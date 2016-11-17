@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:scrollbars="none">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:text="@string/work_overall_comment_title"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <RatingBar
+            android:id="@+id/rb_rating_total"
+            style="?android:attr/ratingBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/title_tv"
+            android:progressDrawable="@drawable/ratingbar_big_bg"
+            android:rating="0"
+            android:stepSize="1"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/ll_comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_tv"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_total_audio_comment"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"/>
+            <!--android:layout_marginLeft="10dp"-->
+            <EditText
+                android:id="@+id/overall_comment_et"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/drawale_fill_in_comment_edittext"
+                android:gravity="top|left"
+                android:hint="@string/work_read_comment_hint"
+                android:maxLines="5"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_audio_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_comment_content"
+            android:orientation="vertical"/>
+
+        <TextView
+            android:id="@+id/insert_comment_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_audio_comment"
+            android:layout_marginTop="15dp"
+            android:text="@string/work_insert_comment_title"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/line_comment"
+            android:layout_width="285dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/ll_audio_comment"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/insert_comment_tv"
+            android:background="@drawable/drawale_fill_in_comment_edittext"
+            android:gravity="center_vertical"
+            android:paddingRight="10dp">
+
+            <TextView
+                android:id="@+id/comment_list_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                android:text="@string/comment_list_tip"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:layout_width="15dp"
+                android:layout_height="10dp"
+                android:background="@drawable/pull_arrow"
+                android:paddingRight="20dp" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>

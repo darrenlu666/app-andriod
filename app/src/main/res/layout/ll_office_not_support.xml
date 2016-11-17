@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:showIn="@layout/activity_personal_les_prep_content">
+
+    <TextView
+        android:id="@+id/tv_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/office_no_support"
+        android:textColor="@color/md_grey_900"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/btn_download"
+        android:text="@string/click_to_download"
+        style="@style/btn_download_or_view_lesson_plan"/>
+
+    <Button
+        android:id="@+id/btn_open"
+        android:text="@string/click_to_open"
+        style="@style/btn_download_or_view_lesson_plan"/>
+
+    <ProgressBar
+        android:id="@+id/pb_downloading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:indeterminate="false"
+        android:indeterminateDrawable="@drawable/progress_loading"
+        android:visibility="gone"/>
+</LinearLayout>

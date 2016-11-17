@@ -1,0 +1,102 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffefeff3"
+    tools:context=".commons.controllers.activities.SettingActivity"
+    android:fitsSystemWindows="true">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="设置"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="25dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#fff">
+
+            <TextView
+                style="@style/SettingTitles"
+                android:text="仅WiFi下显示图片" />
+
+            <ToggleButton
+                android:id="@+id/show_image"
+                style="@style/SettingSwitch" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#fff">
+
+            <View style="@style/UserDivider" />
+
+            <TextView
+                style="@style/SettingTitles"
+                android:text="允许在2G/3G/4G网络下缓存" />
+
+            <ToggleButton
+                android:id="@+id/allow_cache"
+                style="@style/SettingSwitch" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/btn_clear_cache"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:background="#fff">
+
+        <View style="@style/UserDivider" />
+
+        <TextView
+            style="@style/SettingTitles"
+            android:text="清除系统缓存" />
+
+        <TextView
+            android:id="@+id/cache_size"
+            style="@style/SettingContents" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ltCheckNewVersion"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="15dp"
+        android:background="#fff" >
+
+        <View style="@style/UserDivider" />
+
+        <TextView
+            style="@style/SettingTitles"
+            android:text="检查新版本" />
+
+        <TextView
+            android:id="@+id/please_update_to"
+            style="@style/SettingContents" />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_modify_password"
+        style="@style/style_setting_simple_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="修改密码"
+        />
+
+    <TextView
+        android:id="@+id/tv_exit"
+        style="@style/style_setting_exit"
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/exit"/>
+</LinearLayout>

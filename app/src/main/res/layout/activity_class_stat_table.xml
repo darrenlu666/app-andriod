@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".statistics.controllers.activities.ClassStatTableActivity">
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_title_height"
+        android:background="@color/main_green">
+
+        <Button
+            android:id="@+id/btn_return"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/back_btn_bg"/>
+
+        <ImageButton
+            android:id="@+id/ib_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:padding="16dp"
+            android:src="@drawable/ic_filter"/>
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_toEndOf="@id/btn_return"
+            android:layout_toLeftOf="@id/ib_filter"
+            android:layout_toRightOf="@id/btn_return"
+            android:layout_toStartOf="@id/ib_filter"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/layout_title_text_size"
+                tools:text="开课比分析-主讲教室(主讲)"/>
+        </HorizontalScrollView>
+    </RelativeLayout>
+
+    <fragment
+        android:id="@+id/fragment_stat_table"
+        android:name="com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_bar"
+        tools:layout="@layout/fragmet_stat_table"/>
+</RelativeLayout>

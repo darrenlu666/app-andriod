@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_participatorSchool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="江苏省苏州市吴中区第二中学"
+        style="@style/collective_prepare_lesson_detail_title_text"/>
+
+    <TextView
+        android:id="@+id/tv_participatorRoomTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="分会场："
+        android:layout_below="@+id/tv_participatorSchool"
+        style="@style/collective_prepare_lesson_detail_title_text"/>
+
+    <TextView
+        android:id="@+id/tv_participatorRoomValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tv_participatorRoomTitle"
+        android:layout_below="@+id/tv_participatorSchool"
+        android:text="备课室 1"
+        style="@style/collective_prepare_lesson_detail_value_text"/>
+
+    <TextView
+        android:id="@+id/tv_participatorTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="参会者："
+        android:layout_below="@+id/tv_participatorRoomTitle"
+        style="@style/collective_prepare_lesson_detail_title_text"/>
+
+    <TextView
+        android:id="@+id/tv_participatorValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_participatorRoomTitle"
+        android:layout_toRightOf="@+id/tv_participatorTitle"
+        android:text="张三"
+        style="@style/collective_prepare_lesson_detail_value_text"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_participatorteaTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="听课教师："
+        android:layout_below="@+id/tv_participatorTitle"
+        style="@style/collective_prepare_lesson_detail_title_text"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_participatorValue"
+        android:layout_toRightOf="@+id/tv_participatorteaTitle"
+        android:text="王老师"
+        style="@style/collective_prepare_lesson_detail_value_text"
+        android:visibility="gone"/>
+
+</RelativeLayout>

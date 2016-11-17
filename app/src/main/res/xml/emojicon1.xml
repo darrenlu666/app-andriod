@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:horizontalGap="3dp"
+    android:keyHeight="10%p"
+    android:keyWidth="12.5%p"
+    android:verticalGap="3dp">
+    <Row>
+        <Key
+            android:codes="55"
+            android:keyEdgeFlags="left"
+            android:keyIcon="@drawable/smiley_20"
+            android:keyOutputText="[流泪]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_21"
+            android:keyOutputText="[难过]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_22"
+            android:keyOutputText="[撇嘴]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_23"
+            android:keyOutputText="[敲打]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_24"
+            android:keyOutputText="[亲亲]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_25"
+            android:keyOutputText="[色]" />
+        <Key
+            android:codes="55"
+            android:keyEdgeFlags="right"
+            android:keyIcon="@drawable/smiley_26"
+            android:keyOutputText="[胜利]" />
+    </Row>
+    <Row>
+        <Key
+            android:codes="55"
+            android:keyEdgeFlags="left"
+            android:keyIcon="@drawable/smiley_28"
+            android:keyOutputText="[衰]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_30"
+            android:keyOutputText="[睡]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_31"
+            android:keyOutputText="[微笑]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_32"
+            android:keyOutputText="[偷笑]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_33"
+            android:keyOutputText="[吐]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_34"
+            android:keyOutputText="[委屈]" />
+        <Key
+            android:codes="55"
+            android:keyEdgeFlags="right"
+            android:keyIcon="@drawable/smiley_35"
+            android:keyOutputText="[调皮]" />
+    </Row>
+    <Row>
+        <Key
+            android:codes="55"
+            android:keyEdgeFlags="left"
+            android:keyIcon="@drawable/smiley_36"
+            android:keyOutputText="[心]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_38"
+            android:keyOutputText="[嘘]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_39"
+            android:keyOutputText="[阴险]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_40"
+            android:keyOutputText="[疑问]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_41"
+            android:keyOutputText="[再见]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_42"
+            android:keyOutputText="[炸弹]" />
+        <Key
+            android:codes="-5"
+            android:isRepeatable="true"
+            android:keyEdgeFlags="right"
+            android:keyIcon="@drawable/sym_keyboard_delete"
+            android:keyWidth="14.999998%p" />
+    </Row>
+</Keyboard>

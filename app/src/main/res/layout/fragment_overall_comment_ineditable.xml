@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/title_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/work_overall_comment_title"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"/>
+
+    <RatingBar
+        android:id="@+id/rb_rating_total"
+        style="?android:attr/ratingBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/title_tv"
+        android:progressDrawable="@drawable/ratingbar_big_bg"
+        android:rating="0"
+        android:stepSize="1"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/overall_comment_tv"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/title_tv"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="top|left"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/ll_audio_comment_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/overall_comment_tv"/>
+</RelativeLayout>

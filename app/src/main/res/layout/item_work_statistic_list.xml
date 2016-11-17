@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:paddingTop="15dp">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:text="陈晓"/>
+
+    <TextView
+        android:id="@+id/tv_done_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:text="9/12"
+        />
+
+    <TextView
+        android:id="@+id/tv_submit_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:text="2016-09-22 20:10"/>
+
+    <TextView
+        android:id="@+id/tv_objective_right_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_toLeftOf="@id/tv_submit_time"
+        android:layout_toRightOf="@id/tv_done_percent"
+        android:singleLine="true"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.1dp"
+        android:layout_below="@id/tv_name"
+        android:layout_marginTop="10dp"
+        android:background="@color/gray"/>
+
+
+</RelativeLayout>

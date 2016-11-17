@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:background="?selectableItemBackground">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/dv_subject"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        app:placeholderImage="@drawable/default_subject"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/dv_subject"
+        android:layout_toRightOf="@+id/dv_subject"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textSize="18sp"
+        tools:text="小学同步作业课堂系列"/>
+
+    <TextView
+        android:id="@+id/tv_grade_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/dv_subject"
+        android:layout_toRightOf="@+id/dv_subject"
+        android:ems="7"
+        android:singleLine="true"
+        android:textSize="16sp"
+        tools:text="年级 一年级"/>
+
+    <TextView
+        android:id="@+id/tv_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_title"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/tv_grade_name"
+        android:layout_toRightOf="@+id/tv_grade_name"
+        android:singleLine="true"
+        android:textSize="16sp"
+        tools:text="答题时长 8分钟"/>
+
+    <TextView
+        android:id="@+id/tv_create_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_grade_name"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/dv_subject"
+        android:layout_toRightOf="@+id/dv_subject"
+        android:textSize="16sp"
+        tools:text="创建时间 2015-09-23 09:44"/>
+</RelativeLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--首页-直录播-正在直播-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlt_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:padding="10dp"
+    >
+<TextView
+    android:id="@+id/tv_period"
+    android:layout_width="56dp"
+    android:layout_height="56dp"
+    style="@style/ChannelTimeNormal"
+    tools:text="一"
+    android:gravity="center"
+    android:layout_centerVertical="true"
+    />
+<View
+    android:id="@+id/divider"
+    android:layout_width="1px"
+    android:layout_height="44dp"
+    android:layout_toRightOf="@id/tv_period"
+    android:background="@color/divider.function"
+    android:layout_marginTop="@dimen/poe_title_margin_top"
+    android:layout_marginBottom="@dimen/poe_title_margin_Bottom"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    />
+<TextView
+    android:id="@+id/tv_name"
+    tools:text="苏州市星海实验小学"
+    style="@style/txt_group_txt_Title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/divider"
+    android:singleLine="true"
+    android:layout_marginLeft="@dimen/poe_title_margin_top"
+    android:layout_marginTop="@dimen/poe_title_margin_top"
+    android:layout_marginRight="10dp"
+    />
+<TextView
+    android:id="@+id/tv_level_subject_teacher"
+    tools:text="六年级/语文/继越飞"
+    style="@style/txt_group_txt_desc"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/tv_name"
+    android:layout_toRightOf="@id/divider"
+    android:layout_margin="@dimen/poe_title_margin_Bottom"
+    android:maxLines="1"
+    />
+</RelativeLayout>

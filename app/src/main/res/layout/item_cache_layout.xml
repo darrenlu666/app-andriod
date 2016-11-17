@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:descendantFocusability="blocksDescendants">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+    <CheckBox
+        android:id="@+id/cache_item_check_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:button="@drawable/cache_layout_check"/>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/cache_item_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/cache_item_check_btn"
+        app:failureImage="@drawable/icon_default_video"
+        app:placeholderImage="@drawable/icon_default_video"
+        app:roundAsCircle="false"/>
+
+    <com.codyy.erpsportal.commons.widgets.ProgressBarView
+        android:id="@+id/cache_item_progress"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        app:paintw="3"
+        app:textsize="10"/>
+
+    <TextView
+        android:id="@+id/cache_item_text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cache_item_image"
+        android:layout_marginLeft="26dp"
+        android:layout_marginStart="26dp"
+        android:layout_toEndOf="@id/cache_item_image"
+        android:layout_toLeftOf="@id/cache_item_progress"
+        android:layout_toRightOf="@id/cache_item_image"
+        android:layout_toStartOf="@id/cache_item_progress"
+        android:singleLine="true"
+        android:textColor="@color/personal_text_color_content"
+        android:textSize="18sp"
+        tools:text="高中数学高中数学高中数学高中数学高中数学高中数学高中数学"/>
+
+    <TextView
+        android:id="@+id/cache_item_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/cache_item_image"
+        android:layout_alignLeft="@id/cache_item_text_name"
+        android:layout_alignStart="@id/cache_item_text_name"
+        android:textColor="@color/personal_text_color"
+        android:textSize="16sp"
+        tools:text="159.6MB"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignLeft="@id/cache_item_image"
+        android:layout_below="@id/cache_item_text_size"
+        android:layout_marginTop="10dp"
+        android:background="@color/divide_line"/>
+
+    <TextView
+        android:id="@+id/cache_item_text_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:layout_toLeftOf="@id/cache_item_progress"
+        android:paddingTop="20dp"
+        android:textSize="16sp"
+        tools:text="100kb/s"/>
+</RelativeLayout>

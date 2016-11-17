@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:id="@+id/search_dialog_radiogroup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/search_dialog_resource"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:button="@null"
+            android:checked="true"
+            android:gravity="left"
+            android:paddingBottom="10dp"
+            android:paddingLeft="40dp"
+            android:paddingTop="10dp"
+            android:text="@string/search_action_resource"
+            android:textColor="@color/search_bg"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/search_dialog_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:button="@null"
+            android:gravity="left"
+            android:paddingBottom="10dp"
+            android:paddingLeft="40dp"
+            android:paddingTop="10dp"
+            android:text="@string/search_action_video"
+            android:textColor="@color/search_bg"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/search_dialog_doc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:button="@null"
+            android:gravity="left"
+            android:paddingBottom="10dp"
+            android:paddingLeft="40dp"
+            android:paddingTop="10dp"
+            android:text="@string/search_action_doc"
+            android:textColor="@color/search_bg"
+            android:textSize="18sp" />
+
+        <RadioButton
+            android:id="@+id/search_dialog_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:button="@null"
+            android:gravity="left"
+            android:paddingBottom="10dp"
+            android:paddingLeft="40dp"
+            android:paddingTop="10dp"
+            android:text="@string/search_action_group"
+            android:textColor="@color/search_bg"
+            android:textSize="18sp" />
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/divider" />
+</LinearLayout>

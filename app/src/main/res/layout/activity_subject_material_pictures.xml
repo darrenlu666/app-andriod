@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/md_white_1000"
+    tools:context=".rethink.controllers.activities.SubjectMaterialPicturesActivity">
+
+    <LinearLayout
+        android:id="@+id/rl_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/main_green"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_return"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/back_btn_bg" />
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/layout_title_text_size"
+            tools:text="33/34"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:maxEms="8"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textSize="@dimen/layout_title_text_size"
+            tools:text="诗阔地移动端诗阔地移动端诗阔地移动端诗阔地移动端诗阔地移动端诗阔地移动端"/>
+        <TextView
+            android:id="@+id/tv_count_mirror"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/layout_title_text_size"
+            android:visibility="invisible"
+            tools:text="33/34"/>
+        <Space
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/back_btn_bg" />
+    </LinearLayout>
+
+    <com.codyy.erpsportal.commons.widgets.ViewPagerFixed
+        android:id="@+id/vp_subject_material"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 单个RecyclerView+title-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/tv_dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:gravity="center"
+        android:textColor="#707070"
+        android:textSize="20sp"
+        android:maxLines="1"
+        />
+    <com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:background="#fff"
+        />
+</LinearLayout>

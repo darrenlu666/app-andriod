@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <com.codyy.erpsportal.commons.widgets.BnVideoView
+        android:id="@+id/bnVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:shouldDrawError="false"/>
+
+    <TextView
+        android:id="@+id/hintText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#ffffffff"
+        android:background="#ff000000"
+        android:gravity="center"
+        android:textSize="@dimen/txt_size_middle"
+        android:text="@string/loading"/>
+</merge>

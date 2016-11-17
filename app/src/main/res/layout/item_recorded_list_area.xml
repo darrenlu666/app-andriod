@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:fresco="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/rl_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sd_record_list_pic"
+        android:layout_width="@dimen/list_image_length"
+        android:layout_height="@dimen/list_image_length"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        fresco:failureImage="@drawable/school_holder"
+        fresco:placeholderImage="@drawable/school_holder"/>
+
+    <TextView
+        android:id="@+id/tv_school_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/sd_record_list_pic"
+        android:textSize="@dimen/list_first_content_item_size"
+        tools:text="*********中心小学"
+        android:singleLine="true"/>
+
+    <TextView
+        android:id="@+id/tv_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_school_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/sd_record_list_pic"
+        android:textSize="@dimen/list_secend_content_item_size"
+        tools:text="安徽省-安庆市-铜陵县"
+        android:singleLine="true"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.05dp"
+        android:layout_below="@+id/tv_area"
+        android:layout_marginTop="10dp"
+        android:background="@color/user_item_line"/>
+</RelativeLayout>

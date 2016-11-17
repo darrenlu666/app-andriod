@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="entity"
+            type="com.codyy.erpsportal.county.controllers.models.entities.StatisticsItem" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/timetable_popu_bg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/title_text"
+                style="@style/conty_detail_popu_text"
+                android:text="本学期开课统计"
+                android:textSize="20dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/dotted_line"
+                android:layerType="software" />
+
+            <TextView
+                android:id="@+id/classroom_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text='@{"教室名称: "+(entity.classroomName==null?"":entity.classroomName)}'
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="教室名称: 北京市智障二中" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text='@{(entity.type ==2?"有效听课: ":"有效授课: ")+entity.validCount}'
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="有效授课: 50" />
+
+            <TextView
+                style="@style/semester_statistics_textstyle"
+                android:text='@{(entity.type==2?"无故未听课: ":"无故停课: ")+entity.unreasonableMissedCount}'
+                tools:text="无故停课: 50" />
+
+            <TextView
+                android:id="@+id/invalidCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text='@{(entity.type==2?"无效听课: ":"无效授课: ")+entity.invalidCount}'
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="无效授课: 50" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text='@{(entity.type==2?"因故未听课: ":"因故停课: ")+entity.reasonableMissedCount}'
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="因故停课: 50" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/dotted_line"
+                android:layerType="software" />
+
+            <TextView
+                style="@style/conty_detail_popu_text"
+                android:layout_marginTop="20dp"
+                android:text='@{(entity.type==2?"因故未听课原因":"因故停课原因")}'
+                android:textSize="20dp"
+                tools:text="因故停课原因" />
+
+            <LinearLayout
+                android:id="@+id/reason_class_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical" />
+
+            <!--<TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="网络故障: 50" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="在线课堂系统故障: 50" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="班班通设备系统故障: 50" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="电力故障: 50" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="教师请假: 50" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="其他原因: 50" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="主讲教室未开课成功: 50" />-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/dotted_line"
+                android:layerType="software" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

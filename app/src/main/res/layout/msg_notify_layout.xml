@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp">
+
+
+    <com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView
+        android:id="@+id/tab_text"
+        android:layout_width="80dp"
+        android:layout_height="45dp"
+        android:gravity="center"
+        app:badge_gravity="rightTop"
+        app:badge_horizontalMargin="5dp"
+        android:layout_centerInParent="true"
+        android:text="5"
+        app:badge_padding = "5dp"
+        android:textSize="13sp"
+        />
+
+
+
+</RelativeLayout>

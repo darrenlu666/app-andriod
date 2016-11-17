@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="StatBar">
+        <attr name="android:text" />
+        <attr name="android:textSize" />
+        <attr name="barColor" format="color" />
+        <attr name="middlePadding" format="dimension" />
+        <attr name="barPadding" format="dimension" />
+    </declare-styleable>
+</resources>

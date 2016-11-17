@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical"
+              tools:context=".resource.controllers.activities.VideoDetailsActivity">
+
+    <FrameLayout
+        android:id="@+id/video_area"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@color/black">
+
+        <com.codyy.erpsportal.commons.widgets.BnVideoView2
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/rltControlTitle"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="#66000000">
+
+                <ImageButton
+                    android:id="@+id/ib_back"
+                    android:layout_width="44dp"
+                    android:layout_height="36dp"
+                    android:background="@null"
+                    android:contentDescription="@null"
+                    android:onClick="onBackClick"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/back_video"/>
+
+                <Button
+                    android:id="@+id/btnDownload"
+                    style="@style/btn_download_resource"
+                    android:layout_width="44dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="@string/download"/>
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/ib_back"
+                    android:layout_toLeftOf="@id/btnDownload"
+                    android:layout_toRightOf="@id/ib_back"
+                    android:layout_toStartOf="@id/btnDownload"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    tools:text="shifdjfidjfdijfdifjdifjdifjdiffffffffffffffffffff"/>
+            </RelativeLayout>
+
+            <com.codyy.erpsportal.commons.widgets.BNVideoControlView
+                android:id="@+id/videoControl"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <TabHost
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:divider="@drawable/divider_tab"/>
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="0"/>
+    </TabHost>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.codyy.erpsportal.commons.widgets.BnVideoView2
+                android:id="@+id/bn_video_view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true" />
+            <com.codyy.erpsportal.commons.widgets.BNVideoControlView
+                android:id="@+id/video_control_view2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                />
+        </RelativeLayout>
+
+        <com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView
+            android:id="@+id/video_recycler_view"
+            android:layout_width="198dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginTop="?actionBarSize"
+            android:background="#66000000"
+            />
+    </android.support.v4.widget.DrawerLayout>
+    <RelativeLayout
+        android:id="@+id/relative_header"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="#66000000">
+
+        <ImageButton
+            android:id="@+id/imgBtn2"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:padding="10dp"
+            android:background="@null"
+            android:onClick="onBackClick"
+            android:scaleType="centerInside"
+            android:src="@drawable/back_video"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/imgBtn2"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            tools:text="会议视频"
+            android:textColor="@android:color/white"
+            android:textSize="21sp" />
+
+        <TextView
+            android:id="@+id/video_name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            tools:text="111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+            android:textColor="@color/main_color"
+            android:textSize="21sp"
+            android:layout_toRightOf="@id/tv_title"
+            android:layout_toLeftOf="@id/tv_list"
+            android:paddingLeft="10dp"
+            android:layout_marginRight="80dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_list"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:paddingRight="15dp"
+            tools:text="列表"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+
+            />
+        <TextView
+            android:id="@+id/download_text_view"
+            android:layout_width="50dp"
+            android:layout_height="21dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="60dp"
+            android:background="@drawable/btn_download_bg"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="下载"
+            android:textColor="@color/main_green"
+            android:textSize="12sp"
+            />
+    </RelativeLayout>
+
+</RelativeLayout>

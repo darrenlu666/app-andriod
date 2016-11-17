@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@color/black">
+
+    <TextView
+        android:id="@+id/tv_video_control1"
+        style="@style/remote_director_text"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:text="录像控制"
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/stop"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tv_video_control1"
+        android:background="@drawable/img_video_control_start"/>
+
+    <TextView
+        android:id="@+id/tv_start_or_stop"
+        style="@style/remote_director_text"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/stop"
+        android:text=""
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/video_control"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tv_start_or_stop"
+        android:background="@drawable/img_video_control_start"/>
+
+    <TextView
+        android:id="@+id/tv_video_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/video_control"
+        android:text="@string/record_start"
+        android:textColor="#E35837"
+        android:textSize="12sp"/>
+
+    <RelativeLayout
+        android:id="@+id/btn_more_setting"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/img_director_setting"/>
+    </RelativeLayout>
+
+</RelativeLayout>

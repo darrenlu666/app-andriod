@@ -1,0 +1,26 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:ptr="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+            >
+
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/ptrl_prepare_lseeons_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        ptr:ptrDrawable="@drawable/loading_bg"
+        ptr:ptrHeaderTextColor="@color/tips_loading_more_pull_to_refresh"
+        android:cacheColorHint="#00000000"
+        android:listSelector="#00000000"
+        android:divider="@null" />
+
+
+    <com.codyy.erpsportal.commons.widgets.EmptyView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+    </com.codyy.erpsportal.commons.widgets.EmptyView>
+
+</FrameLayout>

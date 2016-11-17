@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/divide_color"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/dialog_reservation_filter_cancel"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:background="#707070"
+            android:text="不限"
+            android:textColor="#fff" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="选择开始时间和结束时间"
+            android:textColor="@color/main_color"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/dialog_reservation_filter_sure"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/login_bt_bg"
+            android:text="确定"
+            android:textColor="#fff" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@color/divide_color" />
+
+    <com.andexert.calendarlistview.library.DayPickerView
+        android:id="@+id/reservation_pickerView"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        app:colorCurrentDay="@color/main_color"
+        app:colorSelectedDayBackground="@color/main_color"
+        app:firstMonth="january" />
+</LinearLayout>

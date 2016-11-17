@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.codyy.erpsportal.commons.widgets.BnVideoLayout2
+        android:id="@+id/bnVideoViewOfLiveVideoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <RelativeLayout
+        android:id="@+id/relativeHeadOfLiveVideoPlay"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="#66000000"
+        android:visibility="gone"
+        >
+        <ImageButton
+            android:id="@+id/imgBtn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@null"
+            android:scaleType="centerInside"
+            android:src="@drawable/back_video"
+            android:onClick="onBackClick"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/txtTitleOfLiveVideoPlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:layout_toRightOf="@id/imgBtn"
+            android:text="高三数学期中考试试题讲解"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+    <com.codyy.erpsportal.commons.widgets.BNLiveControlView
+        android:id="@+id/bn_live_control_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/relativeHeadOfLiveVideoPlay"
+        android:visibility="gone"
+        />
+    <com.codyy.erpsportal.commons.widgets.BnVideoView2
+        android:id="@+id/bn_video_view_main"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        />
+    <com.codyy.erpsportal.commons.widgets.BNVideoControlView
+        android:id="@+id/view_control"
+        android:layout_width="1dp"
+        android:layout_height="1dp"/>
+</RelativeLayout>

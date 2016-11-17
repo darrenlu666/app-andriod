@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:elevation="0dp">
+
+
+            <RelativeLayout
+                android:id="@+id/title_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/weibo_divider_line"
+                android:padding="10dp"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/weibo_search_bg"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/weibo_search_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:drawableLeft="@drawable/btn_search"
+                        android:hint="@string/weibo_search_people"
+                        android:imeOptions="actionSearch"
+                        android:singleLine="true"
+                        android:textColor="@color/wei_bo_name"
+                        android:textColorHint="@color/divider" />
+
+                    <ImageView
+                        android:id="@+id/weibo_search_edittext_delete"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="center"
+                        android:src="@drawable/delete_x"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </RelativeLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <fragment
+            android:id="@+id/weibouniversalfragment"
+            class="com.codyy.erpsportal.weibo.controllers.fragments.WeiBoUniversalFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tag="weibouniversalfragment"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:layout="@layout/fragment_refresh_base" />
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>
+
+

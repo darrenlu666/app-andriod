@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".weibo.controllers.activities.WeiBoNewActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <LinearLayout
+        android:id="@+id/weibo_new_rootview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:id="@+id/weibo_new_scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.codyy.erpsportal.commons.widgets.EmojiEditText
+                    android:id="@+id/weibo_new_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/toolbar"
+                    android:background="@null"
+                    android:gravity="start"
+                    android:hint="分享新鲜事..."
+                    android:maxLength="150"
+                    android:maxLines="12"
+                    android:minLines="8"
+                    android:padding="15dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.codyy.erpsportal.commons.widgets.NoScrollGridView
+                        android:id="@+id/weibo_new_gridview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:columnWidth="10dp"
+                        android:gravity="center"
+                        android:horizontalSpacing="10dp"
+                        android:numColumns="3"
+                        android:padding="10dp"
+                        android:verticalSpacing="10dp" />
+
+                    <RelativeLayout
+                        android:id="@+id/weibo_new_video_relative"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/weibo_divider_bg"
+                        android:paddingLeft="30dp"
+                        android:paddingRight="30dp"
+                        android:visibility="gone">
+
+                        <RelativeLayout
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_centerVertical="true">
+
+                            <com.facebook.drawee.view.SimpleDraweeView
+                                android:id="@+id/weibo_listitem_video_simpledrawview"
+                                android:layout_width="140dp"
+                                android:layout_height="140dp"
+                                android:layout_centerInParent="true"
+                                app:placeholderImage="@drawable/weibo_video_bg" />
+
+                            <ImageView
+                                android:id="@+id/weibo_listitem_video_play"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/weibo_video_play" />
+
+                            <ImageView
+                                android:id="@+id/weibo_new_delete"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_alignParentRight="true"
+                                android:scaleType="center"
+                                android:src="@drawable/delete_x" />
+                        </RelativeLayout>
+
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/weibo_new_grouptext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text=""
+                    android:textSize="16sp" />
+
+                <CheckBox
+                    android:id="@+id/weibo_new_isshow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="仅圈组成员可见"
+                    android:textColor="@color/wei_bo_time"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </ScrollView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#f7f7f7">
+
+            <ViewStub
+                android:id="@+id/weibo_new_personal_stub"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout="@layout/item_bottom_personal" />
+
+            <ViewStub
+                android:id="@+id/weibo_new_group_stub"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout="@layout/item_bottom_group" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.codyy.erpsportal.commons.widgets.EmojiView
+        android:id="@+id/weibo_new_emojiview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:keyBackground="@android:color/white"
+        android:paddingBottom="20dp"
+        android:visibility="gone" />
+
+</LinearLayout>

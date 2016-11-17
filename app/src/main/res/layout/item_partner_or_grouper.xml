@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 参会者/参与机构-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tv_school_text"
+        android:text="学校    "
+        style="@style/collective_prepare_lesson_detail_title_text"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/tv_school_name"
+        tools:text="安徽省合肥市肥东县第一中心小学"
+        android:layout_toRightOf="@+id/tv_school_text"
+        style="@style/collective_prepare_lesson_detail_value_text"
+        android:layout_marginLeft="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_classroom_desc"
+        android:layout_below="@+id/tv_school_name"
+        android:text="分会场"
+        style="@style/collective_prepare_lesson_detail_title_text"
+        />
+
+    <TextView
+        android:id="@+id/tv_classroom"
+        tools:text="备课室1"
+        android:layout_toRightOf="@+id/tv_classroom_desc"
+        android:layout_below="@+id/tv_school_name"
+        style="@style/collective_prepare_lesson_detail_value_text"
+        />
+
+    <TextView
+        android:id="@+id/tv_attend_meeting_desc"
+        android:layout_below="@+id/tv_classroom_desc"
+        android:text="参会者"
+        style="@style/collective_prepare_lesson_detail_title_text"
+        />
+
+    <TextView
+        android:id="@+id/tv_attend_meeting_people"
+        tools:text="张一，张一，张一，张一，张一，张一，张一，张一，张一，张一，张一，张一，张一，张一"
+        android:layout_toRightOf="@+id/tv_attend_meeting_desc"
+        android:layout_below="@+id/tv_classroom_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:textSize="15sp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/black"
+        />
+</RelativeLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="60dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="50dp"
+    android:paddingTop="5dp">
+
+    <TextView
+        android:id="@+id/private_msg_item_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/text_color_grap"
+        android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="2dp"
+        android:text="2015-03-11"
+        android:textColor="@color/primary_text"
+        android:textSize="10dp" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/private_msg_item_simpledraweeview"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/private_msg_item_time"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        app:placeholderImage="@drawable/placeholderimage_head" />
+
+    <com.codyy.erpsportal.commons.widgets.ClickTextView
+        android:id="@+id/private_msg_item_textcontent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/private_msg_item_simpledraweeview"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/private_msg_item_simpledraweeview"
+        android:background="@drawable/weibo_talk_right"
+        android:gravity="center_vertical|left"
+        android:minHeight="40dp"
+        android:minWidth="40dp"
+        android:padding="5dp"
+        android:textColor="@color/primary_text"
+        android:textSize="16sp"
+        tools:text="斯蒂芬阿萨德发生的发生的" />
+</RelativeLayout>

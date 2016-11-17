@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/item_do_read_by_top"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/toolbar"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/transparent_half"/>
+
+        <LinearLayout
+            android:id="@+id/ll_floating_stu_list"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/exam_bg_color"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcl_floating_stu_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/fl_top"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:scrollbars="none"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/transparent_half"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView
+        android:id="@+id/sfsv_stu_answer_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/division_line"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.codyy.erpsportal.homework.widgets.MyViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@color/white"/>
+
+            <LinearLayout
+                android:id="@+id/container_stu_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/transparent_half"/>
+
+                <TextView
+                    android:id="@+id/tv_people_wait"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:gravity="center_vertical|right"
+                    android:paddingRight="16dp"
+                    android:text="人待批阅"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_answer_webview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical"
+                android:paddingLeft="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/work_item_stu_answer"
+                    android:textColor="@color/exam_normal_color"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_audio_answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <!--<LinearLayout
+                    android:id="@+id/container_audio_answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/customer_audio_bg_l"
+                    android:gravity="left|center_vertical"
+                    android:layout_marginLeft="4dp">
+
+                    <ImageView
+                        android:id="@+id/iv_audio_bar_answer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/audio_bar_animation"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_audio_time_answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"/>-->
+            </LinearLayout>
+
+            <include
+                layout="@layout/item_video_thumbnail_view"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/ll_score"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingLeft="4dp"
+                    android:text="得分:"
+                    android:textColor="@color/exam_normal_color"
+                    android:textSize="14sp"/>
+
+                <EditText
+                    android:id="@+id/et_score"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/drawale_fill_in_comment_edittext"
+                    android:inputType="number"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:text="分"
+                    android:textColor="@color/exam_normal_color"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_max_score"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:hint="该道题满分为10分,老师打分不能大于该分值。"
+                android:paddingLeft="4dp"
+                android:singleLine="true"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tv_comment"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="4dp"
+                android:singleLine="true"
+                android:text="老师点评"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
+            <EditText
+                android:id="@+id/et_comment"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/drawale_fill_in_comment_edittext"
+                android:hint="请输入点评"
+                android:maxLines="5"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_submit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btn_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/main_color"
+                    android:text="提交"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+    </com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView>
+
+
+</LinearLayout>

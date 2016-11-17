@@ -1,0 +1,26 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:text="@string/resource_details" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#d7d7d7"
+        android:layout_below="@id/title_bar"/>
+
+    <fragment
+        android:tag="tag_doc_details"
+        android:name="com.codyy.erpsportal.resource.controllers.fragments.ResourceDetailsFragment"
+        tools:layout="@layout/fragment_video_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

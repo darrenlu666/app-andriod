@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@color/divide_color"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/dialog_reservation_filter2_cancel"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="5dp"
+            android:background="#707070"
+            android:text="取消"
+            android:textColor="#fff" />
+
+        <TextView
+            android:id="@+id/dialog_reservation_title"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="选择"
+            android:textColor="@color/main_color"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/dialog_reservation_filter2_sure"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/login_bt_bg"
+            android:text="确定"
+            android:textColor="#fff" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/dialog_reservation_filter2_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="@color/divide_color"
+        android:dividerHeight="1px"
+        android:listSelector="@android:color/transparent" />
+
+</LinearLayout>

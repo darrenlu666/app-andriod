@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.codyy.erpsportal.timetable.activities.TimeTableDetailActivity">
+
+    <include layout="@layout/title_layout_filter" />
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="20dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:onClick="previous"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow_full_left" />
+
+                <FrameLayout
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/date_text"
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:drawableLeft="@drawable/calendar_table"
+                        android:drawablePadding="5dp"
+                        android:gravity="center"
+                        android:onClick="onCalendarClick"
+                        android:textColor="@color/main_color"
+                        android:textSize="18dp"
+                        android:visibility="gone"
+                        tools:text="2016-6-13" />
+
+                    <TextView
+                        android:id="@+id/week_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:drawableRight="@drawable/pull_arrow"
+                        android:gravity="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="20dp"
+                        android:text="第0周"
+                        android:textColor="@color/main_color"
+                        android:textSize="18dp" />
+                </FrameLayout>
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:onClick="next"
+                    android:scaleType="center"
+                    android:src="@drawable/arrow_full_right" />
+            </LinearLayout>
+
+            <com.codyy.erpsportal.commons.widgets.CalendarScrollView
+                android:id="@+id/calendarscrollview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:scrollbars="none">
+
+                    <com.codyy.erpsportal.commons.widgets.TimeTableView2
+                        android:id="@+id/timetableview2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:columnSize="60"
+                        app:isShowDate="true"
+                        app:startWith="monday" />
+                </HorizontalScrollView>
+            </com.codyy.erpsportal.commons.widgets.CalendarScrollView>
+        </LinearLayout>
+
+        <include
+            layout="@layout/item_filter_timetable"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
+
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.codyy.erpsportal.commons.widgets.RefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_main_res"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:appBarLayoutId="@id/app_bar_layout">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.codyy.erpsportal.commons.widgets.infinitepager.SlideView
+                android:id="@+id/slide_view"
+                android:layout_width="match_parent"
+                android:layout_height="180dp" />
+
+            <include layout="@layout/scrolling_info_sheet"/>
+
+            <FrameLayout
+                android:id="@+id/bar_resource"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f2f2f2">
+                <TextView
+                    android:id="@+id/tv_res_title"
+                    style="@style/title_above_line_point_line"
+                    android:layout_gravity="center"
+                    tools:text="优课资源"/>
+            </FrameLayout>
+
+            <android.support.v7.widget.GridLayout
+                android:id="@+id/gl_resources_recommendation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:columnCount="2" />
+
+            <TextView
+                android:id="@+id/tv_resource_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:text="@string/sorry_for_no_contents"/>
+
+            <FrameLayout
+                android:id="@+id/bar_live_classroom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f2f2f2">
+                <TextView
+                    android:id="@+id/tv_live_classroom"
+                    style="@style/title_above_line_point_line"
+                    android:layout_gravity="center"
+                    android:text="@string/live_classroom"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_classroom_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:text="@string/sorry_for_no_contents"/>
+
+            <FrameLayout
+                android:id="@+id/bar_blog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f2f2f2">
+                <TextView
+                    android:id="@+id/tv_blog"
+                    style="@style/title_above_line_point_line"
+                    android:layout_gravity="center"
+                    android:text="@string/blog"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_blog_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:text="@string/sorry_for_no_contents"/>
+
+            <FrameLayout
+                android:id="@+id/bar_teachers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f2f2f2">
+                <TextView
+                    android:id="@+id/tv_teachers"
+                    style="@style/title_above_line_point_line"
+                    android:layout_gravity="center"
+                    android:text="@string/teacher_recommendation"/>
+            </FrameLayout>
+
+            <android.support.v7.widget.GridLayout
+                android:id="@+id/gl_teachers_recommendation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:columnCount="2"/>
+
+            <TextView
+                android:id="@+id/tv_teacher_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:text="@string/sorry_for_no_contents"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</com.codyy.erpsportal.commons.widgets.RefreshLayout>

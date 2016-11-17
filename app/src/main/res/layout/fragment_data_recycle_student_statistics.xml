@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_fragment_data_student_statistics"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+                    android:id="@+id/ud_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/exam_order_by_student"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="18dp"
+                    android:background="#dddddd" />
+
+                <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+                    android:id="@+id/ud_score"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/exam_order_by_score"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="18dp"
+                    android:background="#dddddd" />
+
+                <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+                    android:id="@+id/ud_rate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/exam_order_by_rate"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="18dp"
+                    android:background="#dddddd" />
+
+                <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+                    android:id="@+id/ud_count"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/exam_order_by_counts"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/ll_fragment_data_student_statistics_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/ll_fragment_data_student_statistics"
+                android:background="#dddddd" />
+
+            <include
+                layout="@layout/fragment_item_index"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ll_fragment_data_student_statistics_line"
+                android:layout_above="@+id/ll_fragment_data_student_statistics_linel" />
+            <View
+                android:id="@+id/ll_fragment_data_student_statistics_linel"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_above="@+id/ud_class"
+                android:background="#dddddd" />
+            <TextView
+                android:id="@+id/ud_class"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="48dp"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:text="@string/no_data_for_now"
+        android:textSize="@dimen/empty_text"
+        android:visibility="gone" />
+</FrameLayout>

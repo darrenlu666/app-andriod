@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/rl_exam_teacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null">
+
+    <TextView
+        android:id="@+id/tv_holder_1"
+        style="@style/list_item_first_title_style_exam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+        tools:text="英语模拟试卷"/>
+
+    <TextView
+        android:id="@+id/tv_holder_2"
+        style="@style/list_item_second_title_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_holder_1"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        tools:text="20题 "/>
+
+    <TextView
+        android:id="@+id/tv_holder_3"
+        style="@style/list_item_second_title_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_holder_1"
+        android:layout_toRightOf="@+id/tv_holder_2"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        tools:text="试卷类型 "/>
+
+    <TextView
+        android:id="@+id/tv_holder_4"
+        style="@style/list_item_second_title_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_holder_2"
+        android:paddingBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp"
+        tools:text="更新时间 "/>
+
+    <TextView
+        android:id="@+id/tv_holder_5"
+        style="@style/list_item_second_title_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_holder_2"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="8dp"
+        android:paddingRight="15dp"
+        android:paddingTop="8dp"
+        tools:text="未开始"
+        android:textStyle="bold"/>
+    
+</RelativeLayout>

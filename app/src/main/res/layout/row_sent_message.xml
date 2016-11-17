@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/timestamp"
+        style="@style/chat_time_lb"
+        android:layout_marginBottom="10dp"
+        android:text="早上11:10" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.codyy.erpsportal.commons.widgets.AvatarView
+            xmlns:fresco="http://schemas.android.com/apk/res-auto"
+            fresco:placeholderImage="@drawable/ic_default_avatar"
+            fresco:roundAsCircle="true"
+            android:id="@+id/iv_userhead"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="4dp"
+            android:scaleType="fitXY" />
+
+        <com.codyy.erpsportal.commons.widgets.AsyncTextView
+            android:id="@+id/tv_userid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/iv_userhead"
+            android:textColor="#9A9A9A"
+            android:textSize="13sp"
+            android:text="123"/>
+
+        <com.codyy.erpsportal.commons.widgets.SuperTextView
+            xmlns:emoji="http://schemas.android.com/apk/res-auto"
+            emoji:emojiconSize="20dp"
+            android:id="@+id/tv_chatcontent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/iv_userhead"
+            android:autoLink="web|email|phone"
+            android:linksClickable="true"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/tv_userid"
+            android:text="xxxxxxxxx"
+            android:textColorLink="@color/chat_link_color"
+            android:background="@drawable/chat_to_bg_selector"
+            android:gravity="left|center_vertical"
+            android:lineSpacingExtra="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="12dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:textSize="15sp"
+            android:minHeight="32dp"
+            android:textColor="@color/chat_message_color"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:clickable="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:textSize="12sp"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:textSize="12sp"
+            android:visibility="invisible" />
+
+        <ProgressBar
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="4dp"
+            android:layout_toLeftOf="@id/tv_chatcontent"
+            android:visibility="gone" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.codyy.erpsportal.commons.widgets.TitleItemBar
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="本周课程开设情况"
+            app:hasMore="false" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/week_plan"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="1"
+                android:text="计划课时数 " />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="20dp"
+                android:background="@color/divider" />
+
+            <TextView
+                android:id="@+id/week_week"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="0.75"
+                android:text="周课时数 " />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/week_Reality"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:text="实际听课数 " />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="20dp"
+                android:background="@color/divider" />
+
+            <TextView
+                android:id="@+id/week_rate"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="0.75"
+                android:background="?attr/selectableItemBackground"
+                android:text="实际听课占比 " />
+        </LinearLayout>
+
+        <com.codyy.erpsportal.commons.widgets.TitleItemBar
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="学期课程开设情况"
+            app:hasMore="false" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/term_all"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="1"
+                android:text="计划总课时数 " />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="20dp"
+                android:background="@color/divider" />
+
+            <TextView
+                android:id="@+id/term_stu"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="0.75"
+                android:text="受益学生数 " />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/term_plan"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="1"
+                android:text="计划课时数 " />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="20dp"
+                android:background="@color/divider" />
+
+            <TextView
+                android:id="@+id/term_reality"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="0.75"
+                android:background="?attr/selectableItemBackground"
+                android:text="实际听课数 " />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/term_rate"
+                style="@style/conty_item_detail_text"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:text="实际听课占比" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

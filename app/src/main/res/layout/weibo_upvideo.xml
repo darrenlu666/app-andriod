@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="250dp"
+    android:layout_height="150dp"
+    android:background="@drawable/circle_bg_white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.codyy.erpsportal.commons.widgets.ProgressBarView
+        android:id="@+id/up_dailog_progress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        app:paintw="3"
+        app:textsize="10" />
+
+    <TextView
+        android:id="@+id/weibo_upvideo_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="0/0"
+        android:textColor="@color/main_color" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider" />
+
+
+    <TextView
+        android:id="@+id/weibo_upvideo_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/red" />
+</LinearLayout>

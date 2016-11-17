@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#fff">
+
+        <RadioGroup
+            android:id="@+id/user_timetable_select_radio"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/user_timetable_select_radio_personal"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:button="@null"
+                android:gravity="center"
+                android:text="个人课表"
+                android:textColor="@color/choice"
+                android:textSize="15sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divider" />
+
+            <RadioButton
+                android:id="@+id/user_timetable_select_radio_class"
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:button="@null"
+                android:gravity="center"
+                android:text="班级课表"
+                android:textColor="@color/choice"
+                android:textSize="15sp" />
+        </RadioGroup>
+
+
+        <ListView
+            android:id="@+id/user_timetable_select_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:divider="@color/divide_color"
+            android:dividerHeight="1px"
+            android:scrollbars="none"
+            tools:listitem="@layout/item_usertimetable_class" />
+
+    </FrameLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/titlebar_shadow" />
+</LinearLayout>

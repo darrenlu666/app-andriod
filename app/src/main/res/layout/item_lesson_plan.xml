@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:padding="8dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/dv_subject"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_centerVertical="true"
+        app:placeholderImage="@drawable/default_subject"/>
+
+    <TextView
+        android:id="@+id/tv_plp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@id/dv_subject"
+        android:layout_toRightOf="@id/dv_subject"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/md_grey_900"
+        android:textSize="20sp"
+        tools:text="长方形和正方形面积的计算"/>
+
+    <TextView
+        android:id="@+id/lb_teacher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_plp_title"
+        android:layout_alignStart="@id/tv_plp_title"
+        android:layout_below="@id/tv_plp_title"
+        android:layout_marginTop="16dp"
+        android:text="教师"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tv_teacher_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/lb_teacher"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/lb_teacher"
+        android:layout_toRightOf="@id/lb_teacher"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxEms="6"
+        android:textSize="18sp"
+        tools:text="蔡老师蔡老师蔡老师蔡老师"/>
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/lb_teacher"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:textSize="18sp"
+        tools:text="2015-02-04"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/lb_teacher"
+        android:layout_alignStart="@id/lb_teacher"
+        android:layout_below="@id/lb_teacher"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_lb_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/rate"
+            android:textSize="18sp"/>
+
+        <RatingBar
+            android:id="@+id/rb_rate"
+            style="@style/pcp_ratingbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:paddingBottom="4dp"
+            android:rating="2.5"/>
+
+        <TextView
+            android:id="@+id/tv_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:textSize="18sp"
+            tools:text="9.8分"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_click_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_date"
+        android:layout_marginTop="4dp"
+        android:textSize="18sp"
+        tools:text="50"/>
+
+    <TextView
+        android:id="@+id/tv_click_count_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_click_count"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_toLeftOf="@id/tv_click_count"
+        android:layout_toStartOf="@id/tv_click_count"
+        android:text="@string/click_count"
+        android:textSize="18sp"/>
+</RelativeLayout>

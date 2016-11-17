@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.codyy.erpsportal.resource.controllers.activities.ResourcesNewActivity">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/ib_open_simple_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/title"
+            android:layout_toRightOf="@id/title"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:minHeight="4dp"
+            android:minWidth="4dp"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp"/>
+
+        <ImageButton
+            android:id="@+id/ib_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:src="@drawable/filter_bg_selector"/>
+
+        <Button
+            android:id="@+id/btn_confirm_filter"
+            android:text="@string/confirm_filter"
+            style="@style/TextButtonInLeftOfTitleBar"
+            android:visibility="gone"/>
+    </com.codyy.erpsportal.commons.widgets.TitleBar>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/filter_drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_bar">
+
+        <com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout
+            android:id="@+id/sliding_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            app:umanoClipPanel="true"
+            app:umanoFadeColor="@android:color/transparent"
+            app:umanoOverlay="true"
+            app:umanoPanelHeight="0dp"
+            app:umanoShadowHeight="1dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/rl_resources"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_resources"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+                <TextView
+                    android:id="@+id/tv_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/no_data_for_now"
+                    android:textSize="@dimen/empty_text"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <RadioGroup
+                android:id="@+id/rg_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#f1f1f1"
+                android:checkedButton="@+id/rb_filter_video"
+                android:divider="@drawable/divider_h_res_simple_filter"
+                android:orientation="vertical"
+                android:showDividers="middle">
+
+                <RadioButton
+                    android:id="@+id/rb_filter_video"
+                    style="@style/ResSimpleFilterItemRb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="视频资源"/>
+
+                <RadioButton
+                    android:id="@+id/rb_filter_audio"
+                    style="@style/ResSimpleFilterItemRb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="音频资源"/>
+
+                <RadioButton
+                    android:id="@+id/rb_filter_document"
+                    style="@style/ResSimpleFilterItemRb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="文档资源"/>
+
+                <RadioButton
+                    android:id="@+id/rb_filter_image"
+                    style="@style/ResSimpleFilterItemRb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="图片资源"/>
+
+                <RadioButton
+                    android:id="@+id/rb_filter_album"
+                    style="@style/ResSimpleFilterItemRb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="专辑资源"
+                    android:visibility="gone"/>
+            </RadioGroup>
+        </com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"/>
+    </android.support.v4.widget.DrawerLayout>
+
+    <com.codyy.erpsportal.resource.widgets.AudioControlBar
+        android:id="@+id/audio_control_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"/>
+</RelativeLayout>

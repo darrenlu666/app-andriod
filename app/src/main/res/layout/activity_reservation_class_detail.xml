@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.codyy.erpsportal.reservation.controllers.activities.ReservationClassDetailActivity">
+
+    <include layout="@layout/title_layout_filter" />
+
+    <com.codyy.erpsportal.commons.widgets.CalendarScrollView
+        android:id="@+id/calendarscrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/classroom_tv"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:drawableRight="@drawable/pull_arrow"
+                android:gravity="center_vertical"
+                android:onClick="onClassRoomClick"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="教室 " />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divider" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none">
+
+                <com.codyy.erpsportal.commons.widgets.TimeTableView2
+                    android:id="@+id/timetableview2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:columnSize="60"
+                    app:isShowDate="true"
+                    app:startWith="monday" />
+            </HorizontalScrollView>
+        </LinearLayout>
+    </com.codyy.erpsportal.commons.widgets.CalendarScrollView>
+</LinearLayout>

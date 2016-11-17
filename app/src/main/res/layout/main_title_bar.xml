@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:background="#f2f2f2">
+
+    <TextView
+        android:id="@+id/tv_bar_title"
+        style="@style/title_above_line_point_line"
+        android:layout_gravity="center"/>
+</FrameLayout>

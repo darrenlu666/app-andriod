@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:tools="http://schemas.android.com/tools"
+       tools:showIn="@layout/activity_resources_new">
+
+    <ImageButton
+        android:id="@+id/ib_next_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_bar_next"/>
+
+    <ImageButton
+        android:id="@+id/ib_play_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/ib_next_audio"
+        android:layout_toStartOf="@id/ib_next_audio"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:padding="8dp"
+        android:src="@drawable/ic_bar_pause"/>
+
+    <ImageButton
+        android:id="@+id/ib_previous_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/ib_play_audio"
+        android:layout_toStartOf="@id/ib_play_audio"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:padding="12dp"
+        android:src="@drawable/ic_bar_previous"/>
+
+    <TextView
+        android:id="@+id/tv_audio_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/ib_previous_audio"
+        android:layout_toStartOf="@id/ib_previous_audio"
+        android:layout_marginStart="12dp"
+        android:lines="1"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        tools:text="我的世界是一个快乐"
+        android:layout_marginLeft="12dp"/>
+
+    <ProgressBar
+        android:id="@+id/pb_audio_current"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:minHeight="4dp"
+        android:maxHeight="4dp"
+        android:max="1000"
+        android:progressDrawable="@drawable/pb_audio_current"
+        android:layout_alignParentBottom="true"/>
+</merge>

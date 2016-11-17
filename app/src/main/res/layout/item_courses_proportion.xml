@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingEnd="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingStart="4dp">
+
+    <ImageView
+        android:id="@+id/iv_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/gray_dot"/>
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/iv_dot"
+        android:layout_toRightOf="@id/iv_dot"
+        tools:text="2015年1月"/>
+
+    <FrameLayout
+        android:id="@+id/fl_vertical_line"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_alignEnd="@id/iv_dot"
+        android:layout_alignLeft="@id/iv_dot"
+        android:layout_alignRight="@id/iv_dot"
+        android:layout_alignStart="@id/iv_dot"
+        android:layout_below="@id/iv_dot"
+        android:layout_marginTop="4dp">
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:background="#cacaca"/>
+    </FrameLayout>
+
+    <com.codyy.erpsportal.statistics.widgets.ProportionBar
+        android:id="@+id/pb_courses"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_date"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignStart="@id/tv_date"
+        android:layout_below="@id/tv_date"
+        android:layout_marginTop="8dp"
+        android:text="20%"
+        android:textColor="#707070"
+        android:textSize="16sp"
+        app:barColor="#69be40"
+        app:barColorLow="#f08a1d"
+        app:barHeight="10dp"
+        app:middlePadding="8dp"
+        app:textColorLow="#f08a1d"/>
+</RelativeLayout>

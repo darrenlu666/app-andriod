@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="title_height">50dp</dimen>
+    <dimen name="layout_title_text_size">20dp</dimen>
+
+    <dimen name="personal_text_size">18sp</dimen>
+    <dimen name="personal_text_size1">16sp</dimen>
+
+    <dimen name="empty_text">20sp</dimen>
+    <dimen name="layout_title_height">50dp</dimen>
+
+    <dimen name="btn_download_corner">3.1dp</dimen>
+
+    <dimen name="txt_size_middle">18sp</dimen>
+    <dimen name="txt_size_small">14sp</dimen>
+    <dimen name="filter_name_size">14sp</dimen>
+    <dimen name="filter_type_size">12sp</dimen>
+
+    <dimen name="popuwindow_text_size">18sp</dimen>
+
+    <dimen name="assessment_class_item_text_title">15dp</dimen>
+    <dimen name="assessment_class_item_text_teacher">12dp</dimen>
+    <integer name="circle_radius">20</integer>
+    <integer name="stroke_width">20</integer>
+    <integer name="text_top">50</integer>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="title_item_bar_height">47dp</dimen>
+
+    <dimen name="info_slide">18sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="filter_bg_corner">4dp</dimen>
+    <dimen name="filter_bg_condition_corner">8dp</dimen>
+
+    <dimen name="list_first_content_item_size">18sp</dimen><!-- 应用中列表项一级内容字体大小-->
+    <dimen name="list_secend_content_item_size">14sp</dimen><!-- 应用中列表项二级内容字体大小-->
+
+    <!-- 统一风格-->
+    <dimen name="list_image_length">60dp</dimen> <!-- 应用中列表项图片大小-->
+    <dimen name="fragment_title_size">14sp</dimen><!--应用页涉及的fragment标题文字大小  实时直播|往期录播 -->
+    <dimen name="head_length">60dp</dimen><!-- 头像图片大小-->
+    <dimen name="head_name_text_size">12sp</dimen><!-- 头像名字字体大小-->
+    <dimen name="function_detail_top_text_size">12sp
+    </dimen><!-- 几大应用如视频会议，集体备课，互动听课等的详情页的上端，发起方那一栏的字体大小-->
+    <dimen name="function_detail_first_content_size">18sp
+    </dimen><!-- 几大应用如视频会议，集体备课，互动听课等的详情页的一级内容的字体大小-->
+    <dimen name="function_detail_second_content_size">15sp
+    </dimen><!-- 几大应用如视频会议，集体备课，互动听课等的详情页的二级内容的字体大小-->
+    <dimen name="function_detail_status_size">17sp</dimen><!-- 几大应用如视频会议，集体备课，互动听课等的详情页的底部状态的字体大小-->
+    <dimen name="comment_first_content_size">14sp</dimen><!-- 评论一级内容字体大小-->
+    <dimen name="comment_second_content_size">12sp</dimen><!-- 评论二级内容字体大小-->
+    <dimen name="detail_info_text_size">16sp</dimen><!-- 个人资料 、试卷信息、圈组、优课资源文档资源详情等各种详情内容字体大小-->
+    <dimen name="edittext_hint">12sp</dimen><!--文本框提示字体大小 -->
+
+    <dimen name="rect_image_size_width">140dp</dimen>
+    <dimen name="rect_image_size_height">90dp</dimen>
+
+
+    <!--group /blog 的字体/padding-->
+    <dimen name="poe_head_pic_size_large">70dp</dimen>
+    <dimen name="poe_head_pic_size_middle">60dp</dimen>
+    <dimen name="poe_head_pic_size_small">50dp</dimen>
+    <dimen name="poe_txt_size_head">21sp</dimen>
+    <dimen name="poe_txt_size_title">17sp</dimen>
+    <dimen name="poe_txt_size_content">15sp</dimen>
+    <dimen name="poe_txt_size_little">13sp</dimen>
+    <dimen name="poe_txt_size_small">7sp</dimen>
+
+    <dimen name="poe_title_margin_top">6dp</dimen>
+    <dimen name="poe_title_margin_Bottom">6dp</dimen>
+    <dimen name="poe_desc_margin_top">4dp</dimen>
+    <dimen name="poe_desc_margin_bottom">4dp</dimen>
+    <dimen name="poe_top_bottom_text_addition_padding_size">-2dp</dimen>
+    <dimen name="poe_top_text_addition_padding_size">0dp</dimen>
+    <dimen name="poe_bottom_text_addition_padding_size">-2dp</dimen>
+
+    <dimen name="sp16">16sp</dimen>
+    <dimen name="dp8">8dp</dimen>
+
+    <dimen name="net_teach_launch_limit">150dp</dimen>
+
+</resources>

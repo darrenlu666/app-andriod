@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/select_left_item_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:minHeight="45dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:text="hahah"
+        android:textColor="@color/personal_text_color"
+        android:textSize="@dimen/filter_name_size" />
+</LinearLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:tools="http://schemas.android.com/tools"
+       xmlns:android="http://schemas.android.com/apk/res/android"
+       tools:showIn="@layout/fragment_main_res">
+
+    <TextView
+        android:id="@+id/tv_title1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_res_type"
+        android:gravity="center"
+        android:text="精品课"
+        android:textColor="#929292"
+        android:textSize="20sp"/>
+
+    <com.codyy.erpsportal.commons.widgets.NestedGridView
+        android:id="@+id/gv_resource1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="2"/>
+</merge>

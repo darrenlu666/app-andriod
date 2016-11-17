@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:id="@+id/lin_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/lin_function_item_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/style_item_function_selected"
+            android:layout_marginTop="1dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_function_item_first"
+                style="@style/iv_function_item_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:placeholderImage="@drawable/tab_function"
+                />
+
+            <TextView
+                android:id="@+id/tv_function_title_first"
+                style="@style/tv_function_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:text="item function"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/divider.function"/>
+
+        <LinearLayout
+            android:id="@+id/lin_function_item_second"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/style_item_function_selected"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_function_item_second"
+                style="@style/iv_function_item_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:placeholderImage="@drawable/tab_function"/>
+
+            <TextView
+                android:id="@+id/tv_function_title_second"
+                style="@style/tv_function_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:text="item function"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/divider.function"
+            />
+
+        <LinearLayout
+            android:id="@+id/lin_function_item_third"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/style_item_function_selected"
+            android:layout_margin="0dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_function_item_third"
+                style="@style/iv_function_item_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:placeholderImage="@drawable/tab_function"/>
+
+            <TextView
+                android:id="@+id/tv_funciton_title_third"
+                style="@style/tv_function_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:text="item function"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignBottom="@id/lin_container"
+        android:background="@color/divider.function"
+        />
+
+    <LinearLayout
+        android:id="@+id/line_function_items"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lin_container"
+        android:background="@color/divider.function"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_open_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/lin_container"
+        android:layout_marginTop="4dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/img_up"
+        android:visibility="gone"
+        />
+</RelativeLayout>

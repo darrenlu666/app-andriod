@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ProgressBarView">
+        <attr name="textsize" format="integer" />
+        <attr name="paintw" format="integer" />
+        <attr name="progressbg" format="color" />
+        <attr name="text_color" format="color" />
+    </declare-styleable>
+</resources>

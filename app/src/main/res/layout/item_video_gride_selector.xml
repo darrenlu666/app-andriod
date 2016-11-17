@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.codyy.erpsportal.commons.widgets.onlinemeeting.CheckableTextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/checked_text_view"
+        android:layout_width="?actionBarSize"
+        android:layout_height="?actionBarSize"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/item_video_grid"
+        android:textSize="24sp"
+        android:background="@drawable/selector_rectangle_white_green"
+        android:checked="true"
+        />

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/weibo_new_simpledrawee"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter"
+        app:placeholderImage="@drawable/placeholder_middle" />
+
+  <!--  <ImageView
+        android:id="@+id/weibo_new_delete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignEnd="@+id/weibo_new_simpledrawee"
+        android:layout_alignRight="@+id/weibo_new_simpledrawee"
+        android:layout_alignTop="@+id/weibo_new_simpledrawee"
+        android:scaleType="center"
+        android:src="@drawable/delete_x" />-->
+</RelativeLayout>

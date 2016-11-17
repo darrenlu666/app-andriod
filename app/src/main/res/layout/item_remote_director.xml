@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/rl_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_item_background"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_content_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        >
+
+        <com.codyy.erpsportal.commons.widgets.AvatarView
+            xmlns:fresco="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/iv_head"
+            android:layout_width="@dimen/head_length"
+            android:layout_height="@dimen/head_length"
+            android:scaleType="fitXY"
+            fresco:placeholderImage="@drawable/img_yuwen"
+            fresco:roundAsCircle="true"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp">
+
+            <FrameLayout
+                android:id="@+id/fl_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tv_holder_2"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:id="@+id/tv_in_remote_living_class"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/in_remote_class"
+                    android:drawablePadding="5dp"
+                    android:text="进入"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <include
+                    layout="@layout/item_start_time_layout"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tv_school_unstart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未开始"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:visibility = "visible"/>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_holder_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="主讲教师名称"
+                android:textColor="@color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tv_holder_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_holder_1"
+                android:layout_marginTop="5dp"
+                android:text="一年级/音乐/第四节"
+                android:textSize="14sp"
+                />
+
+            <TextView
+                android:id="@+id/tv_holder_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_holder_2"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:text="主讲教室名称大锅饭大师傅 asdf俺的沙发案发生地方"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:layout_toLeftOf="@id/fl_status"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_below="@+id/ll_content_view"
+        android:layout_marginTop="10dp"
+        android:background="#dd999999"/>
+
+</RelativeLayout>

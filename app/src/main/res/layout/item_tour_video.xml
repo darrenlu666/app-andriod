@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efeff3"
+    android:padding="4dp">
+
+    <RelativeLayout
+        android:id="@+id/rl_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="4dp"
+        android:background="@android:color/white">
+
+        <com.codyy.erpsportal.commons.widgets.BnVideoLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/videoLayout" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:id="@+id/videoTitle"
+            android:layout_below="@id/videoLayout"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            tools:text="数学第一章节" />
+    </RelativeLayout>
+</RelativeLayout>

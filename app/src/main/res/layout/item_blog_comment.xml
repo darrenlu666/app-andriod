@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlt_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    >
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_pic"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:padding="10dp"
+        app:placeholderImage="@drawable/default_person_head"
+        android:layout_centerVertical="true"
+        />
+    <TextView
+        android:id="@+id/tv_reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="回复"
+        style="@style/txt_blog_comment_item_title"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:drawableLeft="@drawable/weibo_comment"
+        />
+    <com.codyy.erpsportal.commons.widgets.SuperTextView
+        android:id="@+id/stv_content"
+        xmlns:emoji="http://schemas.android.com/apk/res-auto"
+        emoji:emojiconSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_toLeftOf="@id/tv_reply"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/tv_userid"
+        android:text="苏小小：水电费水电费撒旦法舒服睡地方"
+        android:gravity="left|center_vertical"
+        android:lineSpacingExtra="2dp"
+        android:padding="10dp"
+        android:textSize="15sp"
+        android:minHeight="32dp"
+        android:textColor="@color/chat_message_color"/>
+    <TextView
+        android:id="@+id/tv_create_time"
+        style="@style/txt_group_txt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_below="@id/stv_content"
+        android:layout_marginLeft="8dp"
+        android:maxLines="1"
+        android:text="2016-2-18 17:00"
+        />
+</RelativeLayout>

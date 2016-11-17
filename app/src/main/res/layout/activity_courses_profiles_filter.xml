@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.codyy.erpsportal.statistics.controllers.activities.CoursesProfilesFilterActivity">
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_title_height"
+        android:background="@color/main_green">
+
+        <Button
+            android:id="@+id/btn_return"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_btn_bg"/>
+
+        <Button
+            android:id="@+id/btn_confirm_filter"
+            style="@style/TextButtonInLeftOfTitleBar"
+            android:text="@string/confirm_filter"/>
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/btn_return"
+            android:layout_toLeftOf="@id/btn_confirm_filter"
+            android:layout_toRightOf="@id/btn_return"
+            android:layout_toStartOf="@id/btn_confirm_filter"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/layout_title_text_size"
+                tools:text="开课比分析-主讲教室(主讲)"/>
+        </HorizontalScrollView>
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_bar">
+
+        <RadioGroup
+            android:id="@+id/rg_filter_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/rb_by_week"
+                style="@style/StatisticsFilterRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="按周统计"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/ib_previous_week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@null"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_past"/>
+
+                <TextView
+                    android:id="@+id/tv_week_begin"
+                    style="@style/StatisticsFilterDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2016-05-09"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/to"/>
+
+                <TextView
+                    android:id="@+id/tv_week_end"
+                    style="@style/StatisticsFilterDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2016-05-09"/>
+
+                <ImageButton
+                    android:id="@+id/ib_next_week"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@null"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_future"/>
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/rb_by_month"
+                style="@style/StatisticsFilterRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="按月统计"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/ib_previous_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginRight="12dp"
+                    android:background="@null"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_past"/>
+
+                <TextView
+                    android:id="@+id/tv_month_begin"
+                    style="@style/StatisticsFilterDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2016-05-09"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/to"/>
+
+                <TextView
+                    android:id="@+id/tv_month_end"
+                    style="@style/StatisticsFilterDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="2016-05-16"/>
+
+                <ImageButton
+                    android:id="@+id/ib_next_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@null"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_future"/>
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/rb_by_specific_date"
+                style="@style/StatisticsFilterRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="按具体日期统计"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/ll_by_specific_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btn_specific_date_begin"
+                    style="@style/StatisticsFilterDate.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2016-05-09"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/to"/>
+
+                <Button
+                    android:id="@+id/btn_specific_date_end"
+                    style="@style/StatisticsFilterDate.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2016-05-16"/>
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/rb_by_term"
+                style="@style/StatisticsFilterRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="学期选择"
+                android:visibility="gone"/>
+
+            <android.support.v7.widget.GridLayout
+                android:id="@+id/gl_terms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:visibility="gone"
+                app:columnCount="2"/>
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:background="@drawable/bg_btn_statistics_filter_date"-->
+            <!--android:ems="12"-->
+            <!--android:gravity="center"-->
+            <!--android:padding="12dp"-->
+            <!--android:text="2015年下半学期"-->
+            <!--android:visibility="gone"/>-->
+
+            <TextView
+                android:id="@+id/tv_select_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="学科选择："
+                android:visibility="gone"/>
+
+            <com.codyy.erpsportal.statistics.widgets.OrderLayout
+                android:id="@+id/ol_subjects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:visibility="gone"
+                app:horizontalGap="12dp"
+                app:verticalGap="12dp">
+
+                <!--<CheckedTextView-->
+                <!--style="@style/StatisticsFilterSubject"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="全部"/>-->
+
+                <!--<CheckedTextView-->
+                <!--style="@style/StatisticsFilterSubject"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="数学"/>-->
+
+                <!--<CheckedTextView-->
+                <!--style="@style/StatisticsFilterSubject"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="英语"/>-->
+
+                <!--<CheckedTextView-->
+                <!--style="@style/StatisticsFilterSubject"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="历史"/>-->
+
+                <!--<CheckedTextView-->
+                <!--style="@style/StatisticsFilterSubject"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="我是一门课"/>-->
+
+                <!--<CheckedTextView-->
+                <!--style="@style/StatisticsFilterSubject"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="自然科学社会与法"/>-->
+            </com.codyy.erpsportal.statistics.widgets.OrderLayout>
+        </RadioGroup>
+
+    </ScrollView>
+
+</RelativeLayout>

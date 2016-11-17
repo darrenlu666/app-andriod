@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFDFDFE"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:text="答题人数/测试人数"
+        android:textColor="@android:color/black"
+        android:textSize="18dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:id="@+id/tv_class_level_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="14sp" />
+
+        <com.codyy.erpsportal.exam.widgets.AnalysisProgress
+            android:id="@+id/ap_readovercount_alltestcount"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/tv_readovercount_alltestcount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:id="@+id/tv_max_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="14sp" />
+
+        <com.codyy.erpsportal.exam.widgets.AnalysisProgress
+            android:id="@+id/ap_max_score_total"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/tv_max_score_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:id="@+id/tv_min_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="14sp" />
+
+        <com.codyy.erpsportal.exam.widgets.AnalysisProgress
+            android:id="@+id/ap_min_score_total"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/tv_min_score_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:id="@+id/tv_avg_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="14sp" />
+
+        <com.codyy.erpsportal.exam.widgets.AnalysisProgress
+            android:id="@+id/ap_avg_score_total"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/tv_avg_score_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/v_divider_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/ll_third"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/transparent_half" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:id="@+id/tv_my_score"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="14sp" />
+
+        <com.codyy.erpsportal.exam.widgets.AnalysisProgress
+            android:id="@+id/ap_my_score_total"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="3" />
+
+        <TextView
+            android:id="@+id/tv_my_score_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="4"
+            android:padding="8dp"
+            android:text="正确率(客观题)"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tv_exam_rightrate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <com.codyy.erpsportal.exam.widgets.AnalysisProgress
+            android:id="@+id/ap_exam_rightrate"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="4" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="4"
+            android:padding="8dp"
+            android:text="错题数(客观题)"
+            android:textColor="@color/exam_normal_color"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/tv_exam_mistake"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:paddingLeft="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+        <com.codyy.erpsportal.exam.widgets.AnalysisProgress
+            android:id="@+id/ap_exam_mistake"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="4" />
+
+    </LinearLayout>
+</LinearLayout>

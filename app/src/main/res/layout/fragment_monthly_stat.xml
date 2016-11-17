@@ -1,0 +1,32 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".statistics.controllers.fragments.MonthlyStatFragment">
+
+    <TextView
+        android:id="@+id/anchor"
+        style="@style/area_name"
+        android:visibility="invisible"/>
+
+    <ListView
+        android:id="@+id/lv_statistical_scope"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/anchor"
+        android:layout_alignLeft="@id/anchor"
+        android:layout_alignRight="@id/anchor"
+        android:layout_alignStart="@id/anchor"
+        android:choiceMode="singleChoice"
+        android:scrollbars="none"
+        tools:listitem="@layout/item_statistical_scope"/>
+
+    <ListView
+        android:id="@+id/lv_statistical_proportion"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/lv_statistical_scope"
+        android:layout_toRightOf="@id/lv_statistical_scope"
+        android:divider="@null"
+        tools:listitem="@layout/item_courses_proportion"/>
+</RelativeLayout>

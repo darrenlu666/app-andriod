@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="#161616"
+             android:keepScreenOn="true"
+             tools:contents="com.codyy.erpsportal.commons.controllers.activities.RemoteDirectorActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:background="#000"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tv_teacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/bt_back"
+                android:gravity="center"
+                android:text="主讲教师:"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_teacher_name"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/tv_teacher"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                tools:text="语文语文语文语文语文"/>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:textSize="18sp"
+                android:visibility="gone"/>
+
+
+            <Button
+                android:id="@+id/bt_back"
+                android:layout_width="80dp"
+                android:layout_height="45dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:background="@null"
+                android:drawableLeft="@drawable/back_btn_bg"
+                android:drawablePadding="-35dp"
+                android:text="@string/title_back"
+                android:textColor="#fff"
+                android:textSize="15sp"/>
+
+
+            <TextView
+                android:id="@+id/tv_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/tv_subject_name"
+                android:gravity="center"
+                android:text="学科:"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/tv_subject_name"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                tools:text="语文语文语文语文语文"/>
+
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="204dp">
+
+            <com.codyy.erpsportal.commons.widgets.BnVideoLayout
+                android:id="@+id/video_layout"
+                android:layout_width="match_parent"
+                android:layout_height="204dp"/>
+
+            <TextView
+                android:id="@+id/tv_tip_un_start"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@color/black"
+                android:gravity="center"
+                android:text="@string/class_video_un_start"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:visibility="gone"/>
+        </FrameLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/remote_main_bg"
+                    android:padding="10dp">
+
+                    <com.codyy.erpsportal.commons.widgets.MyGridView
+                        android:id="@+id/lv_class_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:horizontalSpacing="12dp"
+                        android:listSelector="@android:color/transparent"
+                        android:numColumns="3"
+                        android:verticalSpacing="10dp"/>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/remote_main_bg"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_record_mode"
+                        style="@style/remote_director_text"
+                        android:text="录制模式"/>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_below="@+id/tv_record_mode"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/rb_movie_mode"
+                            style="@style/remote_director_radio_button"
+                            android:layout_marginRight="12dp"
+                            android:text=" 电 影 "/>
+
+                        <Button
+                            android:id="@+id/rb_res_mode"
+                            style="@style/remote_director_radio_button"
+                            android:layout_marginRight="12dp"
+                            android:text=" 资 源 "/>
+
+                        <Button
+                            android:id="@+id/rb_movieandres_mode"
+                            style="@style/remote_director_radio_button"
+                            android:text="电影+资源"/>
+
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/remote_main_bg"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_director_mode"
+                        style="@style/remote_director_text"
+                        android:text="导播模式"/>
+
+
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_below="@+id/tv_director_mode"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/bt_mnul_mode"
+                            style="@style/remote_director_radio_button"
+                            android:layout_marginRight="12dp"
+                            android:checked="true"
+                            android:text=" 手 动 "/>
+
+                        <RadioButton
+                            android:id="@+id/bt_auto_mode"
+                            style="@style/remote_director_radio_button"
+                            android:layout_marginRight="12dp"
+                            android:text=" 自 动 "/>
+
+                        <RadioButton
+                            android:id="@+id/bt_auto_mnul_mode"
+                            style="@style/remote_director_radio_button"
+                            android:text=" 半自动 "/>
+
+
+                    </RadioGroup>
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/remote_main_bg"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/tv_position"
+                        style="@style/remote_director_text"
+                        android:text="预置位"/>
+
+                    <com.codyy.erpsportal.commons.widgets.MyGridView
+                        android:id="@+id/gv_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_position"
+                        android:layout_centerHorizontal="true"
+                        android:horizontalSpacing="12dp"
+                        android:listSelector="@android:color/transparent"
+                        android:numColumns="9"
+                        android:verticalSpacing="10dp"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/remote_main_bg"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/seekbar_title1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:text="变焦"
+                            android:textColor="@color/remote_text_nor"
+                            android:textSize="16sp"/>
+
+                        <Button
+                            android:id="@+id/bt_sub_change_focus"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_toRightOf="@+id/seekbar_title1"
+                            android:background="@drawable/img_sub_nor"/>
+
+                        <Button
+                            android:id="@+id/bt_plus_change_focus"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="1dp"
+                            android:background="@drawable/img_plus_nor"/>
+
+                        <SeekBar
+                            android:id="@+id/seekbar_change_focus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginRight="1dp"
+                            android:layout_toLeftOf="@+id/bt_plus_change_focus"
+                            android:layout_toRightOf="@+id/bt_sub_change_focus"
+                            android:progress="50"/>
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/seekbar_title2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:text="变倍"
+                            android:textColor="@color/remote_text_nor"
+                            android:textSize="16sp"/>
+
+                        <Button
+                            android:id="@+id/bt_sub_double_focus"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="1dp"
+                            android:layout_toRightOf="@+id/seekbar_title2"
+                            android:background="@drawable/img_sub_nor"/>
+
+                        <Button
+                            android:id="@+id/bt_plus_double_focus"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="1dp"
+                            android:background="@drawable/img_plus_nor"/>
+
+                        <SeekBar
+                            android:id="@+id/seekbar_change_double"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginRight="1dp"
+                            android:layout_toLeftOf="@+id/bt_plus_double_focus"
+                            android:layout_toRightOf="@+id/bt_sub_double_focus"
+                            android:progress="50"/>
+
+                    </RelativeLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="60dp"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/img_stop_init">
+
+
+                        <Button
+                            android:id="@+id/bt_up"
+                            android:layout_width="35dp"
+                            android:layout_height="20dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/up_selector"
+                            android:gravity="center"/>
+
+                        <Button
+                            android:id="@+id/bt_down"
+                            android:layout_width="35dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginBottom="15dp"
+                            android:background="@drawable/down_selector"
+                            android:gravity="center"/>
+
+
+                        <Button
+                            android:id="@+id/bt_left"
+                            android:layout_width="20dp"
+                            android:layout_height="35dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/right_selector"
+                            android:gravity="center"/>
+
+                        <Button
+                            android:id="@+id/bt_right"
+                            android:layout_width="20dp"
+                            android:layout_height="35dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/left_selector"
+                            android:gravity="center"/>
+
+
+                        <TextView
+                            android:id="@+id/tv_start_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text="00:00:00"
+                            android:textColor="#fff"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</FrameLayout>

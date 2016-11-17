@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".weibo.controllers.activities.WeiBoMyFriendActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:elevation="0dp">
+
+
+            <RelativeLayout
+                android:id="@+id/weibo_myfriend_find"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/weibo_divider_line"
+                android:padding="10dp"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <EditText
+                    android:id="@+id/weibo_search_edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/weibo_search_bg"
+                    android:drawableLeft="@drawable/btn_search"
+                    android:focusable="false"
+                    android:focusableInTouchMode="true"
+                    android:hint="@string/weibo_search_people"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:textColor="@color/wei_bo_name"
+                    android:textColorHint="@color/divider" />
+            </RelativeLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <com.codyy.erpsportal.commons.widgets.RefreshRecycleView
+            android:id="@+id/weibo_myfriden_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    </android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_white_1000"
+    android:orientation="vertical">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:text="@string/lesson_plan_details"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="教案名称"/>
+
+                <TextView
+                    android:id="@+id/tv_lesson_name"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="教师"/>
+
+                <TextView
+                    android:id="@+id/tv_teacher_name"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="年级"/>
+
+                <TextView
+                    android:id="@+id/classLevelName"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="学科"/>
+
+                <TextView
+                    android:id="@+id/subjectName"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="版本"/>
+
+                <TextView
+                    android:id="@+id/versionName"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="分册"/>
+
+                <TextView
+                    android:id="@+id/volumeName"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="章"/>
+
+                <TextView
+                    android:id="@+id/chapterName"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="节"/>
+
+                <TextView
+                    android:id="@+id/sectionName"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="撰写时间"/>
+
+                <TextView
+                    android:id="@+id/edit_time"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="@string/rate"/>
+
+                <RatingBar
+                    android:id="@+id/rb_rate"
+                    style="@style/pcp_ratingbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:rating="2.5"/>
+
+                <TextView
+                    android:id="@+id/tv_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:textSize="18sp"
+                    tools:text="9.8分"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+
+                <TextView
+                    style="@style/detail_item_label"
+                    android:text="点击量"/>
+
+                <TextView
+                    android:id="@+id/tv_click_count"
+                    style="@style/video_details_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <include layout="@layout/video_details_divider"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
+

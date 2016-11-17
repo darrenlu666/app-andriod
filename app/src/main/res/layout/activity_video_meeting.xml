@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    >
+    <include layout="@layout/toolbar_layout"/>
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_videoMeeting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/id_meetingTitle"
+            android:background="#fff">
+            <include  layout="@layout/tab_layout"/>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/videoMeeting_ViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:background="@android:color/white"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_filter"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_gravity = "right"/>
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

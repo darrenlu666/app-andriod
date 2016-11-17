@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlt_container"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    >
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_pic"
+        android:layout_width="@dimen/poe_head_pic_size_small"
+        android:layout_height="@dimen/poe_head_pic_size_small"
+        style="@style/sdv_item_style"
+        app:placeholderImage="@drawable/default_person_head"
+        app:placeholderImageScaleType="fitXY"
+        />
+
+    <TextView
+        android:id="@+id/tv_class"
+        style="@style/txt_group_txt_Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_alignTop="@id/sdv_pic"
+        android:text="圈组名称"
+        android:layout_marginTop="@dimen/poe_top_bottom_text_addition_padding_size"
+        />
+
+    <TextView
+        android:id="@+id/tv_school"
+        style="@style/txt_group_txt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_below="@id/tv_class"
+        android:text="@string/school"
+        android:layout_marginTop="@dimen/poe_title_margin_top"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/main_green"
+        android:layout_below="@id/tv_school"
+        android:layout_marginTop="20dp"
+        />
+</RelativeLayout>

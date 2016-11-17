@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".resource.controllers.fragments.ResourceDetailsFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <com.codyy.erpsportal.statistics.widgets.OrderLayout
+            android:id="@+id/ol_attributes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:horizontalGap="4dp"
+            app:verticalGap="4dp">
+        </com.codyy.erpsportal.statistics.widgets.OrderLayout>
+
+        <TextView
+            android:id="@+id/tv_lb_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ol_attributes"
+            android:layout_marginTop="8dp"
+            android:text="评分："
+            android:textSize="16sp"/>
+
+        <RatingBar
+            android:id="@+id/rb_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_lb_rate"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/tv_lb_rate"
+            android:layout_toRightOf="@+id/tv_lb_rate"
+            android:indeterminateDrawable="@drawable/ratingbar_drawable"
+            android:isIndicator="true"
+            android:minHeight="13dp"
+            android:numStars="5"
+            android:progressDrawable="@drawable/ratingbar_drawable"
+            android:rating="0"/>
+
+        <TextView
+            android:id="@+id/tv_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_lb_rate"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/rb_rate"
+            android:layout_toRightOf="@+id/rb_rate"
+            android:textSize="16sp"
+            tools:text="7.9分"/>
+
+        <TextView
+            android:id="@+id/tv_publisher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_lb_rate"
+            android:layout_marginTop="8dp"
+            android:ems="8"
+            android:lines="1"
+            android:textSize="16sp"
+            tools:text="发布人：刘诺一"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_publisher"
+            android:layout_toEndOf="@id/tv_publisher"
+            android:layout_toRightOf="@id/tv_publisher"
+            android:textSize="16sp"
+            tools:text="发布时间：2013-04-31"/>
+
+        <TextView
+            android:id="@+id/tv_sharer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_publisher"
+            android:layout_marginTop="8dp"
+            android:ems="8"
+            android:lines="1"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:text="共享人：刘雪莱"/>
+
+        <TextView
+            android:id="@+id/tv_shared_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_sharer"
+            android:layout_toEndOf="@id/tv_sharer"
+            android:layout_toRightOf="@id/tv_sharer"
+            android:textSize="16sp"
+            android:visibility="gone"
+            tools:text="共分享234条"/>
+
+        <TextView
+            android:id="@+id/tv_view_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_sharer"
+            android:layout_marginTop="8dp"
+            android:ems="8"
+            android:lines="1"
+            android:textSize="16sp"
+            tools:text="播放：112"/>
+
+        <TextView
+            android:id="@+id/tv_collect_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tv_view_count"
+            android:layout_toEndOf="@id/tv_view_count"
+            android:layout_toRightOf="@id/tv_view_count"
+            android:textSize="16sp"
+            tools:text="收藏：112"/>
+
+        <TextView
+            android:id="@+id/tv_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_view_count"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            tools:text="简介：改自恋分基地那就放大了放假了分基地附近都老夫就大力发动机封ID路附近的了房间的发动机路附近的绿卡积分嗲了低价了发的浪费空间的路口附近的李开复极登陆。"/>
+
+    </RelativeLayout>
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="简介"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/description"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="发布人"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/publisher"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="学段"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/semesterName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="学科"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/subjectName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="年级"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/classLevelName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="版本"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/versionName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="分册"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/volumeName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="章"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/chapterName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="节"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/sectionName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="知识点"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/knowledgeName"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/lb_duration"-->
+    <!--android:text="时长"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/duration"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="发布时间"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/publish_time"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="评分"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/score"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/lb_view_times"-->
+    <!--android:text="在线观看数"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/view_count"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="下载次数"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/download_count"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+
+    <!--<include layout="@layout/video_details_divider"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp">-->
+
+    <!--<TextView-->
+    <!--android:text="收藏次数"-->
+    <!--style="@style/detail_item_label"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/favorite_count"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/video_details_content" />-->
+    <!--</LinearLayout>-->
+    <!--</LinearLayout>-->
+</ScrollView>
+
+

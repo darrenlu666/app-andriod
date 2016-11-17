@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/rl_item_homework"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/class_icon"
+        android:layout_width="@dimen/rect_image_size_width"
+        android:layout_height="@dimen/rect_image_size_height"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        app:failureImage="@drawable/placeholder_img"/>
+
+    <TextView
+        android:id="@+id/teacher_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/class_icon"
+        android:singleLine="true"
+        android:textColor="@color/fistpageclass_gridview_item_textcolor"
+        android:textSize="16sp"
+        tools:text="张三"
+        />
+
+    <TextView
+        android:id="@+id/school_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/teacher_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/class_icon"
+        android:singleLine="true"
+        android:textColor="#929292"
+        android:textSize="14sp"
+        tools:text="苏大附中"/>
+
+    <TextView
+        android:id="@+id/class_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/school_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/class_icon"
+        android:singleLine="true"
+        android:textColor="#929292"
+        android:textSize="14sp"
+        tools:text="六年级·英语"/>
+
+    <TextView
+        android:id="@+id/tv_work_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/class_type"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/class_icon"
+        android:drawableLeft="@drawable/work_book"
+        android:drawablePadding="10dp"
+        android:textColor="#929292"
+        android:textSize="14sp"
+        tools:text="24份"/>
+
+    <TextView
+        android:id="@+id/task_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/class_type"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="#929292"
+        android:textSize="14sp"
+        tools:text="2015-07-29 10:10"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5px"
+        android:layout_below="@id/tv_work_count"
+        android:layout_marginTop="10dp"
+        android:background="@color/divide_color"/>
+
+</RelativeLayout>

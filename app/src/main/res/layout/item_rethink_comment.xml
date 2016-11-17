@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?selectableItemBackground">
+    <RelativeLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:padding="8dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/dv_user_photo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            fresco:placeholderImage="@drawable/icon_default_photo"
+            fresco:roundAsCircle="true"/>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@id/dv_user_photo"
+            android:layout_toRightOf="@id/dv_user_photo"
+            android:textSize="18sp"
+            tools:text="苏小小：附加地方都交了罚金开发；大了菲拉法拉家纺垃圾法力解放拉萨附近啊"/>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_content"
+            android:layout_alignStart="@id/tv_content"
+            android:layout_below="@id/tv_content"
+            android:layout_marginTop="8dp"
+            tools:text="2015-08-16 15:30"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/md_grey_600"
+            android:textSize="16sp"/>
+
+        <Button
+            android:id="@+id/btn_rely"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/tv_time"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="?selectableItemBackground"
+            android:drawableLeft="@drawable/weibo_comment"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/weibo_comment"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:text="@string/rely"
+            android:textColor="@color/md_grey_600"
+            android:textSize="16sp"/>
+
+    </RelativeLayout>
+    <View
+        android:id="@+id/divider_comment"
+        android:layout_height="0.5dp"
+        android:layout_width="match_parent"
+        android:background="#cecece"/>
+</LinearLayout>

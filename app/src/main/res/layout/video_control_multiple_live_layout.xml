@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/txt_my_interact_partner_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <ImageView
+        android:id="@+id/next_video_image_view"
+        style="@style/img_my_interact_partner_control"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/ic_video_switch"
+        />
+    <ImageView
+        android:id="@+id/close_video_image_view"
+        style="@style/img_my_interact_partner_control"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_close_video"
+        />
+    <ImageView
+        android:id="@+id/expand_video_image_view"
+        style="@style/img_my_interact_partner_control"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_video_expand"
+        android:scaleType="centerInside"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
+        />
+</merge>

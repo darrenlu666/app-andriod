@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/actionBarItemBackground"
+    >
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_user_item_start"
+        style="@style/img_online_user_icon"
+        android:layout_width="@dimen/poe_head_pic_size_small"
+        android:layout_height="@dimen/poe_head_pic_size_small"
+        app:placeholderImage="@drawable/placeholderimage_head"
+        />
+    <ImageView
+        android:id="@+id/img_user_item_end"
+        style="@style/img_online_user_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_private_message"
+        />
+    <ImageView
+        android:id="@+id/img_video_state"
+        style="@style/img_online_user_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/img_user_item_end"
+        android:src="@drawable/ic_video_on"
+        android:padding="10dp"
+        />
+    <TextView
+        android:id="@+id/txt_user_item_name"
+        style="@style/txt_online_user_txt_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_user_item_start"
+        android:layout_alignTop="@id/sdv_user_item_start"
+        android:layout_marginTop="@dimen/poe_top_bottom_text_addition_padding_size"
+        android:layout_toLeftOf="@id/img_user_item_end"
+        tools:text="张三张三张三张三张三张三张三张三张三张三张三张三张三张三张三张三张三张三张三张三张三"
+        android:singleLine="true"
+        />
+    <TextView
+        android:id="@+id/txt_user_item_desc"
+        style="@style/txt_online_user_txt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_user_item_start"
+        android:layout_alignBottom="@id/sdv_user_item_start"
+        android:text="主讲教师"
+        android:layout_marginBottom="@dimen/poe_bottom_text_addition_padding_size"
+        />
+
+</RelativeLayout>

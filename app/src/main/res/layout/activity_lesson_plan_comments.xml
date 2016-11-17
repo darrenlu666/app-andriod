@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:orientation="vertical">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:text="评论"/>
+
+    <Button
+        android:id="@+id/btn_send_comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff8f8f8"
+        android:gravity="center"
+        android:minHeight="0dp"
+        android:onClick="onCommentClick"
+        android:padding="16dp"
+        android:text="发表评论"
+        android:textColor="#bbbbbb"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <!--<fragment
+        android:id="@+id/fragment_lesson_plan_comments"
+        android:name="com.codyy.erpsportal.perlcourseprep.controllers.fragments.LessonPlanCommentsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="tag_lesson_plan_comments"
+        tools:layout="@layout/item_resource_comment"/>-->
+</LinearLayout>

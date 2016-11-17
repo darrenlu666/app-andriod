@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <FrameLayout
+        android:id="@+id/video_area"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:background="@color/black">
+
+        <com.codyy.erpsportal.commons.widgets.BnVideoView2
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/rltControlTitle"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:background="#66000000">
+
+                <ImageButton
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@null"
+                    android:onClick="onBackClick"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/back_video" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:singleLine="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/activity_theme_text_down1"
+                    android:layout_width="50dp"
+                    android:layout_height="21dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/btn_download_bg"
+                    android:gravity="center"
+                    android:text="下载"
+                    android:textColor="@color/main_green"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <com.codyy.erpsportal.commons.widgets.BNVideoControlView
+                android:id="@+id/videoControl"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/activitytheme_videolayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="视频列表"
+                android:textColor="#1f1f1f"
+                android:textSize="16sp" />
+
+
+            <TextView
+                android:id="@+id/tv_video_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:textColor="#999999"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/activity_theme_text_down"
+                android:layout_width="50dp"
+                android:layout_height="21dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/tv_video_count"
+                android:background="@drawable/btn_download_bg"
+                android:gravity="center"
+                android:text="下载"
+                android:textColor="@color/main_green"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+        <com.codyy.erpsportal.commons.widgets.HorizontalListView
+            android:id="@+id/hl_video"
+            android:layout_width="wrap_content"
+            android:layout_height="38dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+
+
+    <com.codyy.erpsportal.commons.widgets.SlidingTabLayout
+        android:id="@+id/sliding_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/white" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/activity_thieme_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/white" />
+
+</LinearLayout>

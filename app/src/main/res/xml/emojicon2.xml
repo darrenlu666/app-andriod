@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:horizontalGap="3dp"
+    android:keyHeight="10%p"
+    android:keyWidth="12.5%p"
+    android:verticalGap="3dp">
+
+    <Row>
+        <Key
+            android:codes="55"
+            android:keyEdgeFlags="left"
+            android:keyIcon="@drawable/smiley_43"
+            android:keyOutputText="[抓狂]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_27"
+            android:keyOutputText="[示爱]" />
+        <Key
+            android:codes="55"
+            android:keyIcon="@drawable/smiley_44"
+            android:keyOutputText="[猪头]" />
+        <Key
+            android:codes="-5"
+            android:isRepeatable="true"
+            android:keyEdgeFlags="right"
+            android:keyIcon="@drawable/sym_keyboard_delete"
+            android:keyWidth="14.999998%p" />
+    </Row>
+</Keyboard>

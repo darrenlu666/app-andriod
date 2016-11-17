@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/rl_course_tour"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:paddingBottom="16dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="222dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        app:actualImageScaleType="centerCrop"
+        app:placeholderImage="@drawable/ic_default_video_play_bg"
+        app:placeholderImageScaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/tv_receive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_receive"
+        android:gravity="right|end"
+        android:paddingEnd="4dp"
+        android:paddingRight="4dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="接收"
+        android:textColor="@color/white"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_school_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/iv_thumb"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="XXX主讲学校名称"
+        android:textColor="#212121"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/tv_scope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_school_name"
+        android:layout_alignStart="@+id/tv_school_name"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@id/tv_school_name"
+        android:layout_marginTop="12dp"
+        android:textColor="#6f6f6f"
+        android:textSize="16sp"
+        tools:text="一年级/语文"/>
+
+    <TextView
+        android:id="@+id/tv_enter_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tv_scope"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:drawableLeft="@drawable/ic_enter_view"
+        android:drawablePadding="4dp"
+        android:drawableStart="@drawable/ic_enter_view"
+        android:text="进入观摩"
+        android:textColor="#6f6f6f"
+        android:textSize="16sp"/>
+
+</RelativeLayout>

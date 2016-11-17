@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="com.codyy.erpsportal.county.controllers.models.entities.CountyListItem.ScheduleItem" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:onClick="@{(theView)->item.onClick(theView,item)}"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text='@{item.teacherName+"/"+item.classlevel+"/"+item.subject}'
+                android:textColor="#222222"
+                android:textSize="18dp"
+                tools:text="张三/一年级/语文" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:text='@{item.contyType==1?"计划课时 "+item.planTimes:"星期 星期"+item.dayStr}'
+                android:textColor="#666666"
+                android:textSize="15dp"
+                tools:text="计划课时 24" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:text='@{item.contyType==1?"实际课时 "+item.actualTimes:"节次 第"+item.classStr+"节"}'
+                android:textColor="#666666"
+                android:textSize="15dp"
+                tools:text="实际课时 24" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="10dp"
+                android:text='@{item.contyType==1?"本周课时 "+item.weekTimes:""}'
+                android:textColor="#666666"
+                android:textSize="15dp"
+                tools:text="本周课时 24" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{"上课日期 "+item.strScheduleDate}'
+            android:textColor="#666666"
+            android:textSize="15dp"
+            android:visibility="@{item.contyType==1?View.GONE:View.VISIBLE}"
+            tools:text="上课日期：2016-26-08" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/divider" />
+    </LinearLayout>
+</layout>

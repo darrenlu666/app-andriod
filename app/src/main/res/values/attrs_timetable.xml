@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TimeTableView2">
+        <attr name="titleSize" format="integer" />
+        <attr name="columnSize" format="integer" />
+        <attr name="subjectTextSize" format="integer" />
+        <attr name="startWith">
+            <enum name="monday" value="1" />
+            <enum name="sunday" value="0" />
+        </attr>
+        <attr name="isShowDate" format="boolean" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,730 @@
+<resources>
+    <string name="app_name">互动学习平台</string>
+
+    <string name="title_activity_main">互动学习平台</string>
+    <string name="click_to_refresh">没有数据，点击刷新。</string>
+    <string name="no_data_for_now">暂时没有相关内容</string>
+    <string name="net_error">网络链接错误！</string>
+    <string name="net_connect_error">数据请求错误！</string>
+    <string name="share_net_error">共享桌面/视频失败，无法链接服务器！</string>
+    <string name="just_now">刚刚</string>
+    <string name="beforeMin">%d分钟前</string>
+    <string name="today">今天 %s</string>
+    <string name="username_cant_be_empty">用户名不能为空！</string>
+    <string name="password_cant_be_empty">密码不能为空！</string>
+    <string name="please_update_to">请更新至最新版本</string>
+    <string name="checking_update">正在获取最新版本信息…</string>
+    <string name="sure_to_clear_cache">确定要清除缓存？</string>
+    <string name="sure_to_exit">确认退出登录？</string>
+    <string name="activity_detail">活动详情</string>
+    <string name="newest_comment">最新评论</string>
+    <string name="by_time">按开始时间</string>
+    <string name="by_count">按点击量</string>
+    <string name="by_quality">按评分高低</string>
+
+    <string name="lesson_view">进入观摩</string>
+    <string name="lesson_on">进行中</string>
+    <string name="lesson_into_prepare">进入备课</string>
+    <string name="lesson_into_listen">进入听课</string>
+    <string name="lesson_into">进入课程</string>
+    <string name="meeting_into">进入会议</string>
+    <string name="lesson_view_video">观看视频</string>
+    <string name="lesson_unstart">未开始</string>
+    <string name="lesson_end">已结束</string>
+
+    <string name="single_chat">私聊</string>
+    <string name="group_chat">群聊</string>
+    <string name="system_message">系统消息</string>
+    <string name="login">登录</string>
+    <string name="publish_comment">写下你的话</string>
+    <string name="comment_hint">我来说两句</string>
+    <string name="net_switch_close">已设置禁止在2G/3G/4G网络下缓存,需要开启后继续</string>
+    <string name="school">学校</string>
+    <string name="school_child">小孩所在学校</string>
+    <string name="my_class">班级</string>
+    <string name="my_child_class">小孩所在班级</string>
+    <string name="my_post">职位</string>
+
+    <string name="exit">退\ \ \ 出</string>
+    <string name="title_activity_video_details">VideoDetailsActivity</string>
+    <string name="filter">筛选</string>
+    <string name="loading">加载中…</string>
+    <string name="pull_to_refresh">下拉刷新</string>
+    <string name="release_to_refresh">释放刷新</string>
+
+    <string name="title_live_period">请选择需要播放的文件</string>
+    <string name="title_live_class">%s在线课堂</string>
+    <string name="title_schoollive_class">%s直录播课堂</string>
+    <string name="no_more_load">没有更多加载!</string>
+    <string name="sending">发送中…</string>
+    <string name="txt_dialog_wifi_cancel">取消观看</string>
+    <string name="txt_dialog_wifi_continue">继续观看</string>
+    <string name="txt_dialog_wifi_play_video_tips">您正在使用2G/3G/4G网络，继续观看可能产生超额流量费。</string>
+    <string name="tip_homework_list_show_image">您正在使用2G/3G/4G网络，是否需要显示图片？</string>
+    <string name="collective_prepare_lessons">集体备课</string>
+    <string name="txt_live_history_has_no_play_back_tips">很抱歉，未读取到视频文件。</string>
+    <string name="txt_live_no_input_stream">教室信号尚未接入，请稍后…</string>
+    <string name="txt_video_meeting_no_input_stream">信号未接入，请稍后…</string>
+    <string name="txt_video_meeting_no_input_stream_retry">信号未接入，点击重连…</string>
+    <string name="loading_video_framework">正在加载视频模块，请稍后…</string>
+    <string name="title_back">返回</string>
+    <string name="txt_dialog_download_start">开始下载 %s</string>
+    <string name="txt_dialog_download_exist">之前已下载！</string>
+    <string name="txt_dialog_download_exist_downloading">已在下载列表中</string>
+    <string name="txt_dialog_download_error">获取下载地址失败,请检查网络是否通畅！</string>
+    <string name="txt_dialog_download_audio_exist">当前音频已下载！</string>
+
+    <!-- 首页专递课堂-->
+    <string name="txt_live_playing">正在直播</string>
+    <string name="txt_live_prepare">未开始</string>
+    <string name="txt_live_over">已结束</string>
+    <string name="title_homework">课堂作业</string>
+
+    <!--应用专递课堂-->
+    <string name="class_room_area">地区：</string>
+    <string name="class_room_main_info">主讲：</string>
+    <string name="class_room_receive_info">接收：</string>
+    <string name="class_room_time">上课时间：</string>
+    <string name="class_video_un_start">该课程还未开始，请稍等！</string>
+    <string name="main_info">%1$s \n%2$s%3$s%4$s</string>
+    <string name="class_video_list">视频列表</string>
+    <string name="class_video_list_count">共%1$d段</string>
+    <string name="class_video_length">时长：</string>
+    <string name="class_play_count">播放次数：</string>
+    <string name="class_period">节次：</string>
+    <!-- 在线视频会议title-->
+    <string name="title_tab_online_meeting_interacts">互动</string>
+    <string name="title_tab_online_meeting_user_lists">用户列表</string>
+    <string name="title_tab_online_meeting_messages">聊天区</string>
+    <string name="title_tab_online_meeting_documents">文档管理</string>
+    <string name="title_tab_online_meeting_prompt">申请发言</string>
+    <string name="title_tab_online_meeting_prompt_cancel">取消发言</string>
+    <string name="title_tab_online_meeting_prompt_forbidden">禁止发言</string>
+    <string name="txt_dialog_forbidden">主讲人已开启免打扰模式,禁止发言</string>
+    <string name="format_dialog_loop_patrol">主持人已开启轮巡,不能%s</string>
+    <string name="txt_dialog_online_exit">是否要退出本次会议</string>
+    <string name="tips_duplicate_click_in_period">您申请发言操作过于频繁，请稍后再试！</string>
+    <string name="tips_no_auth_prompt">您没有权限申请发言！</string>
+    <string name="tips_add_in">加入中…</string>
+    <string name="tips_video_too_short">视频太短，已播放完成！</string>
+    <string name="tips_no_data_to_show">暂时没有相关内容</string>
+    <string name="tips_no_lesson_live">暂无课程，请稍后再来，谢谢！</string>
+
+    <!--搜索-->
+    <string name="search_action_resource">资讯</string>
+    <string name="search_action_video">视频</string>
+    <string name="search_action_doc">文档</string>
+    <string name="search_action_group">圈组</string>
+
+    <!-- test crash -->
+    <string name="title_activity_resources">ResourcesActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="resource">优课资源</string>
+    <string name="no_login_info">无登录信息</string>
+
+    <string name="title_activity_video_meeting_detail">VideoMeetingDetailActivity</string>
+    <string name="latest_comments">最新评论</string>
+    <string name="title_activity_statistical">StatisticalActivity</string>
+    <string name="count_lessons_today">今日开课数</string>
+    <string name="count_lessons_semester">学期开课比例</string>
+    <string name="document_resource_details">文档资源详情</string>
+    <string name="latest_comment">最新评论</string>
+    <string name="resource_details">资源详细</string>
+    <string name="more">更多</string>
+
+    <string name="change_password">修改密码</string>
+    <string name="channel">频道</string>
+    <string name="function">应用</string>
+    <string name="my">我的</string>
+    <string name="title_activity_more_resource">MoreResourceActivity</string>
+    <string name="cache_my">离线缓存</string>
+    <string name="setting_my">设置</string>
+
+    <string name="by_rate">按评分高低</string>
+    <string name="by_heat">按浏览次数</string>
+    <string name="by_release_time">按发布时间</string>
+
+    <!-- 评课议课/互动听课-->
+    <string name="meeting_topic">会议主题</string>
+    <string name="time_prepared">预约时间</string>
+    <string name="time_lesson_prepared">课程时间</string>
+    <string name="time_active">活动时间</string>
+    <string name="active_requirement">活动要求</string>
+    <string name="active_select_lesson">选择课程</string>
+    <string name="lesson_view_type">观摩方式</string>
+    <string name="active_participate_scope">参与范围</string>
+    <string name="time_start">开始时间</string>
+    <string name="time_schedule_lesson">排课日期</string>
+    <string name="score">        评分:</string>
+    <string name="sponsor_name">发起方：</string>
+    <string name="sponsor_time">发起时间：</string>
+    <string name="meeting_production_name">会议简介</string>
+    <string name="association">主讲机构</string>
+    <string name="master_classroom">主会场：</string>
+    <string name="master_teacher">主讲人：</string>
+    <string name="master_participator">参会者：</string>
+    <string name="participatorstu">听课学生：</string>
+    <string name="participatortea">听课教师：</string>
+    <string name="participator_assiciation">参与机构</string>
+    <string name="has_permission_record">有录制权限</string>
+    <string name="has_permission">是否有权归档到服务器</string>
+    <string name="document_relative">相关文档</string>
+    <string name="result_meeting">会议成果</string>
+    <string name="str_meeting_main_speaker">主持人</string>
+    <string name="unstart_meeting_status">主持人还未开始会议，请耐心等待。</string>
+    <string name="remove_meeting_status">您已经被请出会议！</string>
+    <string name="end_meeting_status">本次会议已经结束！</string>
+    <string name="error_meeting_status">您已经在另外一个地点登录系统！</string>
+
+
+    <string name="record_start">录像开始</string>
+    <string name="time">00:00:00</string>
+    <string name="sure">确定</string>
+    <string name="cancel">取消</string>
+    <string name="subtitle_msg">"请先关闭字幕，再选择字幕"</string>
+    <string name="head_msg">"请先关闭片头，再选择片头"</string>
+    <string name="end_msg">"请先关闭片尾，再选择片尾"</string>
+    <string name="logo_msg">"请先关闭台标，再选择台标"</string>
+    <string name="exit_coco">帐号已于别处登录，点击【确定】退出远程导播</string>
+    <string name="exit2">主讲教室关闭，点击【确定】退出远程导播</string>
+    <string name="class_over">当前课堂已结束</string>
+    <string name="system_error">与服务器链接断开，点击【确定】退出远程导播</string>
+    <string name="disconnect">与远程课堂终端失去连接，请耐心等待…</string>
+    <string name="mode_2">"主讲教师正在使用【互动模式】授课,在退出该模式之前，手动导播功能暂时无法使用"</string>
+    <string name="title_remote_director">今日导播</string>
+
+
+    <string name="please_connect_internet">请先连接网络！</string>
+    <string name="login_invalid">登录已失效，请重新登录！</string>
+    <string name="all">全部</string>
+    <string name="filter_by_property">属性</string>
+    <string name="filter_by_knowledge_point">知识点</string>
+    <string name="no_filter">不限</string>
+    <string name="video">视频</string>
+    <string name="video_model">视频模式</string>
+    <string name="show_model">演示模式</string>
+    <string name="document">文档</string>
+    <string name="info">资讯</string>
+    <string name="edit">编辑</string>
+    <string name="class_tour">课堂巡视</string>
+    <string name="live_classroom">直播课堂</string>
+    <string name="blog">博文</string>
+    <string name="teacher_recommendation">名师推荐</string>
+    <string name="please_login_first">请先登录！</string>
+    <string name="title_activity_user_detail">UserDetailActivity</string>
+    <string name="slide_to_switch_video">左右滑动切换视频</string>
+    <string name="live_class_teacher_fomat">主讲老师:%s</string>
+    <string name="news">新闻</string>
+    <string name="announcement">公告</string>
+    <string name="notice">通知</string>
+    <string name="sorry_for_no_contents">暂时没有相关内容</string>
+    <string name="clearing_cache">正在清除缓存…</string>
+    <string name="fraction_line">%1$d/%2$d</string>
+    <!-- 测试 -->
+    <string name="exam">测试</string>
+    <string name="exam_answer_duration">答题时长%1$s分钟</string>
+    <string name="exam_answer_subject">学科 %1$s</string>
+    <string name="exam_answer_score_total">%1$d分</string>
+    <string name="exam_answer_score_avg">%1$s分</string>
+    <string name="exam_do_read_max_score">该题满分为%1$s分,老师打分不能大于该分值。</string>
+    <string name="exam_a_count">优秀\n%1$d次</string>
+    <string name="exam_b_count">良好\n%1$d次</string>
+    <string name="exam_c_count">及格\n%1$d次</string>
+    <string name="exam_d_count">不及格\n%1$d次</string>
+    <string name="exam_parent_score">总分:%1$s</string>
+    <string name="exam_parent_max_score">最高分: %1$s</string>
+    <string name="exam_parent_min_score">最低分: %1$s</string>
+    <string name="exam_parent_avg_score">平均分: %1$s</string>
+    <string name="exam_parent_my_score">小孩得分: %1$s</string>
+    <string name="exam_grade">年级</string>
+    <string name="exam_subject">学科</string>
+    <string name="exam_teacher">教师</string>
+    <string name="exam_class">班级</string>
+    <string name="exam_state">状态</string>
+    <string name="exam_area">地区</string>
+    <string name="exam_year">年份</string>
+    <string name="exam_filter_toast">请先选择%1$s！</string>
+    <string name="exam_statistics_detail_title">%1$s(%2$s分)</string>
+    <string name="exam_answer_cnt">答题数 %1$s/%2$s</string>
+    <string name="exam_answer_score">得分 %1$s分</string>
+    <string name="exam_no_score_tip">得分不能为空</string>
+    <string name="exam_answer_rate">正确率 (客观题) %1$s%%</string>
+    <string name="exam_submit_answer">提交答卷</string>
+    <string name="exam_order_by_student">姓名</string>
+    <string name="exam_order_by_score">分数</string>
+    <string name="exam_order_by_rate">正确率</string>
+    <string name="exam_order_by_counts">答题数</string>
+    <string name="exam_overall_statistics">总体统计</string>
+    <string name="exam_statistics">统计</string>
+    <string name="exam_topic_statistics">题目统计</string>
+    <string name="exam_student_statistics">学生统计</string>
+    <string name="exam_detail">试卷详情</string>
+    <string name="exam_info">试卷信息</string>
+    <string name="exam_school_grade">年级统考</string>
+    <string name="exam_school_class">班级测试</string>
+    <string name="exam_teacher_mine">我的试卷</string>
+    <string name="exam_teacher_real">真题试卷</string>
+    <string name="exam_teacher_exam">测试任务</string>
+    <string name="exam_student_self">自主测试</string>
+    <string name="exam_parents_situation">测试情况</string>
+    <string name="exam_parents_analysis">成绩分析</string>
+    <string name="exam_arrange_select_person">选择人员</string>
+    <string name="exam_arrange_select_person_toast">请选择人员</string>
+    <string name="exam_arrange_select_person_completed">完成</string>
+    <string name="exam_arrange_select_person_confirm">确定</string>
+    <string name="exam_arrange">布置试卷</string>
+    <string name="exam_arrange_start_time_title">设置开始时间</string>
+    <string name="exam_arrange_start_time_empty">开始时间不能为空</string>
+    <string name="exam_arrange_start_time_error_msg">开始时间不能大于结束时间</string>
+    <string name="exam_arrange_end_time_title">设置结束时间</string>
+    <string name="exam_arrange_end_time_empty">结束时间不能为空</string>
+    <string name="exam_arrange_end_time_error_msg">结束时间不能小于开始时间</string>
+    <string name="exam_arrange_time_picker_error_msg">不能选择过去时</string>
+    <string name="exam_arrange_time_picker_exception_msg">控件异常</string>
+    <string name="type_single_choice">单选题</string>
+    <string name="type_multi_choice">多选题</string>
+    <string name="type_judgement">判断题</string>
+    <string name="type_fill_in_blank">填空题</string>
+    <string name="type_ask_answer">问答题</string>
+    <string name="type_computing">计算题</string>
+    <string name="type_text">文本题</string>
+    <string name="type_file">附件题</string>
+    <string name="type_work_content">作业内容：</string>
+    <string name="input_solution">请输入答案</string>
+    <string name="input_answer_page_hint">若输入公式,请至网页作答</string>
+    <string name="answer_solution">答题</string>
+    <string name="exam_overall_commit_cnt">答题人数/测试人数</string>
+    <string name="exam_overall_highest">最高得分</string>
+    <string name="exam_overall_lowest">最低得分</string>
+    <string name="exam_overall_average">平均得分</string>
+    <string name="exam_image_max_count">最多只能选择%1$d张图片</string>
+    <string name="exam_image_upload">上传照片(%1$d)</string>
+    <string name="exam_image_upload_n">上传照片</string>
+    <string name="exam_image_preview">预览</string>
+    <string name="exam_image_select">选择照片</string>
+    <string name="exam_audio_select">选择音频</string>
+    <string name="exam_audio_time">时长 %1$s</string>
+    <string name="exam_audio_date">日期 %1$s</string>
+    <string name="exam_video_select">选择视频</string>
+    <string name="exam_answer_time_yet_to_come">答题时间未到,请稍后</string>
+    <string name="exam_answer_exit_title">是否继续答题?退出答题后，考试倒计时继续，时间结束后自动提交答卷</string>
+    <string name="exam_answer_exit_confirm">是</string>
+    <string name="exam_answer_exit_not">否</string>
+    <string name="exam_submit_success">提交成功</string>
+    <string name="exam_submit_fail">提交失败</string>
+    <string name="exam_answer_submit_yes">确认提交</string>
+    <string name="exam_answer_submit_auto_tip">答题时间已到,3秒后自动提交答卷!</string>
+    <string name="exam_answer_submit_completed">习题已答完,确认要提交吗?</string>
+    <string name="exam_answer_submit_uncompleted">你还有习题未做完,确认要提交吗?</string>
+    <string name="exam_practice">巩固测试</string>
+    <string name="exam_practice_result">巩固结果</string>
+    <string name="exam_practice_no_statistics">无统计信息</string>
+    <string name="exam_statistics_title">试卷统计</string>
+    <string name="exam_no_subjective">无主观题</string>
+    <string name="exam_read_submit">提交</string>
+    <string name="exam_full_screen_read_tip">若需要公示输入，请至网页批阅！</string>
+    <string name="exam_full_screen_do_tip">若需要公示输入，请至网页作答！</string>
+
+
+    <string-array name="exam_subject_name">
+        <item>数学</item>
+        <item>物理</item>
+        <item>化学</item>
+        <item>生物</item>
+        <item>几何</item>
+        <item>代数</item>
+    </string-array>
+    <string-array name="self_states_id">
+        <item>INIT</item>
+        <item>CHECKED</item>
+    </string-array>
+    <string-array name="self_states_name">
+        <item>未完成</item>
+        <item>已完成</item>
+    </string-array>
+    <string-array name="states_name">
+        <item>未完成</item>
+        <item>待批阅</item>
+        <item>已完成</item>
+    </string-array>
+    <string-array name="par_states_name">
+        <item>未开始</item>
+        <item>待批阅</item>
+        <item>已完成</item>
+    </string-array>
+    <string-array name="work_states_id">
+        <item>PROGRESS</item>
+        <item>END</item>
+        <item>CHECKED</item>
+    </string-array>
+    <string-array name="states_id">
+        <item>INIT</item>
+        <item>SUBMITTED</item>
+        <item>CHECKED</item>
+    </string-array>
+    <string-array name="school_states_name">
+        <item>未开始</item>
+        <item>进行中</item>
+        <item>已结束</item>
+    </string-array>
+    <string-array name="work_tea_states_name">
+        <item>待布置</item>
+        <item>待批阅</item>
+        <item>已批阅</item>
+    </string-array>
+    <string-array name="school_states_id">
+        <item>INIT</item>
+        <item>PROGRESS</item>
+        <item>END</item>
+    </string-array>
+    <string-array name="work_stu_states_name">
+        <item>待批阅</item>
+        <item>已批阅</item>
+    </string-array>
+    <string-array name="work_stu_states_id">
+        <item>END</item>
+        <item>CHECKED</item>
+    </string-array>
+    <string-array name="areas_province">
+        <item>河北省</item>
+        <item>山西省</item>
+        <item>辽宁省</item>
+        <item>吉林省</item>
+        <item>黑龙江省</item>
+        <item>江苏省</item>
+        <item>浙江省</item>
+        <item>安徽省</item>
+        <item>福建省</item>
+        <item>江西</item>
+        <item>山东省</item>
+        <item>河南省</item>
+        <item>湖北省</item>
+        <item>湖南省</item>
+        <item>广东省</item>
+        <item>海南省</item>
+        <item>四川省</item>
+        <item>贵州省</item>
+        <item>云南省</item>
+        <item>陕西省</item>
+        <item>甘肃省</item>
+        <item>青海省</item>
+        <item>台湾省</item>
+        <item>内蒙古</item>
+        <item>广西</item>
+        <item>宁夏</item>
+        <item>辽宁省</item>
+        <item>新疆</item>
+    </string-array>
+    <string name="refresh_state_no_more">没有更多加载！</string>
+    <string name="refresh_state_loading">加载中&#8230;</string>
+    <string name="refresh_state_up_loadmore">上滑加载更多。</string>
+    <string name="refresh_state_loade_error">数据加载失败！</string>
+    <string name="exam_recording_time">00:00:00</string>
+
+    <!-- 作业 -->
+    <string name="work_title">作业</string>
+    <string name="read_work_list">批阅</string>
+    <string name="read_browser_work_list">查看批阅</string>
+    <string name="statistic_work_list">统计</string>
+    <string name="arrange_work">布置</string>
+    <string name="arrange_work_dialog">确认要布置该作业吗？</string>
+    <string name="arrange_work_success">布置成功!</string>
+    <string name="arrange_work_failure">布置失败!</string>
+    <string name="work_name">作业名称</string>
+    <string name="work_publish_time">发布时间</string>
+    <string name="work_finish_info">完成情况</string>
+    <string name="work_item_count">作业题量</string>
+    <string name="work_subjective_count">主观题量</string>
+    <string name="work_objective_count">客观题量</string>
+    <string name="work_accuracy_statistic">正确率统计</string>
+    <string name="work_total_accuracy_statistic">总正确率 %1$s</string>
+    <string name="work_read_submit">提交</string>
+    <string name="work_read_submit_success">提交成功</string>
+    <string name="work_read_go_on">继续批阅</string>
+    <string name="work_un_read_number">人待批阅</string>
+    <string name="work_un_read_item_number">题待批阅</string>
+    <string name="work_read_comment_hint">请输入点评</string>
+    <string name="work_overall_comment_title">总体评价:</string>
+    <string name="work_insert_comment_title">插入点评:</string>
+    <string name="answer_title">回答:</string>
+    <string name="file_tip">手机端无法查看附件，您可在PC端查看</string>
+    <string name="comment_list_tip">请选择</string>
+    <string name="work_item_name">作业</string>
+    <string name="work_item_difficulty">难易度 </string>
+    <string name="work_item_analysis">习题解析 </string>
+    <string name="work_item_knowlege">知识点 </string>
+    <string name="work_item_comment">老师点评 </string>
+    <string name="work_title_read_by_item">按习题批阅</string>
+    <string name="work_item_stu_answer">学生答案</string>
+    <string name="work_read_comment_failure_tip">无法获取到点评信息！</string>
+    <string name="work_read_no_overall_comment">请添加总体评价！</string>
+    <string name="work_answer_submit_success">上传成功！</string>
+    <string name="work_answer_submit_failure">上传失败！</string>
+    <string name="work_audio_can_not_play">音频无法播放</string>
+    <string name="work_item_comment_no">暂无评论</string>
+    <string name="work_answer_submit_tip">习题未答完，确认提交吗？</string>
+    <string name="work_read_submit_tip">习题未批阅完，确认提交吗？</string>
+    <string name="work_answer_submit_tip_2">确认提交吗？</string>
+    <string name="work_pic_submit_success">图片已上传</string>
+    <string name="work_audio_submit_success">音频已上传</string>
+    <string name="work_video_submit_success">视频已上传</string>
+    <string name="work_static_no_finish">无完成情况统计！</string>
+    <string name="work_stu_list_no_person">无学生提交作业</string>
+    <string name="work_stu_list_read_by_stu">该套作业为学生互评！</string>
+    <string name="work_stu_list_read_by_stu_specific">该套作业为指定学生批阅！</string>
+    <string name="work_fill_answer_index">(%1$s)</string>
+    <string name="work_answer_have_audio">已添加音频，长按删除后即可添加视频</string>
+    <string name="work_answer_have_video">已添加视频，长按删除后即可添加音频</string>
+    <string name="work_tip_have_attachment">该套作业有附件题，请到PC端作答！</string>
+    <string name="tips_have_eight_pics">已满8张图片！长按删除后即可再次添加图片</string>
+    <string name="work_fill_blank_answer">%1$s   %2$s</string>
+    <string name="work_read_by_item_no_read_count">已没有主观题可批阅！</string>
+    <string name="work_info_subject">学科</string>
+    <string name="work_info_reader">批阅人</string>
+    <string name="work_info_submit">已提交</string>
+    <string name="work_info_not_submit">未提交</string>
+    <string name="work_info_assign_time">布置时间</string>
+    <string name="work_info_deadline">结束时间</string>
+    <string name="work_info_title">作业信息</string>
+    <string name="first_page">首页</string>
+    <string name="total_comment">总体评价</string>
+    <string name="work_item_info">题目信息</string>
+    <string name="todayClass">今日课程：%1$d</string>
+    <string name="video_list">视频列表</string>
+    <string name="video_list_count">共%1$s段</string>
+    <string name="class_detail">课程详情</string>
+    <string name="upload_work">上传作业</string>
+    <string name="tip_delete_image">确定删除该图片？</string>
+    <string name="tip_delete_audio">确定删除该资源？</string>
+
+    <string name="grade_lb">年级：%1$s</string>
+    <string name="duration_lb">答题时长：%1$d</string>
+    <string name="create_time_lb">创建时间：%1$s</string>
+
+    <!--微博-->
+    <string name="weibo_list_item_share">转发</string>
+    <string name="weibo_list_item_comment">评论</string>
+    <string name="weibo_list_item_favour">赞</string>
+    <string name="weibo_search_people">请输入姓名或用户名搜索</string>
+    <string name="weibo_has_add_friend">已关注</string>
+    <string name="weibo_has_remove_fans">已移除粉丝</string>
+    <string name="weibo_has_remove_msg">已移除私信</string>
+    <string name="weibo_add_friend">+关注</string>
+    <string name="weibo_has_delete_friend">已取消关注</string>
+    <string name="weibo_delete_fans">移除粉丝</string>
+    <string name="weibo_delete">删除</string>
+    <string name="weibo_shield_msg">屏蔽私信</string>
+    <string name="weibo_has_shield_msg">已屏蔽私信</string>
+    <string name="weibo_delete_shield_msg">取消屏蔽</string>
+    <string name="weibo_has_delete_shield_msg">已取消屏蔽</string>
+    <string name="weibo_turn_blog">转发微博</string>
+    <string name="weibo_original_delete">原微博已删除！</string>
+    <string name="weibo_has_lock">微博已锁定!</string>
+
+    <string name="title_activity_rethink_details">RethinkDetailsActivity</string>
+    <string name="rethink_details">教学反思详情</string>
+    <string name="recommend">推荐</string>
+    <string name="say_something">我来说两句</string>
+    <string name="rely">回复</string>
+    <string name="comment_lb">%1$s: %2$s</string>
+    <string name="rely_lb">%1$s回复%2$s：%3$s</string>
+    <string name="more_relies">更多回复</string>
+    <string name="login_successfully">登录成功</string>
+    <string name="by_write_time">按撰写时间</string>
+    <string name="click_count">点击量</string>
+    <string name="browse_count">阅读量</string>
+    <string name="rate">评分</string>
+
+    <!--圈组-->
+    <string name="group_creator">创建人</string>
+    <string name="group_create_time">创建时间</string>
+    <string name="group_team">组别</string>
+    <string name="group_desc">简介：</string>
+    <string name="group_child_module">子模块</string>
+    <string name="group_detail">圈组详情</string>
+    <string name="group_subject_detail">学科</string>
+    <string name="group_subject">学\ \ \ \ 科</string>
+    <string name="group_category">分\ \ \ \ 类</string>
+    <string name="group_status_approved">通过</string>
+    <string name="group_status_wait">审核中</string>
+    <string name="group_status_wait_check">待处理</string>
+    <string name="group_status_reject">未通过</string>
+    <string name="group_status_close">被关闭</string>
+    <string name="person_info">个人资料</string>
+    <string name="person_lesson_prepare">教案</string>
+    <string name="blog_title">博文</string>
+    <string name="blog_all_title">全部博文</string>
+    <string name="class_blog_title">班级博文</string>
+    <string name="group_blog_title">圈组博文</string>
+    <string name="blog_detail_title">博文详情</string>
+    <string name="resource_share">资源</string>
+    <string name="weibo">微博</string>
+    <string name="members">成员</string>
+    <!--博文 -->
+    <string name="blog_hot">热门博文</string>
+    <string name="blog_all">全部博文</string>
+    <string name="details">详情</string>
+    <string name="simple_rethink">反思</string>
+    <string name="click_to_download">点击下载</string>
+    <string name="comment">评论</string>
+    <string name="courseware">课件</string>
+
+    <string name="office_no_support">暂不支持在线浏览Office教案</string>
+    <string name="lesson_plan_details">教案详情</string>
+    <string name="view_rethink">查看反思</string>
+    <string name="type">类型</string>
+    <string name="cancel_recommend">取消推荐</string>
+    <string name="recommend_failed">推荐失败！</string>
+    <string name="cancel_recommend_failed">取消推荐失败！</string>
+    <string name="n_comments">%1$d评论</string>
+    <string name="original">原文</string>
+    <string name="publish">发表</string>
+    <string name="publish_comment_successfully">发表评论成功！</string>
+    <string name="rely_to">回复%1$s</string>
+    <string name="save_rethink_failed">反思保存失败！</string>
+
+    <string name="test_number">测验题号(%1$d/%2$d)</string>
+    <string name="confirm_to_delete_comment">删除此评论？</string>
+    <string name="confirm_to_delete_reply">删除此回复？</string>
+    <string name="get_tutorial_test_failed">获取随堂测验失败，请检查网络！</string>
+    <string name="click_to_open">点击查看</string>
+    <string name="office_not_support_and_no_sdcard">暂不支持在线浏览Office教案\n没有SD卡无法下载</string>
+    <string name="view">查看</string>
+    <string name="disable_of_transform_failure">文档转换失败的课件，无法下载或查看！</string>
+    <string name="download">下载</string>
+    <string name="group_personal_lesson_plan">圈组个人备课</string>
+    <string name="name_and_time">%1$s | %2$s</string>
+    <string name="put_top_something">[置顶] %1$s</string>
+    <string name="nothingness">无</string>
+    <string name="main_teacher_is">"主讲老师 %1$s"</string>
+    <string name="open_lesson_time_is">"开课时间 %1$s"</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="server_address">服务器地址</string>
+    <string name="n_times">%1$s次</string>
+    <string name="stat_classroom_role_format">%1$s-%2$s（%3$s）</string>
+    <string name="stat_receive_role_format">%1$s-%2$s</string>
+    <!--<string name="courses_profile_main">%1$s-主讲教室（主讲）</string>-->
+    <!--<string name="courses_profile_main_invited">%1$s-主讲教室（受邀）</string>-->
+    <!--<string name="courses_profile_receiving">%1$s-接收教室</string>-->
+
+    <string name="w_courses_profile">%1$s开课概况</string>
+
+    <!--<string name="courses_proportion_main">%1$s-主讲教室（主讲）</string>-->
+    <!--<string name="courses_proportion_main_invited">%1$s-主讲教室（受邀）</string>-->
+    <!--<string name="courses_proportion_receiving">%1$s-接收教室</string>-->
+
+    <string name="classroom_role_format">%1$s（%2$s）</string>
+
+    <string name="title_activity_courses_proportion_table">CoursesProportionTableActivity</string>
+    <string name="scope_week">按周统计</string>
+    <string name="scope_month">按月统计</string>
+    <string name="scope_term">学期统计</string>
+
+    <string name="subject_statistics">学科统计</string>
+    <string name="author">作者</string>
+    <string name="confirm">确定</string>
+
+    <string name="to">至</string>
+    <string name="confirm_filter">确认筛选</string>
+
+    <string name="n_score">%s分</string>
+    <string name="d_score">%d.0分</string>
+    <string name="publisher_who">发布人：%1$s</string>
+    <string name="publish_time_when">发布时间：%1$s</string>
+    <string name="play_n">播放：%1$s</string>
+    <string name="view_n">浏览：%1$s</string>
+    <string name="collect_n">收藏：%1$s</string>
+    <string name="summary_what">简介：%1$s</string>
+    <string name="sharer_who">共享人：%1$s</string>
+    <string name="shared_n_times">共分享%1$s条</string>
+
+    <!-- 网络授课-->
+    <string name="net_teach">网络授课</string>
+    <string name="net_teach_my_create">我创建的</string>
+    <string name="net_teach_area_manager">区内课程管理</string>
+    <string name="net_teach_school_manager">本校课程管理</string>
+    <string name="net_teach_my">我的课程</string>
+    <string name="course_info">课程信息</string>
+    <string name="no_data_pull_to_refresh">没有数据，下拉刷新！</string>
+
+    <string-array name="numbers">
+        <item>零</item>
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+        <item>四</item>
+        <item>五</item>
+        <item>六</item>
+        <item>七</item>
+        <item>八</item>
+        <item>九</item>
+        <item>十</item>
+    </string-array>
+
+    <string-array name="profile_main_table_titles">
+        <item>应开课教室</item>
+        <item>实开课教室</item>
+        <item>开课教室占比</item>
+        <item>计划课时</item>
+        <item>实开课时</item>
+        <item>实开课时占比</item>
+        <item>平均开课</item>
+    </string-array>
+
+    <string-array name="profile_school_table_titles">
+        <item>计划课时</item>
+        <item>实开课时</item>
+        <item>实开课时占比</item>
+    </string-array>
+
+    <string-array name="profile_invited_table_titles">
+        <item>应受邀教室</item>
+        <item>实受邀教室</item>
+        <item>受邀教室占比</item>
+        <item>计划课时</item>
+        <item>实听课时</item>
+        <item>实听课时占比</item>
+        <item>平均开课</item>
+    </string-array>
+
+    <string-array name="subject_area_table_titles">
+        <item>学科</item>
+        <item>计划开课时</item>
+        <item>应开课时</item>
+        <item>实开课时</item>
+        <item>开课时比例</item>
+    </string-array>
+
+    <string-array name="subject_school_table_titles">
+        <item>计划开课时</item>
+        <item>应开课时</item>
+        <item>实开课时</item>
+        <item>开课时比例</item>
+    </string-array>
+
+    <!--辅导-->
+    <string name="tutors_ship_detail_title">课堂详情</string>
+    <string name="tutors_ship_detail_create_real_name">创建人:%1$s</string>
+    <string name="tutors_ship_detail_create_time">创建时间:%1$s</string>
+    <string name="tutors_ship_detail_begin_time">开课时间:%1$s</string>
+    <string name="tutors_ship_detail_registers">%1$d人签到</string>
+    <string name="tutors_ship_detail_unregisters">%1$d人未签到</string>
+
+    <string name="please_type_in_comment_content">请输入评论内容</string>
+    <string name="username_or_pw_wrong">用户名或密码错误</string>
+    <string name="total_comments">全部评论(%1$d)</string>
+    <string name="no_some_type_resources">暂无%s相关数据</string>
+    <string name="loading_user_info">加载用户信息中...</string>
+    <string name="audio">音频</string>
+    <string name="image">图片</string>
+    <string name="no_show_document">暂无演示内容</string>
+
+    <string name="teacher_type_lb">%1$s：</string>
+    <string name="classroom_count_lb">%1$s课堂数</string>
+
+    <string name="obtain_s_failed">获取%1$s失败！</string>
+
+</resources>

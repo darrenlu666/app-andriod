@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:minHeight="100dp">
+
+    <ImageView
+        android:id="@+id/group_collective_state"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/unstart" />
+
+    <ImageView
+        android:id="@+id/group_collective_public"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/lesson_public" />
+
+    <TextView
+        android:id="@+id/group_collective_text_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/group_collective_state"
+        android:singleLine="true"
+        android:text="haha | asdfasdfasdf" />
+
+    <TextView
+        android:id="@+id/group_collective_text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/group_collective_text_center"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/group_collective_state"
+        android:singleLine="true"
+        android:text="title"
+        android:textColor="@color/fistpageclass_gridview_item_textcolor"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/group_collective_text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/group_collective_text_center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/group_collective_state"
+        android:singleLine="true"
+        android:text="预计时长：" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/group_collective_state"
+        android:background="@color/divider" />
+
+</RelativeLayout>

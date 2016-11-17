@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.codyy.erpsportal.commons.widgets.CheckableRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:paddingRight="16dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:textColor="#707070"
+        android:textSize="14sp"
+        android:minEms="3"
+        android:maxEms="5"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:background="@drawable/bg_filter_rectangle_grey"
+        tools:text="学段" />
+
+    <CheckedTextView
+        android:id="@+id/content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/title"
+        android:layout_toStartOf="@id/title"
+        android:textColor="@color/choice"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textAlignment="gravity"
+        tools:text="初中" />
+
+</com.codyy.erpsportal.commons.widgets.CheckableRelativeLayout>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/user_bg_color"
+    android:orientation="vertical"
+    android:scrollbars="none">
+    <include layout="@layout/toolbar_layout"/>
+    <com.codyy.erpsportal.commons.widgets.EmptyView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:visibility="gone"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/user_bg_color"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rlt_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/user_item_color"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/sdv_my_head_icon"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="10dp"
+                android:background="@color/transparent"
+                fresco:placeholderImage="@drawable/icon_default_photo"
+                />
+
+            <TextView
+                android:id="@+id/tv__my_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/sdv_my_head_icon"
+                android:ellipsize="end"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:textColor="@color/user_text_color_content"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/lin_class_namespace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:background="@color/white"
+            >
+            <TextView
+                android:id="@+id/tv_class_namespace_desc"
+                style="@style/style_my_simple_text_no_selector"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_my_class_space"
+                android:text="班级空间"/>
+            <TextView
+                android:id="@+id/tv_class_namespace"
+                style="@style/style_my_simple_text_no_selector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                tools:text="一年级(1)班、二年级(2)班、三年级(3)班"
+                />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_WeiBo"
+            style="@style/style_my_simple_text_item2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:drawableLeft="@drawable/ic_my_weibo"
+            android:text="微博"/>
+        <TextView
+            android:id="@+id/tv_blog_post"
+            style="@style/style_my_simple_text_item2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_my_blog"
+            android:text="博文"/>
+        <TextView
+            android:id="@+id/tv_good_resource"
+            style="@style/style_my_simple_text_item2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_my_resource"
+            android:text="优课资源"
+            />
+       </LinearLayout>
+</LinearLayout>

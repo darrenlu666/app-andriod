@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="entity"
+            type="com.codyy.erpsportal.county.controllers.models.entities.CountyListItemDetail" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <include layout="@layout/toolbar_layout" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:onClick="titleClick">
+
+            <TextView
+                android:id="@+id/enter_tv"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/main_color"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="enterClass"
+                android:text="进入课堂"
+                android:textColor="@color/white"
+                android:visibility='@{"PROGRESS".equals(entity.status)?View.VISIBLE:View.GONE}' />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_toLeftOf="@id/enter_tv"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text='@{entity.teacherName==null?"姓名":entity.teacherName}'
+                android:textColor="#444444"
+                android:textSize="18dp"
+                tools:text="刘若英" />
+
+            <TextView
+                android:id="@+id/editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textView4"
+                android:layout_alignStart="@+id/textView4"
+                android:layout_below="@+id/textView4"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text='@{entity.schoolName==null?"学校":entity.schoolName+"("+entity.roomName+")"}'
+                android:textColor="#555555"
+                tools:text="实验小学（主讲教室1）" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/editText"
+                android:layout_alignStart="@+id/editText"
+                android:layout_below="@+id/editText"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text='@{entity.classlevel!=null?entity.classlevel+"/"+entity.subject:"年级/学科"}'
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#666666"
+                tools:text="一年级/语文" />
+
+
+            <LinearLayout
+                android:id="@+id/plan_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp">
+
+                <TextView
+                    style="@style/conty_item_detail_text"
+                    android:text='@{entity.classlevel==null?"年级/学科":entity.classlevel+"/"+entity.subject}'
+                    tools:text="一年级/语文" />
+
+                <TextView
+                    style="@style/conty_item_detail_text"
+                    android:text='@{entity.dayStr==null?"星期/节次":"星期"+entity.dayStr+"/第"+entity.classStr+"节"}'
+                    tools:text="星期三/第一节" />
+
+                <TextView
+                    style="@style/conty_item_detail_text"
+                    android:text='@{entity.strScheduleDate==null?"":entity.strScheduleDate}'
+                    tools:text="2016-06-18" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/libetry_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/conty_item_detail_text"
+                    android:text='@{"计划课时 "+entity.planTimes}'
+                    tools:text="计划课时 20" />
+
+                <TextView
+                    style="@style/conty_item_detail_text"
+                    android:text='@{"实际课时 "+entity.actualTimes}'
+                    tools:text="实际课时 25" />
+
+                <TextView
+                    style="@style/conty_item_detail_text"
+                    android:text='@{"本周课时 "+entity.weekTimes}'
+                    tools:text="本周课时 65" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="#f7f7f7" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider" />
+
+        <ListView
+            android:id="@+id/item_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:divider="@null"
+            android:layoutAnimation="@anim/list_item_show"
+            android:scrollbars="none"
+            tools:listitem="@layout/item_conty_itemdetail_classitem" />
+    </LinearLayout>
+</layout>

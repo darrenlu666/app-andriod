@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <ImageView
+        android:id="@+id/ib_showDocument"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_doc_show"
+        android:scaleType="centerInside"
+        android:padding="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        />
+        <TextView
+            android:id="@+id/tv_documentName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            tools:text="文档1文档1文档1文档1文档1文档1文档1文档1文档1文档1文档1文档1文档1文档1文档1文档1文档1"
+            android:textSize="15sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            android:layout_marginRight="40dp"
+            android:singleLine="true"
+            />
+
+    <TextView
+        android:id="@+id/tv_documentAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_documentName"
+        android:text="张三"
+        android:textSize="15sp"
+        android:paddingLeft="15dp"
+        />
+
+</RelativeLayout>

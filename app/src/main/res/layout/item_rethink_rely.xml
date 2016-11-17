@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="72dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="72dp"
+                android:background="@drawable/bg_bottom_line_with_gray_bg"
+                android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:textSize="18sp"
+        tools:text="苏小小：附加地方都交了罚金开发；大了菲拉法拉家纺垃圾法力解放拉萨附近啊"/>
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_content"
+        android:layout_alignStart="@id/tv_content"
+        android:layout_below="@id/tv_content"
+        android:layout_marginTop="8dp"
+        android:text="2015-08-16 15:30"
+        android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btn_rely"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/tv_time"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="?selectableItemBackground"
+        android:drawableLeft="@drawable/weibo_comment"
+        android:drawablePadding="4dp"
+        android:drawableStart="@drawable/weibo_comment"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:text="@string/rely"
+        android:textColor="@color/md_grey_600"
+        android:textSize="16sp"/>
+</RelativeLayout>

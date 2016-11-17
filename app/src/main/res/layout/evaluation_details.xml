@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.codyy.erpsportal.commons.widgets.BnVideoView2
+        android:id="@+id/evaluation_details_bnVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/evaluation_textview_novideo"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:gravity="center"
+        android:text="视频未上传"
+        android:textColor="#fff"
+        android:textSize="18dp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/evaluation_details_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_title_height"
+        android:background="#66000000">
+
+        <Button
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_video"
+            android:onClick="onBackClick" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="评课"
+            android:textColor="#fff"
+            android:textSize="@dimen/layout_title_text_size" />
+
+        <Button
+            android:id="@+id/evaluation_list_heardview_btn_down"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/circle_bg_green"
+            android:text="下载"
+            android:textColor="@color/main_color"
+            android:textSize="15sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/evaluation_details_fullscreen"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignBottom="@id/evaluation_details_bnVideoView"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="3dp"
+        android:layout_marginRight="3dp"
+        android:background="@drawable/poe_select_video_expand"
+        android:scaleType="centerInside" />
+
+    <com.codyy.erpsportal.commons.widgets.BNVideoControlView
+        android:id="@+id/evaluation_widgets_VideoControlView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignBottom="@id/evaluation_details_bnVideoView" />
+
+
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/evaluation_layout_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/evaluation_details_bnVideoView"
+        android:background="#fff"
+        android:divider="@null"
+        ptr:ptrDrawable="@drawable/loading_bg"
+        ptr:ptrMode="both"
+        ptr:ptrShowIndicator="false" />
+
+    <TextView
+        android:id="@+id/evaluation_layout_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/evaluation_details_bnVideoView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:text="暂无评论"
+        android:textColor="@color/green" />
+
+</RelativeLayout>

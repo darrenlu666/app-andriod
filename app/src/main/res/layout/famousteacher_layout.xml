@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/gl_teachers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:columnCount="2" >
+        <FrameLayout
+            android:id="@+id/bar_teachers1"
+            android:background="#f2f2f2"
+            app:layout_columnSpan="2"
+            app:layout_gravity="fill">
+            <TextView
+                android:id="@+id/tv_teachers1"
+                style="@style/title_above_line_point_line"
+                android:layout_gravity="center"
+                android:text="@string/teacher_recommendation"/>
+        </FrameLayout>
+    </android.support.v7.widget.GridLayout>
+
+</LinearLayout>

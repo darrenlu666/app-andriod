@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--在线视频会议的相关style-->
+<resources>
+
+    <style name="style_center">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="style_relative_center_vertical">
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="txt_online_interact_theme_title" parent="style_center">
+
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/md_white_1000</item>
+        <item name="android:background">@color/md_black_1000</item>
+    </style>
+
+    <style name="img_online_user_icon" >
+
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_centerVertical">true</item>
+
+    </style>
+    <style name="img_online_user_icon2" parent="style_center">
+
+            <item name="android:scaleType">centerInside</item>
+            <item name="android:layout_margin">10dp</item>
+            <item name="android:layout_centerVertical">true</item>
+
+    </style>
+
+
+    <style name="txt_online_user_txt_content" >
+
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/md_black_1000</item>
+
+    </style>
+
+    <style name="txt_online_user_txt_desc">
+
+        <item name="android:textSize">13sp</item>
+
+    </style>
+
+    <style name="txt_group_txt_Title" >
+        <item name="android:textSize">@dimen/poe_txt_size_title</item>
+        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">0dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:minLines">1</item>
+    </style>
+
+    <style name="txt_group_txt_state" >
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/md_orange_A400</item>
+        <item name="android:padding">1dp</item>
+    </style>
+
+    <style name="txt_blog_comment_item_title" >
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="txt_group_txt_desc">
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="txt_my_interact_video">
+        <item name="android:textSize">@dimen/poe_txt_size_little</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:background">@drawable/select_rectangle_grey</item>
+    </style>
+    <style name="txt_my_interact_partner_control">
+        <item name="android:textSize">@dimen/poe_txt_size_little</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:background">@drawable/poe_grey_rectangle_bg</item>
+    </style>
+    <style name="img_my_interact_partner_control">
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_margin">0dp</item>
+    </style>
+    <style name="txt_my_video_btn">
+        <item name="android:textSize">@dimen/poe_txt_size_little</item>
+        <item name="android:paddingLeft">3dp</item>
+        <item name="android:paddingTop">1dp</item>
+        <item name="android:paddingRight">3dp</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/select_rectangle_grey</item>
+    </style>
+</resources>

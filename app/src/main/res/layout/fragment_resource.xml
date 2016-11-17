@@ -1,0 +1,23 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".resource.controllers.fragments.ResourcesFragment">
+
+    <com.handmark.pulltorefresh.library.PullToRefreshGridView
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:horizontalSpacing="4dp"
+        android:numColumns="2"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        ptr:ptrDrawable="@drawable/loading_bg" />
+
+    <com.codyy.erpsportal.commons.widgets.EmptyView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</FrameLayout>

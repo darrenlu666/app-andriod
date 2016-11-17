@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:clickable="true"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/circle_bg_select"
+        android:padding="1dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/search_layout_video_simple"
+            android:layout_width="80dp"
+            android:layout_height="fill_parent"
+            fresco:placeholderImage="@drawable/placeholder_middle"
+            fresco:roundedCornerRadius="8dp" />
+
+        <TextView
+            android:id="@+id/search_layout_video_text_titel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/search_layout_video_simple"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/search_layout_video_simple"
+            android:layout_toRightOf="@id/search_layout_video_simple"
+            android:singleLine="true"
+            android:text="New Text"
+            android:textColor="@color/fistpageclass_gridview_item_textcolor"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/search_layout_video_text_publicname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/search_layout_video_text_titel"
+            android:layout_alignStart="@+id/search_layout_video_text_titel"
+            android:layout_below="@+id/search_layout_video_text_titel"
+            android:layout_marginTop="5dp"
+            android:text="New Text"
+            android:textColor="#929292"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/search_layout_video_text_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/search_layout_video_text_publicname"
+            android:layout_alignStart="@+id/search_layout_video_text_publicname"
+            android:layout_below="@+id/search_layout_video_text_publicname"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/play_video"
+            android:drawablePadding="10dp"
+            android:text="New Text"
+            android:textSize="13sp" />
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/search_layout_video_text_number"
+            android:layout_alignStart="@+id/search_layout_video_text_number"
+            android:layout_below="@+id/search_layout_video_text_number"
+            android:layout_marginTop="5dp"
+            android:text="评分："
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/search_layout_video_ratingAvg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_toEndOf="@+id/textView3"
+            android:layout_toRightOf="@+id/textView3"
+            android:text="9.7分"
+            android:textSize="14sp" />
+
+        <!--    <TextView
+                android:id="@+id/search_layout_video_tatingbar"
+                style="@style/my_ratingbar"
+                android:layout_width="wrap_content"
+                android:layout_height="15dp"
+                android:layout_alignBottom="@+id/textView3"
+                android:layout_toEndOf="@+id/textView3"
+                android:layout_toRightOf="@+id/textView3"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:rating="2.5" />-->
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<RatingBar xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/my_ratingbar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical" />-->
+
+<RatingBar xmlns:android="http://schemas.android.com/apk/res/android"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:gravity="center_vertical"
+           android:layout_gravity="center_vertical"
+           android:indeterminateDrawable="@drawable/ratingbar_drawable"
+           android:isIndicator="true"
+           android:minHeight="13dp"
+           android:numStars="5"
+           android:progressDrawable="@drawable/ratingbar_drawable"
+           android:rating="0"/>

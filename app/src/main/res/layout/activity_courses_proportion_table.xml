@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.codyy.erpsportal.statistics.controllers.activities.CoursesProportionTableActivity">
+
+    <RelativeLayout
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_title_height"
+        android:background="@color/main_green" >
+
+        <Button
+            android:id="@+id/btn_return"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_btn_bg"/>
+
+        <Button
+            android:id="@+id/btn_date_scope"
+            style="@style/TextButtonInLeftOfTitleBar"
+            android:text="学期统计"/>
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/btn_return"
+            android:layout_toRightOf="@id/btn_return"
+            android:layout_toStartOf="@id/btn_date_scope"
+            android:layout_toLeftOf="@id/btn_date_scope"
+            android:layout_alignWithParentIfMissing="true"
+            android:scrollbars="none">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/layout_title_text_size"
+                tools:text="开课比分析-主讲教室(主讲)"/>
+        </HorizontalScrollView>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_bar"/>
+
+</RelativeLayout>

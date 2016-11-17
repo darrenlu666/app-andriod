@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:clickable="true"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/circle_bg_select"
+        android:padding="1dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/search_resource_simpledraweeview"
+            android:layout_width="100dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true"
+            fresco:placeholderImage="@drawable/placeholder_middle"
+            fresco:roundedCornerRadius="8dp" />
+
+        <TextView
+            android:id="@+id/search_resource_text_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/search_resource_simpledraweeview"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="title:\n"
+            android:textColor="@color/fistpageclass_gridview_item_textcolor"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/search_resource_text_cont"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/search_resource_text_title"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/search_resource_simpledraweeview"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="title\n"
+            android:textColor="#929292"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</RelativeLayout>

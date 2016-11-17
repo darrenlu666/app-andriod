@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.codyy.erpsportal.reservation.models.entities.ReservationClassItem" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:onClick="@{(theview)->item.onClick(theview,item)}"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/item_reservation_class_simpledrawee"
+            android:layout_width="@dimen/list_image_length"
+            android:layout_height="@dimen/list_image_length"
+            android:layout_centerVertical="true"
+            app:placeholderImage="@drawable/school_holder"
+            app:placeholderImageScaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/item_reservation_class_simpledrawee"
+            android:layout_toRightOf="@+id/item_reservation_class_simpledrawee"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@{item.schoolName}"
+            android:textColor="#222222"
+            android:textSize="18dp"
+            tools:text="XXXXXXX小学" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView8"
+            android:layout_alignStart="@+id/textView8"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@{item.schoolAreaPath}"
+            android:textColor="#777777"
+            android:textSize="14dp"
+            tools:text="安徽省-安庆市" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView9"
+            android:layout_alignStart="@+id/textView9"
+            android:layout_below="@id/textView9"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text='@{item.masterCount +"个互动教室"}'
+            android:textColor="#555555"
+            android:textSize="16dp"
+            tools:text="33个直录播教室" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/divider" />
+    </RelativeLayout>
+</layout>

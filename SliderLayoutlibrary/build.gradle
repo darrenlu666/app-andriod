@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion COMPILE_SDK_VERSION as int
+    buildToolsVersion BUILD_TOOLS_VERSION
+
+    defaultConfig {
+        minSdkVersion MIN_SDK_VERSION as int
+        targetSdkVersion TARGET_SDK_VERSION as int
+        versionCode 15
+        versionName "1.1.5"
+    }
+    buildTypes {
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    lintOptions {
+          abortOnError false
+      }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile "com.android.support:appcompat-v7:${SUPPORT_VERSION}"
+    compile "com.android.support:support-v4:${SUPPORT_VERSION}"
+    compile 'com.nineoldandroids:library:2.4.0'
+//    compile project(':drawee-pipeline-release')
+//    compile project(':drawee-release')
+//    compile project(':fbcore-release')
+//    compile project(':imagepipeline-release')
+//    compile project(':imagepipeline-base')
+    compile 'com.facebook.fresco:fresco:0.14.1'
+    compile 'com.facebook.fresco:animated-gif:0.14.1'
+}

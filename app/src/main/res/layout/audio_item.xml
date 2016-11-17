@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginBottom="5dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/container_audio"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/customer_audio_bg_l"
+        android:gravity="left|center_vertical">
+
+        <ImageView
+            android:id="@+id/iv_audio_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/audio_bar_animation" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_audio_time"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:paddingLeft="5dp" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp">
+
+        <ImageView
+            android:id="@+id/iv_audio_upload_failure"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/audio_upload_failure"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/iv_uploading"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/upload_progress_animation"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </FrameLayout>
+
+</LinearLayout>

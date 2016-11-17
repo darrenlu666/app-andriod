@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.codyy.erpsportal"
+    android:installLocation="preferExternal">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <!-- user features -->
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <!-- 系统悬浮框权限 6.0后需单独请求-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- tesssst -->
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
+
+    <application
+        android:name=".EApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <service
+            android:name=".commons.services.uploadServices.UploadService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.yourcompany.yourapp.uploadservice.action.upload" />
+            </intent-filter>
+        </service>
+        <service android:name=".commons.services.BackService" />
+        <service
+            android:name=".exam.services.PollingService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.codyy.erpsportal.services.exam.polling.PollingService" />
+                <category android:name="android.intent.category.default" />
+            </intent-filter>
+        </service>
+        <service android:name=".commons.services.RemoteBackService" />
+
+        <receiver android:name=".commons.receivers.ConnectionChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".commons.controllers.activities.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".commons.controllers.activities.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.ListenDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.SettingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.ResetPasswordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.SearchInputActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.LocationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.SingleChatActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".info.controllers.activities.InfoActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.CollectivePrepareLessonsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.CollectivePrepareLessonsDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".commons.controllers.activities.GroupCollectiveActivityDetail"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".commons.controllers.activities.LiveClassActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.HomeWorkActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.HomeWorkNewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.ActivityThemeActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".commons.controllers.activities.HomeWorkDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".info.controllers.activities.MoreInformationActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.ClassMemberActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.CollectivePrepareLessonsNewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.LiveVideoPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.HistoryVideoPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.CacheVideoPlayActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.RateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.EvaluationActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.EvaluationAllActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.RemoteDirectorListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.RemoteDirectorNewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.ActivityThemeVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".onlineteach.controllers.activities.NetTechVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.RemoteDirectorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".resource.controllers.activities.VideoDetailsActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:label="@string/title_activity_video_details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.AudioDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.DocumentContentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.DocumentDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.ImageDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.PicturesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent" />
+        <activity
+            android:name=".resource.controllers.activities.DocumentCommentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".onlinemeetings.controllers.activities.VideoMeetingActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".onlinemeetings.controllers.activities.VideoMeetingDetailActivity"
+            android:label="@string/title_activity_video_meeting_detail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".onlinemeetings.controllers.activities.VideoMeetingPlayActivity"
+            android:label="@string/title_activity_video_meeting_detail"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".statistics.controllers.activities.StatisticalActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.RemoteDirectorListForClassActivity"
+            android:label="@string/title_activity_statistical" />
+        <activity
+            android:name=".statistics.controllers.activities.OrgStatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.AssessmentClassActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".onlinemeetings.controllers.activities.OnlineLiveVideoPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="landscape"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".onlinemeetings.controllers.activities.OnlineMeetingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.MoreBlogPostsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.GroupBlogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.BlogPostDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".groups.controllers.activities.MoreGroupListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.GroupSpaceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".groups.controllers.activities.GroupSpaceDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.GroupSpaceDetailManagerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.GroupManagerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.GroupMemberActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.PersonActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.PublicUserActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.ClassSpaceActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme"
+            android:launchMode="singleInstance"
+            />
+
+        <activity
+            android:name=".groups.controllers.activities.MyBlogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.ClassBlogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".groups.controllers.activities.GroupBlogMoreActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".onlineteach.controllers.activities.OnlineTeachActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".onlineteach.controllers.activities.OnlineTeachDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".commons.controllers.activities.CacheResourceActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.AssessmentDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.MoreResourcesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.ParentsResourcesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.HomeWorkItemDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".info.controllers.activities.InfoDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.ResourceKnowledgeFilterAct"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.UserTimeTableActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.ResourcePropertyFilterAct"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.ClassTourActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.ReservationClassFilterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.LiveVideoListPlayActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".commons.controllers.activities.FirstPageLiveActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <activity
+            android:name=".commons.controllers.activities.SetTeacherActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 作业 -->
+        <activity
+            android:name=".homework.controllers.activities.WorkListsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.WorkStatisticDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.WorkStuReadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.WorkItemDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".homework.controllers.activities.WorkStatisticListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.WorkReadByItemActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.WorkListsClassSpaceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.WorkClassStatisticDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.VideoViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.PreviewImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".homework.controllers.activities.WorkInfoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/WorkInfoActivityTheme" />
+        <!-- 测试 -->
+        <activity
+            android:name=".exam.controllers.activities.ExamActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.classroom.ExamClassSpaceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.classroom.ExamClassSpaceDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.media.MMSelectorActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.teacher.TeacherArrangeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.teacher.TeacherDoReadActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".exam.controllers.activities.teacher.TeacherDoReadByTopicActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".exam.controllers.activities.teacher.TeacherArrangeTreeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.teacher.TeacherMineDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.teacher.TeacherArrangeListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.school.SchoolStatisticsDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.media.image.MMPreviewImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.school.SchoolGradeDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.school.SchoolClassDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.ExamInfoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.school.SchoolArrangeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.school.SchoolArrangeTreeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.ExamStatisticsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.student.StudentAnswerDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".exam.controllers.activities.student.StudentViewCheckedActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".exam.controllers.activities.student.StudentViewWaitActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".exam.controllers.activities.student.StudentPracticeDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".exam.controllers.activities.student.StudentViewPracticeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.student.StudentReadActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.parent.ParentViewCheckedActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".exam.controllers.activities.parent.ParentViewWaitActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 微博 -->
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoMyFriendActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoImageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoTurnActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoUniversalActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoNewActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoPrivateMessageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".weibo.controllers.activities.WeiBoCommentActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".tutorship.controllers.activities.TutorshipActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".tutorship.controllers.activities.TutorshipDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".rethink.controllers.activities.RethinkListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".rethink.controllers.activities.RethinkDetailsActivity"
+            android:label="@string/title_activity_rethink_details"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".perlcourseprep.controllers.activities.PersonalLesPrepActivity"
+            android:label="@string/title_activity_rethink_details"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".perlcourseprep.controllers.activities.PersonalLesPrepContentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".perlcourseprep.controllers.activities.LessonPlanRethinkActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".perlcourseprep.controllers.activities.LessonPlanDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".perlcourseprep.controllers.activities.LessonPlanCommentsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".commons.services.SaveLessonPlanRethinkService"
+            android:exported="false" />
+        <service
+            android:name=".commons.services.WeiBoMediaService"
+            android:exported="false" />
+
+        <activity
+            android:name=".rethink.controllers.activities.SubjectMaterialPicturesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tutorship.controllers.activities.TutorialTestActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".tutorship.controllers.activities.TutorialTestNumbersActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".groups.controllers.activities.GroupLessonPlanActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.HttpVideoPlayerActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".perlcourseprep.controllers.activities.MoreLessonPlansActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".rethink.controllers.activities.MoreRethinkListActivity"
+            android:screenOrientation="portrait" />
+
+        <receiver android:name=".commons.receivers.DownloadCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".commons.services.UserInfoKeeperService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".commons.services.EngineService"
+            android:exported="false" />
+        <service
+            android:name=".commons.services.OnlineMeetingService"
+            android:exported="false" />
+
+        <activity android:name=".groups.controllers.activities.GroupCollectiveLessonsActivity" />
+
+        <activity
+            android:name=".statistics.controllers.activities.CoursesStatisticsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".statistics.controllers.activities.ClassStatTableActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".statistics.controllers.activities.SubjectStatTbActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".statistics.controllers.activities.CoursesProportionTableActivity"
+            android:label="@string/title_activity_courses_proportion_table"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".county.controllers.activities.CountyListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".county.controllers.activities.CountyItemDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".county.controllers.activities.CountyClassDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".reservation.controllers.activities.ReservationClassActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".reservation.controllers.activities.ReservationClassDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".timetable.activities.TimeTableListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".timetable.activities.TimeTableDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".resource.controllers.activities.ResourcesNewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopupMenu" />
+        <activity
+            android:name=".resource.controllers.activities.ClassResourcesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.PopupMenu" />
+        <activity
+            android:name=".statistics.controllers.activities.CoursesProfilesFilterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classroom.activity.ClassRoomListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classroom.activity.ClassRoomDetailActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classroom.activity.ClassRecordedFilterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".classroom.activity.ClassRecordedNoAreaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".commons.controllers.activities.ClassTourNewActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".commons.controllers.activities.ClassTourPagerActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".classroom.activity.LiveVideoListPlayNewActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".commons.controllers.activities.LoadingUserTypeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Transparent.Darker"/>
+    </application>
+
+</manifest>

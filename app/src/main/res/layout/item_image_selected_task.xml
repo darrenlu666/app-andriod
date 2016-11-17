@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="5dp">
+
+    <FrameLayout
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_headpic"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/transparent"
+            fresco:progressBarImage="@drawable/upload_progress_animation"
+            fresco:progressBarImageScaleType="center"/>
+        <LinearLayout
+            android:id="@+id/container_image_upload"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#96999999"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/iv_image_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/upload_progress_animation"
+                android:scaleType="centerCrop"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_image_failed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/audio_upload_failure"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+</RelativeLayout>

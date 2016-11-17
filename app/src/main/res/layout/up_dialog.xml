@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="130dp"
+    android:layout_height="130dp"
+    android:background="@drawable/circle_bg_white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <com.codyy.erpsportal.commons.widgets.ProgressBarView
+        android:id="@+id/up_dailog_progress"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:paintw="3"
+        app:textsize="10" />
+
+    <TextView
+        android:id="@+id/up_name"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        tools:text="上传中。。" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="上传中。。"
+        android:textColor="@color/main_color"
+        android:textSize="13sp" />
+</LinearLayout>

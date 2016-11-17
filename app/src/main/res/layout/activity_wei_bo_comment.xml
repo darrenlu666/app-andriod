@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".weibo.controllers.activities.WeiBoCommentActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <LinearLayout
+        android:id="@+id/weibo_comment_rootview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.codyy.erpsportal.commons.widgets.RefreshRecycleView
+            android:id="@+id/weibo_comment_swiprefresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <VideoView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/weibo_divider_line" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/weibo_divider_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:onClick="sendEmoji"
+                android:src="@drawable/weibo_emoticon" />
+
+            <com.codyy.erpsportal.commons.widgets.EmojiEditText
+                android:id="@+id/weibo_comment_inputcomment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:hint="我来说两句"
+                android:maxLength="150"
+                android:maxLines="4"
+                android:minHeight="50dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp" />
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="10dp"
+                android:onClick="sendMessage"
+                android:scaleType="center"
+                android:src="@drawable/ic_menu_send" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.codyy.erpsportal.commons.widgets.EmojiView
+        android:id="@+id/private_emojiview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:keyBackground="@android:color/white"
+        android:paddingBottom="20dp"
+        android:visibility="gone" />
+
+</LinearLayout>

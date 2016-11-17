@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtContentOfSimpleText"
+        style="@style/simple_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分段一" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/txtContentOfSimpleText"
+        android:background="#ffc7c7c7"
+        android:layout_marginLeft="5dp"
+        />
+
+</RelativeLayout>

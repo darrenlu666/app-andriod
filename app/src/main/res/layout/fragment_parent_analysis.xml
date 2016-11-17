@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:id="@+id/v_divider_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/recycler_view"
+        android:background="@color/exam_normal_color" />
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/gl_layout"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_below="@+id/v_divider_line"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:columnCount="4"
+        app:rowCount="1">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1">
+
+            <CheckBox
+                android:id="@+id/cb_acount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/checkbox_btn_shap"
+                android:button="@null"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1">
+
+            <CheckBox
+                android:id="@+id/cb_bcount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/checkbox_btn_shap"
+                android:button="@null"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1">
+
+            <CheckBox
+                android:id="@+id/cb_ccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/checkbox_btn_shap"
+                android:button="@null"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1">
+
+            <CheckBox
+                android:id="@+id/cb_dcount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/checkbox_btn_shap"
+                android:button="@null"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+    </android.support.v7.widget.GridLayout>
+
+    <View
+        android:id="@+id/v_divider_line1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/gl_layout"
+        android:background="@color/exam_normal_color" />
+
+    <com.codyy.erpsportal.exam.widgets.chartview.ChartView
+        android:id="@+id/cv_chart"
+        android:layout_width="match_parent"
+        android:layout_height="550px"
+        android:layout_below="@+id/v_divider_line1" />
+
+    <ViewStub
+        android:id="@+id/vs_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout="@layout/viewstub_parent_exam_info" />
+
+</RelativeLayout>

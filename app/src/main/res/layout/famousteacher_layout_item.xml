@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?selectableItemBackground"
+                android:padding="8dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/famousteacher_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:placeholderImage="@drawable/placeholderimage_head"/>
+
+    <TextView
+        android:id="@+id/famousteacher_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/famousteacher_image"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="7dp"
+        android:layout_toEndOf="@id/famousteacher_image"
+        android:layout_toRightOf="@id/famousteacher_image"
+        android:singleLine="true"
+        android:textColor="#262626"
+        android:textSize="15sp"
+        tools:text="张老师"/>
+
+    <TextView
+        android:id="@+id/famousteacher_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/famousteacher_name"
+        android:layout_alignStart="@id/famousteacher_name"
+        android:layout_below="@id/famousteacher_name"
+        android:layout_marginTop="5dp"
+        android:textColor="#929292"
+        android:textSize="12sp"
+        tools:text="New Text"/>
+</RelativeLayout>

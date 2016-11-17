@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <com.codyy.erpsportal.commons.widgets.BnVideoLayout2
+        android:id="@+id/bnVideoViewOfLiveVideoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/relativeHeadOfLiveVideoPlay"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="#66000000"
+        android:visibility="gone"
+        >
+
+        <ImageButton
+            android:id="@+id/imgBtn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@null"
+            android:onClick="onBackClick"
+            android:scaleType="centerInside"
+            android:src="@drawable/back_video"/>
+
+        <TextView
+            android:id="@+id/txtTitleOfLiveVideoPlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/imgBtn"
+            android:layout_toEndOf="@id/imgBtn"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingStart="20dp"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

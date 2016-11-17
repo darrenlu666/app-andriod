@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/md_white_1000">
+
+    <include layout="@layout/toolbar_layout"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="44dp">
+
+            <TextView
+                android:id="@+id/tv_creator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/user_bg_color"
+                android:paddingBottom="4dp"
+                android:paddingEnd="12dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:textSize="16sp"
+                tools:text="创建人：陈老师"/>
+
+            <TextView
+                android:id="@+id/tv_create_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/user_bg_color"
+                android:paddingBottom="8dp"
+                android:paddingEnd="12dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingStart="12dp"
+                android:paddingTop="4dp"
+                android:textSize="16sp"
+                tools:text="创建时间：2015/02/24 10:12"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="16dp">
+
+                <TextView
+                    android:id="@+id/tv_tutorship_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="@color/md_grey_800"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="课堂名称"/>
+
+                <TextView
+                    android:id="@+id/tv_begin_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_tutorship_title"
+                    android:layout_marginTop="8dp"
+                    android:textSize="18sp"
+                    tools:text="开课时间 2015-1-1 0:00"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_grade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_begin_time"
+                    android:layout_alignStart="@id/tv_begin_time"
+                    android:layout_below="@id/tv_begin_time"
+                    android:layout_marginTop="4dp"
+                    android:text="年级"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/tv_grade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/tv_lb_grade"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@id/tv_lb_grade"
+                    android:layout_toRightOf="@id/tv_lb_grade"
+                    android:ems="5"
+                    android:singleLine="true"
+                    android:textSize="18sp"
+                    tools:text="一年级"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_lb_grade"
+                    android:layout_marginTop="4dp"
+                    android:text="学科"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/tv_subject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/tv_lb_subject"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@id/tv_lb_subject"
+                    android:layout_toRightOf="@id/tv_lb_subject"
+                    android:textSize="18sp"
+                    tools:text="语文"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_speaker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_lb_grade"
+                    android:layout_alignStart="@id/tv_lb_grade"
+                    android:layout_below="@id/tv_lb_subject"
+                    android:layout_marginTop="4dp"
+                    android:text="主讲教师"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/tv_speaker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/tv_lb_speaker"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@id/tv_lb_speaker"
+                    android:layout_toRightOf="@id/tv_lb_speaker"
+                    android:singleLine="true"
+                    android:textSize="18sp"
+                    tools:text="王老师王老师王老师王老师王老师王老师"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_assistant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_lb_speaker"
+                    android:layout_marginTop="4dp"
+                    android:text="助教"
+                    android:textSize="18sp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tv_assistant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/tv_lb_assistant"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_toEndOf="@id/tv_lb_assistant"
+                    android:layout_toRightOf="@id/tv_lb_assistant"
+                    android:singleLine="true"
+                    android:textSize="18sp"
+                    android:visibility="gone"
+                    tools:text="陈老师fdfdfdfd噶是范德萨范德萨发生"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/md_grey_300"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="16dp">
+
+                <TextView
+                    android:id="@+id/tv_lb_tutorship_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="课堂简介"
+                    android:textColor="@color/md_grey_800"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_tutorship_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/tv_lb_tutorship_summary"
+                    android:layout_marginTop="12dp"
+                    android:textSize="18sp"
+                    tools:text="这个辅导很牛x，老师很性感，会的姿势非常多，根本停不下来，可惜身体太久了吃不消。这个辅导很牛x，老师很性感，会的姿势非常多，根本停不下来，可惜身体太久了吃不消。这个辅导很牛x，老师很性感，会的姿势非常多，根本停不下来，可惜身体太久了吃不消。这个辅导很牛x，老师很性感，会的姿势非常多，根本停不下来，可惜身体太久了吃不消。这个辅导很牛x，老师很性感，会的姿势非常多，根本停不下来，可惜身体太久了吃不消。这个辅导很牛x，老师很性感，会的姿势非常多，根本停不下来，可惜身体太久了吃不消。这个辅导很牛x，老师很性感，会的姿势非常多，根本停不下来，可惜身体太久了吃不消。重要的事情说X遍，是我上过的最好的舞蹈辅导。"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/md_grey_300"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="16dp">
+
+                <TextView
+                    android:id="@+id/tv_lb_register_situation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:text="首次签到情况"
+                    android:textColor="@color/md_grey_800"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_registers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/tv_lb_register_situation"
+                    android:layout_marginTop="12dp"
+                    android:textSize="18sp"
+                    tools:text="3人签到"/>
+
+                <TextView
+                    android:id="@+id/tv_registers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/tv_lb_registers"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/tv_lb_registers"
+                    android:layout_toRightOf="@id/tv_lb_registers"
+                    android:textSize="18sp"
+                    tools:text="张三 李四 王五 张三 李四 王五 张三 李四 王五 张三 李四 王五 张三 李四 王五 张三 李四 王五"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_unregisters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_registers"
+                    android:layout_marginTop="4dp"
+                    android:textSize="18sp"
+                    tools:text="3人未签到"/>
+
+                <TextView
+                    android:id="@+id/tv_unregisters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/tv_lb_unregisters"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/tv_lb_unregisters"
+                    android:layout_toRightOf="@id/tv_lb_unregisters"
+                    android:textSize="18sp"
+                    tools:text="张大三 李小四 笑笑"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:background="#bb000000">
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_gravity="center"
+            android:drawableLeft="@drawable/xxhdpi_init_"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/xxhdpi_init_"
+            android:gravity="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="20sp"
+            tools:text="未开始"/>
+    </FrameLayout>
+</RelativeLayout>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff">
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/eliteschool_video_bnvideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#c5c5c5"
+        android:minHeight="165dp"
+        android:orientation="horizontal"
+        app:actualImageScaleType="fitCenter"
+        app:placeholderImage="@drawable/placeholder_img" />
+
+    <TextView
+        android:id="@+id/eliteschool_adapter_text_play"
+        android:layout_width="60dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/eliteschool_video_bnvideo"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/circle_bg_white"
+        android:drawableLeft="@drawable/play_video"
+        android:gravity="center"
+        android:maxLines="2"
+        android:padding="5dp"
+        android:text="播放"
+        android:textColor="@color/main_color"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/eliteschool_video_text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/eliteschool_video_bnvideo"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_toLeftOf="@id/eliteschool_adapter_text_play"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="王烈奇中心小学"
+        android:textColor="#333333"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/eliteschool_video_text_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/eliteschool_video_text_title"
+        android:layout_alignStart="@id/eliteschool_video_text_title"
+        android:layout_below="@id/eliteschool_video_text_title"
+        android:layout_marginTop="6dp"
+        android:singleLine="true"
+        android:text="六年级 音乐 张三"
+        android:textColor="#707070"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/eliteschool_video_text_viewnumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/eliteschool_video_text_grade"
+        android:layout_alignStart="@id/eliteschool_video_text_grade"
+        android:layout_below="@id/eliteschool_video_text_grade"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="6dp"
+        android:drawableLeft="@drawable/preview_bg"
+        android:drawablePadding="10dp"
+        android:text="0"
+        android:textColor="#707070"
+        android:textSize="15sp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/eliteschool_video_text_viewnumber"
+        android:layout_marginTop="5dp"
+        android:background="@color/divide_color" />
+
+</RelativeLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="content"
+            type="com.codyy.erpsportal.timetable.models.entities.TimeTableList" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simpledraweeview"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            app:placeholderImage="@drawable/icon_direct_video_default" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/simpledraweeview"
+            android:layout_toRightOf="@+id/simpledraweeview"
+            android:text="XXXXX小学"
+            android:textColor="#222222"
+            android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/simpledraweeview"
+            android:layout_toRightOf="@+id/simpledraweeview"
+            android:text="主讲教室 34 "
+            android:textColor="#777777" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/simpledraweeview"
+            android:layout_toRightOf="@+id/simpledraweeview"
+            android:text="接收教室 56"
+            android:textColor="#777777" />
+    </RelativeLayout>
+</layout>

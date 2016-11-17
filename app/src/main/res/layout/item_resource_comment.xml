@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:id="@+id/user_photo"
+        fresco:placeholderImage="@drawable/icon_default_photo"
+        fresco:roundAsCircle="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_name"
+        android:layout_marginLeft="8dp"
+        android:textColor="#ff343434"
+        android:textSize="16sp"
+        android:text="张老师"
+        android:layout_toRightOf="@+id/user_photo"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/comment_time"
+        android:text="1分钟前"
+        android:textSize="14sp"
+        android:layout_alignBottom="@id/user_name"
+        android:layout_toRightOf="@id/user_name"
+        android:layout_marginLeft="8dp"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/comment"
+        android:layout_marginTop="4dp"
+        android:textSize="14sp"
+        android:textColor="#ff343434"
+        android:layout_alignLeft="@id/user_name"
+        android:layout_alignStart="@id/user_name"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/user_name"
+        android:text="课堂讲解内容很丰富，老师讲解很生动(以上皆为吹牛)"/>
+</RelativeLayout>

@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height" />
+
+    <TextView
+        android:id="@+id/title_statistic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f7f7f7"
+        android:textColor="#666666"
+        android:textSize="16sp"
+        android:padding="16dp"
+        android:text="本周各学科开课总数"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#dedede"/>
+
+    <fragment
+        android:tag="tag_statistic"
+        android:name="com.codyy.erpsportal.statistics.controllers.fragments.StatisticalFragment"
+        tools:layout="@layout/fragment_statistical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+</LinearLayout>
+
+

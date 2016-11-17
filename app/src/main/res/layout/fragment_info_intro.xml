@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.codyy.erpsportal.commons.widgets.RefreshLayout
+    android:id="@+id/sr_info_intro"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:appBarLayoutId="@id/app_bar_layout">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.codyy.erpsportal.commons.widgets.TitleItemBar
+                android:id="@+id/bar_news"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/title_item_bar_height"
+                android:text="@string/news"/>
+
+            <com.codyy.erpsportal.commons.widgets.infinitepager.SlideView
+                android:id="@+id/slide_view"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:visibility="gone"/>
+
+            <com.codyy.erpsportal.commons.widgets.NoScrollListView
+                android:id="@+id/lv_news"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_h_intro"/>
+
+            <TextView
+                android:id="@+id/tv_news_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:text="@string/sorry_for_no_contents"/>
+
+            <com.codyy.erpsportal.commons.widgets.TitleItemBar
+                android:id="@+id/bar_notification"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/title_item_bar_height"
+                android:text="@string/notice"/>
+
+            <com.codyy.erpsportal.commons.widgets.NoScrollListView
+                android:id="@+id/lv_notification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_h_intro"/>
+
+            <TextView
+                android:id="@+id/tv_notification_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:text="@string/sorry_for_no_contents"/>
+
+            <com.codyy.erpsportal.commons.widgets.TitleItemBar
+                android:id="@+id/bar_announcement"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/title_item_bar_height"
+                android:text="@string/announcement"/>
+
+            <com.codyy.erpsportal.commons.widgets.NoScrollListView
+                android:id="@+id/lv_announcement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_h_intro"/>
+
+            <TextView
+                android:id="@+id/tv_announcement_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:text="@string/sorry_for_no_contents"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</com.codyy.erpsportal.commons.widgets.RefreshLayout>

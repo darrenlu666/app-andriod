@@ -1,0 +1,3 @@
+include ':app', ':pullToRefreshLib', ':bennu', ':codyymedialibrary', ':albumlibrary', ':CalendarListviewLibrary', ':mupdf', ':url-builder-compiler', ':url-builder-annotations'
+include ':library-viewpager-indicator'
+

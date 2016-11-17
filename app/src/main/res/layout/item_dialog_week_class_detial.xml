@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    android:paddingTop="5dp">
+
+    <TextView
+        android:id="@+id/class_state"
+        style="@style/conty_detail_popu_text"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/main_color"
+        tools:text="有效授课" />
+
+    <TextView
+        android:id="@+id/teacher_name"
+        style="@style/conty_detail_popu_text"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@id/class_state"
+        android:ellipsize="end"
+        android:singleLine="true"
+        tools:text="王老五 一年级语文" />
+
+
+    <TextView
+        android:id="@+id/class_state_reason"
+        style="@style/conty_detail_popu_text"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/class_state"
+        android:layout_marginTop="5dp"
+        android:textColor="#c18c75"
+        tools:text="在线课堂系统故障" />
+
+    <TextView
+        android:id="@+id/class_date"
+        style="@style/conty_detail_popu_text"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/teacher_name"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@id/class_state_reason"
+        android:ellipsize="end"
+        android:singleLine="true"
+        tools:text="第6周/星期二/第六节" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/dotted_line"
+        android:layerType="software" />
+</RelativeLayout>

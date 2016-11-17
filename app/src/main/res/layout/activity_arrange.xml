@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <TextView
+        android:id="@+id/tv_start_time_head"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="开始时间"
+        android:textColor="@color/exam_normal_color"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_arrange_start_time"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="24dp"
+        android:layout_toRightOf="@+id/tv_start_time_head"
+        android:gravity="center_vertical"
+        android:hint="请选择开始时间"
+        android:paddingLeft="24dp"
+        android:textColor="@color/exam_normal_color"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="16dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/arrow" />
+
+    <View
+        android:id="@+id/divider_v_start"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/tv_start_time_head"
+        android:layout_marginTop="16dp"
+        android:background="@color/exam_divider" />
+
+    <TextView
+        android:id="@+id/tv_end_time_head"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_below="@+id/divider_v_start"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="结束时间"
+        android:textColor="@color/exam_normal_color"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/tv_arrange_end_time"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/divider_v_start"
+        android:layout_marginTop="24dp"
+        android:layout_toRightOf="@+id/tv_start_time_head"
+        android:gravity="center_vertical"
+        android:hint="请选择结束时间"
+        android:paddingLeft="24dp"
+        android:textColor="@color/exam_normal_color"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="16dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/divider_v_start"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/arrow" />
+
+    <View
+        android:id="@+id/divider_v_end"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/tv_end_time_head"
+        android:layout_marginTop="16dp"
+        android:background="@color/exam_divider" />
+
+    <TextView
+        android:id="@+id/tv_class_list_head"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/divider_v_end"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="选择人员"
+        android:textColor="@color/exam_normal_color"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="16dp"
+        android:layout_height="28dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/divider_v_end"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/arrow" />
+
+    <View
+        android:id="@+id/divider_v_class"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@+id/tv_class_list_head"
+        android:layout_marginTop="16dp"
+        android:background="@color/exam_divider" />
+
+    <TextView
+        android:id="@+id/tv_is_selected"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/divider_v_class"
+        android:layout_marginTop="24dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:text="已选择人员"
+        android:textColor="@color/exam_normal_color"
+        android:textSize="18sp"
+        android:visibility="invisible" />
+
+    <include
+        layout="@layout/fragment_item_index"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_is_selected"
+        android:layout_margin="8dp" />
+</RelativeLayout>

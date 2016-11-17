@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/item_weibo_list_simpledraweeview"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        app:placeholderImage="@drawable/placeholderimage_head"
+        app:roundAsCircle="true" />
+
+    <ImageView
+        android:id="@+id/item_image_arrows"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:scaleType="center"
+        android:src="@drawable/weibo_arrows" />
+
+    <TextView
+        android:id="@+id/item_weibo_list_textview_name"
+        style="@style/weibo_item_list_text_name"
+        android:layout_alignTop="@id/item_weibo_list_simpledraweeview"
+        android:layout_marginRight="50dp"
+        android:layout_toEndOf="@id/item_weibo_list_simpledraweeview"
+        android:layout_toRightOf="@id/item_weibo_list_simpledraweeview"
+        android:ellipsize="end"
+        android:singleLine="true"
+        tools:text="王玉磊" />
+
+
+    <TextView
+        android:id="@+id/item_weibo_list_textview_date"
+        style="@style/weibo_item_text_date"
+        android:layout_below="@id/item_weibo_list_textview_name"
+        android:layout_toEndOf="@id/item_weibo_list_simpledraweeview"
+        android:layout_toRightOf="@id/item_weibo_list_simpledraweeview"
+        tools:text="2015-12-25" />
+
+    <LinearLayout
+        android:id="@+id/item_weibo_list_commentlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_weibo_list_simpledraweeview"
+        android:orientation="vertical">
+
+        <com.codyy.erpsportal.commons.widgets.ClickTextView
+            android:id="@+id/item_weibo_list_textview_cont"
+            style="@style/weibo_item_text_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="微博" />
+
+        <com.codyy.erpsportal.weibo.widgets.WeiBoMediaView
+            android:id="@+id/item_weibo_list_weibo_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="10dp"
+            android:background="@color/weibo_divider_line" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_weibo_list_commentlayout"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/item_turn_layout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:id="@+id/item_textview_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:drawableLeft="@drawable/weibo_share"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:text="@string/weibo_list_item_share"
+                    android:textColor="#888888" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="25dp"
+                android:background="@color/weibo_divider_line" />
+
+            <LinearLayout
+                android:id="@+id/item_comment_layout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="center"
+                    android:src="@drawable/weibo_comment" />
+
+                <TextView
+                    android:id="@+id/item_textview_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="@string/weibo_list_item_comment"
+                    android:textColor="#888888" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="25dp"
+                android:background="@color/weibo_divider_line" />
+
+            <LinearLayout
+                android:id="@+id/item_agree_layout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/item_image_agree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="center"
+                    android:src="@drawable/weibo_favour" />
+
+                <TextView
+                    android:id="@+id/item_textview_agree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center"
+                    android:text="@string/weibo_list_item_favour"
+                    android:textColor="#888888" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/weibo_divider_bg" />
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stat_panel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/md_white_1000"
+    android:paddingBottom="16dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <ImageButton
+        android:id="@+id/btn_slide_up"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@null"
+        android:paddingBottom="8dp"
+        android:src="@drawable/arrow_below_map"/>
+
+    <TextView
+        android:id="@+id/area_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_slide_up"
+        android:layout_centerHorizontal="true"
+        android:text="加载中…"
+        android:textColor="#444444"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:id="@+id/class_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/area_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="在线课堂开设情况"
+        android:textColor="#929292"
+        android:textSize="12sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/class_status"
+        android:layout_marginTop="16dp"
+        android:weightSum="2">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/lb_main_classroom_count"
+                style="@style/LabelClassroomCount"
+                android:text="主讲课堂数"/>
+
+            <TextView
+                android:id="@+id/master_classroom_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_alignBottom="@id/lb_main_classroom_count"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/lb_main_classroom_count"
+                android:layout_toRightOf="@id/lb_main_classroom_count"
+                android:background="#f6f6f6"
+                android:gravity="center_vertical"
+                android:textColor="@color/green"
+                android:textSize="24sp"
+                tools:text="361"/>
+
+            <TextView
+                android:id="@+id/lb_classroom_semester"
+                style="@style/LabelPeriodTitle"
+                android:layout_below="@id/lb_main_classroom_count"
+                android:text="本学期课程"/>
+
+            <TextView
+                android:id="@+id/lb_planed_total"
+                style="@style/NumLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lb_classroom_semester"
+                android:text="计划总课时数"/>
+
+            <TextView
+                android:id="@+id/lb_students_total"
+                style="@style/NumLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lb_planed_total"
+                android:text="受益学生数"/>
+
+            <TextView
+                android:id="@+id/lb_teachers_total"
+                style="@style/NumLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lb_students_total"
+                android:text="授课教师数"/>
+
+            <TextView
+                android:id="@+id/planed_total"
+                style="@style/NumSemester"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/lb_planed_total"
+                android:layout_marginLeft="8dp"
+                android:layout_toEndOf="@id/lb_planed_total"
+                android:layout_toRightOf="@id/lb_planed_total"
+                tools:text="888306"/>
+
+            <TextView
+                android:id="@+id/students_total"
+                style="@style/NumSemester"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/lb_students_total"
+                android:layout_alignLeft="@id/planed_total"
+                tools:text="15741"/>
+
+            <TextView
+                android:id="@+id/teachers_total"
+                style="@style/NumSemester"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/lb_teachers_total"
+                android:layout_alignLeft="@id/planed_total"
+                tools:text="799"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/lb_receiving_classroom_count"
+                style="@style/LabelClassroomCount"
+                android:text="接收课堂数"/>
+
+            <TextView
+                android:id="@+id/receiving_classroom_count"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_alignBottom="@id/lb_receiving_classroom_count"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/lb_receiving_classroom_count"
+                android:layout_toRightOf="@id/lb_receiving_classroom_count"
+                android:background="#f6f6f6"
+                android:gravity="center_vertical"
+                android:textColor="@color/green"
+                android:textSize="24sp"
+                tools:text="123"/>
+
+            <TextView
+                android:id="@+id/lb_classroom_week"
+                style="@style/LabelPeriodTitle"
+                android:layout_below="@id/lb_receiving_classroom_count"
+                android:text="本周课程"/>
+
+            <TextView
+                android:id="@+id/lb_week_all"
+                style="@style/NumLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lb_classroom_week"
+                android:text="周课时数"/>
+
+            <TextView
+                android:id="@+id/lb_should_give"
+                style="@style/NumLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lb_week_all"
+                android:text="应授课时数"/>
+
+            <TextView
+                android:id="@+id/lb_already_given"
+                style="@style/NumLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/lb_should_give"
+                android:text="已授课时数"/>
+
+            <TextView
+                android:id="@+id/week_all"
+                style="@style/NumWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/lb_week_all"
+                android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@id/lb_should_give"
+                tools:text="821257"/>
+
+            <TextView
+                android:id="@+id/should_give"
+                style="@style/NumWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/lb_should_give"
+                android:layout_alignLeft="@id/week_all"
+                tools:text="1257"/>
+
+            <TextView
+                android:id="@+id/already_given"
+                style="@style/NumWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/lb_already_given"
+                android:layout_alignLeft="@id/week_all"
+                tools:text="279"/>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

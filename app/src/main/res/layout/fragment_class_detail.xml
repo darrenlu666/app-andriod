@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/user_bg_color"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/user_bg_color"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                style="@style/style_work_statistic_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_class_room_area"
+                    style="@style/txt_work_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/class_room_area"/>
+
+                <TextView
+                    android:id="@+id/tv_class_room_area_value"
+                    style="@style/txt_work_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_class_room_area"
+                    tools:text="dfgsdfgdfgfd"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/style_work_statistic_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_class_room_main_info"
+                    style="@style/txt_work_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/class_room_main_info"/>
+
+                <TextView
+                    android:id="@+id/tv_class_room_main_info_value"
+                    style="@style/txt_work_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_class_room_main_info"
+                    tools:text="adfasdfasf"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/style_work_statistic_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_class_room_receive_info"
+                    style="@style/txt_work_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/class_room_receive_info"/>
+
+                <TextView
+                    android:id="@+id/tv_class_room_receive_info_value"
+                    style="@style/txt_work_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_class_room_receive_info"
+                    tools:text="adsfasdfasdfdsfsdfsasdfafasdfasfadasfsdfsdfasf
+                    sdfasdfadsfasdfadfdasdfasdfasdfdsfafsdfadsfadsffadfafadfdf
+                    asfdadfasdfasdfafdfasdfaffasfadadfadfafdsdfasdfafadfadfasdf"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/style_work_statistic_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_class_room_time"
+                    style="@style/txt_work_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/class_room_time"/>
+
+                <TextView
+                    android:id="@+id/tv_class_room_time_value"
+                    style="@style/txt_work_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_class_room_time"
+                    tools:text="adsfa"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_length"
+                style="@style/style_work_statistic_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_length"
+                    style="@style/txt_work_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/class_video_length"/>
+
+                <TextView
+                    android:id="@+id/tv_length_value"
+                    style="@style/txt_work_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_length"
+                    tools:text="40分钟"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_play_count"
+                style="@style/style_work_statistic_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_play_count"
+                    style="@style/txt_work_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/class_play_count"/>
+
+                <TextView
+                    android:id="@+id/tv_play_count_value"
+                    style="@style/txt_work_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/tv_play_count"
+                    tools:text="40次"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

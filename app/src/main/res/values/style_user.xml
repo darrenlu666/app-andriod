@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--主界面.我的中相关样式-->
+<resources  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <style name="UserDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:background">@color/personal_divide_line</item>
+    </style>
+
+    <style name="UserTitles">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/personal_text_color</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:textSize">@dimen/personal_text_size</item>
+    </style>
+
+    <style name="UserContents">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">100dp</item>
+        <item name="android:gravity">end|center_vertical</item>
+        <item name="android:textSize">@dimen/personal_text_size1</item>
+        <item name="android:textColor">@color/personal_text_color_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="style_my_simple_text_item">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:textColor">@color/user_setting_textcolor</item>
+        <item name="android:background">@color/user_item_color</item>
+    </style>
+
+    <style name="style_my_simple_text_item2">
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/personal_text_color</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/white_to_transparent</item>
+    </style>
+
+    <style name="style_my_simple_text_no_selector">
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/personal_text_color</item>
+    </style>
+
+    <style name="style_menu_item_text">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:textColor">@color/md_grey_700</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/line_rectangle_grey</item>
+    </style>
+    <style name="style_menu_item_text_exit">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:textColor">@color/md_red_A400</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/line_rectangle_grey</item>
+    </style>
+    <style name="style_person_text">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/personal_text_color</item>
+    </style>
+
+    <style name="style_person_text_align_right">
+        <item name="android:gravity">center_vertical|right</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/personal_text_color</item>
+        <item name="android:background">?selectableItemBackground</item>
+    </style>
+
+    <style name="style_setting_exit">
+        <item name="android:gravity">center</item>
+        <item name="android:padding">13dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/red_to_transparent</item>
+    </style>
+
+    <style name="style_setting_simple_text">
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingTop">13dp</item>
+        <item name="android:paddingRight">13dp</item>
+        <item name="android:paddingBottom">13dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/personal_text_color</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/white_to_transparent</item>
+    </style>
+
+    <style name="style_item_function_selected">
+        <item name="android:background">?android:attr/actionBarItemBackground</item>
+    </style>
+</resources>

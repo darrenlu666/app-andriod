@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_info_item"
+    android:paddingLeft="8dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/dv_icon"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:background="@color/white"
+        app:roundedCornerRadius="4dp"
+        app:roundWithOverlayColor="@color/md_grey_300"
+        app:placeholderImage="@drawable/ic_load_failed"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@id/dv_icon"
+        android:layout_toStartOf="@id/dv_icon"
+        android:singleLine="true"
+        android:textSize="20sp"
+        tools:text="测试标题测试标题测试标题测试标题测试标题测试标题测试标题测试标题"/>
+
+    <TextView
+        android:id="@+id/tv_intro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@id/tv_title"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@id/dv_icon"
+        android:layout_toStartOf="@id/dv_icon"
+        android:ellipsize="end"
+        android:lines="2"
+        tools:text="具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容具体内容"/>
+</RelativeLayout>
+

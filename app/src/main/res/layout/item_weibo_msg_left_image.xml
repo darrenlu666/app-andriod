@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    android:paddingRight="50dp"
+    android:paddingTop="5dp">
+
+    <TextView
+        android:id="@+id/private_msg_item_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:background="@color/text_color_grap"
+        android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="2dp"
+        android:text="2015-03-11"
+        android:textColor="@color/primary_text"
+        android:textSize="10dp" />
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/private_msg_item_simpledraweeview"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/private_msg_item_time"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        app:placeholderImage="@drawable/placeholderimage_head" />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/private_msg_item_simpledraweeview"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/private_msg_item_simpledraweeview"
+        android:minHeight="40dp"
+        android:minWidth="40dp"
+        android:padding="5dp">
+
+        <!-- <com.facebook.drawee.view.SimpleDraweeView
+             android:id="@+id/private_msg_item_image"
+             android:layout_width="50dp"
+             android:layout_height="50dp"
+             app:actualImageScaleType="center"
+             app:placeholderImage="@drawable/placeholder_middle" />-->
+        <com.codyy.erpsportal.weibo.widgets.ChatImageView
+            android:id="@+id/private_msg_item_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:location="left" />
+    </FrameLayout>
+</RelativeLayout>

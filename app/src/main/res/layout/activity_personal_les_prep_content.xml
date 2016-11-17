@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    android:background="@color/md_white_1000">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <Button
+            android:id="@+id/btn_courseware"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/courseware"
+            android:visibility="invisible"
+            style="@style/title_bar_button"/>
+    </com.codyy.erpsportal.commons.widgets.TitleBar>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#f8f8f8"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/btn_details"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                style="@style/tv_bottom_btn_plp"
+                android:drawableLeft="@drawable/ic_detail"
+                android:drawableStart="@drawable/ic_detail"
+                android:text="@string/details"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/btn_rethink"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_res_details"
+                style="@style/tv_bottom_btn_plp"
+                android:drawableLeft="@drawable/ic_rethink"
+                android:drawableStart="@drawable/ic_rethink"
+                android:text="@string/simple_rethink"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/btn_comments"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_comment"
+                style="@style/tv_bottom_btn_plp"
+                android:drawableLeft="@drawable/ic_comment"
+                android:drawableStart="@drawable/ic_comment"
+                android:text="@string/comment"/>
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/ll_bottom_bar"
+        android:background="#d7d7d7"/>
+
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/divider1"
+        android:layout_below="@id/title_bar">
+
+        <ViewStub
+            android:id="@+id/view_stub"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!--<include layout="@layout/wv_lesson_plan_content"/>-->
+        <!--<include layout="@layout/ll_office_not_support"/>-->
+    </FrameLayout>
+</RelativeLayout>

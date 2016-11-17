@@ -1,0 +1,56 @@
+<resources>
+
+    <!--应用items-->
+    <string name="title_function_no_imp">\"%s\"暂未实现</string>
+    <string name="title_function_special_class">专递课堂</string>
+    <string name="title_function_live_class">直录播课堂</string>
+    <string name="title_function_all_prepare_class">集体备课</string>
+    <string name="title_function_interact_class">互动听课</string>
+    <string name="title_function_evaluate_class">评课议课</string>
+    <string name="title_function_video_meeting">视频会议</string>
+    <string name="title_function_information">资讯</string>
+    <string name="title_function_good_resource">优课资源</string>
+    <string name="title_function_analysis">统计</string>
+    <!-- new add -->
+    <string name="title_function_personal_prepare">个人备课</string>
+    <string name="title_function_teach_reflection">教学反思</string>
+    <string name="title_function_test">测试</string>
+    <string name="title_function_task">作业</string>
+    <string name="title_function_question_ask">问答</string>
+    <string name="title_function_ring_group">圈组</string>
+    <string name="title_function_classroom_member">班级成员</string>
+    <string name="title_function_tutorship">辅导</string>
+
+    <string-array name="apps_function_array">
+        <item>@string/title_function_special_class</item>
+        <item>@string/title_function_live_class</item>
+        <item>@string/title_function_personal_prepare</item>
+        <item>@string/title_function_all_prepare_class</item>
+        <item>@string/title_function_interact_class</item>
+        <item>@string/title_function_evaluate_class</item>
+        <item>@string/title_function_video_meeting</item>
+        <item>@string/title_function_teach_reflection</item>
+        <item>@string/title_function_test</item>
+        <item>@string/title_function_task</item>
+        <item>@string/title_function_question_ask</item>
+        <item>@string/title_function_classroom_member</item>
+        <item>@string/title_function_information</item>
+        <item>@string/title_function_tutorship</item>
+        <item>@string/title_function_ring_group</item>
+        <item>@string/title_function_good_resource</item>
+        <item>@string/title_function_analysis</item>
+    </string-array>
+
+    <!--items:专递课堂-->
+
+    <!--items:直录播课堂-->
+    <!--<string name="item_function_live">直播课堂</string>-->
+    <!--<string name="item_function_mxwl_ktxs">课堂巡视</string>-->
+    <!--<string name="item_function_mxwl_ktzy">课堂作业</string>-->
+    <!--<string name="item_function_mxwl_ycdb">远程导播</string>-->
+
+    <!--items:统计-->
+    <string name="item_function_resource_statistic">资源统计</string>
+
+
+</resources>

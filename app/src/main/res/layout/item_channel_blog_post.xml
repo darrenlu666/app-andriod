@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlt_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_pic"
+        android:layout_width="@dimen/poe_head_pic_size_large"
+        android:layout_height="@dimen/poe_head_pic_size_large"
+        style="@style/sdv_item_style"
+        app:placeholderImage="@drawable/default_person_head"
+        android:layout_centerVertical="true"
+        />
+    <TextView
+        android:id="@+id/tv_name"
+        tools:text="title"
+        style="@style/txt_group_txt_Title"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_alignTop="@id/sdv_pic"
+        android:layout_marginTop="@dimen/poe_top_bottom_text_addition_padding_size"
+        />
+    <TextView
+        android:id="@+id/tv_desc"
+        tools:text="blog detail desc blog detail desc blog detail desc blog detail desc blog detail desc blog detail desc "
+        style="@style/txt_group_txt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_marginTop="@dimen/poe_top_bottom_text_addition_padding_size"
+        android:maxLines="2"
+        android:minLines="1"
+        android:layout_alignBottom="@id/sdv_pic"
+        android:layout_marginRight="10dp"
+        />
+</RelativeLayout>

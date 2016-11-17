@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="250dp"
+    android:layout_height="350dp"
+    android:background="@drawable/circle_bg_white"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:text="学生:"
+        android:textColor="@color/main_color" />
+
+    <RelativeLayout
+        android:layout_width="100dp"
+        android:layout_height="120dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/class_studentdetail_simpledraweeview"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            fresco:placeholderImage="@drawable/default_person_head"
+            />
+
+        <TextView
+            android:id="@+id/class_studentdetail_text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
+            android:text="哈哈"
+            android:textColor="@color/fistpageclass_gridview_item_textcolor"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="30dp"
+        android:gravity="center_vertical"
+        android:text="家长:"
+        android:textColor="@color/main_color" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/class_studentdetail_recycle_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/class_studentdetail_simpledraweeview"
+        android:layout_marginTop="10dp"
+        android:background="#fff" />
+</LinearLayout>

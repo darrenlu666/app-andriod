@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+    <LinearLayout
+        android:id="@+id/rate_item_title"
+        android:layout_width="match_parent"
+        android:layout_height="25sp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
+            android:background="@color/green" />
+
+        <TextView
+            android:id="@+id/rate_layout_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:text="教学基本功"
+            android:textColor="@color/personal_text_color_content"
+            android:textSize="18dp" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@color/divide_line" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/rate_item_text_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rate_item_title"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
+        android:text="1.  哈好好好好好呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵"
+        android:textColor="@color/personal_text_color"
+        android:textSize="14dp" />
+
+    <com.codyy.erpsportal.commons.widgets.SeekBarView
+        android:id="@+id/rate_item_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@id/rate_item_text_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        app:bg_height="18"
+        app:circle_radius="@integer/circle_radius"
+        app:margin_left="50"
+        app:stroke_width="@integer/stroke_width"
+        app:textPadding="50"
+        app:text_top="@integer/text_top" />
+
+    <View
+        android:id="@+id/rate_item_view_bg"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_below="@id/rate_item_seekbar"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/personal_divide_bg" />
+</RelativeLayout>

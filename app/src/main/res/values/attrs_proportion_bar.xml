@@ -1,0 +1,12 @@
+<resources>
+    <declare-styleable name="ProportionBar">
+        <attr name="android:text" />
+        <attr name="android:textSize" />
+        <attr name="barColor"/>
+        <attr name="middlePadding"/>
+        <attr name="barHeight" format="dimension"/>
+        <attr name="android:textColor" />
+        <attr name="barColorLow" format="color" />
+        <attr name="textColorLow" format="color" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,156 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/detail_item_label"
+                android:text="年级"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_grade"
+                style="@style/video_details_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <include layout="@layout/video_details_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/detail_item_label"
+                android:text="学科"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_subject"
+                style="@style/video_details_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <include layout="@layout/video_details_divider" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/detail_item_label"
+                android:text="开始时间"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_start_time"
+                style="@style/video_details_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <include layout="@layout/video_details_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/detail_item_label"
+                android:text="点击量"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_click_count"
+                style="@style/video_details_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <include layout="@layout/video_details_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/detail_item_label"
+                android:text="总评分"
+                android:textSize="15sp" />
+
+            <RatingBar
+                android:id="@+id/rb_star"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_school_name"
+                android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@id/tv_star_name_text"
+                android:numStars="5"
+                android:progressDrawable="@drawable/ratingbar_drawable"
+                android:rating="0"
+                android:stepSize="0.5" />
+
+            <TextView
+                android:id="@+id/tv_score"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                tools:text="80/50" />
+
+        </LinearLayout>
+
+        <include layout="@layout/video_details_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                android:id="@+id/tv_teacher_name_text"
+                style="@style/detail_item_label"
+                android:text="主备教师"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_teacher_name"
+                style="@style/video_details_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <include layout="@layout/video_details_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TextView
+                style="@style/detail_item_label"
+                android:text="活动要求"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_produce"
+                style="@style/video_details_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
+
+

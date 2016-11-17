@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/ib_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:src="@drawable/btn_play"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/ib_play"
+        android:layout_toRightOf="@id/ib_play"
+        android:ellipsize="end"
+        android:lines="1"
+        android:singleLine="true"
+        android:textSize="18sp"
+        tools:text="数学第一章节练习酷玩虚空"/>
+
+    <TextView
+        android:id="@+id/tv_view_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/title"
+        android:layout_alignStart="@id/title"
+        android:layout_below="@id/title"
+        android:layout_marginTop="4dp"
+        tools:text="112"
+        style="@style/ResourceItemNumberTv.ViewCount"/>
+
+    <TextView
+        android:id="@+id/tv_download_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_view_count"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@id/tv_view_count"
+        android:layout_toRightOf="@id/tv_view_count"
+        tools:text="112"
+        style="@style/ResourceItemNumberTv.DownloadCount"/>
+
+    <TextView
+        android:id="@+id/tv_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_view_count"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@id/tv_download_count"
+        android:layout_toRightOf="@id/tv_download_count"
+        tools:text="04:34:54"
+        style="@style/ResourceItemNumberTv.Duration"/>
+</RelativeLayout>

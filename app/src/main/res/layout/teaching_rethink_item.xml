@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="80dp"
+    android:orientation="vertical">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/teaching_rething_simple"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        app:placeholderImage="@drawable/default_subject"
+        app:placeholderImageScaleType="fitCenter"
+        app:roundAsCircle="true" />
+
+    <TextView
+        android:id="@+id/teaching_rething_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/teaching_rething_simple"
+        android:layout_toRightOf="@+id/teaching_rething_simple"
+        android:singleLine="true"
+        android:text="adfadfadfa"
+        android:textColor="@color/fistpageclass_gridview_item_textcolor"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/teaching_rething_count_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/teaching_rething_title_text"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_toEndOf="@+id/teaching_rething_simple"
+        android:layout_toRightOf="@+id/teaching_rething_simple"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="hhah"
+        android:textColor="#929292"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignLeft="@id/teaching_rething_count_text"
+        android:layout_alignParentBottom="true"
+        android:background="@color/divider" />
+</RelativeLayout>

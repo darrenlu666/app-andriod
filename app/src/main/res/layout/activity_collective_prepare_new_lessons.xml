@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_title_head2" />
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/dl_collective_prepare_lesson_new_drawerlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center">
+
+                <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+                    android:id="@+id/udb_by_time"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="18dp"
+                    android:background="#dddddd" />
+
+
+                <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+                    android:id="@+id/udb_by_quality"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="18dp"
+                    android:background="#dddddd" />
+
+                <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+                    android:id="@+id/udb_by_count"
+                    android:layout_width="0px"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/divider" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.codyy.lrticlassroom.controllers.fragments.VideosFragment">
+
+                <com.handmark.pulltorefresh.library.PullToRefreshListView
+                    android:id="@+id/ptrl_prepare_lseeons_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="#00000000"
+                    android:divider="@null"
+                    android:horizontalSpacing="4dp"
+                    android:listSelector="#00000000"
+                    android:numColumns="2"
+                    ptr:ptrDrawable="@drawable/loading_bg" />
+
+                <com.codyy.erpsportal.commons.widgets.EmptyView
+                    android:id="@+id/empty_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/activity_collective_new_filter_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right" />
+
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

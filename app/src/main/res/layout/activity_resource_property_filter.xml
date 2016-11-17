@@ -1,0 +1,27 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".resource.controllers.activities.ResourcePropertyFilterAct">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:text="@string/filter_by_property">
+
+        <Button
+            android:id="@+id/btn_confirm"
+            style="@style/TextButtonInLeftOfTitleBar"
+            android:text="@string/confirm"/>
+
+    </com.codyy.erpsportal.commons.widgets.TitleBar>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_bar"
+        android:choiceMode="singleChoice"/>
+</RelativeLayout>

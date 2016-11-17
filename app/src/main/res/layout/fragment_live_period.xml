@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/framePeriodOfPeriodLive"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_transparent"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        style="@style/live_period"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_live_period"
+            style="@style/live_period_title"
+            />
+        <ListView
+            android:id="@+id/listViewOfLivePeriodFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            style="@style/live_period_listview"
+            />
+
+    </LinearLayout>
+</FrameLayout>

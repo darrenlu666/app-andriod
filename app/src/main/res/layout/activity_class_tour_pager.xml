@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/personal_divide_bg"
+    tools:context=".commons.controllers.activities.ClassTourPagerActivity"
+    tools:openDrawer="end">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/live_class_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_class_tour_title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="#66000000">
+
+            <ImageButton
+                android:id="@+id/ib_return"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@null"
+                android:contentDescription="@null"
+                android:scaleType="centerInside"
+                android:src="@drawable/back_video"/>
+
+            <Button
+                android:id="@+id/btn_course_info"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/bg_btn_course_info"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:lines="1"
+                android:text="@string/course_info"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tv_school_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/ib_return"
+                android:layout_toLeftOf="@id/btn_course_info"
+                android:layout_toRightOf="@id/ib_return"
+                android:layout_toStartOf="@id/btn_course_info"
+                android:gravity="center_vertical"
+                android:paddingLeft="20dp"
+                android:paddingStart="20dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                tools:text="hahahxuex"/>
+        </RelativeLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#3f3f3f">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/tv_lb_grade"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="年级："/>
+
+                <TextView
+                    android:id="@+id/tv_grade"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_lb_grade"
+                    android:layout_toEndOf="@id/tv_lb_grade"
+                    android:layout_toRightOf="@id/tv_lb_grade"
+                    android:ems="5"
+                    android:lines="1"
+                    tools:text="一年级"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_subject"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_grade"
+                    android:layout_toEndOf="@id/tv_grade"
+                    android:layout_toRightOf="@id/tv_grade"
+                    android:text="学科："/>
+
+                <TextView
+                    android:id="@+id/tv_subject"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_lb_subject"
+                    android:layout_toEndOf="@id/tv_lb_subject"
+                    android:layout_toRightOf="@id/tv_lb_subject"
+                    android:ems="5"
+                    android:lines="1"
+                    tools:text="英语"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_week"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_lb_grade"
+                    android:layout_marginTop="8dp"
+                    android:text="周次："/>
+
+                <TextView
+                    android:id="@+id/tv_week"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_lb_week"
+                    android:layout_toEndOf="@id/tv_lb_week"
+                    android:layout_toRightOf="@id/tv_lb_week"
+                    android:ems="5"
+                    android:lines="1"
+                    tools:text="第56周"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_course_number"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_lb_subject"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/tv_week"
+                    android:layout_toRightOf="@id/tv_week"
+                    android:text="节次："/>
+
+                <TextView
+                    android:id="@+id/tv_course_number"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/tv_lb_course_number"
+                    android:layout_toEndOf="@id/tv_lb_course_number"
+                    android:layout_toRightOf="@id/tv_lb_course_number"
+                    tools:text="第二节"/>
+
+                <TextView
+                    android:id="@+id/lb_main_teacher"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_lb_course_number"
+                    android:layout_marginTop="8dp"
+                    android:text="主讲教师："/>
+
+                <TextView
+                    android:id="@+id/tv_main_teacher"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/lb_main_teacher"
+                    android:layout_toEndOf="@id/lb_main_teacher"
+                    android:layout_toRightOf="@id/lb_main_teacher"
+                    android:singleLine="true"
+                    android:textColorLink="@android:color/white"
+                    tools:text="张ddddddddddddddddddddddddddd三三(13333333333)"/>
+
+                <TextView
+                    android:id="@+id/tv_lb_receiving_teacher"
+                    style="@style/CourseInfoTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_main_teacher"
+                    android:layout_marginTop="8dp"
+                    android:text="接收教师："/>
+
+                <LinearLayout
+                    android:id="@+id/ll_receiving_teachers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/tv_lb_receiving_teacher"
+                    android:layout_toEndOf="@id/tv_lb_receiving_teacher"
+                    android:layout_toRightOf="@id/tv_lb_receiving_teacher"
+                    android:orientation="vertical">
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+</android.support.v4.widget.DrawerLayout>

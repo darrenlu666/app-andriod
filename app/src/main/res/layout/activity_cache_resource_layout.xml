@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#fff"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical" >
+
+    <include layout="@layout/toolbar_layout"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+
+        <com.codyy.erpsportal.commons.widgets.SwipeMenuListView.SwipeMenuListView
+            android:id="@+id/cache_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@null" />
+
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="无缓存资源"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/cache_delete_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_title_height"
+        android:background="@color/cache_resource_bottom"
+        android:visibility="gone" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#d7d7d7"/>
+
+        <CheckBox
+            android:id="@+id/cache_check_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:button="@drawable/cache_check_root"
+            android:paddingLeft="5dp"
+            android:text="全选"
+            android:textColor="#19ab20"/>
+
+        <Button
+            android:id="@+id/check_btn_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:drawableLeft="@drawable/cache_delete_btn"
+            android:text="删除"
+            android:textColor="#19ab20"/>
+    </RelativeLayout>
+
+</LinearLayout>

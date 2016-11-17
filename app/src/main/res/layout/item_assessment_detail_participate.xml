@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 互动听课-主讲学校/接收学校-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/assessment_detail_item_school"
+        style="@style/collective_prepare_lesson_detail_value_text"
+        android:text="安徽省某校"
+        android:layout_marginRight="10dp"
+        />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_teacher_desc"
+            style="@style/collective_prepare_lesson_detail_title_text"
+            android:text="参与教师"
+            />
+
+        <TextView
+            android:id="@+id/assessment_detail_item_teacher"
+            style="@style/collective_prepare_lesson_detail_value_text_no_single_line"
+            tools:text="张老师、刘老师、老师张老师、刘老师、老师张老师、刘老师、老师张老师、刘老师、老师张老师、刘老师、老师张老师、刘老师、老师张老师、刘老师、老师" />
+    </LinearLayout>
+</LinearLayout>

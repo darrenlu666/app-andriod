@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.codyy.erpsportal.commons.models.Titles" />
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="entity"
+            type="com.codyy.erpsportal.reservation.models.entities.ReservationDetial.ListBean" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/timetable_popu_bg">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+
+            <TextView
+                style="@style/conty_detail_popu_text"
+                android:layout_marginTop="5dp"
+                android:text='@{TextUtils.isEmpty(entity.classlevelName)?"年级-学科":entity.classlevelName+"-"+entity.subjectName}'
+                tools:text="二年级语文" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/dotted_line"
+                android:layerType="software" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{Titles.sMasterRoom}"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="主讲教室" />
+
+            <TextView
+                android:id="@+id/master_school"
+                style="@style/conty_detail_popu_text"
+                android:layout_marginTop="5dp"
+                android:text='@{TextUtils.isEmpty(entity.schoolName)?"学校:":"学校:"+entity.schoolName}'
+                tools:text="学校：北京市智障二中" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/master_teacher_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:drawableLeft="@drawable/phone_icon"
+                    android:drawablePadding="5dp"
+                    android:onClick="@{(theview)->entity.onPhoneClick(theview,entity.contact)}"
+                    android:text='@{entity.contact}'
+                    android:textColor="@color/main_color"
+                    android:textSize="18dp"
+                    android:visibility="@{TextUtils.isEmpty(entity.contact)?View.GONE:View.VISIBLE}"
+                    tools:text="15555555555" />
+
+                <TextView
+                    android:id="@+id/master_teacher"
+                    style="@style/conty_detail_popu_text"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/master_teacher_phone"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text='@{TextUtils.isEmpty(entity.speakUserName)?"教师:":"教师:"+(TextUtils.isEmpty(entity.contact)?entity.speakUserName+"(未填写联系电话)":entity.speakUserName)}'
+                    tools:text="教师：张三张三张三张三张三张三张三张三" />
+
+            </RelativeLayout>
+
+            <TextView
+                style="@style/conty_detail_popu_text"
+                android:layout_marginTop="5dp"
+                android:text='@{TextUtils.isEmpty(entity.lessonClassNames)?"班级:未添加听课班级":"班级:"+entity.lessonClassNames}'
+                tools:text="班级：智障五班" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/dotted_line"
+                android:layerType="software" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{Titles.sReceiveRoom}"
+                android:textColor="@color/divider"
+                android:textSize="18dp"
+                tools:text="接收教室" />
+
+            <LinearLayout
+                android:id="@+id/receive_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <!-- <include layout="@layout/receiveclass_item" />-->
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/dotted_line"
+                android:layerType="software" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="导播老师"
+                android:textColor="@color/divider"
+                android:textSize="18dp" />
+
+            <LinearLayout
+                android:id="@+id/direct_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+            </LinearLayout>
+            <!--
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@drawable/dotted_line"
+                            android:layerType="software" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="上课时间"
+                            android:textColor="@color/divider"
+                            android:textSize="18dp" />
+
+                        <TextView
+                            android:id="@+id/class_time"
+                            style="@style/conty_detail_popu_text"
+                            android:layout_marginTop="5dp"
+                            android:text='@{entity.strBeginTime}'
+                            tools:text="18:20" />-->
+        </LinearLayout>
+    </ScrollView>
+</layout>

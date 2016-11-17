@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.codyy.erpsportal.commons.widgets.BnVideoView2
+            android:id="@+id/bn_video_view2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"/>
+
+        <RelativeLayout
+            android:id="@+id/relative_header"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="#66000000">
+
+            <ImageButton
+                android:id="@+id/imgBtn2"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@null"
+                android:onClick="onBackClick"
+                android:scaleType="centerInside"
+                android:src="@drawable/back_video"/>
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/imgBtn2"
+                android:gravity="center_vertical"
+                android:maxLength="8"
+                android:paddingLeft="20dp"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                tools:text="高三数学期中考试试题讲解"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.codyy.erpsportal.commons.widgets.BNVideoControlView
+        android:id="@+id/video_control_view2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

@@ -1,0 +1,8 @@
+<resources>
+    <declare-styleable name="BnVideoView">
+        <attr name="shouldDrawError" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="VideoControlView">
+        <attr name="videoControlViewStyle" format="reference"/>
+    </declare-styleable>
+</resources>

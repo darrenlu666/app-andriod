@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/weibo_divider_bg"
+    android:orientation="vertical"
+    tools:context=".weibo.controllers.activities.WeiBoPrivateMessageActivity">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <LinearLayout
+        android:id="@+id/private_rootview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/private_msg_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:listitem="@layout/item_weibo_msg_right" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/bottom_bar_shadow" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/inputviewlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="bottom"
+            android:minHeight="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/send_voice"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:onClick="sendAudio"
+                android:scaleType="center"
+                android:src="@drawable/weibo_voice"
+                android:visibility="gone" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="50dp">
+
+                <com.codyy.erpsportal.commons.widgets.EmojiEditText
+                    android:id="@+id/edittext_send_private_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:maxLength="150"
+                    android:maxLines="4"
+                    android:minHeight="50dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp" />
+
+                <com.codyy.erpsportal.homework.widgets.PressBar
+                    android:id="@+id/pressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="5dp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:onClick="sendEmoji"
+                android:scaleType="center"
+                android:src="@drawable/weibo_emoticon" />
+
+            <ImageView
+                android:id="@+id/send_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:onClick="sendMessage"
+                android:scaleType="center"
+                android:src="@drawable/ic_menu_send" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.codyy.erpsportal.commons.widgets.EmojiView
+        android:id="@+id/private_emojiview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:keyBackground="@android:color/white"
+        android:paddingBottom="20dp"
+        android:visibility="gone" />
+</LinearLayout>

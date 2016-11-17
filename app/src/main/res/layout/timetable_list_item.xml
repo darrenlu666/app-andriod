@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.codyy.erpsportal.commons.models.Titles" />
+
+        <variable
+            name="item"
+            type="com.codyy.erpsportal.commons.models.entities.TimeTableListContent" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:onClick="@{(theview)->item.onClick(theview,item)}"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simledraweeview"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            app:placeholderImage="@drawable/school_holder"
+            app:placeholderImageScaleType="fitCenter" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/simledraweeview"
+            android:layout_toRightOf="@+id/simledraweeview"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/timetable_item_text_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:maxWidth="260dp"
+                android:singleLine="true"
+                android:text="@{item.schoolName}"
+                android:textColor="#333333"
+                android:textSize="18dp"
+                tools:text="东方红小学" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:minWidth="80dp"
+                android:singleLine="true"
+                android:text='@{Titles.sMasterRoom+":"+item.masterCount}'
+                android:textColor="#707070"
+                android:textSize="14dp"
+                tools:text="主讲教室:53" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:minWidth="80dp"
+                android:singleLine="true"
+                android:text='@{Titles.sReceiveRoom+":"+item.reciveCount}'
+                android:textColor="#707070"
+                android:textSize="14dp"
+                tools:text="接收教室:52" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/divider" />
+    </RelativeLayout>
+</layout>

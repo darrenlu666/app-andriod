@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/imgOfLessonItem"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_vertical"
+            fresco:placeholderImage="@drawable/icon_direct_video_default"
+            fresco:failureImage="@drawable/icon_direct_video_default"
+            fresco:roundAsCircle="true"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/txtTitleOfLessonItem"
+                style="@style/txt_lesson_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="苏大附中"
+                />
+
+            <TextView
+                android:id="@+id/txtSubjectOfLessonItem"
+                style="@style/txt_lesson_desc"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleOfLessonItem"
+                android:text="化学" />
+
+            <TextView
+                android:id="@+id/txtTeacherOfLessonItem"
+                style="@style/txt_lesson_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtSubjectOfLessonItem"
+                android:text="诸葛燕" />
+
+
+            <TextView
+                android:id="@+id/txtDes3OfLessonItem"
+                style="@style/txt_lesson_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleOfLessonItem"
+                android:layout_toRightOf="@id/txtSubjectOfLessonItem"
+                android:text="年级" />
+
+            <TextView
+                android:id="@+id/txtGradOfLessonItem"
+                style="@style/txt_lesson_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleOfLessonItem"
+                android:layout_toRightOf="@id/txtDes3OfLessonItem"
+                android:text="三年级" />
+
+
+            <TextView
+                android:id="@+id/txtDes1OfLessonItem"
+                style="@style/txt_lesson_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleOfLessonItem"
+                android:layout_toRightOf="@id/txtGradOfLessonItem"
+                android:text="/上课时间" />
+
+            <TextView
+                android:id="@+id/txtIndexOfLessonItem"
+                style="@style/txt_lesson_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtTitleOfLessonItem"
+                android:layout_toRightOf="@id/txtDes1OfLessonItem" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

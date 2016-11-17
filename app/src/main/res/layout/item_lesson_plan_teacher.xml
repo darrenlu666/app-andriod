@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:clickable="true"
+                android:padding="8dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/dv_subject"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_centerVertical="true"
+        app:placeholderImage="@drawable/default_subject"/>
+
+    <TextView
+        android:id="@+id/tv_plp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@id/dv_subject"
+        android:layout_toRightOf="@id/dv_subject"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/md_grey_900"
+        android:textSize="20sp"
+        tools:text="长方形和正方形面积的计算"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/dv_subject"
+        android:layout_alignLeft="@id/tv_plp_title"
+        android:layout_alignStart="@id/tv_plp_title"
+        android:layout_below="@id/lb_teacher"
+        android:layout_toEndOf="@id/dv_subject"
+        android:layout_toRightOf="@id/dv_subject">
+
+        <TextView
+            android:id="@+id/tv_lb_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/rate"
+            android:textSize="18sp"/>
+
+        <RatingBar
+            android:id="@+id/rb_rate"
+            style="@style/pcp_ratingbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="2.5"/>
+
+        <TextView
+            android:id="@+id/tv_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:textSize="18sp"
+            tools:text="9.8分"/>
+    </LinearLayout>
+
+</RelativeLayout>

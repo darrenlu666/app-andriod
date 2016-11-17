@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lin_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/style_item_function_selected"
+    android:padding="10dp"
+    android:background="@color/white"
+    >
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv"
+        style="@style/iv_function_item_icon_child"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        app:placeholderImage="@drawable/default_person_head"
+        />
+    <ImageView
+        android:id="@+id/iv_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_group_manager"
+        />
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/tv_function_item_title_child"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Group Member"
+        android:layout_below="@id/sdv"
+        />
+
+</RelativeLayout>

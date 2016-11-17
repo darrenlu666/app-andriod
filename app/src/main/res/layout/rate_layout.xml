@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layout_title_height"
+        android:background="@color/layout_title_bg">
+
+        <Button
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/back_btn_bg"
+            android:onClick="rateBack" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="打分"
+            android:textColor="@color/layout_title_text_color"
+            android:textSize="@dimen/layout_title_text_size" />
+
+        <Button
+            android:id="@+id/rate_layout_btn_submit"
+            android:layout_width="44dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/login_bt_bg"
+            android:text="提交"
+            android:textColor="#fff"
+            android:textSize="13dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/divide_color">
+
+        <TextView
+            android:id="@+id/rate_text_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="请根据下面0个具体项进行打分"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/poe_txt_size_title"
+            />
+
+        <TextView
+            android:id="@+id/rate_text_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rate_text_all"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="满分：0 我的打分：0"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/poe_txt_size_title"
+
+            />
+    </RelativeLayout>
+
+    <com.codyy.erpsportal.commons.widgets.ListviewTouch
+        android:id="@+id/rate_layout_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#fff"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent" />
+</LinearLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/set_teacher_text_title"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:background="#efeff3"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="一年级"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <CheckBox
+            android:id="@+id/set_teacher_check_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:button="@drawable/cache_layout_check"
+            android:visibility="gone" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/set_teacher_heart_image"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/set_teacher_check_btn"
+            ptr:roundAsCircle="true"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/set_teacher_text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/set_teacher_heart_image"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/set_teacher_heart_image"
+            android:text="语文"
+            android:textColor="#333333"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignLeft="@id/set_teacher_text_name"
+            android:layout_below="@id/set_teacher_text_name"
+            android:layout_marginTop="20dp"
+            android:background="@color/divider_top_line" />
+    </RelativeLayout>
+</LinearLayout>

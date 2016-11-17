@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#e6e6e6"
+    android:minHeight="50dp"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/input_layout_editext"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/dialog_input_bg"
+        android:cursorVisible="true"
+        android:hint="（150字以内）"
+        android:maxLength="150"
+        android:maxLines="5"
+        android:minHeight="40dp"
+        android:padding="5dp"
+        android:textColor="#000"
+        android:textColorHint="#666666"
+        android:textCursorDrawable="@drawable/et_accent"
+        android:imeOptions="actionDone"/>
+
+    <Button
+        android:id="@+id/input_layout_btn"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/login_bt_bg"
+        android:text="提交"
+        android:textColor="#fff" />
+</LinearLayout>

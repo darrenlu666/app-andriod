@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/rl_view"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@color/remote_main_bg"
+              android:descendantFocusability="blocksDescendants">
+
+    <TextView
+        android:id="@+id/tv_position"
+        android:layout_width="40dp"
+        android:layout_height="45dp"
+        android:background="@color/remote_text_nor"
+        android:text="1"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
+        <View
+            android:id="@+id/point"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:background="@color/remote_text_nor"
+            android:layout_below="@+id/tv_position"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            />
+
+</RelativeLayout>
