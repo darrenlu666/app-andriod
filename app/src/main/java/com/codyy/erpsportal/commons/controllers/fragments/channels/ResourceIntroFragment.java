@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * 优课资源频道页
  */
-public class ResourceIntroFragment extends Fragment implements OnModuleConfigListener,OnRefreshListener {
+public class ResourceIntroFragment extends Fragment{
 
     private final static String TAG = "ResourceIntroFragment";
 
@@ -70,13 +70,13 @@ public class ResourceIntroFragment extends Fragment implements OnModuleConfigLis
         super.onCreate(savedInstanceState);
         mRequestQueue = RequestManager.getRequestQueue();
         initViews();
-        ConfigBus.register(this);
+        ConfigBus.register(mOnModuleConfigListener);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ConfigBus.unregister(this);
+        ConfigBus.unregister(mOnModuleConfigListener);
     }
 
     private void initViews(){
@@ -84,7 +84,7 @@ public class ResourceIntroFragment extends Fragment implements OnModuleConfigLis
             LayoutInflater inflater = LayoutInflater.from(getContext());
             mRootView = inflater.inflate(R.layout.fragment_resource_intro, null);
             mRefreshLayout = (RefreshLayout) mRootView.findViewById(R.id.rl_resource_intro);
-            mRefreshLayout.setOnRefreshListener(this);
+            mRefreshLayout.setOnRefreshListener(mOnRefreshListener);
             mRefreshLayout.setColorSchemeResources(R.color.main_color);
 
             mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);
@@ -318,16 +318,20 @@ public class ResourceIntroFragment extends Fragment implements OnModuleConfigLis
         }
     }
 
-    @Override
-    public void onConfigLoaded(ModuleConfig config) {
-        if (mRootView != null) {//判断下视图是否在
+    private OnModuleConfigListener mOnModuleConfigListener = new OnModuleConfigListener() {
+        @Override
+        public void onConfigLoaded(ModuleConfig config) {
+            if (mRootView != null) {//判断下视图是否在
+                loadData(config.getBaseAreaId(), config.getSchoolId());
+            }
+        }
+    };
+
+    private OnRefreshListener mOnRefreshListener = new OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            ModuleConfig config = ConfigBus.getInstance().getModuleConfig();
             loadData(config.getBaseAreaId(), config.getSchoolId());
         }
-    }
-
-    @Override
-    public void onRefresh() {
-        ModuleConfig config = ConfigBus.getInstance().getModuleConfig();
-        loadData(config.getBaseAreaId(), config.getSchoolId());
-    }
+    };
 }
