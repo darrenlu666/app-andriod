@@ -4,10 +4,12 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:background="#fff"
                 android:descendantFocusability="blocksDescendants">
 
-    <View
+    <Space
         android:layout_width="match_parent"
         android:layout_height="10dp"/>
 
@@ -17,16 +19,21 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:button="@drawable/cache_layout_check"/>
+        android:layout_marginStart="10dp"
+        android:button="@drawable/cache_layout_check"
+        android:paddingBottom="8dp"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="8dp"/>
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/cache_item_image"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/cache_item_check_btn"
+        android:layout_toEndOf="@id/cache_item_check_btn"
         app:failureImage="@drawable/icon_default_video"
         app:placeholderImage="@drawable/icon_default_video"
         app:roundAsCircle="false"/>
@@ -35,11 +42,11 @@
         android:id="@+id/cache_item_progress"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         app:paintw="3"
         app:textsize="10"/>
 
@@ -74,6 +81,7 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_alignLeft="@id/cache_item_image"
+        android:layout_alignStart="@id/cache_item_image"
         android:layout_below="@id/cache_item_text_size"
         android:layout_marginTop="10dp"
         android:background="@color/divide_line"/>
@@ -84,7 +92,9 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_toLeftOf="@id/cache_item_progress"
+        android:layout_toStartOf="@id/cache_item_progress"
         android:paddingTop="20dp"
         android:textSize="16sp"
         tools:text="100kb/s"/>
