@@ -70,7 +70,7 @@ def svnVersion() {
     }
 }
 
-String BUILD_VERSION = getSvnVersion() + '.' + buildTime();
+String BUILD_VERSION = /*getSvnVersion() + '.' +*/ buildTime();
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
