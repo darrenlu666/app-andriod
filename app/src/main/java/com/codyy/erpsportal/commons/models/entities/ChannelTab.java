@@ -74,7 +74,7 @@ public class ChannelTab {
     }
 
     public static List<ChannelTab> parseJsonArray(JSONArray jsonArray) {
-        if (jsonArray == null || jsonArray.length() == 0) return null;
+        if (jsonArray == null || jsonArray.length() == 0) return new ArrayList<>();
         List<ChannelTab> channelTabs = new ArrayList<>(jsonArray.length());
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.optJSONObject(i);
