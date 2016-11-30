@@ -20,16 +20,17 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.StateObjectsAdapter;
+import com.codyy.erpsportal.commons.controllers.adapters.StateObjectsAdapter.OnSelectedChangedListener;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
-import com.codyy.erpsportal.info.models.entities.InfoItem;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
+import com.codyy.erpsportal.info.models.entities.InfoItem;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -103,9 +104,10 @@ public class InfoEditListFragment extends Fragment implements AdapterView.OnItem
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mSender = new RequestSender(getActivity());
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity activity = getActivity();
+        mSender = new RequestSender(activity);
         if (activity instanceof OnDeleteCompleteListener) {
             mDeleteCompleteListener = (OnDeleteCompleteListener) activity;
         }
@@ -129,9 +131,17 @@ public class InfoEditListFragment extends Fragment implements AdapterView.OnItem
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.fragment_info_edit_list, null, false);
+            mRootView = inflater.inflate(R.layout.fragment_info_edit_list, container, false);
             ButterKnife.bind(this, mRootView);
-            mAdapter = new StateObjectsAdapter<>(getActivity(),InfoEditViewHolder.class);
+            mAdapter = new StateObjectsAdapter<>(getActivity(),
+                    InfoEditViewHolder.class,
+                    new OnSelectedChangedListener(){
+
+                        @Override
+                        public void onSelectedChanged() {
+                            updateSelectAllCbState();
+                        }
+                    });
             mListView.setAdapter(mAdapter);
             mListView.setEmptyView(mEmptyView);
             mListView.setOnItemClickListener(this);
@@ -145,6 +155,22 @@ public class InfoEditListFragment extends Fragment implements AdapterView.OnItem
             initPullToRefresh(mListView);
         }
         return mRootView;
+    }
+
+    /**
+     * 更新全部选择的CheckBox
+     */
+    private void updateSelectAllCbState() {
+        List<InfoItem> infoItems = mAdapter.getItems();
+        if (infoItems != null) {
+            for(InfoItem infoItem: infoItems) {
+                if (!infoItem.isSelected()) {
+                    mSelectAll.setChecked(false);
+                    return;
+                }
+            }
+            mSelectAll.setChecked(true);
+        }
     }
 
     @Override
@@ -192,6 +218,7 @@ public class InfoEditListFragment extends Fragment implements AdapterView.OnItem
                             mAdapter.addData(infoList);
                         }
                         mAdapter.notifyDataSetChanged();
+                        updateSelectAllCbState();
 
                         mListView.onRefreshComplete();
                         //如果已经加载所有，下拉更多关闭
@@ -238,7 +265,7 @@ public class InfoEditListFragment extends Fragment implements AdapterView.OnItem
     @OnClick(R.id.btn_delete)
     public void onDeleteClick(){
         int selectCount = 0;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = mAdapter.getCount() - 1; i >= 0; i--) {
             InfoItem news = mAdapter.getItem(i);
             if (news.isSelected()) {
@@ -388,7 +415,8 @@ public class InfoEditListFragment extends Fragment implements AdapterView.OnItem
         }
 
         @Override
-        public void setDataToView(final InfoItem data, Context context, boolean flag) {
+        public void setDataToView(final InfoItem data, Context context, boolean flag,
+                                  final OnSelectedChangedListener listener) {
             titleTv.setText(data.getTitle());
             String content = data.getContent();
             if (TextUtils.isEmpty(content)) {
@@ -417,6 +445,9 @@ public class InfoEditListFragment extends Fragment implements AdapterView.OnItem
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     data.setIsSelected(isChecked);
+                    if (listener != null) {
+                        listener.onSelectedChanged();
+                    }
                 }
             });
         }
