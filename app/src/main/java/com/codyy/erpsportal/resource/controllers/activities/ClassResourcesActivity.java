@@ -696,7 +696,11 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
 
     @OnClick(R.id.ib_open_simple_filter)
     protected void onOpenSimpleFilterClick() {
-        mScopePl.setPanelState(PanelState.EXPANDED);
+        if (mScopePl.getPanelState() == PanelState.COLLAPSED) {
+            mScopePl.setPanelState(PanelState.EXPANDED);
+        } else {
+            mScopePl.setPanelState(PanelState.COLLAPSED);
+        }
     }
 
     /**

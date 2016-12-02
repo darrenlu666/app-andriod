@@ -34,21 +34,19 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.Extra;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
-import com.codyy.erpsportal.commons.widgets.TitleBar;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelSlideListener;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelState;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
+import com.codyy.erpsportal.commons.widgets.TitleBar;
+import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout;
+import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelState;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnLoadMoreListener;
 import com.codyy.erpsportal.resource.controllers.fragments.ParentsResourcesFilterFragment;
@@ -60,6 +58,7 @@ import com.codyy.erpsportal.resource.models.entities.Document;
 import com.codyy.erpsportal.resource.models.entities.Video;
 import com.codyy.erpsportal.resource.utils.CountIncreaser;
 import com.codyy.erpsportal.resource.widgets.AudioControlBar;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -73,11 +72,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
+import static com.codyy.erpsportal.R.id.ib_open_simple_filter;
+
 /**
  * 530家长资源页
  * Created by gujiajia on 2016/7/6
  */
-public class ParentsResourcesActivity extends AppCompatActivity implements OnLoadMoreListener, OnRefreshListener, PanelSlideListener, Callback {
+public class ParentsResourcesActivity extends AppCompatActivity implements OnLoadMoreListener, OnRefreshListener, Callback {
 
     private final static String TAG = "ParentsResourcesActivity";
 
@@ -182,7 +183,10 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         }
 
         @Override
-        public void onPanelStateChanged(View panel, ResSlidingUpPanelLayout.PanelState previousState, ResSlidingUpPanelLayout.PanelState newState) { }
+        public void onPanelStateChanged(View panel, ResSlidingUpPanelLayout.PanelState previousState, ResSlidingUpPanelLayout.PanelState newState) {
+            Cog.d(TAG, "onPanelStateChanged previousState=", previousState, ",newState=", newState);
+            mPanelStateCollapsed = newState == PanelState.COLLAPSED;
+        }
     };
 
     @Override
@@ -457,20 +461,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         }
     }
 
-    @Override
-    public void onPanelSlide(View panel, float slideOffset) {
-    }
-
-    @Override
-    public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-        Cog.d(TAG, "onPanelStateChanged previousState=", previousState, ",newState=", newState);
-        if (newState == PanelState.COLLAPSED) {
-            mPanelStateCollapsed = true;
-        } else {
-            mPanelStateCollapsed = false;
-        }
-    }
-
     private boolean mPanelStateCollapsed = true;
 
     @Override
@@ -494,8 +484,8 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     /**
      * 处理请求响应
      *
-     * @param response
-     * @param isRefreshing
+     * @param response 响应数据
+     * @param isRefreshing 刷新
      */
     private void handleNormalResponse(JSONObject response, boolean isRefreshing) {
         mAdapter.setLoading(false);
@@ -549,8 +539,8 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     /**
      * 检查请求是否成功，默认检查result字段值是否为success
      *
-     * @param response
-     * @return
+     * @param response 响应数据
+     * @return true请求成功
      */
     protected boolean checkSuccessful(JSONObject response) {
         return "success".equals(response.optString("result"));
@@ -651,7 +641,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
     }
 
-    @OnClick(R.id.ib_open_simple_filter)
+    @OnClick(ib_open_simple_filter)
     protected void onOpenSimpleFilterClick() {
         if (mPanelStateCollapsed) {
             mSlidingPanelLayout.setPanelState(PanelState.EXPANDED);

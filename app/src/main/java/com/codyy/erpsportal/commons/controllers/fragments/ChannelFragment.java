@@ -1,6 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.fragments;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -17,22 +17,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.SearchInputActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MapFragment;
+import com.codyy.erpsportal.commons.models.ConfigBus;
+import com.codyy.erpsportal.commons.models.ConfigBus.LoadingHandler;
+import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
+import com.codyy.erpsportal.commons.models.entities.ChannelTab;
+import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.OnFiveEvenClickListener;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.EmptyView.OnReloadClickListener;
 import com.codyy.erpsportal.commons.widgets.SlidingTabLayout;
 import com.codyy.erpsportal.commons.widgets.SlidingTabLayout.IsOnRight;
-import com.codyy.erpsportal.commons.models.ConfigBus;
-import com.codyy.erpsportal.commons.models.ConfigBus.LoadingHandler;
-import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
-import com.codyy.erpsportal.commons.models.entities.ChannelTab;
-import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
+import com.codyy.url.URLConfig;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -98,10 +98,10 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
     };
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnAreaClickListener) {
-            mListener = (OnAreaClickListener) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (getActivity() instanceof OnAreaClickListener) {
+            mListener = (OnAreaClickListener) getActivity();
         }
     }
 
@@ -177,7 +177,7 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
     /**
      * 设置当前地区名称
      *
-     * @param areaName
+     * @param areaName 地区名称
      */
     public void setLocationName(String areaName) {
         if (!TextUtils.isEmpty(areaName) && null != mLocationTv) {
@@ -205,7 +205,7 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
 
     /**
      * 根据配置加载数据
-     * @param config
+     * @param config 配置数据
      */
     private void initViewsWithConfig(ModuleConfig config) {
         if(isDetached()) return;
@@ -250,7 +250,7 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
 
     /**
      * 展开或缩起标题
-     * @param expanded
+     * @param expanded 是否已展开
      */
     public void setTitleExpanded(boolean expanded) {
         mAppBarLayout.setExpanded(expanded, true);
