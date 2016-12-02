@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +69,7 @@ import butterknife.OnClick;
 
 /**
  * 图片资源详情
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class ImageDetailsActivity extends FragmentActivity {
 
@@ -81,11 +82,14 @@ public class ImageDetailsActivity extends FragmentActivity {
     @Bind(R.id.title_bar)
     TitleBar mTitleBar;
 
-    @Bind(R.id.pager)
-    ViewPager mPager;
+    @Bind(R.id.view_pager)
+    ViewPager mViewPager;
 
     @Bind(android.R.id.tabhost)
     TabHost mTabHost;
+
+    @Bind(android.R.id.tabs)
+    TabWidget mTabWidget;
 
     @Bind(R.id.dv_image)
     SimpleDraweeView mImageDv;
@@ -128,7 +132,7 @@ public class ImageDetailsActivity extends FragmentActivity {
 
     private void initViews(Bundle savedInstanceState) {
         mTabHost.setup();
-        mTabsAdapter = new TabsAdapter(this, getSupportFragmentManager(), mTabHost, mPager);
+        mTabsAdapter = new TabsAdapter(this, getSupportFragmentManager(), mTabHost, mViewPager);
         if (savedInstanceState != null) {
             mTabHost.setCurrentTab(savedInstanceState.getInt("tab"));
         }
@@ -199,11 +203,11 @@ public class ImageDetailsActivity extends FragmentActivity {
     /**
      * 创建标签
      *
-     * @param title
-     * @return
+     * @param title 标题
+     * @return 标签组件
      */
     private View makeTabIndicator(String title) {
-        View view = LayoutInflater.from(this).inflate(R.layout.item_tab, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.item_tab, mTabWidget, false);
         TextView tabTitleTv = (TextView) view.findViewById(R.id.tab_title);
         tabTitleTv.setText(title);
         return view;
@@ -244,7 +248,7 @@ public class ImageDetailsActivity extends FragmentActivity {
                     }
 
                     ResourceDetailsFragment resourceDetailsFragment = (ResourceDetailsFragment) getSupportFragmentManager()
-                            .findFragmentByTag(UIUtils.obtainFragmentTag(mPager.getId(), mTabsAdapter.getItemId(0)));
+                            .findFragmentByTag(UIUtils.obtainFragmentTag(mViewPager.getId(), mTabsAdapter.getItemId(0)));
                     resourceDetailsFragment.setResourceDetails(mResourceDetails);
                 } else if ("error".equals(result)) {
                     String message = response.optString("message");
@@ -261,14 +265,14 @@ public class ImageDetailsActivity extends FragmentActivity {
         }, mRequestTag));
     }
 
-    @OnClick(R.id.btnDownload)
+    @OnClick(R.id.btn_download)
     public void onDownloadClick() {
         if (mImageUri != null) {
             String downloadUrl = mResourceDetails.getAttachPath();
             int lastIndexOfDot = downloadUrl.lastIndexOf('.');
             final String suffix = downloadUrl.substring(lastIndexOfDot);
             if (FileDownloadService.hasCached(mUserInfo.getBaseUserId(), mResourceId + suffix)){
-                ToastUtil.showToast(EApplication.instance(), "图片已缓存！");
+                ToastUtil.showToast(EApplication.instance(), R.string.image_cached_already);
                 return;
             }
             CountIncreaser.increaseDownloadCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), mResourceId);
@@ -283,9 +287,9 @@ public class ImageDetailsActivity extends FragmentActivity {
                         if (!dataSource.isFinished()) {
                             return;
                         }
-                        boolean isInCache = dataSource.getResult();
+                        Boolean isInCache = dataSource.getResult();
                         Cog.d(TAG, "onDownloadClick isInCache=", isInCache);
-                        if (isInCache) copeToCache(fileName);
+                        if (isInCache != null && isInCache) copeToCache(fileName);
                     }
 
                     @Override
@@ -294,14 +298,11 @@ public class ImageDetailsActivity extends FragmentActivity {
                     }
                 };
                 inDiskCacheSource.subscribe(subscriber, Executors.newSingleThreadExecutor());
-//                DataSource<CloseableReference<PooledByteBuffer>> dataSource =
-//                        imagePipeline.fetchEncodedImage(imageRequest, CALLER_CONTEXT);
-
             } else {
                 copeToCache(fileName);
             }
         } else {
-            ToastUtil.showToast(this, "图片详情获取失败！");
+            ToastUtil.showToast(this, R.string.fail_to_obtain_image_details);
         }
     }
 
@@ -321,7 +322,7 @@ public class ImageDetailsActivity extends FragmentActivity {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtil.showToast(EApplication.instance(), "缓存成功！");
+                        ToastUtil.showToast(EApplication.instance(), R.string.cache_successfully);
                     }
                 });
             }
@@ -332,12 +333,22 @@ public class ImageDetailsActivity extends FragmentActivity {
     public static File getCachedImageOnDisk(Uri loadUri) {
         File localFile = null;
         if (loadUri != null) {
-            CacheKey cacheKey = DefaultCacheKeyFactory.getInstance().getEncodedCacheKey(ImageRequest.fromUri(loadUri), null);
-            if (ImagePipelineFactory.getInstance().getMainDiskStorageCache().hasKey(cacheKey)) {
-                BinaryResource resource = ImagePipelineFactory.getInstance().getMainDiskStorageCache().getResource(cacheKey);
+            CacheKey cacheKey = DefaultCacheKeyFactory
+                    .getInstance()
+                    .getEncodedCacheKey(ImageRequest.fromUri(loadUri), null);
+            if (ImagePipelineFactory.getInstance()
+                    .getMainFileCache()
+                    .hasKey(cacheKey)) {
+                BinaryResource resource = ImagePipelineFactory.getInstance()
+                        .getMainFileCache()
+                        .getResource(cacheKey);
                 localFile = ((FileBinaryResource) resource).getFile();
-            } else if (ImagePipelineFactory.getInstance().getSmallImageDiskStorageCache().hasKey(cacheKey)) {
-                BinaryResource resource = ImagePipelineFactory.getInstance().getSmallImageDiskStorageCache().getResource(cacheKey);
+            } else if (ImagePipelineFactory.getInstance()
+                    .getSmallImageFileCache()
+                    .hasKey(cacheKey)) {
+                BinaryResource resource = ImagePipelineFactory.getInstance()
+                        .getSmallImageFileCache()
+                        .getResource(cacheKey);
                 localFile = ((FileBinaryResource) resource).getFile();
             }
         }

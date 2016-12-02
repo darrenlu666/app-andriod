@@ -75,7 +75,7 @@ import de.greenrobot.event.EventBus;
 
 /**
  * 530家长资源页
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class ParentsResourcesActivity extends AppCompatActivity implements OnLoadMoreListener, OnRefreshListener, PanelSlideListener, Callback {
 
@@ -119,7 +119,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     @Bind(R.id.rv_resources)
     RecyclerView mRecyclerView;
 
-    @Bind(R.id.sliding_panel)
+    @Bind(R.id.pl_scope)
     ResSlidingUpPanelLayout mSlidingPanelLayout;
 
     @Bind(R.id.rg_type)
@@ -559,9 +559,9 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     /**
      * 检查是否有更多，默认方式是比较total字段与当前项数
      *
-     * @param response
+     * @param response 响应
      * @param itemCount 已有item数量
-     * @return
+     * @return true 请求成功
      */
     protected boolean checkHasMore(JSONObject response, int itemCount) {
         return response.optInt("total") <= itemCount;

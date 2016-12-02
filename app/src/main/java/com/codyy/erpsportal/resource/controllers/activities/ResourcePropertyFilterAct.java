@@ -45,7 +45,7 @@ import butterknife.OnItemClick;
 
 /**
  * 属性筛选
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class ResourcePropertyFilterAct extends AppCompatActivity implements OnChosenListener, OnCancelListener {
 

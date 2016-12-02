@@ -14,7 +14,7 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 
 /**
  * 文档资源评论
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class DocumentCommentActivity extends FragmentActivity {
 

@@ -14,25 +14,23 @@ import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
 
 /**
  * 资源详情界面
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class DocumentDetailsActivity extends FragmentActivity {
 
     private final static String ARG_DOC_DETAILS = "arg_doc_details";
 
-    private ResourceDetailsFragment mResourceDetailsFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_details);
-        mResourceDetailsFragment = (ResourceDetailsFragment) getSupportFragmentManager()
+        ResourceDetailsFragment resourceDetailsFragment = (ResourceDetailsFragment) getSupportFragmentManager()
                 .findFragmentByTag("tag_doc_details");
         if (getIntent() != null) {
             String classId = getIntent().getStringExtra(Extra.CLASS_ID);
-            if (classId != null) mResourceDetailsFragment.setShowSharer(true);
+            if (classId != null) resourceDetailsFragment.setShowSharer(true);
             ResourceDetails resourceDetails = getIntent().getParcelableExtra(ARG_DOC_DETAILS);
-            mResourceDetailsFragment.setResourceDetails(resourceDetails);
+            resourceDetailsFragment.setResourceDetails(resourceDetails);
         }
     }
 

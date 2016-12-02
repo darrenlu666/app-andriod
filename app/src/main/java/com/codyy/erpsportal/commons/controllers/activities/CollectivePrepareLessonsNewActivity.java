@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,10 +20,6 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterGradeSubject;
 import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.UpOrDownButton;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -32,6 +28,10 @@ import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.commons.widgets.UpOrDownButton;
 import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
@@ -121,7 +121,7 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
         mUDBTime.setOnClickListener(this);
         mUDBQuality.setOnClickListener(this);
         mUDBCount.setOnClickListener(this);
-        mUDBTime.setText(R.string.by_time);
+        mUDBTime.setText(R.string.by_create_time);
         mUDBQuality.setText(R.string.by_quality);
         mUDBCount.setText(R.string.by_count);
 //        mUDBTime.setChecked();
@@ -261,10 +261,10 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
                 if (!mBtnSelect.isChecked()) {
                     execSearch();
                 }
-                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
+                if (!mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    mDrawerLayout.openDrawer(GravityCompat.END);
                 } else {
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
+                    mDrawerLayout.closeDrawer(GravityCompat.END);
                 }
                 break;
             default:
@@ -473,7 +473,7 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
             title.setText(data.getTitle());
             teachName.setText(data.getMainTeacher());
             date.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(data.getStartTime()));
-            clickCount.setText(data.getViewCount() + "");
+            clickCount.setText(String.valueOf(data.getViewCount()));
             ratingBar.setProgress(data.getAverageScore());
             ImageFetcher.getInstance(context).fetchImage(headerImage, data.getSubjectPic());
         }
