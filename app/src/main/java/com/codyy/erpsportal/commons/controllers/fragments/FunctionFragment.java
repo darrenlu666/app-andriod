@@ -262,19 +262,19 @@ public class FunctionFragment extends BaseHttpFragment {
             public void onItemClicked(View v, int position, AppInfo data) {
                 switch (mAdapter.getItemViewType(position)){
                     case ApplicationViewHold.ITEM_TYPE_SINGLE://单独点击
-                        if("class.member.id".equals(data.getMenuID())){
+                        if("class.member.id".equals(data.getMenuID())){//班级成员
                             mRecyclerView.setEnabled(false);
-                            if(UserInfo.USER_TYPE_STUDENT.equals(mUserInfo.getUserType())){
+                            if(UserInfo.USER_TYPE_STUDENT.equals(mUserInfo.getUserType())){//学生
                                 if(null !=mClassList && mClassList.size() == 0){
                                     mClassList.add(new ClassCont(mUserInfo.getBaseClassId() ,mUserInfo.getBaseClassName(),mUserInfo.getClasslevelName()));
                                 }
                                 ClassMemberActivity.start(getActivity(), mUserInfo, mUserInfo.getBaseClassId(), mUserInfo.getBaseClassName(),mClassList,ClassMemberActivity.TYPE_FROM_APPLICATION);
-                            }else if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {
+                            }else if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {//家长
                                 //家长
                                 if (mUserInfo.getSelectedChild() != null) {
                                     ClassMemberActivity.start(getActivity(), mUserInfo, mUserInfo.getSelectedChild().getClassId(), mUserInfo.getSelectedChild().getClassName(), UserFragmentUtils.constructClassListInfo(mStudents),ClassMemberActivity.TYPE_FROM_APPLICATION);
                                 }
-                            } else if(UserInfo.USER_TYPE_TEACHER.equals(mUserInfo.getUserType())){
+                            } else if(UserInfo.USER_TYPE_TEACHER.equals(mUserInfo.getUserType())){//老师
                                 mClassList  =   mUserInfo.getClassList();
                                 if(mClassList == null || mClassList.size()==0){
                                     // TODO: 16-3-20 获取班级信息.... && 弹出选择框 ! .
@@ -447,6 +447,7 @@ public class FunctionFragment extends BaseHttpFragment {
 
     /**
      * 获取老师名下的班级信息
+     * {"result":"success","teacherClassList":[]}
      */
     private void loadClassData() {
         HashMap<String, String> data = new HashMap<>();
@@ -459,13 +460,13 @@ public class FunctionFragment extends BaseHttpFragment {
                 if(null == mRecyclerView ) return;
                 mRecyclerView.setEnabled(true);
                 TeacherClassParse teacherClassParse = new Gson().fromJson(response.toString(),TeacherClassParse.class);
-                if(null != teacherClassParse && teacherClassParse.getDataList()!=null){
+                if(null != teacherClassParse && teacherClassParse.getDataList()!=null && teacherClassParse.getDataList().size()>0){
                     mClassList = teacherClassParse.getDataList();
                     mUserInfo.setClassList(teacherClassParse.getDataList());
                     //弹出选择框
                     showSelectClassDialog();
                 }else{
-                    ToastUtil.showToast("没有班级可选！");
+                    ToastUtil.showToast("暂无班级信息！");
                 }
             }
 

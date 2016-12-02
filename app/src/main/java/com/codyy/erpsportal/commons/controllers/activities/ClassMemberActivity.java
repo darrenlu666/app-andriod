@@ -32,6 +32,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.UserClassAdapter;
@@ -103,15 +104,16 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
 
     @Bind(R.id.toolbar)Toolbar mToolBar;
     @Bind(R.id.toolbar_title)TextView mTextTitle;
-    @Bind(R.id.class_layout_teacher_recycle)RecyclerView mRecycleTeacher;
-    @Bind(R.id.class_layout_studnet_recycle)RecyclerView mRecycleStudent;
-    @Bind(R.id.class_room_group)TextView mTextView;
+    @Bind(R.id.recycler_view_teacher)RecyclerView mRecycleTeacher;
+    @Bind(R.id.recycler_view_student)RecyclerView mRecycleStudent;
+    @Bind(R.id.tv_class_room_group)TextView mTextView;
 
-    private ArrayList<ClassCont> classConts;
-    private ListView mGroupListview;
-    private PopupWindow mGroupSelect;
+    private ArrayList<ClassCont> mClasses;
+    private ListView mGroupListView;
+    private PopupWindow mClassMemberPopupWindow;
+    private PopupWindow mClassPopupWindow ;
     private UserClassAdapter mStudentAdapter;
-    private ArrayList<UserClassBase> mUserStuents;
+    private ArrayList<UserClassBase> mUserStudents;
     private ArrayList<UserClassBase> mUserStudentAll;
     /**
      * 学生详情
@@ -155,8 +157,8 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         //学生
         mUserStudentAll.clear();
         UserClassStudent.getClassStudent(students, mUserStudentAll);
-        mUserStuents.clear();
-        mUserStuents.addAll(mUserStudentAll);
+        mUserStudents.clear();
+        mUserStudents.addAll(mUserStudentAll);
         mStudentAdapter.notifyDataSetChanged();
         //学生筛选条件
         ArrayList<UserClassGroups> groupses = new ArrayList<>();
@@ -164,7 +166,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         if (groupses.size() > 0) {
             mTextView.setText(groupses.get(0).getGroupName());
         }
-        mGroupListview.setAdapter(new GroupAdapter(groupses));
+        mGroupListView.setAdapter(new GroupAdapter(groupses));
         if (students.length() <= 0) {
             ToastUtil.showToast(ClassMemberActivity.this, "暂无学生信息！");
         }
@@ -203,34 +205,40 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
             //set the drop down icon .
             setIconDown();
         }
-        classConts = new ArrayList<>();
-        mUserStuents = new ArrayList<>();
+        mClasses = new ArrayList<>();
+        mUserStudents = new ArrayList<>();
         mUserStudentAll = new ArrayList<>();
         mDialogUtil = new DialogUtil(this);
-        mStudentAdapter = new UserClassAdapter(ClassMemberActivity.this, mUserStuents);
+        mStudentAdapter = new UserClassAdapter(ClassMemberActivity.this, mUserStudents);
         mStudentAdapter.setmOnItemClickListener(this);
         mRecycleStudent.setAdapter(mStudentAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecycleTeacher.setLayoutManager(linearLayoutManager);
         mRecycleStudent.setLayoutManager(new GridLayoutManager(this, 4));
-        Drawable drawable = getTintedDrawable(this, R.drawable.search_bg, getResources().getColor(R.color.main_color), false);
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight()); //设置边界
-        mTextView.setCompoundDrawables(null, null, drawable, null);
+        //向下箭头
+        setIconDown();
+        arrowDownMember();
         View group = getLayoutInflater().inflate(R.layout.class_group_select, null);
-        mGroupListview = (ListView) group.findViewById(R.id.class_group_listview);
-        mGroupSelect = new PopupWindow(group, UIUtils.dip2px(this, 100), UIUtils.dip2px(this, 150));
-        mGroupSelect.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
-        mGroupSelect.setTouchable(true);
-        mGroupSelect.setOutsideTouchable(true);
-        mGroupSelect.setFocusable(true);
-        mGroupListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mClassMemberPopupWindow = new PopupWindow(group, UIUtils.dip2px(this, 100), UIUtils.dip2px(this, 150));
+        mClassMemberPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+        mClassMemberPopupWindow.setTouchable(true);
+        mClassMemberPopupWindow.setOutsideTouchable(true);
+        mClassMemberPopupWindow.setFocusable(true);
+        mGroupListView = (ListView) group.findViewById(R.id.class_group_listview);
+        mGroupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                UserClassGroups userClassGroups = ((GroupAdapter) mGroupListview.getAdapter()).getItem(position);
+                UserClassGroups userClassGroups = ((GroupAdapter) mGroupListView.getAdapter()).getItem(position);
                 mTextView.setText(userClassGroups.getGroupName());
                 studentFliterout(userClassGroups.getGroupId());
-                mGroupSelect.dismiss();
+                mClassMemberPopupWindow.dismiss();
+            }
+        });
+        mClassMemberPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                arrowDownMember();
             }
         });
         mDialog = new Dialog(this, R.style.input_dialog);
@@ -250,6 +258,22 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         requestData();
     }
 
+    //班级成员箭头－>下
+    private void arrowDownMember() {
+//        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_black_down_arrow);
+        Drawable drawable = getTintedDrawable(this, R.drawable.ic_black_down_arrow, UiMainUtils.getColor(R.color.main_color), false);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight()); //设置边界
+        mTextView.setCompoundDrawables(null, null, drawable, null);
+    }
+
+    //班级成员箭头－＞上
+    private void arrowUpMember() {
+//        Drawable drawable =  ContextCompat.getDrawable(this, R.drawable.img_up);
+        Drawable drawable = getTintedDrawable(this, R.drawable.img_up, UiMainUtils.getColor(R.color.main_color), false);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight()); //设置边界
+        mTextView.setCompoundDrawables(null, null, drawable, null);
+    }
+
     private void setIconDown() {
         Drawable arrow = ContextCompat.getDrawable(this, R.drawable.ic_white_down_arrow);
         arrow.setBounds(0, 0, arrow.getMinimumWidth(), arrow.getMinimumHeight()); //设置边界
@@ -257,7 +281,6 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         mTextTitle.setCompoundDrawablePadding(10);
     }
 
-    // TODO: 16-11-1 替换向上箭头为白色（产品提供）
     /**
      * bug fix :8519 android，ios应用-班级成员-点击上方页签，那个展出箭头需要有向上向下的变化
      */
@@ -274,14 +297,15 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         if(!TextUtils.isEmpty(cc.getClassLevelName())) sb.append(cc.getClassLevelName());
         if(!TextUtils.isEmpty(cc.getBaseClassName())) sb.append(cc.getBaseClassName());
         mTextTitle.setText(sb.toString());
+        setIconDown();
     }
 
-    private PopupWindow mPopupWindow ;
+
 
     @OnClick(R.id.toolbar_title)
    public void showClassList(){
         if(UserInfo.USER_TYPE_TEACHER.equals(mUserType)&&TYPE_FROM_APPLICATION.equals(mFromType)){
-            if(null == mPopupWindow){
+            if(null == mClassPopupWindow){
                 View contentView = LayoutInflater.from(this).inflate(R.layout.recycleview_single,null);
                 RecyclerView recyclerView = (RecyclerView) contentView.findViewById(R.id.recycle_rview);
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -306,14 +330,14 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
                         mClassID = cc.getBaseClassId();
                         setTitle(cc);
                         requestData();
-                        mPopupWindow.dismiss();
+                        mClassPopupWindow.dismiss();
                     }
                 });
-                mPopupWindow = new PopupWindow(contentView,
+                mClassPopupWindow = new PopupWindow(contentView,
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-                mPopupWindow.setOutsideTouchable(true);
-                mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-                mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                mClassPopupWindow.setOutsideTouchable(true);
+                mClassPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+                mClassPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         setIconDown();
@@ -321,8 +345,8 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
                 });
                 adapter.setData(mData);
             }
-            mPopupWindow.showAsDropDown(mToolBar);
             setIconUp();
+            mClassPopupWindow.showAsDropDown(mToolBar);
         }
     }
 
@@ -348,12 +372,13 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         httpConnect(URLConfig.GET_STUDENT_DETAIL, data, GET_STUDENT_DETAIL);
     }
 
-    @OnClick(R.id.class_room_group)
+    @OnClick(R.id.tv_class_room_group)
     void onGroupClick() {
-        if (mGroupListview.getAdapter() == null || mGroupListview.getAdapter().getCount() <= 0) {
+        if (mGroupListView.getAdapter() == null || mGroupListView.getAdapter().getCount() <= 0) {
             ToastUtil.showToast(this, "暂无数据！");
         } else {
-            mGroupSelect.showAsDropDown(mTextView);
+            arrowUpMember();
+            mClassMemberPopupWindow.showAsDropDown(mTextView);
         }
     }
 
@@ -386,10 +411,10 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
                     case GET_CLASS_LIST://获取班级信息
                         TeacherClassParse teacherClassParse = new Gson().fromJson(response.toString(),TeacherClassParse.class);
                         if(null != teacherClassParse && teacherClassParse.getDataList()!=null){
-                            classConts = (ArrayList<ClassCont>) teacherClassParse.getDataList();
+                            mClasses = (ArrayList<ClassCont>) teacherClassParse.getDataList();
                         }
-                        if (classConts.size() > 0) {
-                            mTextTitle.setText(classConts.get(0).getBaseClassName());
+                        if (mClasses.size() > 0) {
+                            mTextTitle.setText(mClasses.get(0).getBaseClassName());
                             getTeachers();
                         }
                         break;
@@ -453,14 +478,14 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
      * 学生筛选
      */
     private void studentFliterout(String groupId) {
-        mUserStuents.clear();
+        mUserStudents.clear();
         if ("all".equals(groupId)) {
-            mUserStuents.addAll(mUserStudentAll);
+            mUserStudents.addAll(mUserStudentAll);
         } else {
             for (int i = 0; i < mUserStudentAll.size(); i++) {
                 UserClassStudent userClassStudent = (UserClassStudent) mUserStudentAll.get(i);
                 if (groupId.equals(userClassStudent.getGroupId())) {
-                    mUserStuents.add(userClassStudent);
+                    mUserStudents.add(userClassStudent);
                 }
             }
         }
@@ -472,7 +497,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         int a[] = new int[2];
         view.getLocationInWindow(a);
         mDialogUtil.showDialog();
-        getStudentDetail((UserClassStudent) mUserStuents.get(position));
+        getStudentDetail((UserClassStudent) mUserStudents.get(position));
     }
 
 
@@ -507,7 +532,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
             textView.setTextSize(13);
             textView.setText(group.getGroupName() + "(" + group.getStudentCount() + ")");
             if (group.getGroupName().equals(mTextView.getText().toString())) {
-                textView.setTextColor(getResources().getColor(R.color.main_color));
+                textView.setTextColor(UiMainUtils.getColor(R.color.main_color));
             } else {
                 textView.setTextColor(Color.parseColor("#707070"));
             }
