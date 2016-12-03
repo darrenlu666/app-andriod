@@ -48,6 +48,7 @@ import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout;
 import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelState;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter;
+import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnItemClickListener;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnLoadMoreListener;
 import com.codyy.erpsportal.resource.controllers.fragments.ParentsResourcesFilterFragment;
 import com.codyy.erpsportal.resource.controllers.others.AudioListPlayController;
@@ -55,6 +56,7 @@ import com.codyy.erpsportal.resource.controllers.others.AudioListPlayController.
 import com.codyy.erpsportal.resource.models.entities.Audio;
 import com.codyy.erpsportal.resource.models.entities.AudioEvent;
 import com.codyy.erpsportal.resource.models.entities.Document;
+import com.codyy.erpsportal.resource.models.entities.Image;
 import com.codyy.erpsportal.resource.models.entities.Video;
 import com.codyy.erpsportal.resource.utils.CountIncreaser;
 import com.codyy.erpsportal.resource.widgets.AudioControlBar;
@@ -226,6 +228,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         mRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mAdapter = new ResourcesAdapter(mRecyclerView, this);
+        mAdapter.setOnItemClickListener(mOnItemClickListener);
         mRecyclerView.setAdapter(mAdapter);
 
         mPlayController = new AudioListPlayController.Builder()
@@ -248,6 +251,27 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         ft.add(R.id.fl_filter, mFilterFragment);
         ft.commit();
     }
+
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(int position) {
+            Cog.d(TAG, "onItemClick position=", position);
+            Object object = mAdapter.getItem( position);
+            if (object instanceof Video){
+                Video video = (Video) object;
+                VideoDetailsActivity.start(ParentsResourcesActivity.this, mUserInfo, video.getId());
+            } else if (object instanceof Audio) {
+                List<Audio> audios = mAdapter.getData();
+                AudioDetailsActivity.start(ParentsResourcesActivity.this, mUserInfo, audios, position);
+            } else if (object instanceof Document) {
+                Document document = (Document) object;
+                DocumentContentActivity.start(ParentsResourcesActivity.this, mUserInfo, document);
+            } else if (object instanceof Image) {
+                Image image = (Image) object;
+                ImageDetailsActivity.start(ParentsResourcesActivity.this, mUserInfo, image.getId());
+            }
+        }
+    };
 
     private DrawerListener mDrawerListener = new DrawerListener() {
         @Override
