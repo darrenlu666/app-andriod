@@ -39,7 +39,7 @@
                     android:src="@drawable/back_video"/>
 
                 <Button
-                    android:id="@+id/btnDownload"
+                    android:id="@+id/btn_download"
                     style="@style/btn_download_resource"
                     android:layout_width="44dp"
                     android:layout_height="24dp"
@@ -58,9 +58,9 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_toEndOf="@id/ib_back"
-                    android:layout_toLeftOf="@id/btnDownload"
+                    android:layout_toLeftOf="@id/btn_download"
                     android:layout_toRightOf="@id/ib_back"
-                    android:layout_toStartOf="@id/btnDownload"
+                    android:layout_toStartOf="@id/btn_download"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
@@ -92,8 +92,7 @@
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="0"/>
+            android:layout_height="0dp"/>
     </TabHost>
 
     <android.support.v4.view.ViewPager

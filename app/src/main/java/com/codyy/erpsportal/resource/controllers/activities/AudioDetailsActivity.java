@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,13 +80,16 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
     @Bind(R.id.title_bar)
     TitleBar mTitleBar;
 
-    @Bind(R.id.pager)
-    ViewPager mPager;
+    @Bind(R.id.view_pager)
+    ViewPager mViewPager;
 
     @Bind(android.R.id.tabhost)
     TabHost mTabHost;
 
-    @Bind(R.id.btnDownload)
+    @Bind(android.R.id.tabs)
+    TabWidget mTabWidget;
+
+    @Bind(R.id.btn_download)
     ImageButton mDownloadBtn;
 
     @Bind(R.id.tv_current)
@@ -132,8 +136,6 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
 
     private Handler mAudioHandler;
 
-    private HandlerThread mHandlerThread;
-
     private AudioManager mAudioManager;
 
     private OnAudioFocusChangeListener mAfChangeListener = new OnAudioFocusChangeListener() {
@@ -178,9 +180,9 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
 
     private void initAttributes() {
         mHandler = new Handler(this);
-        mHandlerThread = new HandlerThread("audio");
-        mHandlerThread.start();
-        mAudioHandler = new Handler(mHandlerThread.getLooper());
+        HandlerThread handlerThread = new HandlerThread("audio");
+        handlerThread.start();
+        mAudioHandler = new Handler(handlerThread.getLooper());
 
         mRequestSender = new RequestSender(this);
         mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -198,7 +200,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
 
     private void initViews(Bundle savedInstanceState) {
         mTabHost.setup();
-        mTabsAdapter = new TabsAdapter(this, getSupportFragmentManager(), mTabHost, mPager);
+        mTabsAdapter = new TabsAdapter(this, getSupportFragmentManager(), mTabHost, mViewPager);
         mSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
         if (savedInstanceState != null) {
             mTabHost.setCurrentTab(savedInstanceState.getInt("tab"));
@@ -393,7 +395,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
         int duration = mAudioPlayer.getDuration();
         if (duration == 0) {
             mSeekBar.setProgress(mSeekBar.getMax());
-            mCurrentTv.setText("00:00");
+            mCurrentTv.setText(R.string.zero_time);
         } else {
             mSeekBar.setProgress(position * mSeekBar.getMax() / duration);
             mCurrentTv.setText(acquireTimeStamp(position));
@@ -408,13 +410,13 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
         int position = mAudioPlayer.getCurrentPosition();
         int duration = mAudioPlayer.getDuration();
         if (duration == 0) {
-            mCurrentTv.setText("00:00");
+            mCurrentTv.setText(R.string.zero_time);
         } else {
             mCurrentTv.setText(acquireTimeStamp(position));
         }
     }
 
-    @OnClick(R.id.btnDownload)
+    @OnClick(R.id.btn_download)
     public void onDownloadBtnClick(){
         if (mResourceDetails == null) return;
         if (VideoDownloadUtils.downloadAudio(mResourceDetails
@@ -457,7 +459,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
     private void playNext() {
         int position = mPosition - 1;
         if (position < 0) {
-            Toast.makeText(AudioDetailsActivity.this, "已经是第一首了", Toast.LENGTH_LONG).show();
+            Toast.makeText(AudioDetailsActivity.this, R.string.first_song_already, Toast.LENGTH_LONG).show();
         } else {
             playOrResume(position);
         }
@@ -466,7 +468,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
     private void playPrevious() {
         int position = mPosition + 1;
         if (position > mAudioList.size() - 1) {
-            Toast.makeText(AudioDetailsActivity.this, "已经是最后一首了", Toast.LENGTH_LONG).show();
+            Toast.makeText(AudioDetailsActivity.this, R.string.last_song_already, Toast.LENGTH_LONG).show();
         } else {
             playOrResume(position);
         }
@@ -508,11 +510,11 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
     /**
      * 创建标签
      *
-     * @param title
-     * @return
+     * @param title 标签标题
+     * @return 标签组件
      */
     private View makeTabIndicator(String title) {
-        View view = LayoutInflater.from(this).inflate(R.layout.item_tab, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.item_tab, mTabWidget, false);
         TextView tabTitleTv = (TextView) view.findViewById(R.id.tab_title);
         tabTitleTv.setText(title);
         return view;
@@ -544,7 +546,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
 
                     if(mResDetailsFragment == null) {
                         mResDetailsFragment = (ResourceDetailsFragment) getSupportFragmentManager()
-                                .findFragmentByTag(UIUtils.obtainFragmentTag(mPager.getId(),
+                                .findFragmentByTag(UIUtils.obtainFragmentTag(mViewPager.getId(),
                                         mTabsAdapter.getItemId(0)));
                     }
                     if (mResDetailsFragment != null) {
@@ -579,7 +581,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
     /**
      * 播放视频
      *
-     * @param resourceDetails
+     * @param resourceDetails 资源详情
      */
     private void playAudio(ResourceDetails resourceDetails) {
         if(resourceDetails == null ){

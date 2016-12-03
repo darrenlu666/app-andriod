@@ -18,7 +18,7 @@
     <string name="sure_to_exit">确认退出登录？</string>
     <string name="activity_detail">活动详情</string>
     <string name="newest_comment">最新评论</string>
-    <string name="by_time">按开始时间</string>
+    <string name="by_create_time">按开始时间</string>
     <string name="by_count">按点击量</string>
     <string name="by_quality">按评分高低</string>
 
@@ -717,7 +717,7 @@
     <string name="username_or_pw_wrong">用户名或密码错误</string>
     <string name="total_comments">全部评论(%1$d)</string>
     <string name="no_some_type_resources">暂无%s相关数据</string>
-    <string name="loading_user_info">加载用户信息中...</string>
+    <string name="loading_user_info">加载用户信息中…</string>
     <string name="audio">音频</string>
     <string name="image">图片</string>
     <string name="no_show_document">暂无演示内容</string>
@@ -726,5 +726,23 @@
     <string name="classroom_count_lb">%1$s课堂数</string>
 
     <string name="obtain_s_failed">获取%1$s失败！</string>
+    <string name="zero_time">00:00</string>
+    <string name="time_unknown">--:--</string>
+    <string name="first_song_already">已经是第一首了</string>
+    <string name="last_song_already">已经是最后一首了</string>
+    <string name="by_time">按时间</string>
+    <string name="by_rating">按评分</string>
+    <string name="by_pageviews">按浏览量</string>
+    <string name="by_downloads">按下载量</string>
+    <string name="def_resource_scope">本级上传 • 视频 • 按时间</string>
+    <string name="image_cached_already">图片已缓存！</string>
+    <string name="fail_to_obtain_image_details">图片详情获取失败！</string>
+    <string name="cache_successfully">缓存成功！</string>
+    <string name="def_class_res_score">本级上传 • 视频 • 按时间</string>
+    <string name="video_resource">视频资源</string>
+    <string name="audio_resource">音频资源</string>
+    <string name="document_resource">文档资源</string>
+    <string name="image_resource">图片资源</string>
+    <string name="album_resource">专辑资源</string>
 
 </resources>

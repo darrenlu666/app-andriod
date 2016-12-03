@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -50,11 +51,12 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  * 文档资源详情，用于显示文档内容
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class DocumentContentActivity extends FragmentActivity implements View.OnClickListener {
 
@@ -68,10 +70,6 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
 
     private TextView mPageNoTv;
 
-    private RelativeLayout mResourceDetailsBtn;
-
-    private RelativeLayout mCommentBtn;
-
     private RelativeLayout mPdfViewContainerRl;
 
     private UserInfo mUserInfo;
@@ -84,13 +82,11 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
 
     private ResourceDetails mResourceDetails;
 
-//    private PDFView mPdfView;
-
     private MuPDFCore mPdfCore;
 
     private MuPDFReaderView mDocView;
 
-    private ProgressBar mDownloadingPro;
+    private ProgressBar mDownloadingPb;
 
     private String mCacheLoc;
 
@@ -107,7 +103,9 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
 
     private void initAttributes() {
         mSender = new RequestSender(this);
-        mCacheLoc = getExternalCacheDir().getAbsolutePath();
+        if (getExternalCacheDir() != null) {
+            mCacheLoc = getExternalCacheDir().getAbsolutePath();
+        }
         if (getIntent() != null) {
             mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
             mDocumentId = getIntent().getStringExtra(EXTRA_DOCUMENT_ID);
@@ -119,16 +117,16 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
     private void initViews() {
         mNameTv = (TextView) findViewById(R.id.name);
         mPageNoTv = (TextView) findViewById(R.id.pageNoTv);
-        mResourceDetailsBtn = (RelativeLayout) findViewById(R.id.btn_resource_details);
-        mCommentBtn = (RelativeLayout) findViewById(R.id.btn_comment);
-//        mPdfView = (PDFView) findViewById(R.id.pdfView);
-        mDownloadingPro = (ProgressBar) findViewById(R.id.downloading);
+        RelativeLayout resourceDetailsBtn = (RelativeLayout) findViewById(R.id.btn_resource_details);
+        RelativeLayout commentBtn = (RelativeLayout) findViewById(R.id.btn_comment);
+        mDownloadingPb = (ProgressBar) findViewById(R.id.downloading);
         mPdfViewContainerRl = (RelativeLayout) findViewById(R.id.rl_pdf_view_container);
 
-        Drawable drawable = getResources().getDrawable(R.drawable.progress_loading);
-        mDownloadingPro.setIndeterminateDrawable(drawable);
-        mResourceDetailsBtn.setOnClickListener(this);
-        mCommentBtn.setOnClickListener(this);
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(),
+                R.drawable.progress_loading, null);
+        mDownloadingPb.setIndeterminateDrawable(drawable);
+        resourceDetailsBtn.setOnClickListener(this);
+        commentBtn.setOnClickListener(this);
         if (!TextUtils.isEmpty(mDocumentName)) {
             mNameTv.setText(mDocumentName);
         }
@@ -207,7 +205,7 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
 
         /**
          * @param sUrl 第一位为url 第二位为resId
-         * @return
+         * @return 返回下载好的pdf文件位置
          */
         @Override
         protected String doInBackground(String... sUrl) {
@@ -215,6 +213,7 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
             OutputStream output = null;
             HttpURLConnection connection = null;
             String directory = createDir();
+            if (directory == null) return null;
             String fileName = directory + "/" + sUrl[1];
             Cog.d(TAG, "cacheDir=" + directory);
             try {
@@ -271,52 +270,34 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // take CPU lock to prevent CPU from going off if the user
-            // presses the power button during download
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     getClass().getName());
             mWakeLock.acquire();
-//            mProgressDialog.show();
-            mDownloadingPro.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            super.onProgressUpdate(progress);
-            // if we get here, length is known, now set indeterminate to false
-//            mProgressDialog.setIndeterminate(false);
-//            mProgressDialog.setMax(100);
-//            mProgressDialog.setProgress(progress[0]);
+            mDownloadingPb.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(String result) {
             Cog.d(TAG, "onPostExecute result=" + result);
             mWakeLock.release();
-//            mProgressDialog.dismiss();
-            if (result == null)
+            if (result == null) {
                 UIUtils.toast(context, "加载失败", Toast.LENGTH_SHORT);
-            else {
+            } else {
                 UIUtils.toast(context, "加载完成", Toast.LENGTH_SHORT);
                 displayPdf(result);
             }
 
-            mDownloadingPro.setVisibility(View.GONE);
+            mDownloadingPb.setVisibility(View.GONE);
         }
     }
 
     /**
      * 加载显示pdf
      *
-     * @param file
+     * @param file pdf文件路径
      */
     private void displayPdf(String file) {
-//        mPdfView.fromFile(new File(file))
-//                .defaultPage(1)
-//                .onPageChange(this)
-//                .onLoad(this)
-//                .load();
         loadPdf(file);
         mPageNoTv.setVisibility(View.VISIBLE);
     }
@@ -336,7 +317,7 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
     }
 
     private void updatePageNumber(int pageNo) {
-        mPageNoTv.setText(String.format("%d / %d", pageNo, mPdfCore.countPages()));
+        mPageNoTv.setText(String.format(Locale.getDefault(), "%d / %d", pageNo, mPdfCore.countPages()));
     }
 
     private void createUI() {
@@ -370,19 +351,6 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
         mPdfViewContainerRl.addView(mDocView,0);
     }
 
-    private MuPDFCore openBuffer(byte buffer[], String magic) {
-        System.out.println("Trying to open byte buffer");
-        try {
-            mPdfCore = new MuPDFCore(EApplication.instance(), buffer, magic);
-            // New file: drop the old outline data
-            OutlineActivityData.set(null);
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-        return mPdfCore;
-    }
-
     private MuPDFCore openFile(String path) {
 //        mFileName = new String(lastSlashPos == -1
 //                ? path
@@ -393,11 +361,11 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
             // New file: drop the old outline data
             OutlineActivityData.set(null);
         } catch (Exception e) {
-            System.out.println(e);
+            Cog.e(TAG, e.getMessage());
             return null;
         } catch (java.lang.OutOfMemoryError e) {
             //  out of memory is not an Exception, so we catch it separately.
-            System.out.println(e);
+            Cog.e(TAG, e.getMessage());
             return null;
         }
         return mPdfCore;
@@ -406,19 +374,24 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
     /**
      * 创建PDF缓存目录
      *
-     * @return
+     * @return 创建的PDF缓存目录路径
      */
     private String createDir() {
+        if (TextUtils.isEmpty(mCacheLoc)) return null;
         File file = new File(mCacheLoc + Constants.FOLDER_DOC_CACHE);
+        boolean result = false;
         if (file.exists()) {
-            if (!file.isDirectory()) {
-                file.delete();
-                file.mkdirs();
+            if (!file.isDirectory() ) {
+                if (file.delete() && file.mkdirs()) {
+                    result = true;
+                }
+            } else {
+                result = false;
             }
         } else {
-            file.mkdirs();
+            result = file.mkdirs();
         }
-        return file.getAbsolutePath();
+        return result? file.getAbsolutePath(): null;
     }
 
     public static void start(Activity activity, UserInfo userInfo, Resource document) {

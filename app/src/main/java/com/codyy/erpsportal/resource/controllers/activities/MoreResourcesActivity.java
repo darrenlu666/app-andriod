@@ -86,7 +86,7 @@ import de.greenrobot.event.EventBus;
 
 /**
  * 530资源模块页
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class MoreResourcesActivity extends AppCompatActivity {
 
@@ -153,7 +153,7 @@ public class MoreResourcesActivity extends AppCompatActivity {
     @Bind(R.id.rv_resources)
     RecyclerView mRecyclerView;
 
-    @Bind(R.id.sliding_panel)
+    @Bind(R.id.pl_scope)
     ResSlidingUpPanelLayout mSlidingPanelLayout;
 
     @Bind(R.id.rg_from)

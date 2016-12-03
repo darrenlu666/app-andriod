@@ -78,9 +78,9 @@ import de.greenrobot.event.EventBus;
 
 /**
  * 班级资源模块页
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
-public class ClassResourcesActivity extends AppCompatActivity implements OnRefreshListener, Callback {
+public class ClassResourcesActivity extends AppCompatActivity implements Callback {
 
     private final static String TAG = "ClassResourcesActivity";
 
@@ -92,8 +92,6 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     private final static long MIN_LOADING_INTERVAL = 500L;
 
     private final static int MSG_COLLAPSE_PANEL = 23;
-
-    private final static int MSG_UPDATE_PROGRESS = 21;
 
     private FilterTypeMenuController mFilterTypeMenuController;
 
@@ -142,8 +140,8 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     @Bind(R.id.rv_resources)
     RecyclerView mRecyclerView;
 
-    @Bind(R.id.sliding_panel)
-    ResSlidingUpPanelLayout mSlidingPanelLayout;
+    @Bind(R.id.pl_scope)
+    ResSlidingUpPanelLayout mScopePl;
 
     @Bind(R.id.rg_type)
     RadioGroup mTypeRg;
@@ -156,8 +154,6 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
 
     @Bind(R.id.audio_control_bar)
     AudioControlBar mAudioControlBar;
-
-//    private AudioManager mAudioManager;
 
     private ResourcesAdapter mAdapter;
 
@@ -265,7 +261,6 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
         mHandler = new Handler(this);
         mType = TYPE_VIDEO;
         mParams = new HashMap<>();
-//        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
         mClassId = getIntent().getStringExtra(Extra.CLASS_ID);
 
@@ -275,12 +270,17 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     }
 
     private void initViews() {
-        mSlidingPanelLayout.addPanelSlideListener(mPanelSlideListener);
-        mSlidingPanelLayout.setContentScrollableView(mRecyclerView);
+        mScopePl.addPanelSlideListener(mPanelSlideListener);
+        mScopePl.setContentScrollableView(mRecyclerView);
 
         mTitleBar.setTitle(Titles.sWorkspaceResource);
         mRefreshLayout.setColorSchemeResources(R.color.main_color);
-        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout.setOnRefreshListener(new OnRefreshListener(){
+            @Override
+            public void onRefresh() {
+                loadData(true);
+            }
+        });
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mAdapter = new ResourcesAdapter(mRecyclerView, mOnLoadMoreListener);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
@@ -439,7 +439,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     /**
      * 更新排序
      *
-     * @param order
+     * @param order 排序
      */
     private void updateOrder(@NonNull @ResourceOrder String order) {
         if (!order.equals(mOrder)) {
@@ -495,7 +495,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
                         delayResponding(startTime, new ResponseCallable() {
                             @Override
                             public void handle() {
-                                handleErrorResponse(error, refresh);
+                                handleErrorResponse(refresh);
                             }
                         });
                     }
@@ -531,13 +531,9 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     public boolean handleMessage(Message msg) {
         if (msg.what == MSG_COLLAPSE_PANEL) {
             if (!mPanelStateCollapsed) {
-                mSlidingPanelLayout.setPanelState(PanelState.COLLAPSED);
+                mScopePl.setPanelState(PanelState.COLLAPSED);
             }
             return true;
-        } else if (msg.what == MSG_UPDATE_PROGRESS) {
-//            updateProgressBar();
-//            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_PROGRESS,100);
-//            return true;
         }
         return false;
     }
@@ -552,8 +548,8 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     /**
      * 处理请求响应
      *
-     * @param response
-     * @param isRefreshing
+     * @param response 响应
+     * @param isRefreshing 是否是刷新请求
      */
     private void handleNormalResponse(JSONObject response, boolean isRefreshing) {
         mAdapter.setLoading(false);
@@ -607,8 +603,8 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     /**
      * 检查请求是否成功，默认检查result字段值是否为success
      *
-     * @param response
-     * @return
+     * @param response 响应数据
+     * @return 请求是否成功
      */
     protected boolean checkSuccessful(JSONObject response) {
         return "success".equals(response.optString("result"));
@@ -617,9 +613,9 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     /**
      * 检查是否有更多，默认方式是比较total字段与当前项数
      *
-     * @param response
+     * @param response 响应数据
      * @param itemCount 已有item数量
-     * @return
+     * @return true还有更多数据，false没有了
      */
     protected boolean checkHasMore(JSONObject response, int itemCount) {
         return response.optInt("total") <= itemCount;
@@ -675,10 +671,9 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
     /**
      * 处理错误响应
      *
-     * @param error   错误信息
      * @param refresh 是否是刷新
      */
-    private void handleErrorResponse(VolleyError error, boolean refresh) {
+    private void handleErrorResponse(boolean refresh) {
         if (!refresh) {
             mAdapter.removeItem(mAdapter.getItemCount() - 1);
             mAdapter.notifyItemRemoved(mAdapter.getItemCount());
@@ -701,7 +696,11 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
 
     @OnClick(R.id.ib_open_simple_filter)
     protected void onOpenSimpleFilterClick() {
-        mSlidingPanelLayout.setPanelState(PanelState.EXPANDED);
+        if (mScopePl.getPanelState() == PanelState.COLLAPSED) {
+            mScopePl.setPanelState(PanelState.EXPANDED);
+        } else {
+            mScopePl.setPanelState(PanelState.COLLAPSED);
+        }
     }
 
     /**
@@ -728,21 +727,8 @@ public class ClassResourcesActivity extends AppCompatActivity implements OnRefre
         mParams.put(key, value);
     }
 
-    public void removeParam(String key) {
-        mParams.remove(key);
-    }
-
-    public void addMapToParam(Map<String, String> newParams) {
-        mParams.putAll(newParams);
-    }
-
     public void loadData(boolean refresh) {
         loadData(mParams, refresh);
-    }
-
-    @Override
-    public void onRefresh() {
-        loadData(true);
     }
 
     public static void start(Context context, UserInfo userInfo, String classId) {
