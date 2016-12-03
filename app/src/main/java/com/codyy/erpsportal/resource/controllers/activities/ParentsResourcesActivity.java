@@ -74,8 +74,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 
-import static com.codyy.erpsportal.R.id.ib_open_simple_filter;
-
 /**
  * 530家长资源页
  * Created by gujiajia on 2016/7/6
@@ -134,6 +132,15 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     @Bind(R.id.filter_drawer_layout)
     DrawerLayout mDrawerLayout;
 
+    @Bind(R.id.ib_filter)
+    ImageButton mFilterIb;
+
+    @Bind(R.id.btn_confirm_filter)
+    Button mConfirmFilterBtn;
+
+    @Bind(R.id.ib_open_simple_filter)
+    ImageButton mOpenSimpleFilterIb;
+
     private ResourcesAdapter mAdapter;
 
     private ParentsResourcesFilterFragment mFilterFragment;
@@ -188,6 +195,11 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         public void onPanelStateChanged(View panel, ResSlidingUpPanelLayout.PanelState previousState, ResSlidingUpPanelLayout.PanelState newState) {
             Cog.d(TAG, "onPanelStateChanged previousState=", previousState, ",newState=", newState);
             mPanelStateCollapsed = newState == PanelState.COLLAPSED;
+            if (mPanelStateCollapsed) {
+                mOpenSimpleFilterIb.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
+            } else {
+                mOpenSimpleFilterIb.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+            }
         }
     };
 
@@ -369,12 +381,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
             }
         }
     }
-
-    @Bind(R.id.ib_filter)
-    protected ImageButton mFilterIb;
-
-    @Bind(R.id.btn_confirm_filter)
-    protected Button mConfirmFilterBtn;
 
     @OnClick(R.id.ib_filter)
     public void onFilterClick(View view) {
@@ -665,7 +671,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
     }
 
-    @OnClick(ib_open_simple_filter)
+    @OnClick(R.id.ib_open_simple_filter)
     protected void onOpenSimpleFilterClick() {
         if (mPanelStateCollapsed) {
             mSlidingPanelLayout.setPanelState(PanelState.EXPANDED);
