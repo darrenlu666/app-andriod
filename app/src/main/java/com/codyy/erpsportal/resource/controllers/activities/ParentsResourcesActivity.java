@@ -367,6 +367,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
                 onTypeNotAudioChanged();
                 break;
         }
+        mSlidingPanelLayout.setPanelState(PanelState.COLLAPSED);
     }
 
     private void onTypeNotAudioChanged() {
@@ -397,11 +398,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         Map<String,String> filterParams = mFilterFragment.acquireFilterParams();
         mergeParams(filterParams);
         loadData(true);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private boolean mergeParams(Map<String, String> newParams) {
@@ -459,7 +455,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
                         delayResponding(startTime, new ResponseCallable() {
                             @Override
                             public void handle() {
-                                handleErrorResponse(error, refresh);
+                                handleErrorResponse(refresh);
                             }
                         });
                     }
@@ -647,10 +643,9 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     /**
      * 处理错误响应
      *
-     * @param error   错误信息
      * @param refresh 是否是刷新
      */
-    private void handleErrorResponse(VolleyError error, boolean refresh) {
+    private void handleErrorResponse(boolean refresh) {
         if (!refresh) {
             mAdapter.removeItem(mAdapter.getItemCount() - 1);
             mAdapter.notifyItemRemoved(mAdapter.getItemCount());
@@ -714,14 +709,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
 
     public void addParam(String key, String value) {
         mParams.put(key, value);
-    }
-
-    public void removeParam(String key) {
-        mParams.remove(key);
-    }
-
-    public void addMapToParam(Map<String, String> newParams) {
-        mParams.putAll(newParams);
     }
 
     @Override
