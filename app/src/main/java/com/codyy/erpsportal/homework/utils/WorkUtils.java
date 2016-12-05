@@ -9,6 +9,7 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class WorkUtils {
 
     public static String splitString(List<String> answerList) {
         String answerStr = "";
+        Collections.sort(answerList);
         for (int i = 0; i < answerList.size(); i++) {
             answerStr = answerStr + answerList.get(i);
         }
@@ -181,8 +183,8 @@ public class WorkUtils {
     public static String roundFloat(String number) {
         if ("".equals(number))
             return "";
-        float f = Float.valueOf(number.replace("%",""));
+        float f = Float.valueOf(number.replace("%", ""));
         int num = Math.round(f);
-        return String.valueOf(num)+"%";
+        return String.valueOf(num) + "%";
     }
 }
