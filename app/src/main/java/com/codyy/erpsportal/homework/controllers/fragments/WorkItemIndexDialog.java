@@ -180,7 +180,7 @@ public class WorkItemIndexDialog extends DialogFragment implements View.OnClickL
             if (data.getColor() != 0) {
                 button.setBackgroundColor(data.getColor());
             } else {
-                button.setBackgroundColor(Color.rgb(236, 236, 236));
+                button.setBackgroundColor(Color.rgb(235, 236, 236));
             }
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
