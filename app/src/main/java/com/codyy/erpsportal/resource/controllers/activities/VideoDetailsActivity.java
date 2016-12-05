@@ -45,7 +45,7 @@ import java.util.Map;
 
 /**
  * 视频资源详情
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class VideoDetailsActivity extends FragmentActivity {
 
@@ -139,7 +139,7 @@ public class VideoDetailsActivity extends FragmentActivity {
             }
         });
 
-        mDownloadBtn = (Button) findViewById(R.id.btnDownload);
+        mDownloadBtn = (Button) findViewById(R.id.btn_download);
         mDownloadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,12 +190,12 @@ public class VideoDetailsActivity extends FragmentActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            mFrameLayout.setLayoutParams(lparam);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            mFrameLayout.setLayoutParams(layoutParams);
         } else {
             int height = UIUtils.dip2px(this, 180);
-            LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
-            mFrameLayout.setLayoutParams(lparam);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
+            mFrameLayout.setLayoutParams(layoutParams);
         }
     }
 
@@ -267,7 +267,7 @@ public class VideoDetailsActivity extends FragmentActivity {
     /**
      * 播放视频
      *
-     * @param resourceDetails
+     * @param resourceDetails 资源详情
      */
     private void playVideo(ResourceDetails resourceDetails) {
         if(resourceDetails == null ){

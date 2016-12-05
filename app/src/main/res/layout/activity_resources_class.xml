@@ -29,7 +29,7 @@
     </com.codyy.erpsportal.commons.widgets.TitleBar>
 
     <com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout
-        android:id="@+id/sliding_panel"
+        android:id="@+id/pl_scope"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/title_bar"
@@ -58,9 +58,8 @@
                     android:id="@+id/tv_current_scope"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
                     android:padding="4dp"
-                    android:text="本级上传 • 视频 • 按时间"
+                    android:text="@string/def_class_res_score"
                     android:textSize="18sp"/>
 
                 <ImageButton
@@ -124,28 +123,28 @@
                         style="@style/ResSimpleFilterItemRb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="视频"/>
+                        android:text="@string/video"/>
 
                     <RadioButton
                         android:id="@+id/rb_filter_audio"
                         style="@style/ResSimpleFilterItemRb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="音频"/>
+                        android:text="@string/audio"/>
 
                     <RadioButton
                         android:id="@+id/rb_filter_document"
                         style="@style/ResSimpleFilterItemRb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="文档"/>
+                        android:text="@string/document"/>
 
                     <RadioButton
                         android:id="@+id/rb_filter_image"
                         style="@style/ResSimpleFilterItemRb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="图片"/>
+                        android:text="@string/image"/>
                 </RadioGroup>
             </HorizontalScrollView>
 
@@ -167,28 +166,28 @@
                         style="@style/ResSimpleFilterItemRb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="按时间"/>
+                        android:text="@string/by_time"/>
 
                     <RadioButton
                         android:id="@+id/rb_order_rate"
                         style="@style/ResSimpleFilterItemRb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="按评分"/>
+                        android:text="@string/by_rating"/>
 
                     <RadioButton
                         android:id="@+id/rb_order_heat"
                         style="@style/ResSimpleFilterItemRb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="按浏览量"/>
+                        android:text="@string/by_pageviews"/>
 
                     <RadioButton
                         android:id="@+id/rb_order_download"
                         style="@style/ResSimpleFilterItemRb"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="按下载量"/>
+                        android:text="@string/by_downloads"/>
                 </RadioGroup>
             </HorizontalScrollView>
         </LinearLayout>

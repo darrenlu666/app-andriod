@@ -80,7 +80,7 @@ import de.greenrobot.event.EventBus;
 
 /**
  * 530资源模块页
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class ResourcesNewActivity extends AppCompatActivity implements Callback{
 
@@ -159,7 +159,7 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
     @Bind(R.id.rv_resources)
     RecyclerView mRecyclerView;
 
-    @Bind(R.id.sliding_panel)
+    @Bind(R.id.pl_scope)
     ResSlidingUpPanelLayout mSlidingPanelLayout;
 
     @Bind(R.id.rg_from)
@@ -417,8 +417,8 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
     /**
      * 添加来源筛选项
      *
-     * @param text
-     * @param from
+     * @param text 显示的标题
+     * @param from tag
      */
     private void addFromFilterItem(String text, String from) {
         RadioButton radioButton = createRadioButton();
@@ -437,7 +437,7 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
     /**
      * 来自过滤项点击事件
      *
-     * @param view
+     * @param view 被点的组件
      */
     private void onFromFilterItem(View view) {
         Object tag = view.getTag();
@@ -467,7 +467,7 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
     /**
      * 创建筛选项
      *
-     * @return
+     * @return 创建好的RadioButton
      */
     private RadioButton createRadioButton() {
         RadioButton radioButton = new RadioButton(this);
@@ -558,7 +558,7 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
     /**
      * 更新排序
      *
-     * @param order
+     * @param order 排序
      */
     private void updateOrder(@NonNull @ResourceOrder String order) {
         if (!order.equals(mOrder)) {

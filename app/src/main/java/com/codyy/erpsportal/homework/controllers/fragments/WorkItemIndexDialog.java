@@ -176,7 +176,7 @@ public class WorkItemIndexDialog extends DialogFragment implements View.OnClickL
 
         @Override
         public void setDataToView(final ItemInfoClass data) {
-            button.setText(data.getWorkItemIndex());
+            button.setText(data.getWorkItemIndex()+"");
             if (data.getColor() != 0) {
                 button.setBackgroundColor(data.getColor());
             } else {

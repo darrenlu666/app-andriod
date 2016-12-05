@@ -34,22 +34,21 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.Extra;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
-import com.codyy.erpsportal.commons.widgets.TitleBar;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelSlideListener;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelState;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
+import com.codyy.erpsportal.commons.widgets.TitleBar;
+import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout;
+import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelState;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter;
+import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnItemClickListener;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnLoadMoreListener;
 import com.codyy.erpsportal.resource.controllers.fragments.ParentsResourcesFilterFragment;
 import com.codyy.erpsportal.resource.controllers.others.AudioListPlayController;
@@ -57,9 +56,11 @@ import com.codyy.erpsportal.resource.controllers.others.AudioListPlayController.
 import com.codyy.erpsportal.resource.models.entities.Audio;
 import com.codyy.erpsportal.resource.models.entities.AudioEvent;
 import com.codyy.erpsportal.resource.models.entities.Document;
+import com.codyy.erpsportal.resource.models.entities.Image;
 import com.codyy.erpsportal.resource.models.entities.Video;
 import com.codyy.erpsportal.resource.utils.CountIncreaser;
 import com.codyy.erpsportal.resource.widgets.AudioControlBar;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -75,9 +76,9 @@ import de.greenrobot.event.EventBus;
 
 /**
  * 530家长资源页
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
-public class ParentsResourcesActivity extends AppCompatActivity implements OnLoadMoreListener, OnRefreshListener, PanelSlideListener, Callback {
+public class ParentsResourcesActivity extends AppCompatActivity implements OnLoadMoreListener, OnRefreshListener, Callback {
 
     private final static String TAG = "ParentsResourcesActivity";
 
@@ -119,7 +120,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     @Bind(R.id.rv_resources)
     RecyclerView mRecyclerView;
 
-    @Bind(R.id.sliding_panel)
+    @Bind(R.id.pl_scope)
     ResSlidingUpPanelLayout mSlidingPanelLayout;
 
     @Bind(R.id.rg_type)
@@ -130,6 +131,15 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
 
     @Bind(R.id.filter_drawer_layout)
     DrawerLayout mDrawerLayout;
+
+    @Bind(R.id.ib_filter)
+    ImageButton mFilterIb;
+
+    @Bind(R.id.btn_confirm_filter)
+    Button mConfirmFilterBtn;
+
+    @Bind(R.id.ib_open_simple_filter)
+    ImageButton mOpenSimpleFilterIb;
 
     private ResourcesAdapter mAdapter;
 
@@ -182,7 +192,15 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         }
 
         @Override
-        public void onPanelStateChanged(View panel, ResSlidingUpPanelLayout.PanelState previousState, ResSlidingUpPanelLayout.PanelState newState) { }
+        public void onPanelStateChanged(View panel, ResSlidingUpPanelLayout.PanelState previousState, ResSlidingUpPanelLayout.PanelState newState) {
+            Cog.d(TAG, "onPanelStateChanged previousState=", previousState, ",newState=", newState);
+            mPanelStateCollapsed = newState == PanelState.COLLAPSED;
+            if (mPanelStateCollapsed) {
+                mOpenSimpleFilterIb.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
+            } else {
+                mOpenSimpleFilterIb.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
+            }
+        }
     };
 
     @Override
@@ -222,6 +240,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         mRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mAdapter = new ResourcesAdapter(mRecyclerView, this);
+        mAdapter.setOnItemClickListener(mOnItemClickListener);
         mRecyclerView.setAdapter(mAdapter);
 
         mPlayController = new AudioListPlayController.Builder()
@@ -244,6 +263,27 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         ft.add(R.id.fl_filter, mFilterFragment);
         ft.commit();
     }
+
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(int position) {
+            Cog.d(TAG, "onItemClick position=", position);
+            Object object = mAdapter.getItem( position);
+            if (object instanceof Video){
+                Video video = (Video) object;
+                VideoDetailsActivity.start(ParentsResourcesActivity.this, mUserInfo, video.getId());
+            } else if (object instanceof Audio) {
+                List<Audio> audios = mAdapter.getData();
+                AudioDetailsActivity.start(ParentsResourcesActivity.this, mUserInfo, audios, position);
+            } else if (object instanceof Document) {
+                Document document = (Document) object;
+                DocumentContentActivity.start(ParentsResourcesActivity.this, mUserInfo, document);
+            } else if (object instanceof Image) {
+                Image image = (Image) object;
+                ImageDetailsActivity.start(ParentsResourcesActivity.this, mUserInfo, image.getId());
+            }
+        }
+    };
 
     private DrawerListener mDrawerListener = new DrawerListener() {
         @Override
@@ -327,6 +367,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
                 onTypeNotAudioChanged();
                 break;
         }
+        mSlidingPanelLayout.setPanelState(PanelState.COLLAPSED);
     }
 
     private void onTypeNotAudioChanged() {
@@ -341,12 +382,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
             }
         }
     }
-
-    @Bind(R.id.ib_filter)
-    protected ImageButton mFilterIb;
-
-    @Bind(R.id.btn_confirm_filter)
-    protected Button mConfirmFilterBtn;
 
     @OnClick(R.id.ib_filter)
     public void onFilterClick(View view) {
@@ -363,11 +398,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         Map<String,String> filterParams = mFilterFragment.acquireFilterParams();
         mergeParams(filterParams);
         loadData(true);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private boolean mergeParams(Map<String, String> newParams) {
@@ -425,7 +455,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
                         delayResponding(startTime, new ResponseCallable() {
                             @Override
                             public void handle() {
-                                handleErrorResponse(error, refresh);
+                                handleErrorResponse(refresh);
                             }
                         });
                     }
@@ -457,20 +487,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
         }
     }
 
-    @Override
-    public void onPanelSlide(View panel, float slideOffset) {
-    }
-
-    @Override
-    public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-        Cog.d(TAG, "onPanelStateChanged previousState=", previousState, ",newState=", newState);
-        if (newState == PanelState.COLLAPSED) {
-            mPanelStateCollapsed = true;
-        } else {
-            mPanelStateCollapsed = false;
-        }
-    }
-
     private boolean mPanelStateCollapsed = true;
 
     @Override
@@ -494,8 +510,8 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     /**
      * 处理请求响应
      *
-     * @param response
-     * @param isRefreshing
+     * @param response 响应数据
+     * @param isRefreshing 刷新
      */
     private void handleNormalResponse(JSONObject response, boolean isRefreshing) {
         mAdapter.setLoading(false);
@@ -549,8 +565,8 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     /**
      * 检查请求是否成功，默认检查result字段值是否为success
      *
-     * @param response
-     * @return
+     * @param response 响应数据
+     * @return true请求成功
      */
     protected boolean checkSuccessful(JSONObject response) {
         return "success".equals(response.optString("result"));
@@ -559,9 +575,9 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     /**
      * 检查是否有更多，默认方式是比较total字段与当前项数
      *
-     * @param response
+     * @param response 响应
      * @param itemCount 已有item数量
-     * @return
+     * @return true 请求成功
      */
     protected boolean checkHasMore(JSONObject response, int itemCount) {
         return response.optInt("total") <= itemCount;
@@ -627,10 +643,9 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     /**
      * 处理错误响应
      *
-     * @param error   错误信息
      * @param refresh 是否是刷新
      */
-    private void handleErrorResponse(VolleyError error, boolean refresh) {
+    private void handleErrorResponse(boolean refresh) {
         if (!refresh) {
             mAdapter.removeItem(mAdapter.getItemCount() - 1);
             mAdapter.notifyItemRemoved(mAdapter.getItemCount());
@@ -694,14 +709,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
 
     public void addParam(String key, String value) {
         mParams.put(key, value);
-    }
-
-    public void removeParam(String key) {
-        mParams.remove(key);
-    }
-
-    public void addMapToParam(Map<String, String> newParams) {
-        mParams.putAll(newParams);
     }
 
     @Override

@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * 图片查看
- * Created by gujiajia
+ * Created by gujiajia on 2016/7/6
  */
 public class PicturesActivity extends AppCompatActivity {
 
