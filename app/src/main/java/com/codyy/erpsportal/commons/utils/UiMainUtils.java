@@ -27,6 +27,15 @@ import com.codyy.erpsportal.EApplication;
 public class UiMainUtils {
 
     /**
+     * 替换旧的api res.getColor(int color)
+     * @param color
+     * @return
+     */
+    public static int getColor(int color){
+        return ContextCompat.getColor(EApplication.instance(),color);
+    }
+
+    /**
      * 三大应用的评论中的头像
      * @param server
      * @param headPic
