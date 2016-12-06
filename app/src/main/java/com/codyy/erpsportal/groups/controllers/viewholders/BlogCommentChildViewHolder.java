@@ -45,7 +45,11 @@ public class BlogCommentChildViewHolder extends BaseRecyclerViewHolder<BaseComme
         mData   =   data ;
         String message = data.getCommentContent();
         message = PullXmlUtils.replaceMsg(message);
-        message = URLDecoder.decode(message);
+        try{
+            message = URLDecoder.decode(message);
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
+        }
         String name = data.getRealName()+"回复"+data.getReplyName()+":" ;
         Spannable spannable = new SpannableString(name+message);
         spannable.setSpan(new StyleSpan(Typeface.BOLD),0,name.length()-1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);

@@ -160,7 +160,11 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
             lvh.showMore(mRefreshing);
         }else if(holder instanceof BaseRecyclerViewHolder){
             BaseRecyclerViewHolder<T> bvh = (BaseRecyclerViewHolder<T>) holder;
-            bvh.setData(position , mData.get(position));
+            try {
+                bvh.setData(position , mData.get(position));
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }else{
             throw new IllegalArgumentException("ViewHolder not extends BaseRecyclerViewHolder<T> ～！！！");
         }
