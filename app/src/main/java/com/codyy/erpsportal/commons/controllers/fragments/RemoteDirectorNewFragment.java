@@ -144,7 +144,9 @@ public class RemoteDirectorNewFragment extends LoadMoreFragment<ClassRoomItem, R
             if (mClassType.equals(ClassRoomContants.FROM_WHERE_LINE)) {
                 if (data.getStatus().equals(STATUS_PROGRESS)) {
                     mTvTipIn.setVisibility(View.VISIBLE);
+                    mRlTime.setVisibility(View.GONE);
                 } else {
+                    mTvTipIn.setVisibility(View.GONE);
                     mRlTime.setVisibility(View.VISIBLE);
                     mTvHour.setText(getTimeFromLong(data.getStartTime(), "hour"));
                     mTvMinite.setText(getTimeFromLong(data.getStartTime(), ""));
@@ -152,7 +154,9 @@ public class RemoteDirectorNewFragment extends LoadMoreFragment<ClassRoomItem, R
             } else {
                 if (data.getStatus().equals(STATUS_PROGRESS)) {
                     mTvTipIn.setVisibility(View.VISIBLE);
+                    mTvUnstart.setVisibility(View.GONE);
                 } else {
+                    mTvTipIn.setVisibility(View.GONE);
                     mTvUnstart.setVisibility(View.VISIBLE);
                 }
             }

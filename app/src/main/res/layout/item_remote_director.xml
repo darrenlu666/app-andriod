@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/rl_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,8 +92,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_holder_2"
                 android:layout_marginTop="5dp"
-                android:layout_marginRight="5dp"
-                android:text="主讲教室名称大锅饭大师傅 asdf俺的沙发案发生地方"
+                android:text="asdfasdfasdfasfasdfasdfasfasdf俺的沙发案发生地方"
+                android:layout_alignParentLeft="true"
                 android:textSize="14sp"
                 android:singleLine="true"
                 android:layout_toLeftOf="@id/fl_status"
