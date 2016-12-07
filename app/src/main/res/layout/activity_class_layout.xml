@@ -14,7 +14,7 @@
         android:textStyle="bold"
         android:paddingLeft="10dp"
         android:text="任课老师"
-        android:textColor="@color/md_black_1000" />
+        android:textColor="@color/grey_444" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_teacher"
@@ -40,7 +40,7 @@
             android:textStyle="bold"
             android:paddingLeft="10dp"
             android:text="班级成员"
-            android:textColor="@color/md_black_1000" />
+            android:textColor="@color/grey_444" />
 
         <TextView
             android:id="@+id/tv_class_room_group"
@@ -53,7 +53,7 @@
             android:drawablePadding="5dp"
             android:gravity="center"
             android:text="全部"
-            android:textColor="@color/md_black_1000"
+            android:textColor="@color/exam_normal_color"
             />
 
     </RelativeLayout>

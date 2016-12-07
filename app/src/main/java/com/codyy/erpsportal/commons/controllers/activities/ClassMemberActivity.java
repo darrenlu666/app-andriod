@@ -275,10 +275,11 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         if(UserInfo.USER_TYPE_TEACHER.equals(mUserType)&&TYPE_FROM_APPLICATION.equals(mFromType)){
             if(null == mClassPopupWindow){
                 View contentView = LayoutInflater.from(this).inflate(R.layout.recycleview_single,null);
-                RecyclerView recyclerView = (RecyclerView) contentView.findViewById(R.id.recycle_rview);
+                RecyclerView recyclerView = (RecyclerView) contentView.findViewById(R.id.recycler_view);
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-                recyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
+
+                recyclerView.addItemDecoration(new SimpleHorizonDivider(divider,true));
                 mClassAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<ClassMemberSelectViewHolder>() {
                     @Override
                     public ClassMemberSelectViewHolder createViewHolder(ViewGroup parent, int viewType) {
@@ -349,10 +350,10 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         } else {
             if(null == mClassMemberPopupWindow){
                 View contentView = LayoutInflater.from(this).inflate(R.layout.recycleview_single,null);
-                RecyclerView recyclerView = (RecyclerView) contentView.findViewById(R.id.recycle_rview);
+                RecyclerView recyclerView = (RecyclerView) contentView.findViewById(R.id.recycler_view);
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-                recyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
+                recyclerView.addItemDecoration(new SimpleHorizonDivider(divider,true));
                 mClassMemberAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<ClassMemberViewHolder>() {
                     @Override
                     public ClassMemberViewHolder createViewHolder(ViewGroup parent, int viewType) {

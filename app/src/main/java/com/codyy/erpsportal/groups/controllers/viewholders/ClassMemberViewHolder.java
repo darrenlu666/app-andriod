@@ -14,6 +14,7 @@ import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+
 /**
  * 单个TextView (班级成员头部ｉｔｅｍ).-中间的成员筛选
  * Created by poe on 16-1-25.
