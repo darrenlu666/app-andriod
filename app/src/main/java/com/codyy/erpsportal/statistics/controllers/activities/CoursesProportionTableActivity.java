@@ -103,9 +103,9 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
     /**
      * 三种类型：主讲教室（主讲）or主讲教室（受邀）or接收教室
      * <p>见
-     * {@link CoursesProportionTableActivity#TYPE_PROPORTION_MAIN}、
-     * {@link CoursesProportionTableActivity#TYPE_PROPORTION_MAIN_INVITED}、
-     * {@link CoursesProportionTableActivity#TYPE_PROPORTION_RECEIVING}
+     * {@link #TYPE_PROPORTION_MAIN}、
+     * {@link #TYPE_PROPORTION_MAIN_INVITED}、
+     * {@link #TYPE_PROPORTION_RECEIVING}
      */
     private int mType;
 
@@ -260,7 +260,9 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
      * 加载地区与学期数据
      */
     private void loadAreasAndTermsData() {
-        String url = URLConfig.COURSES_PROPORTION_STAT_BASE + "?uuid=" + mUserInfo.getUuid();
+        String url = URLConfig.COURSES_PROPORTION_STAT_BASE
+                + "?uuid=" + mUserInfo.getUuid()
+                + "&statisticType=" + obtainStatisticType();
         mRequestSender.sendGetRequest(new RequestData(url, null, new Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -278,6 +280,20 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
                 Cog.e(TAG, "onError error=", error);
             }
         }, mRequestTag));
+    }
+
+    /**
+     * 获取对应教室类型的参数
+     * @return 教室类型字串
+     */
+    private String obtainStatisticType() {
+        if (mType == TYPE_PROPORTION_MAIN) {
+            return "MASTER";
+        } else if (mType == TYPE_PROPORTION_MAIN_INVITED) {
+            return "INVITE";
+        } else {
+            return "RECEIVE";
+        }
     }
 
     @OnClick(R.id.btn_date_scope)
@@ -315,7 +331,7 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
 
     /**
      * 加载学期统计信息
-     * @param areaInfo
+     * @param areaInfo 地区信息
      */
     private void loadTermsStat(AreaInfo areaInfo) {
         Map<String, String> params = new HashMap<>();
@@ -329,13 +345,7 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
             params.put("baseAreaId", mAreaInfo.getId());
             params.put("isDirect", "Y");
         }
-        if (mType == TYPE_PROPORTION_MAIN) {
-            params.put("statisticType", "MASTER");
-        } else if (mType == TYPE_PROPORTION_MAIN_INVITED) {
-            params.put("statisticType", "INVITE");
-        } else {
-            params.put("statisticType", "RECEIVE");
-        }
+        params.put("statisticType", obtainStatisticType());
         StringBuilder sb = new StringBuilder();
         for (TermEntity termEntity: mTermEntities) {
             sb.append(termEntity.getId()).append(',');

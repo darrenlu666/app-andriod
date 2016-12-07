@@ -83,7 +83,7 @@ android {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
         versionCode 1
-        versionName "5.3.0.20"
+        versionName "5.3.0.23"
         multiDexEnabled true
 //        setProperty("archivesBaseName", "InteractiveLearning-$versionName.$BUILD_VERSION")
         println("version:$versionName.$BUILD_VERSION");
@@ -137,19 +137,6 @@ android {
         web {
             applicationId "com.codyy.erpsportal.web"
             buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile\"")
-        }
-
-
-        fzy {
-            buildConfigField("String", "API_HOST", "\"http://10.5.225.16:8080/MobileInterface\"")
-        }
-
-        bsw {
-            buildConfigField("String", "API_HOST", "\"http://10.5.225.60:8080/MobileInterface\"")
-        }
-
-        luyong {
-            buildConfigField("String", "API_HOST", "\"http://10.5.225.65:8082/MobileInterface\"")
         }
     }
 

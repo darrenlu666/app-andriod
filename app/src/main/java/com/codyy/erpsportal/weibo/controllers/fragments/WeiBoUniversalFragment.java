@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.weibo.controllers.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,8 @@ import android.view.View;
 
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
+import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.BaseRefreshFragment;
@@ -347,6 +350,15 @@ public class WeiBoUniversalFragment extends BaseRefreshFragment implements WeiBo
                 parm2.put("targetUserId", message1.getTargetUserId());
                 httpConnect(URLConfig.DELETE_MI_MIBLOG_MESSAGE, parm2, DELETE_MY_MSG);
                 break;
+        }
+    }
+
+    @Override
+    public void onHeadClick(String id) {
+        if (mUserInfo.getBaseUserId().equals(id)) {
+            MainActivity.start(getActivity(), UserInfoKeeper.obtainUserInfo(), 2);
+        } else {//2.访客
+            PublicUserActivity.start(getActivity(), id);
         }
     }
 

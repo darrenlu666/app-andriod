@@ -7,20 +7,22 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
+import com.codyy.erpsportal.commons.models.entities.UserClassGroups;
+import com.codyy.erpsportal.commons.models.entities.UserClassTeacher;
 import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * 单个TextView (班级成员头部ｉｔｅｍ).
+ * 单个TextView (班级成员头部ｉｔｅｍ).-中间的成员筛选
  * Created by poe on 16-1-25.
  */
-public  class ClassMemberSelectViewHolder extends BaseRecyclerViewHolder<ClassCont> {
+public  class ClassMemberViewHolder extends BaseRecyclerViewHolder<UserClassGroups> {
 
     @Bind(R.id.tv_content) TextView mContentTextView;
 
-    public ClassMemberSelectViewHolder(View itemView ) {
+    public ClassMemberViewHolder(View itemView ) {
         super(itemView);
         ButterKnife.bind(this,itemView);
     }
@@ -31,15 +33,12 @@ public  class ClassMemberSelectViewHolder extends BaseRecyclerViewHolder<ClassCo
     }
 
     @Override
-    public void setData(int position , ClassCont data) {
+    public void setData(int position , UserClassGroups data) {
         mCurrentPosition    =   position ;
         mData  = data ;
 
         if(null != data){
-            StringBuilder sb = new StringBuilder();
-            if(!TextUtils.isEmpty(data.getClassLevelName())) sb.append(data.getClassLevelName());
-            if(!TextUtils.isEmpty(data.getBaseClassName())) sb.append(data.getBaseClassName());
-            mContentTextView.setText(sb.toString());
+            mContentTextView.setText(data.getGroupName() + "(" + data.getStudentCount() + ")");
         }
         //处理选中颜色需要在外面设置 viewHold#setAdapter(BaseRecyclerViewAdapter adapter)
         if(getAdapter()!=null && getAdapter().getSelectedPosition() == mCurrentPosition ){

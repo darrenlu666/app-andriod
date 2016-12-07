@@ -76,7 +76,7 @@ public class TimeTableView2 extends View {
     /**
      * 标题高度(px)
      */
-    private final static int TITLE_H = 40;
+    private final static int TITLE_H = 50;
     /**
      * 日期字体的高度
      */

@@ -94,7 +94,7 @@ import de.greenrobot.event.EventBus;
  */
 public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWidget.OnTabClickListener, BaseRecyclerAdapter.OnItemClickListener, IMeeting, ContactsFragment.QueryAllOnLineUser ,Handler.Callback{
     private final static String TAG = OnlineMeetingActivity.class.getSimpleName();
-    /**     * jump to video meeting pager .     */
+    /**     * jump to video meeting pager .    */
     private static final int MSG_JUMP_TO_VIDEO_MEETING = 0 ;
     /**     * dismiss the progress bar .  and notify all loader the newest user list data .   */
     private static final int MSG_PROGRESS_BAR_DISMISS = 200 ;

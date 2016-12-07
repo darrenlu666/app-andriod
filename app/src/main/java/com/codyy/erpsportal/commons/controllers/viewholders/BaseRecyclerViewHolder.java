@@ -36,7 +36,7 @@ public abstract class BaseRecyclerViewHolder<T>  extends RecyclerView.ViewHolder
      * @param data
      */
     // TODO: 16-2-16 填充数据，
-    public abstract void setData(int position ,T data);
+    public abstract void setData(int position ,T data)throws Throwable;
 
     public int getCurrentPosition() {
         return mCurrentPosition;
