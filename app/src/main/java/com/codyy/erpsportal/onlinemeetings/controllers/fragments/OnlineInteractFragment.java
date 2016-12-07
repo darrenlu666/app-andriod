@@ -141,7 +141,7 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
         Cog.e(TAG,"viewLoadCompleted~");
         //add tabs
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.main_green));
-        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDisplayMetrics().density*4));
+        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.video_model)));
         mTabLayout.addTab(mTabLayout.newTab().setText(getString(R.string.show_model)));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));

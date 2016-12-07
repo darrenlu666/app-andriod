@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -174,7 +175,7 @@ public class OnlineTeachActivity extends BaseHttpActivity {
     private void initView() {
         //add tabs
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.main_green));
-        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDisplayMetrics().density*4));
+        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.setPagingEnabled(true);
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

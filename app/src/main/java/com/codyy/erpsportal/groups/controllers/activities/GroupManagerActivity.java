@@ -107,7 +107,7 @@ public class GroupManagerActivity extends BaseHttpActivity {
         ft.replace(R.id.fl_filter, mFilterFragment);
         ft.commitAllowingStateLoss();
 
-        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
@@ -161,11 +161,11 @@ public class GroupManagerActivity extends BaseHttpActivity {
      */
     private void initView() {
         //add tabs
-        mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.main_green));
-        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDisplayMetrics().density*4));
+        mTabLayout.setSelectedTabIndicatorColor(UiMainUtils.getColor(R.color.main_green));
+        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.setPagingEnabled(true);
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Cog.i(TAG,"onTabSelected : " +mTabLayout.getSelectedTabPosition());

@@ -80,5 +80,6 @@
     <dimen name="dp8">8dp</dimen>
 
     <dimen name="net_teach_launch_limit">150dp</dimen>
+    <dimen name="tab_layout_select_indicator_height">2dp</dimen>
 
 </resources>
