@@ -17,9 +17,23 @@ import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryCl
 public class SimpleHorizonDivider extends RecyclerView.ItemDecoration{
 
     private Drawable mDivider ;
+    private boolean isHeadDividerEnable = false;
 
     public SimpleHorizonDivider(Drawable divider) {
+        this(divider,false);
+    }
+
+    public SimpleHorizonDivider(Drawable divider,boolean isHeadDraw) {
         this.mDivider = divider;
+        this.isHeadDividerEnable = isHeadDraw;
+    }
+
+    public boolean isHeadDividerEnable() {
+        return isHeadDividerEnable;
+    }
+
+    public void setHeadDividerEnable(boolean headDividerEnable) {
+        isHeadDividerEnable = headDividerEnable;
     }
 
     @Override
@@ -30,7 +44,7 @@ public class SimpleHorizonDivider extends RecyclerView.ItemDecoration{
         }
 
             //如果是第一个item，不需要divider，所以直接return
-           if (parent.getChildLayoutPosition(view) < 1) {
+           if (!isHeadDividerEnable && parent.getChildLayoutPosition(view) < 1) {
                 return;
               }
             //如果下一个item的recyclerType为TitleBar or TitleBarMore 则 返回

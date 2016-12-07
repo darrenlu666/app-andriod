@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by kmdai on 2015/9/1.
@@ -48,7 +49,7 @@ public class UserClassGroups {
      * @param array
      * @param groupses
      */
-    public static void getClassGroup(JSONArray array, ArrayList<UserClassGroups> groupses) {
+    public static void getClassGroup(JSONArray array, List<UserClassGroups> groupses) {
         for (int i = 0; i < array.length(); i++) {
             UserClassGroups classGroups = new UserClassGroups();
             JSONObject object = array.optJSONObject(i);

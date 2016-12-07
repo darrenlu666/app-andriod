@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/iv_videoImage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="@dimen/poe_head_pic_size_small"
+        android:layout_height="@dimen/poe_head_pic_size_small"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginLeft="5dp"
         />
@@ -23,7 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="小学生同步作文课堂系列"
-            android:textSize="18dp"/>
+            android:textSize="@dimen/poe_txt_size_title"
+            android:textColor="@color/md_grey_900"
+            android:layout_marginTop="10dp"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,12 +36,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/str_meeting_main_speaker"/>
+                android:text="@string/str_meeting_main_speaker"
+                android:textSize="@dimen/poe_txt_size_content"
+                android:textColor="@color/black_666"
+                />
             <TextView
                 android:id="@+id/tv_personName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:textSize="@dimen/poe_txt_size_content"
+                android:textColor="@color/black_666"
                 android:text="李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四"
                 android:singleLine="true"
                 />
@@ -58,14 +66,19 @@
                 android:id="@+id/tv_start_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2015-07-31 10:00"/>
+                android:text="2015-07-31 10:00"
+                android:textSize="@dimen/poe_txt_size_content"
+                android:textColor="@color/black_666"
+                />
         </LinearLayout>
 
         <View
             android:layout_height="1px"
             android:layout_width="match_parent"
             android:background="@color/gray"
-            android:layerType="software"/>
+            android:layerType="software"
+            android:layout_marginTop="10dp"
+            />
 
     </LinearLayout>
 

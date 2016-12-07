@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -101,19 +102,19 @@ public class OnlineTeachActivity extends BaseHttpActivity {
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
         });
     }
@@ -174,7 +175,7 @@ public class OnlineTeachActivity extends BaseHttpActivity {
     private void initView() {
         //add tabs
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.main_green));
-        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDisplayMetrics().density*4));
+        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.setPagingEnabled(true);
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -183,7 +184,7 @@ public class OnlineTeachActivity extends BaseHttpActivity {
                 Cog.i(TAG,"onTabSelected : " +mTabLayout.getSelectedTabPosition());
                 Cog.i(TAG,"onTabSelected : tab.getPosition :" +tab.getPosition());
                 mViewPager.setCurrentItem(tab.getPosition());
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
                 if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())){
                     if(0 == mTabLayout.getSelectedTabPosition()){
                         crateMyFilter();

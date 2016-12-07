@@ -24,6 +24,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
     private ViewCreator<VH> mCreator;
     protected OnItemClickListener<T> mOnItemClickListener;
     protected OnLoadMoreClickListener mOnLoadMoreClickListener;
+    protected int mSelectedPosition = 0 ;//默认选中的位置
 
     public BaseRecyclerAdapter(ViewCreator<VH> mCreator) {
         this.mCreator = mCreator;
@@ -97,6 +98,14 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
         return viewHolder;
     }
 
+    public int getSelectedPosition() {
+        return mSelectedPosition;
+    }
+
+    public void setSelectedPosition(int selectedPosition) {
+        mSelectedPosition = selectedPosition;
+    }
+
     private void setChildListener(View view , View.OnClickListener clickListener) {
         if(view instanceof ViewGroup ){
 //            Log.i(TAG , " itemView is an ViewGroup !");
@@ -121,6 +130,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
             public void onClick(View v) {
                 if(mOnItemClickListener != null){
                     try {
+                        setSelectedPosition(viewHolder.getCurrentPosition());
                         mOnItemClickListener.onItemClicked(v , viewHolder.getCurrentPosition(),viewHolder.getData());
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -180,7 +190,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
     }
 
     public interface  ViewCreator<VH>{
-        /**
+        /**public
          * create the viewHolder
          * @param parent
          * @param viewType

@@ -88,19 +88,19 @@ public class VideoMeetingActivity extends BaseHttpActivity{
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
         });
     }
@@ -157,7 +157,7 @@ public class VideoMeetingActivity extends BaseHttpActivity{
     private void initTabLayout() {
         //add tabs
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.main_green));
-        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDisplayMetrics().density*4));
+        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -165,7 +165,7 @@ public class VideoMeetingActivity extends BaseHttpActivity{
                 Cog.i(TAG,"onTabSelected : " +mTabLayout.getSelectedTabPosition());
                 Cog.i(TAG,"onTabSelected : tab.getPosition :" +tab.getPosition());
                 mViewPager.setCurrentItem(tab.getPosition());
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override

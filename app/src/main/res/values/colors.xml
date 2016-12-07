@@ -10,6 +10,7 @@
 
     <color name="main_color">#ff69be40</color>
     <color name="black_overlay">#66000000</color>
+    <color name="black_666">#666666</color>
     <color name="green">#ff1bac22</color>
     <color name="bg_title">#69be40</color>
     <color name="layout_title_text_color">#fff</color>
@@ -27,6 +28,8 @@
     <color name="personal_text_color">#707070</color>
     <color name="personal_text_color_content">#333333</color>
     <color name="divide_color">#e6e6e6</color>
+    <color name="divide_red_color">#F2F2F2</color>
+    <color name="divide_red_color_transparent">#F7F7F7</color>
     <color name="personal_divide_line">#d7d7d7</color>
     <color name="fistpageclass_gridview_item_textcolor">#707070</color>
     <color name="cover_color">#22eeeeee</color>
@@ -109,4 +112,6 @@
 
     <color name="image_selected_color">#7f000000</color>
     <color name="timetable_popu_bg">#b2000000</color>
+
+    <color name="grey_444">#444444</color>
 </resources>

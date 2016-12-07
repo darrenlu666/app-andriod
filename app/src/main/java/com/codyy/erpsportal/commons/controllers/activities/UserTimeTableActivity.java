@@ -379,7 +379,8 @@ public class UserTimeTableActivity extends Activity {
         public View getView(int position, View convertView, ViewGroup parent) {
             TextView textView = new TextView(UserTimeTableActivity.this);
             textView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, UIUtils.dip2px(UserTimeTableActivity.this, 50)));
-            textView.setGravity(Gravity.CENTER);
+            textView.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+            textView.setPadding(0, 0, UIUtils.dip2px(UserTimeTableActivity.this, 20), 0);
             textView.setSingleLine();
             textView.setText(mClassConts.get(position).getClassLevelName() + " " + mClassConts.get(position).getBaseClassName());
             textView.setTextSize(15);
