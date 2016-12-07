@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.weibo.controllers.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -16,7 +17,10 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
+import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.RefreshEntity;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.weibo.controllers.activities.WeiBoPrivateMessageActivity;
@@ -146,6 +150,14 @@ public class WeiBoUniversalAdapter extends RefreshBaseAdapter {
             mTextSchool.setText(weiBoSearchPeople.getSchoolName());
             mSimpleDraweeView.setImageURI(Uri.parse(weiBoSearchPeople.getHeadPic()));
             mTextGrade.setText(weiBoSearchPeople.getBaseClassName());
+            mSimpleDraweeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnItemClick != null) {
+                        mOnItemClick.onHeadClick(weiBoSearchPeople.getUserId());
+                    }
+                }
+            });
             switch (mType) {
                 case WeiBoUniversalFragment.TYPE_FIND_PEOPLE:
                     mBtmFollow.setVisibility(View.VISIBLE);
@@ -265,7 +277,7 @@ public class WeiBoUniversalAdapter extends RefreshBaseAdapter {
             });
         }
 
-        void setData(WeiBoMessage message) {
+        void setData(final WeiBoMessage message) {
             mMessage = message;
             mSimpleDraweeView.setImageURI(Uri.parse(message.getTargetHeadPic()));
             mTextName.setText(message.getTargetRealName());
@@ -282,10 +294,20 @@ public class WeiBoUniversalAdapter extends RefreshBaseAdapter {
                 mPopuLeftMenu.setText(mContext.getString(R.string.weibo_shield_msg));
                 mImageShield.setVisibility(View.GONE);
             }
+            mSimpleDraweeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnItemClick != null) {
+                        mOnItemClick.onHeadClick(message.getTargetUserId());
+                    }
+                }
+            });
         }
     }
 
     public interface OnItemClick {
         void onItemClick(RefreshEntity refreshEntity, int type, int position);
+
+        void onHeadClick(String id);
     }
 }
