@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -110,19 +111,19 @@ public class GroupManagerActivity extends BaseHttpActivity {
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
         });
 
@@ -170,7 +171,7 @@ public class GroupManagerActivity extends BaseHttpActivity {
                 Cog.i(TAG,"onTabSelected : " +mTabLayout.getSelectedTabPosition());
                 Cog.i(TAG,"onTabSelected : tab.getPosition :" +tab.getPosition());
                 mViewPager.setCurrentItem(tab.getPosition());
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override

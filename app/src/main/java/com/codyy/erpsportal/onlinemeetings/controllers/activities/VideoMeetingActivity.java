@@ -88,19 +88,19 @@ public class VideoMeetingActivity extends BaseHttpActivity{
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
         });
     }
@@ -165,7 +165,7 @@ public class VideoMeetingActivity extends BaseHttpActivity{
                 Cog.i(TAG,"onTabSelected : " +mTabLayout.getSelectedTabPosition());
                 Cog.i(TAG,"onTabSelected : tab.getPosition :" +tab.getPosition());
                 mViewPager.setCurrentItem(tab.getPosition());
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override

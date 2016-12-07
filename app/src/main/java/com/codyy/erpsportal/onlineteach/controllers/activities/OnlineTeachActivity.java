@@ -101,19 +101,19 @@ public class OnlineTeachActivity extends BaseHttpActivity {
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
         });
     }
@@ -183,7 +183,7 @@ public class OnlineTeachActivity extends BaseHttpActivity {
                 Cog.i(TAG,"onTabSelected : " +mTabLayout.getSelectedTabPosition());
                 Cog.i(TAG,"onTabSelected : tab.getPosition :" +tab.getPosition());
                 mViewPager.setCurrentItem(tab.getPosition());
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
                 if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())){
                     if(0 == mTabLayout.getSelectedTabPosition()){
                         crateMyFilter();

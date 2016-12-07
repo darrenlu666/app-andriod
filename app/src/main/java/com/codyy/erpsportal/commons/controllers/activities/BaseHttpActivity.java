@@ -180,7 +180,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      */
     public void setFilterListener(IFilterListener mFilterListener) {
         this.mFilterListener = mFilterListener;
-        invalidateOptionsMenu();
+        supportInvalidateOptionsMenu();
     }
 
     /**
