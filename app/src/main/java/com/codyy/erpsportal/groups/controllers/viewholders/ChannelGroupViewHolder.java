@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.groups.controllers.viewholders;
 
+import android.graphics.drawable.Animatable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -7,9 +8,15 @@ import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.utils.UriUtils;
 import com.codyy.erpsportal.groups.models.entities.Group;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -48,11 +55,48 @@ public class ChannelGroupViewHolder extends BaseRecyclerViewHolder<Group> {
         }else if(Group.TYPE_TEACHING.equals(data.getGroupType())){//教研组
             mSubjectTextView.setText(UIUtils.filterNull((TextUtils.isEmpty(data.getGrade())?"":data.getGrade()+"/")+data.getSubjectName()));
         }
-        ImageFetcher.getInstance(EApplication.instance()).fetchSmall(mSimpleDraweeView,data.getPic());
+
         mGroupTitleTextView.setText(data.getGroupName());
         mCreatorTextView.setText(data.getGroupCreator());
         String limit = data.getLimited().equals("0")?"不限":(data.getLimited()+" 人");
         String number = data.getMemberCount()+" / "+limit;
         mMemberLimitTextView.setText(number);
+        // 失败后加载默认图片
+        ControllerListener controllerListener = new ControllerListener<ImageInfo>() {
+            @Override
+            public void onSubmit(String id, Object callerContext) {
+
+            }
+
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+
+            }
+
+            @Override
+            public void onIntermediateImageSet(String id, ImageInfo imageInfo) {
+
+            }
+
+            @Override
+            public void onIntermediateImageFailed(String id, Throwable throwable) {
+
+            }
+
+            @Override
+            public void onFailure(String id, Throwable throwable) {
+                mSimpleDraweeView.setImageResource(R.drawable.default_group_icon);
+            }
+
+            @Override
+            public void onRelease(String id) {
+
+            }
+        };
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setControllerListener(controllerListener)
+                .setUri(UriUtils.buildSmallImageUrl(data.getPic()))
+                .build();
+        mSimpleDraweeView.setController(controller);
     }
 }

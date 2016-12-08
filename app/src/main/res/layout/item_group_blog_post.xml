@@ -7,48 +7,59 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     >
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/sdv_pic"
-        android:layout_width="@dimen/poe_head_pic_size_small"
-        android:layout_height="@dimen/poe_head_pic_size_small"
-        style="@style/sdv_item_style"
-        app:placeholderImage="@drawable/default_person_head"
-        />
-    <TextView
-        android:id="@+id/tv_teacher_name"
-        style="@style/txt_group_txt_desc"
-        tools:text="李老师"
-        android:layout_width="@dimen/poe_head_pic_size_small"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@id/sdv_pic"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:singleLine="true"
-        android:layout_marginBottom="10dp"
-        />
-    <TextView
-        android:id="@+id/tv_name"
-        style="@style/txt_group_txt_Title"
-        android:singleLine="true"
+    <LinearLayout
+        android:id="@+id/lin_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/sdv_pic"
-        android:layout_alignTop="@id/sdv_pic"
-        android:layout_marginTop="@dimen/poe_top_bottom_text_addition_padding_size"
-        tools:text="Title"
-        />
-    <TextView
-        android:id="@+id/tv_desc"
-        style="@style/txt_group_txt_desc"
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        >
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_pic"
+            android:layout_width="@dimen/poe_head_pic_size_small"
+            android:layout_height="@dimen/poe_head_pic_size_small"
+            app:placeholderImage="@drawable/default_group_icon"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/tv_teacher_name"
+            style="@style/txt_group_txt_desc"
+            tools:text="李老师"
+            android:layout_width="@dimen/poe_head_pic_size_small"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lin_top"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:layout_marginBottom="10dp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lin_top"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/sdv_pic"
-        android:layout_below="@id/tv_name"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="@dimen/poe_title_margin_top"
-        android:maxLines="2"
-        android:minLines="1"
-        tools:text="content desc content desc content desc content desc content desc content desc content desc content desc content desc content desc content desc content desc"
-        />
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/lin_left"
+        >
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/txt_group_txt_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            tools:text="圈组名称圈组名称圈组名称圈组名称圈组名称圈组名称圈组名称圈组名称圈组名称"
+            android:ellipsize="end"
+            />
+        <TextView
+            android:id="@+id/tv_desc"
+            style="@style/txt_group_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="content desc content desc content desc content desc content desc content desc content desc content desc content desc content desc content desc content desc"
+            />
+    </LinearLayout>
 </RelativeLayout>

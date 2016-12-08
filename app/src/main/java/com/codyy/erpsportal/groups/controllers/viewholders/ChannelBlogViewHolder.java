@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.groups.controllers.viewholders;
 
+import android.graphics.drawable.Animatable;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
@@ -9,7 +10,12 @@ import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHold
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.blog.BlogPost;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UriUtils;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -42,9 +48,43 @@ public class ChannelBlogViewHolder extends BaseRecyclerViewHolder<BlogPost> {
     public void setData(int position,BlogPost data) {
         mCurrentPosition    =   position ;
         mData   =   data ;
-        //head pic
-        ImageFetcher.getInstance(EApplication.instance()).fetchSmall(mSimpleDraweeView,data.getBlogPicture());
+
         mTitleTextView.setText(Html.fromHtml(UIUtils.filterCharacter(data.getBlogTitle())));
         mDescTextView.setText(data.getBlogDesc());
+        //head pic
+//        ImageFetcher.getInstance(EApplication.instance()).fetchSmall(mSimpleDraweeView,data.getBlogPicture());
+        mSimpleDraweeView.setController(Fresco.newDraweeControllerBuilder().setControllerListener(new ControllerListener<ImageInfo>() {
+            @Override
+            public void onSubmit(String id, Object callerContext) {
+
+            }
+
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+
+            }
+
+            @Override
+            public void onIntermediateImageSet(String id, ImageInfo imageInfo) {
+
+            }
+
+            @Override
+            public void onIntermediateImageFailed(String id, Throwable throwable) {
+
+            }
+
+            @Override
+            public void onFailure(String id, Throwable throwable) {
+                mSimpleDraweeView.setImageResource(R.drawable.default_person_head);
+            }
+
+            @Override
+            public void onRelease(String id) {
+
+            }
+        }).setUri(UriUtils.buildSmallImageUrl(data.getBlogPicture()))
+          .build());
+
     }
 }
