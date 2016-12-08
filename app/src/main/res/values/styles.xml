@@ -618,7 +618,6 @@
     <!-- item开头图片style -->
     <style name="sdv_item_style">
         <item name="android:layout_margin">10dp</item>
-        <item name="android:scaleType">fitXY</item>
     </style>
 
     <style name="conty_item_detail_text">
