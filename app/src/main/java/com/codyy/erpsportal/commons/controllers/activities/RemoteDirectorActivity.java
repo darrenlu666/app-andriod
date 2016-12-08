@@ -1031,7 +1031,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
                 if (mMode == 2) {
                     Toast.makeText(RemoteDirectorActivity.this, getResources().getString(R.string.mode_2), Toast.LENGTH_SHORT).show();
                 }
-                if (mVideoBarData.get(position).isPizEnable() && mMode == 0) {
+                if (mVideoBarData.get(position).isPizEnable() && mRbManualMode.isChecked()) {
                     mGridView.setEnabled(true);
                     mGridViewAdapter.setAllDisabled(false);
                     mGridViewAdapter.notifyDataSetChanged();
