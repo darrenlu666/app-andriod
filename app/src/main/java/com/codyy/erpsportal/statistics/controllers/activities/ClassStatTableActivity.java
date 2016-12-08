@@ -82,8 +82,6 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
 
     private UserInfo mUserInfo;
 
-    private String mUrl;
-
     /**
      * 教室类型 主讲教室-主讲(MASTER)、主讲教室-受邀(RECEIVE)、接收教室(ACCEPT)
      */
@@ -229,6 +227,11 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
                 params.put("trimesterId", statFilterCarrier.getTermId());
             } else {
                 params.put("trimesterId", "");
+            }
+            if (statFilterCarrier.getFilterBy() == CoursesProfilesFilterActivity.BY_SPECIFIC_DATE) {
+                params.put("isCustomized", "Y");
+            } else {
+                params.put("isCustomized", "N");
             }
         }
     }

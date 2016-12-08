@@ -60,7 +60,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:text="请选择"
-                            android:textColor="#fff" />
+                            android:textColor="#fff"/>
 
                         <Button
                             android:layout_width="12dp"
@@ -68,7 +68,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="5dp"
-                            android:background="@drawable/img_select_nor" />
+                            android:background="@drawable/img_select_nor"/>
                     </RelativeLayout>
 
                     <Button
@@ -123,7 +123,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="5dp"
-                            android:background="@drawable/img_select_nor" />
+                            android:background="@drawable/img_select_nor"/>
                     </RelativeLayout>
 
                     <Button
@@ -170,7 +170,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:text="请选择"
-                            android:textColor="#fff" />
+                            android:textColor="#fff"/>
 
                         <Button
                             android:layout_width="12dp"
@@ -178,7 +178,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="5dp"
-                            android:background="@drawable/img_select_nor" />
+                            android:background="@drawable/img_select_nor"/>
                     </RelativeLayout>
 
                     <Button
@@ -197,13 +197,13 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
-                    android:layout_marginTop="10dp" >
+                    android:layout_marginTop="10dp">
 
                     <TextView
                         android:id="@+id/tv_focustitle_text"
                         style="@style/remote_director_text"
                         android:layout_centerVertical="true"
-                        android:text="字幕" />
+                        android:text="字幕"/>
 
                     <RelativeLayout
                         android:id="@+id/bt_change_focustitle_view"
@@ -224,7 +224,7 @@
                             android:ellipsize="end"
                             android:singleLine="true"
                             android:text="请选择"
-                            android:textColor="#fff" />
+                            android:textColor="#fff"/>
 
                         <Button
                             android:layout_width="12dp"
@@ -232,7 +232,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="5dp"
-                            android:background="@drawable/img_select_nor" />
+                            android:background="@drawable/img_select_nor"/>
                     </RelativeLayout>
 
                     <Button
@@ -256,12 +256,12 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/remote_main_bg"
-                android:padding="10dp" >
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/tv_frames_mode"
                     style="@style/remote_director_text"
-                    android:text="画面模式" />
+                    android:text="画面模式"/>
 
 
                 <RadioGroup
@@ -275,24 +275,24 @@
                         android:id="@+id/rb_mode_0"
                         style="@style/remote_mode_radio_button"
                         android:layout_marginRight="12dp"
-                        android:background="@drawable/tab_one_picture_selector" />
+                        android:background="@drawable/tab_one_picture_selector"/>
 
                     <RadioButton
                         android:id="@+id/rb_mode_1"
                         style="@style/remote_mode_radio_button"
                         android:layout_marginRight="12dp"
-                        android:background="@drawable/tab_two_picture_selector" />
+                        android:background="@drawable/tab_two_picture_selector"/>
 
                     <RadioButton
                         android:id="@+id/rb_mode_2"
                         style="@style/remote_mode_radio_button"
                         android:layout_marginRight="12dp"
-                        android:background="@drawable/tab_three_picture_selector" />
+                        android:background="@drawable/tab_three_picture_selector"/>
 
                     <RadioButton
                         android:id="@+id/rb_mode_3"
                         style="@style/remote_mode_radio_button"
-                        android:background="@drawable/tab_four_picture_selector" />
+                        android:background="@drawable/tab_four_picture_selector"/>
 
                 </RadioGroup>
             </RelativeLayout>
@@ -381,13 +381,7 @@
                     android:listSelector="@android:color/transparent"
                     android:numColumns="3"
                     android:verticalSpacing="10dp"/>
-
-
             </RelativeLayout>
-
-
         </LinearLayout>
     </ScrollView>
-
-
 </LinearLayout>

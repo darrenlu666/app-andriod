@@ -188,11 +188,7 @@
                             android:id="@+id/rb_movieandres_mode"
                             style="@style/remote_director_radio_button"
                             android:text="电影+资源"/>
-
-
                     </LinearLayout>
-
-
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -235,10 +231,7 @@
                             style="@style/remote_director_radio_button"
                             android:text=" 半自动 "/>
 
-
                     </RadioGroup>
-
-
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -367,7 +360,6 @@
                             android:progress="50"/>
 
                     </RelativeLayout>
-
 
                     <RelativeLayout
                         android:layout_width="150dp"

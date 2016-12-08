@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -144,7 +143,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
      */
     private int width = 0;
     /**
-     * 保存当前课堂模式
+     * 保存当前课堂导播模式
      */
     private int mMode = 0;
     /**
@@ -273,16 +272,26 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
 
     private RadioButton mMode0, mMode1, mMode2, mMode3;
 
+    /**
+     * 录制模式：电影/资源/电影+资源
+     */
     private Button mRbMovieMode, mRbResMode, mRbMovieAndResMode;
+
     /**
      * 手动、自动按钮
      */
     private RadioButton mRbManualMode, mRbAutoMode, mRbAutoManual;
+
     /**
      * 预置位九宫格
      */
     private GridView mGridView;
+
+    /**
+     * 机位
+     */
     private GridView mPositionGridView;
+
     /**
      * 字幕，台标的选择控件
      */
@@ -326,7 +335,12 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
     private IBackService mIBackService = null;
     private Intent mServiceIntent;
     private List<VideoBarMapInfo> mVideoBarData = new ArrayList<>();
-    private NewClassListAdapter mModeAdapter;
+
+    /**
+     * 机位适配器
+     */
+    private NewClassListAdapter mPositionAdapter;
+
     private Handler mHandler;
 
     private Callback mCallback = new Callback() {
@@ -448,8 +462,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             default:
                 break;
         }
-
-
     }
 
     /**
@@ -514,9 +526,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             mBtVideoEndControl.setText(Constants.VIDEO_END_OPEN);
             mVideoEndSelectView.setBackgroundResource(R.drawable.remote_director_background);
         }
-
     }
-
 
     /**
      * 处理COCO回来的字幕信息
@@ -554,7 +564,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
         mVideoBarData.addAll(mapInfos);
         Cog.d("mVideoBarData", mVideoBarData.size() + "");
 
-        mModeAdapter.notifyDataSetChanged();
+        mPositionAdapter.notifyDataSetChanged();
         mResRecordAdapter.notifyDataSetChanged();
         mMainVideoBarPosition = String.valueOf(msg.getVideoMain());
         //判断当前主画面的标题和对位机位的选中位置
@@ -562,23 +572,23 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             if (Integer.valueOf(mapInfos.get(i).getIndex()) == msg.getVideoMain()) {
                 //当前主画面的标题
                 mTvTitle.setText(mapInfos.get(i).getTitle());
-                mModeAdapter.setSelectPosition(i);
+                mPositionAdapter.setSelectPosition(i);
                 if ("VGA".equals(mapInfos.get(i).getTitle())) {
-                    mGridViewAdapter.setmEnableNumber(0);
+                    mGridViewAdapter.setEnableNumber(0);
                     mGridViewAdapter.notifyDataSetChanged();
-                    mModeAdapter.notifyDataSetChanged();
-                    buttonDisable();
+                    mPositionAdapter.notifyDataSetChanged();
+                    disableCameraControl();
                     break;
                 }
-                if (!mapInfos.get(i).getPizEnable()) {
+                if (!mapInfos.get(i).isPizEnable()) {
                     mGridView.setEnabled(false);
                     mGridViewAdapter.setAllDisabled(true);
-                    buttonDisable();
+                    disableCameraControl();
                 }
                 mEnablePosition = mVideoBarData.get(i).getPresetNum();
-                mGridViewAdapter.setmEnableNumber(mEnablePosition);
+                mGridViewAdapter.setEnableNumber(mEnablePosition);
                 //当前主画面对位机位的选中位置
-                mModeAdapter.notifyDataSetChanged();
+                mPositionAdapter.notifyDataSetChanged();
                 mGridViewAdapter.notifyDataSetChanged();
                 break;
             }
@@ -591,8 +601,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             mRbAutoManual.setChecked(true);
             setAutoManual();
         }
-
-
     }
 
     /**
@@ -621,7 +629,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
     public void onEventMainThread(SetMode msg) {
         Cog.d(TAG, "SetMode");
         mMode = msg.getMode();
-        if (mMode == 2) {
+        if (mMode == 2) {//自动模式
             Toast.makeText(RemoteDirectorActivity.this, getResources().getString(R.string.mode_2), Toast.LENGTH_SHORT).show();
             mRbAutoMode.setChecked(true);//当 mode=2时，切换为自动模式
             mRbManualMode.setEnabled(false);//当 mode=2时，手动导播不可以使用
@@ -630,7 +638,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
         } else {
             mRbManualMode.setEnabled(true);//当 mode=0或mode=1时，手动导播可以使用
         }
-
     }
 
     /**
@@ -669,10 +676,10 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
                 mTvTitle.setText(mVideoBarData.get(i).getTitle());
                 mMainVideoBarPosition = mVideoBarData.get(i).getIndex();
                 mEnablePosition = mVideoBarData.get(i).getPresetNum();
-                mGridViewAdapter.setmEnableNumber(mEnablePosition);
+                mGridViewAdapter.setEnableNumber(mEnablePosition);
                 mGridViewAdapter.notifyDataSetChanged();
-                mModeAdapter.setSelectPosition(i);
-                mModeAdapter.notifyDataSetChanged();
+                mPositionAdapter.setSelectPosition(i);
+                mPositionAdapter.notifyDataSetChanged();
                 break;
             }
         }
@@ -739,12 +746,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
         }
     }
 
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -758,7 +759,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
         }
         unbindService(conn);
         unregisterBennuInitReceiver();
-
     }
 
     /**
@@ -967,8 +967,8 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             mSlidingLayout.setTouchEnabled(false);
         }
         mPositionGridView = (GridView) findViewById(R.id.lv_class_list);
-        mModeAdapter = new NewClassListAdapter(this, mVideoBarData, mConfig);
-        mPositionGridView.setAdapter(mModeAdapter);
+        mPositionAdapter = new NewClassListAdapter(this, mVideoBarData, mConfig);
+        mPositionGridView.setAdapter(mPositionAdapter);
 
         GridView resRecordGridView = (GridView) findViewById(R.id.gv_resource);
         mResRecordAdapter = new ResRecordAdapter(this, mVideoBarData, mConfig);
@@ -1004,7 +1004,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             }
         });
 
-
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -1017,31 +1016,31 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             }
         });
 
-
         mPositionGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cog.d(TAG, "onPositionGvItemClick position=", position);
                 mEnablePosition = mVideoBarData.get(position).getPresetNum();
                 mTvTitle.setText(mVideoBarData.get(position).getTitle());
                 mMainVideoBarPosition = mVideoBarData.get(position).getIndex();
-                mGridViewAdapter.setmEnableNumber(mEnablePosition);
-                mModeAdapter.setSelectPosition(position);
+                mGridViewAdapter.setEnableNumber(mEnablePosition);
+                mPositionAdapter.setSelectPosition(position);
                 mGridViewAdapter.notifyDataSetChanged();
-                mModeAdapter.notifyDataSetChanged();
+                mPositionAdapter.notifyDataSetChanged();
                 //  setAutoManual();
                 if (mMode == 2) {
                     Toast.makeText(RemoteDirectorActivity.this, getResources().getString(R.string.mode_2), Toast.LENGTH_SHORT).show();
                 }
-                if (!mVideoBarData.get(position).getPizEnable()) {
-                    mGridView.setEnabled(false);
-                    mGridViewAdapter.setAllDisabled(true);
-                    mGridViewAdapter.notifyDataSetChanged();
-                    buttonDisable();
-                } else {
+                if (mVideoBarData.get(position).isPizEnable() && mMode == 0) {
                     mGridView.setEnabled(true);
                     mGridViewAdapter.setAllDisabled(false);
                     mGridViewAdapter.notifyDataSetChanged();
-                    buttonEnable();
+                    enableCameraControl();
+                } else {
+                    mGridView.setEnabled(false);
+                    mGridViewAdapter.setAllDisabled(true);
+                    mGridViewAdapter.notifyDataSetChanged();
+                    disableCameraControl();
                 }
                 if ("VGA".equals(mVideoBarData.get(position).getTitle())) {
                     mSendSocketCommand.changeVideoMain(mVideoBarData.get(position).getIndex(), true);
@@ -1145,18 +1144,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
                 return false;
             }
         });
-
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // Nothing need to be done here
-
-        } else {
-            // Nothing need to be done here
-        }
 
     }
 
@@ -1345,7 +1332,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
                     }
                     mBtStationControl.setText(Constants.LOGO_CLOSED);
                     mStationSelectView.setBackgroundResource(R.color.cover_color);
-
                 }
                 break;
             case R.id.bt_sub_change_focustitle_control:
@@ -1382,7 +1368,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
                     }
                     mBtVideoHeadControl.setText(Constants.VIDEO_HEAD_CLOSED);
                     mVideoHeadSelectView.setBackgroundResource(R.color.cover_color);
-
                 }
                 break;
             case R.id.bt_video_end_control:
@@ -1440,9 +1425,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
                     Toast.makeText(RemoteDirectorActivity.this, getResources().getString(R.string.end_msg), Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    /*
-      点击字幕
-     */
+                    //点击字幕
                     int clickVideoEnd = 4;
                     initPopWindow(mVideoEndData, clickVideoEnd);
                 }
@@ -1628,7 +1611,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
         mGridView.setEnabled(false);
         mGridViewAdapter.setAllDisabled(true);
         mGridViewAdapter.notifyDataSetChanged();
-        buttonDisable();
+        disableCameraControl();
     }
 
     /**
@@ -1639,7 +1622,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
         mGridViewAdapter.setAllDisabled(true);
         mGridViewAdapter.notifyDataSetChanged();
         mPositionGridView.setEnabled(false);
-        buttonDisable();
+        disableCameraControl();
     }
 
     /**
@@ -1652,20 +1635,18 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
         mPositionGridView.setEnabled(true);
         for (int i = 0; i < mVideoBarData.size(); i++) {
             if (mTvTitle.getText().equals(mVideoBarData.get(i).getTitle())) {
-                if (mVideoBarData.get(i).getPizEnable()) {
-                    buttonEnable();
+                if (mVideoBarData.get(i).isPizEnable()) {
+                    enableCameraControl();
                     break;
                 }
             }
         }
-
     }
 
     /**
      * 摄像机调控不可用
      */
-
-    private void buttonDisable() {
+    private void disableCameraControl() {
         mBtUp.setEnabled(false);
         mBtUp.setBackgroundResource(R.drawable.img_up_press);
         mBtDown.setEnabled(false);
@@ -1681,7 +1662,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
     /**
      * 摄像机调控可用
      */
-    private void buttonEnable() {
+    private void enableCameraControl() {
         mBtUp.setEnabled(true);
         mBtUp.setBackgroundResource(R.drawable.img_up_nor);
         mBtDown.setEnabled(true);
@@ -1759,7 +1740,6 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
      * 弹出退出dialog
      */
     private void showExitDialog(String title) {
-
         String[] items = {getResources().getString(R.string.sure)};
         AlertDialog dialog = new AlertDialog.Builder(this,
                 R.style.Theme_AppCompat_Light_Dialog_Alert)

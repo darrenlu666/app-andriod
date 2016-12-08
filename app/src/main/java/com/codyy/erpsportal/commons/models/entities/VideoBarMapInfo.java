@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by eachann on 2015/7/3.
  * coco收到机位信息
+ * Created by eachann on 2015/7/3.
  */
 public class VideoBarMapInfo implements Parcelable, Comparable<VideoBarMapInfo> {
     /**
@@ -70,10 +70,6 @@ public class VideoBarMapInfo implements Parcelable, Comparable<VideoBarMapInfo> 
 
     public void setPizEnable(boolean pizEnable) {
         this.pizEnable = pizEnable;
-    }
-
-    public boolean getPizEnable() {
-        return this.pizEnable;
     }
 
     public boolean isVideoRecord() {
