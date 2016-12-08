@@ -260,8 +260,8 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                     } else if (!isLoad && UserInfo.USER_TYPE_TEACHER.equals(mUserInfo.getUserType())) {
                         getTeacherClassDetail();
                     }
-                    mCalendarScrollView.open();
                 }
+                mCalendarScrollView.open();
             }
         });
         mTimeTableView2.setTimeTableListener(new TimeTableView2.TimeTableListener() {
