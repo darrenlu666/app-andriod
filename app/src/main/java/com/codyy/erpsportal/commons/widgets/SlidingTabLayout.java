@@ -70,8 +70,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private IsOnRight isOnRight;
     private static final int TITLE_OFFSET_DIPS = 24;
-    private static final int TAB_VIEW_PADDING_DIPS = 16;
-    private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
+    private static final int TAB_VIEW_PADDING_DIPS = 14;
+    private static final int TAB_VIEW_TEXT_SIZE_SP = 14;
 
     private int mTabWidth = 0;
     private int mTitleOffset;
@@ -80,7 +80,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private int mTabViewTextViewId;
 
     private ViewPager mViewPager;
+
     private ViewPager.OnPageChangeListener mViewPagerPageChangeListener;
+
+    private int mTextSizePx;
 
     private final SlidingTabStrip mTabStrip;
 
@@ -104,6 +107,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
             isAverageTabs = typedArray.getBoolean(R.styleable.SlidingTabLayout_isAverageTabs, false);
             bottomBorderPadding = typedArray.getDimension(R.styleable.SlidingTabLayout_bottomBorderPadding, 0);
             bottomBorderMargin = typedArray.getDimension(R.styleable.SlidingTabLayout_bottomBorderMargin, 0);
+            int defaultTextSize = sp2px(context, TAB_VIEW_TEXT_SIZE_SP);
+            mTextSizePx = typedArray.getDimensionPixelSize(R.styleable.SlidingTabLayout_android_textSize, defaultTextSize);
             typedArray.recycle();
         }
 
@@ -124,6 +129,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
         if (bottomBorderMargin >= 0) {//0 表示选中的绿色浮在底部分割线上
             mTabStrip.setBottomBorderMargin((int) bottomBorderMargin);
         }
+    }
+
+    public static int sp2px(Context context, int spValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
     }
 
     public void setIsOnRight(IsOnRight isOnRight) {
@@ -212,8 +222,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(16);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
+//        textView.setTextSize(16);
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizePx);
         textView.setTypeface(Typeface.DEFAULT_BOLD);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

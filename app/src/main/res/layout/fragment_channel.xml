@@ -54,13 +54,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            app:bottomBorderPadding="5dp" />
+            android:textSize="16sp"
+            app:bottomBorderPadding="1dp" />
      <!--   <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-
-
             <ImageView
                 android:id="@+id/sliding_tabs_image"
                 android:layout_width="50dp"
