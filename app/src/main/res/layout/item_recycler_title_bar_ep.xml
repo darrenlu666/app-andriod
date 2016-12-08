@@ -5,10 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
+    <View
+        android:id="@+id/view_padding"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        />
     <RelativeLayout
         android:id="@+id/rlt_title"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="32dp"
+        android:layout_below="@id/view_padding"
         >
         <View
             android:id="@+id/tag"
@@ -20,10 +26,11 @@
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/tag"
             android:layout_marginLeft="15dp"
+            android:gravity="center"
             android:textColor="@color/main_color"
             android:textSize="18sp"
             android:layout_alignParentBottom="true"

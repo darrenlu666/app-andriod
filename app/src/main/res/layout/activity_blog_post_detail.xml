@@ -35,7 +35,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="Title"
-                        android:textSize="23sp"
+                        android:textSize="@dimen/poe_txt_size_head"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:layout_margin="10dp"

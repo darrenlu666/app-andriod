@@ -6,10 +6,16 @@
     android:layout_height="wrap_content"
     android:background="@null"
     >
+    <View
+        android:id="@+id/view_padding"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        />
     <RelativeLayout
         android:id="@+id/rlt_title"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="32dp"
+        android:layout_below="@id/view_padding"
         >
         <View
             android:id="@+id/tag"
@@ -21,11 +27,12 @@
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/tag"
             android:layout_marginLeft="15dp"
             android:textColor="@color/main_color"
+            android:gravity="center"
             android:textSize="18sp"
             android:layout_alignParentBottom="true"
             tools:text="title"
@@ -33,8 +40,7 @@
         <Button
             android:id="@+id/btn_more"
             android:layout_width="wrap_content"
-            android:layout_height="56dp"
-            android:paddingTop="24dp"
+            android:layout_height="32dp"
             android:background="@null"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
@@ -48,7 +54,6 @@
             android:minWidth="0dp"
             android:text="@string/more"
             android:textColor="@color/md_grey_500"
-            android:layout_alignParentBottom="true"
             />
         <View
             android:layout_width="match_parent"

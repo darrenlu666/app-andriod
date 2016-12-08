@@ -41,6 +41,7 @@ public class HtmlUtils {
     /**
      * 1.向富文本中插入执行函数sayHello
      * 2.修改后的文本插入<html></html> 组合为新的页面 .
+     * 3.p.small {line-height: 150%} 控制行高150%
      * @param compatText
      */
     public static String constructExecActionJs(String compatText){
@@ -55,6 +56,7 @@ public class HtmlUtils {
                 "p\n" +
                 "{\n" +
                 "word-wrap: break-word;\n" +
+                "line-height: 150%;\n" +
                 "}\n" +
                 "</style>");
         //插入函数
@@ -64,8 +66,8 @@ public class HtmlUtils {
     }
 
     /**
-     * 1.向富文本中插入执行函数sayHello
-     * 2.修改后的文本插入<html></html> 组合为新的页面 .
+     * 1. 修改后的文本插入<html></html> 组合为新的页面 .
+     * 2. p.small {line-height: 150%} 控制行高150%
      * @param compatText
      */
     public static String constructWordBreakJs(String compatText){
@@ -75,6 +77,7 @@ public class HtmlUtils {
                 "p\n" +
                 "{\n" +
                 "word-wrap: break-word;\n" +
+                "line-height: 200%;\n" +
                 "}\n" +
                 "</style>");
         //插入函数

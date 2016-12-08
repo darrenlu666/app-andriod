@@ -128,12 +128,12 @@ public class AssessmentClassActivity extends BaseHttpActivity {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                invalidateOptionsMenu();
+                supportInvalidateOptionsMenu();
             }
 
             @Override
