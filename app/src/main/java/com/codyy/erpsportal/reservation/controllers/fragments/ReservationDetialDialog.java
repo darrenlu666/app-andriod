@@ -85,7 +85,7 @@ public class ReservationDetialDialog extends AppCompatDialogFragment {
         mDirectLayout = (LinearLayout) view.findViewById(R.id.direct_layout);
         mLayoutInflater = getLayoutInflater(savedInstanceState);
         getClassTableDetial();
-        view.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.linearlayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
@@ -101,11 +101,11 @@ public class ReservationDetialDialog extends AppCompatDialogFragment {
                 for (final ReservationDetial.ListBean.ReceiveListBean bean : mReservationDetial.getReceiveList()) {
                     View item = mLayoutInflater.inflate(R.layout.receiveclass_item, mReceiveLayout, false);
                     TextView textView = (TextView) item.findViewById(R.id.receive_item_text_classroom);
-                    textView.setText("学校:" + bean.getSchoolName() + "(学生数 " + bean.getStuNum() + ")");
+                    textView.setText("学校：" + bean.getSchoolName() + "(学生数 " + bean.getStuNum() + ")");
                     TextView teacherName = (TextView) item.findViewById(R.id.receive_item_text_teacher_name);
                     TextView phone = (TextView) item.findViewById(R.id.receive_item_text_phone);
                     if (!TextUtils.isEmpty(bean.getHelpUserName())) {
-                        teacherName.setText("教师:" + bean.getHelpUserName());
+                        teacherName.setText("教师：" + bean.getHelpUserName());
                         if (TextUtils.isEmpty(bean.getContact())) {
                             teacherName.setText(teacherName.getText() + "(未填写联系电话)");
                             phone.setVisibility(View.GONE);

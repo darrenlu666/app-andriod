@@ -19,9 +19,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/timetable_popu_bg"
-        android:onClick="@{(theview)->entity.onClick(theview)}">
+        android:clickable="true"
+        android:fillViewport="true">
 
         <LinearLayout
+            android:id="@+id/linearlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -53,7 +55,7 @@
                 android:id="@+id/master_school"
                 style="@style/conty_detail_popu_text"
                 android:layout_marginTop="5dp"
-                android:text='@{entity.mainSchoolName==null?"学校:":"学校:"+entity.mainSchoolName+"("+entity.mainClassroomName+")"}'
+                android:text='@{entity.mainSchoolName==null?"学校：":"学校："+entity.mainSchoolName+"("+entity.mainClassroomName+")"}'
                 tools:text="学校：北京市智障二中" />
 
             <RelativeLayout
@@ -85,7 +87,7 @@
                     android:layout_toLeftOf="@id/master_teacher_phone"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text='@{entity.teacherName==null?"教师:":"教师:"+entity.teacherName+(TextUtils.isEmpty(entity.teacherPhone)?"(未填写联系电话)":"")}'
+                    android:text='@{entity.teacherName==null?"教师：":"教师："+entity.teacherName+(TextUtils.isEmpty(entity.teacherPhone)?"(未填写联系电话)":"")}'
                     android:textColor="@color/white"
                     android:textSize="18dp"
                     tools:text="教师：张三adfasdfassdf" />

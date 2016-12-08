@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/linearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/timetable_popu_bg"
@@ -36,9 +37,9 @@
         <com.codyy.erpsportal.commons.widgets.RefreshRecycleView
             android:id="@+id/refresh_recyclerview"
             android:layout_width="match_parent"
-            android:animateLayoutChanges="true"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:animateLayoutChanges="true"
             tools:listitem="@layout/item_dialog_week_class_detial" />
     </LinearLayout>
 </layout>
