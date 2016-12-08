@@ -127,6 +127,8 @@
                     android:layout_alignStart="@id/tv_lb_grade"
                     android:layout_below="@id/tv_lb_subject"
                     android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxEms="9"
                     android:text="主讲教师"
                     android:textSize="18sp"/>
 
