@@ -14,7 +14,8 @@
         android:focusableInTouchMode="false"
         tools:text="3423"
         android:textColor="@color/white"
-        android:textSize="12sp" />
-
+        android:textSize="12sp"
+        android:maxLines="2"
+        android:ellipsize="end"/>
 
 </RelativeLayout>

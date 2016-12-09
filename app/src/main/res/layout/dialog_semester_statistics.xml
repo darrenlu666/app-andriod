@@ -12,9 +12,11 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/timetable_popu_bg">
+        android:background="@color/timetable_popu_bg"
+        android:fillViewport="true">
 
         <LinearLayout
+            android:id="@+id/linearlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -38,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text='@{"教室名称: "+(entity.classroomName==null?"":entity.classroomName)}'
+                android:text='@{"教室名称："+(entity.classroomName==null?"":entity.classroomName)}'
                 android:textColor="@color/divider"
                 android:textSize="18dp"
                 tools:text="教室名称: 北京市智障二中" />
@@ -47,14 +49,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text='@{(entity.type ==2?"有效听课: ":"有效授课: ")+entity.validCount}'
+                android:text='@{(entity.type ==2?"有效听课：":"有效授课：")+entity.validCount}'
                 android:textColor="@color/divider"
                 android:textSize="18dp"
                 tools:text="有效授课: 50" />
 
             <TextView
                 style="@style/semester_statistics_textstyle"
-                android:text='@{(entity.type==2?"无故未听课: ":"无故停课: ")+entity.unreasonableMissedCount}'
+                android:text='@{(entity.type==2?"无故未听课：":"无故停课：")+entity.unreasonableMissedCount}'
                 tools:text="无故停课: 50" />
 
             <TextView
@@ -62,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text='@{(entity.type==2?"无效听课: ":"无效授课: ")+entity.invalidCount}'
+                android:text='@{(entity.type==2?"无效听课：":"无效授课：")+entity.invalidCount}'
                 android:textColor="@color/divider"
                 android:textSize="18dp"
                 tools:text="无效授课: 50" />
@@ -71,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text='@{(entity.type==2?"因故未听课: ":"因故停课: ")+entity.reasonableMissedCount}'
+                android:text='@{(entity.type==2?"因故未听课：":"因故停课：")+entity.reasonableMissedCount}'
                 android:textColor="@color/divider"
                 android:textSize="18dp"
                 tools:text="因故停课: 50" />

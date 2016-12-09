@@ -369,24 +369,50 @@ public class Titles {
     public static String sWorkspaceNetTeachMyCourse = "我的课程";
     public static String sWorkspaceNetTeachSubCourse = "课程订阅";
 
+    /**
+     * front.field.masterschool	主讲学校
+     */
     public static String sMasterSchool = "主讲学校";
+
+    /**
+     * front.field.receiveschool 接收学校
+     */
     public static String sReceiveSchool = "接收学校";
+
+    /**
+     * front.field.masterroom 主讲教室
+     */
     public static String sMasterRoom = "主讲教室";
+
+    /**
+     * front.field.receiveroom 接收教室
+     */
     public static String sReceiveRoom = "接收教室";
+
+    /**
+     * front.field.masterteacher 主讲教师
+     */
     public static String sMasterTeacher = "主讲教师";
+
+    /**
+     * front.field.coachteacher	辅助教师
+     */
     public static String sCoachTeacher = "辅助教师";
+
+    /**
+     * front.field.master 主讲
+     */
     public static String sMaster = "主讲";
+
+    /**
+     * front.field.receive 接收
+     */
     public static String sReceiver = "接收";
+
+    /**
+     * front.field.invited 受邀
+     */
     public static String sInvited = "受邀";
-//    front.field.masterschool	主讲学校
-//    front.field.receiveschool	接收学校
-//    front.field.masterroom		主讲教室
-//    front.field.receiveroom		接收教室
-//    front.field.masterteacher	主讲教师
-//    front.field.coachteacher	辅助教师
-//    front.field.master			主讲
-//    front.field.receive			接收
-//    front.field.invited			受邀
 
     public static void parseTitles(JSONObject jsonObject) {
         UserInfo userInfo = UserInfoKeeper.obtainUserInfo();

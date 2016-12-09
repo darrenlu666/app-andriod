@@ -386,7 +386,7 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
                     result = true;
                 }
             } else {
-                result = false;
+                result = true;
             }
         } else {
             result = file.mkdirs();

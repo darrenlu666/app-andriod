@@ -108,10 +108,8 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    protected abstract
     @LayoutRes
-    int getLayoutView();
-
+    protected abstract int getLayoutView();
 
     protected abstract void initToolbar();
 
