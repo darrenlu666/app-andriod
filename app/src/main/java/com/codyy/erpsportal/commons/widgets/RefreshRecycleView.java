@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
@@ -118,6 +119,12 @@ public class RefreshRecycleView extends SwipeRefreshLayout implements SwipeRefre
         if (mRecyclerView != null) {
             mLayoutManager = manager;
             mRecyclerView.setLayoutManager(mLayoutManager);
+        }
+    }
+
+    public void setRecycleOnClick(OnClickListener onClick) {
+        if (mRecyclerView != null) {
+            mRecyclerView.setOnClickListener(onClick);
         }
     }
 

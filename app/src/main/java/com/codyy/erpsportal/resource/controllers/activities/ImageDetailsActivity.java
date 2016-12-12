@@ -207,7 +207,7 @@ public class ImageDetailsActivity extends FragmentActivity {
      * @return 标签组件
      */
     private View makeTabIndicator(String title) {
-        View view = LayoutInflater.from(this).inflate(R.layout.item_tab, mTabWidget, false);
+        View view = LayoutInflater.from(this).inflate(R.layout.item_tab, null);
         TextView tabTitleTv = (TextView) view.findViewById(R.id.tab_title);
         tabTitleTv.setText(title);
         return view;

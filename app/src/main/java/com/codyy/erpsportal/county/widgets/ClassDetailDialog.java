@@ -65,7 +65,7 @@ public class ClassDetailDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mScheduleListBean = (TimetableDetail.ScheduleListBean) getArguments().getParcelable(EXTRA_DATA);
+        mScheduleListBean = getArguments().getParcelable(EXTRA_DATA);
         mType = getArguments().getInt(EXTRA_TYPE, TYPE_CONTY_DETAIL);
         mID = getArguments().getString(EXTRA_ID);
         setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_Translucent_NoTitleBar);
@@ -100,12 +100,12 @@ public class ClassDetailDialog extends DialogFragment {
         } else {
             setValue();
         }
-//        view.findViewById(R.id.conty_classdetail_scrollview).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dismiss();
-//            }
-//        });
+        view.findViewById(R.id.linearlayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
 
     private void setValue() {
@@ -116,11 +116,11 @@ public class ClassDetailDialog extends DialogFragment {
                 for (final TimetableDetail.ScheduleListBean.ReceiveListBean bean : mScheduleListBean.getReceiveList()) {
                     View item = mLayoutInflater.inflate(R.layout.receiveclass_item, mReceiveLayout, false);
                     TextView textView = (TextView) item.findViewById(R.id.receive_item_text_classroom);
-                    textView.setText("学校:" + bean.getSchoolName() + "(学生数" + bean.getStudentNum() + ")");
+                    textView.setText("学校：" + bean.getSchoolName() + "(学生数" + bean.getStudentNum() + ")");
                     TextView teacherName = (TextView) item.findViewById(R.id.receive_item_text_teacher_name);
                     TextView phone = (TextView) item.findViewById(R.id.receive_item_text_phone);
                     if (!TextUtils.isEmpty(bean.getTeacherName())) {
-                        teacherName.setText("教师:" + bean.getTeacherName());
+                        teacherName.setText("教师：" + bean.getTeacherName());
                         if (!TextUtils.isEmpty(bean.getTeacherPhone())) {
                             phone.setText(bean.getTeacherPhone());
                             phone.setOnClickListener(new View.OnClickListener() {

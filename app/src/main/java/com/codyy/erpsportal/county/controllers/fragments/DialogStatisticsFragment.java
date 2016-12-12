@@ -202,6 +202,14 @@ public class DialogStatisticsFragment extends DialogFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (view != null) {
+            view.findViewById(R.id.linearlayout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+        }
         switch (mType) {
             case DIALOG_TYPE_DETIAL: {
                 TextView title = (TextView) view.findViewById(R.id.title_text);
@@ -212,6 +220,12 @@ public class DialogStatisticsFragment extends DialogFragment {
                     title.setText("本学期开课详情");
                 }
                 mRefreshRecycleView = (RefreshRecycleView) view.findViewById(R.id.refresh_recyclerview);
+                mRefreshRecycleView.setRecycleOnClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dismiss();
+                    }
+                });
                 mRefreshRecycleView.setOnStateChangeLstener(new RefreshRecycleView.OnStateChangeLstener() {
                     @Override
                     public void onRefresh() {
@@ -339,7 +353,7 @@ public class DialogStatisticsFragment extends DialogFragment {
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                                 params.setMargins(0, UIUtils.dip2px(getContext(), 10), 0, 0);
                                 textView.setLayoutParams(params);
-                                textView.setText(reasonListBean.getReasonName() + ": " + reasonListBean.getCount());
+                                textView.setText(reasonListBean.getReasonName() + "：" + reasonListBean.getCount());
                                 mReasonLayout.addView(textView);
                             }
                         } else {

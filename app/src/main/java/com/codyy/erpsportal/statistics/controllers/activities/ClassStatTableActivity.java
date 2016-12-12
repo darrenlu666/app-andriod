@@ -76,13 +76,13 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
      */
     public final static int TYPE_PROFILE_RECEIVING = 2;
 
+    public static final String EXTRA_STAT_FILTER_CARRIER = "com.codyy.erpsportal.StatFilterCarrier";
+
     private RequestSender mRequestSender;
 
     private int mType;
 
     private UserInfo mUserInfo;
-
-    private String mUrl;
 
     /**
      * 教室类型 主讲教室-主讲(MASTER)、主讲教室-受邀(RECEIVE)、接收教室(ACCEPT)
@@ -115,6 +115,7 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
         mType = getIntent().getIntExtra(EXTRA_TYPE, TYPE_PROFILE_MAIN);
         mAreaInfo = getIntent().getParcelableExtra(Extra.AREA_INFO);
+        mStatFilterCarrier = getIntent().getParcelableExtra(EXTRA_STAT_FILTER_CARRIER);
         if (mAreaInfo == null) {
             mAreaInfo = new AreaInfo(mUserInfo);
         }
@@ -148,7 +149,7 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
     }
 
     private void loadData() {
-        loadData(null);
+        loadData(mStatFilterCarrier);
     }
 
     private void loadData(StatFilterCarrier statFilterCarrier) {
@@ -230,6 +231,11 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
             } else {
                 params.put("trimesterId", "");
             }
+            if (statFilterCarrier.getFilterBy() == CoursesProfilesFilterActivity.BY_SPECIFIC_DATE) {
+                params.put("isCustomized", "Y");
+            } else {
+                params.put("isCustomized", "N");
+            }
         }
     }
 
@@ -286,6 +292,9 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
         CoursesProfilesFilterActivity.startProfileFilter(this, mUserInfo, title, mStatFilterCarrier);
     }
 
+    /**
+     * 当前筛选参数
+     */
     private StatFilterCarrier mStatFilterCarrier;
 
     @Override
@@ -312,7 +321,7 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
             } else {
                 areaInfo.setName(mAreaInfo.getName()+ "/" + courseProfile.getName());
             }
-            start(this, mUserInfo, mType, areaInfo);
+            start(this, mUserInfo, mType, areaInfo, mStatFilterCarrier);
         }
     }
 
@@ -335,15 +344,19 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
     }
 
     private static void start(Context context, UserInfo userInfo, @ProfileType int type) {
-        start(context, userInfo, type, null);
+        start(context, userInfo, type, null, null);
     }
 
-    private static void start(Context context, UserInfo userInfo,  @ProfileType int type, AreaInfo areaInfo) {
+    private static void start(Context context, UserInfo userInfo, @ProfileType int type,
+                              AreaInfo areaInfo, StatFilterCarrier statFilterCarrier) {
         Intent intent = new Intent(context, ClassStatTableActivity.class);
         intent.putExtra(Extra.USER_INFO, userInfo);
         intent.putExtra(EXTRA_TYPE, type);
         if (areaInfo != null)
             intent.putExtra(Extra.AREA_INFO, areaInfo);
+        if (statFilterCarrier != null) {
+            intent.putExtra(EXTRA_STAT_FILTER_CARRIER, statFilterCarrier);
+        }
         context.startActivity(intent);
         if (context instanceof Activity) {
             UIUtils.addEnterAnim((Activity) context);

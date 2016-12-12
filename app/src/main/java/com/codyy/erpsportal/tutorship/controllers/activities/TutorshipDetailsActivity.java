@@ -12,6 +12,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -121,6 +122,7 @@ public class TutorshipDetailsActivity extends ToolbarActivity {
         mUserInfo = getIntent().getParcelableExtra(EXTRA_USER_INFO);
         mTutorshipId = getIntent().getStringExtra(EXTRA_TUTORSHIP_ID);
         mRequestSender = new RequestSender(this);
+        mSpeakerLbTv.setText(Titles.sMasterTeacher);
         loadData();
     }
 
