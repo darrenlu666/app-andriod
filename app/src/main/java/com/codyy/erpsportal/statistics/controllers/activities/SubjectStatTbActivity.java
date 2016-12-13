@@ -52,6 +52,8 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
 
     private final static String TAG = "SubjectStatTbActivity";
 
+    public static final String EXTRA_STAT_FILTER_CARRIER = "com.codyy.erpsportal.StatFilterCarrier";
+
     private RequestSender mRequestSender;
 
     private UserInfo mUserInfo;
@@ -87,6 +89,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
     private void initAttributes() {
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
         mAreaInfo = getIntent().getParcelableExtra(Extra.AREA_INFO);
+        mStatFilterCarrier = getIntent().getParcelableExtra(EXTRA_STAT_FILTER_CARRIER);
         if (mAreaInfo == null) {
             mAreaInfo = new AreaInfo(mUserInfo);
         }
@@ -103,12 +106,19 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
 
     private void loadData() {
         LocalDate localDate = LocalDate.now();
-        StatFilterCarrier statFilterCarrier = new StatFilterCarrier();
-        statFilterCarrier.setStartDate(
-                localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
-        statFilterCarrier.setEndDate(
-                localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
-        loadData( statFilterCarrier);
+        if (mStatFilterCarrier == null) {
+            mStatFilterCarrier = new StatFilterCarrier();
+            mStatFilterCarrier.setStartDate(
+                    localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
+            mStatFilterCarrier.setEndDate(
+                    localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
+        }
+//        StatFilterCarrier statFilterCarrier = new StatFilterCarrier();
+//        statFilterCarrier.setStartDate(
+//                localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
+//        statFilterCarrier.setEndDate(
+//                localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
+        loadData( mStatFilterCarrier);
     }
 
     private void loadData(StatFilterCarrier statFilterCarrier) {
@@ -213,7 +223,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
     @OnClick(R.id.ib_filter)
     public void onFilterClick(View view) {
         String title = mTitleTv.getText().toString();
-        CoursesProfilesFilterActivity.startSubjectFilter(this, mUserInfo, title);
+        CoursesProfilesFilterActivity.startSubjectFilter(this, mUserInfo, title, mStatFilterCarrier);
     }
 
     @Override
@@ -232,17 +242,19 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
         } else {
             areaInfo.setName(mAreaInfo.getName()+ "/" + statEntity.getAreaName());
         }
-        start(this, mUserInfo, areaInfo);
+        start(this, mUserInfo, areaInfo, mStatFilterCarrier);
     }
+
+    private StatFilterCarrier mStatFilterCarrier;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CoursesProfilesFilterActivity.REQUEST_CODE
                 && resultCode == RESULT_OK) {
-            StatFilterCarrier statFilterCarrier = data.getParcelableExtra(
+            mStatFilterCarrier = data.getParcelableExtra(
                     CoursesProfilesFilterActivity.EXTRA_OUT_FILTER);
-            loadData(statFilterCarrier);
+            loadData(mStatFilterCarrier);
         }
     }
 
@@ -259,14 +271,18 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
     }
 
     private static void start(Context context, UserInfo userInfo) {
-        start(context, userInfo, null);
+        start(context, userInfo, null, null);
     }
 
-    private static void start(Context context, UserInfo userInfo, AreaInfo areaInfo) {
+    private static void start(Context context, UserInfo userInfo, AreaInfo areaInfo,
+                StatFilterCarrier statFilterCarrier) {
         Intent intent = new Intent(context, SubjectStatTbActivity.class);
         intent.putExtra(Extra.USER_INFO, userInfo);
         if (areaInfo != null) {
             intent.putExtra(Extra.AREA_INFO, areaInfo);
+        }
+        if (statFilterCarrier != null) {
+            intent.putExtra(EXTRA_STAT_FILTER_CARRIER, statFilterCarrier);
         }
         context.startActivity(intent);
         if (context instanceof Activity) {
