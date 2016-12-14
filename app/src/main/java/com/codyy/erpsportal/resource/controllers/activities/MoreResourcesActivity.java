@@ -504,7 +504,7 @@ public class MoreResourcesActivity extends AppCompatActivity {
     private RadioButton createRadioButton() {
         RadioButton radioButton = new RadioButton(this);
         radioButton.setButtonDrawable(new StateListDrawable());
-        radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         radioButton.setPadding(mRadioBtnPadding, mRadioBtnPadding, mRadioBtnPadding, mRadioBtnPadding);
         radioButton.setTextColor(getResources().getColorStateList(R.color.sl_rb_filter_item));
         radioButton.setBackgroundDrawable(DrawableUtils.obtainAttrDrawable(this, R.attr.selectableItemBackground));
@@ -911,7 +911,7 @@ public class MoreResourcesActivity extends AppCompatActivity {
         return emptyText;
     }
 
-    @OnClick(R.id.ib_open_simple_filter)
+    @OnClick({R.id.ib_open_simple_filter, R.id.tv_current_scope})
     protected void onOpenSimpleFilterClick() {
         mSlidingPanelLayout.setPanelState(PanelState.EXPANDED);
     }

@@ -28,7 +28,7 @@ public class AudioViewHolder extends BindingRvHolder<Audio> {
     @Bind(R.id.ib_play)
     ImageButton mPlayIb;
 
-    @Bind(R.id.title)
+    @Bind(R.id.tv_title)
     TextView mTitleTv;
 
     @Bind(R.id.tv_view_count)

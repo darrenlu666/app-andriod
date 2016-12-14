@@ -694,7 +694,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
         UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
     }
 
-    @OnClick(R.id.ib_open_simple_filter)
+    @OnClick({R.id.ib_open_simple_filter, R.id.tv_current_scope})
     protected void onOpenSimpleFilterClick() {
         if (mScopePl.getPanelState() == PanelState.COLLAPSED) {
             mScopePl.setPanelState(PanelState.EXPANDED);

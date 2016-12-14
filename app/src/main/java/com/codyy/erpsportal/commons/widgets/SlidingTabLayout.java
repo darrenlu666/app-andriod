@@ -18,7 +18,6 @@ package com.codyy.erpsportal.commons.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -71,7 +70,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private IsOnRight isOnRight;
     private static final int TITLE_OFFSET_DIPS = 24;
     private static final int TAB_VIEW_PADDING_DIPS = 14;
-    private static final int TAB_VIEW_TEXT_SIZE_SP = 14;
+    private static final int TAB_VIEW_TEXT_SIZE_SP = 16;
 
     private int mTabWidth = 0;
     private int mTitleOffset;
@@ -225,7 +224,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
 //        textView.setTextSize(16);
 //        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizePx);
-        textView.setTypeface(Typeface.DEFAULT_BOLD);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // If we're running on Honeycomb or newer, then we can use the Theme's
@@ -235,11 +233,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
                     outValue, true);
             textView.setBackgroundResource(outValue.resourceId);
         }
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-//            // If we're running on ICS or newer, enable all-caps to match the Action Bar tab style
-//            textView.setAllCaps(true);
-//        }
 
         int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
         textView.setPadding(padding, padding, padding, padding);
