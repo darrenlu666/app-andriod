@@ -21,7 +21,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/sdv"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="15dp"
         android:layout_toLeftOf="@id/eliteschool_adapter_text_play"
         android:ellipsize="end"
         android:singleLine="true"
@@ -36,9 +36,11 @@
         android:layout_alignStart="@id/tv_school"
         android:layout_below="@id/tv_school"
         android:layout_marginTop="6dp"
+        android:layout_marginBottom="5dp"
         android:singleLine="true"
         android:text="六年级 音乐 张三"
         android:textColor="#707070"
         android:textSize="15sp"
         />
+
 </RelativeLayout>
