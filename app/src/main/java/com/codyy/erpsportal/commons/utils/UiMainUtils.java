@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.EApplication;
+import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 
 /**
  * 首页Ui工具类
@@ -46,19 +47,19 @@ public class UiMainUtils {
         return server+"/images/"+headPic;
     }
 
-    public static void setBlogSendText(TextView tv ,String str){
+    public static void setBlogSendText(CommentButton tv ,String str){
         if(null == tv ) return;
-        tv.setCompoundDrawables(null,null,null,null);
+//        tv.setCompoundDrawables(null,null,null,null);
+        tv.showDrawLeft(false);
         tv.setText(str);
-        tv.setGravity(Gravity.CENTER);
     }
     /**
      * 设置图片的DrawableLeft
      * @param tv
      * @param resId
      */
-    public static void setDrawableLeft(TextView tv , @DrawableRes int resId , String str){
-        Drawable drawable = ContextCompat.getDrawable(EApplication.instance() , resId);
+    public static void setDrawableLeft(CommentButton tv , @DrawableRes int resId , String str){
+        /*Drawable drawable = ContextCompat.getDrawable(EApplication.instance() , resId);
         if(null != drawable){
             //set drawableLeft
             tv.setGravity(Gravity.LEFT|Gravity.CENTER_VERTICAL);
@@ -66,7 +67,10 @@ public class UiMainUtils {
             tv.setCompoundDrawables(drawable , null ,null ,null);
             //set text
             tv.setText(str);
-        }
+        }*/
+        tv.showDrawLeft(true);
+        tv.setDrawableLeft(resId);
+        tv.setText(str);
     }
     /**
      * 防止viewItem 在RecyclerView不填充Match_parent
