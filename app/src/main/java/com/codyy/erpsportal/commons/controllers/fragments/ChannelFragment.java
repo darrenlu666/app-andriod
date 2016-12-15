@@ -31,7 +31,6 @@ import com.codyy.erpsportal.commons.utils.OnFiveEvenClickListener;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.EmptyView.OnReloadClickListener;
 import com.codyy.erpsportal.commons.widgets.SlidingTabLayout;
-import com.codyy.erpsportal.commons.widgets.SlidingTabLayout.IsOnRight;
 import com.codyy.url.URLConfig;
 
 import java.lang.ref.WeakReference;
@@ -45,7 +44,7 @@ import butterknife.OnClick;
  * 首页-频道页
  * Created by gujiajia on 2015/7/15.
  */
-public class ChannelFragment extends Fragment implements OnModuleConfigListener, IsOnRight, LoadingHandler, OnReloadClickListener {
+public class ChannelFragment extends Fragment implements OnModuleConfigListener, LoadingHandler, OnReloadClickListener {
 
     private final static String TAG = "ChannelFragment";
 
@@ -132,8 +131,6 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
             mAppBarLayout.addOnOffsetChangedListener(mOnOffsetChangedListener);
             mEmptyView.setLoading(false);
             mEmptyView.setOnReloadClickListener(this);
-            mSlidingTabLayout.setIsOnRight(this);
-//            mImageView.setVisibility(View.GONE);
             mTitleTv.setOnTouchListener(new OnFiveEvenClickListener() {
                 @Override
                 public void onFiveEvenClick(){
@@ -237,15 +234,6 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
         } else {
             mSearchIb.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void isOnRight(boolean flag) {
-//        if (flag) {
-//            mImageView.setVisibility(View.GONE);
-//        } else {
-//            mImageView.setVisibility(View.VISIBLE);
-//        }
     }
 
     /**

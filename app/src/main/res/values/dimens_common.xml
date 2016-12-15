@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_item_title">18sp</dimen><!-- 应用中列表项一级内容字体大小-->
+    <dimen name="list_item_body">14sp</dimen><!-- 应用中列表项二级内容字体大小-->
+</resources>
