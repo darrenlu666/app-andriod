@@ -23,6 +23,8 @@ public class SlideView extends FrameLayout {
 
     private OnPageClickListener mOnPageClickListener;
 
+    private float mAspectRatio;
+
     public SlideView(Context context) {
         super(context);
         init(null, 0);
@@ -42,6 +44,8 @@ public class SlideView extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.slide_view, this, true);
         mInfiniteViewPager = (InfiniteViewPager) findViewById(R.id.view_pager);
         mIndicator = (LinePageIndicator) findViewById(R.id.page_indicator);
+        mAspectRatio = 0.5625f;
+
         Cog.d(TAG, "mIndicator=" + mIndicator);
 
         mInfiniteViewPager.setOnClickListener(new OnClickListener() {
@@ -62,6 +66,16 @@ public class SlideView extends FrameLayout {
         mInfiniteViewPager.setAdapter(slidePagerAdapter);
         mInfiniteViewPager.setIndicator(mIndicator);
         mIndicator.setViewPager(mInfiniteViewPager, slidePagerAdapter.getItemCount() * 200000);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int newWidth;
+        int newHeight;
+        newWidth = getMeasuredWidth();
+        newHeight = (int) (newWidth * mAspectRatio);
+        setMeasuredDimension(newWidth, newHeight);
     }
 
     public void startToScroll() {
