@@ -5,15 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:padding="10dp"
-    >
-    <com.facebook.drawee.view.SimpleDraweeView
+    android:padding="4dp">
+    <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/sdv"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:minHeight="120dp"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
+        app:aspectRatioEnabled="true"
+        app:aspectRatio="0.5625"
+        app:dominantMeasurement="width"
         app:placeholderImage="@drawable/icon_default_video" />
+
     <TextView
         android:id="@+id/tv_school"
         android:layout_width="wrap_content"
@@ -26,8 +28,8 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text="王烈奇中心小学"
-        android:textColor="#333333"
-        android:textSize="18sp" />
+        android:textColor="@color/list_item_title"
+        android:textSize="@dimen/list_item_title" />
     <TextView
         android:id="@+id/tv_level_subject_teacher"
         android:layout_width="wrap_content"
@@ -39,8 +41,7 @@
         android:layout_marginBottom="5dp"
         android:singleLine="true"
         android:text="六年级 音乐 张三"
-        android:textColor="#707070"
-        android:textSize="15sp"
-        />
+        android:textColor="@color/list_item_body"
+        android:textSize="@dimen/list_item_body" />
 
 </RelativeLayout>
