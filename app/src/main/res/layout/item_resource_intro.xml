@@ -4,14 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/res_icon"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        app:aspectRatioEnabled="true"
+        app:aspectRatio="0.5625"
+        app:dominantMeasurement="width"
         app:placeholderImage="@drawable/placeholder_img" />
 
     <TextView

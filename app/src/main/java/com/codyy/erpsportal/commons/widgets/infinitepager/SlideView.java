@@ -23,7 +23,9 @@ public class SlideView extends FrameLayout {
 
     private OnPageClickListener mOnPageClickListener;
 
-    private float mAspectRatio;
+    private int mAspectRatioWidth = 16;
+
+    private int mAspectRatioHeight = 9;
 
     public SlideView(Context context) {
         super(context);
@@ -44,7 +46,6 @@ public class SlideView extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.slide_view, this, true);
         mInfiniteViewPager = (InfiniteViewPager) findViewById(R.id.view_pager);
         mIndicator = (LinePageIndicator) findViewById(R.id.page_indicator);
-        mAspectRatio = 0.5625f;
 
         Cog.d(TAG, "mIndicator=" + mIndicator);
 
@@ -62,20 +63,24 @@ public class SlideView extends FrameLayout {
         });
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int originalWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int originalHeight = MeasureSpec.getSize(heightMeasureSpec);
+        int calculatedHeight = originalWidth * mAspectRatioHeight / mAspectRatioWidth;
+        int finalWidth, finalHeight;
+        finalWidth = originalWidth;
+        finalHeight = calculatedHeight;
+        super.onMeasure(
+                MeasureSpec.makeMeasureSpec(finalWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(finalHeight, MeasureSpec.EXACTLY));
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
     public void setAdapter(SlidePagerAdapter slidePagerAdapter){
         mInfiniteViewPager.setAdapter(slidePagerAdapter);
         mInfiniteViewPager.setIndicator(mIndicator);
         mIndicator.setViewPager(mInfiniteViewPager, slidePagerAdapter.getItemCount() * 200000);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int newWidth;
-        int newHeight;
-        newWidth = getMeasuredWidth();
-        newHeight = (int) (newWidth * mAspectRatio);
-        setMeasuredDimension(newWidth, newHeight);
     }
 
     public void startToScroll() {
@@ -92,11 +97,6 @@ public class SlideView extends FrameLayout {
 
     public interface OnPageClickListener {
         void onPageClick(int position);
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
     }
 
 }
