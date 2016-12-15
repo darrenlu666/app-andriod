@@ -34,9 +34,6 @@
     <dimen name="filter_bg_corner">4dp</dimen>
     <dimen name="filter_bg_condition_corner">8dp</dimen>
 
-    <dimen name="list_first_content_item_size">18sp</dimen><!-- 应用中列表项一级内容字体大小-->
-    <dimen name="list_secend_content_item_size">14sp</dimen><!-- 应用中列表项二级内容字体大小-->
-
     <!-- 统一风格-->
     <dimen name="list_image_length">60dp</dimen> <!-- 应用中列表项图片大小-->
     <dimen name="fragment_title_size">14sp</dimen><!--应用页涉及的fragment标题文字大小  实时直播|往期录播 -->

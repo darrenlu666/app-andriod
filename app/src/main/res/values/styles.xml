@@ -265,20 +265,20 @@
 
     <style name="list_item_first_title_style"><!-- 应用中列表项一级内容-->
         <item name="android:textColor">@color/fistpageclass_gridview_item_textcolor</item>
-        <item name="android:textSize">@dimen/list_first_content_item_size</item>
+        <item name="android:textSize">@dimen/list_item_title</item>
         <item name="android:textStyle">bold</item>
         <item name="android:singleLine">true</item>
     </style>
 
     <style name="list_item_first_title_style_exam"><!-- 应用中列表项一级内容 测试模块-->
         <item name="android:textColor">@color/fistpageclass_gridview_item_textcolor</item>
-        <item name="android:textSize">@dimen/list_first_content_item_size</item>
+        <item name="android:textSize">@dimen/list_item_title</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="list_item_second_title_style"><!-- 应用中列表项二级内容-->
         <item name="android:textColor">@color/fistpageclass_gridview_item_textcolor</item>
-        <item name="android:textSize">@dimen/list_secend_content_item_size</item>
+        <item name="android:textSize">@dimen/list_item_body</item>
         <item name="android:singleLine">true</item>
     </style>
 

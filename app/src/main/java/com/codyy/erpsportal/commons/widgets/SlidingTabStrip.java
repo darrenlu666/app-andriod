@@ -31,7 +31,7 @@ class SlidingTabStrip extends LinearLayout {
 
     private static final String TAG = "SlidingTabStrip";
 
-    private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 1;
+    private static final float DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = .5f;
     private static final byte DEFAULT_BOTTOM_BORDER_COLOR_ALPHA = 0x26;
     private static final int SELECTED_INDICATOR_THICKNESS_DIPS = 2;
 
@@ -102,7 +102,7 @@ class SlidingTabStrip extends LinearLayout {
         mDefaultTabColorizer.setDividerColors(setColorAlpha(themeForegroundColor,
                 DEFAULT_DIVIDER_COLOR_ALPHA));
 
-        mBottomBorderThickness = (int) (DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS * density);
+        mBottomBorderThickness = (int) (DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS * density + 0.5f);
         mBottomBorderPaint = new Paint();
         mBottomBorderPaint.setColor(mDefaultBottomBorderColor);
         mSelectedIndicatorPadding = (int) (DEFAULT_SELECTED_INDICATOR_PADDING_DIPS * density);
@@ -220,8 +220,11 @@ class SlidingTabStrip extends LinearLayout {
 
             mSelectedIndicatorPaint.setColor(color);
 
-            canvas.drawRect(left + mSelectedIndicatorPadding, height - mSelectedIndicatorThickness - (mBottomBorderThickness + mBottomBorderMargin), right - mSelectedIndicatorPadding,
-                    height - (mBottomBorderThickness + mBottomBorderMargin), mSelectedIndicatorPaint);
+            canvas.drawRect(left + mSelectedIndicatorPadding,
+                    height - mSelectedIndicatorThickness - (mBottomBorderThickness + mBottomBorderMargin),
+                    right - mSelectedIndicatorPadding,
+                    height - (mBottomBorderThickness + mBottomBorderMargin),
+                    mSelectedIndicatorPaint);
         }
 
         // Thin underline along the entire bottom edge
@@ -293,23 +296,4 @@ class SlidingTabStrip extends LinearLayout {
         this.mIsAverageTabs = isAverageTabs;
     }
 
-    /**
-     * 监听页面滑动
-     */
-    public interface OnPagerChangerListener {
-
-        /**
-         * scroll to which pager index .
-         *
-         * @param selected
-         */
-        void onPagerSelected(int selected);
-
-        /**
-         * 点击的tab位置
-         *
-         * @param clicked clicked position
-         */
-        void onTabClick(int clicked);
-    }
 }
