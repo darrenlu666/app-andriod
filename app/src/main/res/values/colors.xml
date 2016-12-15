@@ -114,4 +114,5 @@
     <color name="timetable_popu_bg">#b2000000</color>
 
     <color name="grey_444">#444444</color>
+    <color name="grey_divider">#dcdcdc</color>
 </resources>
