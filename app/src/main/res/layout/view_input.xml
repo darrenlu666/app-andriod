@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="#EEEEEE"
               android:gravity="bottom"
               android:orientation="vertical" >
-
-  
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,15 +15,11 @@
         android:paddingBottom="4dp"
         android:paddingRight="6dp"
         android:paddingTop="4dp">
-
-      
-
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_weight="1" >
-
             <com.codyy.erpsportal.commons.widgets.EmojiconEditText
                 xmlns:emoji="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/et_text"
@@ -47,7 +41,6 @@
                 android:maxLines="5"
                 android:maxLength="150"
                 />
-
             <ImageView
                 android:id="@+id/iv_emoji"
                 android:layout_width="25dp"
@@ -59,7 +52,7 @@
                 />
         </RelativeLayout>
 
-        <Button
+        <!--<Button
             android:id="@+id/btn_send"
             android:layout_width="55dp"
             android:layout_height="41dp"
@@ -70,6 +63,18 @@
             android:background="@drawable/btn_send_disable"
             android:drawableLeft="@drawable/ic_message_count"
             android:drawablePadding="0dp"
+            android:paddingLeft="3dp"
+            />-->
+        <com.codyy.erpsportal.commons.widgets.blog.CommentButton
+            android:id="@+id/btn_send"
+            android:layout_width="55dp"
+            android:layout_height="41dp"
+            android:layout_marginLeft="8dp"
+            app:cb_text="发送"
+            app:cb_textColor="@color/gray"
+            android:gravity="center"
+            android:background="@drawable/btn_send_disable"
+            app:cb_drawableLeft="@drawable/ic_message_count"
             android:paddingLeft="3dp"
             />
     </LinearLayout>
@@ -82,7 +87,6 @@
         android:orientation="vertical"
         android:visibility="gone"
         >
-
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"

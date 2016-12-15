@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -76,7 +77,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     private boolean mIsSecondReply = false;//是否回复某条评论 .
     private BaseComment mTempBlog; //被回复的对象.
     private int mCommentCount = 0;//1级评论总数
-    private Button mSendComment;
+    private CommentButton mSendComment;
     private EmojiconEditText mInputEditText;
     private String mid;
     private int type;
