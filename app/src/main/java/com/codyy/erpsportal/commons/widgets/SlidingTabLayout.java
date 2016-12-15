@@ -18,6 +18,7 @@ package com.codyy.erpsportal.commons.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -67,13 +68,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     }
 
-    private IsOnRight isOnRight;
     private static final int TITLE_OFFSET_DIPS = 24;
     private static final int TAB_VIEW_PADDING_DIPS = 14;
-    private static final int TAB_VIEW_TEXT_SIZE_SP = 16;
+    private static final int TAB_VIEW_TEXT_SIZE_DP = 18;
 
     private int mTabWidth = 0;
     private int mTitleOffset;
+
+    private int mSelectedTextColor = 0xff444444;
+
+    private int mUnselectedTextColor = 0xff444444;
 
     private int mTabViewLayoutId;
     private int mTabViewTextViewId;
@@ -96,6 +100,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     public SlidingTabLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        float density = getResources().getDisplayMetrics().density;
 
         boolean isAverageTabs = false;
         float bottomBorderPadding = -1;
@@ -106,7 +111,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
             isAverageTabs = typedArray.getBoolean(R.styleable.SlidingTabLayout_isAverageTabs, false);
             bottomBorderPadding = typedArray.getDimension(R.styleable.SlidingTabLayout_bottomBorderPadding, 0);
             bottomBorderMargin = typedArray.getDimension(R.styleable.SlidingTabLayout_bottomBorderMargin, 0);
-            int defaultTextSize = sp2px(context, TAB_VIEW_TEXT_SIZE_SP);
+            int defaultTextSize = (int) (TAB_VIEW_TEXT_SIZE_DP * density + 0.5f);
             mTextSizePx = typedArray.getDimensionPixelSize(R.styleable.SlidingTabLayout_android_textSize, defaultTextSize);
             typedArray.recycle();
         }
@@ -116,7 +121,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
         // Make sure that the Tab Strips fills this View
         setFillViewport(true);
 
-        mTitleOffset = (int) (TITLE_OFFSET_DIPS * getResources().getDisplayMetrics().density);
+        mTitleOffset = (int) (TITLE_OFFSET_DIPS * density);
 
         mTabStrip = new SlidingTabStrip(context);
         addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -128,15 +133,6 @@ public class SlidingTabLayout extends HorizontalScrollView {
         if (bottomBorderMargin >= 0) {//0 表示选中的绿色浮在底部分割线上
             mTabStrip.setBottomBorderMargin((int) bottomBorderMargin);
         }
-    }
-
-    public static int sp2px(Context context, int spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
-    }
-
-    public void setIsOnRight(IsOnRight isOnRight) {
-        this.isOnRight = isOnRight;
     }
 
     /**
@@ -209,7 +205,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         mViewPager = viewPager;
         if (viewPager != null) {
-            viewPager.setOnPageChangeListener(new InternalViewPagerListener());
+            viewPager.addOnPageChangeListener(new InternalViewPagerListener());
             populateTabStrip();
         }
     }
@@ -222,8 +218,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
         TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
 //        textView.setTextSize(16);
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_DP);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSizePx);
+        textView.setTextColor(mUnselectedTextColor);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // If we're running on Honeycomb or newer, then we can use the Theme's
@@ -261,6 +258,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             if (tabView == null) {
                 tabView = createDefaultTabView(getContext());
+                if (i==0){
+                    TextView firstTv = (TextView)tabView;
+                    firstTv.setTextColor(mSelectedTextColor);
+                    firstTv.setTypeface(Typeface.DEFAULT_BOLD);
+                }
             }
 
             if (tabTitleView == null && TextView.class.isInstance(tabView)) {
@@ -303,6 +305,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private class InternalViewPagerListener implements ViewPager.OnPageChangeListener {
         private int mScrollState;
 
+        private int mHighlightPos;
+
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             int tabStripChildCount = mTabStrip.getChildCount();
@@ -340,18 +344,21 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 scrollToTab(position, 0);
             }
 
+            if (mTabViewLayoutId == 0) {//非自定义tab
+                TextView unselectedTv = (TextView)mTabStrip.getChildAt(mHighlightPos);
+                unselectedTv.setTextColor(mUnselectedTextColor);
+                unselectedTv.setTypeface(Typeface.DEFAULT);
+
+                TextView selectedTv = (TextView) mTabStrip.getChildAt(position);
+                selectedTv.setTextColor(mSelectedTextColor);
+                selectedTv.setTypeface(Typeface.DEFAULT_BOLD);
+                mHighlightPos = position;
+            }
+
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }
-            if (isOnRight != null) {
-                if (position == mTabStrip.getChildCount()-1) {
-                    isOnRight.isOnRight(true);
-                } else {
-                    isOnRight.isOnRight(false);
-                }
-            }
         }
-
     }
 
     private class TabClickListener implements View.OnClickListener {
@@ -385,7 +392,4 @@ public class SlidingTabLayout extends HorizontalScrollView {
         void onClick(int index, View v);
     }
 
-    public interface IsOnRight {
-        void isOnRight(boolean flag);
-    }
 }

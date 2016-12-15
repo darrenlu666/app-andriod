@@ -7,8 +7,7 @@
     android:background="?selectableItemBackground"
     android:paddingLeft="10dp"
     android:paddingRight="5dp"
-    android:paddingBottom="5dp"
-    >
+    android:paddingBottom="5dp" >
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv"
         android:layout_width="match_parent"
