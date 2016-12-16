@@ -42,7 +42,7 @@
 
                     <TextView
                         android:id="@+id/tv_title"
-                        style="@style/list_item_first_title_style"
+                        style="@style/ListItemTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
@@ -65,14 +65,14 @@
 
                     <TextView
                         android:id="@+id/tv_total_count"
-                        style="@style/list_item_second_title_style"
+                        style="@style/ListItemBody"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="共14題"/>
 
                     <TextView
                         android:id="@+id/tv_percent"
-                        style="@style/list_item_second_title_style"
+                        style="@style/ListItemBody"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="40dp"
@@ -81,7 +81,7 @@
 
                 <TextView
                     android:id="@+id/tv_assign_time"
-                    style="@style/list_item_second_title_style"
+                    style="@style/ListItemBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

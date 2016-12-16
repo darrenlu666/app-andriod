@@ -35,30 +35,30 @@
 
 
     <style name="txt_online_user_txt_content" >
-
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/md_black_1000</item>
 
     </style>
 
     <style name="txt_online_user_txt_desc">
-
-        <item name="android:textSize">13sp</item>
-
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="txt_group_txt_Title" >
-        <item name="android:textSize">@dimen/poe_txt_size_title</item>
-        <item name="android:textColor">@color/md_grey_900</item>
+        <item name="android:textSize">@dimen/list_item_title</item>
+        <item name="android:textColor">@color/list_item_title</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:maxLines">1</item>
+        <item name="android:textStyle">bold</item>
     </style>
     <style name="txt_group_content" >
-        <item name="android:textSize">@dimen/poe_txt_size_content</item>
-        <item name="android:textColor">@color/black_666</item>
+        <item name="android:textSize">@dimen/list_item_body</item>
+        <item name="android:textColor">@color/list_item_body</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:ellipsize">end</item>
     </style>
     <style name="txt_group_txt_state" >
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/list_item_body</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/md_orange_A400</item>
         <item name="android:padding">1dp</item>
@@ -70,12 +70,8 @@
     </style>
 
     <style name="txt_group_txt_desc">
-        <item name="android:textSize">12sp</item>
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:paddingTop">0dp</item>
-        <item name="android:paddingRight">0dp</item>
-        <item name="android:paddingBottom">0dp</item>
-        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">@dimen/list_item_body</item>
+        <item name="android:textColor">@color/list_item_body</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:ellipsize">end</item>
     </style>

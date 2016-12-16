@@ -8,80 +8,83 @@
 
     <ImageView
         android:id="@+id/iv_state"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
+        android:layout_width="@dimen/poe_head_pic_size_small"
+        android:layout_height="@dimen/poe_head_pic_size_small"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_margin="10dp"
         android:background="@drawable/unstart"/>
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/iv_state"
         android:ellipsize="end"
+        style="@style/ListItemTitle"
         android:singleLine="true"
         android:text="小学语文课堂系列"
-        android:textColor="@color/black"
-        android:textSize="14sp"/>
-
+        />
     <TextView
         android:id="@+id/tv_name_text"
-        style="@style/text_middle_size_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ListItemLabel"
         android:layout_below="@+id/tv_title"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/iv_state"
         android:text="主讲教师"/>
-
     <TextView
         android:id="@+id/tv_name"
-        style="@style/text_middle_size_style"
-        android:layout_below="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ListItemBody"
+        android:maxLines="1"
         android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/tv_title"
         android:layout_toLeftOf="@id/tv_subject_desc"
         android:layout_toRightOf="@+id/tv_name_text"
-        android:text="李四李四李四李四李四李四李四李四李四李四李四李李四李四李四李四四"/>
-
+        tools:text="李四李四李四李四李四李四李四李四李四李四李四李李四李四李四李四四"
+        />
     <TextView
         android:id="@+id/tv_subject_desc"
-        style="@style/text_middle_size_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ListItemLabel"
         android:layout_below="@+id/tv_title"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:layout_toLeftOf="@id/tv_subject"
         android:text="学科"/>
-
     <TextView
         android:id="@+id/tv_subject"
-        style="@style/text_middle_size_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ListItemBody"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tv_title"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="语文"/>
-
     <LinearLayout
         android:id="@+id/rl_star"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_name_text"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_toRightOf="@+id/iv_state"
-        android:orientation="horizontal">
-
+        android:orientation="horizontal"
+        >
         <TextView
             android:id="@+id/tv_star"
-            style="@style/text_middle_size_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ListItemLabel"
             android:layout_gravity="center_vertical"
             android:text="评分"/>
-
         <RatingBar
             android:id="@+id/rb_star"
             style="?android:attr/ratingBarStyleSmall"
@@ -95,7 +98,6 @@
             android:numStars="5"
             android:progressDrawable="@drawable/ratingbar_drawable"
             android:stepSize="0.5"/>
-
         <TextView
             android:id="@+id/tv_score"
             android:layout_width="wrap_content"
@@ -104,40 +106,40 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:textColor="@color/main_green"
+            android:textSize="@dimen/list_item_body"
             tools:text="9分"/>
     </LinearLayout>
-
     <RelativeLayout
         android:id="@+id/rl_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_name_text"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_toLeftOf="@+id/tv_subject"
         android:layout_toRightOf="@+id/iv_state"
         android:orientation="horizontal"
-        android:visibility="gone">
-
+        android:visibility="gone"
+        >
         <TextView
             android:id="@+id/tv_date_text"
-            style="@style/text_middle_size_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ListItemLabel"
             android:text="日期"/>
-
         <TextView
             android:id="@+id/tv_date"
-            style="@style/text_middle_size_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ListItemBody"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/tv_date_text"
             android:text="2015/01/01"/>
     </RelativeLayout>
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
-        android:layout_below="@+id/iv_state"
-        android:layout_marginLeft="72dp"
-        android:layout_marginTop="10dp"
-        android:background="#dd999999"/>
-
+        android:background="#dd999999"
+        android:layout_alignParentBottom="true"
+        />
 </RelativeLayout>

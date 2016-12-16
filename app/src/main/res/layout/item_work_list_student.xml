@@ -43,7 +43,7 @@
 
                     <TextView
                         android:id="@+id/tv_title"
-                        style="@style/list_item_first_title_style"
+                        style="@style/ListItemTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="高三语文第五章练习作业dfgsdfgdsfgsdfgdfs"
@@ -67,14 +67,14 @@
 
                     <TextView
                         android:id="@+id/tv_item_finished_count"
-                        style="@style/list_item_second_title_style"
+                        style="@style/ListItemBody"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="2/10" />
 
                     <TextView
                         android:id="@+id/tv_work_accuracy"
-                        style="@style/list_item_second_title_style"
+                        style="@style/ListItemBody"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/tv_item_finished_count"
@@ -93,7 +93,7 @@
 
                 <TextView
                     android:id="@+id/tv_assign_time"
-                    style="@style/list_item_second_title_style"
+                    style="@style/ListItemBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

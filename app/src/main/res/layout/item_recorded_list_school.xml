@@ -13,9 +13,10 @@
         android:id="@+id/sd_record_list_pic"
         android:layout_width="@dimen/rect_image_size_width"
         android:layout_height="@dimen/rect_image_size_height"
-        android:scaleType="center"
+        android:scaleType="fitXY"
         android:layout_marginLeft="10dp"
-        app:placeholderImage="@drawable/video_holder"/>
+        app:placeholderImage="@drawable/video_holder"
+        app:placeholderImageScaleType = "fitXY"/>
 
     <LinearLayout
         android:id="@+id/ll_info"
@@ -27,7 +28,7 @@
 
         <TextView
             android:id="@+id/tv_teacher"
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/ListItemTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -38,7 +39,7 @@
             android:id="@+id/tv_school_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             tools:text="主讲学校名称"
             android:singleLine="true"/>
 
@@ -47,14 +48,14 @@
             style="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             tools:text="六年级/语文"
             android:singleLine="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
             <TextView

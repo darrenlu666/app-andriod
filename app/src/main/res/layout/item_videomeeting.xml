@@ -3,27 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:layout_margin="3dp">
+    >
 
     <ImageView
         android:id="@+id/iv_videoImage"
         android:layout_width="@dimen/poe_head_pic_size_small"
         android:layout_height="@dimen/poe_head_pic_size_small"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_marginLeft="5dp"
+        android:layout_margin="10dp"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
         android:orientation="vertical">
         <TextView
             android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="小学生同步作文课堂系列"
-            android:textSize="@dimen/poe_txt_size_title"
+            style="@style/txt_group_txt_Title"
             android:textColor="@color/md_grey_900"
             android:layout_marginTop="10dp"
             />
@@ -32,19 +31,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="8dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/str_meeting_main_speaker"
-                android:textSize="@dimen/poe_txt_size_content"
-                android:textColor="@color/black_666"
+                style="@style/ListItemLabel"
                 />
             <TextView
                 android:id="@+id/tv_personName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                style="@style/ListItemBody"
                 android:textSize="@dimen/poe_txt_size_content"
                 android:textColor="@color/black_666"
                 android:text="李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四"
@@ -67,8 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2015-07-31 10:00"
-                android:textSize="@dimen/poe_txt_size_content"
-                android:textColor="@color/black_666"
+                style="@style/ListItemBody"
                 />
         </LinearLayout>
 
@@ -77,7 +75,7 @@
             android:layout_width="match_parent"
             android:background="@color/gray"
             android:layerType="software"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             />
 
     </LinearLayout>

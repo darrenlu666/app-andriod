@@ -58,7 +58,7 @@
     <!--group /blog 的字体/padding-->
     <dimen name="poe_head_pic_size_large">70dp</dimen>
     <dimen name="poe_head_pic_size_middle">60dp</dimen>
-    <dimen name="poe_head_pic_size_small">50dp</dimen>
+    <dimen name="poe_head_pic_size_small">44dp</dimen>
     <dimen name="poe_txt_size_head">21sp</dimen>
     <dimen name="poe_txt_size_title">17sp</dimen>
     <dimen name="poe_txt_size_content">15sp</dimen>

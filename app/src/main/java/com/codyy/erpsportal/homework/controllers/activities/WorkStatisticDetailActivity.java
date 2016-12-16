@@ -151,9 +151,6 @@ public class WorkStatisticDetailActivity extends ToolbarActivity {
                 if (response.optString("result").equals("success") && mToolbar != null) {
                     mClassList = ClassEntity.parseClassList(response);
                     //设置标题--班级
-                    Drawable drawable = getResources().getDrawable(R.drawable.pull_down_arrow);
-                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight()); //设置边界
-                    mTitle.setCompoundDrawables(null, null, drawable, null);
                     mTitle.setText(mClassList.get(0).getClassRoomName());
                     mCurrentClassId = mClassList.get(0).getClassRoomId();
                     mCurrentClassName = mClassList.get(0).getClassRoomName();
