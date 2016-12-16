@@ -20,9 +20,11 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 
 /**
+ * extends TabLayout
+ * 1．自定义Tab的TextView解决标题栏文字会被AutoSize
+ * 2. 自动画出tab之间的分割线Strip .
  * Created by poe on 12/14/16.
  */
-
 public class FixedTabLayout extends TabLayout{
     private static final String TAG = "FixedTabLayout";
     public FixedTabLayout(Context context) {
@@ -59,7 +61,6 @@ public class FixedTabLayout extends TabLayout{
 
             }
         });
-
     }
 
     @Override
