@@ -82,7 +82,7 @@ public class FixedTabLayout extends TabLayout{
         int tabCount = getTabCount() ;
         if(tabCount > 1 && mCanvas != null ){//draw strip line .
             Paint paint = new Paint();
-            int stripWidth = UIUtils.dip2px(EApplication.instance(),1);
+            int stripWidth = UIUtils.dip2px(EApplication.instance(),0.5f);
             paint.setStrokeWidth(stripWidth);
             paint.setColor(UiMainUtils.getColor(R.color.grey_divider));
             int sWidth = getResources().getDisplayMetrics().widthPixels ;
