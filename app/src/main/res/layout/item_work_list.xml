@@ -41,7 +41,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="高三语文第五章练习作业dfgsdfgsdfgsdfgsdfgdfgsdfgd"
-                        style="@style/list_item_first_title_style"
+                        style="@style/ListItemTitle"
                         android:layout_alignParentLeft="true"
                         android:layout_toLeftOf="@id/iv_status"/>
                     <ImageView
@@ -62,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="共14題"
-                        style="@style/list_item_second_title_style"/>
+                        style="@style/ListItemBody"/>
                     <TextView
                         android:id="@+id/tv_percent"
                         android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                         tools:text="2/10"
                         android:layout_toRightOf="@+id/tv_total_count"
                         android:layout_marginLeft="40dp"
-                        style="@style/list_item_second_title_style"/>
+                        style="@style/ListItemBody"/>
 
                     <ImageView
                         android:id="@+id/iv_interactive_comment"
@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     tools:text="布置时间 2015-09-22 10:00"
                     android:layout_marginTop="10dp"
-                    style="@style/list_item_second_title_style"/>
+                    style="@style/ListItemBody"/>
             </LinearLayout>
         </LinearLayout>
 

@@ -145,6 +145,8 @@ public class WorkListStuReadFragment extends LoadMoreFragment<WorkListStuReadCla
             switch (data.getWorkState()) {
                 case STATUS_READ_WAITING:
                     workStatusIv.setImageDrawable(mContext.getResources().getDrawable(R.drawable.to_read));
+                    mReadWorkTv.setVisibility(View.VISIBLE);
+                    divisionView.setVisibility(View.VISIBLE);
                     break;
                 case STATUS_READ:
                     workStatusIv.setImageDrawable(mContext.getResources().getDrawable(R.drawable.read));

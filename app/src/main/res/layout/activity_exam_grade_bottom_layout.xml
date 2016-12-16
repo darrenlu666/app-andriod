@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@color/user_bg_color">
+    android:background="@color/item_info_bg_color">
 
     <TextView
         android:id="@+id/tv_current_item"
@@ -23,7 +23,7 @@
         android:clickable="true"
         android:gravity="center"
         android:text="布置"
-        android:textSize="20sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv_exam_detail"
