@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:minHeight="100dp"
-                android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:minHeight="100dp"
+    android:orientation="vertical">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/teaching_research_item_simpleDraweeView"
@@ -15,7 +15,7 @@
         android:layout_marginLeft="10dp"
         app:placeholderImage="@drawable/default_subject"
         app:placeholderImageScaleType="fitCenter"
-        app:roundAsCircle="true"/>
+        app:roundAsCircle="true" />
 
     <TextView
         android:id="@+id/teaching_research_item_time"
@@ -26,8 +26,8 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
         android:text="New Text"
-        android:textColor="#929292"
-        android:textSize="15sp"/>
+        android:textColor="@color/list_item_body"
+        android:textSize="@dimen/list_item_body" />
 
     <TextView
         android:id="@+id/teaching_research_item_title"
@@ -40,8 +40,8 @@
         android:layout_toRightOf="@id/teaching_research_item_simpleDraweeView"
         android:singleLine="true"
         android:text="标题"
-        android:textColor="@color/fistpageclass_gridview_item_textcolor"
-        android:textSize="16sp"/>
+        android:textColor="@color/list_item_title"
+        android:textSize="@dimen/list_item_title" />
 
     <TextView
         android:id="@+id/teaching_research_item_teacher"
@@ -55,8 +55,8 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text="New Text"
-        android:textColor="#929292"
-        android:textSize="15sp"/>
+        android:textColor="@color/list_item_body"
+        android:textSize="@dimen/list_item_body" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -73,8 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="评分"
-            android:textColor="#929292"
-            android:textSize="15sp"/>
+            android:textColor="@color/list_item_body"
+            android:textSize="@dimen/list_item_body" />
 
         <RatingBar
             android:id="@+id/teaching_research_item_rating"
@@ -88,15 +88,16 @@
             android:numStars="5"
             android:progressDrawable="@drawable/ratingbar_drawable"
             android:rating="4.5"
-            android:stepSize="0.5"/>
+            android:stepSize="0.5" />
 
         <TextView
             android:id="@+id/teaching_research_item_score_tv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
-            android:textColor="#929292"
-            tools:text="8.5分"/>
+            android:textColor="@color/list_item_body"
+            android:textSize="@dimen/list_item_body"
+            tools:text="8.5分" />
     </LinearLayout>
 
     <View
@@ -104,6 +105,6 @@
         android:layout_height="1px"
         android:layout_alignLeft="@id/teaching_research_item_teacher"
         android:layout_alignParentBottom="true"
-        android:background="@color/divide_color"/>
+        android:background="@color/divide_color" />
 
 </RelativeLayout>

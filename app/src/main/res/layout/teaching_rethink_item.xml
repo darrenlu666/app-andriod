@@ -27,8 +27,8 @@
         android:layout_toRightOf="@+id/teaching_rething_simple"
         android:singleLine="true"
         android:text="adfadfadfa"
-        android:textColor="@color/fistpageclass_gridview_item_textcolor"
-        android:textSize="16sp" />
+        android:textColor="@color/list_item_title"
+        android:textSize="@dimen/list_item_title" />
 
     <TextView
         android:id="@+id/teaching_rething_count_text"
@@ -43,8 +43,8 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:text="hhah"
-        android:textColor="#929292"
-        android:textSize="15sp" />
+        android:textColor="@color/list_item_body"
+        android:textSize="@dimen/list_item_body" />
 
     <View
         android:layout_width="match_parent"
