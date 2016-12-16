@@ -107,11 +107,11 @@ public class VideoMeetingActivity extends BaseHttpActivity{
 
     private List<VideoMeetingFragment> makeTabs() {
         List<VideoMeetingFragment> listFragments = new ArrayList<>();
+        int sWidth = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         switch (mUserInfo.getUserType()){
             case UserInfo.USER_TYPE_AREA_USER://管理员
                 mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceVidmeetLaunch));//我发起的
                 mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceVidmeetAttend));//我参与的
-
 
                 listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_LAUNCH,mUserInfo));
                 listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_ATTEND ,mUserInfo));
@@ -124,7 +124,6 @@ public class VideoMeetingActivity extends BaseHttpActivity{
             case UserInfo.USER_TYPE_SCHOOL_USER://学校管理员
                 mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceVidmeetLaunch));//我发起的
                 mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceVidmeetAttend));//我参与的
-
 
                 listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_LAUNCH,mUserInfo));
                 listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_ATTEND,mUserInfo));

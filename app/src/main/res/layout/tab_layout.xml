@@ -12,16 +12,17 @@
          android:background="@color/white"
          app:tabIndicatorColor="@color/main_color"
          app:tabIndicatorHeight="@dimen/tab_layout_select_indicator_height"
-         app:tabTextAppearance="@style/MyTabLayoutTextAppearance"
          app:tabMode="fixed"
          app:tabGravity="fill"
          />
+     <!--app:tabTextAppearance="@style/MyTabLayoutTextAppearance"-->
      <View
          android:id="@+id/divider_portrait"
          android:layout_width="1px"
          android:layout_height="30dp"
          android:background="@color/divide_color"
          android:layout_centerInParent="true"
+         android:visibility="gone"
          />
      <View
          android:layout_width="match_parent"

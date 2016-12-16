@@ -29,7 +29,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:text="0/0" />
+            android:text="0/0"
+            android:textColor="@color/list_item_body"
+            android:textSize="@dimen/list_item_body" />
 
         <TextView
             android:id="@+id/search_group_create"
@@ -40,7 +42,9 @@
             android:layout_toLeftOf="@id/search_group_limit"
             android:layout_toRightOf="@id/search_group_head"
             android:singleLine="true"
-            android:text="创建人" />
+            android:text="创建人"
+            android:textColor="@color/list_item_body"
+            android:textSize="@dimen/list_item_body" />
 
         <TextView
             android:id="@+id/search_group_title"
@@ -52,8 +56,8 @@
             android:layout_toRightOf="@id/search_group_head"
             android:singleLine="true"
             android:text="title"
-            android:textColor="@color/fistpageclass_gridview_item_textcolor"
-            android:textSize="18sp" />
+            android:textColor="@color/list_item_title"
+            android:textSize="@dimen/list_item_title" />
 
         <TextView
             android:id="@+id/search_group_subject"
@@ -64,7 +68,9 @@
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/search_group_head"
             android:singleLine="true"
-            android:text="学科" />
+            android:text="学科"
+            android:textColor="@color/list_item_body"
+            android:textSize="@dimen/list_item_body" />
 
     </RelativeLayout>
 </RelativeLayout>
