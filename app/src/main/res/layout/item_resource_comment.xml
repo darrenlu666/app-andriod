@@ -9,8 +9,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:id="@+id/user_photo"
-        fresco:placeholderImage="@drawable/icon_default_photo"
-        fresco:roundAsCircle="true" />
+        fresco:placeholderImage="@drawable/icon_default_photo" />
 
     <TextView
         android:layout_width="wrap_content"
