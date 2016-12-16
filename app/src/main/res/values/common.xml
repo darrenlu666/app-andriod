@@ -10,7 +10,6 @@
     <style name="ListItemTitle">
         <item name="android:textSize">@dimen/list_item_title</item>
         <item name="android:textColor">@color/list_item_title</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ListItemBody">
