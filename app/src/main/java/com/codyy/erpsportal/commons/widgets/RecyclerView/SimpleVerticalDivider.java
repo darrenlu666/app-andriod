@@ -33,27 +33,6 @@ public class SimpleVerticalDivider extends RecyclerView.ItemDecoration {
             super.getItemOffsets(outRect, view, parent, state);
             return;
         }
-        //如果是第一个item，不需要divider，所以直接return
-        /*if (parent.getChildLayoutPosition(view) < 1) {
-            return;
-        }*/
-       /* int spanCount = getSpanCount(parent);
-        int childCount = parent.getAdapter().getItemCount();
-//        parent.getpos
-        int itemPosition = parent.getChildAdapterPosition(view);
-        if (isLastRaw(parent, itemPosition, spanCount, childCount))// 如果是最后一行，则不需要绘制底部
-        {
-//            outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
-            outRect.set(0, 0, mHDivider.getIntrinsicWidth(), mHDivider.getIntrinsicHeight());
-        } else
-        if (isLastColumn(parent, itemPosition, spanCount, childCount))// 如果是最后一列，则不需要绘制右边
-        {
-            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
-        } else
-        {
-            outRect.set(0, 0, mDivider.getIntrinsicWidth(),
-                    mDivider.getIntrinsicHeight());
-        }*/
     }
     private int getSpanCount(RecyclerView parent)
     {
@@ -95,7 +74,6 @@ public class SimpleVerticalDivider extends RecyclerView.ItemDecoration {
             case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE:
             case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA:
             case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE:
-//            case ApplicationViewHold.ITEM_TYPE_CHILD:
                 result = true;
                 break;
             default:
@@ -115,23 +93,9 @@ public class SimpleVerticalDivider extends RecyclerView.ItemDecoration {
     }
 
     public void drawHorizontal(Canvas c, RecyclerView parent , int i) {
-//        int childCount = parent.getChildCount();
-//        for (int i = 0; i < childCount; i++) {
-//            final View child = parent.getChildAt(i);
-//            final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child
-//                    .getLayoutParams();
-//            final int left = child.getLeft() - params.leftMargin;
-//            final int right = child.getRight() + params.rightMargin+ mHDivider.getIntrinsicWidth();
-//            final int top = child.getBottom() + params.bottomMargin;
-//            final int bottom = top + mDivider.getIntrinsicHeight();
-//            mHDivider.setBounds(left, top, right, bottom);
-//            mHDivider.draw(c);
-//        }
-
         View childView = parent.getChildAt(i);
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) childView.getLayoutParams();
         int left = parent.getPaddingLeft() ;//+ childView.getPaddingLeft();
-//        int bottom = childView.getTop() - params.topMargin;
         int bottom = childView.getBottom() + params.topMargin;
         int top = bottom - mHDivider.getIntrinsicHeight();
         int right = childView.getRight();//-childView.getPaddingRight();
