@@ -24,7 +24,8 @@
             android:layout_height="@dimen/head_length"
             android:scaleType="fitXY"
             fresco:placeholderImage="@drawable/img_yuwen"
-            fresco:roundAsCircle="true"/>
+            fresco:failureImage = "@drawable/img_yuwen"
+            fresco:roundAsCircle="false"/>
 
 
         <RelativeLayout

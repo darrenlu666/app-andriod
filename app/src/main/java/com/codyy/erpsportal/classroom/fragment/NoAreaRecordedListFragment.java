@@ -64,8 +64,11 @@ public class NoAreaRecordedListFragment extends LoadMoreFragment<NoAreaRecordedD
         } else {
             params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
         }
-        if (UserInfoKeeper.obtainUserInfo().getUserType().equals(UserInfo.USER_TYPE_PARENT)) {
+        if (UserInfoKeeper.obtainUserInfo().getUserType().equals(UserInfo.USER_TYPE_PARENT)) {//bug fixed: bug9675 学生账号没有数据
             params.put("studentId", UserInfoKeeper.obtainUserInfo().getSelectedChild().getStudentId());
+        }
+        if(UserInfoKeeper.obtainUserInfo().getUserType().equals(UserInfo.USER_TYPE_STUDENT)){
+            params.put("studentId", UserInfoKeeper.obtainUserInfo().getBaseUserId());
         }
     }
 
@@ -85,7 +88,7 @@ public class NoAreaRecordedListFragment extends LoadMoreFragment<NoAreaRecordedD
     protected List<NoAreaRecordedDetail.ListEntity> getList(JSONObject response) {
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_RECORD)) {
             return NoAreaRecordedDetail.parseResponse(response);
-        }else{
+        } else {
             return NoAreaRecordedDetail.parseSchoolResponse(response);
         }
     }
@@ -136,7 +139,7 @@ public class NoAreaRecordedListFragment extends LoadMoreFragment<NoAreaRecordedD
         @Override
         public void setDataToView(final NoAreaRecordedDetail.ListEntity data) {
             super.setDataToView(data);
-            ImageFetcher.getInstance(mContext).fetchSmall(mImgSdv,data.getThumbnailUrl());
+            ImageFetcher.getInstance(mContext).fetchSmall(mImgSdv, data.getThumbnailUrl());
             mTeacherTv.setText(data.getMainTeacher());
             mGradeSubjectTv.setText(data.getGrade() + "·" + data.getSubject());
             mSchoolNameTv.setText(data.getMainSchoolName());

@@ -39,8 +39,8 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="@{item.schoolName}"
-            android:textColor="#222222"
-            android:textSize="18dp"
+            android:textColor="@color/list_item_title"
+            android:textSize="@dimen/list_item_title"
             tools:text="XXXXXXX小学" />
 
         <TextView
@@ -54,8 +54,8 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="@{item.schoolAreaPath}"
-            android:textColor="#777777"
-            android:textSize="14dp"
+            android:textColor="@color/list_item_body"
+            android:textSize="@dimen/list_item_body"
             tools:text="安徽省-安庆市" />
 
         <TextView
@@ -68,8 +68,8 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text='@{item.masterCount +"个互动教室"}'
-            android:textColor="#555555"
-            android:textSize="16dp"
+            android:textColor="@color/list_item_body"
+            android:textSize="@dimen/list_item_body"
             tools:text="33个直录播教室" />
 
         <View

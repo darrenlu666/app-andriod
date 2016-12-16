@@ -28,7 +28,8 @@
         android:layout_toRightOf="@+id/sd_record_list_pic"
         android:textSize="@dimen/list_item_title"
         tools:text="*********中心小学"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        style="@style/ListItemTitle"/>
 
     <TextView
         android:id="@+id/tv_area"
@@ -40,7 +41,8 @@
         android:layout_toRightOf="@+id/sd_record_list_pic"
         android:textSize="@dimen/list_item_body"
         tools:text="安徽省-安庆市-铜陵县"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        style="@style/ListItemBody"/>
 
     <View
         android:layout_width="match_parent"

@@ -761,7 +761,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         if (TextUtils.isEmpty(reviews)) return;
         SpannableString spannableString = new SpannableString("老师点评");
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView textView = new TextView(getActivity());
         textView.setText(spannableString);
         textView.setPadding(mSpaceing / 2, mSpaceing, mSpaceing, mSpaceing);
@@ -788,7 +788,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         TextView tvScores = new TextView(getActivity());
         SpannableStringBuilder builderScores = new SpannableStringBuilder("分值 ");
         builderScores.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        builderScores.setSpan(new AbsoluteSizeSpan(14, true), 0, builderScores.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builderScores.setSpan(new AbsoluteSizeSpan(16, true), 0, builderScores.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         builderScores.append(scores);
         builderScores.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.red)), 3, 3 + scores.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         builderScores.append("分");
@@ -806,7 +806,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                 tvScore = new TextView(getActivity());
                 builderScore = new SpannableStringBuilder("得分 ");
                 builderScore.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                builderScore.setSpan(new AbsoluteSizeSpan(14, true), 0, builderScore.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builderScore.setSpan(new AbsoluteSizeSpan(16, true), 0, builderScore.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builderScore.append(score);
                 builderScore.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.red)), 3, 3 + score.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builderScore.append("分");
@@ -826,7 +826,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                 tvScore = new TextView(getActivity());
                 builderScore = new SpannableStringBuilder("得分 ");
                 builderScore.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                builderScore.setSpan(new AbsoluteSizeSpan(14, true), 0, builderScore.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builderScore.setSpan(new AbsoluteSizeSpan(16, true), 0, builderScore.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builderScore.append(score);
                 builderScore.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.red)), 3, 3 + score.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builderScore.append("分");
@@ -855,7 +855,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         SpannableString spannableString = new SpannableString("难易度 ");
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView tvDiff = new TextView(getActivity());
         tvDiff.setText(spannableString);
         linearLayout.addView(tvDiff);
@@ -871,7 +871,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             TextView textView = new TextView(getActivity());
             SpannableStringBuilder builder = new SpannableStringBuilder("分值 ");
             builder.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            builder.setSpan(new AbsoluteSizeSpan(14, true), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(new AbsoluteSizeSpan(16, true), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.append(String.valueOf(score));
             builder.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.red)), 3, 3 + String.valueOf(score).length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.append("分");
@@ -1426,7 +1426,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         }
         SpannableString spannableString = new SpannableString("来源    " + sourceStr);
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView textView = new TextView(getActivity());
         textView.setText(spannableString);
         textView.setPadding(mSpaceing / 2, mSpaceing, mSpaceing, mSpaceing);
@@ -1439,8 +1439,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
      */
     protected void addUpdateDate(String date) {
         SpannableString spannableString = new SpannableString("更新日期  " + date);
-        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 4, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView textView = new TextView(getActivity());
         textView.setText(spannableString);
         textView.setPadding(mSpaceing / 2, mSpaceing, mSpaceing, mSpaceing);
@@ -1454,8 +1454,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     protected void addAssembleCounts(String counts) {
         if (TextUtils.isEmpty(counts)) return;
         SpannableString spannableString = new SpannableString("组卷次数  " + counts);
-        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 4, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView textView = new TextView(getActivity());
         textView.setText(spannableString);
         textView.setPadding(mSpaceing / 2, mSpaceing, mSpaceing, mSpaceing);
@@ -1473,8 +1473,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         SpannableString spannableString = new SpannableString("难易度 ");
-        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 3, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView textView = new TextView(getActivity());
         textView.setText(spannableString);
         linearLayout.addView(textView);
@@ -1516,8 +1516,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     protected void addKnowledgePoints(String points) {
         //if (TextUtils.isEmpty(points)) return;
         SpannableString spannableString = new SpannableString("知识点");
-        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 3, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView textView = new TextView(getActivity());
         textView.setText(spannableString);
         textView.setPadding(mSpaceing / 2, mSpaceing, mSpaceing, mSpaceing);
@@ -1535,8 +1535,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     protected void addResolve(String resolve, String url) {
         if (TextUtils.isEmpty(resolve) && TextUtils.isEmpty(url)) return;
         SpannableString spannableString = new SpannableString("习题解析");
-        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new StyleSpan(Typeface.BOLD), 4, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         TextView textView = new TextView(getActivity());
         textView.setText(spannableString);
         textView.setPadding(mSpaceing / 2, mSpaceing, mSpaceing, mSpaceing);
@@ -1568,7 +1568,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         }
         SpannableString spannableString = new SpannableString("正确答案 " + correct);
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 4, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         WebView webView = new WebView(getActivity());
         LinearLayout.LayoutParams mWebViewLP = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -1601,7 +1601,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         }
         SpannableString spannableString = new SpannableString("学生答案 " + answer);
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 4, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         WebView webView = new WebView(getActivity());
         LinearLayout.LayoutParams mWebViewLP = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -1638,7 +1638,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         answer = answer.replace("∷", ";");
         SpannableString spannableString = new SpannableString("我的答案 " + answer);
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 4, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         WebView webView = new WebView(getActivity());
         LinearLayout.LayoutParams mWebViewLP = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -2122,7 +2122,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         TextView titleTv = new TextView(getActivity());
         SpannableString spannableString = new SpannableString(getResources().getString(R.string.answer_title));
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         titleTv.setText(spannableString);
         titleTv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         titleTv.setPadding(mSpaceing, mSpaceing, mSpaceing, mSpaceing);
@@ -2287,7 +2287,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         TextView titleTv = new TextView(getActivity());
         SpannableString spannableString = new SpannableString(commentTitle);
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         titleTv.setText(spannableString);
         titleTv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         titleTv.setPadding(mSpaceing, mSpaceing, mSpaceing, mSpaceing);
@@ -2327,7 +2327,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         TextView titleTv = new TextView(getActivity());
         SpannableString spannableString = new SpannableString(commentTitle);
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         titleTv.setText(spannableString);
         titleTv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         titleTv.setPadding(mSpaceing / 2, mSpaceing, mSpaceing, mSpaceing);
@@ -2389,7 +2389,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         TextView titleTv = new TextView(getActivity());
         SpannableString spannableString = new SpannableString("得分");
         spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         titleTv.setText(spannableString);
         titleTv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         titleTv.setPadding(mSpaceing, mSpaceing, mSpaceing, mSpaceing);
@@ -2917,7 +2917,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         }
         if (spannableString != null) {
             spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new AbsoluteSizeSpan(18, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new ForegroundColorSpan(Color.BLACK),0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         TextView textView = new TextView(getActivity());
         textView.setText(spannableString);
@@ -2963,7 +2964,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         }
         if (spannableString != null) {
             spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            spannableString.setSpan(new AbsoluteSizeSpan(14, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new AbsoluteSizeSpan(16, true), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             if (isCorrect.equals("答对")) {
                 spannableString.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.main_color)),
                         spannableString.length() - 3, spannableString.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
