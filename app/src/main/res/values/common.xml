@@ -4,8 +4,8 @@
     <dimen name="list_item_body">16dp</dimen><!-- 应用中列表项二级内容字体大小-->
 
     <color name="list_item_title">#222222</color>
-    <color name="list_item_body">#666666</color>
-    <color name="list_item_label">#444444</color>
+    <color name="list_item_body">#444444</color>
+    <color name="list_item_label">#666666</color>
 
     <style name="ListItemTitle">
         <item name="android:textSize">@dimen/list_item_title</item>
