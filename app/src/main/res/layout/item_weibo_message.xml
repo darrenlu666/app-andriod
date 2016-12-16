@@ -8,12 +8,26 @@
     android:minHeight="100dp"
     android:padding="10dp">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/simpledraweeview_searchpeople"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        app:placeholderImage="@drawable/placeholderimage_head" />
+    <RelativeLayout
+        android:id="@+id/relativelayout"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/simpledraweeview_searchpeople"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:actualImageScaleType="focusCrop"
+            app:placeholderImage="@drawable/placeholderimage_head" />
+
+        <ImageView
+            android:id="@+id/imageview_shield"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/weibo_msg_shield" />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/searchpeople_setting"
@@ -24,14 +38,6 @@
         android:scaleType="center"
         android:src="@drawable/weibo_setting" />
 
-    <ImageView
-        android:id="@+id/imageview_shield"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/simpledraweeview_searchpeople"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="13dp"
-        android:src="@drawable/weibo_msg_shield" />
 
     <com.codyy.erpsportal.commons.widgets.ClickTextView
         android:id="@+id/searchpeople_message"
@@ -42,12 +48,12 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/searchpeople_setting"
-        android:layout_toRightOf="@id/simpledraweeview_searchpeople"
+        android:layout_toRightOf="@id/relativelayout"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="xxx中学"
-        android:textColor="@color/wei_bo_time"
-        android:textSize="15sp" />
+        android:textColor="@color/list_item_body"
+        android:textSize="@dimen/list_item_body" />
 
     <TextView
         android:id="@+id/searchpeople_name"
@@ -58,12 +64,12 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@id/searchpeople_setting"
-        android:layout_toRightOf="@id/simpledraweeview_searchpeople"
+        android:layout_toRightOf="@id/relativelayout"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="王玉磊"
-        android:textColor="@color/wei_bo_name"
-        android:textSize="16sp" />
+        android:textColor="@color/list_item_title"
+        android:textSize="@dimen/list_item_title" />
 
 
     <View
