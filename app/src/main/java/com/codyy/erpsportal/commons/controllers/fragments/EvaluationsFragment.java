@@ -81,25 +81,25 @@ public class EvaluationsFragment extends BaseRefreshFragment<Assessment> impleme
         type = getArguments().getInt("class_type");
         switch (type) {
             case AssessmentClassActivity.SPONSOR://发起的评课
-                setmURL(URLConfig.GET_SPONSOR_EVALUATION);
+                setURL(URLConfig.GET_SPONSOR_EVALUATION);
                 break;
             case AssessmentClassActivity.AREA://管辖范围的评课
-                setmURL(URLConfig.GET_AREA_EVALUALUATIONS);
+                setURL(URLConfig.GET_AREA_EVALUALUATIONS);
                 break;
             case AssessmentClassActivity.INVITED://受邀的的评课
-                setmURL(URLConfig.GET_INVITED_EVALUALUATIONS);
+                setURL(URLConfig.GET_INVITED_EVALUALUATIONS);
                 break;
             case AssessmentClassActivity.SCHOOLTEACHER://本校教师的评课
-                setmURL(URLConfig.GET_SCHOOLTEACHER_EVALUALUATIONS);
+                setURL(URLConfig.GET_SCHOOLTEACHER_EVALUALUATIONS);
                 break;
             case AssessmentClassActivity.SCHOOLMASTER://本校主讲的
-                setmURL(URLConfig.GET_SCHOOL_MASTER_EVALUALUATION);
+                setURL(URLConfig.GET_SCHOOL_MASTER_EVALUALUATION);
                 break;
             case AssessmentClassActivity.MASTER://主讲的评课
-                setmURL(URLConfig.GET_MASTER_EVALUALUATIONS);
+                setURL(URLConfig.GET_MASTER_EVALUALUATIONS);
                 break;
             case AssessmentClassActivity.ATTEND://参与的评课
-                setmURL(URLConfig.GET_ATTEND_EVALUALUATIONS);
+                setURL(URLConfig.GET_ATTEND_EVALUALUATIONS);
                 break;
         }
         setLastVisibleNB(count);
@@ -115,7 +115,7 @@ public class EvaluationsFragment extends BaseRefreshFragment<Assessment> impleme
     public void loadData() {
         if (mDatas == null || mDatas.size() <= 0) {
             mRefreshRecycleView.setRefreshing(true);
-            httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+            httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
             mEmptyView.setVisibility(View.GONE);
         }
     }

@@ -21,8 +21,7 @@
         android:ellipsize="end"
         android:singleLine="true"
         tools:text="小学生同步作文课堂系列"
-        android:textColor="@color/personal_text_color_content"
-        android:textSize="@dimen/assessment_class_item_text_title" />
+        style="@style/ListItemTitle"/>
     <TextView
         android:id="@+id/assessment_item_text_subject"
         android:layout_width="wrap_content"
@@ -32,8 +31,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
         tools:text="学科 语文"
-        android:textColor="@color/personal_text_color"
-        android:textSize="@dimen/assessment_class_item_text_teacher" />
+        style="@style/ListItemBody" />
 
     <TextView
         android:id="@+id/assessment_item_text_teacher"
@@ -48,8 +46,7 @@
         android:ellipsize="end"
         android:singleLine="true"
         tools:text="主讲教师  李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四李四"
-        android:textColor="@color/personal_text_color"
-        android:textSize="@dimen/assessment_class_item_text_teacher" />
+        style="@style/ListItemBody" />
     <TextView
         android:id="@+id/assessment_item_text_seq"
         android:layout_width="wrap_content"
@@ -60,8 +57,7 @@
         android:ellipsize="end"
         android:singleLine="true"
         tools:text="第一节课"
-        android:textColor="@color/personal_text_color"
-        android:textSize="@dimen/assessment_class_item_text_teacher" />
+        style="@style/ListItemBody" />
     <TextView
         android:id="@+id/assessment_item_text_date"
         android:layout_width="wrap_content"
@@ -70,8 +66,7 @@
         android:layout_below="@id/assessment_item_text_teacher"
         android:layout_toLeftOf="@id/assessment_item_text_seq"
         tools:text="2015/03/07 第三节课"
-        android:textColor="@color/personal_text_color"
-        android:textSize="@dimen/assessment_class_item_text_teacher" />
+        style="@style/ListItemBody" />
 
     <RatingBar
         android:id="@+id/assessment_item_text_rating"
@@ -83,8 +78,7 @@
         android:numStars="5"
         android:progressDrawable="@drawable/ratingbar_drawable"
         android:rating="4.5"
-        android:stepSize="0.5"
-        />
+        android:stepSize="0.5" />
 
     <View
         android:layout_width="match_parent"

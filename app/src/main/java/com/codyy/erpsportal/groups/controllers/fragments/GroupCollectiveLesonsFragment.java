@@ -45,7 +45,7 @@ public class GroupCollectiveLesonsFragment extends BaseRefreshFragment<GroupColl
         mGroupId = getArguments().getString(ARG_GROUP_ID);
         mStart = 0;
         mEnd = mStart + CONT;
-        setmURL(URLConfig.GROUP_MEET_LIST);
+        setURL(URLConfig.GROUP_MEET_LIST);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class GroupCollectiveLesonsFragment extends BaseRefreshFragment<GroupColl
         parm.put("groupId", mGroupId);
         parm.put("start", String.valueOf(mStart));
         parm.put("end", String.valueOf(mEnd));
-        httpConnect(getmURL(), parm, STATE_ON_DOWN_REFRESH);
+        httpConnect(getURL(), parm, STATE_ON_DOWN_REFRESH);
     }
 
     @NonNull

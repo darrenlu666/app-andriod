@@ -46,7 +46,7 @@ public class TimetableListFragment extends BaseRefreshFragment<TimeTableListCont
         mUserInfo = UserInfoKeeper.obtainUserInfo();
         mAreaId=mUserInfo.getBaseAreaId();
         mSchoolId=mUserInfo.getSchoolId();
-        setmURL(URLConfig.TIMETABLE_URL);
+        setURL(URLConfig.TIMETABLE_URL);
         mStart = 0;
         mEnd = mStart + mOnePage;
 
@@ -65,7 +65,7 @@ public class TimetableListFragment extends BaseRefreshFragment<TimeTableListCont
             getView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+                    httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
                 }
             }, 500);
         }

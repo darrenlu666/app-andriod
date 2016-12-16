@@ -70,9 +70,9 @@ public class ContyListFragment extends BaseRefreshFragment<RefreshEntity> {
         mSchoolId = mUserInfo.getSchoolId();
         mType = getArguments().getInt(EXTRA_TYPE, TYPE_LIBERTY);
         if (mType == TYPE_PLAN) {
-            setmURL(URLConfig.CONTY_GET_PLANDATA);
+            setURL(URLConfig.CONTY_GET_PLANDATA);
         } else {
-            setmURL(URLConfig.CONTY_GET_LIBERTYDATA);
+            setURL(URLConfig.CONTY_GET_LIBERTYDATA);
         }
         mStart = mDataListSize = 0;
         mEnd = mStart + mCount;
@@ -91,7 +91,7 @@ public class ContyListFragment extends BaseRefreshFragment<RefreshEntity> {
             getView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+                    httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
                 }
             }, 500);
         }
