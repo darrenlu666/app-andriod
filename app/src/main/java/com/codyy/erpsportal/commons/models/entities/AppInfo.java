@@ -53,6 +53,10 @@ public class AppInfo extends BaseTitleItemBar implements Cloneable{
      */
     private String headPic ;
     /**
+     * 后台配置的名称id #front.workspace.count.class.school
+     */
+    private String configName;
+    /**
      *
      * 用户权限
      */
@@ -78,6 +82,14 @@ public class AppInfo extends BaseTitleItemBar implements Cloneable{
         this.roles = roles;
         this.jumpable = jumpable;
         this.category   =   category;
+    }
+
+    public String getConfigName() {
+        return configName;
+    }
+
+    public void setConfigName(String configName) {
+        this.configName = configName;
     }
 
     public String getHeadPic() {
@@ -180,10 +192,9 @@ public class AppInfo extends BaseTitleItemBar implements Cloneable{
         }
 
         //mock data start -----------
-//        list.add(new AppInfo(R.drawable.ic_function_06,"internet.lesson.id","网络授课",AppConfig.instance().getPriorities("internet.lesson.id"),null,AppInfo.CATEGORY_SINGLE_MODEL));
-        //mock data end --------------
-        //init add jump
+        //init icon/child menu id add jump
         AppConfig.instance().updateData(list);
+        // filter data .
         list = AppConfig.instance().getFilterAppInfo(userType);
 
         return  list;
@@ -191,9 +202,7 @@ public class AppInfo extends BaseTitleItemBar implements Cloneable{
 
 
     private static AppInfo parseOneData(JSONObject jsonObject) {
-
         if (null == jsonObject) return null;
-
         AppInfo appInfo = new AppInfo();
         appInfo.setMenuID(jsonObject.optString("baseMenuId"));
         appInfo.setAppName(jsonObject.optString("menuName"));
@@ -206,6 +215,44 @@ public class AppInfo extends BaseTitleItemBar implements Cloneable{
         appInfo.setHeadPic(image);
         //角色分配
         appInfo.setRole(AppConfig.instance().getPriorities(appInfo.getMenuID()));
+        //检测是否拥有子应用
+        JSONArray childMenu = jsonObject.optJSONArray("childMenuList");
+        if(null != childMenu && childMenu.length()>0){
+            List<AppInfo> childApps = new ArrayList<>();
+            for(int i = 0 ; i< childMenu.length(); i++){
+                childApps.add(parseOneChildMenu(childMenu.optJSONObject(i)));
+            }
+            appInfo.setChildGroups(childApps);
+        }
+
+
+        return appInfo;
+    }
+
+    /**
+     * 解析一条孩子数据
+     * @param jsonObject
+     * @return
+     */
+    private static AppInfo parseOneChildMenu(JSONObject jsonObject) {
+        if (null == jsonObject) return null;
+        AppInfo appInfo = new AppInfo();
+        appInfo.setMenuID(jsonObject.optString("baseMenuId"));
+        appInfo.setAppName(jsonObject.optString("menuName"));
+        appInfo.setConfigName(jsonObject.optString("configName"));//特殊的配置id
+        String image = jsonObject.optString("imagePath");
+        if(null != image && !TextUtils.isEmpty(image)){
+            if(!image.contains("http")){
+                image = URLConfig.IMAGE_URL+image;
+            }
+        }
+        appInfo.setHeadPic(image);
+        //角色分配
+        appInfo.setRole(AppConfig.instance().getPriorities(appInfo.getConfigName()));
+        //config the local res icon id and type .
+        appInfo.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_CHILD);
+        appInfo.setIcon(AppConfig.getChildMenuIcon(appInfo.getConfigName()));
+
         return appInfo;
     }
 
