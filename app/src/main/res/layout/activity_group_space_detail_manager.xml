@@ -37,18 +37,16 @@
                     <RelativeLayout
                         android:id="@+id/rlt"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
+                        android:layout_height="wrap_content"
                         >
                         <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/sdv_group_pic"
                             android:layout_width="@dimen/poe_head_pic_size_small"
                             android:layout_height="@dimen/poe_head_pic_size_small"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="20dp"
-                            android:layout_marginRight="15dp"
-                            android:layout_marginBottom="0dp"
+                            android:layout_margin="10dp"
                             app:placeholderImage="@drawable/default_group_icon"
                             app:placeholderImageScaleType="fitXY"
+                            android:layout_centerVertical="true"
                             />
                         <TextView
                             android:id="@+id/tv_group_name"
@@ -56,9 +54,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/sdv_group_pic"
-                            android:layout_alignTop="@id/sdv_group_pic"
-                            android:textSize="@dimen/poe_txt_size_head"
-                            android:text="圈组名称"
+                            tools:text="圈组名称"
+                            android:layout_marginTop="10dp"
                             />
                         <TextView
                             android:id="@+id/tv_subject_desc"
@@ -67,7 +64,8 @@
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/sdv_group_pic"
                             android:layout_below="@id/tv_group_name"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="10dp"
                             tools:text="@string/group_subject"
                             android:visibility="gone"
                             />
@@ -78,10 +76,9 @@
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/sdv_group_pic"
                             android:layout_below="@id/tv_group_name"
-                            android:layout_alignTop="@id/tv_subject_desc"
-                            android:layout_alignBottom="@id/sdv_group_pic"
-                            android:gravity="center"
-                            tools:text="明明"
+                            android:layout_marginTop="8dp"
+                            tools:text="小学/一年级／语文"
+                            android:layout_marginBottom="10dp"
                             />
                     </RelativeLayout>
 
@@ -90,7 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/rlt"
-                        android:layout_marginLeft="80dp"
+                        android:layout_marginLeft="65dp"
                         android:text="通过"
                         android:maxLines="1"
                         android:gravity="center"

@@ -21,7 +21,7 @@
             <com.codyy.erpsportal.commons.widgets.infinitepager.SlideView
                 android:id="@+id/slide_view"
                 android:layout_width="match_parent"
-                android:layout_height="180dp" />
+                android:layout_height="wrap_content" />
 
             <include layout="@layout/scrolling_info_sheet"/>
 

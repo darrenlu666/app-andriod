@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.SparseArray;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
@@ -91,6 +92,10 @@ public class AppConfig {
             R.drawable.ic_fun_analysis,//统计 17
             R.drawable.ic_fun_net_teach//网络授课 18
     };
+    /**
+     * 二级菜单icon .
+     */
+    private static HashMap<String,Integer> MENU_ICON = new HashMap<>();
 
     private final static String[] MENUS = {
             "onlineclass.id",//专递课堂 0
@@ -111,9 +116,7 @@ public class AppConfig {
             "group.id",//圈组 15
             "resource.id",//优课资源 16
             "statistic.id",//统计 17
-            /***模拟数据start*******/
-            "netteach.id"//网络授课 18
-            /***模拟数据end*******/
+            "netteach.id",//网络授课 18
     };
 
     private HashMap<String, List<AppPriority>> mPriorityCollection = new HashMap<>();
@@ -141,7 +144,7 @@ public class AppConfig {
      */
     private void initGroupData() {
         initPriority();
-
+        initChildIcon();
         mChildItem.clear();
         List<AppInfo> list1 = new ArrayList();//专递课堂
         List<AppInfo> list2 = new ArrayList();//名校网络课堂
@@ -362,6 +365,18 @@ public class AppConfig {
         mChildItem.put(MENUS[17], list3);
     }
 
+    private void initChildIcon() {
+        //统计-课堂统计
+        MENU_ICON.put("front.workspace.count.class.area",R.drawable.ic_child_analysis_lesson);
+        MENU_ICON.put("front.workspace.count.class.school",R.drawable.ic_child_analysis_lesson);
+        //统计-资源统计
+        MENU_ICON.put("front.workspace.count.resource.area",R.drawable.ic_child_analysis_evaluation);
+        MENU_ICON.put("front.workspace.count.resource.school",R.drawable.ic_child_analysis_evaluation);
+        //统计－活动统计
+        MENU_ICON.put("front.workspace.count.disucss.area",R.drawable.ic_child_analysis_resource);
+        MENU_ICON.put("front.workspace.count.disucss.school",R.drawable.ic_child_analysis_resource);
+    }
+
     /**
      * 权限初始化
      */
@@ -405,6 +420,26 @@ public class AppConfig {
         mPriorityCollection.put(MENUS[17], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
         //网络授课
         mPriorityCollection.put(MENUS[18], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT));
+
+        /** 二级应用列表-统计**/
+        //统计－课堂统计/** 二级应用列表-统计**/
+        //统计－课堂统计
+        mPriorityCollection.put("front.workspace.count.class.area",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        mPriorityCollection.put("front.workspace.count.class.school",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        //统计－资源统计
+        mPriorityCollection.put("front.workspace.count.resource.area",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        mPriorityCollection.put("front.workspace.count.resource.school",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        //统计－活动统计
+        mPriorityCollection.put("front.workspace.count.disucss.area",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        mPriorityCollection.put("front.workspace.count.disucss.school",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        mPriorityCollection.put("front.workspace.count.class.area",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        mPriorityCollection.put("front.workspace.count.class.school",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        //统计－资源统计
+        mPriorityCollection.put("front.workspace.count.resource.area",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        mPriorityCollection.put("front.workspace.count.resource.school",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        //统计－活动统计
+        mPriorityCollection.put("front.workspace.count.disucss.area",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        mPriorityCollection.put("front.workspace.count.disucss.school",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
     }
 
     /**
@@ -500,6 +535,18 @@ public class AppConfig {
     }
 
     /**
+     * 获取二级菜单的icon
+     * @param menuId
+     * @return
+     */
+    public static int getChildMenuIcon(String menuId){
+        if(MENU_ICON.containsKey(menuId)){
+            return  MENU_ICON.get(menuId);
+        }
+        return R.drawable.icon_default_video;
+    }
+
+    /**
      * 初始化整个app的应用信息
      */
     private void initAppInfo() {
@@ -554,9 +601,12 @@ public class AppConfig {
         String menuID = ai.getMenuID();
 
         if (mChildItem.get(menuID) != null) {
-            ai.setChildGroups(mChildItem.get(menuID));
             ai.setCategory(AppInfo.CATEGORY_CHILD_MODEL);
             ai.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_MULTI);
+            //此处过滤掉可配置模块＂统计"
+            if(null == ai.getChildGroups() || ai.getChildGroups().size() == 0){
+                ai.setChildGroups(mChildItem.get(menuID));
+            }
         } else {
             ai.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_SINGLE);
             ai.setCategory(AppInfo.CATEGORY_SINGLE_MODEL);

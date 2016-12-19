@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,6 +26,8 @@ import com.codyy.erpsportal.commons.models.entities.People;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.SoftKeyboardStateHelper;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.net.URLEncoder;
@@ -39,7 +42,8 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
     private static final int MAX_INPUT_SIZE = 150;
     private ImageView mIvEmoji;
     private Animation mShowAnim, mDismissAnim;
-    private Button mBtnSend;
+//    private Button mBtnSend;
+    private CommentButton mBtnSend;
     private EmojiconEditText mEtText;
     private OnComposeOperationDelegate mDelegate;
     private SoftKeyboardStateHelper mKeyboardHelper;
@@ -82,7 +86,10 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
         void onEmojiPanClose();
     }
 
-    public Button getBtnSend() {
+//    public Button getBtnSend() {
+//        return mBtnSend;
+//    }
+    public CommentButton getBtnSend() {
         return mBtnSend;
     }
 
@@ -117,14 +124,12 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.length() > 0) {
-                mBtnSend.setTextColor(getResources().getColor(R.color.white));
-                mBtnSend.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_send_enabled));
+                mBtnSend.setTextColor(UiMainUtils.getColor(R.color.white));
+                mBtnSend.setBackgroundDrawable(ContextCompat.getDrawable(getContext(),R.drawable.btn_send_enabled));
             } else {
-                mBtnSend.setTextColor(getResources().getColor(R.color.gray));
-                mBtnSend.setBackgroundDrawable(getResources().getDrawable(R.drawable.btn_send_disable));
+                mBtnSend.setTextColor(UiMainUtils.getColor(R.color.gray));
+                mBtnSend.setBackgroundDrawable(ContextCompat.getDrawable(getContext(),R.drawable.btn_send_disable));
             }
-
-
         }
 
         @Override
@@ -204,7 +209,7 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
         mIvEmoji.setOnClickListener(this);
         mEtText = (EmojiconEditText) findViewById(R.id.et_text);
         mEtText.addTextChangedListener(mTextWatcher);
-        mBtnSend = (Button) findViewById(R.id.btn_send);
+        mBtnSend = (CommentButton) findViewById(R.id.btn_send);
         mBtnSend.setOnClickListener(this);
 //        mEtText.setFocusable(false);
         mLyEmoji = findViewById(R.id.ly_emoji);

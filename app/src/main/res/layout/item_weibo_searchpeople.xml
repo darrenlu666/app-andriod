@@ -8,9 +8,10 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/simpledraweeview_searchpeople"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
+        app:actualImageScaleType="fitCenter"
         app:placeholderImage="@drawable/placeholderimage_head" />
 
 
@@ -23,8 +24,8 @@
         android:layout_toRightOf="@id/simpledraweeview_searchpeople"
         android:singleLine="true"
         android:text="xxx中学"
-        android:textColor="@color/wei_bo_time"
-        android:textSize="15sp" />
+        android:textColor="@color/list_item_body"
+        android:textSize="@dimen/list_item_body" />
 
     <TextView
         android:id="@+id/searchpeople_name"
@@ -36,8 +37,8 @@
         android:layout_toRightOf="@id/simpledraweeview_searchpeople"
         android:singleLine="true"
         android:text="王玉磊"
-        android:textColor="@color/wei_bo_name"
-        android:textSize="16sp" />
+        android:textColor="@color/list_item_title"
+        android:textSize="@dimen/list_item_title" />
 
     <TextView
         android:id="@+id/searchpeople_grade"
@@ -49,8 +50,8 @@
         android:layout_toRightOf="@id/simpledraweeview_searchpeople"
         android:singleLine="true"
         android:text="6nianji"
-        android:textColor="@color/wei_bo_time"
-        android:textSize="15sp" />
+        android:textColor="@color/list_item_body"
+        android:textSize="@dimen/list_item_body" />
 
     <ImageView
         android:id="@+id/searchpeople_setting"

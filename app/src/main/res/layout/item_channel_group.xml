@@ -9,8 +9,8 @@
     >
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_group_pic"
-        android:layout_width="@dimen/poe_head_pic_size_middle"
-        android:layout_height="@dimen/poe_head_pic_size_middle"
+        android:layout_width="@dimen/poe_head_pic_size_small"
+        android:layout_height="@dimen/poe_head_pic_size_small"
         style="@style/sdv_item_style"
         app:placeholderImage="@drawable/default_group_icon"
         android:layout_gravity="center_vertical"

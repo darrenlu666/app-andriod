@@ -15,9 +15,10 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:gravity="center"
         android:textColor="@color/main_color"
-        android:textSize="18sp"
+        android:textSize="18dp"
         tools:text="正在直播" />
 
     <Button
@@ -35,6 +36,7 @@
         android:minHeight="8dp"
         android:minWidth="8dp"
         android:text="@string/more"
+        android:textSize="17dp"
         android:textColor="@color/md_grey_500" />
 
     <View

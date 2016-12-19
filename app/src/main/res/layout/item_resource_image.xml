@@ -8,11 +8,14 @@
               android:orientation="vertical"
               android:padding="8dp">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/res_icon"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
+        app:aspectRatioEnabled="true"
+        app:aspectRatio="0.5625"
+        app:dominantMeasurement="width"
         app:placeholderImage="@drawable/placeholder_img"/>
 
     <TextView
@@ -20,9 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textSize="16sp"
+        style="@style/ResourceItemTitle"
         tools:text="Video"/>
 
     <TextView

@@ -11,10 +11,10 @@
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/sdv_group_pic"
         style="@style/sdv_item_style"
-        android:layout_width="@dimen/poe_head_pic_size_large"
-        android:layout_height="@dimen/poe_head_pic_size_large"
+        android:layout_width="@dimen/poe_head_pic_size_small"
+        android:layout_height="@dimen/poe_head_pic_size_small"
         app:placeholderImage="@drawable/default_group_icon"
-        app:placeholderImageScaleType="fitXY"
+        android:layout_centerVertical="true"
         />
 
     <TextView
@@ -38,8 +38,7 @@
         android:layout_alignBottom="@id/tv_creator"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
+        android:layout_marginTop="8dp"
         tools:text="xxx / xxx 人" />
     <TextView
         android:id="@+id/tv_creator"
@@ -49,9 +48,8 @@
         android:layout_toRightOf="@id/sdv_group_pic"
         android:layout_toLeftOf="@id/tv_member"
         android:layout_below="@id/tv_group_name"
-        android:layout_above="@id/tv_subject_or_category"
         android:gravity="center_vertical"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         tools:text="明明"
         />
 
@@ -61,9 +59,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/sdv_group_pic"
-        android:layout_marginBottom="@dimen/poe_top_bottom_text_addition_padding_size"
+        android:layout_below="@id/tv_creator"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
-        android:layout_alignBottom="@id/sdv_group_pic"
+        android:layout_marginBottom="10dp"
         tools:text="二年级/数学"
         />
 
@@ -83,5 +82,7 @@
         tools:text="圈主"
         android:layout_below="@id/tv_member"
         android:layout_alignRight="@id/tv_member"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
         />
 </RelativeLayout>

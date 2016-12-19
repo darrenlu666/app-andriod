@@ -192,7 +192,7 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
                         viewHolder =  new HistoryClassViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.item_customized_history_class_small,parent,false));
+                                .inflate(R.layout.item_customized_history_class,parent,false));
                         break;
                 }
                 return viewHolder;

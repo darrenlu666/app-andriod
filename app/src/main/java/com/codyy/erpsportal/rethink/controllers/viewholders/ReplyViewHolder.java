@@ -1,10 +1,9 @@
 package com.codyy.erpsportal.rethink.controllers.viewholders;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.StyleSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -52,7 +51,7 @@ public class ReplyViewHolder extends RecyclerViewHolder<RethinkReply> {
     public void setDataToView(final RethinkReply reply, final int position) {
         SpannableStringBuilder ssb = new SpannableStringBuilder(context.getString(
                 R.string.rely_lb, reply.getUserRealName(), reply.getReplyToName(), reply.getContent()));
-        ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, reply.getUserRealName().length() + reply.getReplyToName().length() + 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        ssb.setSpan(new ForegroundColorSpan(0xff222222), 0, reply.getUserRealName().length() + reply.getReplyToName().length() + 3, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         InputUtils.setEmojiSpan(context, ssb, (int) contentTv.getTextSize() + 5);
         Cog.d(TAG, "setDataToView:", ssb);
         contentTv.setText(ssb);

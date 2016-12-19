@@ -186,7 +186,7 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
                         viewHolder =  new HistoryRecommendViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
-                                parent.getContext(), R.layout.item_customized_history_class_small));
+                                parent.getContext(), R.layout.item_customized_history_class));
                         break;
                 }
                 return viewHolder;

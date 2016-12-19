@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
@@ -62,7 +63,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
 
     private BaseRecyclerAdapter<BaseTitleItemBar , BaseRecyclerViewHolder> mAdapter ;
     private EmojiconEditText mInputEditText;
-    private Button mSendComment;
+    private CommentButton mSendComment;
     private InputMethodManager mInputManager ;
     private LinkedList<BaseTitleItemBar> mData  = new LinkedList<>();
     private String mId;//对ing的id

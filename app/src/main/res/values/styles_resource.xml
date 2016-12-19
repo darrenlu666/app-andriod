@@ -3,15 +3,24 @@
 <resources>
     <style name="ResSimpleFilterItemRb">
         <item name="android:button">@null</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/sl_rb_filter_item</item>
         <item name="android:padding">8dp</item>
         <item name="android:background">?selectableItemBackground</item>
     </style>
 
+    <style name="ResourceItemTitle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#222222</item>
+        <item name="android:lines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="ResourceItemNumberTv">
         <item name="android:textSize">16sp</item>
         <item name="android:drawablePadding">4dp</item>
+        <item name="android:textColor">#999999</item>
     </style>
 
     <style name="ResourceItemNumberTv.ViewCount">

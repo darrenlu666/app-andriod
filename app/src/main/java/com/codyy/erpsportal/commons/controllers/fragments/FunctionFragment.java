@@ -61,7 +61,6 @@ public class FunctionFragment extends BaseHttpFragment {
     @Bind(R.id.rcv_frag_function) RecyclerView mRecyclerView;
     @Bind(R.id.empty_view)EmptyView mEmptyView;
 
-//    private StudentParse mStudentParse;
     protected List<AppInfo> mData;
     private FunctionParentAdapter mParentAdapter ;
     private List<Student> mStudents = new ArrayList<>();//家长名下孩子集合 .

@@ -265,20 +265,20 @@
 
     <style name="list_item_first_title_style"><!-- 应用中列表项一级内容-->
         <item name="android:textColor">@color/fistpageclass_gridview_item_textcolor</item>
-        <item name="android:textSize">@dimen/list_first_content_item_size</item>
+        <item name="android:textSize">@dimen/list_item_title</item>
         <item name="android:textStyle">bold</item>
         <item name="android:singleLine">true</item>
     </style>
 
     <style name="list_item_first_title_style_exam"><!-- 应用中列表项一级内容 测试模块-->
         <item name="android:textColor">@color/fistpageclass_gridview_item_textcolor</item>
-        <item name="android:textSize">@dimen/list_first_content_item_size</item>
+        <item name="android:textSize">@dimen/list_item_title</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="list_item_second_title_style"><!-- 应用中列表项二级内容-->
         <item name="android:textColor">@color/fistpageclass_gridview_item_textcolor</item>
-        <item name="android:textSize">@dimen/list_secend_content_item_size</item>
+        <item name="android:textSize">@dimen/list_item_body</item>
         <item name="android:singleLine">true</item>
     </style>
 
@@ -500,10 +500,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/main_color</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-        <item name="android:drawablePadding">8dp</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:drawablePadding">10dp</item>
         <item name="android:drawableLeft">@drawable/left_strip</item>
         <item name="android:drawableRight">@drawable/right_strip</item>
     </style>
@@ -684,4 +684,9 @@
         <item name="android:textSize">18dp</item>
     </style>
 
+    <!-- font test -->
+    <style name="MyTabLayoutTextAppearance" parent="AlertDialog.AppCompat.Light">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black_666</item>
+    </style>
 </resources>

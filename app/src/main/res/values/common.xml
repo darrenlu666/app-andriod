@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_item_title">18dp</dimen><!-- 应用中列表项一级内容字体大小-->
+    <dimen name="list_item_body">16dp</dimen><!-- 应用中列表项二级内容字体大小-->
+
+    <dimen name="tab">14dp</dimen>
+
+    <color name="list_item_title">#222222</color>
+    <color name="list_item_body">#444444</color>
+    <color name="list_item_label">#666666</color>
+
+    <style name="ListItemTitle">
+        <item name="android:textSize">@dimen/list_item_title</item>
+        <item name="android:textColor">@color/list_item_title</item>
+    </style>
+
+    <style name="ListItemBody">
+        <item name="android:textSize">@dimen/list_item_body</item>
+        <item name="android:textColor">@color/list_item_body</item>
+    </style>
+
+    <style name="ListItemLabel">
+        <item name="android:textSize">@dimen/list_item_body</item>
+        <item name="android:textColor">@color/list_item_label</item>
+    </style>
+</resources>

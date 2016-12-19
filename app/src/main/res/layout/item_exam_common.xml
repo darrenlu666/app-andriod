@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tv_holder_1"
-        style="@style/list_item_first_title_style_exam"
+        style="@style/ListItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="8dp"
@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/tv_holder_2"
-        style="@style/list_item_second_title_style"
+        style="@style/ListItemBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_holder_1"
@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/tv_holder_3"
-        style="@style/list_item_second_title_style"
+        style="@style/ListItemBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_holder_1"
@@ -40,7 +40,7 @@
 
     <TextView
         android:id="@+id/tv_holder_4"
-        style="@style/list_item_second_title_style"
+        style="@style/ListItemBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_holder_2"
@@ -52,7 +52,7 @@
 
     <TextView
         android:id="@+id/tv_holder_5"
-        style="@style/list_item_second_title_style"
+        style="@style/ListItemBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_holder_2"

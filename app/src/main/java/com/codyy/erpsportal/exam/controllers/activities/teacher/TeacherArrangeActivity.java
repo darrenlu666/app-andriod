@@ -329,9 +329,9 @@ public class TeacherArrangeActivity extends ToolbarActivity {
                     layout.setMargins(UIUtils.dip2px(context, 4), UIUtils.dip2px(context, 4), UIUtils.dip2px(context, 4), UIUtils.dip2px(context, 4));
                     Button button = new Button(context);
                     button.setSingleLine();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        button.setElevation(UIUtils.dip2px(context, 2));
-                    }
+                    /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        button.setElevation(UIUtils.dip2px(context, 2));//添加阴影
+                    }*/
                     button.setText(object.isNull("name") ? "" : object.optString("name"));
                     button.setBackgroundResource(R.color.main_green);
                     button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f);

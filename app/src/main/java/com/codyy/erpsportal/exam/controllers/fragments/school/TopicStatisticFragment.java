@@ -3,6 +3,7 @@ package com.codyy.erpsportal.exam.controllers.fragments.school;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -303,6 +304,11 @@ public class TopicStatisticFragment extends ItemIndexBaseFragment {
                 mClassListAdapter = new ClassAdapter(getActivity(), mList);
                 mListView.setAdapter(mClassListAdapter);
                 int num = mList.size() > 3 ? 3 : mList.size();
+                //设置标题--班级
+/*                //在左侧添加图片
+                Drawable drawable = getResources().getDrawable(R.drawable.img_up);
+                drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                mUpOrDownButton.setCompoundDrawables(null, drawable, null, null);*/
                 mPopWindow = new PopupWindow(view, ScreenUtils.getScreenWidth(getActivity()), num * UIUtils.dip2px(getActivity(), 48), true);
                 mPopWindow.setTouchable(true);
                 mPopWindow.setOutsideTouchable(true);

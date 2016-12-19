@@ -117,8 +117,8 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
     private void initViews() {
         mNameTv = (TextView) findViewById(R.id.name);
         mPageNoTv = (TextView) findViewById(R.id.pageNoTv);
-        RelativeLayout resourceDetailsBtn = (RelativeLayout) findViewById(R.id.btn_resource_details);
-        RelativeLayout commentBtn = (RelativeLayout) findViewById(R.id.btn_comment);
+        View resourceDetailsBtn = findViewById(R.id.btn_resource_details);
+        View commentBtn = findViewById(R.id.btn_comment);
         mDownloadingPb = (ProgressBar) findViewById(R.id.downloading);
         mPdfViewContainerRl = (RelativeLayout) findViewById(R.id.rl_pdf_view_container);
 

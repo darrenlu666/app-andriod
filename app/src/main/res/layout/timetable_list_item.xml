@@ -47,8 +47,8 @@
                 android:maxWidth="260dp"
                 android:singleLine="true"
                 android:text="@{item.schoolName}"
-                android:textColor="#333333"
-                android:textSize="18dp"
+                android:textColor="@color/list_item_title"
+                android:textSize="@dimen/list_item_title"
                 tools:text="东方红小学" />
 
             <TextView
@@ -59,8 +59,8 @@
                 android:minWidth="80dp"
                 android:singleLine="true"
                 android:text='@{Titles.sMasterRoom+":"+item.masterCount}'
-                android:textColor="#707070"
-                android:textSize="14dp"
+                android:textColor="@color/list_item_body"
+                android:textSize="@dimen/list_item_body"
                 tools:text="主讲教室:53" />
 
             <TextView
@@ -71,8 +71,8 @@
                 android:minWidth="80dp"
                 android:singleLine="true"
                 android:text='@{Titles.sReceiveRoom+":"+item.reciveCount}'
-                android:textColor="#707070"
-                android:textSize="14dp"
+                android:textColor="@color/list_item_body"
+                android:textSize="@dimen/list_item_body"
                 tools:text="接收教室:52" />
         </LinearLayout>
 

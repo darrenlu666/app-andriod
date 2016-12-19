@@ -38,7 +38,7 @@
         android:layout_margin="5dp"
         android:layout_toRightOf="@+id/division_line"
         android:singleLine="true"
-        android:textSize="@dimen/list_first_content_item_size"
+        style="@style/ListItemTitle"
         tools:text="舒城县王烈桥中心王烈桥中心小学dfaadfasdfa"/>
 
     <TextView

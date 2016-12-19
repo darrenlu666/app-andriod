@@ -11,12 +11,16 @@
 
     <TextView
         android:id="@+id/ud_class"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:gravity="center"
-        android:layout_gravity="bottom"
+        android:layout_gravity="bottom|center_horizontal"
         android:background="?attr/selectableItemBackground"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:text="班级"
+        android:drawableRight="@drawable/img_up"
+        android:drawablePadding="5dp"
+        />
 
 
 </FrameLayout>

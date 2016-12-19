@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
@@ -121,7 +122,8 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     @Bind(R.id.refresh_layout)    RefreshLayout mRefreshLayout;
 
     private String mBlogId ;
-    private Button mSendComment;
+//    private Button mSendComment;
+    private CommentButton mSendComment;
     private EmojiconEditText mInputEditText;
     private BaseRecyclerAdapter<BaseTitleItemBar , BaseRecyclerViewHolder<BaseComment>> mAdapter ;
     private LinkedList<BaseTitleItemBar> mData = new LinkedList<>();

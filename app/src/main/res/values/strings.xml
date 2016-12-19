@@ -131,7 +131,7 @@
     <string name="count_lessons_semester">学期开课比例</string>
     <string name="document_resource_details">文档资源详情</string>
     <string name="latest_comment">最新评论</string>
-    <string name="resource_details">资源详细</string>
+    <string name="resource_details">资源详情</string>
     <string name="more">更多</string>
 
     <string name="change_password">修改密码</string>
@@ -639,7 +639,7 @@
     <string name="collect_n">收藏：%1$s</string>
     <string name="summary_what">简介：%1$s</string>
     <string name="sharer_who">共享人：%1$s</string>
-    <string name="shared_n_times">共分享%1$s条</string>
+    <string name="shared_n_times">共分享%1$d条</string>
 
     <!-- 网络授课-->
     <string name="net_teach">网络授课</string>
