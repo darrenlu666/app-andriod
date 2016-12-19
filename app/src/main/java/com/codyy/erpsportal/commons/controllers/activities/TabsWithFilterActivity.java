@@ -5,6 +5,8 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
@@ -15,8 +17,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
@@ -256,34 +259,68 @@ public abstract class TabsWithFilterActivity extends ToolbarActivity implements 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mDrawerLayout.getDrawerLockMode(Gravity.RIGHT) == DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {//当前fragment无筛选时,隐藏右上角筛选
+        if (mDrawerLayout.getDrawerLockMode(GravityCompat.END) == DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {//当前fragment无筛选时,隐藏右上角筛选
             menu.getItem(FIRST_MENU_ITEM_POSITION).setVisible(false);
             return true;
         } else {
             menu.getItem(FIRST_MENU_ITEM_POSITION).setVisible(true);
         }
-        if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-            menu.getItem(FIRST_MENU_ITEM_POSITION).setIcon(R.drawable.ic_done_white);
+//        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+//            menu.getItem(FIRST_MENU_ITEM_POSITION).setIcon(R.drawable.ic_done_white);
+//        } else {
+//            menu.getItem(FIRST_MENU_ITEM_POSITION).setIcon(R.drawable.ic_filter);
+//        }
+        menu.getItem(FIRST_MENU_ITEM_POSITION).setActionView(R.layout.menu_item_filter_btn);
+        View view = menu.getItem(FIRST_MENU_ITEM_POSITION).getActionView();
+        Button filterBtn = (Button) view.findViewById(R.id.btn_filter);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            turnFiltering(filterBtn);
         } else {
-            menu.getItem(FIRST_MENU_ITEM_POSITION).setIcon(R.drawable.ic_filter);
+            turnToFilter(filterBtn);
         }
+        filterBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFilterBtnClick((Button)v);
+            }
+        });
         return true;
+    }
+
+    private void turnToFilter(Button filterBtn) {
+        ViewCompat.setBackground(filterBtn, null);
+        filterBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_filter,0,0,0);
+        filterBtn.setText("");
+    }
+
+    private void turnFiltering(Button filterBtn) {
+        filterBtn.setBackgroundResource(R.drawable.bg_filter_rectangle_green);
+        filterBtn.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+        filterBtn.setText("确认筛选");
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter:
-                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
-                } else {
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                    doFilterConfirmed();
-                }
+                View view = item.getActionView();
+                Button filterBtn = (Button) view.findViewById(R.id.btn_filter);
+                onFilterBtnClick(filterBtn);
                 return true;
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void onFilterBtnClick(Button filterBtn) {
+        if (!mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            turnFiltering(filterBtn);
+            mDrawerLayout.openDrawer(GravityCompat.END);
+        } else {
+            turnToFilter(filterBtn);
+            mDrawerLayout.closeDrawer(GravityCompat.END);
+            doFilterConfirmed();
+        }
     }
 
     @Override
