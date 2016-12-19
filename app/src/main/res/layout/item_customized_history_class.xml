@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:padding="4dp"
     >
     <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/sdv"
@@ -25,7 +24,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/sdv"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_toLeftOf="@id/eliteschool_adapter_text_play"
         android:ellipsize="end"
         android:maxLines="1"
