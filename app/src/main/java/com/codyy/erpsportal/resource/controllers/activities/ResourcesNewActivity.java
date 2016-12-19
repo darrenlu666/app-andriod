@@ -1,8 +1,6 @@
 package com.codyy.erpsportal.resource.controllers.activities;
 
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -17,7 +15,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -34,14 +31,6 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
-import com.codyy.erpsportal.commons.widgets.TitleBar;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelSlideListener;
-import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelState;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.FilterItem;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -49,6 +38,13 @@ import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
+import com.codyy.erpsportal.commons.widgets.TitleBar;
+import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout;
+import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelSlideListener;
+import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelState;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnItemClickListener;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnLoadMoreListener;
@@ -63,9 +59,10 @@ import com.codyy.erpsportal.resource.models.entities.Document;
 import com.codyy.erpsportal.resource.models.entities.Image;
 import com.codyy.erpsportal.resource.models.entities.Video;
 import com.codyy.erpsportal.resource.utils.CountIncreaser;
-import com.codyy.erpsportal.resource.utils.DrawableUtils;
+import com.codyy.erpsportal.resource.utils.ViewCreator;
 import com.codyy.erpsportal.resource.widgets.AudioControlBar;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -422,7 +419,7 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
      * @param from tag
      */
     private void addFromFilterItem(String text, String from) {
-        RadioButton radioButton = createRadioButton();
+        RadioButton radioButton = ViewCreator.createRadioButton(this, mRadioBtnPadding);
         radioButton.setId(mRadioButtonId++);
         radioButton.setText(text);
         radioButton.setTag(from);
@@ -463,22 +460,6 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
                 break;
         }
         updateCurrentScopeTv();
-    }
-
-    /**
-     * 创建筛选项
-     *
-     * @return 创建好的RadioButton
-     */
-    private RadioButton createRadioButton() {
-        RadioButton radioButton = new RadioButton(this);
-        radioButton.setButtonDrawable(new StateListDrawable());
-        radioButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        radioButton.setTypeface(Typeface.DEFAULT);
-        radioButton.setPadding(mRadioBtnPadding, mRadioBtnPadding, mRadioBtnPadding, mRadioBtnPadding);
-        radioButton.setTextColor(getResources().getColorStateList(R.color.sl_rb_filter_item));
-        radioButton.setBackgroundDrawable(DrawableUtils.obtainAttrDrawable(this, R.attr.selectableItemBackground));
-        return radioButton;
     }
 
     @OnClick({R.id.rb_filter_video, R.id.rb_filter_audio, R.id.rb_filter_image, R.id.rb_filter_document})
