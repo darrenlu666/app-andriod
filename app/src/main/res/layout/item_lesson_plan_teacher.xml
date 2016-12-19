@@ -10,8 +10,8 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/dv_subject"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_centerVertical="true"
         app:placeholderImage="@drawable/default_subject"/>
 
@@ -19,14 +19,13 @@
         android:id="@+id/tv_plp_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:layout_toEndOf="@id/dv_subject"
         android:layout_toRightOf="@id/dv_subject"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/md_grey_900"
-        android:textSize="20sp"
+        style="@style/ListItemTitle"
         tools:text="长方形和正方形面积的计算"/>
 
     <LinearLayout
@@ -45,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="@string/rate"
-            android:textSize="18sp"/>
+            style="@style/ListItemLabel"/>
 
         <RatingBar
             android:id="@+id/rb_rate"
@@ -66,7 +65,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:textSize="18sp"
+            style="@style/ListItemBody"
             tools:text="9.8分"/>
     </LinearLayout>
 

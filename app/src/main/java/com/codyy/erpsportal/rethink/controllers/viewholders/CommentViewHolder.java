@@ -3,10 +3,9 @@ package com.codyy.erpsportal.rethink.controllers.viewholders;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.StyleSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -15,12 +14,12 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
+import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DateUtils;
 import com.codyy.erpsportal.commons.utils.InputUtils;
 import com.codyy.erpsportal.commons.utils.Linker;
-import com.codyy.erpsportal.commons.models.ImageFetcher;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.rethink.models.entities.DeleteCommentEvent;
 import com.codyy.erpsportal.rethink.models.entities.RethinkComment;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -91,7 +90,7 @@ public class CommentViewHolder extends RecyclerViewHolder<RethinkComment> {
         });
         SpannableStringBuilder ssb = new SpannableStringBuilder(context.getString(
                 R.string.comment_lb, rethinkComment.getUserRealName(), rethinkComment.getContent()));
-        ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, rethinkComment.getUserRealName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        ssb.setSpan(new ForegroundColorSpan(0xff222222), 0, rethinkComment.getUserRealName().length() + 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         InputUtils.setEmojiSpan(context, ssb, (int) contentTv.getTextSize() + 5);
 //            SpannableString ss = new SpannableString(context.getString(
 //                    R.string.comment_lb, data.getUserRealName(), data.getContent()));

@@ -639,7 +639,7 @@
     <string name="collect_n">收藏：%1$s</string>
     <string name="summary_what">简介：%1$s</string>
     <string name="sharer_who">共享人：%1$s</string>
-    <string name="shared_n_times">共分享%1$s条</string>
+    <string name="shared_n_times">共分享%1$d条</string>
 
     <!-- 网络授课-->
     <string name="net_teach">网络授课</string>

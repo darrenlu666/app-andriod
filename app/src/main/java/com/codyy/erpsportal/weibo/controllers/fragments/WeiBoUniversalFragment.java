@@ -1,6 +1,5 @@
 package com.codyy.erpsportal.weibo.controllers.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -91,22 +90,22 @@ public class WeiBoUniversalFragment extends BaseRefreshFragment implements WeiBo
         switch (mType) {
             case TYPE_FIND_PEOPLE:
                 setEnable(false);
-                setmURL(URLConfig.GET_SEARCH_PEOPLE);
+                setURL(URLConfig.GET_SEARCH_PEOPLE);
                 break;
             case TYPE_MY_FANS:
                 setEnable(false);
-                setmURL(URLConfig.GET_MY_FANS_LIST);
-                httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+                setURL(URLConfig.GET_MY_FANS_LIST);
+                httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
                 break;
             case TYPE_MY_FOLLOW:
                 setEnable(false);
-                setmURL(URLConfig.GET_MY_FRIENDLIST);
-                httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+                setURL(URLConfig.GET_MY_FRIENDLIST);
+                httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
                 break;
             case TYPE_MY_MSG:
                 setEnable(false);
-                setmURL(URLConfig.GET_MIBLOG_MESSAGE_LIST);
-                httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+                setURL(URLConfig.GET_MIBLOG_MESSAGE_LIST);
+                httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
                 break;
         }
     }
@@ -145,7 +144,7 @@ public class WeiBoUniversalFragment extends BaseRefreshFragment implements WeiBo
 
     public void searchInPut(String key) {
         mKey = key;
-        httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+        httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
     }
 
     @NonNull

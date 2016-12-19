@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,6 @@ import com.codyy.erpsportal.commons.utils.NumberUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
 import com.codyy.erpsportal.statistics.widgets.OrderLayout;
-
-import java.text.NumberFormat;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -189,6 +187,8 @@ public class ResourceDetailsFragment extends Fragment {
         if (TextUtils.isEmpty(tagStr)) return;
         TextView textView = new TextView(getContext());
         textView.setText(tagStr);
+        textView.setTextColor(0xff999999);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.tab));
         textView.setPadding(mTagHorizontalPadding, mTagVerticalPadding, mTagHorizontalPadding, mTagVerticalPadding);
         if (VERSION.SDK_INT == VERSION_CODES.JELLY_BEAN_MR1) {
             textView.setPaddingRelative(mTagHorizontalPadding, mTagVerticalPadding, mTagHorizontalPadding, mTagVerticalPadding);

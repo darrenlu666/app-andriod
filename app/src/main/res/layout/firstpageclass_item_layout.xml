@@ -21,9 +21,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/firstpageclass_item_simpledraweeview"
         android:layout_below="@id/firstpageclass_item_simpledraweeview"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="8dp"
         android:singleLine="true"
         android:textColor="@color/fistpageclass_gridview_item_textcolor"
-        android:textSize="15sp"
+        style="@style/ListItemBody"
         tools:text="第一个第一课"/>
 </RelativeLayout>

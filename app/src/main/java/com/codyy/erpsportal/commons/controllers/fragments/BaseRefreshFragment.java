@@ -185,7 +185,7 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
             if (mEmptyView.isShown()) {
                 mEmptyView.setLoading(true);
             }
-            httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+            httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
         } else {
             mRefreshRecycleView.postDelayed(new Runnable() {
                 @Override
@@ -200,7 +200,7 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
     public boolean onBottom() {
         if (mURL != null && hasData()) {
             mRefreshRecycleView.setAdapterLastState(RefreshRecycleView.STATE_LOADING);
-            httpConnect(getmURL(), getParam(STATE_ON_UP_REFRESH), STATE_ON_UP_REFRESH);
+            httpConnect(getURL(), getParam(STATE_ON_UP_REFRESH), STATE_ON_UP_REFRESH);
             return true;
         } else {
             mRefreshRecycleView.setAdapterLastState(RefreshRecycleView.STATE_NO_MORE);
@@ -212,11 +212,11 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
         return false;
     }
 
-    public String getmURL() {
+    public String getURL() {
         return mURL;
     }
 
-    public void setmURL(String mURL) {
+    public void setURL(String mURL) {
         this.mURL = mURL;
     }
 

@@ -47,7 +47,7 @@ public class ReservationClassFragment extends BaseRefreshFragment<ReservationCla
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        setmURL(URLConfig.GET_RESERVATION_CLASS);
+        setURL(URLConfig.GET_RESERVATION_CLASS);
         mUserInfo = UserInfoKeeper.obtainUserInfo();
         mAreaId=mUserInfo.getBaseAreaId();
         mSchoolId=mUserInfo.getSchoolId();
@@ -70,7 +70,7 @@ public class ReservationClassFragment extends BaseRefreshFragment<ReservationCla
             getView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+                    httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
                 }
             }, 500);
         }

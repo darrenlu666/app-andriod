@@ -88,9 +88,9 @@ public class WeiBoFragment extends BaseRefreshFragment<WeiBoListInfo> implements
             mUserId = mUserInfo.getBaseUserId();
         }
         if (mGroupId == null) {
-            setmURL(URLConfig.SELECT_DYNAMIC_LIST);
+            setURL(URLConfig.SELECT_DYNAMIC_LIST);
         } else {
-            setmURL(URLConfig.WEIBO_LIST_BYGROUPID);
+            setURL(URLConfig.WEIBO_LIST_BYGROUPID);
         }
     }
 
@@ -144,7 +144,7 @@ public class WeiBoFragment extends BaseRefreshFragment<WeiBoListInfo> implements
                 }
             });
         }
-        httpConnect(getmURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
+        httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
         mEmptyView.setVisibility(View.GONE);
     }
 

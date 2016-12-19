@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/rl_item_homework"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/rl_item_homework"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground">
@@ -13,10 +13,10 @@
         android:layout_width="@dimen/rect_image_size_width"
         android:layout_height="@dimen/rect_image_size_height"
         android:layout_centerVertical="true"
-        android:scaleType="fitXY"
         android:layout_marginLeft="10dp"
+        android:scaleType="fitXY"
         app:placeholderImage="@drawable/placeholder_img"
-        app:placeholderImageScaleType = "fitXY"/>
+        app:placeholderImageScaleType="fitXY"/>
 
     <TextView
         android:id="@+id/teacher_name"
@@ -27,15 +27,16 @@
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/class_icon"
         android:singleLine="true"
-        android:textColor="@color/fistpageclass_gridview_item_textcolor"
+        android:textColor="@color/list_item_title"
         android:textSize="16sp"
-        tools:text="张三"
-        />
+        tools:text="张三" />
 
     <TextView
         android:id="@+id/school_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tv_work_count"
+        android:layout_alignRight="@+id/tv_work_count"
         android:layout_below="@id/teacher_name"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
@@ -43,9 +44,7 @@
         android:singleLine="true"
         android:textColor="#929292"
         android:textSize="14sp"
-        tools:text="苏大附中"
-        android:layout_alignRight="@+id/tv_work_count"
-        android:layout_alignEnd="@+id/tv_work_count"/>
+        tools:text="苏大附中"/>
 
     <TextView
         android:id="@+id/class_type"
