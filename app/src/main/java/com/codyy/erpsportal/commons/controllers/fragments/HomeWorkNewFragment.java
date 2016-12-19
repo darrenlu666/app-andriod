@@ -42,7 +42,6 @@ public class HomeWorkNewFragment extends LoadMoreFragment<FamousClassBean, HomeW
         mClassType = getArguments().getString(ClassRoomContants.FROM_WHERE_MODEL);
     }
 
-
     @Override
     protected ViewHolderCreator<HomeWorkViewHolder> newViewHolderCreator() {
         return new ViewHolderCreator<HomeWorkViewHolder>() {

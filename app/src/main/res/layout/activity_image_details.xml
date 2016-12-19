@@ -43,6 +43,7 @@
             android:id="@android:id/tabs"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="@color/res_tab_widget"
             android:divider="@drawable/divider_tab"/>
 
         <FrameLayout

@@ -4,20 +4,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:padding="8dp"
-                android:clickable="true">
+                android:clickable="true"
+                android:padding="8dp">
 
     <ImageView
         android:id="@+id/iv_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:src="@drawable/tutorship_status_init"/>
 
     <TextView
         android:id="@+id/tv_title"
+        style="@style/ListItemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -25,45 +26,44 @@
         android:layout_toRightOf="@+id/iv_status"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textSize="18sp"
         tools:text="小学同步作业课堂系列"/>
 
     <TextView
         android:id="@+id/tv_grade_name"
+        style="@style/ListItemBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_title"
         android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/iv_status"
-        android:layout_toRightOf="@+id/iv_status"
         android:layout_toLeftOf="@+id/tv_duration"
+        android:layout_toRightOf="@+id/iv_status"
         android:layout_toStartOf="@+id/tv_duration"
         android:singleLine="true"
-        android:textSize="16sp"
         tools:text="主讲老师 张老师"/>
 
     <TextView
         android:id="@+id/tv_duration"
+        style="@style/ListItemBody"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/tv_title"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:singleLine="true"
-        android:textSize="16sp"
         tools:text="语文fdfdfdfdfdfdfdfdfd"/>
 
     <TextView
         android:id="@+id/tv_create_time"
+        style="@style/ListItemBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_grade_name"
         android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/iv_status"
         android:layout_toRightOf="@+id/iv_status"
-        android:textSize="16sp"
         tools:text="开课时间 2015-09-23 09:44"/>
 </RelativeLayout>
