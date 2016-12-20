@@ -2,14 +2,14 @@
  * Modify by poe 2015 /8/7
  * Copyright (C) 2015 nshmura
  * Copyright (C) 2015 The Android Open Source Project
- *
- *
+ * <p>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -100,7 +100,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
         setIndicatorHeight(a.getDimensionPixelSize(R.styleable.rtl_RecyclerTabLayout_rtl_tabIndicatorHeight, 0));
         setIndicatorModel(a.getInt(R.styleable.rtl_RecyclerTabLayout_rtl_tabIndicatorModel, MODE_INDICATOR_BOTTOM));
 
-        mTabTextAppearance = a.getResourceId(R.styleable.rtl_RecyclerTabLayout_rtl_tabTextAppearance,R.style.rtl_RecyclerTabLayout_Tab);
+        mTabTextAppearance = a.getResourceId(R.styleable.rtl_RecyclerTabLayout_rtl_tabTextAppearance, R.style.rtl_RecyclerTabLayout_Tab);
 
         mTabPaddingStart = mTabPaddingTop = mTabPaddingEnd = mTabPaddingBottom = a.getDimensionPixelSize(R.styleable.rtl_RecyclerTabLayout_rtl_tabPadding, 0);
         mTabPaddingStart = a.getDimensionPixelSize(R.styleable.rtl_RecyclerTabLayout_rtl_tabPaddingStart, mTabPaddingStart);
@@ -123,6 +123,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
 
     /**
      * 选中的位置 .
+     *
      * @return
      */
     public int getIndicatorPositoin() {
@@ -333,7 +334,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
         int right = view.getRight() + mScrollOffset + mIndicatorOffset;
         int top = getHeight() - mIndicatorHeight;
         int bottom = getHeight();
-        if(mIndicatorModel == MODE_INDICATOR_TOP){
+        if (mIndicatorModel == MODE_INDICATOR_TOP) {
             top = 0;
             bottom = mIndicatorHeight;
         }
@@ -346,7 +347,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
         protected LinearLayoutManager mLinearLayoutManager;
 
         public RecyclerOnScrollListener(RecyclerTabLayoutSimple recyclerTabLayout,
-                LinearLayoutManager linearLayoutManager) {
+                                        LinearLayoutManager linearLayoutManager) {
             mRecyclerTabLayout = recyclerTabLayout;
             mLinearLayoutManager = linearLayoutManager;
         }
@@ -382,7 +383,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
                 View view = mLinearLayoutManager.findViewByPosition(position);
                 if (view.getLeft() + view.getWidth() >= center) {
                     mRecyclerTabLayout.setCurrentItem(position, false);
-                    if(null != mItemClickListener) mItemClickListener.OnClick(position);
+                    if (null != mItemClickListener) mItemClickListener.OnClick(position);
                     break;
                 }
             }
@@ -396,7 +397,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
                 View view = mLinearLayoutManager.findViewByPosition(position);
                 if (view.getLeft() <= center) {
                     mRecyclerTabLayout.setCurrentItem(position, false);
-                    if(null != mItemClickListener) mItemClickListener.OnClick(position);
+                    if (null != mItemClickListener) mItemClickListener.OnClick(position);
                     break;
                 }
             }
@@ -439,7 +440,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
         protected int mIndicatorPosition;
 
         public Adapter(OnItemClickListener mOnItemClickListener) {
-            this.mOnItemClickListener   =   mOnItemClickListener;
+            this.mOnItemClickListener = mOnItemClickListener;
         }
 
         public OnItemClickListener getOnItemClickListener() {
@@ -514,7 +515,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            CharSequence title = "simple Text :"+position;
+            CharSequence title = "simple Text :" + position;
             holder.title.setText(title);
             holder.title.setSelected(getCurrentIndicatorPosition() == position);
         }
@@ -525,7 +526,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
         }
 
         public void setTabPadding(int tabPaddingStart, int tabPaddingTop, int tabPaddingEnd,
-                int tabPaddingBottom) {
+                                  int tabPaddingBottom) {
             mTabPaddingStart = tabPaddingStart;
             mTabPaddingTop = tabPaddingTop;
             mTabPaddingEnd = tabPaddingEnd;
@@ -537,7 +538,7 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
         }
 
         public void setTabSelectedTextColor(boolean tabSelectedTextColorSet,
-                int tabSelectedTextColor) {
+                                            int tabSelectedTextColor) {
             mTabSelectedTextColorSet = tabSelectedTextColorSet;
             mTabSelectedTextColor = tabSelectedTextColor;
         }
@@ -581,20 +582,23 @@ public class RecyclerTabLayoutSimple extends RecyclerView {
     /**
      * item点击监听
      */
-    public interface  OnItemClickListener{
+    public interface OnItemClickListener {
 
         /**
          * click事件
+         *
          * @param position
          */
         void OnClick(int position);
 
         /**
          * 获取数据count
-          * @return
+         *
+         * @return
          */
         int getDataSize();
     }
+
     public static class TabTextView extends TextView {
 
         public TabTextView(Context context) {

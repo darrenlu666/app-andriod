@@ -18,26 +18,26 @@ import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryCl
  * 实现了以下功能：
  * 1.水平分割线
  * 2.gradeItem的等分space
- *
+ * <p>
  * {@care 必须是使用了GridLayoutManager布局的RecyclerView}
  * Created by poe on 15-9-8.
  */
-public class SimpleBisectDivider extends RecyclerView.ItemDecoration{
+public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
     private static final String TAG = "SimpleBisectDivider";
-    private Drawable mDivider ;
+    private Drawable mDivider;
     private boolean isHeadDividerEnable = false;
     private int mSpace = 20;//多个gridView之间的间距　.
-    private  int mLastPosition = 0 ;//第一次出现的地方
-    private boolean isBigShow = false ;//是否有大图片
+    private int mLastPosition = 0;//第一次出现的地方
+    private boolean isBigShow = false;//是否有大图片
 
     public SimpleBisectDivider(Drawable divider) {
-        this(divider ,20);
+        this(divider, 20);
     }
 
-    public SimpleBisectDivider(Drawable divider , int space) {
-        this(divider,false);
+    public SimpleBisectDivider(Drawable divider, int space) {
+        this(divider, false);
         this.mSpace = space;
-        mLastPosition = 0 ;
+        mLastPosition = 0;
     }
 
     public SimpleBisectDivider(Drawable divider, boolean isHeadDraw) {
@@ -56,91 +56,90 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration{
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         GridLayoutManager gridLayoutManager = (GridLayoutManager) parent.getLayoutManager();
-        if(gridLayoutManager == null) return;
+        if (gridLayoutManager == null) return;
         //如果下一个item的recyclerType为TitleBar or TitleBarMore 则 返回
         int position = parent.getChildLayoutPosition(view);
         int viewType = parent.getAdapter().getItemViewType(position);
 
-        if(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE == viewType ||
-           HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE == viewType ){
-            if(HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE == viewType){
-                isBigShow = true ;
+        if (HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE == viewType ||
+                HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE == viewType) {
+            if (HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE == viewType) {
+                isBigShow = true;
                 outRect.top = mSpace;
                 outRect.left = mSpace;
                 outRect.right = mSpace;
                 outRect.bottom = mSpace;
-            }else if(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE == viewType){
+            } else if (HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE == viewType) {
                 //记录初始位置
-                if(mLastPosition == 0){
-                    mLastPosition = position ;
-                    Log.i(TAG," last Position : "+mLastPosition);
+                if (mLastPosition == 0) {
+                    mLastPosition = position;
+                    Log.i(TAG, " last Position : " + mLastPosition);
                 }
                 int count = gridLayoutManager.getSpanCount();
-                setSpace(outRect, position-mLastPosition,count);
+                setSpace(outRect, position - mLastPosition, count);
             }
             return;
         }
 
-        if(mDivider == null){
+        if (mDivider == null) {
             super.getItemOffsets(outRect, view, parent, state);
             return;
         }
 
-            //如果是第一个item，不需要divider，所以直接return
-           if (!isHeadDividerEnable && parent.getChildLayoutPosition(view) < 1) {
-                return;
-              }
+        //如果是第一个item，不需要divider，所以直接return
+        if (!isHeadDividerEnable && parent.getChildLayoutPosition(view) < 1) {
+            return;
+        }
 
-            if(needDivider(viewType)){
-                return;
-            }
+        if (needDivider(viewType)) {
+            return;
+        }
 
-           //相当于给itemView设置margin，给divider预留空间
-          int layoutOrientation = getOrientation(parent);
-           if (layoutOrientation == LinearLayoutManager.VERTICAL) {
-                 outRect.top = mDivider.getIntrinsicHeight();
-               } else if(layoutOrientation == LinearLayoutManager.HORIZONTAL) {
-                outRect.left = mDivider.getIntrinsicWidth();
-              }
+        //相当于给itemView设置margin，给divider预留空间
+        int layoutOrientation = getOrientation(parent);
+        if (layoutOrientation == LinearLayoutManager.VERTICAL) {
+            outRect.top = mDivider.getIntrinsicHeight();
+        } else if (layoutOrientation == LinearLayoutManager.HORIZONTAL) {
+            outRect.left = mDivider.getIntrinsicWidth();
+        }
     }
 
-    private void setSpace(Rect outRect, int position , int count) {
+    private void setSpace(Rect outRect, int position, int count) {
         if (position < count && !isBigShow) {
             outRect.top = mSpace;
-        }  else{
+        } else {
             outRect.top = 0;
         }
         outRect.bottom = mSpace;
-        int pos = position%count;
-        Log.i(TAG," pos : "+position +" real pos : "+pos + " count:"+count);
+        int pos = position % count;
+        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count);
         //起始位置 .
-        if(pos == 0){
+        if (pos == 0) {
             outRect.left = mSpace;
-            outRect.right = mSpace/2;
-        }else if(pos < (count-1)){//中间的部分
-            outRect.left = mSpace/2;
-            outRect.right = mSpace/2;
-        }else{//最右侧
-            outRect.left = mSpace/2;
+            outRect.right = mSpace / 2;
+        } else if (pos < (count - 1)) {//中间的部分
+            outRect.left = mSpace / 2;
+            outRect.right = mSpace / 2;
+        } else {//最右侧
+            outRect.left = mSpace / 2;
             outRect.right = mSpace;
         }
     }
 
     /**
      * 获取布局管理器的方向
+     *
      * @param v
      * @return
      */
-    private int getOrientation(RecyclerView v){
+    private int getOrientation(RecyclerView v) {
         int result = LinearLayoutManager.HORIZONTAL;
         LinearLayoutManager lm = getLinearLayoutManger(v);
-        if(lm != null){
-            result  =  lm.getOrientation();
+        if (lm != null) {
+            result = lm.getOrientation();
         }
-        return  result;
+        return result;
     }
-
-
 
 
     @Override
@@ -159,7 +158,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration{
         int childCount = parent.getChildCount();
         if (orientation == LinearLayoutManager.VERTICAL) {
             int right = parent.getWidth();
-            for (int i=0; i<childCount; i++) {
+            for (int i = 0; i < childCount; i++) {
 
                 //判断第一个item的下标是不是0，是则return，不需要draw divider
                 if (i == 0 && firstVisiblePosition == 0) {
@@ -167,9 +166,9 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration{
                 }
                 //如果下一个item的recyclerType为TitleBar or TitleBarMore 则 返回
                 int count = parent.getAdapter().getItemCount();
-                if((i+firstVisiblePosition)< count){
-                    int viewType = parent.getAdapter().getItemViewType(i+firstVisiblePosition);
-                    if(needDivider(viewType)){
+                if ((i + firstVisiblePosition) < count) {
+                    int viewType = parent.getAdapter().getItemViewType(i + firstVisiblePosition);
+                    if (needDivider(viewType)) {
                         continue;
                     }
                 }
@@ -182,8 +181,8 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration{
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
             }
-        } else if(orientation == LinearLayoutManager.HORIZONTAL) {
-            for (int i=0; i<childCount; i++) {
+        } else if (orientation == LinearLayoutManager.HORIZONTAL) {
+            for (int i = 0; i < childCount; i++) {
                 if (i == 0 && firstVisiblePosition == 0) {
                     continue;
                 }
@@ -202,12 +201,13 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration{
 
     /**
      * 再次处过滤不希望回执divider的类型 0x100 - 0x200
+     *
      * @param viewType
      * @return
      */
     private boolean needDivider(int viewType) {
         boolean result = false;
-        switch (viewType){
+        switch (viewType) {
             case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE:
             case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA:
             case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE:
@@ -216,7 +216,8 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration{
             case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE:
                 result = true;
                 break;
-            default: result = false;
+            default:
+                result = false;
                 break;
         }
         return result;
