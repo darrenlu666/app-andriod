@@ -8,7 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.volley.VolleyError;
+import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
@@ -146,8 +149,8 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-        mRecyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
-        mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
+        mRecyclerView.addItemDecoration(new SimpleBisectDivider(divider, UIUtils.dip2px(EApplication.instance(),15)));
+        mRefreshLayout.setColorSchemeColors(UiMainUtils.getColor(R.color.main_color));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

@@ -1,13 +1,13 @@
 /**
  * Copyright (C) 2015 nshmura
  * Copyright (C) 2015 The Android Open Source Project
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,6 +35,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.codyy.erpsportal.R;
 
 public class RecyclerTabLayout extends RecyclerView {
@@ -94,9 +95,9 @@ public class RecyclerTabLayout extends RecyclerView {
                 defStyle, R.style.rtl_RecyclerTabLayout);
         setIndicatorColor(a.getColor(R.styleable.rtl_RecyclerTabLayout_rtl_tabIndicatorColor, 0));
         setIndicatorHeight(a.getDimensionPixelSize(R.styleable.rtl_RecyclerTabLayout_rtl_tabIndicatorHeight, 0));
-        setIndicatorModel(a.getInt(R.styleable.rtl_RecyclerTabLayout_rtl_tabIndicatorModel,MODE_INDICATOR_BOTTOM));
+        setIndicatorModel(a.getInt(R.styleable.rtl_RecyclerTabLayout_rtl_tabIndicatorModel, MODE_INDICATOR_BOTTOM));
 
-        mTabTextAppearance = a.getResourceId(R.styleable.rtl_RecyclerTabLayout_rtl_tabTextAppearance,R.style.rtl_RecyclerTabLayout_Tab);
+        mTabTextAppearance = a.getResourceId(R.styleable.rtl_RecyclerTabLayout_rtl_tabTextAppearance, R.style.rtl_RecyclerTabLayout_Tab);
 
         mTabPaddingStart = mTabPaddingTop = mTabPaddingEnd = mTabPaddingBottom = a.getDimensionPixelSize(R.styleable.rtl_RecyclerTabLayout_rtl_tabPadding, 0);
         mTabPaddingStart = a.getDimensionPixelSize(R.styleable.rtl_RecyclerTabLayout_rtl_tabPaddingStart, mTabPaddingStart);
@@ -319,7 +320,7 @@ public class RecyclerTabLayout extends RecyclerView {
         int right = view.getRight() + mScrollOffset + mIndicatorOffset;
         int top = getHeight() - mIndicatorHeight;
         int bottom = getHeight();
-        if(mIndicatorModel == MODE_INDICATOR_TOP){
+        if (mIndicatorModel == MODE_INDICATOR_TOP) {
             top = 0;
             bottom = mIndicatorHeight;
         }
@@ -332,7 +333,7 @@ public class RecyclerTabLayout extends RecyclerView {
         protected LinearLayoutManager mLinearLayoutManager;
 
         public RecyclerOnScrollListener(RecyclerTabLayout recyclerTabLayout,
-                LinearLayoutManager linearLayoutManager) {
+                                        LinearLayoutManager linearLayoutManager) {
             mRecyclerTabLayout = recyclerTabLayout;
             mLinearLayoutManager = linearLayoutManager;
         }
@@ -502,7 +503,7 @@ public class RecyclerTabLayout extends RecyclerView {
         }
 
         public void setTabPadding(int tabPaddingStart, int tabPaddingTop, int tabPaddingEnd,
-                int tabPaddingBottom) {
+                                  int tabPaddingBottom) {
             mTabPaddingStart = tabPaddingStart;
             mTabPaddingTop = tabPaddingTop;
             mTabPaddingEnd = tabPaddingEnd;
@@ -514,7 +515,7 @@ public class RecyclerTabLayout extends RecyclerView {
         }
 
         public void setTabSelectedTextColor(boolean tabSelectedTextColorSet,
-                int tabSelectedTextColor) {
+                                            int tabSelectedTextColor) {
             mTabSelectedTextColorSet = tabSelectedTextColorSet;
             mTabSelectedTextColor = tabSelectedTextColor;
         }

@@ -13,7 +13,7 @@ import android.view.View;
  * setRefresh(true)禁止触摸
  * Created by poe on 16-2-16.
  */
-public class SimpleRecyclerView extends RecyclerView{
+public class SimpleRecyclerView extends RecyclerView {
     /**
      * 是否正在刷新中...
      * true :禁止touch
@@ -42,13 +42,14 @@ public class SimpleRecyclerView extends RecyclerView{
 
     /**
      * 是否在刷新中...
+     *
      * @param mIsRefreshing
      */
     public void setRefreshing(boolean mIsRefreshing) {
         this.mIsRefreshing = mIsRefreshing;
     }
 
-    public void init(){
+    public void init() {
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
