@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
@@ -15,11 +17,11 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="登录"
+            android:text="@string/login"
             android:textColor="@color/layout_title_text_color"
-            android:textSize="@dimen/layout_title_text_size" />
+            android:textSize="@dimen/layout_title_text_size"/>
 
-        <include layout="@layout/title_bottom_line" />
+        <include layout="@layout/title_bottom_line"/>
     </RelativeLayout>
 
     <ScrollView
@@ -39,38 +41,90 @@
                 android:layout_marginTop="48dp"
                 android:drawableLeft="@drawable/ic_username"
                 android:drawablePadding="5dp"
+                android:drawableStart="@drawable/ic_username"
                 android:hint="@string/username"
-                android:imeOptions="actionNext" />
+                android:imeOptions="actionNext"/>
 
-            <EditText
-                android:id="@+id/et_password"
-                style="@style/EtPassword"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
                 android:layout_marginTop="20dp"
-                android:drawableLeft="@drawable/ic_password"
-                android:drawablePadding="5dp"
-                android:hint="@string/password"
-                android:imeOptions="actionDone" />
+                android:background="@drawable/bg_et_frame"
+                android:orientation="horizontal">
 
-            <com.codyy.erpsportal.commons.widgets.InstantAutoCompleteTv
-                android:id="@+id/et_server_address"
-                style="@style/EtUsername"
+                <EditText
+                    android:id="@+id/et_password"
+                    style="@style/EtPassword"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_password"
+                    android:drawableStart="@drawable/ic_password"
+                    android:hint="@string/password"
+                    android:imeOptions="actionDone"/>
+
+                <ImageButton
+                    android:id="@+id/ib_show_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:contentDescription="@null"
+                    android:padding="10dp"
+                    android:src="@drawable/ib_view_password"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_verify_code"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
                 android:layout_marginTop="20dp"
-                android:drawableLeft="@drawable/ic_network"
-                android:drawablePadding="5dp"
-                android:hint="@string/server_address"
-                android:visibility="gone"/>
+                android:divider="@color/transparent"
+                android:dividerPadding="10dp"
+                android:orientation="horizontal"
+                android:showDividers="middle"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <EditText
+                    android:id="@+id/et_verify_code"
+                    style="@style/EtVerificationCode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="5"
+                    android:drawablePadding="5dp"
+                    android:hint="@string/please_input_verification_code"
+                    android:imeOptions="actionDone"
+                    android:paddingLeft="8dp"
+                    android:paddingStart="8dp"/>
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"/>
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/dv_verify_code"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:scaleType="fitXY"/>
+
+            </LinearLayout>
 
             <Button
+                android:id="@+id/btn_login"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:layout_marginTop="20dp"
                 android:background="@color/bg.btn.unpressed.login"
-                android:onClick="login"
                 android:text="@string/login"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

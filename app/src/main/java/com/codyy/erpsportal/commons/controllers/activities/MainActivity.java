@@ -224,12 +224,16 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
     }
 
     /**
-     * 获取模块配置
+     * 加载模块配置
      */
     public void loadModuleConfig() {
         loadModuleConfig(null, null);
     }
 
+    /**
+     * 获取模块配置
+     * @return 模块配置
+     */
     public ModuleConfig getConfig() {
         return mModuleConfig;
     }
@@ -267,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
      *
      * @param titleStrId 标签名
      * @param drawableId 标签图标
-     * @return
+     * @return 标签组件
      */
     private View makeTabIndicator(@StringRes int titleStrId, @DrawableRes int drawableId) {
         View view = mInflater.inflate(R.layout.tab_indicator, null);
@@ -281,9 +285,9 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
     /**
      * 启动主界面
      *
-     * @param activity
+     * @param activity 原活动
      * @param userInfo 登陆的用户信息
-     * @param index
+     * @param index 0为频道页，1为应用页，2为我的页
      */
     public static void start(Activity activity, UserInfo userInfo, int index) {
         Intent intent = new Intent(activity, MainActivity.class);
@@ -291,18 +295,20 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         intent.putExtra(Extra.USER_INFO, userInfo);
         intent.putExtra(LoginActivity.EXTRA_INDEX_GOTO, index);
         activity.startActivity(intent);
+        UIUtils.addExitTranAnim(activity);
     }
 
     /**
      * 进入学校首页
-     * @param activity
-     * @param schoolId
+     * @param activity 原活动
+     * @param schoolId 学校id
      */
     public static void start(Activity activity, String schoolId) {
         Intent intent = new Intent(activity, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra(Extra.SCHOOL_ID, schoolId);
         activity.startActivity(intent);
+        UIUtils.addExitTranAnim(activity);
     }
 
     @Override

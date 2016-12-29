@@ -79,6 +79,24 @@ public class URLConfig {
     @UrlSuffix("/newLogin.do")
     public static String LOGIN;
 
+    @UrlSuffix("/loginWithToken.do")
+    public static String LOGIN_WITH_TOKEN;
+
+    /**
+     * 获取登录token
+     */
+    @UrlSuffix("/genertateLoginToken.do")
+    public static String LOGIN_TOKEN;
+
+    /**
+     * 获取验证码图片
+     */
+    @UrlSuffix("/getVerifyCodeImage.do")
+    public static String VERIFY_CODE_IMAGE;
+
+    @UrlSuffix("/mobile/complete/completeUserInfo.do")
+    public static String COMPLETE_USER_INFO;
+
     /**
      * 获得课表
      */

@@ -77,6 +77,11 @@
         <activity
             android:name=".commons.controllers.activities.LoginActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".commons.controllers.activities.CompleteProfileActivity"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".commons.controllers.activities.ListenDetailsActivity"
             android:screenOrientation="portrait"
