@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.widget.AutoCompleteTextView;
 
 /**
+ * 自动补全TextView
  * Created by gujiajia on 2016/8/3.
  */
 public class InstantAutoCompleteTv extends AutoCompleteTextView {

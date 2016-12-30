@@ -296,7 +296,6 @@ public class MoreResourcesActivity extends AppCompatActivity {
     private void initViews() {
         mSlidingPanelLayout.addPanelSlideListener(mPanelSlideListener);
         mSlidingPanelLayout.setContentScrollableView(mRecyclerView);
-//        mAudioControlBar.setCallback(mControlBarCallback);
 
         mTitleBar.setTitle(R.string.resource);
         mRefreshLayout.setColorSchemeResources(R.color.main_color);
@@ -363,8 +362,6 @@ public class MoreResourcesActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-//        pauseAudio();
-//        updatePlayPauseIb();
         EventBus.getDefault().unregister(this);
     }
 

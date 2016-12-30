@@ -6,33 +6,34 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.SimpleFragmentAdapter;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.commons.widgets.CodyyViewPager;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.GroupManagerFilterFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.NetTeachFilterFragment;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.widgets.CodyyViewPager;
 import com.codyy.erpsportal.onlineteach.controllers.fragments.OnlineTeachFragment;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import butterknife.Bind;
 
 /**
@@ -195,17 +196,13 @@ public class OnlineTeachActivity extends BaseHttpActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) { }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) { }
         });
 
-        this.setFilterListener(new IFilterListener() {
+        /*this.setFilterListener(new IFilterListener() {
             @Override
             public void onFilterClick(MenuItem item) {
                 if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
@@ -231,6 +228,12 @@ public class OnlineTeachActivity extends BaseHttpActivity {
                 } else {
                     menu.getItem(0).setIcon(R.drawable.ic_filter);
                 }
+            }
+        });*/
+        setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
+            @Override
+            protected void doFilterConfirmed() {
+                OnlineTeachActivity.this.doFilterConfirmed();
             }
         });
     }
@@ -281,7 +284,7 @@ public class OnlineTeachActivity extends BaseHttpActivity {
         }
         Cog.i(TAG,"mBaseAreaId"+mBaseAreaId+" mIsDirectory"+mIsDirectory+" mSemester"+mSemester+" mSchoolId"+mSchoolId+" mGrade"+mGrade+" mSubject"+mSubject+" mState"+mStatus);
         //refresh .
-        mListFragments.get(mTabLayout.getSelectedTabPosition()>0?mTabLayout.getSelectedTabPosition():0).refresh(bd);
+        mListFragments.get(mTabLayout.getSelectedTabPosition() > 0? mTabLayout.getSelectedTabPosition(): 0).refresh(bd);
     }
 
     public static void start(Activity from){

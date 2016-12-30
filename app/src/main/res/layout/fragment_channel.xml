@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:drawableLeft="@drawable/btn_location"
+                android:drawableStart="@drawable/btn_location"
                 android:gravity="center_vertical"
                 android:textColor="@color/md_white_1000"
                 android:textSize="15sp"
@@ -36,18 +37,21 @@
                 android:layout_centerInParent="true"
                 android:text="@string/title_activity_main"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textSize="24dp" />
 
             <ImageButton
                 android:id="@+id/search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/btn_search"
                 android:textSize="15dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="@null"/>
         </RelativeLayout>
         <com.codyy.erpsportal.commons.widgets.SlidingTabLayout
             android:id="@+id/sliding_tabs"

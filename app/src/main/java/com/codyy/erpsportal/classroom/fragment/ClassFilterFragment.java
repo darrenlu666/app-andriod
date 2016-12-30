@@ -296,9 +296,9 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                             }
                             params.put("pClassLevelId", mOptionsAdapter.getItem(0).getChoice().getPlaceId());
                         } else if ("teacherId".equals(item.getParamName())) {
-                            params.put("baseClassLevelId", mOptionsAdapter.getItem(0).getChoice() == null ? "" : mOptionsAdapter.getItem(0).getChoice().getId());
+                            params.put("baseClassLevelId", mOptionsAdapter.getItem(0).getChoice() == null ? "" : (mOptionsAdapter.getItem(0).getChoice().getId() == null ? "" : mOptionsAdapter.getItem(0).getChoice().getId()));
                             params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
-                            params.put("baseSubjectId", mOptionsAdapter.getItem(1).getChoice() == null ? "" : mOptionsAdapter.getItem(1).getChoice().getId());
+                            params.put("baseSubjectId", mOptionsAdapter.getItem(1).getChoice() == null ? "" : (mOptionsAdapter.getItem(1).getChoice().getId() == null ? "" : mOptionsAdapter.getItem(1).getChoice().getId()));
                             params.put("uuid", mUuid);
                         }
                         requestQueue.add(new NormalPostRequest(item.getUrl(), params, new Response.Listener<JSONObject>() {

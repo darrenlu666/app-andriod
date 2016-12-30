@@ -1,14 +1,11 @@
 package com.codyy.erpsportal.commons.controllers.activities;
 
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,6 +18,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.FilterFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterGradeSubject;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
 import com.codyy.erpsportal.commons.utils.SystemUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.SlidingTabLayout;
@@ -209,7 +207,7 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
         });
         mViewPager.setSelected(true);
 
-        this.setFilterListener(new IFilterListener() {
+        /*this.setFilterListener(new IFilterListener() {
             @Override
             public void onFilterClick(MenuItem item) {
                 if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
@@ -227,6 +225,12 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
                 } else {
                     menu.getItem(0).setIcon(R.drawable.ic_filter);
                 }
+            }
+        });*/
+        setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
+            @Override
+            protected void doFilterConfirmed() {
+                doFilterConfirm();
             }
         });
     }

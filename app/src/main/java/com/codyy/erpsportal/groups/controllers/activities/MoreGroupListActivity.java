@@ -11,32 +11,30 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.CategoryFilterFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.GroupFilterFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.groups.controllers.viewholders.ChannelGroupViewHolder;
-import com.codyy.erpsportal.groups.models.entities.Group;
-import com.codyy.erpsportal.groups.models.entities.GroupTeaching;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
+import com.codyy.erpsportal.groups.controllers.viewholders.ChannelGroupViewHolder;
+import com.codyy.erpsportal.groups.models.entities.Group;
+import com.codyy.erpsportal.groups.models.entities.GroupTeaching;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -253,7 +251,7 @@ public class MoreGroupListActivity extends BaseHttpActivity {
                 supportInvalidateOptionsMenu();
             }
         });
-        this.setFilterListener(new IFilterListener() {
+        /*this.setFilterListener(new IFilterListener() {
             @Override
             public void onFilterClick(MenuItem item) {
                 if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
@@ -279,6 +277,12 @@ public class MoreGroupListActivity extends BaseHttpActivity {
                 } else {
                     menu.getItem(0).setIcon(R.drawable.ic_filter);
                 }
+            }
+        });*/
+        setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
+            @Override
+            protected void doFilterConfirmed() {
+                doFilterConfirmed();
             }
         });
     }

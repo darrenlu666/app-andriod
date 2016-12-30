@@ -126,7 +126,7 @@ public abstract class TabsWithFilterActivity extends ToolbarActivity implements 
             mTabs.setViewPager(mPager);
         }
         mPager.addOnPageChangeListener(this);
-        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);

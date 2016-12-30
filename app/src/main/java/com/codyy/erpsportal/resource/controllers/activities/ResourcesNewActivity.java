@@ -80,7 +80,7 @@ import de.greenrobot.event.EventBus;
  * 530资源模块页
  * Created by gujiajia on 2016/7/6
  */
-public class ResourcesNewActivity extends AppCompatActivity implements Callback{
+public class ResourcesNewActivity extends AppCompatActivity{
 
     private final static String TAG = "ResourcesNewActivity";
 
@@ -285,11 +285,10 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
     }
 
     private void initAttributes() {
-        mHandler = new Handler(this);
+        mHandler = new Handler(mHandlerCallback);
         mType = TYPE_VIDEO;
         mFrom = FROM_SELF;
         mParams = new HashMap<>();
-//        mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         mUserInfo = getIntent().getParcelableExtra(Constants.USER_INFO);
 
         mRequestSender = new RequestSender(this);
@@ -301,7 +300,6 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
     private void initViews() {
         mSlidingPanelLayout.addPanelSlideListener(mPanelSlideListener);
         mSlidingPanelLayout.setContentScrollableView(mRecyclerView);
-//        mAudioControlBar.setCallback(mControlBarCallback);
 
         mTitleBar.setTitle(Titles.sWorkspaceResource);
         mRefreshLayout.setColorSchemeResources(R.color.main_color);
@@ -628,16 +626,18 @@ public class ResourcesNewActivity extends AppCompatActivity implements Callback{
         }
     }
 
-    @Override
-    public boolean handleMessage(Message msg) {
-        if (msg.what == MSG_COLLAPSE_PANEL) {
-            if (!mPanelStateCollapsed) {
-                mSlidingPanelLayout.setPanelState(PanelState.COLLAPSED);
+    private Callback mHandlerCallback = new Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == MSG_COLLAPSE_PANEL) {
+                if (!mPanelStateCollapsed) {
+                    mSlidingPanelLayout.setPanelState(PanelState.COLLAPSED);
+                }
+                return true;
             }
-            return true;
+            return false;
         }
-        return false;
-    }
+    };
 
     /**
      * 响应回调

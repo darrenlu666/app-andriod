@@ -143,11 +143,17 @@
         <!-- that's the important bit -->
     </style>
 
-    <style name="EtUsername">
+    <style name="EtUsername" parent="EtLoginBase">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:layout_marginLeft">50dp</item>
         <item name="android:layout_marginRight">50dp</item>
+    </style>
+
+    <style name="EtVerificationCode" parent="EtLoginBase">
+    </style>
+
+    <style name="EtLoginBase">
         <item name="android:background">@drawable/bg_et_frame</item>
         <item name="android:cursorVisible">true</item>
         <item name="android:textCursorDrawable">@drawable/et_accent</item>
@@ -157,8 +163,30 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="EtPassword" parent="EtUsername">
+    <style name="EtServerAddress">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/bg_et_frame</item>
+        <item name="android:cursorVisible">true</item>
+        <item name="android:textCursorDrawable">@drawable/et_accent</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">#d7d7d7</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="EtPassword">
         <item name="android:inputType">textPassword</item>
+        <item name="android:cursorVisible">true</item>
+        <item name="android:textCursorDrawable">@drawable/et_accent</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">#d7d7d7</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:drawableLeft">@drawable/ic_password</item>
+        <item name="android:drawableStart">@drawable/ic_password</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="tv_function_item_title">
@@ -654,8 +682,18 @@
         <item name="android:contentDescription">@null</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
-        <item name="android:padding">8dp</item>
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="MixBtnInLeftOfTitleBar">
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
     </style>
 
     <!--播放器title desc-->

@@ -54,7 +54,16 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="MixBtnInLeftOfTitleBar" parent="TextButtonInLeftOfTitleBar">
+    <style name="MixBtnInLeftOfTitleBar">
         <item name="android:background">@null</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
     </style>
 </resources>

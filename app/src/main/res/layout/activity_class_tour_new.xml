@@ -13,11 +13,9 @@
         android:layout_height="wrap_content"
         android:text="实时巡视">
 
-        <Button
+        <com.codyy.erpsportal.commons.widgets.components.FilterButton
             android:id="@+id/btn_filter"
-            style="@style/MixBtnInLeftOfTitleBar"
-            android:drawableEnd="@drawable/filter_bg_selector"
-            android:drawableRight="@drawable/filter_bg_selector"/>
+            style="@style/MixBtnInLeftOfTitleBar"/>
 
         <ImageButton
             android:id="@+id/ib_switch_list"
@@ -71,7 +69,6 @@
             android:id="@+id/fl_filter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
-            />
+            android:layout_gravity="end" />
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

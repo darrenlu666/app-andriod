@@ -19,26 +19,21 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity.ClassroomViewHolder;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.Builder;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.ListExtractor;
+import com.codyy.erpsportal.commons.controllers.fragments.filters.BaseFilterFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.filters.NetTeachFilterFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingCommonRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.TitleBar;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.BaseFilterFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.NetTeachFilterFragment;
 import com.codyy.erpsportal.commons.models.Jumpable;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -46,6 +41,11 @@ import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.SchoolNetClassroomParser;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.TitleBar;
+import com.codyy.erpsportal.commons.widgets.components.FilterButton;
+import com.codyy.url.URLConfig;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -91,7 +91,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     TitleBar mTitleBar;
 
     @Bind(R.id.btn_filter)
-    Button mFilterBtn;
+    FilterButton mFilterBtn;
 
     @Bind(R.id.ib_switch_list)
     ImageButton mSwitchListIb;
@@ -114,8 +114,6 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
     private Bundle mBundleFilter = null;
 
-    private FilterBtnController mFilterBtnController;
-
     private boolean mHasScreenshot;
 
     private Status mStatus = new Status();
@@ -126,12 +124,12 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
         @Override
         public void onDrawerOpened(View drawerView) {
-            mFilterBtnController.setFiltering(true);
+            mFilterBtn.setFiltering(true);
         }
 
         @Override
         public void onDrawerClosed(View drawerView) {
-            mFilterBtnController.setFiltering(false);
+            mFilterBtn.setFiltering(false);
         }
     };
 
@@ -154,7 +152,6 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
             mType = getIntent().getStringExtra(EXTRA_TYPE);
         }
         initTitle();
-        mFilterBtnController = new FilterBtnController(mFilterBtn);
         mDrawerLayout.addDrawerListener(mDrawerListener);
 //        mLiveFilterFragment = (LiveFilterFragment) getSupportFragmentManager().findFragmentByTag("class_tour_filter");
         createFilter();
@@ -203,14 +200,14 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
     @OnClick(R.id.btn_filter)
     public void onFilterBtnClick(View view) {
-        if (mFilterBtnController.isFiltering()) {
+        if (mFilterBtn.isFiltering()) {
             mBundleFilter = mFilterFragment.getFilterData();
             loadData(true);
             mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
             mDrawerLayout.openDrawer(GravityCompat.END);
         }
-        mFilterBtnController.toggle();
+        mFilterBtn.toggle();
     }
 
     @OnClick(R.id.ib_switch_list)
@@ -354,38 +351,6 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     @Override
     public ViewHolderCreator<ClassroomViewHolder> newViewHolderCreator() {
         return new EasyVhrCreator<>(ClassroomViewHolder.class);
-    }
-
-    private static class FilterBtnController {
-        private Button mFilterBtn;
-
-        private boolean mIsFiltering;
-
-        public FilterBtnController(Button filterBtn) {
-            this.mFilterBtn = filterBtn;
-        }
-
-        public void toggle() {
-            setFiltering(!mIsFiltering);
-        }
-
-        public boolean isFiltering() {
-            return mIsFiltering;
-        }
-
-        public void setFiltering(boolean filtering) {
-            if (mIsFiltering == filtering) return;
-            mIsFiltering = filtering;
-            if (mIsFiltering) {
-                mFilterBtn.setText(R.string.confirm_filter);
-                mFilterBtn.setBackgroundResource(R.drawable.bg_btn_aqua);
-                mFilterBtn.setCompoundDrawables(null, null, null, null);
-            } else {
-                mFilterBtn.setText("");
-                mFilterBtn.setBackgroundResource(0);
-                mFilterBtn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.filter_bg_selector, 0);
-            }
-        }
     }
 
     public static void start(Activity activity, UserInfo userInfo, String type) {

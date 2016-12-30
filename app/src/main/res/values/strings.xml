@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">互动学习平台</string>
+    <string name="app_name">全国教育云服务平台</string>
 
-    <string name="title_activity_main">互动学习平台</string>
+    <string name="title_activity_main">全国教育云服务平台</string>
     <string name="click_to_refresh">没有数据，点击刷新。</string>
     <string name="no_data_for_now">暂时没有相关内容</string>
-    <string name="net_error">网络链接错误！</string>
+    <string name="net_error">网络连接错误！</string>
     <string name="net_connect_error">数据请求错误！</string>
     <string name="share_net_error">共享桌面/视频失败，无法链接服务器！</string>
     <string name="just_now">刚刚</string>
@@ -602,6 +602,7 @@
     <string name="open_lesson_time_is">"开课时间 %1$s"</string>
     <string name="username">用户名</string>
     <string name="password">密码</string>
+    <string name="new_password">新密码</string>
     <string name="server_address">服务器地址</string>
     <string name="n_times">%1$s次</string>
     <string name="stat_classroom_role_format">%1$s-%2$s（%3$s）</string>
@@ -744,5 +745,14 @@
     <string name="document_resource">文档资源</string>
     <string name="image_resource">图片资源</string>
     <string name="album_resource">专辑资源</string>
+    <string name="please_input_verification_code">请输入验证码</string>
+    <string name="complete_profile">完善个人资料</string>
+    <string name="submit">提交</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="phone">联系电话</string>
+    <string name="e_mail">电子邮箱</string>
+    <string name="wrong_verify_code">验证码输入有误！</string>
+    <string name="token_timeout">超过登录有效期</string>
+    <string name="please_input_verify_code">请输入验证码</string>
 
 </resources>

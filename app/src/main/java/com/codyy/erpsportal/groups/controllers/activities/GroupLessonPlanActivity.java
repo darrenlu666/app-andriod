@@ -517,7 +517,6 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
                     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_last, parent, false);
                     return new LastItemHolder(view);
                 }
-                default: { }
             }
             return null;
         }

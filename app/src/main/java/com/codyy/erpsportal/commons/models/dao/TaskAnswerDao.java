@@ -104,7 +104,7 @@ public class TaskAnswerDao {
 
     private DbHelper mDbHelper;
     private SQLiteDatabase mDatabase;
-    private static TaskAnswerDao mTaskAnswerDao;
+    private volatile static TaskAnswerDao mTaskAnswerDao;
 
     /**
      * added by eachann
