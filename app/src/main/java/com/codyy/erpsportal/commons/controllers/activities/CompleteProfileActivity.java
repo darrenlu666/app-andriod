@@ -18,6 +18,7 @@ import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
@@ -175,8 +176,8 @@ public class CompleteProfileActivity extends AppCompatActivity {
         }
 
         params.put("userName", username);
-//        params.put("password", StringUtils.md5StringFor(trimPassword));
-        params.put("password", password);
+        params.put("password", StringUtils.md5StringFor(trimPassword));
+//        params.put("password", password);
         params.put("contactPhone", contactPhone);
         params.put("email", email);
         return true;
