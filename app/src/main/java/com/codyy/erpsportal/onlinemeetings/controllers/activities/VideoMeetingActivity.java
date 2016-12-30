@@ -6,27 +6,29 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.SimpleFragmentAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterVideoMeetingFragment;
-import com.codyy.erpsportal.onlinemeetings.controllers.fragments.VideoMeetingFragment;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.onlinemeetings.controllers.fragments.VideoMeetingFragment;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import butterknife.Bind;
 
 /**
@@ -178,7 +180,7 @@ public class VideoMeetingActivity extends BaseHttpActivity{
             }
         });
 
-        this.setFilterListener(new IFilterListener() {
+        /*this.setFilterListener(new IFilterListener() {
             @Override
             public void onFilterClick(MenuItem item) {
                 if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
@@ -205,7 +207,14 @@ public class VideoMeetingActivity extends BaseHttpActivity{
                     menu.getItem(0).setIcon(R.drawable.ic_filter);
                 }
             }
+        });*/
+        setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
+            @Override
+            protected void doFilterConfirmed() {
+                mListFragments.get(mTabLayout.getSelectedTabPosition()).execFilter(mFilterVideoMeetingFragment.GetSelectedItem());
+            }
         });
+
     }
 
     private void addFilterFragment() {

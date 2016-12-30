@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -25,19 +24,20 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.CalendarScrollView;
 import com.codyy.erpsportal.commons.widgets.CalendarViewPager;
 import com.codyy.erpsportal.commons.widgets.RecycleViewPopuWindow;
 import com.codyy.erpsportal.commons.widgets.TimeTableView2;
+import com.codyy.erpsportal.commons.widgets.components.FilterButton;
 import com.codyy.erpsportal.county.widgets.ClassDetailDialog;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.timetable.fragments.ListDialog;
 import com.codyy.erpsportal.timetable.models.entities.TimetableDetail;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -50,6 +50,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import butterknife.OnClick;
 
 /**
  * 区县总表-课表详情
@@ -86,8 +88,9 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
     private final static String DIALOG_TAG = "detailDialog---";
     private CalendarScrollView mCalendarScrollView;
     private DrawerLayout mDrawerLayout;
-    private TextView mFilterTV;
-    private ImageView mFilterIV;
+//    private TextView mFilterTV;
+//    private ImageView mFilterIV;
+    private FilterButton mFilterBtn;
     private TextView mDateTV;
     private TextView mWeekTV;
     private RequestSender mRequestSender;
@@ -159,8 +162,9 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         mCalendarScrollView = (CalendarScrollView) findViewById(R.id.calendarscrollview);
         mCurrentDate = mCalendarScrollView.getCurrentDate();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mFilterTV = (TextView) findViewById(R.id.title_filter_tv);
-        mFilterIV = (ImageView) findViewById(R.id.title_filter);
+//        mFilterTV = (TextView) findViewById(R.id.title_filter_tv);
+//        mFilterIV = (ImageView) findViewById(R.id.title_filter);
+        mFilterBtn = (FilterButton) findViewById(R.id.btn_filter);
         mDateTV = (TextView) findViewById(R.id.date_text);
         mDateTV.setText(mCalendarScrollView.getCurrentDate());
         mWeekTV = (TextView) findViewById(R.id.week_tv);
@@ -194,31 +198,33 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if (mFilterIV.getVisibility() == View.VISIBLE) {
-                    mFilterIV.setAlpha(1 - slideOffset);
-                    mFilterTV.setAlpha(slideOffset);
-                    if (mFilterTV.getVisibility() == View.GONE) {
-                        mFilterTV.setVisibility(View.VISIBLE);
-                    }
-                } else if (mFilterTV.getVisibility() == View.VISIBLE) {
-                    mFilterTV.setAlpha(slideOffset);
-                    mFilterIV.setAlpha(1 - slideOffset);
-                    if (mFilterIV.getVisibility() == View.GONE) {
-                        mFilterIV.setVisibility(View.VISIBLE);
-                    }
-                }
+//                if (mFilterIV.getVisibility() == View.VISIBLE) {
+//                    mFilterIV.setAlpha(1 - slideOffset);
+//                    mFilterTV.setAlpha(slideOffset);
+//                    if (mFilterTV.getVisibility() == View.GONE) {
+//                        mFilterTV.setVisibility(View.VISIBLE);
+//                    }
+//                } else if (mFilterTV.getVisibility() == View.VISIBLE) {
+//                    mFilterTV.setAlpha(slideOffset);
+//                    mFilterIV.setAlpha(1 - slideOffset);
+//                    if (mFilterIV.getVisibility() == View.GONE) {
+//                        mFilterIV.setVisibility(View.VISIBLE);
+//                    }
+//                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                mFilterIV.setVisibility(View.GONE);
-                mFilterTV.setVisibility(View.VISIBLE);
+                mFilterBtn.setFiltering(true);
+//                mFilterIV.setVisibility(View.GONE);
+//                mFilterTV.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                mFilterTV.setVisibility(View.GONE);
-                mFilterIV.setVisibility(View.VISIBLE);
+                mFilterBtn.setFiltering(false);
+//                mFilterTV.setVisibility(View.GONE);
+//                mFilterIV.setVisibility(View.VISIBLE);
                 if (mClassRoomSelect != null && MASTER_CLASS.equals(mClassRoomSelect.getRoomType())) {
                     mClassTableTV.setVisibility(View.VISIBLE);
                 } else {
@@ -231,15 +237,11 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
             }
 
             @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
+            public void onDrawerStateChanged(int newState) { }
         });
         mCalendarScrollView.setOndateChang(new CalendarViewPager.OnDateChange() {
             @Override
-            public void onDateChange(int year, int month, int day) {
-
-            }
+            public void onDateChange(int year, int month, int day) { }
 
             @Override
             public void onDateSelect(int year, int month, int day, int week) {
@@ -304,8 +306,9 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                     mSchoolID = mUserInfo.getSchoolId();
                     break;
                 case UserInfo.USER_TYPE_TEACHER:
-                    mFilterTV.setVisibility(View.GONE);
-                    mFilterIV.setVisibility(View.GONE);
+//                    mFilterTV.setVisibility(View.GONE);
+//                    mFilterIV.setVisibility(View.GONE);
+                    mFilterBtn.setVisibility(View.GONE);
                     mWeekTV.setVisibility(View.GONE);
                     mDateTV.setVisibility(View.VISIBLE);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -328,7 +331,9 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
      *
      * @param view
      */
+    @OnClick(R.id.btn_filter)
     public void onFilterSelect(View view) {
+        mFilterBtn.toggle();
         if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             if (mClassAdapter != null && mClassAdapter.mClassRoom != null && !mClassAdapter.mClassRoom.getClsClassroomId().equals(mClassRoomSelect.getClsClassroomId())) {
                 mClassRoomSelect = mClassAdapter.mClassRoom;

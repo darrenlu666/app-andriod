@@ -109,6 +109,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
         if (!validateAddParams(params)) {
             return;
         }
+        Cog.d(TAG, "onSubmitClick url=", URLConfig.COMPLETE_USER_INFO, params);
         mSender.sendRequest(new RequestData(URLConfig.COMPLETE_USER_INFO, params,
                 new Listener<JSONObject>() {
                     @Override
@@ -117,10 +118,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                         if (response.optBoolean("result")) {
                             jumpToMain();
                         } else {
-                            String msg = response.optString("message");
-                            if (!TextUtils.isEmpty(msg)) {
-                                ToastUtil.showToast(CompleteProfileActivity.this, msg);
-                            }
+                            ToastUtil.showToast(CompleteProfileActivity.this, "完善个人信息失败！");
                         }
                     }
                 },

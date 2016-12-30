@@ -5,8 +5,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +15,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.EvaluationsFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterFragment;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.AreaBase;
+import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
 import com.codyy.erpsportal.commons.widgets.SlidingTabLayout;
 
 import org.json.JSONObject;
@@ -145,24 +144,30 @@ public class AssessmentClassActivity extends BaseHttpActivity {
         if (mUserInfo != null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.assessment_list_select_layout, mScreenFragments.get(0)).commit();
         }
-        this.setFilterListener(new IFilterListener() {
+//        this.setFilterListener(new IFilterListener() {
+//            @Override
+//            public void onFilterClick(MenuItem item) {
+//                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+//                    mDrawerLayout.openDrawer(Gravity.RIGHT);
+//                } else {
+//                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
+//                    doFilter();
+//                }
+//            }
+//
+//            @Override
+//            public void onPreFilterCreate(Menu menu) {
+//                if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
+//                    menu.getItem(0).setIcon(R.drawable.ic_done_white);
+//                }else{
+//                    menu.getItem(0).setIcon(R.drawable.ic_filter);
+//                }
+//            }
+//        });
+        this.setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
             @Override
-            public void onFilterClick(MenuItem item) {
-                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
-                } else {
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                    doFilter();
-                }
-            }
-
-            @Override
-            public void onPreFilterCreate(Menu menu) {
-                if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
-                    menu.getItem(0).setIcon(R.drawable.ic_done_white);
-                }else{
-                    menu.getItem(0).setIcon(R.drawable.ic_filter);
-                }
+            protected void doFilterConfirmed() {
+                doFilter();
             }
         });
     }

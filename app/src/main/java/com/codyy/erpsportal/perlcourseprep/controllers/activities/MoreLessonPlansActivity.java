@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,13 +17,13 @@ import android.widget.TextView;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
-import com.codyy.erpsportal.perlcourseprep.controllers.fragments.MoreLessonPlansFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.BaseFilterFragment;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.UpOrDownButton;
 import com.codyy.erpsportal.commons.widgets.UpOrDownButton.OnStateChangedListener;
+import com.codyy.erpsportal.perlcourseprep.controllers.fragments.MoreLessonPlansFragment;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
 
 import butterknife.Bind;
@@ -210,8 +210,22 @@ public class MoreLessonPlansActivity extends ToolbarActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-            menu.getItem(0).setIcon(R.drawable.ic_done_white);
+//        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+//            menu.getItem(0).setIcon(R.drawable.ic_done_white);
+//        } else {
+//            menu.getItem(0).setIcon(R.drawable.ic_filter);
+//        }
+
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            menu.getItem(0).setActionView(R.layout.textview_filter_confirm_button);
+            TextView tv = (TextView) menu.getItem(0).getActionView().findViewById(R.id.tv_title);
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mDrawerLayout.closeDrawer(GravityCompat.END);
+                    doFilterConfirmed();
+                }
+            });
         } else {
             menu.getItem(0).setIcon(R.drawable.ic_filter);
         }
@@ -222,10 +236,10 @@ public class MoreLessonPlansActivity extends ToolbarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_filter:
-                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
+                if (!mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    mDrawerLayout.openDrawer(GravityCompat.END);
                 } else {
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
+                    mDrawerLayout.closeDrawer(GravityCompat.END);
                     doFilterConfirmed();
                 }
                 return true;

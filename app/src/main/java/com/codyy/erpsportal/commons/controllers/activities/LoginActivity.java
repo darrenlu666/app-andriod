@@ -347,11 +347,11 @@ public class LoginActivity extends AppCompatActivity {
      * @param params 登录参数
      */
     private void sendLoginRequest(final String username, final String password, final Map<String, String> params) {
-        Cog.d(TAG, URLConfig.LOGIN_WITH_TOKEN, params);
         params.put("userName", username);
         final String passwordMd5 = StringUtils.md5StringFor(password);
         params.put("pwmd5", passwordMd5);
         RequestQueue requestQueue = RequestManager.getRequestQueue();
+        Cog.d(TAG, URLConfig.LOGIN_WITH_TOKEN, params);
         requestQueue.add(new NormalPostRequest(URLConfig.LOGIN_WITH_TOKEN, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

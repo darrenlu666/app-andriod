@@ -4,7 +4,7 @@
     <string name="title_activity_main">全国教育云服务平台</string>
     <string name="click_to_refresh">没有数据，点击刷新。</string>
     <string name="no_data_for_now">暂时没有相关内容</string>
-    <string name="net_error">网络链接错误！</string>
+    <string name="net_error">网络连接错误！</string>
     <string name="net_connect_error">数据请求错误！</string>
     <string name="share_net_error">共享桌面/视频失败，无法链接服务器！</string>
     <string name="just_now">刚刚</string>

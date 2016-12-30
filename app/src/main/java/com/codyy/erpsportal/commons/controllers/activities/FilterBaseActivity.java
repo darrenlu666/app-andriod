@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -18,6 +17,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.FilterFragment;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.AreaBase;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.widgets.components.FilterButton;
 
 import org.json.JSONObject;
 
@@ -25,6 +25,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by kmdai on 16-7-4.
@@ -35,10 +36,8 @@ public abstract class FilterBaseActivity extends AppCompatActivity {
     TextView mTextView;
     @Bind(R.id.drawerlayout)
     DrawerLayout mDrawerLayout;
-    @Bind(R.id.title_filter_tv)
-    TextView mFilterTextView;
-    @Bind(R.id.title_filter)
-    ImageView mFilterIV;
+    @Bind(R.id.btn_filter)
+    FilterButton mFilterBtn;
     private FilterFragment mFilterFragment;
     private RequestSender mRequestSender;
 
@@ -57,40 +56,38 @@ public abstract class FilterBaseActivity extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if (mFilterIV.getVisibility() == View.VISIBLE) {
-                    mFilterIV.setAlpha(1 - slideOffset);
-                    mFilterTextView.setAlpha(slideOffset);
-                    if (mFilterTextView.getVisibility() == View.GONE) {
-                        mFilterTextView.setVisibility(View.VISIBLE);
-                    }
-
-                } else if (mFilterTextView.getVisibility() == View.VISIBLE) {
-                    mFilterTextView.setAlpha(slideOffset);
-                    mFilterIV.setAlpha(1 - slideOffset);
-                    if (mFilterIV.getVisibility() == View.GONE) {
-                        mFilterIV.setVisibility(View.VISIBLE);
-                    }
-
-                }
-
+//                if (mFilterIV.getVisibility() == View.VISIBLE) {
+//                    mFilterIV.setAlpha(1 - slideOffset);
+//                    mFilterTextView.setAlpha(slideOffset);
+//                    if (mFilterTextView.getVisibility() == View.GONE) {
+//                        mFilterTextView.setVisibility(View.VISIBLE);
+//                    }
+//
+//                } else if (mFilterTextView.getVisibility() == View.VISIBLE) {
+//                    mFilterTextView.setAlpha(slideOffset);
+//                    mFilterIV.setAlpha(1 - slideOffset);
+//                    if (mFilterIV.getVisibility() == View.GONE) {
+//                        mFilterIV.setVisibility(View.VISIBLE);
+//                    }
+//                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                mFilterIV.setVisibility(View.GONE);
-                mFilterTextView.setVisibility(View.VISIBLE);
+                mFilterBtn.setFiltering(true);
+//                mFilterIV.setVisibility(View.GONE);
+//                mFilterTextView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                mFilterTextView.setVisibility(View.GONE);
-                mFilterIV.setVisibility(View.VISIBLE);
+                mFilterBtn.setFiltering(false);
+//                mFilterTextView.setVisibility(View.GONE);
+//                mFilterIV.setVisibility(View.VISIBLE);
             }
 
             @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
+            public void onDrawerStateChanged(int newState) { }
         });
     }
 
@@ -106,7 +103,9 @@ public abstract class FilterBaseActivity extends AppCompatActivity {
         this.finish();
     }
 
+    @OnClick(R.id.btn_filter)
     public void onFilterSelect(View view) {
+        mFilterBtn.toggle();
         if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mDrawerLayout.closeDrawer(Gravity.RIGHT);
             AreaBase areaBase = mFilterFragment.getLastArea();
@@ -153,7 +152,6 @@ public abstract class FilterBaseActivity extends AppCompatActivity {
                 mDrawerLayout.closeDrawer(Gravity.RIGHT);
                 return true;
             }
-
         }
         return super.onKeyDown(keyCode, event);
     }

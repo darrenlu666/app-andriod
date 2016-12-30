@@ -5,31 +5,32 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterFragment;
-import com.codyy.erpsportal.county.controllers.fragments.CountyAllListFragment;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.AreaBase;
+import com.codyy.erpsportal.commons.widgets.components.FilterButton;
+import com.codyy.erpsportal.county.controllers.fragments.CountyAllListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class CountyListActivity extends AppCompatActivity {
     @Bind(R.id.title_text)
     TextView mTextView;
     @Bind(R.id.drawerlayout)
     DrawerLayout mDrawerLayout;
-    @Bind(R.id.title_filter_tv)
-    TextView mFilterTextView;
-    @Bind(R.id.title_filter)
-    ImageView mFilterIV;
+
+    @Bind(R.id.btn_filter)
+    FilterButton mFilterBtn;
+
     private FilterFragment mFilterFragment;
     private CountyAllListFragment mCountyAllListFragment;
     /**
@@ -66,40 +67,40 @@ public class CountyListActivity extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if (mFilterIV.getVisibility() == View.VISIBLE) {
-                    mFilterIV.setAlpha(1 - slideOffset);
-                    mFilterTextView.setAlpha(slideOffset);
-                    if (mFilterTextView.getVisibility() == View.GONE) {
-                        mFilterTextView.setVisibility(View.VISIBLE);
-                    }
-
-                } else if (mFilterTextView.getVisibility() == View.VISIBLE) {
-                    mFilterTextView.setAlpha(slideOffset);
-                    mFilterIV.setAlpha(1 - slideOffset);
-                    if (mFilterIV.getVisibility() == View.GONE) {
-                        mFilterIV.setVisibility(View.VISIBLE);
-                    }
-
-                }
+//                if (mFilterIV.getVisibility() == View.VISIBLE) {
+//                    mFilterIV.setAlpha(1 - slideOffset);
+//                    mFilterTextView.setAlpha(slideOffset);
+//                    if (mFilterTextView.getVisibility() == View.GONE) {
+//                        mFilterTextView.setVisibility(View.VISIBLE);
+//                    }
+//
+//                } else if (mFilterTextView.getVisibility() == View.VISIBLE) {
+//                    mFilterTextView.setAlpha(slideOffset);
+//                    mFilterIV.setAlpha(1 - slideOffset);
+//                    if (mFilterIV.getVisibility() == View.GONE) {
+//                        mFilterIV.setVisibility(View.VISIBLE);
+//                    }
+//
+//                }
 
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                mFilterIV.setVisibility(View.GONE);
-                mFilterTextView.setVisibility(View.VISIBLE);
+//                mFilterIV.setVisibility(View.GONE);
+//                mFilterTextView.setVisibility(View.VISIBLE);
+                mFilterBtn.setFiltering(true);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                mFilterTextView.setVisibility(View.GONE);
-                mFilterIV.setVisibility(View.VISIBLE);
+//                mFilterTextView.setVisibility(View.GONE);
+//                mFilterIV.setVisibility(View.VISIBLE);
+                mFilterBtn.setFiltering(false);
             }
 
             @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
+            public void onDrawerStateChanged(int newState) { }
         });
     }
 
@@ -107,7 +108,9 @@ public class CountyListActivity extends AppCompatActivity {
         mTextView.setText(Titles.sWorkspaceSpeclassAllTable);
     }
 
+    @OnClick(R.id.btn_filter)
     public void onFilterSelect(View view) {
+        mFilterBtn.toggle();
         if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mDrawerLayout.closeDrawer(Gravity.RIGHT);
             AreaBase areaBase = mFilterFragment.getLastArea();
