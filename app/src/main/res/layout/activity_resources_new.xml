@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:padding="4dp"
                     android:text="@string/def_resource_scope"
-                    android:textSize="18sp"/>
+                    android:textSize="16dp"/>
 
                 <ImageButton
                     android:id="@+id/ib_open_simple_filter"
