@@ -32,7 +32,8 @@
                 android:drawablePadding="5dp"
                 android:drawableStart="@drawable/et_name_nonnull"
                 android:hint="@string/username"
-                android:imeOptions="actionNext"/>
+                android:imeOptions="actionNext"
+                android:maxLength="18"/>
 
             <EditText
                 android:id="@+id/et_password"
@@ -47,7 +48,8 @@
                 android:drawablePadding="5dp"
                 android:drawableStart="@drawable/et_password_nonnull"
                 android:hint="@string/new_password"
-                android:imeOptions="actionNext"/>
+                android:imeOptions="actionNext"
+                android:maxLength="18"/>
 
             <EditText
                 android:id="@+id/et_confirm_password"
@@ -62,7 +64,8 @@
                 android:drawablePadding="5dp"
                 android:drawableStart="@drawable/et_password_nonnull"
                 android:hint="@string/confirm_password"
-                android:imeOptions="actionNext"/>
+                android:imeOptions="actionNext"
+                android:maxLength="18"/>
 
             <EditText
                 android:id="@+id/et_phone"
@@ -73,7 +76,8 @@
                 android:drawableStart="@drawable/et_phone"
                 android:hint="@string/phone"
                 android:imeOptions="actionNext"
-                android:inputType="phone"/>
+                android:inputType="phone"
+                android:maxLength="20"/>
 
             <EditText
                 android:id="@+id/et_email"
@@ -84,7 +88,8 @@
                 android:drawableStart="@drawable/et_mail"
                 android:hint="@string/e_mail"
                 android:imeOptions="actionDone"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textEmailAddress"
+                android:maxLength="50"/>
 
             <Button
                 android:id="@+id/btn_submit"

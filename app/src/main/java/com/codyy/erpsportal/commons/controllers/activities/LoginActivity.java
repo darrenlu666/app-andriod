@@ -37,6 +37,7 @@ import com.codyy.erpsportal.commons.utils.CryptoUtils;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.InputUtils;
 import com.codyy.erpsportal.commons.utils.OnFiveEvenClickListener;
+import com.codyy.erpsportal.commons.utils.Regexes;
 import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -194,7 +195,6 @@ public class LoginActivity extends AppCompatActivity {
     private void loadVerifyCode() {
         Cog.d(TAG, "loadVerifyCode mLoginToken=", mLoginToken);
         String url = URLConfig.VERIFY_CODE_IMAGE
-//                + "?time=" + System.currentTimeMillis()
                 + "?rsaToken=" + URLEncoder.encode(CryptoUtils.encryptText(mLoginToken));
         Uri uri = Uri.parse(url);
         Cog.d(TAG, "loadVerifyCode uri=", uri);
@@ -279,15 +279,8 @@ public class LoginActivity extends AppCompatActivity {
         final String password = mPasswordEt.getText().toString();
         String verifyCode = mVerifyCodeEt.getText().toString();
 
-        if (TextUtils.isEmpty(username)) {
-            UIUtils.toast(R.string.username_cant_be_empty, Toast.LENGTH_SHORT);
-            return;
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            UIUtils.toast(R.string.password_cant_be_empty, Toast.LENGTH_SHORT);
-            return;
-        }
+        if (!validateInput(username, "用户名")) return;
+        if (!validateInput(password, "密码")) return;
 
         Map<String, String> params = new HashMap<>();
         if (mVerifyCodeEt.isShown()) {
@@ -313,6 +306,30 @@ public class LoginActivity extends AppCompatActivity {
         params.put("token", mLoginToken);
         sendLoginRequest(username, password, params);
     }
+
+    /**
+     * 验证用户名或密码
+     * @param text 用户名或密码
+     * @return true 验证通过，false 验证未通过
+     */
+    private boolean validateInput(String text, String typeName) {
+        if (TextUtils.isEmpty(text)) {
+            UIUtils.toast(getString(R.string.please_input_s, typeName), Toast.LENGTH_SHORT);
+            return false;
+        }
+
+        if (text.length() < 6 || text.length()>18 ) {
+            UIUtils.toast(getString(R.string.s_length_require, typeName), Toast.LENGTH_SHORT);
+            return false;
+        }
+
+        if (!text.matches(Regexes.USERNAME_PASSWORD_REGEX)) {
+            UIUtils.toast(getString(R.string.s_worry_chars, typeName), Toast.LENGTH_SHORT);
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * 挂起登录动作
@@ -379,6 +396,7 @@ public class LoginActivity extends AppCompatActivity {
                     switch (errorCode) {
                         case 1:
                             UIUtils.toast(R.string.username_or_pw_wrong, Toast.LENGTH_SHORT);
+                            showVerifyCode(response);
                             break;
                         case 2://2.验证码错误
                             UIUtils.toast(R.string.wrong_verify_code, Toast.LENGTH_SHORT);

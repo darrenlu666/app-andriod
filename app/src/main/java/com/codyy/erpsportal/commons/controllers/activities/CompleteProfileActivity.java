@@ -18,6 +18,7 @@ import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.Regexes;
 import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -33,6 +34,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.codyy.erpsportal.commons.utils.Regexes.USERNAME_PASSWORD_REGEX;
+
 /**
  * 完善个人资料页
  * Created by gujiajia on 2016/12/22.
@@ -41,8 +44,6 @@ import butterknife.OnClick;
 public class CompleteProfileActivity extends AppCompatActivity {
 
     private final static String TAG = "CompleteProfileActivity";
-
-    private final static String EMAIL_REGEX = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,4}";
 
     private UserInfo mUserInfo;
 
@@ -116,10 +117,14 @@ public class CompleteProfileActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Cog.d(TAG, "onSubmitClick response=", response);
-                        if (response.optBoolean("result")) {
+                        if ("success".equals(response.optString("result"))) {
                             jumpToMain();
                         } else {
-                            ToastUtil.showToast(CompleteProfileActivity.this, "完善个人信息失败！");
+                            if (response.optInt("code") == 3) {
+                                ToastUtil.showToast(CompleteProfileActivity.this, response.optString("message"));
+                            } else {
+                                ToastUtil.showToast(CompleteProfileActivity.this, "完善个人信息失败！");
+                            }
                         }
                     }
                 },
@@ -135,56 +140,131 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
     /**
      * 验证输入并加入请求参数
+     *
      * @param params 请求参数
      * @return true通过本地验证 false未通过验证
      */
     private boolean validateAddParams(Map<String, String> params) {
+        if (!validateUsername(params)) {
+            return false;
+        }
+
+        if (!validatePassword(params)) {
+            return false;
+        }
+
+        if (!validatePhone(params)) {
+            return false;
+        }
+
+        if (!validateEmail(params)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 验证用户名是否合法，如果合法会加入请求参数
+     *
+     * @param params 请求参数
+     * @return true 通过验证 false未通过
+     */
+    private boolean validateUsername(Map<String, String> params) {
         String username = mUsernameEt.getText().toString();
+        if (TextUtils.isEmpty(username)) {
+            ToastUtil.showToast(this, "请输入用户名");
+            return false;
+        }
+
+        if (username.length() < 6 || username.length() > 18) {
+            ToastUtil.showToast(this, "用户名长度需要是6到18个英文字符");
+            return false;
+        }
+
+        if (!username.matches(Regexes.USERNAME_PASSWORD_REGEX)) {
+            ToastUtil.showToast(this, "对不起，用户名请输入英文字母、数字、符号（除特殊字符），或组合。");
+            return false;
+        }
+        params.put("userName", username);
+        return true;
+    }
+
+    /**
+     * 验证密码是否合法，如果合法会加入请求参数
+     *
+     * @param params 请求参数
+     * @return true 通过验证 false未通过
+     */
+    private boolean validatePassword(Map<String, String> params) {
         String password = mPasswordEt.getText().toString();
         String confirmPassword = mConfirmPasswordEt.getText().toString();
-        String contactPhone = mPhoneEt.getText().toString();
-        String email = mEmailEt.getText().toString();
-        if (TextUtils.isEmpty(username)) {
-            ToastUtil.showToast(this, "用户名不能为空！");
-            return false;
-        }
-
         if (TextUtils.isEmpty(password) || TextUtils.isEmpty(password.trim())) {
-            ToastUtil.showToast(this, "密码不能为空！");
+            ToastUtil.showToast(this, "请输入新密码");
             return false;
         }
 
-        String trimPassword = password.trim();
-        if (trimPassword.length() < 6 || trimPassword.length() > 20) {
-            ToastUtil.showToast(this, "密码长度限制在6到20个字符之间！");
+        if (password.length() < 6 || password.length() > 20) {
+            ToastUtil.showToast(this, "密码长度需要是6到18个英文字符");
             return false;
         }
 
         if (TextUtils.isEmpty(confirmPassword)) {
-            ToastUtil.showToast(this, "请确认密码！");
+            ToastUtil.showToast(this, "请输入确认密码");
+            return false;
+        }
+
+        if (!password.matches(USERNAME_PASSWORD_REGEX)) {
+            ToastUtil.showToast(this, "对不起，用户名称请输入英文字母、数字、符号（除特殊字符），或组合。");
             return false;
         }
 
         if (!password.equals(confirmPassword)) {
-            ToastUtil.showToast(this, "密码输入不一致！");
+            ToastUtil.showToast(this, "两次输入的新密码不一致！请重新确认");
             return false;
         }
+        params.put("password", StringUtils.md5StringFor(password));
+        return true;
+    }
 
-        if (!TextUtils.isEmpty(email) && email.matches(EMAIL_REGEX)) {
+    /**
+     * 验证电话
+     *
+     * @param params 请求参数
+     * @return true 通过验证 false未通过
+     */
+    private boolean validatePhone(Map<String, String> params) {
+        String contactPhone = mPhoneEt.getText().toString();
+        if (!TextUtils.isEmpty(contactPhone) && !contactPhone.matches(Regexes.PHONE_REGEX)) {
+            ToastUtil.showToast(this, "联系电话格式不正确！");
+            return false;
+        }
+        if (!TextUtils.isEmpty(contactPhone)) {
+            params.put("contactPhone", contactPhone);
+        }
+        return true;
+    }
+
+    /**
+     * 验证电邮
+     *
+     * @param params 请求参数
+     * @return true 通过验证 false未通过
+     */
+    private boolean validateEmail(Map<String, String> params) {
+        String email = mEmailEt.getText().toString();
+        if (!TextUtils.isEmpty(email) && !email.matches(Regexes.EMAIL_REGEX)) {
             ToastUtil.showToast(this, "邮箱格式不正确！");
             return false;
         }
-
-        params.put("userName", username);
-        params.put("password", StringUtils.md5StringFor(trimPassword));
-//        params.put("password", password);
-        params.put("contactPhone", contactPhone);
-        params.put("email", email);
+        if (!TextUtils.isEmpty(email)) {
+            params.put("email", email);
+        }
         return true;
     }
 
     /**
      * 启动完善个人资料页
+     *
      * @param activity 前一个活动
      * @param userInfo 用户信息
      */
