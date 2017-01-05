@@ -3,7 +3,6 @@ package com.codyy.erpsportal.commons.widgets.RecyclerView;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.nfc.Tag;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,9 +64,9 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE == viewType) {
             if (HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE == viewType) {
                 isBigShow = true;
-                outRect.top = mSpace;
-                outRect.left = mSpace;
-                outRect.right = mSpace;
+                outRect.top = 0;
+                outRect.left = 0;
+                outRect.right = 0;
                 outRect.bottom = mSpace;
             } else if (HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE == viewType) {
                 //记录初始位置

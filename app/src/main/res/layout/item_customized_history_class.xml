@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rlt_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?selectableItemBackground"
+<RelativeLayout android:id="@+id/rlt_container"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
     >
+
     <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/sdv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
-        app:aspectRatioEnabled="true"
         app:aspectRatio="0.5625"
+        app:aspectRatioEnabled="true"
         app:dominantMeasurement="width"
-        app:placeholderImage="@drawable/icon_default_video" />
+        app:placeholderImage="@drawable/icon_default_video"/>
 
     <TextView
         android:id="@+id/tv_school"
@@ -23,14 +24,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/sdv"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_toLeftOf="@id/eliteschool_adapter_text_play"
         android:ellipsize="end"
         android:maxLines="1"
-        tools:text="王烈奇中心小学"
         android:textColor="@color/list_item_title"
-        android:textSize="@dimen/list_item_title" />
+        android:textSize="@dimen/list_item_title"
+        tools:text="王烈奇中心小学"/>
+
     <TextView
         android:id="@+id/tv_level_subject_teacher"
         android:layout_width="wrap_content"
@@ -38,10 +42,10 @@
         android:layout_alignLeft="@id/tv_school"
         android:layout_alignStart="@id/tv_school"
         android:layout_below="@id/tv_school"
-        android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
+        android:layout_marginTop="6dp"
         android:singleLine="true"
-        tools:text="六年级 音乐 张三"
         android:textColor="@color/list_item_body"
-        android:textSize="@dimen/list_item_body" />
+        android:textSize="@dimen/list_item_body"
+        tools:text="六年级 音乐 张三"/>
 </RelativeLayout>
