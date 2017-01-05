@@ -208,13 +208,13 @@ public class CompleteProfileActivity extends AppCompatActivity {
             return false;
         }
 
-        if (TextUtils.isEmpty(confirmPassword)) {
-            ToastUtil.showToast(this, "请输入确认密码");
+        if (!password.matches(USERNAME_PASSWORD_REGEX)) {
+            ToastUtil.showToast(this, "对不起，密码请输入英文字母、数字、符号（除特殊字符），或组合。");
             return false;
         }
 
-        if (!password.matches(USERNAME_PASSWORD_REGEX)) {
-            ToastUtil.showToast(this, "对不起，用户名称请输入英文字母、数字、符号（除特殊字符），或组合。");
+        if (TextUtils.isEmpty(confirmPassword)) {
+            ToastUtil.showToast(this, "请输入确认密码");
             return false;
         }
 
@@ -253,7 +253,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
     private boolean validateEmail(Map<String, String> params) {
         String email = mEmailEt.getText().toString();
         if (!TextUtils.isEmpty(email) && !email.matches(Regexes.EMAIL_REGEX)) {
-            ToastUtil.showToast(this, "邮箱格式不正确！");
+            ToastUtil.showToast(this, "电子邮箱格式不正确！");
             return false;
         }
         if (!TextUtils.isEmpty(email)) {
