@@ -223,6 +223,12 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                 return false;
             }
         });
+        mVideoLayout.setOnTipsTouchListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAutoHide.showControl();
+            }
+        });
         mVideoLayout.setOnSurfaceChangeListener(new BnVideoView2.OnSurfaceChangeListener() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
