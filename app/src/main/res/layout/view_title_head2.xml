@@ -23,16 +23,9 @@
         android:textColor="@color/md_white_1000"
         android:textSize="@dimen/layout_title_text_size" />
 
-    <CheckBox
-        android:id="@+id/btn_select"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/filter_bg_selector"
-        android:button="@null"
-        />
+    <com.codyy.erpsportal.commons.widgets.components.FilterButton
+        android:id="@+id/btn_filter"
+        style="@style/MixBtnInLeftOfTitleBar"/>
 
     <include layout="@layout/title_bottom_line" />
 </RelativeLayout>

@@ -63,10 +63,11 @@
 
         <Button
             android:id="@+id/btn_publish"
-            android:layout_width="56dp"
-            android:layout_height="32dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@drawable/bg_say_something"
+            android:background="@color/main_green"
+            android:gravity="center"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:paddingBottom="4dp"

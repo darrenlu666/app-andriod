@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.SparseArray;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
@@ -20,12 +19,6 @@ import com.codyy.erpsportal.commons.controllers.activities.HomeWorkNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.RemoteDirectorNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.UserTimeTableActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.ApplicationViewHold;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.county.controllers.activities.CountyListActivity;
-import com.codyy.erpsportal.exam.controllers.activities.ExamActivity;
-import com.codyy.erpsportal.groups.controllers.activities.GroupManagerActivity;
-import com.codyy.erpsportal.homework.controllers.activities.WorkListsActivity;
-import com.codyy.erpsportal.info.controllers.activities.InfoActivity;
 import com.codyy.erpsportal.commons.models.DirectJumper;
 import com.codyy.erpsportal.commons.models.Jumpable;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -34,6 +27,12 @@ import com.codyy.erpsportal.commons.models.entities.AppInfo;
 import com.codyy.erpsportal.commons.models.entities.AppPriority;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.personal.Student;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.county.controllers.activities.CountyListActivity;
+import com.codyy.erpsportal.exam.controllers.activities.ExamActivity;
+import com.codyy.erpsportal.groups.controllers.activities.GroupManagerActivity;
+import com.codyy.erpsportal.homework.controllers.activities.WorkListsActivity;
+import com.codyy.erpsportal.info.controllers.activities.InfoActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.VideoMeetingActivity;
 import com.codyy.erpsportal.onlineteach.controllers.activities.OnlineTeachActivity;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepActivity;
@@ -370,11 +369,11 @@ public class AppConfig {
         MENU_ICON.put("front.workspace.count.class.area",R.drawable.ic_child_analysis_lesson);
         MENU_ICON.put("front.workspace.count.class.school",R.drawable.ic_child_analysis_lesson);
         //统计-资源统计
-        MENU_ICON.put("front.workspace.count.resource.area",R.drawable.ic_child_analysis_evaluation);
-        MENU_ICON.put("front.workspace.count.resource.school",R.drawable.ic_child_analysis_evaluation);
+        MENU_ICON.put("front.workspace.count.resource.area",R.drawable.ic_child_analysis_resource);
+        MENU_ICON.put("front.workspace.count.resource.school",R.drawable.ic_child_analysis_resource);
         //统计－活动统计
-        MENU_ICON.put("front.workspace.count.disucss.area",R.drawable.ic_child_analysis_resource);
-        MENU_ICON.put("front.workspace.count.disucss.school",R.drawable.ic_child_analysis_resource);
+        MENU_ICON.put("front.workspace.count.disucss.area",R.drawable.ic_child_analysis_evaluation);
+        MENU_ICON.put("front.workspace.count.disucss.school",R.drawable.ic_child_analysis_evaluation);
     }
 
     /**

@@ -99,7 +99,7 @@ public class LessonPlanCommentsActivity extends AppCompatActivity {
     /**
      * 发送评论
      *
-     * @param comment
+     * @param comment 评论
      */
     private void sendComment(String comment) {
         Map<String, String> params = new HashMap<>();
@@ -120,7 +120,6 @@ public class LessonPlanCommentsActivity extends AppCompatActivity {
                 if ("success".equals(response.optString("result"))) {
                     mLoadingDialog.dismiss();
                     mSendCommentDialog.dismiss();
-//                    mCommentListFragment.loadData(true);
                 }
             }
         }, new Response.ErrorListener() {
