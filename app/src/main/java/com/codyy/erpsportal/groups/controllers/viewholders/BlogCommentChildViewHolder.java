@@ -50,8 +50,9 @@ public class BlogCommentChildViewHolder extends BaseRecyclerViewHolder<BaseComme
         }catch (IllegalArgumentException e){
             e.printStackTrace();
         }
-        String name = data.getRealName()+"回复"+data.getReplyName()+":" ;
-        Spannable spannable = new SpannableString(name+message);
+        String replayName = message.substring(message.indexOf("回复")+2,message.indexOf(":"));
+        String name = data.getRealName()+"回复"+replayName+":" ;
+        Spannable spannable = new SpannableString(data.getRealName()+message);
         spannable.setSpan(new StyleSpan(Typeface.BOLD),0,name.length()-1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         spannable.setSpan(new ForegroundColorSpan(Color.BLACK),0,name.length()-1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         mContentTextView.setText(spannable);

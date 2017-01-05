@@ -168,9 +168,14 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         }
         if (null != response) {
             BaseCommentParse parse = new Gson().fromJson(response.toString(), BaseCommentParse.class);
+            mCommentCount = parse.getTotal();
             if (null != parse && parse.getCommentList() != null) {
                 List<BaseComment> commentList = parse.getCommentList();
+                if(commentList.size()!= mCommentCount){
+                    mCommentCount = commentList.size();
+                }
                 if (null != commentList && commentList.size() > 0) {
+
                     for (BaseComment bc : commentList) {
                         bc.setBaseViewHoldType(ITEM_TYPE_FIRST_LEVEL);
                         mData.add(bc);
@@ -194,7 +199,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                     }
 
                     //1.3 评论数
-                    mCommentCount = parse.getTotal();
+
                     mAllCommentCountTv.setText("(" + mCommentCount + ")");
                     if (commentList.size() < mCommentCount) {
                         BaseComment more = new BaseComment();
