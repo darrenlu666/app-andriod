@@ -239,7 +239,8 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                 if(position == 0){
                     mComposeView.setVisibility(View.GONE);
                 }else{
-                    mComposeView.setVisibility(View.VISIBLE);
+                    if (mType != EVALUATION_LESSON)
+                        mComposeView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -248,7 +249,8 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                 if(position == 0){
                     mComposeView.setVisibility(View.GONE);
                 }else{
-                    mComposeView.setVisibility(View.VISIBLE);
+                    if (mType != EVALUATION_LESSON)
+                        mComposeView.setVisibility(View.VISIBLE);
                 }
             }
 

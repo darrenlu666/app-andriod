@@ -25,7 +25,9 @@ import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 
 import org.json.JSONObject;
+
 import java.util.HashMap;
+
 import butterknife.ButterKnife;
 
 /**
@@ -46,28 +48,28 @@ public abstract class BaseHttpFragment extends Fragment {
      * 网络请求
      */
     private RequestSender mSender;
-    public UserInfo mUserInfo ;
-    private int mCurrentPageIndex = 1 ;
+    public UserInfo mUserInfo;
+    private int mCurrentPageIndex = 1;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mInit    =   true;
+        mInit = true;
         mSender = new RequestSender(getActivity());
-        if(null != getArguments()){
+        if (null != getArguments()) {
             mUserInfo = getArguments().getParcelable(Constants.USER_INFO);
         }
-        if(null == mUserInfo){
-            mUserInfo   = UserInfoKeeper.getInstance().getUserInfo();
+        if (null == mUserInfo) {
+            mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
         }
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(mInit){
-            mInit    =   false;
+        if (mInit) {
+            mInit = false;
             onViewLoadCompleted();
         }
     }
@@ -75,8 +77,8 @@ public abstract class BaseHttpFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(mRootView == null){
-            mRootView   =   inflater.inflate(obtainLayoutId(),null);
+        if (mRootView == null) {
+            mRootView = inflater.inflate(obtainLayoutId(), null);
             ButterKnife.bind(this, mRootView);
         }
         return mRootView;
@@ -84,30 +86,35 @@ public abstract class BaseHttpFragment extends Fragment {
 
     /**
      * 布局id
+     *
      * @return
      */
-    public abstract  int obtainLayoutId();
+    public abstract int obtainLayoutId();
 
     /**
      * 获取数据的API.
+     *
      * @return
      */
     public abstract String obtainAPI();
 
     /**
      * 参数拼接
+     *
      * @return
      */
-    public abstract HashMap<String,String> getParam();
+    public abstract HashMap<String, String> getParam();
 
     /**
      * 数据请求返回结果
+     *
      * @param response
      */
     public abstract void onSuccess(JSONObject response) throws Exception;
 
     /**
      * 数据请求错误
+     *
      * @param error
      */
     public abstract void onFailure(VolleyError error) throws Exception;
@@ -115,14 +122,14 @@ public abstract class BaseHttpFragment extends Fragment {
     /**
      * 视图加载完成....执行数据操作
      */
-    public void onViewLoadCompleted(){
+    public void onViewLoadCompleted() {
 
     }
 
     /**
      * 请求数据
      */
-    public void requestData(){
+    public void requestData() {
         requestData(obtainAPI(), getParam(), new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response) {
@@ -148,12 +155,13 @@ public abstract class BaseHttpFragment extends Fragment {
 
     /**
      * 请求GET网络请求 .
+     *
      * @param url
      * @param params
      * @param requestListener
      */
-    public void requestData(String url , HashMap<String ,String> params , final BaseHttpActivity.IRequest requestListener){
-        if(!NetworkUtils.isConnected()){
+    public void requestData(String url, HashMap<String, String> params, final BaseHttpActivity.IRequest requestListener) {
+        if (!NetworkUtils.isConnected()) {
             ToastUtil.showToast(getString(R.string.net_error));
             return;
         }
@@ -161,7 +169,7 @@ public abstract class BaseHttpFragment extends Fragment {
 
             @Override
             public void onResponse(JSONObject response) {
-                if(null != requestListener){
+                if (null != requestListener) {
                     try {
                         requestListener.onRequestSuccess(response);
                     } catch (Exception e) {
@@ -173,26 +181,27 @@ public abstract class BaseHttpFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if(null != requestListener){
+                if (null != requestListener) {
                     requestListener.onRequestFailure(error);
                 }
                 ToastUtil.showToast(getString(R.string.net_connect_error));
                 LogUtils.log(error);
             }
-        },TAG));
+        }, TAG));
     }
 
     /**
      * 设置自动加载更多 默认不会自动加载更多...
+     *
      * @param recyclerView
      */
-    protected void enableLoadMore(RecyclerView recyclerView){
+    protected void enableLoadMore(RecyclerView recyclerView) {
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void onLoadMore(int current_page) {
-                Cog.d(TAG , "current page index :"+current_page);
+                Cog.d(TAG, "current page index :" + current_page);
                 //更新下拉刷新...
-                if(current_page != mCurrentPageIndex){
+                if (current_page != mCurrentPageIndex) {
                     mCurrentPageIndex = current_page;
                     new Thread(new Runnable() {
                         @Override
@@ -215,8 +224,8 @@ public abstract class BaseHttpFragment extends Fragment {
     /**
      * 退出应用时调用
      */
-    private void stopRequest(){
-        if(null != mSender)
+    private void stopRequest() {
+        if (null != mSender)
             mSender.stop(TAG);
     }
 
