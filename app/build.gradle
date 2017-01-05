@@ -83,7 +83,7 @@ android {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
         versionCode 1
-        versionName "5.3.1.01"
+        versionName "5.3.1.02"
         multiDexEnabled true
 //        setProperty("archivesBaseName", "InteractiveLearning-$versionName.$BUILD_VERSION")
         println("version:$versionName.$BUILD_VERSION");
