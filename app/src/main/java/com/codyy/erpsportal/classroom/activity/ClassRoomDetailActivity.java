@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,12 +35,14 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.fragment.ClassDetailFragment;
 import com.codyy.erpsportal.classroom.fragment.ClassRoomCommentFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -46,9 +51,7 @@ import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -388,37 +391,33 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         ClassRoomCommentFragment classRoomCommentFragment;
         mFragmentList.add(classRoomCommentFragment = ClassRoomCommentFragment.newInstance(UserInfoKeeper.obtainUserInfo(), mScheduleDetailId, mFrom));
         classRoomCommentFragment.setOnSoftInputOpenListener(this);
-        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mFragmentList);
+        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
+                mFragmentList, new String[]{getString(R.string.class_detail),getString(R.string.newest_comment)});
+
         mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        mTvClassDetail.setTextColor(getResources().getColor(R.color.green));
-                        mViewFstFragmentLine.setBackgroundColor(0xff1bac22);
-                        mTvLatestComment.setTextColor(getResources().getColor(R.color.personal_text_color));
+                        mTvClassDetail.setTypeface(Typeface.DEFAULT_BOLD);
+                        mViewFstFragmentLine.setBackgroundColor(getColorResource(R.color.main_color));
+                        mTvLatestComment.setTypeface(Typeface.DEFAULT);
                         mViewSecFragmentLine.setBackgroundDrawable(null);
                         break;
                     case 1:
-                        mTvLatestComment.setTextColor(getResources().getColor(R.color.green));
-                        mViewSecFragmentLine.setBackgroundColor(0xff1bac22);
-                        mTvClassDetail.setTextColor(getResources().getColor(R.color.personal_text_color));
+                        mTvLatestComment.setTypeface(Typeface.DEFAULT_BOLD);
+                        mViewSecFragmentLine.setBackgroundColor(getColorResource(R.color.main_color));
+                        mTvClassDetail.setTypeface(Typeface.DEFAULT);
                         mViewFstFragmentLine.setBackgroundDrawable(null);
                         break;
                 }
             }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
         });
+    }
+
+    private int getColorResource(@ColorRes int colorId) {
+        return ResourcesCompat.getColor(getResources(), colorId, null);
     }
 
     @OnClick({R.id.tv_class_detail, R.id.tv_latest_comment})
@@ -545,15 +544,23 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> fragmentList;
+        private String[] titles;
 
-        ViewPagerAdapter(FragmentManager fm, List<Fragment> list) {
+        ViewPagerAdapter(FragmentManager fm, List<Fragment> list, String[] titles) {
             super(fm);
             this.fragmentList = list;
+            this.titles = titles;
         }
 
         @Override
         public Fragment getItem(int position) {
             return fragmentList.get(position);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (position < 0 || position >= titles.length) return "";
+            return titles[position];
         }
 
         @Override
