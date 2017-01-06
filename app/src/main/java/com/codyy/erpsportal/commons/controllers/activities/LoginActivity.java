@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                 mIsFetchingToken = false;
                 if ("success".equals(response.optString("result"))) {
                     mLoginToken = response.optString("token");
-                    if (!showVerifyCode(response)) {
+                    if (!showVerifyCodeDueToResponse(response)) {
                         if (mPendingRequest != null)
                             sendPendingLoginRequest();
                     } else {
@@ -177,16 +177,28 @@ public class LoginActivity extends AppCompatActivity {
         sp.edit().putString(KEY_TOKEN, mLoginToken).apply();
     }
 
-    private boolean showVerifyCode(JSONObject response) {
+    /**
+     * 显示验证码，根据json对象中的showVerifyCode判断是否显示
+     * @param response json对象
+     * @return 是否显示
+     */
+    private boolean showVerifyCodeDueToResponse(JSONObject response) {
         boolean showVerifyCode = response.optBoolean("showVerifyCode");
         if (showVerifyCode) {
-            mVerifyCodeLl.setVisibility(View.VISIBLE);
-            loadVerifyCode();
+            showVerifyCode();
             return true;
         } else {
             mVerifyCodeLl.setVisibility(View.GONE);
             return false;
         }
+    }
+
+    /**
+     * 显示验证码
+     */
+    private void showVerifyCode() {
+        mVerifyCodeLl.setVisibility(View.VISIBLE);
+        loadVerifyCode();
     }
 
     /**
@@ -396,17 +408,15 @@ public class LoginActivity extends AppCompatActivity {
                     switch (errorCode) {
                         case 1:
                             UIUtils.toast(R.string.username_or_pw_wrong, Toast.LENGTH_SHORT);
-                            showVerifyCode(response);
+                            showVerifyCodeDueToResponse(response);
                             break;
                         case 2://2.验证码错误
                             UIUtils.toast(R.string.wrong_verify_code, Toast.LENGTH_SHORT);
                             refreshVerifyCode();
-                            showVerifyCode(response);
                             break;
                         case 3://3.验证码过期
                             UIUtils.toast(R.string.wrong_verify_code, Toast.LENGTH_SHORT);
                             refreshVerifyCode();
-                            showVerifyCode(response);
                             break;
                         case 5://5.token过期
                             pendToLogin(username, password, params);
