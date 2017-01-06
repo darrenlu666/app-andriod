@@ -12,10 +12,6 @@ import android.view.ViewGroup;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -23,10 +19,6 @@ import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
-import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
-import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
-import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.LivingClassViewHolder;
 import com.codyy.erpsportal.commons.models.ConfigBus;
@@ -37,6 +29,13 @@ import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingParse;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
+import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -196,7 +195,7 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
                         viewHolder =  new HistoryClassViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.item_customized_history_class,parent,false));
+                                .inflate(R.layout.item_customized_history_class_small,parent,false));
                         break;
                 }
                 return viewHolder;

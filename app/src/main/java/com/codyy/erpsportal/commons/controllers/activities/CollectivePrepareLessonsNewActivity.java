@@ -9,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +31,7 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.UpOrDownButton;
+import com.codyy.erpsportal.commons.widgets.components.FilterButton;
 import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
@@ -63,7 +63,7 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
     private UpOrDownButton mUDBTime;
     private UpOrDownButton mUDBQuality;
     private UpOrDownButton mUDBCount;
-    private CheckBox mBtnSelect;
+    private FilterButton mFilterBtn;
     private Button mBtnBack;
     private PullToRefreshListView mListView;
     private EmptyView mEmptyView;
@@ -127,8 +127,8 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
 //        mUDBTime.setChecked();
         mBtnBack = (Button) findViewById(R.id.btn_back);
         mBtnBack.setOnClickListener(this);
-        mBtnSelect = (CheckBox) findViewById(R.id.btn_select);
-        mBtnSelect.setOnClickListener(this);
+        mFilterBtn = (FilterButton) findViewById(R.id.btn_filter);
+        mFilterBtn.setOnClickListener(this);
         mListView = (PullToRefreshListView) findViewById(R.id.ptrl_prepare_lseeons_list);
         mEmptyView = (EmptyView) findViewById(R.id.empty_view);
         mListView.setEmptyView(mEmptyView);
@@ -148,25 +148,15 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
         });
         mListView.setAdapter(mAdapter);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_collective_prepare_lesson_new_drawerlayout);
-        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-
-            }
-
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerOpened(View drawerView) {
-                mBtnSelect.setChecked(true);
+                mFilterBtn.setFiltering(true);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                mBtnSelect.setChecked(false);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
+                mFilterBtn.setFiltering(false);
             }
         });
         TextView textView = (TextView) findViewById(R.id.tv_title);
@@ -257,14 +247,14 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
                 this.finish();
                 overridePendingTransition(R.anim.layout_show, R.anim.slidemenu_hide);
                 break;
-            case R.id.btn_select:
-                if (!mBtnSelect.isChecked()) {
-                    execSearch();
-                }
-                if (!mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    mDrawerLayout.openDrawer(GravityCompat.END);
-                } else {
+            case R.id.btn_filter:
+                if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
                     mDrawerLayout.closeDrawer(GravityCompat.END);
+                    execSearch();
+                    mFilterBtn.setFiltering(false);
+                } else {
+                    mDrawerLayout.openDrawer(GravityCompat.END);
+                    mFilterBtn.setFiltering(true);
                 }
                 break;
             default:

@@ -628,15 +628,16 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
                     String message = response.optString("message");
                     ToastUtil.showToast(message == null ? "评论成功！":message);
                     if(null == mRecyclerView ) return;
+                    String commentContent = response.optString("commentContent");
                     BaseComment blogComment = new BaseComment();
                     blogComment.setCommentId(response.optString("blogCommentId"));
                     blogComment.setParentCommentId(response.optString("parentCommentId"));
                     blogComment.setId(mBlogId);
-                    blogComment.setCommentContent(comment);
+                    blogComment.setCommentContent(commentContent);
                     blogComment.setBaseUserId(mUserInfo.getBaseUserId());
                     blogComment.setCreateTime(""+System.currentTimeMillis());
                     blogComment.setHeadPic(mUserInfo.getHeadPic());
-                    blogComment.setRealName(mUserInfo.getRealName());
+                    blogComment.setRealName(response.optString("realName"));
                     blogComment.setBaseViewHoldType(ITEM_TYPE_SECOND_LEVEL);
                     blogComment.setReplyName(mTempBlog.getRealName());
                     //在评论底部插入一条数据

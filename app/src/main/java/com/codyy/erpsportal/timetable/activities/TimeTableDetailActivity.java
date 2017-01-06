@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
@@ -50,8 +51,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import butterknife.OnClick;
 
 /**
  * 区县总表-课表详情
@@ -165,6 +164,12 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
 //        mFilterTV = (TextView) findViewById(R.id.title_filter_tv);
 //        mFilterIV = (ImageView) findViewById(R.id.title_filter);
         mFilterBtn = (FilterButton) findViewById(R.id.btn_filter);
+        mFilterBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFilterSelect(v);
+            }
+        });
         mDateTV = (TextView) findViewById(R.id.date_text);
         mDateTV.setText(mCalendarScrollView.getCurrentDate());
         mWeekTV = (TextView) findViewById(R.id.week_tv);
@@ -192,39 +197,19 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         if (name != null) {
             mTitleTextTV.setText(name);
         } else {
-            mTitleTextTV.setText("课表");
+            mTitleTextTV.setText("我的课表");
         }
         mRecycleViewPopuWindow.setLayoutManager(new GridLayoutManager(this, 4));
-        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-//                if (mFilterIV.getVisibility() == View.VISIBLE) {
-//                    mFilterIV.setAlpha(1 - slideOffset);
-//                    mFilterTV.setAlpha(slideOffset);
-//                    if (mFilterTV.getVisibility() == View.GONE) {
-//                        mFilterTV.setVisibility(View.VISIBLE);
-//                    }
-//                } else if (mFilterTV.getVisibility() == View.VISIBLE) {
-//                    mFilterTV.setAlpha(slideOffset);
-//                    mFilterIV.setAlpha(1 - slideOffset);
-//                    if (mFilterIV.getVisibility() == View.GONE) {
-//                        mFilterIV.setVisibility(View.VISIBLE);
-//                    }
-//                }
-            }
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 mFilterBtn.setFiltering(true);
-//                mFilterIV.setVisibility(View.GONE);
-//                mFilterTV.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 mFilterBtn.setFiltering(false);
-//                mFilterTV.setVisibility(View.GONE);
-//                mFilterIV.setVisibility(View.VISIBLE);
                 if (mClassRoomSelect != null && MASTER_CLASS.equals(mClassRoomSelect.getRoomType())) {
                     mClassTableTV.setVisibility(View.VISIBLE);
                 } else {
@@ -235,9 +220,6 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                     mClassAdapter.notifyDataSetChanged();
                 }
             }
-
-            @Override
-            public void onDrawerStateChanged(int newState) { }
         });
         mCalendarScrollView.setOndateChang(new CalendarViewPager.OnDateChange() {
             @Override
@@ -306,8 +288,6 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                     mSchoolID = mUserInfo.getSchoolId();
                     break;
                 case UserInfo.USER_TYPE_TEACHER:
-//                    mFilterTV.setVisibility(View.GONE);
-//                    mFilterIV.setVisibility(View.GONE);
                     mFilterBtn.setVisibility(View.GONE);
                     mWeekTV.setVisibility(View.GONE);
                     mDateTV.setVisibility(View.VISIBLE);
@@ -316,7 +296,6 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
             }
         }
     }
-
 
     public void onCalendarClick(View view) {
         mCalendarScrollView.open();
@@ -331,7 +310,6 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
      *
      * @param view
      */
-    @OnClick(R.id.btn_filter)
     public void onFilterSelect(View view) {
         mFilterBtn.toggle();
         if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {

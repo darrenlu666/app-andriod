@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -163,9 +161,7 @@ public class CalendarScrollView extends FrameLayout {
                 }
                 break;
             case MotionEvent.ACTION_CANCEL:
-                System.out.println("onInterceptTouchEvent---------ACTION_CANCEL");
             case MotionEvent.ACTION_UP:
-                System.out.println("onInterceptTouchEvent---------ACTION_UP");
                 break;
         }
         return mIsDragged;

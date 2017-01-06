@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.BlogComposeView;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
@@ -239,7 +240,10 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                 if(position == 0){
                     mComposeView.setVisibility(View.GONE);
                 }else{
-                    mComposeView.setVisibility(View.VISIBLE);
+                    if (mType != EVALUATION_LESSON){
+                        mComposeView.setVisibility(View.VISIBLE);
+                        UiMainUtils.setBlogSendText(mComposeView.getBtnSend(),getString(R.string.publish));
+                    }
                 }
             }
 
@@ -248,7 +252,8 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                 if(position == 0){
                     mComposeView.setVisibility(View.GONE);
                 }else{
-                    mComposeView.setVisibility(View.VISIBLE);
+                    if (mType != EVALUATION_LESSON)
+                        mComposeView.setVisibility(View.VISIBLE);
                 }
             }
 

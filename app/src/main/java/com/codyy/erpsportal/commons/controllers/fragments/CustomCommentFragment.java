@@ -10,14 +10,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
@@ -26,6 +23,10 @@ import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.BaseHttpFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.exception.LogUtils;
+import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.entities.comment.BaseComment;
+import com.codyy.erpsportal.commons.models.entities.comment.BaseCommentParse;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.CommentUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
@@ -35,13 +36,11 @@ import com.codyy.erpsportal.commons.widgets.EmojiconEditText;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentMoreViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.ReplyCommentViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.entities.comment.BaseComment;
-import com.codyy.erpsportal.commons.models.entities.comment.BaseCommentParse;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -65,11 +64,14 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     public final static int ITEM_TYPE_FIRST_LEVEL_MORE = 0x02;//一级更多
     public final static int ITEM_TYPE_SECOND_LEVEL = 0x03;//二级评论回复
     public final static int ITEM_TYPE_SECOND_LEVEL_MORE = 0x04;//二级更多
-    @Bind(R.id.recycler_view)    SimpleRecyclerView mRecyclerView;
-//    @Bind(R.id.compose)
+    @Bind(R.id.recycler_view)
+    SimpleRecyclerView mRecyclerView;
+    //    @Bind(R.id.compose)
     private BlogComposeView mComposeView;
-    @Bind(R.id.refresh_layout)    RefreshLayout mRefreshLayout;
-    @Bind(R.id.tv_comment_count)    TextView mAllCommentCountTv;//全部评论数
+    @Bind(R.id.refresh_layout)
+    RefreshLayout mRefreshLayout;
+    @Bind(R.id.tv_comment_count)
+    TextView mAllCommentCountTv;//全部评论数
 
     private BaseRecyclerAdapter<BaseTitleItemBar, BaseRecyclerViewHolder<BaseTitleItemBar>> mAdapter;
     private LinkedList<BaseTitleItemBar> mData = new LinkedList<>();
@@ -92,7 +94,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         type = bundle.getInt("type");
         isComment = bundle.getBoolean("isComment", true);
         mBlogComposeViewInterface = (IBlogComposeView) getActivity();
-        if(null != mBlogComposeViewInterface){
+        if (null != mBlogComposeViewInterface) {
             mComposeView = mBlogComposeViewInterface.getBlogComposeView();
         }
     }
@@ -166,9 +168,14 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         }
         if (null != response) {
             BaseCommentParse parse = new Gson().fromJson(response.toString(), BaseCommentParse.class);
+            mCommentCount = parse.getTotal();
             if (null != parse && parse.getCommentList() != null) {
                 List<BaseComment> commentList = parse.getCommentList();
+                if(commentList.size()!= mCommentCount){
+                    mCommentCount = commentList.size();
+                }
                 if (null != commentList && commentList.size() > 0) {
+
                     for (BaseComment bc : commentList) {
                         bc.setBaseViewHoldType(ITEM_TYPE_FIRST_LEVEL);
                         mData.add(bc);
@@ -192,7 +199,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                     }
 
                     //1.3 评论数
-                    mCommentCount = parse.getTotal();
+
                     mAllCommentCountTv.setText("(" + mCommentCount + ")");
                     if (commentList.size() < mCommentCount) {
                         BaseComment more = new BaseComment();
@@ -273,6 +280,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
 
     /**
      * 删除自己发表的评论
+     *
      * @param blogComment 自己发表的评论
      */
     private void makeSureDeleteDialog(final BaseComment blogComment) {
@@ -310,7 +318,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                     case ITEM_TYPE_FIRST_LEVEL:
                         viewHolder = new CommentViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_blog_comment, parent, false),
-                                        type == ActivityThemeActivity.EVALUATION_LESSON);//当前是评课议课时则隐藏回复
+                                type == ActivityThemeActivity.EVALUATION_LESSON);//当前是评课议课时则隐藏回复
                         break;
                     case ITEM_TYPE_SECOND_LEVEL:
                         viewHolder = new ReplyCommentViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),
@@ -344,8 +352,8 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                                 } else {//2.访客
                                     PublicUserActivity.start(getActivity(), bc.getBaseUserId());
                                 }
-                            }else{
-                                ToastUtil.showToast(EApplication.instance(),"无法查看管理员信息");
+                            } else {
+                                ToastUtil.showToast(EApplication.instance(), "无法查看管理员信息");
                             }
                         } else {
                             clickItem(bc);
@@ -370,7 +378,9 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    /** 显示更多加载的进度条 **/
+    /**
+     * 显示更多加载的进度条
+     **/
     private void showMore() {
         mAdapter.setHasMoreData(true);
         mAdapter.setRefreshing(true);
@@ -416,6 +426,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
 
     /**
      * 发表评论
+     *
      * @param comment 评论
      */
     private void sendComment(final String comment) {
@@ -431,7 +442,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
             case ActivityThemeActivity.INTERACT_LESSON://互动听课
                 url = URLConfig.ADD_COMMENT_LECTURE;
                 data.put("meetingId", mid);
-                data.put("comment",comment);
+                data.put("comment", comment);
                 break;
             case ActivityThemeActivity.EVALUATION_LESSON://评课议课　
                 url = URLConfig.ADD_COMMENT_EVA;
@@ -486,17 +497,17 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     /**
      * 回复评论
      *
-     * @param comment 评论
+     * @param comment       评论
      * @param blogCommentId 被回复的评论id
      */
-    private void sendReplyComment(final String blogCommentId,String replyToId ,final String comment) {
+    private void sendReplyComment(final String blogCommentId, String replyToId, final String comment) {
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
         }
-        data.put("meetingId",mid);
+        data.put("meetingId", mid);
         data.put("parentCommentId", blogCommentId);
-        data.put("replyToId",replyToId);
+        data.put("replyToId", replyToId);
         data.put("comment", comment);
 
         requestData(URLConfig.ADD_COMMENT_LECTURE, data, new BaseHttpActivity.IRequest() {
@@ -505,7 +516,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                 if (null != response && "success".equals(response.optString("result"))) {
                     Cog.d(TAG, response.toString());
                     String message = response.optString("message");
-                    ToastUtil.showToast(TextUtils.isEmpty(message)? "评论成功！" : message);
+                    ToastUtil.showToast(TextUtils.isEmpty(message) ? "评论成功！" : message);
                     if (null == mRecyclerView) return;
                     BaseComment blogComment = new BaseComment();
                     blogComment.setCommentId(response.optString("meetCommentId"));
@@ -579,8 +590,9 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
 
     /**
      * 根据返回更新数据结构
+     *
      * @param blogCommentId blog id .
-     * @param response response data .
+     * @param response      response data .
      */
     private void refreshSecondLevel(String blogCommentId, JSONObject response) {
         BaseCommentParse parse = new Gson().fromJson(response.toString(), BaseCommentParse.class);
@@ -608,7 +620,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
             if (mIsSecondReply) {
                 //发送二级评论
                 if (null != mTempBlog) {
-                    sendReplyComment(mTempBlog.getCommentId(),mTempBlog.getBaseUserId(), mInputEditText.getText().toString());
+                    sendReplyComment(mTempBlog.getCommentId(), mTempBlog.getBaseUserId(), mInputEditText.getText().toString());
                     mIsSecondReply = false;//发送一次后恢复为正常回复框.
                     mInputEditText.setText("");
                     mInputEditText.setHint("我来说两句");
@@ -651,7 +663,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     }
 
 
-    public interface  IBlogComposeView{
+    public interface IBlogComposeView {
         BlogComposeView getBlogComposeView();
     }
 }
