@@ -1,11 +1,16 @@
 package com.codyy.erpsportal.commons.models.entities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.StringDef;
 import android.text.TextUtils;
 
 import com.codyy.erpsportal.commons.controllers.viewholders.ApplicationViewHold;
 import com.codyy.erpsportal.commons.models.Jumpable;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
+import com.codyy.erpsportal.statistics.controllers.activities.CoursesStatisticsActivity;
+import com.codyy.erpsportal.statistics.controllers.activities.StatisticalActivity;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
@@ -252,7 +257,40 @@ public class AppInfo extends BaseTitleItemBar implements Cloneable{
         //config the local res icon id and type .
         appInfo.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_CHILD);
         appInfo.setIcon(AppConfig.getChildMenuIcon(appInfo.getConfigName()));
-
+        Jumpable jumpable = null;
+        switch (appInfo.getConfigName()){
+            case  "front.workspace.count.resource.area"://资源统计
+            case  "front.workspace.count.resource.school"://资源统计
+                jumpable = new Jumpable() {
+                    @Override
+                    public void jump(Context context) {
+                        UserInfo userInfo = UserInfoKeeper.getInstance().getUserInfo();
+                        StatisticalActivity.startResourceStat((Activity) context, userInfo);
+                    }
+                };
+                break;
+            case "front.workspace.count.disucss.area"://评课统计
+            case "front.workspace.count.disucss.school"://评课统计
+                jumpable = new Jumpable() {
+                    @Override
+                    public void jump(Context context) {
+                        UserInfo userInfo = UserInfoKeeper.getInstance().getUserInfo();
+                        StatisticalActivity.startActivityStat((Activity) context, userInfo);
+                    }
+                };
+                break;
+            case "front.workspace.count.class.area"://课堂统计
+            case "front.workspace.count.class.school"://课堂统计
+                jumpable = new Jumpable() {
+                    @Override
+                    public void jump(Context context) {
+                        UserInfo userInfo = UserInfoKeeper.getInstance().getUserInfo();
+                        CoursesStatisticsActivity.start(context, userInfo);
+                    }
+                };
+                break;
+        }
+        appInfo.setJumpable(jumpable);
         return appInfo;
     }
 
