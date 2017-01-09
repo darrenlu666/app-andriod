@@ -38,9 +38,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_toRightOf="@+id/sdv_my_head_icon"
                 android:ellipsize="end"
-                android:maxLength="10"
+                tools:text="myadminsdfsdfsdfsdfsdfmyadminsdfsdfsdfsdfsdfmyadminsdfsdfsdfsdfsdfmyadminsdfsdfsdfsdfsdf"
                 android:singleLine="true"
                 android:textColor="@color/user_text_color_content"/>
 
