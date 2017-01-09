@@ -13,6 +13,7 @@
     <dimen name="btn_download_corner">3.1dp</dimen>
 
     <dimen name="txt_size_middle">18sp</dimen>
+    <dimen name="txt_size_middle_16">16dp</dimen>
     <dimen name="txt_size_small">14sp</dimen>
     <dimen name="filter_name_size">14sp</dimen>
     <dimen name="filter_type_size">12sp</dimen>
