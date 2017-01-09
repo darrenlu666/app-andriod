@@ -63,7 +63,7 @@
                 android:drawableLeft="@drawable/et_password_nonnull"
                 android:drawablePadding="5dp"
                 android:drawableStart="@drawable/et_password_nonnull"
-                android:hint="@string/confirm_password"
+                android:hint="@string/confirm_new_password"
                 android:imeOptions="actionNext"
                 android:maxLength="18"/>
 

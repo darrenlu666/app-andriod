@@ -172,9 +172,20 @@ public class LoginActivity extends AppCompatActivity {
         }));
     }
 
+    /**
+     * 保存登录token
+     */
     private void saveToken() {
         SharedPreferences sp = getSharedPreferences(SP_TOKEN, MODE_PRIVATE);
         sp.edit().putString(KEY_TOKEN, mLoginToken).apply();
+    }
+
+    /**
+     * 清登录token
+     */
+    private void clearToken() {
+        SharedPreferences sp = getSharedPreferences(SP_TOKEN, MODE_PRIVATE);
+        sp.edit().clear().apply();
     }
 
     /**
@@ -393,6 +404,7 @@ public class LoginActivity extends AppCompatActivity {
                     UserInfo userInfo = UserInfo.parseJson(response);
                     UserInfoKeeper.getInstance().setUserInfo(userInfo);
                     executeSaveUserInfo(userInfo);
+                    clearToken();
                     doSaveLoginInfo(username, password);
                     if (response.optBoolean("firstLogin")) {
                         gotoCompleteProfile(userInfo);
@@ -421,6 +433,9 @@ public class LoginActivity extends AppCompatActivity {
                         case 5://5.token过期
                             pendToLogin(username, password, params);
                             loadLoginToken();
+                            break;
+                        case 6://6.账号被锁定
+                            UIUtils.toast(R.string.user_locked, Toast.LENGTH_SHORT);
                             break;
                     }
                 }
