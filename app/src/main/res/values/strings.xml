@@ -748,7 +748,7 @@
     <string name="please_input_verification_code">请输入验证码</string>
     <string name="complete_profile">完善个人资料</string>
     <string name="submit">提交</string>
-    <string name="confirm_password">确认密码</string>
+    <string name="confirm_new_password">确认新密码</string>
     <string name="phone">联系电话</string>
     <string name="e_mail">电子邮箱</string>
     <string name="wrong_verify_code">验证码输入有误！</string>
@@ -757,5 +757,6 @@
     <string name="please_input_s">请输入%1$s</string>
     <string name="s_length_require">%1$s长度需要是6到18个英文字符</string>
     <string name="s_worry_chars">对不起，%1$s请输入英文字母、数字、符号（除特殊字符），或组合。</string>
+    <string name="user_locked">账号已被锁定，请联系管理员</string>
 
 </resources>
