@@ -6,10 +6,10 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@android:color/white"
               android:orientation="vertical"
-              android:fitsSystemWindows="true"
-    >
-    <!--<include layout="@layout/view_title_head2"/>-->
+              android:fitsSystemWindows="true" >
+
     <include layout="@layout/toolbar_layout"/>
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/dl_collective_prepare_lesson_drawerlayout"
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="0px"
+                android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@android:color/white" />
         </LinearLayout>
@@ -40,6 +40,6 @@
             android:id="@+id/activity_collective_new_filter_fragment"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="right" />
+            android:layout_gravity="end" />
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>
