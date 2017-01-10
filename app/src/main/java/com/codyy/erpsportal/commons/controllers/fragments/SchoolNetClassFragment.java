@@ -17,8 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.activities.ClassTourActivity;
+import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.HistoryVideoPlayActivity;
 import com.codyy.erpsportal.commons.controllers.activities.LiveVideoListPlayActivity;
 import com.codyy.erpsportal.commons.controllers.activities.LiveVideoPlayActivity;
@@ -39,6 +38,7 @@ import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.url.URLConfig;
 import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -404,7 +404,7 @@ public class SchoolNetClassFragment extends Fragment implements PullToRefreshAda
 
                                     if (mUserInfo.getUserType().equals(UserInfo.USER_TYPE_PARENT)) {
                                         LiveVideoListPlayActivity.start(getActivity(), mMainClassroom, mUserInfo,
-                                                ClassTourActivity.TYPE_SCHOOL_NET);
+                                                ClassTourNewActivity.TYPE_SCHOOL_NET);
                                         return;
                                     }
 
