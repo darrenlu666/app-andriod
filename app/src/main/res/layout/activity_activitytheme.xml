@@ -133,7 +133,6 @@
             android:layout_marginTop="10dp" />
     </LinearLayout>
 
-
     <com.codyy.erpsportal.commons.widgets.SlidingTabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
@@ -147,8 +146,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:layout_below="@id/sliding_tabs"
-        />
+        android:layout_below="@id/sliding_tabs" />
+
     <com.codyy.erpsportal.commons.widgets.BlogComposeView
         android:id="@+id/compose"
         android:layout_width="match_parent"
