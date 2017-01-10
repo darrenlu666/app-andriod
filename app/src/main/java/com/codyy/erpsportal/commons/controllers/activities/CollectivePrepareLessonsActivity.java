@@ -152,10 +152,7 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
             mSlidingTabLayout.setVisibility(View.GONE);//如果只有一个其他Tab，就隐藏tab
         }
 
-        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-            }
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
 
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -166,18 +163,9 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
             public void onDrawerClosed(View drawerView) {
                 supportInvalidateOptionsMenu();
             }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
         });
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
@@ -199,34 +187,9 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
                     //当前tab在“发起，管理"的tab下，加载不含有省的筛选fragment
                 }
             }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
         });
         mViewPager.setSelected(true);
 
-        /*this.setFilterListener(new IFilterListener() {
-            @Override
-            public void onFilterClick(MenuItem item) {
-                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
-                } else {
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                    doFilterConfirm();
-                }
-            }
-
-            @Override
-            public void onPreFilterCreate(Menu menu) {
-                if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    menu.getItem(0).setIcon(R.drawable.ic_done_white);
-                } else {
-                    menu.getItem(0).setIcon(R.drawable.ic_filter);
-                }
-            }
-        });*/
         setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
             @Override
             protected void doFilterConfirmed() {

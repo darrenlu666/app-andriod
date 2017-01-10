@@ -140,8 +140,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@color/white"
-        android:layout_below="@id/activitytheme_videolayout"
-        />
+        android:layout_below="@id/activitytheme_videolayout" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/activity_thieme_viewpager"
