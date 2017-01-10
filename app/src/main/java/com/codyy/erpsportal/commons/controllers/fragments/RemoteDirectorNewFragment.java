@@ -140,7 +140,7 @@ public class RemoteDirectorNewFragment extends LoadMoreFragment<ClassRoomItem, R
             mTvHolderOne.setText(data.getTeacher());
             mTvHolderTwo.setText(data.getGrade() + "/" + data.getSubject() + "/第" + numArr[Integer.valueOf(data.getSetsuji())] + "节");
             mTvHolderThr.setText(data.getClassRoom());
-            ImageFetcher.getInstance(mContext).fetchSmall(headerImage, StringUtils.replaceSmallPic(StringUtils.replace(data.getSubjectPic())));
+            ImageFetcher.getInstance(mContext).fetchImage(headerImage, StringUtils.replace(data.getSubjectPic()));
             if (mClassType.equals(ClassRoomContants.FROM_WHERE_LINE)) {
                 if (data.getStatus().equals(STATUS_PROGRESS)) {
                     mTvTipIn.setVisibility(View.VISIBLE);
