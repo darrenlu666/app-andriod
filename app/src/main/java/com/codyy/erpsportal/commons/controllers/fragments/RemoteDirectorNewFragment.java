@@ -33,6 +33,7 @@ import com.codyy.erpsportal.commons.models.entities.ClassRoomItem;
 import com.codyy.erpsportal.commons.models.entities.RemoteDirectorConfig;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONObject;
 
@@ -100,7 +101,7 @@ public class RemoteDirectorNewFragment extends LoadMoreFragment<ClassRoomItem, R
     }
 
     public class RemoteDirectorHolder extends RecyclerViewHolder<ClassRoomItem> {
-        AvatarView headerImage;
+        SimpleDraweeView headerImage;
         TextView mTvHolderOne;
         TextView mTvHolderTwo;
         TextView mTvHolderThr;
@@ -123,7 +124,7 @@ public class RemoteDirectorNewFragment extends LoadMoreFragment<ClassRoomItem, R
         @Override
         public void mapFromView(View view) {
             mRlContainer = (RelativeLayout) view.findViewById(R.id.rl_container);
-            headerImage = (AvatarView) view.findViewById(R.id.iv_head);
+            headerImage = (SimpleDraweeView) view.findViewById(R.id.iv_head);
             mTvHolderOne = (TextView) view.findViewById(R.id.tv_holder_1);
             mTvHolderTwo = (TextView) view.findViewById(R.id.tv_holder_2);
             mTvHolderThr = (TextView) view.findViewById(R.id.tv_holder_3);
