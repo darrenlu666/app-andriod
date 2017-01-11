@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -15,8 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.activities.ClassTourActivity;
+import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.HistoryVideoPlayActivity;
 import com.codyy.erpsportal.commons.controllers.activities.LiveVideoListPlayActivity;
 import com.codyy.erpsportal.commons.controllers.activities.LiveVideoPlayActivity;
@@ -36,14 +36,18 @@ import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.url.URLConfig;
 import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -356,8 +360,7 @@ public class LiveFragment extends Fragment implements PullToRefreshBase.OnRefres
                                     mMainClassroom = classroomList.get(i);
 
                                     if (mUserInfo.getUserType().equals(UserInfo.USER_TYPE_PARENT)) {
-                                        LiveVideoListPlayActivity.start(getActivity(), mMainClassroom, mUserInfo,ClassTourActivity.TYPE_SPECIAL_DELIVERY_CLASSROOM);
-                                        //mType.equals("live") ? ClassTourActivity.TYPE_SPECIAL_DELIVERY_CLASSROOM : ClassTourActivity.TYPE_SCHOOL_NET
+                                        LiveVideoListPlayActivity.start(getActivity(), mMainClassroom, mUserInfo, ClassTourNewActivity.TYPE_SPECIAL_DELIVERY_CLASSROOM);
                                         return;
                                     }
 

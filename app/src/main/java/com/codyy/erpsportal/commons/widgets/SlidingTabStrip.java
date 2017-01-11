@@ -162,8 +162,9 @@ class SlidingTabStrip extends LinearLayout {
             int parentWidth = slidingTabLayout.getMeasuredWidth();
 
 
-            int tabsCountInSight;
+            int tabsCountInSight;//平分个数
             if (mMaxTabsCount > 0) {
+                //标签个数大于最大平分个数
                 tabsCountInSight = getChildCount() > mMaxTabsCount ? mMaxTabsCount : getChildCount();
             } else {
                 tabsCountInSight = getChildCount();

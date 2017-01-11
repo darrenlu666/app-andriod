@@ -418,9 +418,6 @@
             android:name=".resource.controllers.activities.ResourcePropertyFilterAct"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".commons.controllers.activities.ClassTourActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".commons.controllers.activities.ReservationClassFilterActivity"
             android:screenOrientation="portrait" />
         <activity

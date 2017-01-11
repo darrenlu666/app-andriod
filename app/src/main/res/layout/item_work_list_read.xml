@@ -25,6 +25,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_vertical"
+                fresco:actualImageScaleType = "centerCrop"
                 fresco:failureImage="@drawable/subject_chinese"
                 fresco:placeholderImage="@drawable/subject_chinese"
                 fresco:roundAsCircle="true"/>
