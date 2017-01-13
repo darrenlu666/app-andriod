@@ -29,6 +29,8 @@
                     android:id="@+id/tabs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    app:tabPadding="2dp"
                     app:isAverageTabs="true"/>
 
                 <android.support.v4.view.ViewPager

@@ -246,7 +246,7 @@ public class LiveVideoListPlayActivity extends FragmentActivity {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         String url;
-        if (ClassTourActivity.TYPE_SPECIAL_DELIVERY_CLASSROOM.equals(mType)) {//专递课堂
+        if (ClassTourNewActivity.TYPE_SPECIAL_DELIVERY_CLASSROOM.equals(mType)) {//专递课堂
             url = URLConfig.SPECIAL_DELIVERY_CLASSROOM_VIDEOS;
         } else {//直录播课堂
             url = URLConfig.SCHOOL_NET_CLASSROOM_VIDEOS;

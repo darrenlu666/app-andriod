@@ -69,7 +69,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     private static final int TITLE_OFFSET_DIPS = 24;
-    private static final int TAB_VIEW_PADDING_DIPS = 14;
+    private static final int TAB_VIEW_PADDING_DP = 14;
     private static final int TAB_VIEW_TEXT_SIZE_DP = 18;
 
     private int mTabWidth = 0;
@@ -81,6 +81,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private int mTabViewLayoutId;
     private int mTabViewTextViewId;
+
+    private int mTabTvPadding;
 
     private ViewPager mViewPager;
 
@@ -113,6 +115,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
             bottomBorderMargin = typedArray.getDimension(R.styleable.SlidingTabLayout_bottomBorderMargin, 0);
             int defaultTextSize = (int) (TAB_VIEW_TEXT_SIZE_DP * density + 0.5f);
             mTextSizePx = typedArray.getDimensionPixelSize(R.styleable.SlidingTabLayout_android_textSize, defaultTextSize);
+            int defaultTabPadding = (int)(TAB_VIEW_PADDING_DP * density + 0.5f);
+            mTabTvPadding = typedArray.getDimensionPixelSize(R.styleable.SlidingTabLayout_tabPadding, defaultTabPadding);
             typedArray.recycle();
         }
 
@@ -231,8 +235,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
             textView.setBackgroundResource(outValue.resourceId);
         }
 
-        int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
-        textView.setPadding(padding, 0, padding, 0);
+        textView.setPadding(mTabTvPadding, 0, mTabTvPadding, 0);
         textView.setLines(2);
 
         if (mTabWidth != 0) {

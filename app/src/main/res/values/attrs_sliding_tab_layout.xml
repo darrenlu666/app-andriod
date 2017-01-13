@@ -4,6 +4,7 @@
         <attr name="isAverageTabs" format="boolean" />
         <attr name="bottomBorderPadding" format="dimension" />
         <attr name="bottomBorderMargin" format="dimension" />
+        <attr name="tabPadding" format="dimension"/>
         <attr name="android:textSize" />
     </declare-styleable>
 </resources>

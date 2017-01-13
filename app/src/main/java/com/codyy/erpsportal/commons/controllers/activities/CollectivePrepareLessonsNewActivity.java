@@ -195,9 +195,9 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
 
     private void initPullToRefresh(PullToRefreshAdapterViewBase<?> view) {
         view.setMode(PullToRefreshBase.Mode.BOTH);
-        view.getLoadingLayoutProxy(false, true).setPullLabel(getResources().getString(R.string.pull_to_refresh));
-        view.getLoadingLayoutProxy(false, true).setRefreshingLabel(getResources().getString(R.string.loading));
-        view.getLoadingLayoutProxy(false, true).setReleaseLabel(getResources().getString(R.string.release_to_refresh));
+        view.getLoadingLayoutProxy(false, true).setPullLabel(getString(R.string.pull_to_refresh));
+        view.getLoadingLayoutProxy(false, true).setRefreshingLabel(getString(R.string.loading));
+        view.getLoadingLayoutProxy(false, true).setReleaseLabel(getString(R.string.release_to_refresh));
         view.setOnRefreshListener(this);
     }
 

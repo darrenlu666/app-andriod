@@ -16,18 +16,18 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.county.controllers.models.entities.CountyListItem;
-import com.codyy.erpsportal.county.controllers.models.entities.CountyListItemDetail;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.activities.ClassTourActivity;
+import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.county.controllers.fragments.ContyListFragment;
-import com.codyy.erpsportal.databinding.ActivityContyItemDetailBinding;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.county.controllers.fragments.ContyListFragment;
+import com.codyy.erpsportal.county.controllers.models.entities.CountyListItem;
+import com.codyy.erpsportal.county.controllers.models.entities.CountyListItemDetail;
+import com.codyy.erpsportal.databinding.ActivityContyItemDetailBinding;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -174,7 +174,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
         TourClassroom tourClassroom = new TourClassroom();
         tourClassroom.setClassRoomId(mContyListItemDetial.getClassroomId());
         tourClassroom.setId(mContyListItemDetial.getScheduleDetailId());
-        ClassTourPagerActivity.start(this, tourClassroom, mUserInfo, ClassTourActivity.TYPE_SPECIAL_DELIVERY_CLASSROOM);
+        ClassTourPagerActivity.start(this, tourClassroom, mUserInfo, ClassTourNewActivity.TYPE_SPECIAL_DELIVERY_CLASSROOM);
     }
 
     /**
