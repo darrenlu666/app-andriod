@@ -755,7 +755,7 @@
     <string name="token_timeout">超过登录有效期</string>
     <string name="please_input_verify_code">请输入验证码</string>
     <string name="please_input_s">请输入%1$s</string>
-    <string name="s_length_require">%1$s长度需要是6到18个英文字符</string>
+    <string name="s_d_d_length_require">%1$s长度需要是%2$d到%3$d个英文字符</string>
     <string name="s_worry_chars">对不起，%1$s请输入英文字母、数字、符号（除特殊字符），或组合。</string>
     <string name="user_locked">账号已被锁定，请联系管理员</string>
 

@@ -45,7 +45,7 @@
                 android:drawableStart="@drawable/ic_username"
                 android:hint="@string/username"
                 android:imeOptions="actionNext"
-                android:maxLength="18"/>
+                android:maxLength="30"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

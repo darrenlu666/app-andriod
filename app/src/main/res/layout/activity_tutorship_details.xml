@@ -189,7 +189,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:text="课堂简介"
+                    android:text="课堂介绍"
                     android:textColor="@color/md_grey_800"
                     android:textSize="20sp"
                     android:textStyle="bold"/>

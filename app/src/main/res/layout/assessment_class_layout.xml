@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:background="#fff"
                 android:textSize="16dp"
-                app:tabPadding="2dp"/>
+                app:tabPadding="14dp"/>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/assessment_class_viewpager"

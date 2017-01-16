@@ -34,7 +34,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.codyy.erpsportal.commons.utils.Regexes.USERNAME_PASSWORD_REGEX;
+import static com.codyy.erpsportal.commons.utils.Regexes.PASSWORD_REGEX;
 
 /**
  * 完善个人资料页
@@ -176,12 +176,12 @@ public class CompleteProfileActivity extends AppCompatActivity {
             return false;
         }
 
-        if (username.length() < 6 || username.length() > 18) {
-            ToastUtil.showToast(this, "用户名长度需要是6到18个英文字符");
+        if (username.length() < 5 || username.length() > 30) {
+            ToastUtil.showToast(this, "用户名长度需要是5到30个英文字符");
             return false;
         }
 
-        if (!username.matches(Regexes.USERNAME_PASSWORD_REGEX)) {
+        if (!username.matches(Regexes.USERNAME_REGEX)) {
             ToastUtil.showToast(this, "对不起，用户名请输入英文字母、数字、符号（除特殊字符），或组合。");
             return false;
         }
@@ -203,12 +203,12 @@ public class CompleteProfileActivity extends AppCompatActivity {
             return false;
         }
 
-        if (password.length() < 6 || password.length() > 20) {
+        if (password.length() < 6 || password.length() > 18) {
             ToastUtil.showToast(this, "密码长度需要是6到18个英文字符");
             return false;
         }
 
-        if (!password.matches(USERNAME_PASSWORD_REGEX)) {
+        if (!password.matches(PASSWORD_REGEX)) {
             ToastUtil.showToast(this, "对不起，密码请输入英文字母、数字、符号（除特殊字符），或组合。");
             return false;
         }
