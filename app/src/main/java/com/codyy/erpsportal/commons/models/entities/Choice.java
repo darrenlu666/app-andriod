@@ -147,20 +147,6 @@ public class Choice implements Parcelable {
         }
     }
 
-    /**
-     * 年级解析器
-     */
-    public static class ClassLevelJsonParser extends BaseChoiceParser {
-
-        @Override
-        public Choice parse(JSONObject jsonObject) {
-            Choice choice = new Choice();
-            choice.setId(jsonObject.optString("classLevelId"));
-            choice.setTitle(StringUtils.replaceHtml(jsonObject.optString("className")));
-            return choice;
-        }
-    }
-
     @Override
     public int describeContents() {
         return 0;
