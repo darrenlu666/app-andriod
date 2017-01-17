@@ -455,7 +455,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
             @Override
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "delete comment response=", response);
-                if (response.optBoolean("result") && mCommentsRv != null) {
+                if (response.optString("result").equals("success") && mCommentsRv != null) {
                     String toastStr;
                     if (commentBase instanceof RethinkComment) {
                         toastStr = "删除评论成功！";
