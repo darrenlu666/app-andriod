@@ -17,18 +17,19 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,9 +56,9 @@ public class FilterGradeSubject extends Fragment implements View.OnClickListener
      */
     private RequestSender mSender;
 
-    private ArrayList<GradeMode> mGrade;
-    private ArrayList<GradeMode> mSubject;
-    private ArrayList<GradeMode> mStatus;
+    private List<GradeMode> mGrade;
+    private List<GradeMode> mSubject;
+    private List<GradeMode> mStatus;
 
     private TextView mTextViewGrade;
 
@@ -198,7 +199,7 @@ public class FilterGradeSubject extends Fragment implements View.OnClickListener
      */
     private void httpConnect(String url, HashMap<String, String> data, final int msg) {
         Map<String, String> map = new HashMap<>(1);
-        if (mUserInfo.isSchool()||mUserInfo.isTeacher()) {
+        if (mUserInfo.isSchool()||mUserInfo.isTeacher()||mUserInfo.isParent()||mUserInfo.isStudent()) {
             map.put("schoolId", mUserInfo.getSchoolId());
         } else if (mUserInfo.isArea()) {
             map.put("areaId", mUserInfo.getBaseAreaId());
@@ -274,6 +275,7 @@ public class FilterGradeSubject extends Fragment implements View.OnClickListener
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                Cog.e(TAG, "onErrorResponse error=", error);
             }
         }, this.toString()));
     }
@@ -348,9 +350,9 @@ public class FilterGradeSubject extends Fragment implements View.OnClickListener
 
     class LeftAdapter extends BaseAdapter {
 
-        ArrayList<GradeMode> gradeModes;
+        List<GradeMode> gradeModes;
 
-        LeftAdapter(ArrayList<GradeMode> gradeModes) {
+        LeftAdapter(List<GradeMode> gradeModes) {
             this.gradeModes = gradeModes;
         }
 
