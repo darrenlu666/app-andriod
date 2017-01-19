@@ -232,7 +232,7 @@ public class ClassTourPagerActivity extends FragmentActivity {
      * 显示提示
      */
     private void showPrompt() {
-        SharedPreferences sharedPreferences = getSharedPreferences("hint", Activity.BIND_AUTO_CREATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("hint", MODE_PRIVATE);
         if (sharedPreferences.getBoolean("tourHint", true)) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("tourHint", false);
