@@ -13,7 +13,7 @@
         android:textSize="18dp"
         tools:text="天明市仁和明德小学" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/receive_item_text_classroom"
@@ -23,26 +23,28 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/receive_item_text_teacher_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#fff"
-            android:textSize="18dp"
-            tools:text="张三" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <TextView
             android:id="@+id/receive_item_text_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_weight="1"
             android:drawableLeft="@drawable/phone_icon"
             android:drawablePadding="5dp"
+            android:singleLine="true"
             android:textColor="@color/main_color"
             android:textSize="18dp"
             tools:text="15555555555" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/receive_item_text_teacher_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/receive_item_text_phone"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#fff"
+            android:textSize="18dp"
+            tools:text="张三sssssssssssssssssssssssssssssssssssssssss" />
+    </RelativeLayout>
 </RelativeLayout>
