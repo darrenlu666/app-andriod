@@ -7,20 +7,19 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.widgets.CenterLongTextView;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment.OnRowClickListener;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
@@ -29,6 +28,7 @@ import com.codyy.erpsportal.statistics.models.entities.StatRow;
 import com.codyy.erpsportal.statistics.models.entities.StatTableModel;
 import com.codyy.erpsportal.statistics.models.entities.SubjectsStatEntity;
 import com.codyy.erpsportal.statistics.models.entities.SubjectsStatResult;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.joda.time.DateTimeConstants;
@@ -61,7 +61,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
     private AreaInfo mAreaInfo;
 
     @Bind(R.id.tv_title)
-    TextView mTitleTv;
+    CenterLongTextView mTitleTv;
 
     private StatTableFragment mTableFragment;
 

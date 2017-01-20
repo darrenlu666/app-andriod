@@ -74,7 +74,11 @@ public class ChangeServerDialog extends DialogFragment {
             mServerAddressEt.setAdapter(adapter);
         }
 
-        mServerAddressEt.setText(URLConfig.BASE.substring(7));
+        if (URLConfig.BASE.startsWith("https://")) {
+            mServerAddressEt.setText(URLConfig.BASE.substring(8));
+        } else {//http://
+            mServerAddressEt.setText(URLConfig.BASE.substring(7));
+        }
         cancelBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +92,7 @@ public class ChangeServerDialog extends DialogFragment {
                 String newBaseUrl = null;
                 if (TextUtils.isEmpty(serverAddress.trim())) {
                     Toast.makeText(getActivity(), "服务地址为空，保持原地址", Toast.LENGTH_SHORT).show();
-                } else if (serverAddress.startsWith("http://")){
+                } else if (serverAddress.startsWith("http://") || serverAddress.startsWith("https://")){
                     newBaseUrl = serverAddress;
                 } else {
                     newBaseUrl = "http://" + serverAddress;

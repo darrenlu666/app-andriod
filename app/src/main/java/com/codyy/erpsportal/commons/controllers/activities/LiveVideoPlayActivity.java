@@ -1,27 +1,22 @@
 package com.codyy.erpsportal.commons.controllers.activities;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.Classroom;
 import com.codyy.erpsportal.commons.models.entities.LiveClassListModel;
@@ -37,8 +32,11 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -310,35 +308,6 @@ public class LiveVideoPlayActivity extends AppCompatActivity {
         UIUtils.addEnterAnim(activity);
 
         mStartFrom = PLAY_STYLE_SCHOOLNET;
-    }
-
-    /**
-     * 显示提示：可左右滑动切换主辅视频
-     */
-    private void showHint(){
-        SharedPreferences sharedReference = getSharedPreferences("hint",Activity.BIND_AUTO_CREATE);
-        if(sharedReference.getBoolean("liveHint",true)){
-            SharedPreferences.Editor editor = sharedReference.edit();
-            editor.putBoolean("liveHint", false);
-            editor.apply();
-
-            final Dialog dialog = new Dialog(this,android.R.style.Theme_Translucent_NoTitleBar);
-            View view = getLayoutInflater().inflate(R.layout.navigation_layout,null);
-            TextView promptTv = (TextView) view.findViewById(R.id.tv_prompt);
-            promptTv.setText(R.string.slide_to_switch_video);
-            ImageView imageView = (ImageView) view.findViewById(R.id.navigation_image);
-            Animation animation = AnimationUtils.loadAnimation(this,R.anim.na_anim);
-            imageView.setAnimation(animation);
-            dialog.setContentView(view);
-            dialog.show();
-
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-        }
     }
 
     @Override

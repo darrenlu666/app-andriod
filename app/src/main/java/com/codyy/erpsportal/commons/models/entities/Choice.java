@@ -141,22 +141,8 @@ public class Choice implements Parcelable {
         @Override
         public Choice parse(JSONObject jsonObject) {
             Choice choice = new Choice();
-            choice.setId(jsonObject.optString("baseUserId "));
+            choice.setId(jsonObject.optString("baseUserId"));
             choice.setTitle(jsonObject.optString("realName"));
-            return choice;
-        }
-    }
-
-    /**
-     * 年级解析器
-     */
-    public static class ClassLevelJsonParser extends BaseChoiceParser {
-
-        @Override
-        public Choice parse(JSONObject jsonObject) {
-            Choice choice = new Choice();
-            choice.setId(jsonObject.optString("classLevelId"));
-            choice.setTitle(StringUtils.replaceHtml(jsonObject.optString("className")));
             return choice;
         }
     }

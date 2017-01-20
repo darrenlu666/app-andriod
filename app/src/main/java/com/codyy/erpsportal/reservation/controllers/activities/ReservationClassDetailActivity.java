@@ -176,7 +176,7 @@ public class ReservationClassDetailActivity extends AppCompatActivity {
                     break;
                 case UserInfo.USER_TYPE_TEACHER:
                     mClassRoomTV.setVisibility(View.GONE);
-                    mTitleTV.setText(Titles.sWorkspaceNetClassClass);
+                    mTitleTV.setText("课程表");
                     break;
             }
         }
@@ -253,7 +253,7 @@ public class ReservationClassDetailActivity extends AppCompatActivity {
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
             final ReservationClassDetial.RoomListBean roomListBean = mRoomListBeen.get(position);
             TextView textView = new TextView(ReservationClassDetailActivity.this);
-            textView.setGravity(Gravity.CENTER_VERTICAL);
+            textView.setGravity(Gravity.CENTER);
             //添加点击效果（5.0以上会有水波纹效果）
             // Attribute array
             int[] attrs = new int[]{android.R.attr.selectableItemBackground};

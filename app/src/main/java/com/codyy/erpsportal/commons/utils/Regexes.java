@@ -10,5 +10,7 @@ public class Regexes {
 
     public final static String PHONE_REGEX = "^((1[3|4|5|7|8]\\d{9})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))$)$";
 
-    public final static String USERNAME_PASSWORD_REGEX = "^[\\w,.;~!@#$%^&*()+-=\\\\/<>]{6,18}$";
+    public final static String USERNAME_REGEX = "^[\\w,.;~!@#$%^&*()+-=\\\\/<>]{5,30}$";
+
+    public final static String PASSWORD_REGEX = "^[\\w,.;~!@#$%^&*()+-=\\\\/<>]{6,18}$";
 }

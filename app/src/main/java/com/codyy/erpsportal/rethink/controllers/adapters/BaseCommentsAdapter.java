@@ -2,15 +2,17 @@ package com.codyy.erpsportal.rethink.controllers.adapters;
 
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView.Adapter;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.models.entities.CommentListHeader;
 import com.codyy.erpsportal.commons.models.entities.MoreComments;
 import com.codyy.erpsportal.commons.models.entities.MoreRelies;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.rethink.controllers.viewholders.CommentViewHolder;
 import com.codyy.erpsportal.rethink.controllers.viewholders.MoreCommentsViewHolder;
 import com.codyy.erpsportal.rethink.controllers.viewholders.MoreReliesViewHolder;
@@ -25,13 +27,18 @@ import java.util.List;
  * 评论数据适配器
  * Created by gujiajia on 2016/8/16.
  */
-public class BaseCommentsAdapter extends Adapter<RecyclerViewHolder> {
+public class BaseCommentsAdapter extends Adapter<ViewHolder> {
     private final static String TAG = "ResourceCommentsAdapter";
 
     /**
      * 评论类型
      */
     private final static int TYPE_COMMENT = 1;
+
+    /**
+     * 头类型
+     */
+    private final static int TYPE_HEAD = 2;
 
     /**
      * 评论回复类型
@@ -56,13 +63,21 @@ public class BaseCommentsAdapter extends Adapter<RecyclerViewHolder> {
 
     private boolean mHasMoreComments;
 
+    private CommentListHeader mCommentListHeader;
+
     public BaseCommentsAdapter() {
         mMoreComments = new MoreComments();
     }
 
+    public void setHeader(CommentListHeader commentListHeader) {
+        this.mCommentListHeader = commentListHeader;
+    }
+
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_COMMENT) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_HEAD) {
+            return mCommentListHeader.createViewHolder(parent);
+        } else if (viewType == TYPE_COMMENT) {
             return new CommentViewHolder(inflateView(parent, R.layout.item_rethink_comment));
         } else if (viewType == TYPE_REPLY) {
             return new ReplyViewHolder(inflateView(parent, R.layout.item_rethink_rely));
@@ -78,12 +93,25 @@ public class BaseCommentsAdapter extends Adapter<RecyclerViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        holder.setDataToView(mCommentBaseList, position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if(mCommentListHeader != null && position == 0) {
+            mCommentListHeader.update(holder);
+            return;
+        }
+        if (mCommentListHeader != null) position--;
+        if (holder instanceof RecyclerViewHolder) {
+            ((RecyclerViewHolder)holder).setDataToView(mCommentBaseList, position);
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (mCommentListHeader != null && position == 0) {
+            return TYPE_HEAD;
+        }
+        if (mCommentListHeader != null) {
+            position --;
+        }
         Object item = mCommentBaseList.get(position);
         if (item instanceof RethinkComment) {
             return TYPE_COMMENT;
@@ -99,7 +127,7 @@ public class BaseCommentsAdapter extends Adapter<RecyclerViewHolder> {
     /**
      * 添加评论
      *
-     * @param comment
+     * @param comment 评论
      */
     public void addComment(RethinkComment comment) {
         mRethinkComments.add(comment);
@@ -125,23 +153,25 @@ public class BaseCommentsAdapter extends Adapter<RecyclerViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mCommentBaseList.size();
+        if (mCommentListHeader != null) {
+            return mCommentBaseList.size() + 1;
+        } else {
+            return mCommentBaseList.size();
+        }
     }
 
     /**
      * 是否有更多回复
      *
-     * @param hasMore
+     * @param hasMore true有更多
      */
     public void setHasMore(boolean hasMore) {
         if (mHasMoreComments != hasMore) {
             mHasMoreComments = hasMore;
             if (hasMore) {
                 mCommentBaseList.add(mMoreComments);
-//                    notifyItemInserted(mCommentBaseList.size()-1);
             } else {
                 mCommentBaseList.remove(mMoreComments);
-//                    notifyItemRemoved(mCommentBaseList.size());
             }
         }
     }
