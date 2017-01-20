@@ -1,5 +1,7 @@
 package com.codyy.erpsportal.commons.models.entities;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -131,7 +133,12 @@ public class MeetingShow {
         MeetingShow meetingShow =   new MeetingShow();
 
         meetingShow.setShowResID(meetJson.optString("res_id"));
-        meetingShow.setShowTitle(meetJson.optString("show_title"));
+        //bmp图片处理.
+        String title = meetJson.optString("show_title").toLowerCase();
+        /*if(!TextUtils.isEmpty(title)&&title.endsWith(".bmp")){
+            title = title.substring(0,title.indexOf(".bmp"))+".jpg";
+        }*/
+        meetingShow.setShowTitle(title);
         meetingShow.setShowModel(meetJson.optString("is_show"));
         meetingShow.setShowCount(meetJson.optInt("count"));
         meetingShow.setShowPageIndex(meetJson.optInt("page_index"));

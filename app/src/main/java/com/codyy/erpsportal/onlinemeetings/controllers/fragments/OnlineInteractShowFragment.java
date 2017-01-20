@@ -1,5 +1,7 @@
 package com.codyy.erpsportal.onlinemeetings.controllers.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -9,6 +11,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -249,7 +253,12 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase{
 
     private void tryLoadPdf(final MeetingShow meetingShow ,boolean isNewOpen){
         Cog.d(TAG, "tryLoadPdf...");
-        mFileName = UiOnlineMeetingUtils.createDir()+"/"+meetingShow.getShowTitle();
+        //bmp转换为jpg.
+        String ResourceName = meetingShow.getShowTitle();
+        if(!TextUtils.isEmpty(ResourceName)&&ResourceName.endsWith(".bmp")){
+            ResourceName = ResourceName.substring(0,ResourceName.indexOf(".bmp"))+".jpg";
+        }
+        mFileName = UiOnlineMeetingUtils.createDir()+"/"+ResourceName;
         loadPdf(meetingShow, isNewOpen);
         if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
             mDrawerLayout.closeDrawer(Gravity.RIGHT);
@@ -542,14 +551,15 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase{
             InputStream is = null;
             OutputStream os = null;
             HttpURLConnection connection = null;
-            String directory = UiOnlineMeetingUtils.createDir() + "/" + meetingShow.getShowTitle();
+            String ResourceName = meetingShow.getShowTitle();
+            //bmp转换为jpg.
+            if(!TextUtils.isEmpty(ResourceName)&&ResourceName.endsWith(".bmp")){
+                ResourceName = ResourceName.substring(0,ResourceName.indexOf(".bmp"))+".jpg";
+            }
+            String directory = UiOnlineMeetingUtils.createDir() + "/" + ResourceName;
 
             try {
                 String docPath = meetingShow.getShowDocPath();
-               /* if(docPath.contains("COCO")){
-                    docPath = cocoAddress;
-                }*/
-
                 Cog.i(TAG,"down address : "+docPath);
                 URL url = new URL(docPath);
                 try {
@@ -564,22 +574,29 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase{
                     is = connection.getInputStream();
                     os = new FileOutputStream(directory);
 
-                    byte data[] = new byte[4096];
-                    long total = 0;
-                    int count;
-
-                    while((count = is.read(data)) !=-1){
-                        if(isCancelled()){
-                            is.close();
-                            return null;
+                    //判断是否是bmp
+                    if(ResourceName.endsWith(".bmp")||ResourceName.endsWith(".jpg")){
+                        Cog.d(TAG, "doInBackground: .bmp");
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        if(null != bitmap){
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
                         }
-                        total += count;
-                        if(fileLength >0 )
-                            publishProgress((int)total*100 /fileLength );
+                    }else{
+                        byte data[] = new byte[4096];
+                        long total = 0;
+                        int count;
+                        while((count = is.read(data)) !=-1){
+                            if(isCancelled()){
+                                is.close();
+                                return null;
+                            }
+                            total += count;
+                            if(fileLength >0 )
+                                publishProgress((int)total*100 /fileLength );
 
-                        os.write(data,0,count);
+                            os.write(data,0,count);
+                        }
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

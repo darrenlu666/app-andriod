@@ -208,6 +208,10 @@ public class UiOnlineMeetingUtils {
      * @return
      */
     public static boolean hasLoadCompleted(String ResourceName){
+        //bmp转换为jpg.
+        if(!TextUtils.isEmpty(ResourceName)&&ResourceName.endsWith(".bmp")){
+             ResourceName = ResourceName.substring(0,ResourceName.indexOf(".bmp"))+".jpg";
+        }
         File file = new File(createDir() +"/" + ResourceName);
         return file.exists();
     }

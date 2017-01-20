@@ -198,7 +198,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             //自定义title ，禁用系统的title
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-        mToolbar.setCollapsible(true);
+//        mToolbar.setCollapsible(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
