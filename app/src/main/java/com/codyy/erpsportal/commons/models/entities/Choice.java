@@ -141,7 +141,7 @@ public class Choice implements Parcelable {
         @Override
         public Choice parse(JSONObject jsonObject) {
             Choice choice = new Choice();
-            choice.setId(jsonObject.optString("baseUserId "));
+            choice.setId(jsonObject.optString("baseUserId"));
             choice.setTitle(jsonObject.optString("realName"));
             return choice;
         }
