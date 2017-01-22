@@ -202,17 +202,15 @@ public class ExamInfoActivity extends NormalActivity {
             }
             linearLayout.addView(view, new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mHeight));
             RelativeLayout layout = (RelativeLayout) view;
-            if (layout.getChildAt(0) instanceof TextView && layout.getChildAt(2) instanceof TextView) {
-                setViewAnim(true, (TextView) layout.getChildAt(0));
-                setViewAnim(true, (TextView) layout.getChildAt(2));
-                if (i == 0) {
-                    ((TextView) layout.getChildAt(2)).setText(TYPE_REAL_VALUES[0]);
-                    ((TextView) layout.getChildAt(0)).setText(mExamName);
-                } else {
-                    ((TextView) layout.getChildAt(2)).setText(TYPE_REAL_VALUES[i]);
-                    ((TextView) layout.getChildAt(0)).setText(stringList.get(i - 1));
-                }
+
+            if (i == 0) {
+                ((TextView) layout.getChildAt(1)).setText(TYPE_REAL_VALUES[0]);
+                ((TextView) layout.getChildAt(2)).setText(mExamName);
+            } else {
+                ((TextView) layout.getChildAt(2)).setText(TYPE_REAL_VALUES[i]);
+                ((TextView) layout.getChildAt(0)).setText(stringList.get(i - 1));
             }
+
         }
     }
 
