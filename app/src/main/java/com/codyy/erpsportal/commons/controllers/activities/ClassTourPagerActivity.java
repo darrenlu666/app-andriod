@@ -21,6 +21,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -36,16 +37,19 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.Check3GUtil;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
-import com.codyy.erpsportal.commons.widgets.BnVideoView2;
+import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.AppointmentInfo.ReceiveListBean;
+import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.ClassTourInfo.DetailBean;
+import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.ClassTourInfo.DetailBean.ReceiveTeacherListBean;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.parsers.ClassTourClassroomNewParser;
+import com.codyy.erpsportal.commons.utils.Check3GUtil;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
+import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -317,19 +321,29 @@ public class ClassTourPagerActivity extends FragmentActivity {
                     try {
                         ClassTourInfo info = new Gson().fromJson(response.toString(), ClassTourInfo.class);
                         if (info != null && "success".equals(info.getResult())) {
-                            if (info.getDetail() != null) {
-                                mTvGrade.setText(info.getDetail().getClasslevelName());
-                                mTvSubject.setText(info.getDetail().getSubjectName());
-                                mTvWeek.setText(TextUtils.isEmpty(info.getDetail().getWeekSeq()) ? "" : "第" + info.getDetail().getWeekSeq() + "周");
-                                mTvCourseNum.setText(TextUtils.isEmpty(info.getDetail().getClassSeq()) ? "" : "第" + info.getDetail().getClassSeq() + "节");
-                                mTvMainTeacher.setText(TextUtils.isEmpty(info.getDetail().getTeacherMobile()) ? info.getDetail().getTeacherName() : info.getDetail().getTeacherName() + "(" + info.getDetail().getTeacherMobile() + ")");
-                                if (info.getDetail().getReceiveTeacherList() != null && info.getDetail().getReceiveTeacherList().size() > 0) {
-                                    for (int i = 0; i < info.getDetail().getReceiveTeacherList().size(); i++) {
+                            DetailBean detailBean = info.getDetail();
+                            if (detailBean != null) {
+                                mTvGrade.setText(detailBean.getClasslevelName());
+                                mTvSubject.setText(detailBean.getSubjectName());
+                                mTvWeek.setText(TextUtils.isEmpty(detailBean.getWeekSeq()) ? "" : "第" + detailBean.getWeekSeq() + "周");
+                                mTvCourseNum.setText(TextUtils.isEmpty(detailBean.getClassSeq()) ? "" : "第" + detailBean.getClassSeq() + "节");
+                                mTvMainTeacher.setText(TextUtils.isEmpty(detailBean.getTeacherMobile()) ? detailBean.getTeacherName() : detailBean.getTeacherName() + "(" + detailBean.getTeacherMobile() + ")");
+                                if (detailBean.getReceiveTeacherList() != null && detailBean.getReceiveTeacherList().size() > 0) {
+                                    for (int i = 0; i < detailBean.getReceiveTeacherList().size(); i++) {
                                         TextView textView = new TextView(ClassTourPagerActivity.this);
                                         textView.setTextColor(ContextCompat.getColor(ClassTourPagerActivity.this, android.R.color.white));
+//                                        textView.setBackgroundColor(Color.BLUE);
 //                                        textView.setAutoLinkMask(Linkify.PHONE_NUMBERS);
                                         textView.setLinkTextColor(ContextCompat.getColor(ClassTourPagerActivity.this, android.R.color.white));
-                                        textView.setText(info.getDetail().getReceiveTeacherList().get(i).getTeacherName() + (TextUtils.isEmpty(info.getDetail().getReceiveTeacherList().get(i).getTeacherMobile()) ? "" : "(" + info.getDetail().getReceiveTeacherList().get(i).getTeacherMobile() + ")") + "\n" + info.getDetail().getReceiveTeacherList().get(i).getSchoolName());
+                                        ReceiveTeacherListBean receiveTeacherListBean = detailBean.getReceiveTeacherList().get(i);
+                                        textView.setText(
+                                                (TextUtils.isEmpty(receiveTeacherListBean.getTeacherName()) ? "未选择教师" : receiveTeacherListBean.getTeacherName())
+                                                + (TextUtils.isEmpty(receiveTeacherListBean.getTeacherMobile()) ? "" : "("
+                                                + receiveTeacherListBean.getTeacherMobile() + ")")
+                                                + "\n" + receiveTeacherListBean.getSchoolName());
+                                        if ( i != 0) {
+                                            setMarginTop(textView);
+                                        }
                                         mLlReceiverTeacher.addView(textView);
                                     }
                                 }
@@ -353,7 +367,15 @@ public class ClassTourPagerActivity extends FragmentActivity {
                                     TextView textView = new TextView(ClassTourPagerActivity.this);
                                     textView.setTextColor(ContextCompat.getColor(ClassTourPagerActivity.this, android.R.color.white));
                                     textView.setLinkTextColor(ContextCompat.getColor(ClassTourPagerActivity.this, android.R.color.white));
-                                    textView.setText(info.getReceiveList().get(i).getHelpUserName() + (TextUtils.isEmpty(info.getReceiveList().get(i).getContact()) ? "" : "(" + info.getReceiveList().get(i).getContact() + ")") + "\n" + info.getReceiveList().get(i).getSchoolName());
+                                    ReceiveListBean receiveListBean = info.getReceiveList().get(i);
+                                    textView.setText(
+                                            (TextUtils.isEmpty(receiveListBean.getHelpUserName())?"未选择教师" : receiveListBean.getHelpUserName())
+                                            + (TextUtils.isEmpty(receiveListBean.getContact()) ? "" : "("
+                                            + receiveListBean.getContact() + ")")
+                                            + "\n" + receiveListBean.getSchoolName());
+                                    if ( i != 0) {
+                                        setMarginTop(textView);
+                                    }
                                     mLlReceiverTeacher.addView(textView);
                                 }
                             }
@@ -369,6 +391,12 @@ public class ClassTourPagerActivity extends FragmentActivity {
                 Cog.e(TAG, "onErrorResponse:" + error);
             }
         }, mRequestTag));
+    }
+
+    private void setMarginTop(TextView textView) {
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.dp8);
+        textView.setLayoutParams(lp);
     }
 
     @Override
@@ -442,6 +470,7 @@ public class ClassTourPagerActivity extends FragmentActivity {
 
                                 videoLayout.setUrl(classroom.getVideoUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
                                 videoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
+                                videoLayout.setTimeOut(15);
                             }
                         }
                     }, 2 * 1000);
@@ -457,17 +486,6 @@ public class ClassTourPagerActivity extends FragmentActivity {
                 }
             });
 
-//            RelativeLayout mRelativeLayout = (RelativeLayout) view.findViewById(R.id.relativeHeadOfLiveVideoPlay);
-//            view.findViewById(R.id.imgBtn).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    finish();
-//                }
-//            });
-//
-//            String formatTitle = getString(R.string.title_live_class);
-//            mTitleTv.setText(String.format(formatTitle, classroom.getSchoolName()));
-//
             mBnVideoLayouts.append(position, videoLayout);
             container.addView(view);
             return view;
@@ -484,7 +502,7 @@ public class ClassTourPagerActivity extends FragmentActivity {
         }
     }
 
-    private class AppointmentInfo {
+    class AppointmentInfo {
 
         /**
          * classSeq : 18542
@@ -597,7 +615,7 @@ public class ClassTourPagerActivity extends FragmentActivity {
         }
     }
 
-    private class ClassTourInfo {
+    class ClassTourInfo {
 
         /**
          * result : success
