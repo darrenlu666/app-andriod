@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog.ServerChangedListener;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -150,12 +151,15 @@ public class LoginActivity extends AppCompatActivity {
                         if (mPendingRequest != null) {
                             ToastUtil.showToast(LoginActivity.this, "需要输入验证码！");
                             mPendingRequest = null;
+                            mLoadingDialog.cancel();
                         }
                     }
                     saveToken();
                 } else {
                     if (mPendingRequest != null) {
                         UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
+                        mPendingRequest = null;
+                        mLoadingDialog.cancel();
                     }
                     mLoginToken = null;
                 }
@@ -167,6 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                 mIsFetchingToken = false;
                 if (mPendingRequest != null) {
                     UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
+                    mPendingRequest = null;
+                    mLoadingDialog.cancel();
                 }
             }
         }));
@@ -271,7 +277,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFiveEvenClick() {
                 Cog.d(TAG, "onFiveEvenClick");
-                ChangeServerDialog.newInstance().show(getSupportFragmentManager(), "change_server");
+                ChangeServerDialog changeServerDialog = ChangeServerDialog.newInstance();
+                changeServerDialog.setServerChangedListener(new ServerChangedListener() {
+                    @Override
+                    public void onServerChangedListener() {
+                        loadLoginToken();
+                    }
+                });
+                changeServerDialog.show(getSupportFragmentManager(), "change_server");
             }
         });
         mVerifyCodeDv.setOnClickListener(new OnClickListener() {

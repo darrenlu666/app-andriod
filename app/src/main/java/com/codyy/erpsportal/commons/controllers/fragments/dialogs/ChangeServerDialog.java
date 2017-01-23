@@ -36,10 +36,16 @@ public class ChangeServerDialog extends DialogFragment {
 
     private AutoCompleteTextView mServerAddressEt;
 
+    private ServerChangedListener mServerChangedListener;
+
     public static ChangeServerDialog newInstance(){
         ChangeServerDialog changeServerDialog = new ChangeServerDialog();
         changeServerDialog.setStyle(STYLE_NO_TITLE, 0);
         return changeServerDialog;
+    }
+
+    public void setServerChangedListener(ServerChangedListener serverChangedListener) {
+        mServerChangedListener = serverChangedListener;
     }
 
     @Override
@@ -74,11 +80,8 @@ public class ChangeServerDialog extends DialogFragment {
             mServerAddressEt.setAdapter(adapter);
         }
 
-        if (URLConfig.BASE.startsWith("https://")) {
-            mServerAddressEt.setText(URLConfig.BASE.substring(8));
-        } else {//http://
-            mServerAddressEt.setText(URLConfig.BASE.substring(7));
-        }
+        mServerAddressEt.setText(URLConfig.BASE);
+
         cancelBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,12 +93,15 @@ public class ChangeServerDialog extends DialogFragment {
             public void onClick(View v) {
                 String serverAddress = mServerAddressEt.getText().toString();
                 String newBaseUrl = null;
+                boolean serverChanged = false;
                 if (TextUtils.isEmpty(serverAddress.trim())) {
                     Toast.makeText(getActivity(), "服务地址为空，保持原地址", Toast.LENGTH_SHORT).show();
                 } else if (serverAddress.startsWith("http://") || serverAddress.startsWith("https://")){
                     newBaseUrl = serverAddress;
+                    serverChanged = true;
                 } else {
                     newBaseUrl = "http://" + serverAddress;
+                    serverChanged = true;
                 }
                 if (newBaseUrl != null && !URLConfig.BASE.equals(newBaseUrl)) {
                     URLConfig.updateUrls(newBaseUrl);
@@ -103,6 +109,9 @@ public class ChangeServerDialog extends DialogFragment {
                 }
                 saveServerAddress();
                 dismiss();
+                if (serverChanged && mServerChangedListener != null) {
+                    mServerChangedListener.onServerChangedListener();
+                }
             }
         });
         return view;
@@ -114,7 +123,7 @@ public class ChangeServerDialog extends DialogFragment {
     }
 
     /**
-     * 保存地址
+     * 保存历史填写地址，用于配置服务器地址时下拉补全
      */
     private void saveServerAddress() {
         Executor executor = Executors.newSingleThreadExecutor();
@@ -122,8 +131,12 @@ public class ChangeServerDialog extends DialogFragment {
             @Override
             public void run() {
                 ServerAddressDao.saveServerAddress(getContext().getApplicationContext(),
-                        URLConfig.BASE.substring("http://".length()));
+                        URLConfig.BASE);
             }
         });
+    }
+
+    public interface ServerChangedListener{
+        void onServerChangedListener();
     }
 }
