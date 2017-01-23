@@ -226,7 +226,7 @@ public class TimeTableView2 extends View {
         SimpleDateFormat df = new SimpleDateFormat("MM-dd");
         mToday = df.format(c.getTime());
         if (c.getFirstDayOfWeek() == Calendar.SUNDAY) {
-            mDayOfWeekTure = c.get(Calendar.DAY_OF_WEEK) == 1 ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
+            mDayOfWeekTure = c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
         } else {
             mDayOfWeekTure = c.get(Calendar.DAY_OF_WEEK);
         }

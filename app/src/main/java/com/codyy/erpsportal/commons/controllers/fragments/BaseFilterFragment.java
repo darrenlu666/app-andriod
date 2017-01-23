@@ -21,12 +21,9 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity.FilterParamsProvider;
 import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.models.entities.AreaFilterItem;
 import com.codyy.erpsportal.commons.models.entities.Choice;
 import com.codyy.erpsportal.commons.models.entities.ChoicesOption;
@@ -37,10 +34,12 @@ import com.codyy.erpsportal.commons.models.network.JsonArrayPostRequest;
 import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
 import com.codyy.erpsportal.commons.models.network.RequestManager;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -81,6 +80,9 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
 
     private View mView;
 
+    /**
+     * 用来获取年级学科的地区信息
+     */
     private AreaInfo mAreaInfo;
 
     /**
@@ -286,20 +288,7 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
     }
 
     private void handleJsonItems(JSONArray jsonArray, FilterItem item) {
-        List<Choice> choices;
-        if (("classLevelId".equals(item.getParamName()) || "subjectId".equals(item.getParamName())) && jsonArray.length() > 0) {
-            choices = new ArrayList<>();
-            try {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    choices.add(new Choice(jsonArray.getJSONObject(i).optString("id"), jsonArray.getJSONObject(i).optString("name")));
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                choices = null;
-            }
-        } else {
-            choices = item.getChoiceParser().parseArray(jsonArray);
-        }
+        List<Choice> choices = item.getChoiceParser().parseArray(jsonArray);
         if (choices == null) {
             choices = new ArrayList<>(1);
         }
@@ -365,7 +354,7 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
             items.add(areaFilterItem);
         }
 
-        FilterItem classLevelFilterItem = new FilterItem("年级", "classLevelId", URLConfig.ALL_CLASS_LEVEL, FilterItem.OBJECT, new Choice.ClassLevelJsonParser());
+        FilterItem classLevelFilterItem = new FilterItem("年级", "classLevelId", URLConfig.ALL_CLASS_LEVEL, FilterItem.OBJECT);
         FilterItem subjectFilterItem = new FilterItem("学科", "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT);
         subjectFilterItem.addPrecondition(classLevelFilterItem, "classlevelId");
         items.add(classLevelFilterItem);

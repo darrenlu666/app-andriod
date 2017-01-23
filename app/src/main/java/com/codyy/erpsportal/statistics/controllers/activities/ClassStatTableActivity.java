@@ -8,21 +8,20 @@ import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.Extra;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.CenterLongTextView;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment.OnRowClickListener;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
@@ -31,6 +30,7 @@ import com.codyy.erpsportal.statistics.models.entities.CourseProfilesResult;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterCarrier;
 import com.codyy.erpsportal.statistics.models.entities.StatRow;
 import com.codyy.erpsportal.statistics.models.entities.StatTableModel;
+import com.codyy.url.URLConfig;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -95,7 +95,7 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
      * 类型：开课概况-主讲教室（主讲）/开课概况-主讲教室（受邀）/开课概况-接收教室
      */
     @Bind(R.id.tv_title)
-    TextView mTitleTv;
+    CenterLongTextView mTitleTv;
 
     private StatTableFragment mTableFragment;
 

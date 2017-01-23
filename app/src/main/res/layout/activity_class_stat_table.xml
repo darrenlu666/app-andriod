@@ -33,7 +33,31 @@
             android:padding="16dp"
             android:src="@drawable/ic_filter"/>
 
-        <HorizontalScrollView
+        <!--<HorizontalScrollView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_alignWithParentIfMissing="true"-->
+            <!--android:layout_toEndOf="@id/btn_return"-->
+            <!--android:layout_toLeftOf="@id/ib_filter"-->
+            <!--android:layout_toRightOf="@id/btn_return"-->
+            <!--android:layout_toStartOf="@id/ib_filter"-->
+            <!--android:scrollbars="none">-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tv_title"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:ellipsize="end"-->
+                <!--android:gravity="center"-->
+                <!--android:singleLine="true"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="@dimen/layout_title_text_size"-->
+                <!--tools:text="开课比分析-主讲教室(主讲)"/>-->
+        <!--</HorizontalScrollView>-->
+
+        <com.codyy.erpsportal.commons.widgets.CenterLongTextView
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignWithParentIfMissing="true"
@@ -41,20 +65,8 @@
             android:layout_toLeftOf="@id/ib_filter"
             android:layout_toRightOf="@id/btn_return"
             android:layout_toStartOf="@id/ib_filter"
-            android:scrollbars="none">
+            tools:text="开课比分析-主讲教室(主讲)"/>
 
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/layout_title_text_size"
-                tools:text="开课比分析-主讲教室(主讲)"/>
-        </HorizontalScrollView>
     </RelativeLayout>
 
     <fragment

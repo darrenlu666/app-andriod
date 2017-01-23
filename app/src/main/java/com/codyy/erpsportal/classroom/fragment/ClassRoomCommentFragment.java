@@ -27,12 +27,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.entities.CountHeader;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.DeleteCommentDialog;
@@ -129,11 +131,16 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
     @Bind(R.id.rv_comments)
     protected RecyclerView mCommentsRv;
 
+    @Bind(R.id.tv_empty)
+    protected TextView mEmptyTv;
+
     private BaseCommentsAdapter mCommentsAdapter;
 
     private SendingDialogPresenter mSendingDialogPresenter;
 
     private RequestSender mRequestSender;
+
+    private CountHeader mCountHeader;
 
     public static ClassRoomCommentFragment newInstance(UserInfo userInfo, String scheduleDetailId, String from) {
 
@@ -180,6 +187,8 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
         mRefreshLayout.setOnRefreshListener(this);
         mCommentsRv.setLayoutManager(new LinearLayoutManager(getContext()));
         mCommentsAdapter = new BaseCommentsAdapter();
+        mCountHeader = new CountHeader();
+        mCommentsAdapter.setHeader(mCountHeader);
         mCommentsRv.setAdapter(mCommentsAdapter);
         initCommentTextFilter();
         return view;
@@ -352,29 +361,36 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
                 mIsLoadingMore = false;
                 stopRefreshing();
                 if ("success".equals(response.optString("result")) && mCommentsRv != null) {
-                    if (isRefresh) {
-                        mCommentsAdapter.clear();
-                    }
                     mTotal = response.optInt("firstTotal");
-//                    updateCommentsCount();
-                    JSONArray jsonArray = response.optJSONArray("firstList");
-                    if (null != jsonArray) {
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject commentJsonObj = jsonArray.optJSONObject(i);
-                            RethinkComment rethinkComment = new RethinkComment();
-                            rethinkComment.setContent(commentJsonObj.optString("content"));
-                            rethinkComment.setId(commentJsonObj.optString("commentId"));
-                            rethinkComment.setCreateTime(commentJsonObj.optString("createTime"));
-                            rethinkComment.setTotalReplyCount(commentJsonObj.optInt("secondTotal"));
-                            rethinkComment.setUserType(commentJsonObj.optString("userType"));
+                    updateCommentsCount();
+                    if (mTotal == 0) {
+                        mCommentsAdapter.clear();
+                        mCommentsAdapter.notifyDataSetChanged();
+                        mEmptyTv.setVisibility(View.VISIBLE);
+                    } else {
+                        if (isRefresh) {
+                            mCommentsAdapter.clear();
+                        }
+                        mEmptyTv.setVisibility(View.GONE);
+                        JSONArray jsonArray = response.optJSONArray("firstList");
+                        if (null != jsonArray) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject commentJsonObj = jsonArray.optJSONObject(i);
+                                RethinkComment rethinkComment = new RethinkComment();
+                                rethinkComment.setContent(commentJsonObj.optString("content"));
+                                rethinkComment.setId(commentJsonObj.optString("commentId"));
+                                rethinkComment.setCreateTime(commentJsonObj.optString("createTime"));
+                                rethinkComment.setTotalReplyCount(commentJsonObj.optInt("secondTotal"));
+                                rethinkComment.setUserType(commentJsonObj.optString("userType"));
 
-                            JSONArray repliesJsonArray = commentJsonObj.optJSONArray("secondList");
-                            parseRepliesJsonArray(rethinkComment, repliesJsonArray);
-                            rethinkComment.setUserIcon(commentJsonObj.optString("headPic"));
-                            rethinkComment.setUserId(commentJsonObj.optString("baseUserId"));
-                            rethinkComment.setUserRealName(commentJsonObj.optString("baseUserName"));
-                            rethinkComment.setMine(mUserInfo.getBaseUserId().equals(rethinkComment.getUserId()));
-                            mCommentsAdapter.addComment(rethinkComment);
+                                JSONArray repliesJsonArray = commentJsonObj.optJSONArray("secondList");
+                                parseRepliesJsonArray(rethinkComment, repliesJsonArray);
+                                rethinkComment.setUserIcon(commentJsonObj.optString("headPic"));
+                                rethinkComment.setUserId(commentJsonObj.optString("baseUserId"));
+                                rethinkComment.setUserRealName(commentJsonObj.optString("baseUserName"));
+                                rethinkComment.setMine(mUserInfo.getBaseUserId().equals(rethinkComment.getUserId()));
+                                mCommentsAdapter.addComment(rethinkComment);
+                            }
                         }
                     }
                     mCommentsAdapter.setHasMore(mTotal > mCommentsAdapter.getCommentCount());
@@ -391,6 +407,10 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
                 UIUtils.toast(getContext(), "获取评论失败，请检查网络。", Toast.LENGTH_SHORT);
             }
         }));
+    }
+
+    private void updateCommentsCount(){
+        mCountHeader.updateCount(mTotal);
     }
 
     /**
@@ -455,7 +475,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
             @Override
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "delete comment response=", response);
-                if (response.optBoolean("result") && mCommentsRv != null) {
+                if (response.optString("result").equals("success") && mCommentsRv != null) {
                     String toastStr;
                     if (commentBase instanceof RethinkComment) {
                         toastStr = "删除评论成功！";

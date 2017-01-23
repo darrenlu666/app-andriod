@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
+import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.Cog;
 
 
@@ -105,7 +106,7 @@ public class ConfirmDownloadDialog extends DialogFragment {
         Cog.d(TAG, "+downloadNewVersion url=" + url);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setDescription("新版本下载中…");
-        request.setTitle("互动学习平台");
+        request.setTitle(getResources().getString(R.string.app_name));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             request.allowScanningByMediaScanner();
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);

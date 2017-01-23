@@ -6,6 +6,7 @@ import com.codyy.erpsportal.commons.utils.StringUtils;
 import org.json.JSONObject;
 
 /**
+ * 监管首页数据集
  * Created by gujiajia on 2015/4/20.
  */
 public class CountData {

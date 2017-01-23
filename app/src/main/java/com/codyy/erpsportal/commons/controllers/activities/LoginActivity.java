@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog.ServerChangedListener;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -150,12 +151,15 @@ public class LoginActivity extends AppCompatActivity {
                         if (mPendingRequest != null) {
                             ToastUtil.showToast(LoginActivity.this, "需要输入验证码！");
                             mPendingRequest = null;
+                            mLoadingDialog.cancel();
                         }
                     }
                     saveToken();
                 } else {
                     if (mPendingRequest != null) {
                         UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
+                        mPendingRequest = null;
+                        mLoadingDialog.cancel();
                     }
                     mLoginToken = null;
                 }
@@ -167,6 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                 mIsFetchingToken = false;
                 if (mPendingRequest != null) {
                     UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
+                    mPendingRequest = null;
+                    mLoadingDialog.cancel();
                 }
             }
         }));
@@ -271,7 +277,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFiveEvenClick() {
                 Cog.d(TAG, "onFiveEvenClick");
-                ChangeServerDialog.newInstance().show(getSupportFragmentManager(), "change_server");
+                ChangeServerDialog changeServerDialog = ChangeServerDialog.newInstance();
+                changeServerDialog.setServerChangedListener(new ServerChangedListener() {
+                    @Override
+                    public void onServerChangedListener() {
+                        loadLoginToken();
+                    }
+                });
+                changeServerDialog.show(getSupportFragmentManager(), "change_server");
             }
         });
         mVerifyCodeDv.setOnClickListener(new OnClickListener() {
@@ -302,8 +315,8 @@ public class LoginActivity extends AppCompatActivity {
         final String password = mPasswordEt.getText().toString();
         String verifyCode = mVerifyCodeEt.getText().toString();
 
-        if (!validateInput(username, "用户名")) return;
-        if (!validateInput(password, "密码")) return;
+        if (!validateInput(username, "用户名", 5 , 30)) return;
+        if (!validateInput(password, "密码", 6, 18)) return;
 
         Map<String, String> params = new HashMap<>();
         if (mVerifyCodeEt.isShown()) {
@@ -326,7 +339,9 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        params.put("token", mLoginToken);
+        if (!TextUtils.isEmpty(mLoginToken)) {
+            params.put("token", mLoginToken);
+        }
         sendLoginRequest(username, password, params);
     }
 
@@ -335,18 +350,18 @@ public class LoginActivity extends AppCompatActivity {
      * @param text 用户名或密码
      * @return true 验证通过，false 验证未通过
      */
-    private boolean validateInput(String text, String typeName) {
+    private boolean validateInput(String text, String typeName, int minLength, int maxLength) {
         if (TextUtils.isEmpty(text)) {
             UIUtils.toast(getString(R.string.please_input_s, typeName), Toast.LENGTH_SHORT);
             return false;
         }
 
-        if (text.length() < 6 || text.length()>18 ) {
-            UIUtils.toast(getString(R.string.s_length_require, typeName), Toast.LENGTH_SHORT);
+        if (text.length() < minLength || text.length() > maxLength ) {
+            UIUtils.toast(getString(R.string.s_d_d_length_require, typeName, minLength, maxLength), Toast.LENGTH_SHORT);
             return false;
         }
 
-        if (!text.matches(Regexes.USERNAME_PASSWORD_REGEX)) {
+        if (!text.matches(Regexes.USERNAME_REGEX)) {
             UIUtils.toast(getString(R.string.s_worry_chars, typeName), Toast.LENGTH_SHORT);
             return false;
         }

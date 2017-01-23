@@ -33,7 +33,7 @@
                 android:drawableStart="@drawable/et_name_nonnull"
                 android:hint="@string/username"
                 android:imeOptions="actionNext"
-                android:maxLength="18"/>
+                android:maxLength="30"/>
 
             <EditText
                 android:id="@+id/et_password"

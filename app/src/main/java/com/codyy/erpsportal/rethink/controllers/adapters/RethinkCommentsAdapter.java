@@ -212,8 +212,8 @@ public class RethinkCommentsAdapter extends Adapter<RecyclerViewHolder> {
         if (item instanceof RethinkComment) {
             RethinkComment comment = (RethinkComment) item;
             mRethinkComments.remove(comment);
-            int i = comment.itemCount(),deletingItemCount = comment.itemCount();
-            while(i>0) {
+            int i = comment.itemCount(), deletingItemCount = comment.itemCount();
+            while(i > 0) {
                 mCommentBaseList.remove(position);
                 i--;
             }

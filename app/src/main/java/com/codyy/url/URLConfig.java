@@ -85,7 +85,7 @@ public class URLConfig {
     /**
      * 获取登录token
      */
-    @UrlSuffix("/genertateLoginToken.do")
+    @UrlSuffix("/generateLoginToken.do")
     public static String LOGIN_TOKEN;
 
     /**

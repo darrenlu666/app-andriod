@@ -24,14 +24,14 @@ public class DateUtils {
 
     public static SimpleDateFormat sDayFormat = new SimpleDateFormat("MM-dd");
 
-    public static SimpleDateFormat sDayWithYearFormat = new SimpleDateFormat("yy-MM-dd");
+    public static SimpleDateFormat sDayWithYearFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * 1) 发布时间小于1分钟，显示：刚刚
      * 2) 1分钟≤发布时间<1小时，显示：mm分钟前
      * 3) 1小时≦发布时间，并且在今天0：00后的，显示：今天 hh：mm
      * 4) 发布时间在今天0：00前的，且在今年的，显示：MM-DD
-     * 5) 发布年份≦当前年份，显示：YY-MM-DD
+     * 5) 发布年份≦当前年份，显示：YYYY-MM-DD
      */
     public static String formatCreateTime(Context context, String dateStr) {
         Date date = null;

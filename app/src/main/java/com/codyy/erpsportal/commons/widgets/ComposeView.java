@@ -25,6 +25,7 @@ import com.codyy.erpsportal.commons.models.entities.People;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.SoftKeyboardStateHelper;
+import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.net.URLEncoder;
@@ -38,7 +39,7 @@ public class ComposeView extends LinearLayout implements View.OnClickListener, S
 
     private ImageView mIvEmoji;
     private Animation mShowAnim, mDismissAnim;
-    private Button mBtnSend;
+    private CommentButton mBtnSend;
     private EmojiconEditText mEtText;
     private OnComposeOperationDelegate mDelegate;
     private SoftKeyboardStateHelper mKeyboardHelper;
@@ -149,7 +150,7 @@ public class ComposeView extends LinearLayout implements View.OnClickListener, S
         mIvEmoji.setOnClickListener(this);
         mEtText = (EmojiconEditText) findViewById(R.id.et_text);
         mEtText.addTextChangedListener(mTextWatcher);
-        mBtnSend = (Button) findViewById(R.id.btn_send);
+        mBtnSend = (CommentButton) findViewById(R.id.btn_send);
         mBtnSend.setOnClickListener(this);
 
         mLyEmoji = findViewById(R.id.ly_emoji);
