@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by gujiajia on 2016/2/23.
@@ -42,6 +43,8 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         InputStream input = null;
         OutputStream output = null;
         HttpURLConnection connection = null;
+        String urlStr = urls[0];
+
         String filePath = urls[1];
         int index = filePath.lastIndexOf('.');
 //        String suffix = filePath.substring(index);
@@ -55,7 +58,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             Cog.d(TAG, "cacheDir=" + directory);
         }
         try {
-            URL url = new URL(urls[0].replace(" ", "%20"));
+            URL url = new URL(encode(urlStr));
             Cog.d(TAG, "url=", url, ", fileName=", filePath,", bytes=", startPos);
 
             connection = (HttpURLConnection) url.openConnection();
@@ -113,6 +116,14 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                 connection.disconnect();
         }
         return filePath;
+    }
+
+    private String encode(String url) {
+        String[] urls = url.split("\\?");
+        if (urls.length == 1) {
+            return urls[0];
+        }
+        return urls[0] + "?" + URLEncoder.encode(urls[1]);
     }
 
     @Override
