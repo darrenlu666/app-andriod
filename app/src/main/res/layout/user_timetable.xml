@@ -58,7 +58,7 @@
     </RelativeLayout>
 
 
-    <com.codyy.erpsportal.commons.widgets.TimeTableView2
+    <com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2
         android:id="@+id/user_timeable_layout_timetableview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

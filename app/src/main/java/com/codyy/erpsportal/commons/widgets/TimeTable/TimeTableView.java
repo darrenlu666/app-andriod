@@ -1,4 +1,4 @@
-package com.codyy.erpsportal.commons.widgets;
+package com.codyy.erpsportal.commons.widgets.TimeTable;
 
 import android.content.Context;
 import android.graphics.Canvas;

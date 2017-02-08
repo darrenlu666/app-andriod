@@ -33,7 +33,7 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.CalendarScrollView;
 import com.codyy.erpsportal.commons.widgets.CalendarViewPager;
 import com.codyy.erpsportal.commons.widgets.RecycleViewPopuWindow;
-import com.codyy.erpsportal.commons.widgets.TimeTableView2;
+import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
 import com.codyy.erpsportal.commons.widgets.components.FilterButton;
 import com.codyy.erpsportal.county.widgets.ClassDetailDialog;
 import com.codyy.erpsportal.timetable.fragments.ListDialog;
