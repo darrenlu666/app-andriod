@@ -354,13 +354,28 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
             items.add(areaFilterItem);
         }
 
-        FilterItem classLevelFilterItem = new FilterItem("年级", "classLevelId", URLConfig.ALL_CLASS_LEVEL, FilterItem.OBJECT);
+        FilterItem classLevelFilterItem = new FilterItem("年级", "classLevelId", obtainClassLevelUrl(), FilterItem.OBJECT);
         FilterItem subjectFilterItem = new FilterItem("学科", "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT);
         subjectFilterItem.addPrecondition(classLevelFilterItem, "classlevelId");
         items.add(classLevelFilterItem);
         items.add(subjectFilterItem);
         appendExtraOptions(items);
         mOptionsAdapter.addData(items);
+    }
+
+    /**
+     * 如果有学校信息，用getClasslevelsBySchoolId这个接口请求数据
+     * @return
+     */
+    private String obtainClassLevelUrl() {
+        if (mAreaInfo != null) {
+            if (mAreaInfo.isSchool()) {
+                if (!TextUtils.isEmpty(mAreaInfo.getId())) {
+                    return URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID;
+                }
+            }
+        }
+        return URLConfig.ALL_CLASS_LEVEL;
     }
 
     protected void appendExtraOptions(List<FilterItem> items) {

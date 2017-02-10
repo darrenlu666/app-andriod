@@ -86,7 +86,7 @@
                 android:layout_height="match_parent"
                 android:scrollbars="none">
 
-                <com.codyy.erpsportal.commons.widgets.TimeTableView2
+                <com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2
                     android:id="@+id/timetableview2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

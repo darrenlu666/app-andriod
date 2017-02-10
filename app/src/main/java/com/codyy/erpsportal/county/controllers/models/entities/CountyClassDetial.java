@@ -3,7 +3,7 @@ package com.codyy.erpsportal.county.controllers.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.codyy.erpsportal.commons.widgets.TimeTableView2;
+import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
 
 import java.util.List;
 
