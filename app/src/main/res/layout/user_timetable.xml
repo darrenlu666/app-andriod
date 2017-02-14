@@ -63,6 +63,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         app:startWith="sunday"
-        app:subjectTextSize="14"
+        app:subjectTextSize="14dp"
         app:titleSize="12" />
 </LinearLayout>

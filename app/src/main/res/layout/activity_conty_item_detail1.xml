@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             app:isShowDate="true"
             android:layout_height="match_parent"
-            app:columnSize="65"
+            app:subjectTextSize="14dp"
+            app:columnSize="65dp"
             app:startWith="monday" />
     </HorizontalScrollView>
 
