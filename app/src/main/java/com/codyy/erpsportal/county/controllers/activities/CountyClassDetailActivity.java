@@ -191,6 +191,7 @@ public class CountyClassDetailActivity extends ToolbarActivity {
     private void loadData() {
         Map<String, String> param = new HashMap<>();
         param.put("uuid", mUserInfo.getUuid());
+        param.put("isNewVersion", "1");
         switch (mType) {
             case TYPE_MASTERCLASSROOM:
                 if (mClassRoomID != null) {
@@ -289,10 +290,21 @@ public class CountyClassDetailActivity extends ToolbarActivity {
             public void onDateSelect(int year, int month, int day, int week) {
                 mModifiedCalender.set(year, month, day);
                 mYear = year;
-                mCurrentDate = year + "-" + String.format(Locale.getDefault(), "%02d", month) + "-" + String.format(Locale.getDefault(), "%02d", day);
-                mDateTV.setText(mCurrentDate);
-                loadData();
-                mCalendarScrollView.open();
+                String f = String.format(Locale.getDefault(), "%02d", month) + "-" + String.format(Locale.getDefault(), "%02d", day);
+                boolean flag = false;
+                for (int i = 0; i < mCountyClassDetial.getHolidays().size(); i++) {
+                    if (f.equals(mCountyClassDetial.getHolidays().get(i).getmDate())) {
+                        mCalendarScrollView.open();
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) {
+                    mCurrentDate = year + "-" + f;
+                    mDateTV.setText(mCurrentDate);
+                    loadData();
+                    mCalendarScrollView.open();
+                }
             }
         });
         mModifiedCalender = Calendar.getInstance();
@@ -715,6 +727,7 @@ public class CountyClassDetailActivity extends ToolbarActivity {
                 if (mCountyClassDetial.getTimeTables() == null || mCountyClassDetial.getTimeTables().size() <= 0) {
                     ToastUtil.showToast(CountyClassDetailActivity.this, "本周暂无课程信息");
                 }
+                mSuperTimeTableLayout.setClassCount(mCountyClassDetial.getMorningCount(), mCountyClassDetial.getAfternoonCount());
                 mSuperTimeTableLayout.setTimeTable(mCountyClassDetial.getTimeTables());
                 mSuperTimeTableLayout.setWeekDate(mCountyClassDetial.getHolidays());
 //                setData();

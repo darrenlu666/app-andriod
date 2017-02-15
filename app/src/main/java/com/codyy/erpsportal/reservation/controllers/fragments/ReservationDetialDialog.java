@@ -163,14 +163,14 @@ public class ReservationDetialDialog extends AppCompatDialogFragment {
         mRequestSender.sendRequest(new RequestSender.RequestData(URLConfig.GET_LIVE_INFO, param, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (!isRemoving()) {
+                if (getDialog() != null && getDialog().isShowing()) {
                     getReservationDetial(response);
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                ToastUtil.showToast(getContext(), "获取数据失败！");
             }
         }, mHashTag));
     }

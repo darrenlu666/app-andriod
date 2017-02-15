@@ -225,6 +225,7 @@ public class TimeTableBase extends View {
     public void setClassCount(int amRow, int pmRow) {
         mAMRow = amRow;
         mPMRow = pmRow;
+        setMinimumHeight(mRowSize * (mAMRow + mPMRow));
         invalidate();
     }
 
@@ -235,7 +236,6 @@ public class TimeTableBase extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
         if (mToday >= 0 && mIsShowToday) {
             mLinePT.setColor(mTodayBGColor);
             canvas.drawRect(mColumnSize * mToday, 0, mColumnSize * mToday + mColumnSize, mHeight, mLinePT);

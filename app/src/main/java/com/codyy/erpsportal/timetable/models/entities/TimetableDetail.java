@@ -20,9 +20,27 @@ public class TimetableDetail {
     private int currentWeek;
     private String currentDate;
     private int code;
+    private int afternoonCount;
+    private int morningCount;
 
     public String getCurrentDate() {
         return currentDate;
+    }
+
+    public int getAfternoonCount() {
+        return afternoonCount;
+    }
+
+    public void setAfternoonCount(int afternoonCount) {
+        this.afternoonCount = afternoonCount;
+    }
+
+    public int getMorningCount() {
+        return morningCount;
+    }
+
+    public void setMorningCount(int morningCount) {
+        this.morningCount = morningCount;
     }
 
     public void setCurrentDate(String currentDate) {

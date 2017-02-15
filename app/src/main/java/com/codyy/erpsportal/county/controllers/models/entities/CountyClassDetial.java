@@ -57,6 +57,8 @@ public class CountyClassDetial implements Parcelable {
     private List<WeekDateListBean> weekDateList;
     private List<TimeTableView2.Holiday> holidays;
     private List<TimeTableView2.TimeTable> timeTables;
+    private int morningCount;
+    private int afternoonCount;
 
     public List<TimeTableView2.TimeTable> getTimeTables() {
         return timeTables;
@@ -112,6 +114,22 @@ public class CountyClassDetial implements Parcelable {
 
     public void setWeekDateList(List<WeekDateListBean> weekDateList) {
         this.weekDateList = weekDateList;
+    }
+
+    public int getMorningCount() {
+        return morningCount;
+    }
+
+    public void setMorningCount(int morningCount) {
+        this.morningCount = morningCount;
+    }
+
+    public int getAfternoonCount() {
+        return afternoonCount;
+    }
+
+    public void setAfternoonCount(int afternoonCount) {
+        this.afternoonCount = afternoonCount;
     }
 
     public static class WeekClassBean implements Parcelable {

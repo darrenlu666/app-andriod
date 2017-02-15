@@ -86,21 +86,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <HorizontalScrollView
+                <com.codyy.erpsportal.commons.widgets.TimeTable.SuperTimeTableLayout
+                    android:id="@+id/supertimetablelayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
-                    android:scrollbars="none">
+                    android:fillViewport="true"
+                    android:gravity="center"
+                    android:textColor="#707070"
+                    android:textSize="15sp"
+                    app:AMRow="4"
+                    app:PMRow="4"
+                    app:columnSize="70dp"
+                    app:noon="12dp"
+                    app:rowSize="70dp"
+                    app:startWith="monday"
+                    app:subjectTextSize="15dp"
+                    app:titleHeight="50dp" />
 
-                    <com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2
-                        android:id="@+id/timetableview2"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        app:columnSize="60dp"
-                        app:subjectTextSize="14dp"
-                        app:isShowDate="true"
-                        app:startWith="monday" />
-                </HorizontalScrollView>
+                <!--  <HorizontalScrollView
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/white"
+                      android:scrollbars="none">
+
+                      <com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2
+                          android:id="@+id/timetableview2"
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          app:columnSize="60dp"
+                          app:isShowDate="true"
+                          app:startWith="monday"
+                          app:subjectTextSize="14dp" />
+                  </HorizontalScrollView>-->
             </com.codyy.erpsportal.commons.widgets.CalendarScrollView>
         </LinearLayout>
 

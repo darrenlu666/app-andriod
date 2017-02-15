@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.entities.TimeTableContent;
+import com.codyy.erpsportal.commons.utils.Cog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import java.util.TimeZone;
  * create by kmdai 17-2-8
  */
 public class SuperTimeTableLayout extends FrameLayout {
+    public final static String TAG = "SuperTimeTableLayout-----:";
     private final static String[] WEEK_STARTWITH_MONDAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
     private final static String[] WEEK_STARTWITH_SUNDAY = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
     private ScrollView mScrollView;
@@ -237,16 +239,31 @@ public class SuperTimeTableLayout extends FrameLayout {
         mTimeTableBase.setIsShowToday(isShowToday);
     }
 
+    /**
+     * 设置上午、下午节次
+     *
+     * @param amRow
+     * @param pmRow
+     */
+    public void setClassCount(int amRow, int pmRow) {
+        if (mTimeTableBase != null) {
+            Cog.d(TAG, amRow + "-" + pmRow);
+            mTimeTableBase.setClassCount(amRow, pmRow);
+        }
+    }
+
     public void setWeekDate(List<TimeTableView2.Holiday> week) {
         mWeekDate = week;
+        boolean flag = false;
         for (int i = 0; i < week.size(); i++) {
             if (mToday.equals(week.get(i).getmDate())) {
                 if (mCurrentYear == mYear) {
-                    setIsShowToday(true);
+                    flag = true;
                 }
                 break;
             }
         }
+        setIsShowToday(flag);
         setTitleView();
     }
 
