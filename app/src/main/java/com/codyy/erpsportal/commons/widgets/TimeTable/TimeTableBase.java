@@ -81,21 +81,17 @@ public class TimeTableBase extends View {
 
     private int mPressX;
     private int mPressY;
-    /**
-     * 点击的框
-     */
-    private RectF mClickRect;
     private int mToday;
     private int mSubjectTestSize;
     private int mAmPmTextSize;
     /**
      * 水平平均值
      */
-    private int mHorizontalAV = 0;
+    private int mHorizontalAV;
     /**
      * 课表竖向平均值
      */
-    private int mVerticalAV = 0;
+    private int mVerticalAV;
     /**
      * 星期几开始这一周
      */
@@ -190,7 +186,6 @@ public class TimeTableBase extends View {
         mIsShowToday = true;
         Calendar c = Calendar.getInstance();
         c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        SimpleDateFormat df = new SimpleDateFormat("MM-dd");
         int dayOfWeekTure;
         if (c.getFirstDayOfWeek() == Calendar.SUNDAY) {
             dayOfWeekTure = c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
@@ -223,6 +218,9 @@ public class TimeTableBase extends View {
      * @param pmRow
      */
     public void setClassCount(int amRow, int pmRow) {
+        if (amRow < 4 || mPMRow < 4) {
+            return;
+        }
         mAMRow = amRow;
         mPMRow = pmRow;
         setMinimumHeight(mRowSize * (mAMRow + mPMRow));
@@ -302,7 +300,7 @@ public class TimeTableBase extends View {
 
     private void drawSubject(Canvas canvas) {
         for (TimeTableView2.TimeTable timeTable : mTimeTables) {
-            String a = timeTable.getClassName().toString();
+            String a = timeTable.getClassName();
             if (a.length() > 7) {
                 a = a.substring(0, 7) + "...";
             }
@@ -319,7 +317,7 @@ public class TimeTableBase extends View {
             } else {
                 mSubjectPT.setColor(mSubjectColor);
             }
-            StaticLayout staticLayout = new StaticLayout(a, mSubjectPT, mColumnSize, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0, false);
+            StaticLayout staticLayout = new StaticLayout(a, mSubjectPT, mColumnSize-20, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0, false);
             int h = staticLayout.getHeight();
             int s = 0;
             if (h < mRowSize) {
@@ -385,6 +383,10 @@ public class TimeTableBase extends View {
         mWidth = w;
         mHeight = h;
         mHorizontalAV = w / 7;
+        mVerticalAV = h / (mAMRow + mPMRow);
+        if (mVerticalAV > mRowSize) {
+            mRowSize = mVerticalAV;
+        }
         if (mHorizontalAV > mColumnSize) {
             mColumnSize = mHorizontalAV;
         }

@@ -162,6 +162,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         Map<String, String> param = new HashMap<>();
         param.put("uuid", mUserInfo.getUuid());
         param.put("strDate", mCurrentDate);
+        param.put("isNewVersion", "1");
         if (httpConnect(URLConfig.GET_TEACHER_SCHEDULE, param, GET_TABLE_INFO)) {
             if (!mLoadingDialog.isShowing()) {
                 mLoadingDialog.show(getSupportFragmentManager(), TAG);
