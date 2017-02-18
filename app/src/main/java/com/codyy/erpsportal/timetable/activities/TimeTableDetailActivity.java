@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -33,7 +34,8 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.CalendarScrollView;
 import com.codyy.erpsportal.commons.widgets.CalendarViewPager;
 import com.codyy.erpsportal.commons.widgets.RecycleViewPopuWindow;
-import com.codyy.erpsportal.commons.widgets.TimeTableView2;
+import com.codyy.erpsportal.commons.widgets.TimeTable.SuperTimeTableLayout;
+import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
 import com.codyy.erpsportal.commons.widgets.components.FilterButton;
 import com.codyy.erpsportal.county.widgets.ClassDetailDialog;
 import com.codyy.erpsportal.timetable.fragments.ListDialog;
@@ -59,6 +61,7 @@ import java.util.Map;
  */
 public class TimeTableDetailActivity extends AppCompatActivity implements View.OnClickListener {
     private Integer mHashTag = this.hashCode();
+    private final static String TAG = "TimeTableDetailActivity------:";
     /**
      * school id
      */
@@ -87,7 +90,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
     private final static String DIALOG_TAG = "detailDialog---";
     private CalendarScrollView mCalendarScrollView;
     private DrawerLayout mDrawerLayout;
-//    private TextView mFilterTV;
+    //    private TextView mFilterTV;
 //    private ImageView mFilterIV;
     private FilterButton mFilterBtn;
     private TextView mDateTV;
@@ -108,7 +111,8 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
     private String mClsSchoolTrimesterId;
     private TimetableDetail mTimetableDetail;
     private RecycleViewPopuWindow mRecycleViewPopuWindow;
-    private TimeTableView2 mTimeTableView2;
+    //    private TimeTableView2 mTimeTableView2;
+    private SuperTimeTableLayout mSuperTimeTableLayout;
     private RadioGroup mRadioGroup;
     private ClassAdapter mClassAdapter;
     private String mCurrentDate;
@@ -119,6 +123,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
      * 能否切换日期或周次
      */
     private boolean mCanChangeDate;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +147,11 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
             Map<String, String> param = new HashMap<>();
             param.put("uuid", mUserInfo.getUuid());
             param.put(SCHOOL_ID, mSchoolID);
-            httpConnect(URLConfig.GET_BASESCHEDULEINFO, param, GET_BASE_INFO);
+            if (httpConnect(URLConfig.GET_BASESCHEDULEINFO, param, GET_BASE_INFO)) {
+                if (!mLoadingDialog.isShowing()) {
+                    mLoadingDialog.show(getSupportFragmentManager(), TAG);
+                }
+            }
         }
     }
 
@@ -153,11 +162,69 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         Map<String, String> param = new HashMap<>();
         param.put("uuid", mUserInfo.getUuid());
         param.put("strDate", mCurrentDate);
-        httpConnect(URLConfig.GET_TEACHER_SCHEDULE, param, GET_TABLE_INFO);
+        param.put("isNewVersion", "1");
+        if (httpConnect(URLConfig.GET_TEACHER_SCHEDULE, param, GET_TABLE_INFO)) {
+            if (!mLoadingDialog.isShowing()) {
+                mLoadingDialog.show(getSupportFragmentManager(), TAG);
+            }
+        }
+
+    }
+
+    /**
+     * 获取课表详情
+     *
+     * @param classRoom
+     */
+    private void getTableInfo(ClassRoom classRoom) {
+        if (mUserInfo != null) {
+            Map<String, String> param = new HashMap<>();
+            param.put("uuid", mUserInfo.getUuid());
+            param.put("isNewVersion", "1");
+            if (MASTER_CLASS.equals(classRoom.getRoomType())) {
+                if (mRadioGroup.getCheckedRadioButtonId() == R.id.master_rb) {
+                    param.put(SCHOOL_ID, mSchoolID);
+                    if (mCurrentWeek > 0) {
+                        param.put("weekSeq", String.valueOf(mCurrentWeek));
+                    }
+                    param.put("clsClassroomId", classRoom.getClsClassroomId());
+                    param.put("clsSchoolTrimesterId", mClsSchoolTrimesterId);
+                    if (httpConnect(URLConfig.GET_MASTERCLASSROOM_DETAIL, param, GET_TABLE_INFO)) {
+                        if (!mLoadingDialog.isShowing()) {
+                            mLoadingDialog.show(getSupportFragmentManager(), TAG);
+                        }
+                    }
+                } else {
+                    param.put(SCHOOL_ID, mSchoolID);
+                    if (mCurrentDate != null) {
+                        param.put("startDate", mCurrentDate);
+                    }
+                    param.put("clsClassroomId", classRoom.getClsClassroomId());
+                    if (httpConnect(URLConfig.GET_RECEIVECLASSROOM_DETAIL, param, GET_TABLE_INFO)) {
+                        if (!mLoadingDialog.isShowing()) {
+                            mLoadingDialog.show(getSupportFragmentManager(), TAG);
+                        }
+                    }
+                }
+            } else {
+                if (mCurrentDate != null) {
+                    param.put("startDate", mCurrentDate);
+                }
+                param.put(SCHOOL_ID, mSchoolID);
+                param.put("clsClassroomId", classRoom.getClsClassroomId());
+                if (httpConnect(URLConfig.GET_RECEIVECLASSROOM_DETAIL, param, GET_TABLE_INFO)) {
+                    if (!mLoadingDialog.isShowing()) {
+                        mLoadingDialog.show(getSupportFragmentManager(), TAG);
+                    }
+                }
+            }
+
+        }
     }
 
     private void init() {
         mRequestSender = new RequestSender(this);
+        mLoadingDialog = LoadingDialog.newInstance();
         mCalendarScrollView = (CalendarScrollView) findViewById(R.id.calendarscrollview);
         mCurrentDate = mCalendarScrollView.getCurrentDate();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -179,7 +246,8 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         mClassRoomTV.setOnClickListener(this);
         mClassTableTV = (TextView) findViewById(R.id.classtable_tv);
         mClassTableTV.setOnClickListener(this);
-        mTimeTableView2 = (TimeTableView2) findViewById(R.id.timetableview2);
+//        mTimeTableView2 = (TimeTableView2) findViewById(R.id.timetableview2);
+        mSuperTimeTableLayout = (SuperTimeTableLayout) findViewById(R.id.supertimetablelayout);
         mRecycleViewPopuWindow = new RecycleViewPopuWindow(this);
         mRadioGroup = (RadioGroup) findViewById(R.id.radiogroup);
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -223,7 +291,8 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         });
         mCalendarScrollView.setOndateChang(new CalendarViewPager.OnDateChange() {
             @Override
-            public void onDateChange(int year, int month, int day) { }
+            public void onDateChange(int year, int month, int day) {
+            }
 
             @Override
             public void onDateSelect(int year, int month, int day, int week) {
@@ -248,7 +317,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                 mCalendarScrollView.open();
             }
         });
-        mTimeTableView2.setTimeTableListener(new TimeTableView2.TimeTableListener() {
+        mSuperTimeTableLayout.setTimeTableListener(new TimeTableView2.TimeTableListener() {
             @Override
             public void onTimeTableClick(int day, int classSeq, float[] size) {
                 if (getSupportFragmentManager().findFragmentByTag(DIALOG_TAG) == null && mTimetableDetail != null && mTimetableDetail.getScheduleList() != null) {
@@ -406,38 +475,6 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         }
     }
 
-    private void getTableInfo(ClassRoom classRoom) {
-        if (mUserInfo != null) {
-            Map<String, String> param = new HashMap<>();
-            param.put("uuid", mUserInfo.getUuid());
-            if (MASTER_CLASS.equals(classRoom.getRoomType())) {
-                if (mRadioGroup.getCheckedRadioButtonId() == R.id.master_rb) {
-                    param.put(SCHOOL_ID, mSchoolID);
-                    if (mCurrentWeek > 0) {
-                        param.put("weekSeq", String.valueOf(mCurrentWeek));
-                    }
-                    param.put("clsClassroomId", classRoom.getClsClassroomId());
-                    param.put("clsSchoolTrimesterId", mClsSchoolTrimesterId);
-                    httpConnect(URLConfig.GET_MASTERCLASSROOM_DETAIL, param, GET_TABLE_INFO);
-                } else {
-                    param.put(SCHOOL_ID, mSchoolID);
-                    if (mCurrentDate != null) {
-                        param.put("startDate", mCurrentDate);
-                    }
-                    param.put("clsClassroomId", classRoom.getClsClassroomId());
-                    httpConnect(URLConfig.GET_RECEIVECLASSROOM_DETAIL, param, GET_TABLE_INFO);
-                }
-            } else {
-                if (mCurrentDate != null) {
-                    param.put("startDate", mCurrentDate);
-                }
-                param.put(SCHOOL_ID, mSchoolID);
-                param.put("clsClassroomId", classRoom.getClsClassroomId());
-                httpConnect(URLConfig.GET_RECEIVECLASSROOM_DETAIL, param, GET_TABLE_INFO);
-            }
-
-        }
-    }
 
     /**
      * 网络请求
@@ -446,8 +483,8 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
      * @param param
      * @param msg
      */
-    private void httpConnect(String url, Map<String, String> param, final int msg) {
-        mRequestSender.sendRequest(new RequestSender.RequestData(url, param, new Response.Listener<JSONObject>() {
+    private boolean httpConnect(String url, Map<String, String> param, final int msg) {
+        return mRequestSender.sendRequest(new RequestSender.RequestData(url, param, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (isFinishing()) {
@@ -483,24 +520,29 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                                     mDateTV.setVisibility(View.GONE);
                                     mRadioGroup.check(R.id.master_rb);
                                 } else {
-                                    mDateTV.setText(response.optString("currentDate"));
                                     mWeekTV.setVisibility(View.GONE);
                                     mDateTV.setVisibility(View.VISIBLE);
                                 }
                                 getTableInfo(mClassRoomSelect);
                             }
                         } else {
+                            if (mLoadingDialog.isShowing()) {
+                                mLoadingDialog.dismiss();
+                            }
                             ToastUtil.showToast(TimeTableDetailActivity.this, "暂无信息！");
                         }
                         break;
                     case GET_TABLE_INFO:
                         mCanChangeDate = false;
+                        if (mLoadingDialog.isShowing()) {
+                            mLoadingDialog.dismiss();
+                        }
                         if (response.optBoolean("result")) {
                             new GetClassDetail().execute(response);
                         } else {
                             ToastUtil.showToast(TimeTableDetailActivity.this, "暂无课表！");
                             mTimetableDetail = null;
-                            mTimeTableView2.setTimeTable(new ArrayList<TimeTableView2.TimeTable>());
+                            mSuperTimeTableLayout.setTimeTable(new ArrayList<TimeTableView2.TimeTable>());
                             mWeekAdapter = new WeekAdapter(0);
                             mRecycleViewPopuWindow.setAdapter(mWeekAdapter);
                             mWeekTV.setText("第0周");
@@ -513,6 +555,9 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
             public void onErrorResponse(VolleyError error) {
                 if (isFinishing()) {
                     return;
+                }
+                if (mLoadingDialog.isShowing()) {
+                    mLoadingDialog.dismiss();
                 }
                 mCanChangeDate = false;
                 ToastUtil.showToast(TimeTableDetailActivity.this, R.string.net_error);
@@ -737,6 +782,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         protected void onPostExecute(TimetableDetail timetableDetail) {
             mTimetableDetail = timetableDetail;
             if (mTimetableDetail != null) {
+                mSuperTimeTableLayout.setClassCount(mTimetableDetail.getMorningCount(), mTimetableDetail.getAfternoonCount());
                 mCurrentWeek = timetableDetail.getCurrentWeek();
                 if (mTimetableDetail.getCurrentDate() != null) {
                     mDateTV.setText(mTimetableDetail.getCurrentDate());
@@ -751,7 +797,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                     holiday.setmDate(mTimetableDetail.getHolidayList().get(i).getStrDate());
                     week.add(holiday);
                 }
-                mTimeTableView2.setWeekDate(week);
+                mSuperTimeTableLayout.setWeekDate(week);
                 if (mTimetableDetail.getScheduleList() != null) {
                     if (!UserInfo.USER_TYPE_TEACHER.equals(mUserInfo.getUserType()) && MASTER_CLASS.equals(mClassRoomSelect.getRoomType()) && mRadioGroup.getCheckedRadioButtonId() == R.id.master_rb) {
                         List<TimeTableView2.TimeTable> tables = new ArrayList<>(mTimetableDetail.getScheduleList().size());
@@ -765,7 +811,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                             }
                             tables.add(timeTableContent);
                         }
-                        mTimeTableView2.setTimeTable(tables);
+                        mSuperTimeTableLayout.setTimeTable(tables);
                     } else {
                         List<TimeTableView2.TimeTable> tables = new ArrayList<>();
                         List<TimetableDetail.ScheduleListBean> scheduleLists = mTimetableDetail.getScheduleList();
@@ -806,7 +852,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                                 }
                             }
                         }
-                        mTimeTableView2.setTimeTable(tables);
+                        mSuperTimeTableLayout.setTimeTable(tables);
                     }
                 }
                 if (mWeekAdapter != null) {

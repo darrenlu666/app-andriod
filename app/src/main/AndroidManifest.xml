@@ -354,10 +354,9 @@
             android:name=".groups.controllers.activities.ClassSpaceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme"
             android:launchMode="singleInstance"
-            />
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
 
         <activity
             android:name=".groups.controllers.activities.MyBlogActivity"
@@ -701,6 +700,9 @@
             android:name=".county.controllers.activities.CountyClassDetailActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".county.controllers.activities.CountyClassStatisticalActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".reservation.controllers.activities.ReservationClassActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -750,7 +752,7 @@
         <activity
             android:name=".commons.controllers.activities.LoadingUserTypeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Transparent.Darker"/>
+            android:theme="@style/AppTheme.Transparent.Darker" />
     </application>
 
 </manifest>

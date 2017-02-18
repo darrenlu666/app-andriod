@@ -86,11 +86,12 @@
                 android:layout_height="match_parent"
                 android:scrollbars="none">
 
-                <com.codyy.erpsportal.commons.widgets.TimeTableView2
+                <com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2
                     android:id="@+id/timetableview2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:columnSize="60"
+                    app:columnSize="60dp"
+                    app:subjectTextSize="14dp"
                     app:isShowDate="true"
                     app:startWith="monday" />
             </HorizontalScrollView>

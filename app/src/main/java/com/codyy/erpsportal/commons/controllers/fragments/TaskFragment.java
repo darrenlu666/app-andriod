@@ -2303,7 +2303,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         commentTv.setBackgroundResource(R.drawable.drawale_fill_in_comment_edittext);
         commentTv.setBackgroundColor(Color.TRANSPARENT);
         mLinearLayout.addView(commentTv);*/
-        addContent(comment);
+        addContent("<p>"+comment+"</p>");
 
     }
 
