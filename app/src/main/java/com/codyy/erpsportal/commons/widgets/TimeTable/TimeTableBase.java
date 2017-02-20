@@ -163,7 +163,6 @@ public class TimeTableBase extends View {
             a.recycle();
         }
         mPressX = mPressY = -1;//初始化点击位置
-        mToday = 2;
         mLinePT = new Paint();
         mLinePT.setStyle(Paint.Style.FILL);
         mLinePT.setStrokeWidth(1);
@@ -188,7 +187,7 @@ public class TimeTableBase extends View {
         c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         int dayOfWeekTure;
         if (c.getFirstDayOfWeek() == Calendar.SUNDAY) {
-            dayOfWeekTure = c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
+            dayOfWeekTure = c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
         } else {
             dayOfWeekTure = c.get(Calendar.DAY_OF_WEEK);
         }
@@ -317,7 +316,7 @@ public class TimeTableBase extends View {
             } else {
                 mSubjectPT.setColor(mSubjectColor);
             }
-            StaticLayout staticLayout = new StaticLayout(a, mSubjectPT, mColumnSize-20, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0, false);
+            StaticLayout staticLayout = new StaticLayout(a, mSubjectPT, mColumnSize - 20, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0, false);
             int h = staticLayout.getHeight();
             int s = 0;
             if (h < mRowSize) {

@@ -49,8 +49,10 @@ import com.google.gson.JsonSyntaxException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -293,7 +295,7 @@ public class CountyClassDetailActivity extends ToolbarActivity {
                 String f = String.format(Locale.getDefault(), "%02d", month) + "-" + String.format(Locale.getDefault(), "%02d", day);
                 boolean flag = false;
                 for (int i = 0; i < mCountyClassDetial.getHolidays().size(); i++) {
-                    if (f.equals(mCountyClassDetial.getHolidays().get(i).getmDate())) {
+                    if (f.equals(mCountyClassDetial.getHolidays().get(i).getmDate()) && mYear == mCountyClassDetial.getHolidays().get(i).getYear()) {
                         mCalendarScrollView.open();
                         flag = true;
                         break;
@@ -679,10 +681,13 @@ public class CountyClassDetailActivity extends ToolbarActivity {
             if (countyClassDetial != null) {
                 if (countyClassDetial.getWeekDateList() != null) {
                     List<TimeTableView2.Holiday> holidays = new ArrayList<>(countyClassDetial.getWeekDateList().size());
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
                     for (CountyClassDetial.WeekDateListBean bean : countyClassDetial.getWeekDateList()) {
                         TimeTableView2.Holiday holiday = new TimeTableView2.Holiday();
                         holiday.setmDate(bean.getDate());
                         holiday.setIsholiday(bean.isHoliday());
+                        Date date = new Date(bean.getDateOfWeek());
+                        holiday.setYear(Integer.valueOf(simpleDateFormat.format(date)));
                         holidays.add(holiday);
                     }
                     countyClassDetial.setHolidays(holidays);

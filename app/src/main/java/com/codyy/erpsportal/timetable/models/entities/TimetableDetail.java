@@ -9,6 +9,7 @@ import android.view.View;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -105,6 +106,15 @@ public class TimetableDetail {
         private int daySeq;
         private String holidayName;
         private String strDate;
+        private long dateOfWeek;
+
+        public long getDateOfWeek() {
+            return dateOfWeek;
+        }
+
+        public void setDateOfWeek(long dateOfWeek) {
+            this.dateOfWeek = dateOfWeek;
+        }
 
         public boolean isHolidayFlag() {
             return holidayFlag;
@@ -162,7 +172,6 @@ public class TimetableDetail {
         private boolean isAdd;
 
         public void onClick(View view) {
-            System.out.println("-----------onClick");
         }
 
         public boolean isAdd() {

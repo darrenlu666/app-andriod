@@ -401,10 +401,19 @@ public class CountyClassDetial implements Parcelable {
     public static class WeekDateListBean implements Parcelable {
         private String date;
         private boolean holiday;
+        private long dateOfWeek;
         private int weekDay;
 
         public String getDate() {
             return date;
+        }
+
+        public long getDateOfWeek() {
+            return dateOfWeek;
+        }
+
+        public void setDateOfWeek(long dateOfWeek) {
+            this.dateOfWeek = dateOfWeek;
         }
 
         public void setDate(String date) {
@@ -427,6 +436,9 @@ public class CountyClassDetial implements Parcelable {
             this.weekDay = weekDay;
         }
 
+        public WeekDateListBean() {
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -436,15 +448,14 @@ public class CountyClassDetial implements Parcelable {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.date);
             dest.writeByte(this.holiday ? (byte) 1 : (byte) 0);
+            dest.writeLong(this.dateOfWeek);
             dest.writeInt(this.weekDay);
-        }
-
-        public WeekDateListBean() {
         }
 
         protected WeekDateListBean(Parcel in) {
             this.date = in.readString();
             this.holiday = in.readByte() != 0;
+            this.dateOfWeek = in.readLong();
             this.weekDay = in.readInt();
         }
 

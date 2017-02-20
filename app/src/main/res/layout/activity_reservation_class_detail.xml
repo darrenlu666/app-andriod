@@ -84,6 +84,7 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fillViewport="true"
                 android:scrollbars="none">
 
                 <com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2
@@ -91,9 +92,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:columnSize="60dp"
-                    app:subjectTextSize="14dp"
                     app:isShowDate="true"
-                    app:startWith="monday" />
+                    app:startWith="monday"
+                    app:subjectTextSize="14dp" />
             </HorizontalScrollView>
         </LinearLayout>
     </com.codyy.erpsportal.commons.widgets.CalendarScrollView>
