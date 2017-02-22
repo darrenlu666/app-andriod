@@ -310,6 +310,11 @@ public class CalendarScrollView extends FrameLayout {
                 mScrollView = getChildAt(1);
             }
             mScrollView.offsetTopAndBottom(mScroller.getCurrY() - mScrollView.getTop());
+            if (mScroller.isFinished()) {
+                if (!mIsOpen) {
+                    mBGView.setVisibility(GONE);
+                }
+            }
             invalidate();
         }
     }

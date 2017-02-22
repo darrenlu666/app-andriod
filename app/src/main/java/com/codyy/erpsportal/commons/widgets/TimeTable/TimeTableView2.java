@@ -10,6 +10,8 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -94,7 +96,7 @@ public class TimeTableView2 extends View {
      * 高的一半
      */
     private float mHeightHalf = 0;
-    private int mAmPmTestSize = 10;
+    private int mAmPmTextSize = 10;
     private int mSubjectTestSize;
     private Paint mPaint;
     /**
@@ -152,6 +154,9 @@ public class TimeTableView2 extends View {
      */
     private RectF mTodayRect;
 
+    private int mCurrentYear;
+
+
     public TimeTableView2(Context context) {
         super(context);
         init(context, null);
@@ -177,19 +182,18 @@ public class TimeTableView2 extends View {
         if (attrs != null) {
             TypedArray attributes = context.obtainStyledAttributes(attrs, R.styleable.TimeTableView2);
             mTitleTextSize = attributes.getInteger(R.styleable.TimeTableView2_titleSize, 13);
-            mHorizontalAV = attributes.getInteger(R.styleable.TimeTableView2_columnSize, 0);
-            mSubjectTestSize = attributes.getInteger(R.styleable.TimeTableView2_subjectTextSize, 15);
-            mSubjectTestSize = dip2px(context, mSubjectTestSize);
+            mHorizontalAV = attributes.getDimensionPixelSize(R.styleable.TimeTableView2_columnSize, 0);
+            mSubjectTestSize = attributes.getDimensionPixelSize(R.styleable.TimeTableView2_subjectTextSize, 50);
             mWeekStart = attributes.getInteger(R.styleable.TimeTableView2_startWith, 0);
             isShowDate = attributes.getBoolean(R.styleable.TimeTableView2_isShowDate, false);
             if (mHorizontalAV > 0) {
                 mIsHorizontalLock = true;
-                mHorizontalAV = dip2px(context, mHorizontalAV);
                 this.setMinimumWidth((int) (mHorizontalAV * 7));
             }
             if (isShowDate) {
                 getCurrentWeekDate();
             }
+            attributes.recycle();
         }
         mIsShowToday = true;
         mHolidayIcon = ((BitmapDrawable) context.getResources().getDrawable(R.drawable.holiday_icon)).getBitmap();
@@ -215,14 +219,15 @@ public class TimeTableView2 extends View {
         mAmPmPT.setAntiAlias(true);
         mAmPmPT.setStyle(Paint.Style.FILL);
         mAmPmPT.setStrokeWidth(1);
-        mAmPmTestSize = dip2px(context, mAmPmTestSize);
-        mAmPmPT.setTextSize(mAmPmTestSize);
+        mAmPmTextSize = dip2px(context, mAmPmTextSize);
+        mAmPmPT.setTextSize(mAmPmTextSize);
         mAmPmPT.setTextAlign(Paint.Align.CENTER);
         mAmPmPT.setColor(mAmPmColor);
         mAmPmLengh = dip2px(context, mAmPmLengh);
         mAmTop = dip2px(context, mAmTop);
         Calendar c = Calendar.getInstance();
         c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        mCurrentYear = c.get(Calendar.YEAR);
         SimpleDateFormat df = new SimpleDateFormat("MM-dd");
         mToday = df.format(c.getTime());
         if (c.getFirstDayOfWeek() == Calendar.SUNDAY) {
@@ -299,7 +304,7 @@ public class TimeTableView2 extends View {
             //上下午分割线
             mPaint.setColor(mTitleColor);
             canvas.drawText("上午", mAmPmLengh, (mHeightHalf + mTitleHeight) - mAmTop, mAmPmPT);
-            canvas.drawText("下午", mAmPmLengh, (mHeightHalf + mTitleHeight) + mAmPmTestSize, mAmPmPT);
+            canvas.drawText("下午", mAmPmLengh, (mHeightHalf + mTitleHeight) + mAmPmTextSize, mAmPmPT);
             //画网格
             for (int i = 0; i <= (mWeek.length + 1); i++) {
                 canvas.drawLine(mHorizontalAV * i, 0, mHorizontalAV * i, mHeight, mLinePT);
@@ -390,8 +395,9 @@ public class TimeTableView2 extends View {
         mHeight = h;
         mVerticalAV = (mHeight - mTitleHeight) / (float) 8;
         mHeightHalf = mVerticalAV * 4;
-        if (!mIsHorizontalLock) {
-            mHorizontalAV = mWidth / (float) 7;
+        float horizon = mWidth / (float) 7;
+        if (!mIsHorizontalLock || mHorizontalAV < horizon) {
+            mHorizontalAV = horizon;
         }
         mTodayRect = new RectF(mDayOfWeek * mHorizontalAV, mTitleHeight, (mDayOfWeek + 1) * mHorizontalAV, mHeight);
         mWeekRect = new Rect(0, 0, mWidth, mTitleHeight);
@@ -443,7 +449,7 @@ public class TimeTableView2 extends View {
         mWeekDate = week;
         boolean flag = false;
         for (Holiday holiday : week) {
-            if (mToday.equals(holiday.getmDate())) {
+            if (mToday.equals(holiday.getmDate()) && mCurrentYear == holiday.getYear()) {
                 mIsShowToday = true;
                 flag = true;
                 break;
@@ -539,7 +545,7 @@ public class TimeTableView2 extends View {
         void onTimeTableClick(int day, int classSeq, float[] size);
     }
 
-    public static class TimeTable {
+    public static class TimeTable implements Parcelable {
         int daySeq, classSeq;
         String className;
         int count;
@@ -584,6 +590,43 @@ public class TimeTableView2 extends View {
         public void setClassSeq(int classSeq) {
             this.classSeq = classSeq;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.daySeq);
+            dest.writeInt(this.classSeq);
+            dest.writeString(this.className);
+            dest.writeInt(this.count);
+            dest.writeByte(this.processing ? (byte) 1 : (byte) 0);
+        }
+
+        public TimeTable() {
+        }
+
+        protected TimeTable(Parcel in) {
+            this.daySeq = in.readInt();
+            this.classSeq = in.readInt();
+            this.className = in.readString();
+            this.count = in.readInt();
+            this.processing = in.readByte() != 0;
+        }
+
+        public static final Parcelable.Creator<TimeTable> CREATOR = new Parcelable.Creator<TimeTable>() {
+            @Override
+            public TimeTable createFromParcel(Parcel source) {
+                return new TimeTable(source);
+            }
+
+            @Override
+            public TimeTable[] newArray(int size) {
+                return new TimeTable[size];
+            }
+        };
     }
 
 
@@ -605,9 +648,18 @@ public class TimeTableView2 extends View {
         return (int) (dpValue * scale + 0.5f);
     }
 
-    public static class Holiday {
+    public static class Holiday implements Parcelable {
         String mDate;
         boolean mIsholiday;
+        int year;
+
+        public int getYear() {
+            return year;
+        }
+
+        public void setYear(int year) {
+            this.year = year;
+        }
 
         public boolean isHoliday() {
             return mIsholiday;
@@ -624,6 +676,42 @@ public class TimeTableView2 extends View {
         public void setmDate(String mDate) {
             this.mDate = mDate;
         }
+
+        public Holiday() {
+            Calendar c = Calendar.getInstance();
+            c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+            year = c.get(Calendar.YEAR);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.mDate);
+            dest.writeByte(this.mIsholiday ? (byte) 1 : (byte) 0);
+            dest.writeInt(this.year);
+        }
+
+        protected Holiday(Parcel in) {
+            this.mDate = in.readString();
+            this.mIsholiday = in.readByte() != 0;
+            this.year = in.readInt();
+        }
+
+        public static final Creator<Holiday> CREATOR = new Creator<Holiday>() {
+            @Override
+            public Holiday createFromParcel(Parcel source) {
+                return new Holiday(source);
+            }
+
+            @Override
+            public Holiday[] newArray(int size) {
+                return new Holiday[size];
+            }
+        };
     }
 
     private void getCurrentWeekDate() {

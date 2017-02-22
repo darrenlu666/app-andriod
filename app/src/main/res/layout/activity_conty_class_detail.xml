@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -97,39 +98,74 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.codyy.erpsportal.commons.widgets.CalendarScrollView
-            android:id="@+id/calendarscrollview"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <com.codyy.erpsportal.commons.widgets.CalendarScrollView
+                android:id="@+id/calendarscrollview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/divider" />
-
-                <com.codyy.erpsportal.county.widgets.AutoScrollView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/white"
-                    tools:context="com.codyy.erpsportal.county.controllers.activities.CountyItemDetailActivity">
+                    android:orientation="vertical">
 
-                    <LinearLayout
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:background="@color/divider" />
+
+                    <com.codyy.erpsportal.commons.widgets.TimeTable.SuperTimeTableLayout
+                        android:id="@+id/supertimetablelayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:fillViewport="true"
+                        android:gravity="center"
+                        android:textColor="#707070"
+                        android:textSize="15sp"
+                        app:AMRow="4"
+                        app:PMRow="4"
+                        app:columnSize="70dp"
+                        app:noon="12dp"
+                        app:rowSize="70dp"
+                        app:startWith="monday"
+                        app:subjectTextSize="15dp"
+                        app:titleHeight="50dp" />
+                    <!-- <com.codyy.erpsportal.county.widgets.AutoScrollView
+                         android:layout_width="match_parent"
+                         android:layout_height="match_parent"
+                         android:layout_weight="1"
+                         android:background="@color/white"
+                         tools:context="com.codyy.erpsportal.county.controllers.activities.CountyItemDetailActivity">
 
-                        <include layout="@layout/activity_conty_item_detail1" />
 
-                        <include layout="@layout/activity_conty_item_detail2" />
-                    </LinearLayout>
-                </com.codyy.erpsportal.county.widgets.AutoScrollView>
-            </LinearLayout>
-        </com.codyy.erpsportal.commons.widgets.CalendarScrollView>
+                         &lt;!&ndash; <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="match_parent"
+                              android:orientation="vertical">
+
+                              <include layout="@layout/activity_conty_item_detail1" />
+
+                              <include layout="@layout/activity_conty_item_detail2" />
+                          </LinearLayout>&ndash;&gt;
+                     </com.codyy.erpsportal.county.widgets.AutoScrollView>-->
+                </LinearLayout>
+            </com.codyy.erpsportal.commons.widgets.CalendarScrollView>
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/class_statistical"
+                android:gravity="center"
+                android:onClick="onStatisticalClick"
+                android:paddingLeft="5dp"
+                android:text="课程统计"
+                android:textColor="@android:color/white"
+                android:textSize="14dp" />
+        </RelativeLayout>
     </LinearLayout>
 </layout>

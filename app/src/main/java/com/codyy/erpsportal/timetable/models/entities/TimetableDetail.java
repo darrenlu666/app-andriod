@@ -9,6 +9,7 @@ import android.view.View;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,9 +21,27 @@ public class TimetableDetail {
     private int currentWeek;
     private String currentDate;
     private int code;
+    private int afternoonCount;
+    private int morningCount;
 
     public String getCurrentDate() {
         return currentDate;
+    }
+
+    public int getAfternoonCount() {
+        return afternoonCount;
+    }
+
+    public void setAfternoonCount(int afternoonCount) {
+        this.afternoonCount = afternoonCount;
+    }
+
+    public int getMorningCount() {
+        return morningCount;
+    }
+
+    public void setMorningCount(int morningCount) {
+        this.morningCount = morningCount;
     }
 
     public void setCurrentDate(String currentDate) {
@@ -87,6 +106,15 @@ public class TimetableDetail {
         private int daySeq;
         private String holidayName;
         private String strDate;
+        private long dateOfWeek;
+
+        public long getDateOfWeek() {
+            return dateOfWeek;
+        }
+
+        public void setDateOfWeek(long dateOfWeek) {
+            this.dateOfWeek = dateOfWeek;
+        }
 
         public boolean isHolidayFlag() {
             return holidayFlag;
@@ -144,7 +172,6 @@ public class TimetableDetail {
         private boolean isAdd;
 
         public void onClick(View view) {
-            System.out.println("-----------onClick");
         }
 
         public boolean isAdd() {

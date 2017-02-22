@@ -2,12 +2,19 @@
 <resources>
     <declare-styleable name="TimeTableView2">
         <attr name="titleSize" format="integer" />
-        <attr name="columnSize" format="integer" />
-        <attr name="subjectTextSize" format="integer" />
+        <attr name="columnSize" format="dimension" />
+        <attr name="rowSize" format="dimension" />
+        <attr name="noon" format="dimension" />
+        <attr name="AMRow" format="integer" />
+        <attr name="PMRow" format="integer" />
+        <attr name="subjectTextSize" format="dimension" />
         <attr name="startWith">
             <enum name="monday" value="1" />
             <enum name="sunday" value="0" />
         </attr>
         <attr name="isShowDate" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="SuperTimeTableLayout">
+        <attr name="titleHeight" format="dimension" />
     </declare-styleable>
 </resources>

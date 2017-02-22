@@ -141,7 +141,6 @@ public class ClassDetailDialog extends DialogFragment {
                 }
             }
             if (mScheduleListBean.getDirectorList() != null) {
-
                 for (final TimetableDetail.ScheduleListBean.DirectorListBean bean : mScheduleListBean.getDirectorList()) {
                     View item = mLayoutInflater.inflate(R.layout.item_direct_teacher, mDirectLayout, false);
                     TextView teacherName = (TextView) item.findViewById(R.id.directed_teacher);
@@ -178,7 +177,7 @@ public class ClassDetailDialog extends DialogFragment {
         mRequestSender.sendRequest(new RequestSender.RequestData(url, param, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                if (isRemoving()) {
+                if (getView() == null) {
                     return;
                 }
                 switch (mType) {

@@ -58,4 +58,17 @@ public class LoadingDialog extends DialogFragment {
         return dialog;
     }
 
+    @Override
+    public void dismiss() {
+        if (isShowing()) {
+             super.dismiss();
+        }
+    }
+
+    public boolean isShowing() {
+        if (getDialog() != null && getDialog().isShowing()) {
+            return true;
+        }
+        return false;
+    }
 }
