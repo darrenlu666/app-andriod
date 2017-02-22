@@ -120,12 +120,6 @@ public class SuperTimeTableLayout extends FrameLayout {
         mYear = mCurrentYear = c.get(Calendar.YEAR);
         SimpleDateFormat df = new SimpleDateFormat("MM-dd");
         mToday = df.format(c.getTime());
-//        int dayOfWeekTure;
-//        if (c.getFirstDayOfWeek() == Calendar.SUNDAY) {
-//            dayOfWeekTure = c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ? 7 : c.get(Calendar.DAY_OF_WEEK) - 1;
-//        } else {
-//            dayOfWeekTure = c.get(Calendar.DAY_OF_WEEK);
-//        }
         if (mWeekStart == 0) {
             mWeek = WEEK_STARTWITH_SUNDAY;
         } else {
@@ -257,7 +251,7 @@ public class SuperTimeTableLayout extends FrameLayout {
         boolean flag = false;
         for (int i = 0; i < week.size(); i++) {
             if (mToday.equals(week.get(i).getmDate())) {
-                if (mCurrentYear == mYear) {
+                if (mCurrentYear == week.get(i).getYear()) {
                     flag = true;
                 }
                 break;
@@ -269,27 +263,6 @@ public class SuperTimeTableLayout extends FrameLayout {
 
     public void setYear(int year) {
         mYear = year;
-    }
-
-    public static class Holiday {
-        String mDate;
-        boolean mIsholiday;
-
-        public boolean isHoliday() {
-            return mIsholiday;
-        }
-
-        public void setIsholiday(boolean mIsholiday) {
-            this.mIsholiday = mIsholiday;
-        }
-
-        public String getmDate() {
-            return mDate;
-        }
-
-        public void setmDate(String mDate) {
-            this.mDate = mDate;
-        }
     }
 
     private void getCurrentWeekDate() {

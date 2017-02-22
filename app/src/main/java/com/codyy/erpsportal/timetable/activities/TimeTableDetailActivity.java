@@ -29,6 +29,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.utils.DateUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.CalendarScrollView;
@@ -47,8 +48,10 @@ import com.google.gson.JsonSyntaxException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -228,8 +231,8 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         mCalendarScrollView = (CalendarScrollView) findViewById(R.id.calendarscrollview);
         mCurrentDate = mCalendarScrollView.getCurrentDate();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        mFilterTV = (TextView) findViewById(R.id.title_filter_tv);
-//        mFilterIV = (ImageView) findViewById(R.id.title_filter);
+//      mFilterTV = (TextView) findViewById(R.id.title_filter_tv);
+//      mFilterIV = (ImageView) findViewById(R.id.title_filter);
         mFilterBtn = (FilterButton) findViewById(R.id.btn_filter);
         mFilterBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -246,7 +249,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
         mClassRoomTV.setOnClickListener(this);
         mClassTableTV = (TextView) findViewById(R.id.classtable_tv);
         mClassTableTV.setOnClickListener(this);
-//        mTimeTableView2 = (TimeTableView2) findViewById(R.id.timetableview2);
+//      mTimeTableView2 = (TimeTableView2) findViewById(R.id.timetableview2);
         mSuperTimeTableLayout = (SuperTimeTableLayout) findViewById(R.id.supertimetablelayout);
         mRecycleViewPopuWindow = new RecycleViewPopuWindow(this);
         mRadioGroup = (RadioGroup) findViewById(R.id.radiogroup);
@@ -302,8 +305,10 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                 mDateTV.setText(mCurrentDate);
                 boolean isLoad = false;
                 if (mTimetableDetail != null && mTimetableDetail.getHolidayList() != null) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
                     for (TimetableDetail.HolidayListBean bean : mTimetableDetail.getHolidayList()) {
-                        if (montyDay.equals(bean.getStrDate())) {
+                        int y = Integer.valueOf(simpleDateFormat.format(new Date(bean.getDateOfWeek())));
+                        if (montyDay.equals(bean.getStrDate()) && y == year) {
                             isLoad = true;
                             break;
                         }
@@ -791,10 +796,13 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                 mWeekAdapter = new WeekAdapter(timetableDetail.getWeekCount());
                 mRecycleViewPopuWindow.setAdapter(mWeekAdapter);
                 ArrayList<TimeTableView2.Holiday> week = new ArrayList<>(7);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
                 for (int i = 0; i < mTimetableDetail.getHolidayList().size(); i++) {
                     TimeTableView2.Holiday holiday = new TimeTableView2.Holiday();
                     holiday.setIsholiday(mTimetableDetail.getHolidayList().get(i).isHolidayFlag());
                     holiday.setmDate(mTimetableDetail.getHolidayList().get(i).getStrDate());
+                    Date date = new Date(mTimetableDetail.getHolidayList().get(i).getDateOfWeek());
+                    holiday.setYear(Integer.valueOf(simpleDateFormat.format(date)));
                     week.add(holiday);
                 }
                 mSuperTimeTableLayout.setWeekDate(week);

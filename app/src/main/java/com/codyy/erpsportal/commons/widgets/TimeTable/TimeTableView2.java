@@ -154,6 +154,9 @@ public class TimeTableView2 extends View {
      */
     private RectF mTodayRect;
 
+    private int mCurrentYear;
+
+
     public TimeTableView2(Context context) {
         super(context);
         init(context, null);
@@ -224,6 +227,7 @@ public class TimeTableView2 extends View {
         mAmTop = dip2px(context, mAmTop);
         Calendar c = Calendar.getInstance();
         c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        mCurrentYear = c.get(Calendar.YEAR);
         SimpleDateFormat df = new SimpleDateFormat("MM-dd");
         mToday = df.format(c.getTime());
         if (c.getFirstDayOfWeek() == Calendar.SUNDAY) {
@@ -391,8 +395,9 @@ public class TimeTableView2 extends View {
         mHeight = h;
         mVerticalAV = (mHeight - mTitleHeight) / (float) 8;
         mHeightHalf = mVerticalAV * 4;
-        if (!mIsHorizontalLock) {
-            mHorizontalAV = mWidth / (float) 7;
+        float horizon = mWidth / (float) 7;
+        if (!mIsHorizontalLock || mHorizontalAV < horizon) {
+            mHorizontalAV = horizon;
         }
         mTodayRect = new RectF(mDayOfWeek * mHorizontalAV, mTitleHeight, (mDayOfWeek + 1) * mHorizontalAV, mHeight);
         mWeekRect = new Rect(0, 0, mWidth, mTitleHeight);
@@ -444,7 +449,7 @@ public class TimeTableView2 extends View {
         mWeekDate = week;
         boolean flag = false;
         for (Holiday holiday : week) {
-            if (mToday.equals(holiday.getmDate())) {
+            if (mToday.equals(holiday.getmDate()) && mCurrentYear == holiday.getYear()) {
                 mIsShowToday = true;
                 flag = true;
                 break;
@@ -646,6 +651,15 @@ public class TimeTableView2 extends View {
     public static class Holiday implements Parcelable {
         String mDate;
         boolean mIsholiday;
+        int year;
+
+        public int getYear() {
+            return year;
+        }
+
+        public void setYear(int year) {
+            this.year = year;
+        }
 
         public boolean isHoliday() {
             return mIsholiday;
@@ -663,6 +677,12 @@ public class TimeTableView2 extends View {
             this.mDate = mDate;
         }
 
+        public Holiday() {
+            Calendar c = Calendar.getInstance();
+            c.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+            year = c.get(Calendar.YEAR);
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -672,17 +692,16 @@ public class TimeTableView2 extends View {
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeString(this.mDate);
             dest.writeByte(this.mIsholiday ? (byte) 1 : (byte) 0);
-        }
-
-        public Holiday() {
+            dest.writeInt(this.year);
         }
 
         protected Holiday(Parcel in) {
             this.mDate = in.readString();
             this.mIsholiday = in.readByte() != 0;
+            this.year = in.readInt();
         }
 
-        public static final Parcelable.Creator<Holiday> CREATOR = new Parcelable.Creator<Holiday>() {
+        public static final Creator<Holiday> CREATOR = new Creator<Holiday>() {
             @Override
             public Holiday createFromParcel(Parcel source) {
                 return new Holiday(source);
