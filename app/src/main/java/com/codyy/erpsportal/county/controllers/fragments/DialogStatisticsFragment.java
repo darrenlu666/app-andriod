@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -42,7 +43,8 @@ import java.util.Map;
 /**
  * Created by kmdai on 16-10-19.
  */
-public class DialogStatisticsFragment extends DialogFragment {
+public class DialogStatisticsFragment extends AppCompatDialogFragment {
+    private final static Object REQUEST_TAG = new Object();
     /**
      * 主讲教室开课详情
      */
@@ -277,6 +279,9 @@ public class DialogStatisticsFragment extends DialogFragment {
         mRequestSender.sendGetRequest(new RequestSender.RequestData(url, param, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                if (getDialog() == null || !getDialog().isShowing()) {
+                    return;
+                }
                 switch (msg) {
                     case MSG_RESULT_DETIAL:
                         if (mRefreshRecycleView != null) {
@@ -365,12 +370,21 @@ public class DialogStatisticsFragment extends DialogFragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (getDialog() == null || !getDialog().isShowing()) {
+                    return;
+                }
                 if (mRefreshRecycleView != null) {
                     mRefreshRecycleView.setRefreshing(false);
                 }
                 ToastUtil.showToast(getContext(), getString(R.string.net_error));
             }
-        }));
+        }, REQUEST_TAG));
+    }
+
+    @Override
+    public void onDestroyView() {
+        mRequestSender.stop(REQUEST_TAG);
+        super.onDestroyView();
     }
 
     class DetialAdapter extends RefreshBaseAdapter<ActualClassItem> {

@@ -3,14 +3,15 @@ package com.codyy.erpsportal.county.controllers.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.codyy.erpsportal.commons.widgets.TimeTableView2;
+import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by kmdai on 16-8-12.
  */
-public class CountyClassDetial {
+public class CountyClassDetial implements Parcelable {
 
     /**
      * dataList : [{"classLevelName":"一年级","classSque":8,"clsScheduleDetailId":"106941d0d9e24b2794f4d9be64aaca67","clsScheduleId":"6895fd337a7f4b2ca8e6e5ee60480c35","courseName":"语文","daySque":7,"status":"INIT"}]
@@ -56,6 +57,8 @@ public class CountyClassDetial {
     private List<WeekDateListBean> weekDateList;
     private List<TimeTableView2.Holiday> holidays;
     private List<TimeTableView2.TimeTable> timeTables;
+    private int morningCount;
+    private int afternoonCount;
 
     public List<TimeTableView2.TimeTable> getTimeTables() {
         return timeTables;
@@ -113,7 +116,23 @@ public class CountyClassDetial {
         this.weekDateList = weekDateList;
     }
 
-    public static class WeekClassBean {
+    public int getMorningCount() {
+        return morningCount;
+    }
+
+    public void setMorningCount(int morningCount) {
+        this.morningCount = morningCount;
+    }
+
+    public int getAfternoonCount() {
+        return afternoonCount;
+    }
+
+    public void setAfternoonCount(int afternoonCount) {
+        this.afternoonCount = afternoonCount;
+    }
+
+    public static class WeekClassBean implements Parcelable {
         private int weekPlanNum;
         private int weekRealityNum;
         private int weekScheNum;
@@ -141,9 +160,42 @@ public class CountyClassDetial {
         public void setWeekScheNum(int weekScheNum) {
             this.weekScheNum = weekScheNum;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.weekPlanNum);
+            dest.writeInt(this.weekRealityNum);
+            dest.writeInt(this.weekScheNum);
+        }
+
+        public WeekClassBean() {
+        }
+
+        protected WeekClassBean(Parcel in) {
+            this.weekPlanNum = in.readInt();
+            this.weekRealityNum = in.readInt();
+            this.weekScheNum = in.readInt();
+        }
+
+        public static final Creator<WeekClassBean> CREATOR = new Creator<WeekClassBean>() {
+            @Override
+            public WeekClassBean createFromParcel(Parcel source) {
+                return new WeekClassBean(source);
+            }
+
+            @Override
+            public WeekClassBean[] newArray(int size) {
+                return new WeekClassBean[size];
+            }
+        };
     }
 
-    public static class TermClassBean {
+    public static class TermClassBean implements Parcelable {
         private int benefitStuNum;
         private int maxTermPlanNum;
         private int planScheduleNum;
@@ -180,6 +232,41 @@ public class CountyClassDetial {
         public void setRealityScheduleNum(int realityScheduleNum) {
             this.realityScheduleNum = realityScheduleNum;
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.benefitStuNum);
+            dest.writeInt(this.maxTermPlanNum);
+            dest.writeInt(this.planScheduleNum);
+            dest.writeInt(this.realityScheduleNum);
+        }
+
+        public TermClassBean() {
+        }
+
+        protected TermClassBean(Parcel in) {
+            this.benefitStuNum = in.readInt();
+            this.maxTermPlanNum = in.readInt();
+            this.planScheduleNum = in.readInt();
+            this.realityScheduleNum = in.readInt();
+        }
+
+        public static final Creator<TermClassBean> CREATOR = new Creator<TermClassBean>() {
+            @Override
+            public TermClassBean createFromParcel(Parcel source) {
+                return new TermClassBean(source);
+            }
+
+            @Override
+            public TermClassBean[] newArray(int size) {
+                return new TermClassBean[size];
+            }
+        };
     }
 
     public static class DataListBean implements Parcelable {
@@ -311,13 +398,22 @@ public class CountyClassDetial {
         };
     }
 
-    public static class WeekDateListBean {
+    public static class WeekDateListBean implements Parcelable {
         private String date;
         private boolean holiday;
+        private long dateOfWeek;
         private int weekDay;
 
         public String getDate() {
             return date;
+        }
+
+        public long getDateOfWeek() {
+            return dateOfWeek;
+        }
+
+        public void setDateOfWeek(long dateOfWeek) {
+            this.dateOfWeek = dateOfWeek;
         }
 
         public void setDate(String date) {
@@ -339,5 +435,81 @@ public class CountyClassDetial {
         public void setWeekDay(int weekDay) {
             this.weekDay = weekDay;
         }
+
+        public WeekDateListBean() {
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(this.date);
+            dest.writeByte(this.holiday ? (byte) 1 : (byte) 0);
+            dest.writeLong(this.dateOfWeek);
+            dest.writeInt(this.weekDay);
+        }
+
+        protected WeekDateListBean(Parcel in) {
+            this.date = in.readString();
+            this.holiday = in.readByte() != 0;
+            this.dateOfWeek = in.readLong();
+            this.weekDay = in.readInt();
+        }
+
+        public static final Creator<WeekDateListBean> CREATOR = new Creator<WeekDateListBean>() {
+            @Override
+            public WeekDateListBean createFromParcel(Parcel source) {
+                return new WeekDateListBean(source);
+            }
+
+            @Override
+            public WeekDateListBean[] newArray(int size) {
+                return new WeekDateListBean[size];
+            }
+        };
     }
+
+    public CountyClassDetial() {
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.result);
+        dest.writeParcelable(this.weekClass, flags);
+        dest.writeParcelable(this.termClass, flags);
+        dest.writeTypedList(this.dataList);
+        dest.writeTypedList(this.weekDateList);
+        dest.writeTypedList(this.holidays);
+        dest.writeTypedList(this.timeTables);
+    }
+
+    protected CountyClassDetial(Parcel in) {
+        this.result = in.readString();
+        this.weekClass = in.readParcelable(WeekClassBean.class.getClassLoader());
+        this.termClass = in.readParcelable(TermClassBean.class.getClassLoader());
+        this.dataList = in.createTypedArrayList(DataListBean.CREATOR);
+        this.weekDateList = in.createTypedArrayList(WeekDateListBean.CREATOR);
+        this.holidays = in.createTypedArrayList(TimeTableView2.Holiday.CREATOR);
+        this.timeTables = in.createTypedArrayList(TimeTableView2.TimeTable.CREATOR);
+    }
+
+    public static final Creator<CountyClassDetial> CREATOR = new Creator<CountyClassDetial>() {
+        @Override
+        public CountyClassDetial createFromParcel(Parcel source) {
+            return new CountyClassDetial(source);
+        }
+
+        @Override
+        public CountyClassDetial[] newArray(int size) {
+            return new CountyClassDetial[size];
+        }
+    };
 }

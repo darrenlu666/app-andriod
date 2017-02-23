@@ -33,7 +33,7 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.my.TeacherClassParse;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.TimeTableView2;
+import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;

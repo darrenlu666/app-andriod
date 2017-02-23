@@ -2,11 +2,13 @@ package com.codyy.erpsportal.timetable.fragments;
 
 import android.app.Dialog;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +90,10 @@ public class ListDialog extends DialogFragment {
             textview.setBackgroundDrawable(d);
             textview.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UIUtils.dip2px(getContext(), 40)));
             textview.setGravity(Gravity.CENTER);
+            if ("PROGRESS".equals(bean.getStatus())) {
+                textview.setTextColor(Color.parseColor("#19AB20"));
+            }
+            textview.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
             textview.setText(bean.getSubjectName());
             textview.setOnClickListener(new View.OnClickListener() {
                 @Override

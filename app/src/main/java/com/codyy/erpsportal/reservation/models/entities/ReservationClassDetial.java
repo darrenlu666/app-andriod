@@ -3,7 +3,7 @@ package com.codyy.erpsportal.reservation.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.codyy.erpsportal.commons.widgets.TimeTableView2;
+import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,17 +104,17 @@ public class ReservationClassDetial implements Parcelable {
     }
 
     public static class HolidayListBean {
-        private String dateOfWeek;
+        private long dateOfWeek;
         private int daySeq;
         private boolean holidayFlag;
         private String holidayName;
         private String strDate;
 
-        public String getDateOfWeek() {
+        public long getDateOfWeek() {
             return dateOfWeek;
         }
 
-        public void setDateOfWeek(String dateOfWeek) {
+        public void setDateOfWeek(long dateOfWeek) {
             this.dateOfWeek = dateOfWeek;
         }
 

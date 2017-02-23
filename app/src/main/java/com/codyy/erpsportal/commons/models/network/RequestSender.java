@@ -247,7 +247,7 @@ public class RequestSender {
      *
      * @param requestData
      */
-    protected void sendLoginRequest(final RequestData requestData) {
+    private void sendLoginRequest(final RequestData requestData) {
         SharedPreferences sp = mContext.getSharedPreferences(Constants.SHARED_KEY_PASSWORD, Context.MODE_PRIVATE);
         final String username = sp.getString("username", null);
         if (username == null) {

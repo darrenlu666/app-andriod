@@ -20,25 +20,25 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.CalendarScrollView;
 import com.codyy.erpsportal.commons.widgets.CalendarViewPager;
 import com.codyy.erpsportal.commons.widgets.RecycleViewPopuWindow;
-import com.codyy.erpsportal.commons.widgets.TimeTableView2;
-import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
 import com.codyy.erpsportal.reservation.controllers.fragments.ListDialog;
 import com.codyy.erpsportal.reservation.controllers.fragments.ReservationDetialDialog;
 import com.codyy.erpsportal.reservation.models.entities.ReservationClassDetial;
 import com.codyy.erpsportal.reservation.models.entities.ReservationClassItem;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -117,8 +117,8 @@ public class ReservationClassDetailActivity extends AppCompatActivity {
                 String montyDay = String.format(Locale.getDefault(), "%02d", month) + "-" + String.format(Locale.getDefault(), "%02d", day);
                 mCurrentDate = year + "-" + montyDay;
                 boolean isRequest = false;
-                for (ReservationClassDetial.HolidayListBean bean : mReservationClassDetial.getHolidayList()) {
-                    if (bean.getStrDate().equals(montyDay)) {
+                for (TimeTableView2.Holiday bean : mReservationClassDetial.getWeekList()) {
+                    if (bean.getmDate().equals(montyDay) && bean.getYear() == year) {
                         isRequest = true;
                         break;
                     }
@@ -310,10 +310,12 @@ public class ReservationClassDetailActivity extends AppCompatActivity {
             ReservationClassDetial reservationClassDetial = new Gson().fromJson(params[0].toString(), ReservationClassDetial.class);
             if (reservationClassDetial != null && reservationClassDetial.getHolidayList() != null && reservationClassDetial.getScheduleList() != null) {
                 ArrayList<TimeTableView2.Holiday> week = new ArrayList<>(7);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy");
                 for (ReservationClassDetial.HolidayListBean bean : reservationClassDetial.getHolidayList()) {
                     TimeTableView2.Holiday holiday = new TimeTableView2.Holiday();
                     holiday.setmDate(bean.getStrDate());
                     holiday.setIsholiday(bean.isHolidayFlag());
+                    holiday.setYear(Integer.valueOf(simpleDateFormat.format(new Date(bean.getDateOfWeek()))));
                     week.add(holiday);
                 }
                 for (ReservationClassDetial.ScheduleListBean bean : reservationClassDetial.getScheduleList()) {
