@@ -3,6 +3,7 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.codyy.erpsportal.commons.utils.NumberUtils;
 import com.codyy.erpsportal.commons.utils.UriUtils;
 
 import org.json.JSONArray;
@@ -33,7 +34,7 @@ public class PrepareLessonsShortEntity implements Parcelable {
     private int viewCount;
     private String title;
     private String totalScore;
-    private int averageScore;
+    private float averageScore;
     private String scoreType;
 
     public String getScoreType() {
@@ -72,7 +73,7 @@ public class PrepareLessonsShortEntity implements Parcelable {
         this.totalScore = totalScore;
     }
 
-    public void setAverageScore(int averageScore) {
+    public void setAverageScore(float averageScore) {
         this.averageScore = averageScore;
     }
 
@@ -104,7 +105,7 @@ public class PrepareLessonsShortEntity implements Parcelable {
         return totalScore;
     }
 
-    public int getAverageScore() {
+    public float getAverageScore() {
         return averageScore;
     }
 
@@ -119,7 +120,7 @@ public class PrepareLessonsShortEntity implements Parcelable {
         prepareLessonsShortEntity.setMainTeacher(jsonObject.optString("mainTeacher"));
         prepareLessonsShortEntity.setStartTime(jsonObject.optLong("startTime"));
         prepareLessonsShortEntity.setTotalScore(jsonObject.optString("totalScore"));
-        prepareLessonsShortEntity.setAverageScore(jsonObject.optInt("averageScore"));
+        prepareLessonsShortEntity.setAverageScore(NumberUtils.floatOf(jsonObject.optString("averageScore")));
         prepareLessonsShortEntity.setViewCount(jsonObject.optInt("viewCount"));
         prepareLessonsShortEntity.setSubjectPic(UriUtils.getImageUrl(jsonObject.optString("subjectPic")));
         prepareLessonsShortEntity.setScoreType(jsonObject.optString("scoreType"));
@@ -153,7 +154,7 @@ public class PrepareLessonsShortEntity implements Parcelable {
         dest.writeInt(this.viewCount);
         dest.writeString(this.title);
         dest.writeString(this.totalScore);
-        dest.writeInt(this.averageScore);
+        dest.writeFloat(this.averageScore);
         dest.writeString(this.scoreType);
     }
 
@@ -165,7 +166,7 @@ public class PrepareLessonsShortEntity implements Parcelable {
         this.viewCount = in.readInt();
         this.title = in.readString();
         this.totalScore = in.readString();
-        this.averageScore = in.readInt();
+        this.averageScore = in.readFloat();
         this.scoreType = in.readString();
     }
 

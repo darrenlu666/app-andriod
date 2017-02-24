@@ -361,7 +361,7 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
                 break;
             case TeachingResearchBase.EVALUATION_LESSON:
                 EvaluationScore evaluationScore = new EvaluationScore();
-                evaluationScore.setAvgScore(item.getAverageScore());
+                evaluationScore.setAvgScore( item.getAverageScore());
                 evaluationScore.setScoreType(item.getScoreType());
                 float totalScore = 0f;
                 try {
@@ -450,7 +450,7 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
                         rateTv.setVisibility(View.VISIBLE);
                         ratingBar.setVisibility(View.VISIBLE);
                         scoreTv.setText("评分");
-                        ratingBar.setRating((float) data.getAverageScore() / 2);
+                        ratingBar.setRating(data.getAverageScore() / 2f);
                     }
                     break;
                 case TeachingResearchBase.INTERAC_LESSON:
@@ -459,12 +459,12 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
 
                     break;
             }
-            rateTv.setText(context.getString(R.string.d_score, data.getAverageScore()));
+            rateTv.setText(context.getString(R.string.f_score, data.getAverageScore()));
             title.setText(data.getTitle());
             teachName.setText(data.getMainTeacher());
             date.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(data.getStartTime()));
             clickCount.setText(String.valueOf(data.getViewCount()));
-            ratingBar.setProgress(data.getAverageScore());
+            ratingBar.setProgress((int)data.getAverageScore());
             ImageFetcher.getInstance(context).fetchImage(headerImage, data.getSubjectPic());
         }
     }

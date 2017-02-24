@@ -2,6 +2,7 @@ package com.codyy.erpsportal.commons.models.entities;
 
 import android.support.annotation.NonNull;
 
+import com.codyy.erpsportal.commons.utils.NumberUtils;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.utils.UriUtils;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -117,9 +118,6 @@ public class TeachingResearchBase {
                     teachingResearchPrepare.setSubjectPic(getPic(person.optString("subjectPic")));
                     teachingResearchBases.add(teachingResearchPrepare);
                 }
-//                TeachingResearchBase teachingResearchBase3 = new TeachingResearchBase();
-//                teachingResearchBase3.setType(TeachingResearchBase.DIVIDE_VIEW);
-//                teachingResearchBases.add(teachingResearchBase3);
             } else {
                 TeachingResearchBase nodata = new TeachingResearchBase();
                 nodata.setType(TeachingResearchBase.NO_DATA);
@@ -143,7 +141,7 @@ public class TeachingResearchBase {
                         teachingResearchPrepare.setMainTeacher(jsonObject1.optString("mainTeacher"));
                         teachingResearchPrepare.setStartTime(jsonObject1.optLong("startTime"));
                         teachingResearchPrepare.setTotalScore(jsonObject1.optString("totalScore"));
-                        teachingResearchPrepare.setAverageScore(jsonObject1.optString("averageScore"));
+                        teachingResearchPrepare.setAverageScore(NumberUtils.floatOf(jsonObject1.optString("averageScore")));
                         teachingResearchPrepare.setViewCount(jsonObject1.optInt("viewCount", 0));
                         teachingResearchPrepare.setSubjectPic(getPic(jsonObject1.optString("subjectPic")));
                         teachingResearchBases.add(teachingResearchPrepare);
@@ -174,7 +172,7 @@ public class TeachingResearchBase {
                         teachingResearchPrepare.setMainTeacher(jsonObject1.optString("mainTeacher"));
                         teachingResearchPrepare.setStartTime(jsonObject1.optLong("startTime"));
                         teachingResearchPrepare.setTotalScore(jsonObject1.optString("totalScore"));
-                        teachingResearchPrepare.setAverageScore(jsonObject1.optString("averageScore"));
+                        teachingResearchPrepare.setAverageScore(NumberUtils.floatOf(jsonObject1.optString("averageScore")));
                         teachingResearchPrepare.setViewCount(jsonObject1.optInt("viewCount", 0));
                         teachingResearchPrepare.setSubjectPic(getPic(jsonObject1.optString("subjectPic")));
                         teachingResearchBases.add(teachingResearchPrepare);
@@ -207,7 +205,7 @@ public class TeachingResearchBase {
                         teachingResearchPrepare.setMainTeacher(jsonObject1.optString("mainTeacher"));
                         teachingResearchPrepare.setStartTime(jsonObject1.optLong("startTime"));
                         teachingResearchPrepare.setTotalScore(jsonObject1.optString("totalScore"));
-                        teachingResearchPrepare.setAverageScore(jsonObject1.optString("averageScore").endsWith(".0") ? jsonObject1.optString("averageScore").replace(".0", "") : jsonObject1.optString("averageScore"));
+                        teachingResearchPrepare.setAverageScore(NumberUtils.floatOf(jsonObject1.optString("averageScore")));
                         teachingResearchPrepare.setViewCount(jsonObject1.optInt("viewCount", 0));
                         teachingResearchPrepare.setScoreType(jsonObject1.optString("scoreType"));
                         teachingResearchPrepare.setSubjectPic(getPic(jsonObject1.optString("subjectPic")));
@@ -218,28 +216,7 @@ public class TeachingResearchBase {
                     nodata.setType(TeachingResearchBase.NO_DATA);
                     teachingResearchBases.add(nodata);
                 }
-
-
-//                TeachingResearchBase teachingResearchBase5 = new TeachingResearchBase();
-//                teachingResearchBase5.setType(TeachingResearchBase.DIVIDE_VIEW);
-//                teachingResearchBases.add(teachingResearchBase5);
             }
-            /*jsonArray = rethinkRethink.optJSONArray("list");
-            if (jsonArray.length() > 0) {
-                TeachingResearchBase teachingResearchBase4 = new TeachingResearchBase();
-                teachingResearchBase4.setType(TeachingResearchBase.TITLE_VIEW);
-                teachingResearchBase4.setTitleType(TeachingResearchBase.RETHINK_RETHINK);
-                teachingResearchBase4.setTitleStr(Titles.sPagetitleNetteachRethink);
-                teachingResearchBases.add(teachingResearchBase4);
-                Gson gson = new Gson();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject rethink = jsonArray.optJSONObject(i);
-                    TeachingRethink teachingRethink = gson.fromJson(rethink.toString(), TeachingRethink.class);
-                    teachingRethink.setType(TeachingResearchBase.RETHINK_RETHINK);
-                    teachingRethink.setSubjectPic(getPic(rethink.optString("subjectPic")));
-                    teachingResearchBases.add(teachingRethink);
-                }
-            }*/
         }
     }
 
