@@ -448,6 +448,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object1 = jsonArray.optJSONObject(i);
                         ThemeVideo themeVideo = new ThemeVideo();
+                        themeVideo.setId(object1.optString("id"));
                         themeVideo.setDownloadUrl(object1.optString("downloadUrl"));
                         themeVideo.setFilePath(object1.optString("filePath"));
                         videos.add(themeVideo);
