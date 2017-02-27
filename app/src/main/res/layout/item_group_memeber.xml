@@ -34,8 +34,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Group Member"
+        android:text="Group MemberGroup MemberGroup MemberGroup MemberGroup Member"
         android:layout_below="@id/sdv"
+        android:maxLines="1"
+        android:ellipsize="end"
         />
-
 </RelativeLayout>
