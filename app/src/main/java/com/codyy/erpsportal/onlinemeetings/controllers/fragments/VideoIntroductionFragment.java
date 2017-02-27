@@ -15,6 +15,8 @@ import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
 import com.codyy.erpsportal.commons.models.entities.MeetDetail;
 
+import java.text.DecimalFormat;
+
 /**
  * 集体备课、互动听课视频详情fragment
  * Created by yangxinwu on 2015/7/29.
@@ -67,7 +69,8 @@ public class VideoIntroductionFragment extends Fragment {
             if ("SCORE".equals(score.getScoreType())) {
                 mScoreTV.setVisibility(View.VISIBLE);
                 mRbStar.setVisibility(View.GONE);
-                mScoreTV.setText((int)score.getAvgScore() + "/" + (int)score.getTotalScore());
+                DecimalFormat df = new DecimalFormat("#.#");
+                mScoreTV.setText(df.format(score.getAvgScore()) + "/" + df.format(score.getTotalScore()));
             } else {
                 mScoreTV.setVisibility(View.GONE);
                 mRbStar.setVisibility(View.VISIBLE);
