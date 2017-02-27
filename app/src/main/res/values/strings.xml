@@ -633,7 +633,7 @@
 
     <string name="n_score">%s分</string>
     <string name="d_score">%d.0分</string>
-    <string name="f_score">%.0f分</string>
+    <string name="f_score">%.1f分</string>
     <string name="rating_ratio_f_s">评分   %1$.1f/%2$s</string>
     <string name="publisher_who">发布人：%1$s</string>
     <string name="publish_time_when">发布时间：%1$s</string>
