@@ -2,8 +2,11 @@ package com.codyy.erpsportal.commons.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import com.codyy.erpsportal.IMeetingService;
@@ -25,6 +28,9 @@ import java.nio.CharBuffer;
 public class BackService extends Service {
     private static final String TAG = "BackService";
     private static final long HEART_BEAT_RATE = 30 * 1000;
+    private static final int MSG_SEND = 0x111;//发送消息.
+    private static final int MSG_SEND_HEART = 0x112;//发送心跳消息返回结果.
+    private static final int MSG_SEND_HEART_RESULT = 0x121;//发送心跳消息返回结果.
     public static  String HOST = "coco.ppmeeting.com";
     public static  int PORT = 1888;
     private String mExtraStr;
@@ -34,22 +40,42 @@ public class BackService extends Service {
     private BufferedReader in;
     private WeakReference<Socket> mSocket;
     // For heart Beat
-    private Handler mHandler = new Handler();
-    private Runnable heartBeatRunnable = new Runnable() {
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_SEND_HEART_RESULT:
+                    //处理心跳信息
+                    try{
+                        boolean complete = (boolean) msg.obj;
+                        if(complete){//发送心跳成功
+                            mHandler.postDelayed(mHeartBeatRunnable, HEART_BEAT_RATE);
+                        }else{//发送心跳失败
+                            mHandler.removeCallbacks(mHeartBeatRunnable);
+                            mReadThread.release();
+                            Cog.d(TAG, "------releaseLastSocket-------->尝试重连");
+                            releaseLastSocket(mSocket);
+                            Cog.d(TAG, "-------------->尝试重连");
+                            new InitSocketThread().start();
+                        }
+                    }catch(ClassCastException e){
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+        }
+    };
+    /**消息发送线程**/
+    private HandlerThread mMessageThread ;
+    private Handler mMessageHandler ;
+    /** 发送心跳包 **/
+    private Runnable mHeartBeatRunnable = new Runnable() {
 
         @Override
         public void run() {
             Cog.d(TAG, "-------------->send = xxx");
-            boolean isSuccess = sendMsgs(CommandUtil.keepLive(mMeetingConfig));
-            if (!isSuccess) {
-                mHandler.removeCallbacks(heartBeatRunnable);
-                mReadThread.release();
-                Cog.d(TAG, "------releaseLastSocket-------->尝试重连");
-                releaseLastSocket(mSocket);
-                Cog.d(TAG, "-------------->尝试重连");
-                new InitSocketThread().start();
-            }
-            mHandler.postDelayed(this, HEART_BEAT_RATE);
+             sendMsgs(CommandUtil.keepLive(mMeetingConfig));
         }
     };
     private IMeetingService.Stub meetingService = new IMeetingService.Stub() {
@@ -260,13 +286,53 @@ public class BackService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        initWriteThread();
+    }
+
+    private void initWriteThread() {
+        mMessageThread = new HandlerThread("online-meeting-message");
+        mMessageThread.start();
+        mMessageHandler = new Handler(mMessageThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                try{
+                    String obj = (String) msg.obj;
+                    //判断是否为heartbeat
+                    boolean isHeartTest  = obj.contains("keepAlive");
+
+                    switch (msg.what){
+                        case MSG_SEND:
+                           boolean sendResult = sendMsgThread(obj);
+                            if(isHeartTest){
+                                mHandler.sendMessage(mHandler.obtainMessage(MSG_SEND_HEART_RESULT,sendResult));
+                            }
+                            break;
+                    }
+                }catch (ClassCastException e){
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
 
     }
 
     /**
-     * 发送消息
+     * 发送消息(外部方法)
      */
-    public boolean sendMsgs(String msg) {
+    public void sendMsgs(String msg) {
+        Cog.d(TAG, "-------------->send = " + msg);
+        mMessageHandler.sendMessage(mMessageHandler.obtainMessage(MSG_SEND,msg));
+    }
+
+    /**
+     * 发送消息(线程安全)
+     * modified by poe
+     * 修复7.0中的主线程中进行网络请求错误
+     */
+    private boolean sendMsgThread(String msg) {
         Cog.d(TAG, "-------------->send = " + msg);
         if (null == mSocket || null == mSocket.get()) {
             return false;
@@ -297,7 +363,7 @@ public class BackService extends Service {
             mSocket = new WeakReference<>(so);
             mReadThread = new ReadThread(so);
             mReadThread.start();
-            mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);//初始化成功后，就准备发送心跳包
+            mHandler.postDelayed(mHeartBeatRunnable, HEART_BEAT_RATE);//初始化成功后，就准备发送心跳包
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -306,7 +372,7 @@ public class BackService extends Service {
     }
 
     private void releaseResources() {
-        mHandler.removeCallbacks(heartBeatRunnable);
+        mHandler.removeCallbacks(mHeartBeatRunnable);
         releaseLastSocket(mSocket);
     }
 
@@ -449,4 +515,13 @@ public class BackService extends Service {
         return n;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(Build.VERSION.SDK_INT>= 18){
+            mMessageThread.quitSafely();
+        }else{
+            mMessageThread.quit();
+        }
+    }
 }
