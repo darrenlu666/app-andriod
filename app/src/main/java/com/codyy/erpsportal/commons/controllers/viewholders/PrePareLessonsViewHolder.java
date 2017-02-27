@@ -28,7 +28,7 @@ public class PrePareLessonsViewHolder extends AbsViewHolder<PreparationEntity> {
     RatingBar ratingBar;
     RelativeLayout rlDate;
     ViewGroup rlScore;
-    TextView tvScore;
+//    TextView tvScore;
 
     @Override
     public int obtainLayoutId() {
@@ -47,7 +47,7 @@ public class PrePareLessonsViewHolder extends AbsViewHolder<PreparationEntity> {
         ratingBar=(RatingBar)view.findViewById(R.id.rb_star);
         rlDate=(RelativeLayout)view.findViewById(R.id.rl_date);
         rlScore=(ViewGroup)view.findViewById(R.id.rl_star);
-        tvScore = (TextView) view.findViewById(R.id.tv_score);
+//        tvScore = (TextView) view.findViewById(R.id.tv_score);
     }
 
     @Override
@@ -77,6 +77,6 @@ public class PrePareLessonsViewHolder extends AbsViewHolder<PreparationEntity> {
         date.setText(data.getStartDate());
         subject.setText(data.getSubjectName());
         ratingBar.setProgress(data.getAverageScore());
-        tvScore.setText(context.getString(R.string.d_score, data.getAverageScore()));
+//        tvScore.setText(context.getString(R.string.d_score, data.getAverageScore()));
     }
 }
