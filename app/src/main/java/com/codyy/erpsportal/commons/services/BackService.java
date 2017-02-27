@@ -2,8 +2,11 @@ package com.codyy.erpsportal.commons.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import com.codyy.erpsportal.IMeetingService;
@@ -25,6 +28,7 @@ import java.nio.CharBuffer;
 public class BackService extends Service {
     private static final String TAG = "BackService";
     private static final long HEART_BEAT_RATE = 30 * 1000;
+    private static final int MSG_SEND = 0x111;//发送消息.
     public static  String HOST = "coco.ppmeeting.com";
     public static  int PORT = 1888;
     private String mExtraStr;
@@ -35,6 +39,10 @@ public class BackService extends Service {
     private WeakReference<Socket> mSocket;
     // For heart Beat
     private Handler mHandler = new Handler();
+    /**消息发送线程**/
+    private HandlerThread mMessageThread ;
+    private Handler mMessageHandler ;
+
     private Runnable heartBeatRunnable = new Runnable() {
 
         @Override
@@ -260,13 +268,47 @@ public class BackService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        initWriteThread();
+    }
+
+    private void initWriteThread() {
+        mMessageThread = new HandlerThread("online-meeting-message");
+        mMessageThread.start();
+        mMessageHandler = new Handler(mMessageThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what){
+                    case MSG_SEND:
+                        try{
+                            String obj = (String) msg.obj;
+                            sendMsgThread(obj);
+                        }catch (ClassCastException e){
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+            }
+        };
+
 
     }
 
     /**
-     * 发送消息
+     * 发送消息(外部方法)
      */
     public boolean sendMsgs(String msg) {
+        Cog.d(TAG, "-------------->send = " + msg);
+        mMessageHandler.sendMessage(mMessageHandler.obtainMessage(MSG_SEND,msg));
+        return true;
+    }
+
+    /**
+     * 发送消息(线程安全)
+     * modified by poe
+     * 修复7.0中的主线程中进行网络请求错误
+     */
+    private boolean sendMsgThread(String msg) {
         Cog.d(TAG, "-------------->send = " + msg);
         if (null == mSocket || null == mSocket.get()) {
             return false;
@@ -449,4 +491,13 @@ public class BackService extends Service {
         return n;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(Build.VERSION.SDK_INT>= 18){
+            mMessageThread.quitSafely();
+        }else{
+            mMessageThread.quit();
+        }
+    }
 }
