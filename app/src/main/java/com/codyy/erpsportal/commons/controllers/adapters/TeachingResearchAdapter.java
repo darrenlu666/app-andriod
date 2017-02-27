@@ -16,10 +16,6 @@ import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.LoginActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleViewHolder;
-import com.codyy.erpsportal.commons.utils.NumberUtils;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.TitleItemBar;
-import com.codyy.erpsportal.commons.widgets.TitleItemBar.OnMoreClickListener;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -27,6 +23,10 @@ import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchPrepare;
 import com.codyy.erpsportal.commons.models.entities.TeachingRethink;
+import com.codyy.erpsportal.commons.utils.NumberUtils;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.TitleItemBar;
+import com.codyy.erpsportal.commons.widgets.TitleItemBar.OnMoreClickListener;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.MoreLessonPlansActivity;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepContentActivity;
 import com.codyy.erpsportal.rethink.controllers.activities.MoreRethinkListActivity;
@@ -35,6 +35,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.joda.time.LocalDate;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 import butterknife.Bind;
@@ -48,6 +50,7 @@ public class TeachingResearchAdapter extends RecyclerView.Adapter<RecyclerView.V
     private List<TeachingResearchBase> teachingResearchBases;
     private String baseAreaId;
     private String schoolId;
+    private NumberFormat mNumberFormat = new DecimalFormat("0.0");
 
     public TeachingResearchAdapter(Context context, List<TeachingResearchBase> teachingResearchBases, String baseAreaId, String schoolId) {
         this.mContext = context;
@@ -128,16 +131,17 @@ public class TeachingResearchAdapter extends RecyclerView.Adapter<RecyclerView.V
                 ImageFetcher.getInstance(EApplication.instance()).fetchImage(
                         viewItem.mSimpleDraweeView,teachingResearchPrepare.getSubjectPic());
                 viewItem.mTextViewTitle.setText(teachingResearchPrepare.getTitle());
-                viewItem.mScore.setText(teachingResearchPrepare.getAverageScore() + ".0分");
+
+                viewItem.mScore.setText(mNumberFormat.format(teachingResearchPrepare.getAverageScore()) + "分");
                 String teacher = "";
                 switch (teachingResearchPrepare.getType()) {
                     case TeachingResearchBase.INTERAC_LESSON:
                         teacher = Titles.sMasterTeacher;//"主讲教师 ";
-                        viewItem.mRatingBar.setRating(NumberUtils.floatOf(teachingResearchPrepare.getAverageScore()) / 2);
+                        viewItem.mRatingBar.setRating(teachingResearchPrepare.getAverageScore() / 2);
                         break;
                     case TeachingResearchBase.PREPARE_LESSON:
                         teacher = "主备教师";
-                        float rating = NumberUtils.floatOf(teachingResearchPrepare.getAverageScore()) / 2;
+                        float rating = teachingResearchPrepare.getAverageScore() / 2f;
                         viewItem.mRatingBar.setRating(rating);
                         break;
                     case TeachingResearchBase.EVALUATION_LESSON:
@@ -145,12 +149,14 @@ public class TeachingResearchAdapter extends RecyclerView.Adapter<RecyclerView.V
                         if ("SCORE".equals(teachingResearchPrepare.getScoreType())) {
                             viewItem.mRatingBar.setVisibility(View.GONE);
                             viewItem.mScore.setVisibility(View.GONE);
-                            viewItem.mTextViewScore.setText("评分   " + teachingResearchPrepare.getAverageScore() + "/" + teachingResearchPrepare.getTotalScore());
+                            viewItem.mTextViewScore.setText("评分   "
+                                    + mNumberFormat.format(teachingResearchPrepare.getAverageScore())
+                                    + "/" + teachingResearchPrepare.getTotalScore());
                         } else {
                             viewItem.mScore.setVisibility(View.VISIBLE);
                             viewItem.mRatingBar.setVisibility(View.VISIBLE);
                             viewItem.mTextViewScore.setText("评分");
-                            float f = NumberUtils.floatOf(teachingResearchPrepare.getAverageScore()) / 2;
+                            float f = teachingResearchPrepare.getAverageScore() / 2f;
                             viewItem.mRatingBar.setRating(f);
                         }
                         break;
@@ -158,7 +164,7 @@ public class TeachingResearchAdapter extends RecyclerView.Adapter<RecyclerView.V
                         teacher = "教师";
                         viewItem.mScore.setVisibility(View.VISIBLE);
                         viewItem.mRatingBar.setVisibility(View.VISIBLE);
-                        double c = Math.ceil(Double.valueOf(teachingResearchPrepare.getAverageScore())) / 2;
+                        double c = Math.ceil(teachingResearchPrepare.getAverageScore()) / 2f;
                         viewItem.mRatingBar.setRating((float) c);
                         break;
                 }
@@ -178,7 +184,7 @@ public class TeachingResearchAdapter extends RecyclerView.Adapter<RecyclerView.V
                                     EvaluationScore evaluationScore = new EvaluationScore();
                                     evaluationScore.setTotalScore(NumberUtils.floatOf(teachingResearchPrepare.getTotalScore()));
                                     evaluationScore.setScoreType(teachingResearchPrepare.getScoreType());
-                                    evaluationScore.setAvgScore(NumberUtils.floatOf(teachingResearchPrepare.getAverageScore()));
+                                    evaluationScore.setAvgScore(teachingResearchPrepare.getAverageScore());
                                     ActivityThemeActivity.start(mContext, ActivityThemeActivity.EVALUATION_LESSON,
                                             teachingResearchPrepare.getId(),
                                             teachingResearchPrepare.getViewCount(),

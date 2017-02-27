@@ -101,12 +101,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".commons.controllers.activities.LocationActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme" />
-        <activity
             android:name=".commons.controllers.activities.SingleChatActivity"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTop"

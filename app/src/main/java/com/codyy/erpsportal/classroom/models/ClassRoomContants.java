@@ -21,4 +21,5 @@ public class ClassRoomContants {
     public static final String EXTRA_SCHEDULE_DETAIL_ID = "scheduleDetailId";
 
     public static final String EXTRA_LIVE_STATUS = "live.status";
+    public static final String EXTRA_LIVE_SUBJECT = "live.custom.subject";//自定义学科
 }

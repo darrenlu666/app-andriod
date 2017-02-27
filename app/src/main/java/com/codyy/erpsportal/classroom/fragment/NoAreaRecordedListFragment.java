@@ -149,7 +149,7 @@ public class NoAreaRecordedListFragment extends LoadMoreFragment<NoAreaRecordedD
                 @Override
                 public void onClick(View v) {
                     if (data.getVideoDeleteFlag().equals("N")) {
-                        ClassRoomDetailActivity.startActivity(mContext, data.getScheduleDetailId(), mFrom);
+                        ClassRoomDetailActivity.startActivity(mContext, data.getScheduleDetailId(), mFrom,data.getSubject());
                     } else {
                         ToastUtil.showToast(mContext, "资源被删除！");
                     }

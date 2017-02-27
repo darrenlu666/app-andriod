@@ -1,13 +1,11 @@
 package com.codyy.erpsportal.commons.controllers.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.AppBarLayout.OnOffsetChangedListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,9 +49,6 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
     @Bind(R.id.app_bar_layout)
     protected AppBarLayout mAppBarLayout;
 
-    @Bind(R.id.location)
-    protected TextView mLocationTv;
-
     @Bind(R.id.search)
     protected ImageButton mSearchIb;
 
@@ -77,8 +72,6 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
 
     protected View mRootView;
 
-    private OnAreaClickListener mListener;
-
     private OnOffsetChangedListener mOnOffsetChangedListener = new OnOffsetChangedListener() {
         private int mPrevOffset;
         @Override
@@ -95,20 +88,6 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
             }
         }
     };
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (getActivity() instanceof OnAreaClickListener) {
-            mListener = (OnAreaClickListener) getActivity();
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -158,28 +137,10 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
         ConfigBus.clearErrorHandler();
     }
 
-    @OnClick(R.id.location)
-    public void onLocationClick() {
-        if (mListener != null) {
-            mListener.onAreaClick();
-        }
-    }
-
     @OnClick(R.id.search)
     public void onSearchClick() {
         Cog.d(TAG, "onSearchClick mSearchFlag=", mSearchFlag);
         SearchInputActivity.start(getActivity(), mSearchFlag);
-    }
-
-    /**
-     * 设置当前地区名称
-     *
-     * @param areaName 地区名称
-     */
-    public void setLocationName(String areaName) {
-        if (!TextUtils.isEmpty(areaName) && null != mLocationTv) {
-            mLocationTv.setText(areaName);
-        }
     }
 
     public void initializeTabs(List<ChannelTab> channelTabs, String indexTemplateId) {
@@ -208,7 +169,6 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
         if(isDetached()) return;
         mEmptyView.setVisibility(View.GONE);
         mViewPager.setVisibility(View.VISIBLE);
-        setLocationName(ModuleConfig.VISIT_TYPE_AREA.equals(config.getVisitType()) ? config.getAreaName() : config.getSchoolName());
         initializeTabs(config.getChannelTabs(), config.getIndexTemplateId());
         initSearchBtn(config);
     }

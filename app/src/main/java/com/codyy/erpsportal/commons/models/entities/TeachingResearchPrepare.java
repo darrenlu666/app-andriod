@@ -1,12 +1,5 @@
 package com.codyy.erpsportal.commons.models.entities;
 
-import com.codyy.erpsportal.commons.utils.UriUtils;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 /**
  * Created by kmdai on 2015/8/10.
  */
@@ -27,7 +20,7 @@ public class TeachingResearchPrepare extends TeachingResearchBase {
     private int viewCount;
     private String title;
     private String totalScore;
-    private String averageScore;
+    private float averageScore;
     private String subjectPic;
     private String scoreType;
 
@@ -63,7 +56,7 @@ public class TeachingResearchPrepare extends TeachingResearchBase {
         this.totalScore = totalScore;
     }
 
-    public void setAverageScore(String averageScore) {
+    public void setAverageScore(float averageScore) {
         this.averageScore = averageScore;
     }
 
@@ -91,7 +84,7 @@ public class TeachingResearchPrepare extends TeachingResearchBase {
         return totalScore;
     }
 
-    public String getAverageScore() {
+    public float getAverageScore() {
         return averageScore;
     }
 
@@ -102,95 +95,4 @@ public class TeachingResearchPrepare extends TeachingResearchBase {
     public void setSubjectPic(String subjectPic) {
         this.subjectPic = subjectPic;
     }
-
-    /**
-     * 获取集体备课
-     *
-     * @param object
-     * @param teachingResearchPrepares
-     */
-    public static void getTeachingResearchPrepare(JSONObject object, ArrayList<TeachingResearchBase> teachingResearchPrepares) {
-        if ("success".equals(object.optString("result"))) {
-            if (teachingResearchPrepares == null) {
-                teachingResearchPrepares = new ArrayList<>();
-            }
-            JSONObject jsonObject = object.optJSONObject("groupPreparation");
-            JSONArray jsonArray = jsonObject.optJSONArray("list");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject1 = jsonArray.optJSONObject(i);
-                TeachingResearchPrepare teachingResearchPrepare = new TeachingResearchPrepare();
-                teachingResearchPrepare.setType(PREPARE_LESSON);
-                teachingResearchPrepare.setId(jsonObject1.optString("id"));
-                teachingResearchPrepare.setTitle(jsonObject1.optString("title"));
-                teachingResearchPrepare.setMainTeacher(jsonObject1.optString("mainTeacher"));
-                teachingResearchPrepare.setStartTime(jsonObject1.optLong("startTime"));
-                teachingResearchPrepare.setTotalScore(jsonObject1.optString("totalScore"));
-                teachingResearchPrepare.setAverageScore(jsonObject1.optString("averageScore"));
-                teachingResearchPrepare.setViewCount(jsonObject1.optInt("viewCount", 0));
-                teachingResearchPrepare.setSubjectPic(UriUtils.getImageUrl(jsonObject1.optString("subjectPic")));
-                teachingResearchPrepares.add(teachingResearchPrepare);
-            }
-        }
-    }
-
-    /**
-     * 互动听课
-     *
-     * @param object
-     * @param teachingResearchPrepares
-     */
-    public static void getTeachingResearchInterac(JSONObject object, ArrayList<TeachingResearchBase> teachingResearchPrepares) {
-        if ("success".equals(object.optString("result"))) {
-            if (teachingResearchPrepares == null) {
-                teachingResearchPrepares = new ArrayList<>();
-            }
-            JSONObject jsonObject = object.optJSONObject("interactionListen");
-            JSONArray jsonArray = jsonObject.optJSONArray("list");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject1 = jsonArray.optJSONObject(i);
-                TeachingResearchPrepare teachingResearchPrepare = new TeachingResearchPrepare();
-                teachingResearchPrepare.setType(INTERAC_LESSON);
-                teachingResearchPrepare.setId(jsonObject1.optString("id"));
-                teachingResearchPrepare.setTitle(jsonObject1.optString("title"));
-                teachingResearchPrepare.setMainTeacher(jsonObject1.optString("mainTeacher"));
-                teachingResearchPrepare.setStartTime(jsonObject1.optLong("startTime"));
-                teachingResearchPrepare.setTotalScore(jsonObject1.optString("totalScore"));
-                teachingResearchPrepare.setAverageScore(jsonObject1.optString("averageScore"));
-                teachingResearchPrepare.setViewCount(jsonObject1.optInt("viewCount", 0));
-                teachingResearchPrepare.setSubjectPic(UriUtils.getImageUrl(jsonObject1.optString("subjectPic")));
-                teachingResearchPrepares.add(teachingResearchPrepare);
-            }
-        }
-    }
-
-    /**
-     * 互动听课
-     *
-     * @param object
-     * @param teachingResearchPrepares
-     */
-    public static void getTeachingResearchEvaluation(JSONObject object, ArrayList<TeachingResearchBase> teachingResearchPrepares) {
-        if ("success".equals(object.optString("result"))) {
-            if (teachingResearchPrepares == null) {
-                teachingResearchPrepares = new ArrayList<>();
-            }
-            JSONObject jsonObject = object.optJSONObject("evaluationAndDiscussion");
-            JSONArray jsonArray = jsonObject.optJSONArray("list");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject1 = jsonArray.optJSONObject(i);
-                TeachingResearchPrepare teachingResearchPrepare = new TeachingResearchPrepare();
-                teachingResearchPrepare.setType(EVALUATION_LESSON);
-                teachingResearchPrepare.setId(jsonObject1.optString("id"));
-                teachingResearchPrepare.setTitle(jsonObject1.optString("title"));
-                teachingResearchPrepare.setMainTeacher(jsonObject1.optString("mainTeacher"));
-                teachingResearchPrepare.setStartTime(jsonObject1.optLong("startTime"));
-//                teachingResearchPrepare.setTotalScore(jsonObject1.optInt("totalScore", 0));
-//                teachingResearchPrepare.setAverageScore(jsonObject1.optInt("averageScore", 0));
-                teachingResearchPrepare.setViewCount(jsonObject1.optInt("viewCount", 0));
-                teachingResearchPrepare.setSubjectPic(UriUtils.getImageUrl(jsonObject1.optString("subjectPic")));
-                teachingResearchPrepares.add(teachingResearchPrepare);
-            }
-        }
-    }
-
 }

@@ -33,7 +33,7 @@
             android:layout_marginLeft="15dp"
             android:textColor="@color/main_color"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="@dimen/list_item_title"
             android:layout_alignParentBottom="true"
             tools:text="title"
             />

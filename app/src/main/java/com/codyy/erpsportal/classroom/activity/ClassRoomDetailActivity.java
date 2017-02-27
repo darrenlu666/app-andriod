@@ -154,6 +154,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     private String mScheduleDetailId;//课程id
     private String mFrom;//专递课堂/直录播课堂
     private String mStatus;//进行中 or 未开始
+    private String mSubject ;//传递的自定义学科字段
     private String mRequestUrl;
 
     @Override
@@ -168,6 +169,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         mScheduleDetailId = getIntent().getExtras().getString(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID);
         mFrom = getIntent().getExtras().getString(ClassRoomContants.FROM_WHERE_MODEL);
         mStatus = getIntent().getExtras().getString(ClassRoomContants.EXTRA_LIVE_STATUS);
+        mSubject = getIntent().getExtras().getString(ClassRoomContants.EXTRA_LIVE_SUBJECT);
         initViewStub();
         handleData();
         //禁止锁屏
@@ -286,6 +288,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                 }
             }
         });
+
     }
 
     /**
@@ -363,6 +366,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                 if ("success".equals(response.optString("result"))) {
                     if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
                         mClassRoomDetail = ClassRoomDetail.parseResult(response);
+                        mClassRoomDetail.setSubject(mSubject);
                         mTitleTv.setText(mClassRoomDetail.getSchoolName());
                     } else {
                         mRecordRoomDetail = RecordRoomDetail.parseResult(response);
@@ -495,20 +499,23 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         }
     }
 
-    public static void startActivity(Context context, String scheduleDetailId, String from) {
+    public static void startActivity(Context context, String scheduleDetailId, String from,String subject) {
         Intent intent = new Intent(context, ClassRoomDetailActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID, scheduleDetailId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
+        intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT,subject);
         context.startActivity(intent);
     }
 
-    public static void startActivity(Context context, String scheduleDetailId, String from, String status) {
+    public static void startActivity(Context context, String scheduleDetailId, String from, String status,String subject) {
         Intent intent = new Intent(context, ClassRoomDetailActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID, scheduleDetailId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
         intent.putExtra(ClassRoomContants.EXTRA_LIVE_STATUS, status);
+        intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT,subject);
         context.startActivity(intent);
     }
+
 
     /**
      * @return 获取辅课堂的直播地址集合

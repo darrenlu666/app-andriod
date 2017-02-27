@@ -23,12 +23,11 @@ public class WifiBroadCastReceiver extends BroadcastReceiver {
     private WifiChangeListener listener;
 
     public WifiBroadCastReceiver(WifiChangeListener listener){
-        this.listener   =   listener;
+        this.listener = listener;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         if(listener != null ){
             ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -36,8 +35,8 @@ public class WifiBroadCastReceiver extends BroadcastReceiver {
 
             if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected()) {
                 if(listener != null )listener.onWifiClose();
-            }else {
-                    if(listener != null )listener.onWifiOpen();
+            } else {
+                if(listener != null )listener.onWifiOpen();
             }
         }
     }

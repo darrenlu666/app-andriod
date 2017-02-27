@@ -27,19 +27,9 @@ import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.ChannelFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.FunctionFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.UserFragment;
-import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver;
-import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver.WifiChangeListener;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.Extra;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.commons.widgets.MyTabWidget;
-import com.codyy.erpsportal.exam.services.PollingService;
-import com.codyy.erpsportal.exam.utils.PollingUtils;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
@@ -50,6 +40,16 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.ConfigRequest;
 import com.codyy.erpsportal.commons.models.network.ConfigRequest.ConfigParser;
 import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver;
+import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver.WifiChangeListener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.widgets.MyTabWidget;
+import com.codyy.erpsportal.exam.services.PollingService;
+import com.codyy.erpsportal.exam.utils.PollingUtils;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -62,7 +62,7 @@ import butterknife.Bind;
  * 主界面
  */
 public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTabClickListener,
-        UserFragment.OnLogoutListener, ChannelFragment.OnAreaClickListener, Callback {
+        UserFragment.OnLogoutListener, Callback {
 
     private final static String TAG = "MainActivity";
     public final static int REQUEST_AREA = 13;
@@ -108,9 +108,8 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
 
         loadModuleConfig();
 
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         mWifiBroadCastReceiver = new WifiBroadCastReceiver(mWifiChangeListener);
-        registerReceiver(mWifiBroadCastReceiver, filter);
+
         if (BuildConfig.DEBUG) ViewServer.get(this).addWindow(this);
 
         UiMainUtils.setNavigationTintColor(this,R.color.main_green);
@@ -165,6 +164,21 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         UserInfo userInfo = UserInfoKeeper.obtainUserInfo();
         outState.putParcelable(Constants.USER_INFO, userInfo);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mWifiBroadCastReceiver, filter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mWifiBroadCastReceiver != null) {
+            unregisterReceiver(mWifiBroadCastReceiver);
+        }
     }
 
     @Override
@@ -325,9 +339,6 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
     protected void onDestroy() {
         super.onDestroy();
         ConfigBus.clear();
-        if (mWifiBroadCastReceiver != null) {
-            unregisterReceiver(mWifiBroadCastReceiver);
-        }
         Cog.d(TAG, "Stop polling service...");
         PollingUtils.stopPollingService(EApplication.instance(), PollingService.class, PollingService.ACTION);
         if (BuildConfig.DEBUG) ViewServer.get(this).removeWindow(this);
@@ -344,15 +355,6 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         mUserInfo = null;
         UserInfoKeeper.getInstance().clearUserInfo();
         loadModuleConfig();
-    }
-
-    @Override
-    public void onAreaClick() {
-        Intent it = new Intent(this, LocationActivity.class);
-        it.putExtra(LocationActivity.LOCATION_ID, mModuleConfig.getBaseAreaId());
-        it.putExtra(LocationActivity.LOCATION_NAME, mModuleConfig.getAreaName());
-        it.putExtra(LocationActivity.LOCATION_FETCH_TYPE, LocationActivity.TYPE_AREA);
-        startActivityForResult(it, MainActivity.REQUEST_AREA);
     }
 
     @Override

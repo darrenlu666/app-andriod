@@ -19,18 +19,6 @@
             app:layout_scrollFlags="scroll|enterAlways">
 
             <TextView
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:drawableLeft="@drawable/btn_location"
-                android:drawableStart="@drawable/btn_location"
-                android:gravity="center_vertical"
-                android:textColor="@color/md_white_1000"
-                android:textSize="15sp"
-                android:visibility="gone"
-                tools:text="苏州" />
-
-            <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,6 +41,7 @@
                 android:visibility="gone"
                 android:contentDescription="@null"/>
         </RelativeLayout>
+
         <com.codyy.erpsportal.commons.widgets.SlidingTabLayout
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
@@ -60,20 +49,7 @@
             android:background="@color/white"
             android:textSize="18sp"
             app:bottomBorderPadding="1dp" />
-     <!--   <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/sliding_tabs_image"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_alignBaseline="@id/sliding_tabs"
-                android:layout_alignBottom="@id/sliding_tabs"
-                android:layout_alignParentRight="true"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/first_page_bg"
-                android:maxHeight="50dp" />
-        </RelativeLayout>-->
+
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager

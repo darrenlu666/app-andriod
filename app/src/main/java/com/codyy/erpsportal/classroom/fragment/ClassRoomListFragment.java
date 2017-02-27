@@ -133,7 +133,7 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ClassRoomDetailActivity.startActivity(getContext(), data.getScheduleDetailId(), mFrom, data.getStatus());
+                    ClassRoomDetailActivity.startActivity(getContext(), data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
                 }
             });
         }
