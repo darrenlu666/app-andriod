@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         //Start polling service
         Cog.d(TAG, "Start polling service...");
 //        PollingUtils.startPollingService(EApplication.instance(), 5, PollingService.class, PollingService.ACTION);
-
     }
 
     /**
