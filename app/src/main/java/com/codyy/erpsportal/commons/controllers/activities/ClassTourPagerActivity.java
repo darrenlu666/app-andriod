@@ -241,7 +241,7 @@ public class ClassTourPagerActivity extends FragmentActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("tourHint", false);
             editor.apply();
-            final Dialog dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+            final Dialog dialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
             View view = getLayoutInflater().inflate(R.layout.navigation_layout, null);
             TextView promptTv = (TextView) view.findViewById(R.id.tv_prompt);
             promptTv.setText(R.string.slide_to_switch_video);

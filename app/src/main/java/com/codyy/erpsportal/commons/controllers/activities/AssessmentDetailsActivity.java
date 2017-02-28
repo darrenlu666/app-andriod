@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.entities.EmumIndex;
+import com.codyy.erpsportal.commons.utils.DateUtils;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationsFragment;
@@ -141,15 +143,22 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
         mGradeNameTv.setText(Html.fromHtml(assessmentDetails.getClassLevelName()));
         mSubjectNameTv.setText(Html.fromHtml(assessmentDetails.getSubjectName()));
         if(!TextUtils.isEmpty(assessmentDetails.getScheduleDate())){
-            mScheduleTime.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.DEF_FORMAT));
+            //排课日期：　2015-1-1 星期五　第五节
+            String date = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.YEAR_MONTH_DAY);
+            String week = DateUtil.getWeek(date);
+            String sequence = "第"+ EmumIndex.getIndex(Integer.valueOf(assessmentDetails.getClassSeq()))+"节";
+
+            mScheduleTime.setText(date+" "+week+" "+sequence);
         }
         if(!TextUtils.isEmpty(assessmentDetails.getRealBeginTime())){
             mRealStartTimeTv.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getRealBeginTime()),DateUtil.DEF_FORMAT));
+        }else{
+            mRealStartTimeTv.setText("无");
         }
         if ("LIVE".equals(assessmentDetails.getEvaType())) {
-            mViewTypeTextView.setText("直播");
+            mViewTypeTextView.setText("直播课堂");
         } else if ("VIDEO".equals(assessmentDetails.getEvaType())) {
-            mViewTypeTextView.setText("录播");
+            mViewTypeTextView.setText("录播课堂");
         }
         mVerticalDivider.setVisibility(View.GONE);
         mSetTeacherTv.setVisibility(View.GONE);

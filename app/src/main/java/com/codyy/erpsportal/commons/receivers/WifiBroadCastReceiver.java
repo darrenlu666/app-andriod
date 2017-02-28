@@ -6,10 +6,14 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.codyy.erpsportal.commons.utils.Cog;
+
 /**
  * wifi关闭接收器
  */
 public class WifiBroadCastReceiver extends BroadcastReceiver {
+
+    private final static String TAG = "WifiBroadCastReceiver";
 
     /**
      * 关闭wifi的action通知
@@ -32,6 +36,8 @@ public class WifiBroadCastReceiver extends BroadcastReceiver {
             ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             NetworkInfo wifiNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            Cog.d(TAG, "mobNet connected = ", mobNetInfo.isConnected());
+            Cog.d(TAG, "wifiNet connected = ", wifiNetInfo.isConnected());
 
             if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected()) {
                 if(listener != null )listener.onWifiClose();

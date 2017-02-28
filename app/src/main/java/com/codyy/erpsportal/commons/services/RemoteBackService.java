@@ -3,7 +3,10 @@ package com.codyy.erpsportal.commons.services;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Handler.Callback;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
@@ -29,6 +32,17 @@ import java.nio.CharBuffer;
 public class RemoteBackService extends Service {
     private static final String TAG = "RemoteBackService";
     private static final long HEART_BEAT_RATE = 30 * 1000;
+
+    /**
+     * 发送内容的消息
+     */
+    private static final int MSG_SEND = 1;
+
+    /**
+     * 发送心跳的消息
+     */
+    private static final int MSG_HEART_BEAT = 2;
+
     private String mTempMsg = "";
     private String mExtraStr;
     /**
@@ -37,24 +51,42 @@ public class RemoteBackService extends Service {
     private RemoteDirectorConfig mRemoteDirectorConfig;
     private ReadThread mReadThread;
     private WeakReference<Socket> mSocket;
+
+    private Callback mHeartBeatCallback = new Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            Cog.d(TAG, "heartBeatCallback:" + msg);
+            if (msg.what == MSG_HEART_BEAT) {
+                if (msg.arg1 == 1) {//成功发送心跳包
+                    mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);
+                } else {
+                    mHandler.removeCallbacks(heartBeatRunnable);
+                    mReadThread.release();
+                    if (mSendHandler != null && mSendHandler.getLooper() != null) {
+                        mSendHandler.getLooper().quit();
+                    }
+                    Cog.d(TAG, "--releaseLastSocket-->尝试重连");
+                    releaseLastSocket(mSocket);
+                    Cog.d(TAG, "-->尝试重连");
+                    // new InitSocketThread().start();
+                }
+            }
+            return true;
+        }
+    };
+
     // For heart Beat
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(mHeartBeatCallback);
+
     private Runnable heartBeatRunnable = new Runnable() {
 
         @Override
         public void run() {
-            Cog.d(TAG, "-->send = xxx");
-            boolean isSuccess = sendMessages("<root from='" + mRemoteDirectorConfig.getUid() + "' to='" + mRemoteDirectorConfig.getMid() + "' type='keepAlive' serverType='" + mRemoteDirectorConfig.getServerType() + "' enterpriseId='" + mRemoteDirectorConfig.getEnterpriseId() + "'/>");
-            if (!isSuccess) {
-                mHandler.removeCallbacks(heartBeatRunnable);
-                mReadThread.release();
-                Cog.d(TAG, "--releaseLastSocket-->尝试重连");
-                releaseLastSocket(mSocket);
-                Cog.d(TAG, "-->尝试重连");
-                // new InitSocketThread().start();
-            }
-
-            mHandler.postDelayed(this, HEART_BEAT_RATE);
+            Cog.d(TAG, "-->send heart beat");
+            sendMessage("<root from='" + mRemoteDirectorConfig.getUid()
+                    + "' to='" + mRemoteDirectorConfig.getMid()
+                    + "' type='keepAlive' serverType='" + mRemoteDirectorConfig.getServerType()
+                    + "' enterpriseId='" + mRemoteDirectorConfig.getEnterpriseId() + "'/>", true);
         }
     };
     private IBackService.Stub iBackService = new IBackService.Stub() {
@@ -64,12 +96,12 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void login() throws RemoteException {
-            sendMessages(Commands.login(mRemoteDirectorConfig));
+            sendMessage(Commands.login(mRemoteDirectorConfig));
         }
 
         @Override
         public void noticeOnLine() throws RemoteException {
-            sendMessages(Commands.noticeOnLine(mRemoteDirectorConfig));
+            sendMessage(Commands.noticeOnLine(mRemoteDirectorConfig));
         }
 
         /**
@@ -77,7 +109,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void loginOut() throws RemoteException {
-            sendMessages(Commands.loginOut(mRemoteDirectorConfig));
+            sendMessage(Commands.loginOut(mRemoteDirectorConfig));
         }
 
         /**
@@ -85,7 +117,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void keepAlive() throws RemoteException {
-            sendMessages("<root from='" + mRemoteDirectorConfig.getUid() + "' to='" + mRemoteDirectorConfig.getMid() + "' type='keepAlive' serverType='" + mRemoteDirectorConfig.getServerType() + "' enterpriseId='" + mRemoteDirectorConfig.getEnterpriseId() + "'/>");//就发送一个\r\n过去 如果发送失败，就重新初始化一个socket
+            sendMessage("<root from='" + mRemoteDirectorConfig.getUid() + "' to='" + mRemoteDirectorConfig.getMid() + "' type='keepAlive' serverType='" + mRemoteDirectorConfig.getServerType() + "' enterpriseId='" + mRemoteDirectorConfig.getEnterpriseId() + "'/>");//就发送一个\r\n过去 如果发送失败，就重新初始化一个socket
         }
 
         /**
@@ -109,7 +141,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void sceneStyle(String command, int seq) throws RemoteException {
-            sendMessages(Commands.sceneStyle(command, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.sceneStyle(command, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -125,7 +157,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void videoStitchMode(String command, int seq) throws RemoteException {
-            sendMessages(Commands.videoStitchMode(command, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.videoStitchMode(command, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
 
@@ -137,7 +169,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void directorMode(String mode, int seq) throws RemoteException {
-            sendMessages(Commands.directorMode(mode, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.directorMode(mode, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -148,7 +180,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void setLogo(String mode, int seq) throws RemoteException {
-            sendMessages(Commands.setLogo(mode, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setLogo(mode, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -160,12 +192,12 @@ public class RemoteBackService extends Service {
         @Override
         public void setVideoRecord(String mode, String flag, int seq) throws RemoteException {
             Cog.d(TAG, "setVideoRecord mode=", mode, ",flag=", flag, ",seq=", seq);
-            sendMessages(Commands.setVideoRecord(mode, flag, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setVideoRecord(mode, flag, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         @Override
         public void setSubTitle(String mode, int seq) throws RemoteException {
-            sendMessages(Commands.setSubTitle(mode, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setSubTitle(mode, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -179,7 +211,7 @@ public class RemoteBackService extends Service {
         @Override
         public void setChangeRecordMode(String mode, String flag, String recordArr, int seq) throws RemoteException {
             Cog.d(TAG, "setChangeRecordMode mode=", mode, ",flag=", flag, ",seq=", seq);
-            sendMessages(Commands.setChangeRecordMode(mode, flag, recordArr, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setChangeRecordMode(mode, flag, recordArr, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
 
@@ -191,7 +223,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void setVideoHead(String mode, int seq) throws RemoteException {
-            sendMessages(Commands.setVideoHead(mode, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setVideoHead(mode, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -202,7 +234,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void setVideoEnd(String mode, int seq) throws RemoteException {
-            sendMessages(Commands.setVideoEnd(mode, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setVideoEnd(mode, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -213,7 +245,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void setRecordState(int mode, int seq) throws RemoteException {
-            sendMessages(Commands.setRecordState(mode, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setRecordState(mode, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -225,7 +257,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void setPresetPosition(int flight, int presetPosition, int seq) throws RemoteException {
-            sendMessages(Commands.setPresetPosition(flight, presetPosition, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setPresetPosition(flight, presetPosition, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -238,7 +270,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void setVideoMove(String flight, String function, String action, int seq) throws RemoteException {
-            sendMessages(Commands.setVideoMove(flight, function, action, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setVideoMove(flight, function, action, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -250,7 +282,7 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void changeVideoMain(String position, boolean flag, int seq) throws RemoteException {
-            sendMessages(Commands.changeVideoMain(position, flag, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.changeVideoMain(position, flag, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         /**
@@ -271,12 +303,12 @@ public class RemoteBackService extends Service {
          */
         @Override
         public void setClassAndVoice(String mode, int seq) throws RemoteException {
-            sendMessages(Commands.setClassAndVoice(mode, seq, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setClassAndVoice(mode, seq, mRemoteDirectorConfig, mExtraStr));
         }
 
         @Override
         public void setSubViewCenter(int seq, int index, int x, int y, int width, int hight) {
-            sendMessages(Commands.setSubViewCenter(seq, index, x, y, width, hight, mRemoteDirectorConfig, mExtraStr));
+            sendMessage(Commands.setSubViewCenter(seq, index, x, y, width, hight, mRemoteDirectorConfig, mExtraStr));
         }
 
     };
@@ -294,28 +326,26 @@ public class RemoteBackService extends Service {
 
     /**
      * 发送消息
+     * @param msg 消息内容
+     * @param keepAlive 是否是心跳包
+     * @return 是否成功
      */
-    public boolean sendMessages(String msg) {
+    public boolean sendMessage(String msg, boolean keepAlive) {
         Cog.d(TAG, "-->send = " + msg);
-
         if (null == mSocket || null == mSocket.get()) {
             return false;
         }
-        Socket soc = mSocket.get();
-        try {
-            if (!soc.isClosed() && !soc.isOutputShutdown()) {
-                OutputStream os = soc.getOutputStream();
-                String message = msg + "\r\n";
-                os.write(message.getBytes());
-                os.flush();
-            } else {
-                return false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+        if (mSendHandler != null) {
+            mSendHandler.sendMessage(mSendHandler.obtainMessage(keepAlive?MSG_HEART_BEAT: MSG_SEND, msg));
         }
         return true;
+    }
+
+    /**
+     * 发送消息
+     */
+    public boolean sendMessage(String msg) {
+        return sendMessage(msg, false);
     }
 
     private void initSocket() {
@@ -324,11 +354,53 @@ public class RemoteBackService extends Service {
             mSocket = new WeakReference<>(so);
             mReadThread = new ReadThread(so);
             mReadThread.start();
+            HandlerThread sendThread = new HandlerThread("sendMsg2Coco");
+            sendThread.start();
+            mSendHandler = new Handler(sendThread.getLooper(), mSendCallback);
             mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);//初始化成功后，就准备发送心跳包
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private Handler mSendHandler;
+
+    private Callback mSendCallback = new Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == MSG_SEND || msg.what == MSG_HEART_BEAT) {
+                Cog.d(TAG, "-->send = " + msg);
+                String message = (String) msg.obj;
+                boolean sendResult = true;
+                Socket soc = mSocket.get();
+                if (null == mSocket || null == soc) {
+                    sendResult = false;
+                } else {
+                    try {
+                        if (!soc.isClosed() && !soc.isOutputShutdown()) {
+                            OutputStream os = soc.getOutputStream();
+                            String finalMsg = message + "\r\n";
+                            os.write(finalMsg.getBytes());
+                            os.flush();
+                        } else {
+                            sendResult = false;
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        sendResult = false;
+                    }
+                }
+                if(msg.what == MSG_HEART_BEAT) {//如果是心跳，要返回是否发送成功的结果
+                    if (sendResult) {
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_HEART_BEAT, 1, 0));
+                    } else {
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_HEART_BEAT, 0, 0));
+                    }
+                }
+            }
+            return true;
+        }
+    };
 
     private void releaseResources() {
         mHandler.removeCallbacks(heartBeatRunnable);
@@ -339,17 +411,15 @@ public class RemoteBackService extends Service {
     /**
      * 释放socket
      */
-    private void releaseLastSocket(WeakReference<Socket> mSocket) {
+    private void releaseLastSocket(WeakReference<Socket> socketWeakRef) {
         try {
-            if (null != mSocket) {
-                Socket sk = mSocket.get();
+            if (null != socketWeakRef) {
+                Socket sk = socketWeakRef.get();
                 if (sk != null) {
                     if (!sk.isClosed()) {
                         sk.close();
                     }
                 }
-                sk = null;
-                mSocket = null;
             }
         } catch (IOException e) {
             e.printStackTrace();

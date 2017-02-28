@@ -34,7 +34,7 @@ public class WiFiBroadCastUtils {
     public WiFiBroadCastUtils(Context context,FragmentManager fragmentManager, PlayStateListener mPlayStateListener) {
         if(null == context) return;
         this.mFragmentManager = fragmentManager ;
-        mContextWeakReference = new WeakReference(context);
+        mContextWeakReference = new WeakReference<>(context);
         this.mPlayStateListener =   mPlayStateListener;
         registerMyBroadCast();
     }
