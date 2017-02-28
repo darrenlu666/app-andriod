@@ -52,10 +52,10 @@ public class RemoteBackService extends Service {
     private ReadThread mReadThread;
     private WeakReference<Socket> mSocket;
 
-    // For heart Beat
-    private Handler mHandler = new Handler(){
+    private Callback mHeartBeatCallback = new Callback() {
         @Override
-        public void handleMessage(Message msg) {
+        public boolean handleMessage(Message msg) {
+            Cog.d(TAG, "heartBeatCallback:" + msg);
             if (msg.what == MSG_HEART_BEAT) {
                 if (msg.arg1 == 1) {//成功发送心跳包
                     mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);
@@ -71,14 +71,18 @@ public class RemoteBackService extends Service {
                     // new InitSocketThread().start();
                 }
             }
+            return true;
         }
     };
+
+    // For heart Beat
+    private Handler mHandler = new Handler(mHeartBeatCallback);
 
     private Runnable heartBeatRunnable = new Runnable() {
 
         @Override
         public void run() {
-            Cog.d(TAG, "-->send = xxx");
+            Cog.d(TAG, "-->send heart beat");
             sendMessage("<root from='" + mRemoteDirectorConfig.getUid()
                     + "' to='" + mRemoteDirectorConfig.getMid()
                     + "' type='keepAlive' serverType='" + mRemoteDirectorConfig.getServerType()
@@ -388,9 +392,9 @@ public class RemoteBackService extends Service {
                 }
                 if(msg.what == MSG_HEART_BEAT) {//如果是心跳，要返回是否发送成功的结果
                     if (sendResult) {
-                        mHandler.sendMessage(mHandler.obtainMessage(MSG_HEART_BEAT, 1));
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_HEART_BEAT, 1, 0));
                     } else {
-                        mHandler.sendMessage(mHandler.obtainMessage(MSG_HEART_BEAT, 0));
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_HEART_BEAT, 0, 0));
                     }
                 }
             }
