@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
 
         if (BuildConfig.DEBUG) ViewServer.get(this).addWindow(this);
 
-        UiMainUtils.setNavigationTintColor(this,R.color.main_green);
+        UiMainUtils.setNavigationTintColor(this, R.color.main_green);
         if (savedInstanceState != null) {
             mTabHost.setCurrentTab(savedInstanceState.getInt("tab"));
         }

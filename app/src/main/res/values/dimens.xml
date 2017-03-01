@@ -73,6 +73,7 @@
     <dimen name="poe_top_bottom_text_addition_padding_size">-2dp</dimen>
     <dimen name="poe_top_text_addition_padding_size">0dp</dimen>
     <dimen name="poe_bottom_text_addition_padding_size">-2dp</dimen>
+    <dimen name="poe_recycler_grid_layout_padding">10dp</dimen>
 
     <dimen name="sp16">16sp</dimen>
     <dimen name="dp8">8dp</dimen>

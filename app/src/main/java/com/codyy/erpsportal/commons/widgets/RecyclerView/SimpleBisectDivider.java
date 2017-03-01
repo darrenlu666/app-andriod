@@ -28,14 +28,16 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
     private int mSpace = 20;//多个gridView之间的间距　.
     private int mLastPosition = 0;//第一次出现的地方
     private boolean isBigShow = false;//是否有大图片
+    private IGridLayoutViewHolder mIGridLayoutViewHolder;
 
-    public SimpleBisectDivider(Drawable divider) {
-        this(divider, 20);
-    }
+//    public SimpleBisectDivider(Drawable divider) {
+//        this(divider, 20);
+//    }
 
-    public SimpleBisectDivider(Drawable divider, int space) {
+    public SimpleBisectDivider(Drawable divider, int space,IGridLayoutViewHolder iGridLayoutViewHolder) {
         this(divider, false);
         this.mSpace = space;
+        this.mIGridLayoutViewHolder = iGridLayoutViewHolder ;
         mLastPosition = 0;
     }
 
@@ -55,20 +57,20 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         GridLayoutManager gridLayoutManager = (GridLayoutManager) parent.getLayoutManager();
-        if (gridLayoutManager == null) return;
+        if (gridLayoutManager == null ) return;
         //如果下一个item的recyclerType为TitleBar or TitleBarMore 则 返回
         int position = parent.getChildLayoutPosition(view);
         int viewType = parent.getAdapter().getItemViewType(position);
 
-        if (HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE == viewType ||
-                HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE == viewType) {
-            if (HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE == viewType) {
+        if (null != mIGridLayoutViewHolder) {
+            if (mIGridLayoutViewHolder.obtainSingleBigItemViewHolderType() == viewType) {
                 isBigShow = true;
                 outRect.top = 0;
                 outRect.left = 0;
                 outRect.right = 0;
                 outRect.bottom = mSpace;
-            } else if (HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE == viewType) {
+                return;
+            } else if (mIGridLayoutViewHolder.obtainMultiInLineViewHolderType() == viewType) {
                 //记录初始位置
                 if (mLastPosition == 0) {
                     mLastPosition = position;
@@ -76,8 +78,8 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 }
                 int count = gridLayoutManager.getSpanCount();
                 setSpace(outRect, position - mLastPosition, count);
+                return;
             }
-            return;
         }
 
         if (mDivider == null) {
@@ -103,6 +105,12 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
         }
     }
 
+    /**
+     * 设置grid等分space
+     * @param outRect
+     * @param position
+     * @param count
+     */
     private void setSpace(Rect outRect, int position, int count) {
         if (position < count && !isBigShow) {
             outRect.top = mSpace;
@@ -236,5 +244,19 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
             return layoutManager.getOrientation();
         }
         return -1;
+    }
+
+    public interface IGridLayoutViewHolder{
+        /**
+         * 单个item填充整行
+         * @return
+         */
+        int obtainSingleBigItemViewHolderType();
+
+        /**
+         * 多个item填充一行
+         * @return
+         */
+        int obtainMultiInLineViewHolderType();
     }
 }
