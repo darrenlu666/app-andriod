@@ -32,6 +32,11 @@ public class WifiBroadCastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Cog.d(TAG, "intent = ", intent);
+        if (isInitialStickyBroadcast()) {//miui8锁屏十分钟会偷偷断开wifi，还会发个粘性广播坑你
+            Cog.d(TAG, "isInitialStickyBroadcast = ", isInitialStickyBroadcast());
+            return;
+        }
         if(listener != null ){
             ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
