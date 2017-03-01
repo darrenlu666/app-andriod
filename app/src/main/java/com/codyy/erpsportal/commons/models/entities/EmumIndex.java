@@ -23,15 +23,15 @@ public class EmumIndex {
 
         String result ="一";
 
-        if(pos>8){
-            pos = pos%8;
-        }
+        if(pos <16){
+            if(pos>0){
+                pos --;
+            }
 
-        if(pos>0){
-            pos --;
+            result  =   indexs[pos] ;
+        }else{
+            result=pos+"";
         }
-
-        result  =   indexs[pos] ;
 
         return result;
     }
