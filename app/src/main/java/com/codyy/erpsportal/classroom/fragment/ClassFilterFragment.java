@@ -64,9 +64,22 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
 
     private View mView;
     private String mUuid;
+    private String mSchoolId;
     private static String ARG_ITEMS = "ARG_ITEMS";
     private static String ARG_UUID = "ARG_UUID";
+    private static String ARG_SCHOOL_ID = "ARG_SCHOOL_ID";
     private int mLastOptionPos = -1;
+
+    public static ClassFilterFragment getInstance(ArrayList<FilterItem> items,String uuid,String schoolId) {
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(ARG_ITEMS, items);
+        bundle.putString(ARG_UUID, uuid);
+        bundle.putString(ARG_SCHOOL_ID,schoolId);
+        ClassFilterFragment fragment = new ClassFilterFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     public static ClassFilterFragment newInstance(ArrayList<FilterItem> items, String uuid) {
         ClassFilterFragment fragment = new ClassFilterFragment();
@@ -84,6 +97,7 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUuid(getArguments().getString(ARG_UUID));
+        mSchoolId = getArguments().getString(ARG_SCHOOL_ID);
     }
 
     @Override
@@ -272,17 +286,34 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                         }
                     } else {
                         if ("classLevelId".equals(item.getParamName())) {//根据schoolid获取年级信息
-                            if (UserInfoKeeper.obtainUserInfo().isArea()) {
+                            /*if (UserInfoKeeper.obtainUserInfo().isArea()) {
                                 params.put("areaId", UserInfoKeeper.obtainUserInfo().getBaseAreaId());
+                            } else {
+                                params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
+                            }*///以前的代码
+                            //现在的筛选接口，对应bugId:10615
+                            if (UserInfoKeeper.obtainUserInfo().isArea()) {
+                                params.put("schoolId", mSchoolId);
                             } else {
                                 params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
                             }
                         } else if ("subjectId".equals(item.getParamName())) {//获取学科信息
-                            if (UserInfoKeeper.obtainUserInfo().isArea()) {
+                            /*if (UserInfoKeeper.obtainUserInfo().isArea()) {
                                 params.put("areaId", UserInfoKeeper.obtainUserInfo().getBaseAreaId());
                             } else {
                                 params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
+                            }*/
+                            if (position == 1) { //点击学科
+                                FilterItem classLevelItem = mOptionsAdapter.getItem(0);
+                                Choice classLevel = classLevelItem.getChoice();
+                                if (classLevel == null || classLevel.getId() == null) {
+                                    unCheckItem(2);
+                                    shortlyToast(getString(R.string.exam_filter_toast, mOptionsAdapter.getItem(0).getTypeName()));
+                                    return;
+                                }
                             }
+                            params.put("pClasslevelId", mOptionsAdapter.getItem(0).getChoice().getPlaceId());
+
                         } else if ("classId".equals(item.getParamName())) {
                             params.put("uuid", mUuid);
                             if (position == 2) { //点击班级
@@ -297,8 +328,12 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                             params.put("pClassLevelId", mOptionsAdapter.getItem(0).getChoice().getPlaceId());
                         } else if ("teacherId".equals(item.getParamName())) {
                             params.put("baseClassLevelId", mOptionsAdapter.getItem(0).getChoice() == null ? "" : (mOptionsAdapter.getItem(0).getChoice().getId() == null ? "" : mOptionsAdapter.getItem(0).getChoice().getId()));
-                            params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
-                            params.put("baseSubjectId", mOptionsAdapter.getItem(1).getChoice() == null ? "" : (mOptionsAdapter.getItem(1).getChoice().getId() == null ? "" : mOptionsAdapter.getItem(1).getChoice().getId()));
+                            if(UserInfoKeeper.obtainUserInfo().isArea()){
+                                params.put("schoolId", mSchoolId);
+                            }else{
+                                params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
+                            }
+                            //params.put("baseSubjectId", mOptionsAdapter.getItem(1).getChoice() == null ? "" : (mOptionsAdapter.getItem(1).getChoice().getId() == null ? "" : mOptionsAdapter.getItem(1).getChoice().getId()));
                             params.put("uuid", mUuid);
                         }
                         requestQueue.add(new NormalPostRequest(item.getUrl(), params, new Response.Listener<JSONObject>() {

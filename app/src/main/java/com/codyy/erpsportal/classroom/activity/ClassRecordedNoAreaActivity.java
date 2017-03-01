@@ -55,11 +55,11 @@ public class ClassRecordedNoAreaActivity extends TabsWithFilterActivity {
     protected void addFilterFragments() {
         ArrayList<FilterItem> items;
         items = new ArrayList<>();
-        items.add(new FilterItem(getString(R.string.exam_grade), "classLevelId", isAreaUser ? URLConfig.ALL_CLASS_LEVEL : URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID,
-                FilterItem.OBJECT, new Choice.BaseChoiceParser()));
-        items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT, new Choice.BaseChoiceParser()));
+        items.add(new FilterItem(getString(R.string.exam_grade), "classLevelId",URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID,
+                FilterItem.OBJECT, new Choice.BaseChoiceParser()));//以前代码 isAreaUser ? URLConfig.ALL_CLASS_LEVEL : URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID
+        items.add(new FilterItem(getString(R.string.exam_subject), "subjectId",URLConfig.ALL_SUBJECTS_BY_CLASS_ID , FilterItem.OBJECT, new Choice.BaseChoiceParser()));//URLConfig.ALL_SUBJECTS_LIST
         items.add(new FilterItem(getString(R.string.exam_teacher), "teacherId", URLConfig.GET_TEACHER_BY_CLASS, FilterItem.OBJECT, new Choice.BaseTeacherParser()));
-        addFilterFragment(0, ClassFilterFragment.newInstance(items, UserInfoKeeper.obtainUserInfo().getUuid()));
+        addFilterFragment(0, ClassFilterFragment.getInstance(items, UserInfoKeeper.obtainUserInfo().getUuid(),mSchoolId));
     }
 
     @Override
