@@ -152,7 +152,17 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-        mRecyclerView.addItemDecoration(new SimpleBisectDivider(divider, UIUtils.dip2px(EApplication.instance(),15)));
+        mRecyclerView.addItemDecoration(new SimpleBisectDivider(divider, (int)getResources().getDimension(R.dimen.poe_recycler_grid_layout_padding), new SimpleBisectDivider.IGridLayoutViewHolder() {
+            @Override
+            public int obtainSingleBigItemViewHolderType() {
+                return HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE;
+            }
+
+            @Override
+            public int obtainMultiInLineViewHolderType() {
+                return HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE;
+            }
+        }));
         mRefreshLayout.setColorSchemeColors(UiMainUtils.getColor(R.color.main_color));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

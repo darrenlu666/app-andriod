@@ -21,7 +21,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassMemberActivity;
@@ -272,7 +275,17 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-        mRecyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
+        mRecyclerView.addItemDecoration(new SimpleBisectDivider(divider,(int)getResources().getDimension(R.dimen.poe_recycler_grid_layout_padding), new SimpleBisectDivider.IGridLayoutViewHolder() {
+            @Override
+            public int obtainSingleBigItemViewHolderType() {
+                return -1;
+            }
+
+            @Override
+            public int obtainMultiInLineViewHolderType() {
+                return ITEM_TYPE_SPACE_RESOURCE_SHARE;
+            }
+        }));
         mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -284,7 +297,6 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
                 requestData();
             }
         });
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -362,7 +374,7 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
         });
         mRecyclerView.setAdapter(mAdapter);
 
-        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
