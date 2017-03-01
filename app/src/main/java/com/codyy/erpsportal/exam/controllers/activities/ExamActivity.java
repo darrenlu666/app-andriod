@@ -153,11 +153,11 @@ public class ExamActivity extends TabsWithFilterActivity {
                 case UserInfo.USER_TYPE_SCHOOL_USER:
                     items = new ArrayList<>();
                     items.add(new FilterItem(getString(R.string.exam_grade), "classLevelId", URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_CLASS_LEVEL ClassLevelJsonParser()
-                    items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
+                    items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_BY_CLASS_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
                     addFilterFragment(INDEX_ZERO, ClassFilterFragment.newInstance(items, mUserInfo.getUuid()));
                     items = new ArrayList<>();
                     items.add(new FilterItem(getString(R.string.exam_grade), "classLevelId", URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_CLASS_LEVEL ClassLevelJsonParser()
-                    items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
+                    items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_BY_CLASS_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
                     items.add(new FilterItem(getString(R.string.exam_class), "classId", URLConfig.ALL_CLASS_BY_CLASSLEVEL_ID, FilterItem.OBJECT, new Choice.BaseClassParser()));
                     items.add(new FilterItem(getString(R.string.exam_state), "schoolClsState", null, FilterItem.ARRAY));
                     addFilterFragment(INDEX_ONE, ClassFilterFragment.newInstance(items, mUserInfo.getUuid()));
@@ -165,7 +165,7 @@ public class ExamActivity extends TabsWithFilterActivity {
                 case UserInfo.USER_TYPE_TEACHER:
                     items = new ArrayList<>();
                     items.add(new FilterItem(getString(R.string.exam_grade), "classLevelId", URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_CLASS_LEVEL ClassLevelJsonParser()
-                    items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
+                    items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_BY_CLASS_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
                     addFilterFragment(INDEX_ZERO, ClassFilterFragment.newInstance(items, mUserInfo.getUuid()));
                     items = new ArrayList<>();
                     items.add(new FilterItem(getString(R.string.exam_area), "areaName", null, FilterItem.ARRAY));
@@ -175,7 +175,7 @@ public class ExamActivity extends TabsWithFilterActivity {
                     addFilterFragment(INDEX_ONE, ClassFilterFragment.newInstance(items, mUserInfo.getUuid()));
                     items = new ArrayList<>();
                     items.add(new FilterItem(getString(R.string.exam_grade), "classLevelId", URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_CLASS_LEVEL ClassLevelJsonParser()
-                    items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
+                    items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_BY_CLASS_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
                     addFilterFragment(INDEX_TWO, ClassFilterFragment.newInstance(items, mUserInfo.getUuid()));
                     break;
                 case UserInfo.USER_TYPE_STUDENT:

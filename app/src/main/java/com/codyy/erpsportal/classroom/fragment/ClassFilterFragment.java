@@ -286,11 +286,6 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                         }
                     } else {
                         if ("classLevelId".equals(item.getParamName())) {//根据schoolid获取年级信息
-                            /*if (UserInfoKeeper.obtainUserInfo().isArea()) {
-                                params.put("areaId", UserInfoKeeper.obtainUserInfo().getBaseAreaId());
-                            } else {
-                                params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
-                            }*///以前的代码
                             //现在的筛选接口，对应bugId:10615
                             if (UserInfoKeeper.obtainUserInfo().isArea()) {
                                 params.put("schoolId", mSchoolId);
@@ -298,11 +293,13 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                                 params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
                             }
                         } else if ("subjectId".equals(item.getParamName())) {//获取学科信息
-                            /*if (UserInfoKeeper.obtainUserInfo().isArea()) {
-                                params.put("areaId", UserInfoKeeper.obtainUserInfo().getBaseAreaId());
-                            } else {
-                                params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
-                            }*/
+                            if(position == 0 || position == 3){
+                                if (UserInfoKeeper.obtainUserInfo().isArea()) {
+                                    params.put("schoolId", mSchoolId);
+                                } else {
+                                    params.put("schoolId", UserInfoKeeper.obtainUserInfo().getSchoolId());
+                                }
+                            }
                             if (position == 1) { //点击学科
                                 FilterItem classLevelItem = mOptionsAdapter.getItem(0);
                                 Choice classLevel = classLevelItem.getChoice();
@@ -312,7 +309,9 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                                     return;
                                 }
                             }
-                            params.put("pClasslevelId", mOptionsAdapter.getItem(0).getChoice().getPlaceId());
+                            if(position == 1 && mOptionsAdapter.getItem(0).getChoice() != null){
+                                params.put("pClasslevelId", mOptionsAdapter.getItem(0).getChoice().getPlaceId());
+                            }
 
                         } else if ("classId".equals(item.getParamName())) {
                             params.put("uuid", mUuid);
@@ -325,7 +324,9 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                                     return;
                                 }
                             }
-                            params.put("pClassLevelId", mOptionsAdapter.getItem(0).getChoice().getPlaceId());
+                            if(mOptionsAdapter.getItem(0).getChoice() != null){
+                                params.put("pClassLevelId", mOptionsAdapter.getItem(0).getChoice().getPlaceId());
+                            }
                         } else if ("teacherId".equals(item.getParamName())) {
                             params.put("baseClassLevelId", mOptionsAdapter.getItem(0).getChoice() == null ? "" : (mOptionsAdapter.getItem(0).getChoice().getId() == null ? "" : mOptionsAdapter.getItem(0).getChoice().getId()));
                             if(UserInfoKeeper.obtainUserInfo().isArea()){
