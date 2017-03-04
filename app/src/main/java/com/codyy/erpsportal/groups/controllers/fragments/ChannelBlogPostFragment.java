@@ -80,9 +80,10 @@ public class ChannelBlogPostFragment extends BaseHttpFragment implements ConfigB
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing)  mBlogList.clear();
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
@@ -161,7 +162,7 @@ public class ChannelBlogPostFragment extends BaseHttpFragment implements ConfigB
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -170,7 +171,7 @@ public class ChannelBlogPostFragment extends BaseHttpFragment implements ConfigB
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestData();
+                requestData(true);
             }
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -241,7 +242,8 @@ public class ChannelBlogPostFragment extends BaseHttpFragment implements ConfigB
         mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
         mBaseAreaId = config.getBaseAreaId();
         mSchoolId = config.getSchoolId();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     @Override

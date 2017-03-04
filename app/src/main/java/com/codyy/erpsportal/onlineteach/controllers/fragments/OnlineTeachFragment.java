@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
@@ -33,6 +32,7 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
     public final static String TYPE_MY = "MY_LIST";//我的课程
     public final static int REQUEST_CODE_GROUP_MANAGER = 0x210 ;
     private int mViewHolderType = NetTeachManagerViewHolder.ITEM_TYPE_MY;
+
     private String mBaseAreaId;//地区id
     private String mSchoolId;//学校id 　．
     private String mGradeId;//年级
@@ -110,29 +110,13 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
     }
 
     @Override
-    public BaseRecyclerAdapter.ViewCreator getViewCreator() {
-        return new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder>(){
-
-            @Override
-            public BaseRecyclerViewHolder createViewHolder(ViewGroup parent, int viewType) {
-                return new NetTeachManagerViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_net_teach));
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return mViewHolderType;
-            }
-        };
+    public BaseRecyclerViewHolder<NetTeach> getViewHolder(ViewGroup parent) {
+        return new NetTeachManagerViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_net_teach));
     }
 
     @Override
-    public void setOnClickListener() {
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<NetTeach>() {
-            @Override
-            public void onItemClicked(View v, int position, NetTeach data) {
-                OnlineTeachDetailActivity.start(getActivity() , data.getLessonId());
-            }
-        });
+    public void OnItemClicked(View v, int position, NetTeach data) {
+        OnlineTeachDetailActivity.start(getActivity() , data.getLessonId());
     }
 
     @Override
@@ -144,7 +128,7 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
     public void onViewLoadCompleted() {
         super.onViewLoadCompleted();
         mBaseAreaId = mUserInfo.getBaseAreaId();
-        requestData();
+        initData();
     }
 
     @Override

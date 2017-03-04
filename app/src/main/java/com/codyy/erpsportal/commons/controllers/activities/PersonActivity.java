@@ -123,7 +123,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG,response != null ?response.toString():" null ");
         if(null == mSchoolTv || null == mClassTv) return;
         mEmptyView.setLoading(false);
@@ -180,10 +180,13 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
-        requestData();
+
+        mEmptyView.setVisibility(View.VISIBLE);
+        mEmptyView.setLoading(true);
+        requestData(true);
     }
 
     private void refreshUI() {
@@ -305,9 +308,9 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
             api = URLConfig.GET_PUBLIC_PARENT_CHILDREN;
         }
 
-        requestData(api, data, new IRequest() {
+        requestData(api, data, false,new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null == mSchoolTv || null == mClassTv) return;
                 mStudentParse = new Gson().fromJson(response.toString(), StudentParse.class);
                 if (null != mStudentParse) {
@@ -339,9 +342,9 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
             data.put("userId",mNativeUserInfo.getBaseUserId());
         }
 
-        requestData(URLConfig.GET_TEACHER_CLASS_LIST, data, new IRequest() {
+        requestData(URLConfig.GET_TEACHER_CLASS_LIST, data, false ,new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null == mSchoolTv || null == mClassTv) return;
                 TeacherClassParse teacherClassParse = new Gson().fromJson(response.toString(),TeacherClassParse.class);
                 if(null != teacherClassParse && teacherClassParse.getDataList()!=null){

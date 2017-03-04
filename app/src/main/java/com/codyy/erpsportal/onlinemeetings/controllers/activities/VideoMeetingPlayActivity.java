@@ -97,7 +97,7 @@ public class VideoMeetingPlayActivity extends BaseHttpActivity implements BnVide
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         JSONArray jsonArray = response.optJSONArray("videoList");
         List<VideoDetails> list = VideoDetails.parseJsonArray(jsonArray);
         if(list != null){
@@ -204,7 +204,7 @@ public class VideoMeetingPlayActivity extends BaseHttpActivity implements BnVide
         });
         setAdapter();
         //get video list data .
-        requestData();
+        requestData(true);
     }
 
     private void setAdapter() {

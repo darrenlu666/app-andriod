@@ -80,9 +80,10 @@ public class GroupFragment extends BaseHttpFragment implements ConfigBus.OnModul
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mGroupList.clear();
         if (null !=mRefreshLayout&&mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
@@ -167,7 +168,7 @@ public class GroupFragment extends BaseHttpFragment implements ConfigBus.OnModul
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -176,7 +177,7 @@ public class GroupFragment extends BaseHttpFragment implements ConfigBus.OnModul
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestData();
+                requestData(true);
             }
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -238,7 +239,8 @@ public class GroupFragment extends BaseHttpFragment implements ConfigBus.OnModul
         mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
         mBaseAreaId = config.getBaseAreaId();
         mSchoolId = config.getSchoolId();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     @Override

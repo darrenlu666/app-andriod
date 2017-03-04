@@ -84,7 +84,7 @@ public class PublicUserActivity extends BaseHttpActivity {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, response != null ? response.toString() : " null ");
         if (null == mEmptyView) return;
         mEmptyView.setLoading(false);
@@ -115,9 +115,9 @@ public class PublicUserActivity extends BaseHttpActivity {
             data.put("userId",mNativeUserInfo.getBaseUserId());
         }
 
-        requestData(URLConfig.GET_TEACHER_CLASS_LIST, data, new IRequest() {
+        requestData(URLConfig.GET_TEACHER_CLASS_LIST,data,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null == mResourceTv || null == mWeiboTv) return;
                 TeacherClassParse teacherClassParse = new Gson().fromJson(response.toString(),TeacherClassParse.class);
                 if(null != teacherClassParse && teacherClassParse.getDataList()!=null){
@@ -156,9 +156,9 @@ public class PublicUserActivity extends BaseHttpActivity {
             }
         }
 
-        requestData(api, data, new IRequest() {
+        requestData(api, data,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null == mResourceTv || null == mWeiboTv) return;
                 mStudentParse = new Gson().fromJson(response.toString(), StudentParse.class);
                 if (null != mStudentParse) {
@@ -221,11 +221,13 @@ public class PublicUserActivity extends BaseHttpActivity {
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         mClassSpaceLinearLayout.setEnabled(false);
-        requestData();
+        mEmptyView.setVisibility(View.VISIBLE);
+        mEmptyView.setLoading(true);
+        requestData(true);
     }
 
     /**

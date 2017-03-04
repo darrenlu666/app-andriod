@@ -133,7 +133,7 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, response.toString());
         if (null == mRecyclerView || null == mRefreshLayout) return;
         if (mRefreshLayout.isRefreshing()) {
@@ -257,7 +257,8 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     public void init() {
@@ -271,7 +272,7 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -294,7 +295,7 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
 
                 mRecyclerView.setEnabled(false);
                 mRecyclerView.setRefreshing(true);
-                requestData();
+                requestData(true);
             }
         });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);

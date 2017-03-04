@@ -144,7 +144,9 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
+        if(null ==  mRecycleTeacher) return;
+//        if(isFinishing())
         JSONArray groups = response.optJSONArray("classGroups");
         JSONArray students = response.optJSONArray("students");
         JSONArray teachers = response.optJSONArray("teachers");
@@ -229,7 +231,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         lp.height = UIUtils.dip2px(this, 350);
         window.setAttributes(lp);
         //get data .
-        requestData();
+        requestData(true);
     }
 
     //班级成员箭头－>下
@@ -301,7 +303,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
                         mClassID = cc.getBaseClassId();
                         setTitle(cc);
                         mClassAdapter.notifyDataSetChanged();
-                        requestData();
+                        requestData(true);
                         mClassPopupWindow.dismiss();
                     }
                 });

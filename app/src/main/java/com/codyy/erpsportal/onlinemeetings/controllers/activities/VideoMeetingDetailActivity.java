@@ -108,7 +108,7 @@ public class VideoMeetingDetailActivity extends BaseHttpActivity {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         if(null == mEmptyView) return;
         mEmptyView.setVisibility(View.GONE);
         mVideoMeetingDetailEntity = VideoMeetingDetailEntity.parseJsonObject(response);
@@ -307,7 +307,7 @@ public class VideoMeetingDetailActivity extends BaseHttpActivity {
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
-                requestData();
+                requestData(true);
             }
         });
         mReceiveRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -317,7 +317,7 @@ public class VideoMeetingDetailActivity extends BaseHttpActivity {
         setAdapter();
         showProgress();
         //get detail data .
-        requestData();
+        requestData(true);
     }
 
     private void setAdapter() {

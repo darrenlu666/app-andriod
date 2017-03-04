@@ -95,7 +95,7 @@ public class ClassBlogActivity extends BaseHttpActivity {
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -185,13 +185,15 @@ public class ClassBlogActivity extends BaseHttpActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView || null == mRefreshLayout) return;
+        if(isRefreshing) mDataList.clear();
         mRecyclerView.setRefreshing(false);
         mAdapter.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -201,7 +203,7 @@ public class ClassBlogActivity extends BaseHttpActivity {
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
-                requestData();
+                requestData(true);
             }
         });
 
@@ -271,9 +273,8 @@ public class ClassBlogActivity extends BaseHttpActivity {
     //刷新数据
     private void refresh() {
         mRecyclerView.setRefreshing(true);
-        mDataList.clear();
         hideMore();
-        requestData();
+        requestData(true);
     }
 
     /**
@@ -286,9 +287,9 @@ public class ClassBlogActivity extends BaseHttpActivity {
         hashMap.put("start",mAllBlogList.size()+"");
         hashMap.put("end",(mAllBlogList.size()+sPageCount-1)+"");
 
-        requestData(URLConfig.GET_CLASS_BLOG_LIST_MORE, hashMap, new IRequest() {
+        requestData(URLConfig.GET_CLASS_BLOG_LIST_MORE, hashMap, false,new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG , response.toString());
                 if(null == mRecyclerView ) return;
                 ClassBlogList blogPostList = new Gson().fromJson(response.toString(),ClassBlogList.class);

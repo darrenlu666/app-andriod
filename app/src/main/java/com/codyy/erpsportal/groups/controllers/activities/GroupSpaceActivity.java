@@ -162,9 +162,13 @@ public class GroupSpaceActivity extends BaseHttpActivity implements BaseRecycler
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, response.toString());
         if (null == mRecyclerView || null == mRefreshLayout) return;
+        if(isRefreshing) {
+            mGroupList.clear();
+            mTitleList.clear();
+        }
         mRecyclerView.setEnabled(true);
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
@@ -307,7 +311,8 @@ public class GroupSpaceActivity extends BaseHttpActivity implements BaseRecycler
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     public void init() {
@@ -332,7 +337,7 @@ public class GroupSpaceActivity extends BaseHttpActivity implements BaseRecycler
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -342,10 +347,8 @@ public class GroupSpaceActivity extends BaseHttpActivity implements BaseRecycler
             @Override
             public void onRefresh() {
                 //下拉刷新
-                mGroupList.clear();
-                mTitleList.clear();
                 mRecyclerView.setEnabled(false);
-                requestData();
+                requestData(true);
             }
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -563,16 +566,13 @@ public class GroupSpaceActivity extends BaseHttpActivity implements BaseRecycler
         if (GroupSpace.GROUP_OPERATE_TYPE_EXIT == type) {
             url = URLConfig.UPDATE_GROUP_PROMPT_OUT;
         }
-        requestData(url, data, new IRequest() {
+        requestData(url, data, false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response ,boolean isRefreshing) {
                 if (response != null && response.optString("result").equals("success")) {
                     ToastUtil.showToast(response.optString("message"));
-                    //下拉刷新
-                    mGroupList.clear();
-                    mTitleList.clear();
                     mRecyclerView.setEnabled(false);
-                    requestData();
+                    requestData(true);
                     mInputEdt.setText("");
                     hideInput();
                 } else if (null != response) {

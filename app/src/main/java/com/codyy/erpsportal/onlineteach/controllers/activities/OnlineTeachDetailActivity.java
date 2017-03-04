@@ -119,7 +119,7 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, "onResponse:" + response);
         if(mEmptyView == null) return;
         mEmptyView.setVisibility(View.GONE);
@@ -276,7 +276,7 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
-                requestData();
+                requestData(true);
             }
         });
         mRlState.setOnClickListener(this);
@@ -286,7 +286,9 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
         setAdapter();
         showProgress();
         //get detail data .
-        requestData();
+        mEmptyView.setVisibility(View.VISIBLE);
+        mEmptyView.setLoading(true);
+        requestData(true);
     }
 
     private void setAdapter() {

@@ -111,9 +111,10 @@ public class MoreGroupListActivity extends BaseHttpActivity {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mGroupList.clear();
         mRecyclerView.setRefreshing(false);
         mAdapter.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -162,7 +163,8 @@ public class MoreGroupListActivity extends BaseHttpActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     public void init() {
@@ -177,7 +179,7 @@ public class MoreGroupListActivity extends BaseHttpActivity {
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -188,9 +190,8 @@ public class MoreGroupListActivity extends BaseHttpActivity {
             public void onRefresh() {
                 //下拉刷新
                 mRecyclerView.setRefreshing(true);
-                mGroupList.clear();
                 mAdapter.setHasMoreData(false);
-                requestData();
+                requestData(true);
             }
         });
 
@@ -215,11 +216,11 @@ public class MoreGroupListActivity extends BaseHttpActivity {
         mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
             @Override
             public void onMoreData() {
-                requestData();
+                requestData(false);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-        this.enableLoadMore(mRecyclerView);
+        this.enableLoadMore(mRecyclerView,false);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         mFilterFragment = new GroupFilterFragment();
         Bundle bd = new Bundle();
@@ -306,7 +307,7 @@ public class MoreGroupListActivity extends BaseHttpActivity {
         Cog.i(TAG,"mBaseAreaId"+mBaseAreaId+" mIsDirectory"+mIsDirectory+" mSemester"+mSemester+" mSchoolId"+mSchoolId+" mGrade"+mGrade+" mSubject"+mSubject+" mCategory"+mCategory);
         //refresh .
         mGroupList.clear();
-        requestData();
+        requestData(true);
     }
 
     /**

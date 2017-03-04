@@ -83,7 +83,7 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
 
     }
 
