@@ -47,7 +47,6 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
     protected BaseRecyclerAdapter<T,BaseRecyclerViewHolder<T>> mAdapter ;
     public int mTotal = 0;//总数据量
     public int mCurrentPageIndex = 1 ;//当前页码
-    private Parcelable mRecyclerSavedInstanceState;
 
     @Override
     public int obtainLayoutId() {
@@ -177,10 +176,6 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
         });
         mRecyclerView.setAdapter(mAdapter);
         this.enableLoadMore(mRecyclerView,false);
-        if(null != mRecyclerSavedInstanceState){
-            mRecyclerView.getLayoutManager().onRestoreInstanceState(mRecyclerSavedInstanceState);
-            mRecyclerSavedInstanceState = null ;
-        }
     }
 
     @Override
@@ -189,15 +184,9 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
         Cog.i(TAG,"onActivityCreated ~ ");
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mRecyclerSavedInstanceState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-    }
-
     /** * 初始化数据 */
     public void initData(){
-        mRefreshLayout.setRefreshing(true);
+        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         requestData(true);
     }
     /**
@@ -209,5 +198,4 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
         mAdapter.setHasMoreData(false);
         requestData(true);
     }
-
 }

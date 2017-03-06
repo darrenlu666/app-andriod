@@ -171,6 +171,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
         }else if(holder instanceof BaseRecyclerViewHolder){
             BaseRecyclerViewHolder<T> bvh = (BaseRecyclerViewHolder<T>) holder;
             try {
+                bvh.setData(mData.get(position));
                 bvh.setData(position , mData.get(position));
             } catch (Throwable throwable) {
                 throwable.printStackTrace();

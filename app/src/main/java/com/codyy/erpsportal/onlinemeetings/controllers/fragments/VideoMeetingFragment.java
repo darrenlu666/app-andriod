@@ -125,7 +125,7 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
     public void doFilter(Bundle bd){
         if(null != bd){
             mState   =   bd.getString("state");
-            refresh();
+            initData();
         }
     }
 }

@@ -1,34 +1,38 @@
 package com.codyy.erpsportal.commons.controllers.viewholders;
 
-import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.PreparationEntity;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 
 /**
  * Created by yangxinwu on 2015/8/3.
  */
-public class PrePareLessonsViewHolder extends AbsViewHolder<PreparationEntity> {
-    ImageView headerImage;
-    TextView title;
-    TextView teachNameDesc;
-    TextView teachName;
-    TextView date;
-    TextView subject;
-    TextView tvTimeText;
-    RatingBar ratingBar;
-    RelativeLayout rlDate;
-    ViewGroup rlScore;
-//    TextView tvScore;
+public class PrePareLessonsViewHolder extends BaseRecyclerViewHolder<PreparationEntity> {
+    @Bind(R.id.iv_state) ImageView headerImage;
+    @Bind(R.id.tv_title) TextView title;
+    @Bind(R.id.tv_name_text) TextView teachNameDesc;
+    @Bind(R.id.tv_name) TextView teachName;
+    @Bind(R.id.tv_date) TextView date;
+    @Bind(R.id.tv_subject) TextView subject;
+    @Bind(R.id.tv_date_text) TextView tvTimeText;
+    @Bind(R.id.rb_star) RatingBar ratingBar;
+    @Bind(R.id.rl_date) RelativeLayout rlDate;
+    @Bind(R.id.rl_star) ViewGroup rlScore;
+
+    public PrePareLessonsViewHolder(View itemView) {
+        super(itemView);
+        ButterKnife.bind(this,itemView);
+    }
 
     @Override
     public int obtainLayoutId() {
@@ -36,22 +40,7 @@ public class PrePareLessonsViewHolder extends AbsViewHolder<PreparationEntity> {
     }
 
     @Override
-    public void mapFromView(View view) {
-        headerImage =(ImageView)view.findViewById(R.id.iv_state);
-        title =(TextView)view.findViewById(R.id.tv_title);
-        teachNameDesc = (TextView) view.findViewById(R.id.tv_name_text);
-        teachName =(TextView)view.findViewById(R.id.tv_name);
-        date =(TextView)view.findViewById(R.id.tv_date);
-        subject=(TextView)view.findViewById(R.id.tv_subject);
-        tvTimeText=(TextView)view.findViewById(R.id.tv_date_text);
-        ratingBar=(RatingBar)view.findViewById(R.id.rb_star);
-        rlDate=(RelativeLayout)view.findViewById(R.id.rl_date);
-        rlScore=(ViewGroup)view.findViewById(R.id.rl_star);
-//        tvScore = (TextView) view.findViewById(R.id.tv_score);
-    }
-
-    @Override
-    public void setDataToView(PreparationEntity data, Context context) {
+    public void setData(int position, PreparationEntity data) throws Throwable {
         if(Constants.TYPE_PREPARE_LESSON.equals(data.getFromType())){
             teachNameDesc.setText("主备教师");
         }else{
@@ -77,6 +66,5 @@ public class PrePareLessonsViewHolder extends AbsViewHolder<PreparationEntity> {
         date.setText(data.getStartDate());
         subject.setText(data.getSubjectName());
         ratingBar.setProgress(data.getAverageScore());
-//        tvScore.setText(context.getString(R.string.d_score, data.getAverageScore()));
     }
 }
