@@ -76,94 +76,6 @@ public class GroupManagerListFragment extends SimpleRecyclerFragment<Group> {
     }
 
     @Override
-    public String getAPI() {
-       return URLConfig.GET_GROUP_MANAGER_LIST;
-    }
-
-    /**
-     * directFlag	boolean	直属校（默认false，非直属)
-     * @return
-     */
-    @Override
-    public HashMap<String, String> getParams() {
-        HashMap hashMap = new HashMap();
-        if(null != mUserInfo) hashMap.put("uuid" , mUserInfo.getUuid());
-        if(null != mBaseAreaId) hashMap.put("areaId",mBaseAreaId);
-        if(null != mSchoolId) hashMap.put("schoolId",mSchoolId);
-        if(null != mSemesterId) hashMap.put("semesterId",mSemesterId);
-        if(null != mGroupType) hashMap.put("groupType",mGroupType);
-        if(null != mGradeId) hashMap.put("gradeId",mGradeId);
-        if(null != mSubjectId) hashMap.put("subjectId",mSubjectId);
-        if(null != mCategoryId) hashMap.put("categoryId",mCategoryId);
-        if(null != mState) hashMap.put("state",mState);
-        if(null != mType) hashMap.put("type", mType);
-        if(null != mDirectFlag) hashMap.put("directFlag",mDirectFlag);
-        hashMap.put("start",mDataList.size()+"");
-        hashMap.put("end",(mDataList.size()+sPageCount-1)+"");
-        return hashMap;
-    }
-
-    @Override
-    public void parseData(JSONObject response) {
-        GroupTeaching groupTeaching = new Gson().fromJson(response.toString(),GroupTeaching.class);
-        if(null != groupTeaching && null != groupTeaching.getTotal()) {
-            mTotal  =   Integer.parseInt(groupTeaching.getTotal());
-            if (groupTeaching.getDataList() != null && groupTeaching.getDataList().size() > 0) {
-                for (Group group : groupTeaching.getDataList()) {
-                    group.setBaseViewHoldType(mViewHolderType);
-                    mDataList.add(group);
-                }
-            }
-        }
-    }
-
-    @Override
-    public BaseRecyclerViewHolder<Group> getViewHolder(ViewGroup parent) {
-        return new GroupManagerViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_group_manager,parent,false));
-    }
-
-    @Override
-    public void OnItemClicked(View v, int position, Group data) {
-        switch (data.getBaseViewHoldType()){
-            case GroupManagerViewHolder.ITEM_TYPE_GROUP_MANAGER://辖区内
-            case GroupManagerViewHolder.ITEM_TYPE_GROUP_SCHOOL://校内的
-                GroupSpaceDetailManagerActivity.start(GroupManagerListFragment.this,data.getGroupId(),REQUEST_CODE_GROUP_MANAGER);
-                break;
-            case GroupManagerViewHolder.ITEM_TYPE_GROUP_MY://我的
-                if(data.getJoinStatus().equals("APPROVED")){
-                    if(!"Y".equals(data.getClosedFlag())){
-                        if(!"REJECT".equals(data.getApproveStatus())){
-                            GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
-                        }
-                    }else{
-                        //审核中 或者 拒绝 只要不是圈主就可以继续
-                        if(!"CREATOR".equals(data.getUserType())){
-                            switch (data.getJoinStatus()){
-                                case "APPROVED"://加入的圈组没有 “通过”状态
-                                case "WAIT":
-                                    GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
-                                    break;
-                                case "REJECT":
-                                    //do nothing ...
-                                    break;
-                                default:
-                                    GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
-                                    break;
-                            }
-                        }
-                    }
-                }
-                break;
-        }
-    }
-
-    @Override
-    public int getTotal() {
-        return mTotal;
-    }
-
-    @Override
     public void onViewLoadCompleted() {
         super.onViewLoadCompleted();
         mBaseAreaId = mUserInfo.getBaseAreaId();
@@ -192,5 +104,98 @@ public class GroupManagerListFragment extends SimpleRecyclerFragment<Group> {
             mState         =    bd.getString("state");
             refresh();
         }
+    }
+
+    @Override
+    public SimpleRecyclerDelegate<Group> getSimpleRecyclerDelegate() {
+        return new SimpleRecyclerDelegate<Group>() {
+            @Override
+            public String obtainAPI() {
+                return URLConfig.GET_GROUP_MANAGER_LIST;
+            }
+
+            /**
+             * directFlag	boolean	直属校（默认false，非直属)
+             * @return
+             */
+            @Override
+            public HashMap<String, String> getParams() {
+                HashMap hashMap = new HashMap();
+                if(null != mUserInfo) hashMap.put("uuid" , mUserInfo.getUuid());
+                if(null != mBaseAreaId) hashMap.put("areaId",mBaseAreaId);
+                if(null != mSchoolId) hashMap.put("schoolId",mSchoolId);
+                if(null != mSemesterId) hashMap.put("semesterId",mSemesterId);
+                if(null != mGroupType) hashMap.put("groupType",mGroupType);
+                if(null != mGradeId) hashMap.put("gradeId",mGradeId);
+                if(null != mSubjectId) hashMap.put("subjectId",mSubjectId);
+                if(null != mCategoryId) hashMap.put("categoryId",mCategoryId);
+                if(null != mState) hashMap.put("state",mState);
+                if(null != mType) hashMap.put("type", mType);
+                if(null != mDirectFlag) hashMap.put("directFlag",mDirectFlag);
+                hashMap.put("start",mDataList.size()+"");
+                hashMap.put("end",(mDataList.size()+sPageCount-1)+"");
+                return hashMap;
+            }
+
+            @Override
+            public void parseData(JSONObject response) {
+                GroupTeaching groupTeaching = new Gson().fromJson(response.toString(),GroupTeaching.class);
+                if(null != groupTeaching && null != groupTeaching.getTotal()) {
+                    mTotal  =   Integer.parseInt(groupTeaching.getTotal());
+                    if (groupTeaching.getDataList() != null && groupTeaching.getDataList().size() > 0) {
+                        for (Group group : groupTeaching.getDataList()) {
+                            group.setBaseViewHoldType(mViewHolderType);
+                            mDataList.add(group);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public BaseRecyclerViewHolder<Group> getViewHolder(ViewGroup parent) {
+                return new GroupManagerViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_group_manager,parent,false));
+            }
+
+            @Override
+            public void OnItemClicked(View v, int position, Group data) {
+                switch (data.getBaseViewHoldType()){
+                    case GroupManagerViewHolder.ITEM_TYPE_GROUP_MANAGER://辖区内
+                    case GroupManagerViewHolder.ITEM_TYPE_GROUP_SCHOOL://校内的
+                        GroupSpaceDetailManagerActivity.start(GroupManagerListFragment.this,data.getGroupId(),REQUEST_CODE_GROUP_MANAGER);
+                        break;
+                    case GroupManagerViewHolder.ITEM_TYPE_GROUP_MY://我的
+                        if(data.getJoinStatus().equals("APPROVED")){
+                            if(!"Y".equals(data.getClosedFlag())){
+                                if(!"REJECT".equals(data.getApproveStatus())){
+                                    GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
+                                }
+                            }else{
+                                //审核中 或者 拒绝 只要不是圈主就可以继续
+                                if(!"CREATOR".equals(data.getUserType())){
+                                    switch (data.getJoinStatus()){
+                                        case "APPROVED"://加入的圈组没有 “通过”状态
+                                        case "WAIT":
+                                            GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
+                                            break;
+                                        case "REJECT":
+                                            //do nothing ...
+                                            break;
+                                        default:
+                                            GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public int getTotal() {
+                return mTotal;
+            }
+        };
     }
 }

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
@@ -71,60 +72,6 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
     }
 
     @Override
-    public String getAPI() {
-       return URLConfig.GET_MY_CREATE_TEACH_LIST;
-    }
-
-    /**
-     * directFlag	boolean	直属校（默认false，非直属)
-     * @return
-     */
-    @Override
-    public HashMap<String, String> getParams() {
-        HashMap hashMap = new HashMap();
-        if(null != mUserInfo) hashMap.put("uuid" , mUserInfo.getUuid());
-        if(null != mBaseAreaId) hashMap.put("areaId",mBaseAreaId);
-        if(!TextUtils.isEmpty(mSchoolId)) hashMap.put("schoolId",mSchoolId);
-        if(null != mGradeId) hashMap.put("gradeId",mGradeId);
-        if(null != mSubjectId) hashMap.put("subjectId",mSubjectId);
-        if(null != mStatus) hashMap.put("status",mStatus);
-        if(null != mType) hashMap.put("type", mType);
-
-        hashMap.put("start",mDataList.size()+"");
-        hashMap.put("end",(mDataList.size()+sPageCount-1)+"");
-        return hashMap;
-    }
-
-    @Override
-    public void parseData(JSONObject response) {
-        NetTeachParse parse = new Gson().fromJson(response.toString() , NetTeachParse.class);
-        if(null != parse) {
-            mTotal  =   parse.getTotal();
-            if (parse.getData() != null && parse.getData().size() > 0) {
-                for (NetTeach group : parse.getData()) {
-                    group.setBaseViewHoldType(mViewHolderType);
-                    mDataList.add(group);
-                }
-            }
-        }
-    }
-
-    @Override
-    public BaseRecyclerViewHolder<NetTeach> getViewHolder(ViewGroup parent) {
-        return new NetTeachManagerViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_net_teach));
-    }
-
-    @Override
-    public void OnItemClicked(View v, int position, NetTeach data) {
-        OnlineTeachDetailActivity.start(getActivity() , data.getLessonId());
-    }
-
-    @Override
-    public int getTotal() {
-        return mTotal;
-    }
-
-    @Override
     public void onViewLoadCompleted() {
         super.onViewLoadCompleted();
         mBaseAreaId = mUserInfo.getBaseAreaId();
@@ -148,5 +95,65 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
             mSchoolId     =   bd.getString("directSchoolId");
             refresh();
         }
+    }
+
+    @Override
+    public SimpleRecyclerDelegate<NetTeach> getSimpleRecyclerDelegate() {
+        return new SimpleRecyclerDelegate<NetTeach>() {
+            @Override
+            public String obtainAPI() {
+                return URLConfig.GET_MY_CREATE_TEACH_LIST;
+            }
+
+            /**
+             * directFlag	boolean	直属校（默认false，非直属)
+             * @return
+             */
+            @Override
+            public HashMap<String, String> getParams() {
+                HashMap hashMap = new HashMap();
+                if(null != mUserInfo) hashMap.put("uuid" , mUserInfo.getUuid());
+                if(null != mBaseAreaId) hashMap.put("areaId",mBaseAreaId);
+                if(!TextUtils.isEmpty(mSchoolId)) hashMap.put("schoolId",mSchoolId);
+                if(null != mGradeId) hashMap.put("gradeId",mGradeId);
+                if(null != mSubjectId) hashMap.put("subjectId",mSubjectId);
+                if(null != mStatus) hashMap.put("status",mStatus);
+                if(null != mType) hashMap.put("type", mType);
+
+                hashMap.put("start",mDataList.size()+"");
+                hashMap.put("end",(mDataList.size()+sPageCount-1)+"");
+                return hashMap;
+            }
+
+            @Override
+            public void parseData(JSONObject response) {
+                NetTeachParse parse = new Gson().fromJson(response.toString() , NetTeachParse.class);
+                if(null != parse) {
+                    mTotal  =   parse.getTotal();
+                    if (parse.getData() != null && parse.getData().size() > 0) {
+                        for (NetTeach group : parse.getData()) {
+                            group.setBaseViewHoldType(mViewHolderType);
+                            mDataList.add(group);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public BaseRecyclerViewHolder<NetTeach> getViewHolder(ViewGroup parent) {
+                return new NetTeachManagerViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_net_teach));
+            }
+
+            @Override
+            public void OnItemClicked(View v, int position, NetTeach data) {
+                OnlineTeachDetailActivity.start(getActivity() , data.getLessonId());
+            }
+
+            @Override
+            public int getTotal() {
+                return mTotal;
+            }
+
+        };
     }
 }
