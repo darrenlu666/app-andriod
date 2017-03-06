@@ -165,9 +165,11 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mAllCommentCountTv ) return;
+        if(mRefreshLayout.isRefreshing())mRefreshLayout.setRefreshing(false);
+//        if(isRefreshing) mData.clear();
         BlogDetail blogDetail = new Gson().fromJson(response.toString() , BlogDetail.class);
         mImageList = HtmlUtils.filterImages(blogDetail.getBlogContent());
         refreshUI(blogDetail);
@@ -215,7 +217,8 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     public void init() {
@@ -449,9 +452,9 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         data.put("start",""+start);
         data.put("end",""+(start+sPageCount-1));
 
-        requestData(URLConfig.GET_BLOG_COMMENT_LIST, data, new IRequest() {
+        requestData(URLConfig.GET_BLOG_COMMENT_LIST, data,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG , response.toString());
                 if(null == mRecyclerView ) return;
                 if (null !=mRefreshLayout&&mRefreshLayout.isRefreshing()) {
@@ -527,9 +530,9 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         data.put("start",""+start);
         data.put("end",""+(start+sPageCount-1));
 
-        requestData(URLConfig.GET_BLOG_SECOND_COMMENT_LIST, data, new IRequest() {
+        requestData(URLConfig.GET_BLOG_SECOND_COMMENT_LIST, data, false,new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG , response.toString());
                 if(null == mRecyclerView ) return;
                 refreshSecondLevel(blogCommentId , response);
@@ -554,9 +557,9 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         if(null != mBlogId) data.put("blogId",mBlogId);
         data.put("commentContent",comment);
 
-        requestData(URLConfig.POST_BLOG_COMMENT, data, new IRequest() {
+        requestData(URLConfig.POST_BLOG_COMMENT, data, false,new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null != response && "success".equals(response.optString("result"))){
                     Cog.d(TAG , response.toString());
                     String message = response.optString("message");
@@ -620,9 +623,9 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         data.put("parentCommentId",blogCommentId);
         data.put("commentContent",comment);
 
-        requestData(URLConfig.POST_BLOG_COMMENT_REPLY, data, new IRequest() {
+        requestData(URLConfig.POST_BLOG_COMMENT_REPLY, data,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null != response && "success".equals(response.optString("result"))){
                     Cog.d(TAG , response.toString());
                     String message = response.optString("message");
@@ -668,9 +671,9 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         if(null != mBlogId) data.put("blogId",mBlogId);
         data.put("blogCommentId",blogCommentId);
 
-        requestData(URLConfig.DELETE_BLOG_COMMENT, data, new IRequest() {
+        requestData(URLConfig.DELETE_BLOG_COMMENT, data,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null != response && ("success".equals(response.optString("result"))|| response.optBoolean("result"))){
                     Cog.d(TAG , response.toString());
                     ToastUtil.showToast("删除成功！");

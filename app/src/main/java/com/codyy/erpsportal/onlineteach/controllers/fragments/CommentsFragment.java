@@ -92,9 +92,10 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG ,response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mData.clear();
         mRecyclerView.setEnabled(true);
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -168,7 +169,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -177,7 +178,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestData();
+                requestData(true);
             }
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -188,7 +189,8 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
         mInputManager   = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         //set adapter
         setAdapter();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     private void setAdapter() {
@@ -247,7 +249,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
                         //load more ...
                         mData.remove(mData.size()-1);
                         showMore();
-                        requestData();
+                        requestData(false);
                         break;
                     case ITEM_VIEW_HOLDER_TYPE_COMMENT_REPLY_MORE://二级更多
                         //load more ...
@@ -323,9 +325,9 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
         }
         if(null != mId) data.put("evaluationId",mId);
         data.put("commentContent",comment);
-        requestData(URLConfig.SEND_COMMENT, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.SEND_COMMENT, data,false, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG , response.toString());
                 if(null != response && "success".equals(response.optString("result"))){
                     String message = response.optString("message");
@@ -371,9 +373,9 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
             data.put("evaluationId",mId);
         data.put("blogCommentId",blogCommentId);
 
-        requestData(URLConfig.DELETE_BLOG_COMMENT, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.DELETE_BLOG_COMMENT, data,false, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG , response.toString());
                 if(null != response && ("success".equals(response.optString("result"))|| response.optBoolean("result"))){
                     ToastUtil.showToast("删除成功！");
@@ -417,9 +419,9 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
         }
         data.put("start", String.valueOf(start));
         data.put("end", String.valueOf(mData.size()+sPageCount-1));
-        requestData(URLConfig.GET_EVALUATION_COMMENT_LIST, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_EVALUATION_COMMENT_LIST, data, false,new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG ,response.toString());
                 BaseCommentParse parse = new Gson().fromJson(response.toString() , BaseCommentParse.class);
                 if(null != parse && "success".equals(parse.getResult())){
@@ -462,9 +464,9 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
         data.put("parentCommentId",blogCommentId);
         data.put("commentContent",comment);
 
-        requestData(URLConfig.POST_BLOG_COMMENT_REPLY, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.POST_BLOG_COMMENT_REPLY, data, false,new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG , response.toString());
                 if(null != response && "success".equals(response.optString("result"))){
                     String message = response.optString("message");

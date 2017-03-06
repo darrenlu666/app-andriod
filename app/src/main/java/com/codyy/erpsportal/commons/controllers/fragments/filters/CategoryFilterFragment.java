@@ -142,9 +142,10 @@ public  class CategoryFilterFragment extends BaseHttpFragment {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mConditionRecyclerView ) return;
+        if(isRefreshing) mData.clear();
         if (response.has("list")) {
             mData.clear();
             JSONArray areas = response.optJSONArray("list");
@@ -172,7 +173,7 @@ public  class CategoryFilterFragment extends BaseHttpFragment {
     @Override
     public void onViewLoadCompleted() {
         super.onViewLoadCompleted();
-        requestData();
+        requestData(true);
     }
 
     /**

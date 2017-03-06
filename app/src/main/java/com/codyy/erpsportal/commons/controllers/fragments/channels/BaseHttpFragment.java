@@ -38,7 +38,7 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseHttpFragment extends Fragment {
     private static final String TAG = "BaseHttpFragment";
-    protected boolean mInit = false;//是否初始化
+    protected boolean mInit = false;//是否初始化{@link#}
     protected View mRootView;//缓存view，防止FragmentTabHost多次加载视图
     /**
      * 单页加载的数据
@@ -50,7 +50,7 @@ public abstract class BaseHttpFragment extends Fragment {
     private RequestSender mSender;
     public UserInfo mUserInfo;
     private int mCurrentPageIndex = 1;
-
+    private  EndlessRecyclerOnScrollListener mEndlessRecyclerOnScrollListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +110,7 @@ public abstract class BaseHttpFragment extends Fragment {
      *
      * @param response
      */
-    public abstract void onSuccess(JSONObject response) throws Exception;
+    public abstract void onSuccess(JSONObject response,boolean isRefreshing) throws Exception;
 
     /**
      * 数据请求错误
@@ -123,18 +123,26 @@ public abstract class BaseHttpFragment extends Fragment {
      * 视图加载完成....执行数据操作
      */
     public void onViewLoadCompleted() {
-
+        Cog.i(TAG,"onViewLoadCompleted () ");
     }
 
     /**
      * 请求数据
      */
-    public void requestData() {
-        requestData(obtainAPI(), getParam(), new BaseHttpActivity.IRequest() {
+    public void requestData( boolean isRefreshing) {
+        HashMap<String,String> params = getParam();
+        /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
+        if(isRefreshing){
+            params.put("start",0+"");
+            params.put("end",(sPageCount-1)+"");
+            //取消loadMore的状态
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(false);
+        }
+        requestData(obtainAPI(), params,isRefreshing, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 try {
-                    onSuccess(response);
+                    onSuccess(response,isRefreshing);
                 } catch (Exception e) {
                     e.printStackTrace();
                     LogUtils.log(e);
@@ -160,7 +168,7 @@ public abstract class BaseHttpFragment extends Fragment {
      * @param params
      * @param requestListener
      */
-    public void requestData(String url, HashMap<String, String> params, final BaseHttpActivity.IRequest requestListener) {
+    public void requestData(String url, HashMap<String, String> params,final boolean isRefreshing, final BaseHttpActivity.IRequest requestListener) {
         if (!NetworkUtils.isConnected()) {
             ToastUtil.showToast(getString(R.string.net_error));
             return;
@@ -171,11 +179,12 @@ public abstract class BaseHttpFragment extends Fragment {
             public void onResponse(JSONObject response) {
                 if (null != requestListener) {
                     try {
-                        requestListener.onRequestSuccess(response);
+                        requestListener.onRequestSuccess(response,isRefreshing);
                     } catch (Exception e) {
                         e.printStackTrace();
                         LogUtils.log(e);
-                    }
+
+               }
                 }
             }
         }, new Response.ErrorListener() {
@@ -195,30 +204,33 @@ public abstract class BaseHttpFragment extends Fragment {
      *
      * @param recyclerView
      */
-    protected void enableLoadMore(RecyclerView recyclerView) {
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
-            @Override
-            public void onLoadMore(int current_page) {
-                Cog.d(TAG, "current page index :" + current_page);
-                //更新下拉刷新...
-                if (current_page != mCurrentPageIndex) {
-                    mCurrentPageIndex = current_page;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //加载view停留1s ，防止太快闪现!
-                            SystemClock.sleep(500);
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    requestData();
-                                }
-                            });
-                        }
-                    }).start();
+    protected void enableLoadMore(RecyclerView recyclerView, final boolean isRefreshing) {
+        if(null == mEndlessRecyclerOnScrollListener){
+            mEndlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
+                @Override
+                public void onLoadMore(int current_page) {
+                    Cog.d(TAG, "current page index :" + current_page);
+                    //更新下拉刷新...
+                    if (current_page != mCurrentPageIndex) {
+                        mCurrentPageIndex = current_page;
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //加载view停留1s ，防止太快闪现!
+                                SystemClock.sleep(500);
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        requestData(isRefreshing);
+                                    }
+                                });
+                            }
+                        }).start();
+                    }
                 }
-            }
-        });
+            };
+        }
+        recyclerView.addOnScrollListener(mEndlessRecyclerOnScrollListener);
     }
 
     /**

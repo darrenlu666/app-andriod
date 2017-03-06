@@ -59,7 +59,7 @@ public class GroupSpaceDetailActivity extends BaseHttpActivity implements Serial
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
     }
 

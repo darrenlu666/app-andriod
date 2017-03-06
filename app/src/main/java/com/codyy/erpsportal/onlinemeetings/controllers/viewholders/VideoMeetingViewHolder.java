@@ -1,24 +1,32 @@
 package com.codyy.erpsportal.onlinemeetings.controllers.viewholders;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoMeetingEntity;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by ldh on 2015/8/17.
+ * modified by poe on 2017/3/3 .
  */
-public class VideoMeetingViewHolder extends AbsViewHolder<VideoMeetingEntity>{
+public class VideoMeetingViewHolder extends BaseRecyclerViewHolder<VideoMeetingEntity> {
 
-    ImageView mHeaderImageView;
-    TextView mContentTextView;
-    TextView mPersonNameTextView;
-    TextView mTimeLabelTextView;
-    TextView mTimeTextView;
+    @Bind(R.id.iv_videoImage) ImageView mHeaderImageView;
+    @Bind(R.id.tv_content) TextView mContentTextView;
+    @Bind(R.id.tv_personName) TextView mPersonNameTextView;
+    @Bind(R.id.tv_start_time) TextView mTimeTextView;
+    @Bind(R.id.tv_timelabel) TextView mTimeLabelTextView;
+
+    public VideoMeetingViewHolder(View itemView) {
+        super(itemView);
+        ButterKnife.bind(this,itemView);
+    }
 
     @Override
     public int obtainLayoutId() {
@@ -26,17 +34,7 @@ public class VideoMeetingViewHolder extends AbsViewHolder<VideoMeetingEntity>{
     }
 
     @Override
-    public void mapFromView(View view) {
-        mHeaderImageView = (ImageView)view.findViewById(R.id.iv_videoImage);
-        mContentTextView =(TextView) view.findViewById(R.id.tv_content);
-        mPersonNameTextView = (TextView) view.findViewById(R.id.tv_personName);
-        mTimeTextView = (TextView) view.findViewById(R.id.tv_start_time);
-        mTimeLabelTextView = (TextView) view.findViewById(R.id.tv_timelabel);
-    }
-
-    @Override
-    public void setDataToView(VideoMeetingEntity data, Context context) {
-
+    public void setData(int position, VideoMeetingEntity data) throws Throwable {
         if(data.getMeet_sate().equals("INIT")){
             mTimeLabelTextView.setText("预约开始时间：");
             mHeaderImageView.setBackgroundResource(R.drawable.unstart);

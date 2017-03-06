@@ -8,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.volley.VolleyError;
-import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
@@ -87,8 +85,9 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mData.clear();
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
@@ -145,7 +144,7 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -165,7 +164,7 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
             @Override
             public void onRefresh() {
                 mRecyclerView.setEnabled(false);
-                requestData();
+                requestData(false);
             }
         });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -237,7 +236,8 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
     public void onConfigLoaded(ModuleConfig config) {
         schoolId = config.getSchoolId();
         baseAreaId = config.getBaseAreaId();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     /**
@@ -249,9 +249,9 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
         data.put("size", "7");
         data.put("schoolId", schoolId);
         data.put("uuid",mUserInfo.getUuid());
-        requestData(URLConfig.GET_INDEX_LIVE_APPOINTMENT_RECOMMEND, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_INDEX_LIVE_APPOINTMENT_RECOMMEND, data,false, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 HistoryClassParse hcp = new Gson().fromJson(response.toString(),HistoryClassParse.class);
                 if(null != hcp ) {
                     List<HistoryClass> hcList = hcp.getData();

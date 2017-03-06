@@ -2,9 +2,13 @@ package com.codyy.erpsportal.groups.controllers.fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.view.ViewGroup;
+
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
@@ -16,6 +20,8 @@ import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.erpsportal.onlineteach.models.entities.NetTeach;
+
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,28 +62,32 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
 
     public abstract HashMap<String, String> getParams() ;
 
-    // TODO: 16-1-20 解析服务器返回的数据，可能是刷新，也可能是更多 
+    /**解析服务器返回的数据，可能是刷新，也可能是更多 **/
     public abstract void parseData(JSONObject response);
 
-    // TODO: 16-1-20 每个UI需要实现的item布局部分 
-    public abstract BaseRecyclerAdapter.ViewCreator getViewCreator();
+    /**16-1-20 每个UI需要实现的item布局部分 **/
+//    public abstract BaseRecyclerAdapter.ViewCreator getViewCreator();
 
-    // TODO: 16-7-22 设置监听器
-    public abstract void setOnClickListener();
+    /** 获取viewHolder**/
+    public abstract BaseRecyclerViewHolder<T> getViewHolder(ViewGroup parent);
 
-    // TODO: 16-2-16 获取最大上限
+    /**ItemClickListener**/
+    public abstract void OnItemClicked(View v, int position, T data);
+
+    /** 获取最大上限 **/
     public abstract int getTotal();
 
-    // TODO: 16-1-20 请求数据传递的参数
+    /**请求数据传递的参数**/
     @Override
     public HashMap<String, String> getParam() {
         return getParams();
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView || null == mRefreshLayout) return;
+        if(isRefreshing) mDataList.clear();
         mRecyclerView.setRefreshing(false);
         mAdapter.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -128,7 +138,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -141,19 +151,44 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
             }
         });
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new BaseRecyclerAdapter<>(getViewCreator());
+        mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<T>>() {
+            @Override
+            public BaseRecyclerViewHolder<T> createViewHolder(ViewGroup parent, int viewType) {
+                return getViewHolder(parent);
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                return 0;
+            }
+        });
         mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
             @Override
             public void onMoreData() {
-                requestData();
+                requestData(false);
             }
         });
-        setOnClickListener();
+        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<T>() {
+            @Override
+            public void onItemClicked(View v, int position, T data) {
+                OnItemClicked(v,position,data);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
-        this.enableLoadMore(mRecyclerView);
-
+        this.enableLoadMore(mRecyclerView,false);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Cog.i(TAG,"onActivityCreated ~ ");
+    }
+
+    /** * 初始化数据 */
+    public void initData(){
+        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
+        requestData(true);
+    }
     /**
      * 下拉刷新
      */
@@ -161,8 +196,6 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
         if(null == mRecyclerView ) return;
         mRecyclerView.setRefreshing(true);
         mAdapter.setHasMoreData(false);
-        mDataList.clear();
-        requestData();
+        requestData(true);
     }
-
 }

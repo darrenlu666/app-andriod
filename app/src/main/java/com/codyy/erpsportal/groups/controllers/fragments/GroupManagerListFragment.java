@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.groups.controllers.activities.GroupSpaceActivity;
 import com.codyy.erpsportal.groups.controllers.activities.GroupSpaceDetailManagerActivity;
@@ -117,62 +118,44 @@ public class GroupManagerListFragment extends SimpleRecyclerFragment<Group> {
     }
 
     @Override
-    public BaseRecyclerAdapter.ViewCreator getViewCreator() {
-
-        return new BaseRecyclerAdapter.ViewCreator<GroupManagerViewHolder>(){
-
-            @Override
-            public GroupManagerViewHolder createViewHolder(ViewGroup parent, int viewType) {
-                return new GroupManagerViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_group_manager,parent,false));
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return mViewHolderType;
-            }
-        };
+    public BaseRecyclerViewHolder<Group> getViewHolder(ViewGroup parent) {
+        return new GroupManagerViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_group_manager,parent,false));
     }
 
     @Override
-    public void setOnClickListener() {
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<Group>() {
-            @Override
-            public void onItemClicked(View v, int position, Group data) {
-                switch (data.getBaseViewHoldType()){
-                    case GroupManagerViewHolder.ITEM_TYPE_GROUP_MANAGER://辖区内
-                    case GroupManagerViewHolder.ITEM_TYPE_GROUP_SCHOOL://校内的
-                        GroupSpaceDetailManagerActivity.start(GroupManagerListFragment.this,data.getGroupId(),REQUEST_CODE_GROUP_MANAGER);
-                        break;
-                    case GroupManagerViewHolder.ITEM_TYPE_GROUP_MY://我的
-                        if(data.getJoinStatus().equals("APPROVED")){
-                            if(!"Y".equals(data.getClosedFlag())){
-                                if(!"REJECT".equals(data.getApproveStatus())){
+    public void OnItemClicked(View v, int position, Group data) {
+        switch (data.getBaseViewHoldType()){
+            case GroupManagerViewHolder.ITEM_TYPE_GROUP_MANAGER://辖区内
+            case GroupManagerViewHolder.ITEM_TYPE_GROUP_SCHOOL://校内的
+                GroupSpaceDetailManagerActivity.start(GroupManagerListFragment.this,data.getGroupId(),REQUEST_CODE_GROUP_MANAGER);
+                break;
+            case GroupManagerViewHolder.ITEM_TYPE_GROUP_MY://我的
+                if(data.getJoinStatus().equals("APPROVED")){
+                    if(!"Y".equals(data.getClosedFlag())){
+                        if(!"REJECT".equals(data.getApproveStatus())){
+                            GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
+                        }
+                    }else{
+                        //审核中 或者 拒绝 只要不是圈主就可以继续
+                        if(!"CREATOR".equals(data.getUserType())){
+                            switch (data.getJoinStatus()){
+                                case "APPROVED"://加入的圈组没有 “通过”状态
+                                case "WAIT":
                                     GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
-                                }
-                            }else{
-                                //审核中 或者 拒绝 只要不是圈主就可以继续
-                                if(!"CREATOR".equals(data.getUserType())){
-                                    switch (data.getJoinStatus()){
-                                        case "APPROVED"://加入的圈组没有 “通过”状态
-                                        case "WAIT":
-                                            GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
-                                            break;
-                                        case "REJECT":
-                                            //do nothing ...
-                                            break;
-                                        default:
-                                            GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
-                                            break;
-                                    }
-                                }
+                                    break;
+                                case "REJECT":
+                                    //do nothing ...
+                                    break;
+                                default:
+                                    GroupSpaceActivity.start(getActivity(), Titles.sWorkspaceGroup,data.getGroupId(), CategoryFilterFragment.CATEGORY_TYPE_GROUP);
+                                    break;
                             }
                         }
-                        break;
+                    }
                 }
-            }
-        });
-
+                break;
+        }
     }
 
     @Override
@@ -184,7 +167,7 @@ public class GroupManagerListFragment extends SimpleRecyclerFragment<Group> {
     public void onViewLoadCompleted() {
         super.onViewLoadCompleted();
         mBaseAreaId = mUserInfo.getBaseAreaId();
-        requestData();
+        initData();
     }
 
     @Override

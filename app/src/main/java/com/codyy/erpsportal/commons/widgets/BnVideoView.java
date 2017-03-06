@@ -114,8 +114,8 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
         Cog.d(TAG, "+play:" + getObjectId());
         if (isPlaying()) return;
 //        if (mPlayer == null) {
-            mPlayer = BNMediaPlayer.createPlayer();
-            initListener();
+        mPlayer = BNMediaPlayer.createPlayer();
+        initListener();
 //            mPlayer.Init(this);
 //        }else{
 //            mPlayer.Init(this);
@@ -129,7 +129,7 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
         Cog.d(TAG, "-play:" + getObjectId());
     }
 
-    public void playNow(){
+    public void playNow() {
         Cog.d(TAG, "+playNow");
         if (isPlaying()) return;
         if (mSurface != null) {
@@ -143,7 +143,7 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
     public void playSingle() {
         Cog.d(TAG, "+playSingle:" + getObjectId());
 
-        if (mPlayer == null ) {
+        if (mPlayer == null) {
             Cog.d(TAG, "+playSingle:+init()" + getObjectId());
             mPlayer = BNMediaPlayer.createPlayer();
             initListener();
@@ -165,17 +165,17 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * pause the video
      */
-    public void pause(){
+    public void pause() {
 
-        if(isPlaying() && null!= mPlayer){
+        if (isPlaying() && null != mPlayer) {
             Cog.d(TAG, "+pause（）:" + getObjectId());
             mPlayer.pause();
         }
     }
 
-    public void seekTo(int position){
+    public void seekTo(int position) {
 
-        if(null != mPlayer ){
+        if (null != mPlayer) {
             mPlayer.seekTo(position);
         }
     }
@@ -189,6 +189,7 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * set error listener
+     *
      * @param errorListener
      */
     public void setErrorListener(OnBNErrorListener errorListener) {
@@ -197,6 +198,7 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
 
     /**
      * set buffer update listener
+     *
      * @param mBufferUpdateListener
      */
     public void setBufferUpdateListener(OnBNBufferUpdateListener mBufferUpdateListener) {
@@ -206,6 +208,7 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * set complete listener
      * you needn't to stop video play ,it will be auto stop by BNVideoView
+     *
      * @param mCompleteListener
      */
     public void setCompleteListener(OnBNCompleteListener mCompleteListener) {
@@ -243,7 +246,10 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        if(null != mPlayingListener ){
+        if (isInEditMode()) {
+            return;
+        }
+        if (null != mPlayingListener) {
             mPlayingListener.surfaceCreated(holder);
         }
     }
@@ -251,6 +257,9 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Cog.d(TAG, "surfaceChanged:" + getObjectId());
+        if (isInEditMode()) {
+            return;
+        }
         mSurface = holder.getSurface();
         if (delayPlayingAfterSurfaceObtained) {
             setSurfaceAndPlay();
@@ -259,8 +268,11 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        if (isInEditMode()) {
+            return;
+        }
         Cog.d(TAG, "surfaceDestroyed！");
-        if(null != mPlayingListener ){
+        if (null != mPlayingListener) {
             mPlayingListener.surfaceDestroyed(holder);
         }
         if (isPlaying()) {
@@ -268,17 +280,17 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    private void initListener(){
-        if(null != mPlayer){
+    private void initListener() {
+        if (null != mPlayer) {
             //onError
             mPlayer.setErrorListener(new BNMediaPlayer.ErrorListener() {
                 @Override
                 public void error(BNMediaPlayer player, int errorCode, String errorMsg) {
                     Cog.e(TAG, "onError=" + errorCode);
-                    if(null != mErrorListener){
+                    if (null != mErrorListener) {
                         mErrorListener.onError(errorCode);
                     }
-                    if (errorCode == 0&& mShouldDrawError) {
+                    if (errorCode == 0 && mShouldDrawError) {
                     }
                 }
             });
@@ -315,7 +327,7 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
             mPlayer.setDurationChangedListener(new BNMediaPlayer.DurationChangedListener() {
                 @Override
                 public void durationChanged(BNMediaPlayer player, long duration) {
-                    mDuration   = (int) duration;
+                    mDuration = (int) duration;
                 }
             });
 
@@ -323,8 +335,8 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
             mPlayer.setPositionUpdatedListener(new BNMediaPlayer.PositionUpdatedListener() {
                 @Override
                 public void positionUpdated(BNMediaPlayer player, long position) {
-                    if( null != mBufferUpdateListener){
-                        mBufferUpdateListener.onBufferUpdate((int)position, mDuration);
+                    if (null != mBufferUpdateListener) {
+                        mBufferUpdateListener.onBufferUpdate((int) position, mDuration);
                     }
                 }
             });
@@ -363,15 +375,15 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     /**
+     * @param uris
      * @not use normally .
      * 设置辅课堂流并播放。
-     * @param uris
      */
     private void setAssistUris(String... uris) {
         BNClassroomInfo classroomInfo = new BNClassroomInfo();
         classroomInfo.setAssistClassroomNum(uris.length);
-        for(int i=0 ; i< uris.length ; i++){
-            classroomInfo.setAssistClassroomUri(i,uris[i]);
+        for (int i = 0; i < uris.length; i++) {
+            classroomInfo.setAssistClassroomUri(i, uris[i]);
         }
 
         mPlayer.playWithAudioMix(classroomInfo);
@@ -388,17 +400,19 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
         this.isPlaying = isPlaying;
     }
 
-    public void close (){
-        if(null != mPlayer){
+    public void close() {
+        if (null != mPlayer) {
             mPlayer.stop();
         }
     }
+
     public interface OnBNErrorListener {
         /**
          * 错误回调
-         *  -1 :视频管道错误
-         *  -2 :视频信号未连接
-         *  待续...
+         * -1 :视频管道错误
+         * -2 :视频信号未连接
+         * 待续...
+         *
          * @param errorCode
          */
         void onError(int errorCode);
@@ -408,7 +422,7 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * 播放完成监听
      */
-    public interface OnBNCompleteListener{
+    public interface OnBNCompleteListener {
         /**
          * 播放完成
          */
@@ -418,12 +432,13 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
     /**
      * 播放进度更新
      */
-    public interface OnBNBufferUpdateListener{
+    public interface OnBNBufferUpdateListener {
 
         /**
          * 播放进度更新
-         * @param position  播放位置
-         * @param total     总播放时间
+         *
+         * @param position 播放位置
+         * @param total    总播放时间
          */
         void onBufferUpdate(int position, int total);
 
@@ -441,12 +456,14 @@ public class BnVideoView extends SurfaceView implements SurfaceHolder.Callback {
 
         /**
          * surface crated
+         *
          * @param holder
          */
         void surfaceCreated(SurfaceHolder holder);
 
         /**
          * surface destroyed
+         *
          * @param holder
          */
         void surfaceDestroyed(SurfaceHolder holder);

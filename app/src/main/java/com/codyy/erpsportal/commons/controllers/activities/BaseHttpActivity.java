@@ -89,7 +89,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * 数据请求返回结果
      * @param response 数据请求成功返回
      */
-    public abstract void onSuccess(JSONObject response) throws Exception;
+    public abstract void onSuccess(JSONObject response,boolean isRefreshing) throws Exception;
 
     /**
      * 数据请求错误
@@ -111,12 +111,13 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
     /**
      * 请求数据
      */
-    public void requestData(){
-        requestData(obtainAPI(), getParam(), new IRequest() {
+    public void requestData(boolean isRefreshing){
+        requestData(obtainAPI(), getParam(),isRefreshing, new IRequest() {
+
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 try {
-                    onSuccess(response);
+                    onSuccess(response,isRefreshing);
                 } catch (Exception e) {
                     e.printStackTrace();
                     LogUtils.log(e);
@@ -141,7 +142,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * @param params request params .
      * @param requestListener request listener .
      */
-    public void requestData(String url , HashMap<String ,String> params , final IRequest requestListener){
+    public void requestData(String url , HashMap<String ,String> params , final boolean isRefreshing, final IRequest requestListener){
 
         if(!NetworkUtils.isConnected()){
             ToastUtil.showToast(getString(R.string.net_error));
@@ -154,7 +155,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
             public void onResponse(JSONObject response) {
                 if(null != requestListener){
                     try {
-                        requestListener.onRequestSuccess(response);
+                        requestListener.onRequestSuccess(response,isRefreshing);
                     } catch (Exception e) {
                         e.printStackTrace();
                         LogUtils.log(e);
@@ -217,7 +218,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * 设置自动加载更多 默认不会自动加载更多...
      * @param recyclerView the recycler view which will auto load more .
      */
-    protected void enableLoadMore(RecyclerView recyclerView){
+    protected void enableLoadMore(RecyclerView recyclerView, final boolean isRefreshing){
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
             @Override
             public void onLoadMore(int current_page) {
@@ -233,7 +234,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    requestData();
+                                    requestData(isRefreshing);
                                 }
                             });
                         }
@@ -322,7 +323,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
          * success
          * @param response result data .
          */
-        void onRequestSuccess(JSONObject response) throws Exception;
+        void onRequestSuccess(JSONObject response,boolean isRefreshing) throws Exception;
 
         /**
          * fail 失败
