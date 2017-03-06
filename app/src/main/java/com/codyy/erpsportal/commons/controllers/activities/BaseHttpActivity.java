@@ -52,6 +52,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
     protected UserInfo mUserInfo ;
     private IFilterListener mFilterListener;
     private int mCurrentPageIndex = 1 ;//当前默认页面
+    private  EndlessRecyclerOnScrollListener mEndlessRecyclerOnScrollListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,7 +114,6 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      */
     public void requestData(boolean isRefreshing){
         requestData(obtainAPI(), getParam(),isRefreshing, new IRequest() {
-
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 try {
@@ -147,6 +147,13 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
         if(!NetworkUtils.isConnected()){
             ToastUtil.showToast(getString(R.string.net_error));
             return;
+        }
+        /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
+        if(isRefreshing){
+            params.put("start",0+"");
+            params.put("end",(sPageCount-1)+"");
+            //取消loadMore的状态
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(false);
         }
 
         mSender.sendRequest(new RequestSender.RequestData(url, params, new Response.Listener<JSONObject>() {
@@ -219,29 +226,33 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * @param recyclerView the recycler view which will auto load more .
      */
     protected void enableLoadMore(RecyclerView recyclerView, final boolean isRefreshing){
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
-            @Override
-            public void onLoadMore(int current_page) {
-                Cog.d(TAG , "current page index :"+current_page);
-                //更新下拉刷新...
-                if(current_page != mCurrentPageIndex){
-                    mCurrentPageIndex = current_page;
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //加载view停留1s ，防止太快闪现!
-                            SystemClock.sleep(500);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    requestData(isRefreshing);
-                                }
-                            });
-                        }
-                    }).start();
+
+        if(null == mEndlessRecyclerOnScrollListener){
+            mEndlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener((LinearLayoutManager) recyclerView.getLayoutManager()) {
+                @Override
+                public void onLoadMore(int current_page) {
+                    Cog.d(TAG, "current page index :" + current_page);
+                    //更新下拉刷新...
+                    if (current_page != mCurrentPageIndex) {
+                        mCurrentPageIndex = current_page;
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //加载view停留1s ，防止太快闪现!
+                                SystemClock.sleep(500);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        requestData(isRefreshing);
+                                    }
+                                });
+                            }
+                        }).start();
+                    }
                 }
-            }
-        });
+            };
+        }
+        recyclerView.addOnScrollListener(mEndlessRecyclerOnScrollListener);
     }
 
     /**

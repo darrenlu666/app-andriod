@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
@@ -20,9 +19,7 @@ import com.codyy.erpsportal.commons.models.entities.Assessment;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

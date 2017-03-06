@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by yangxinwu on 2015/8/11.
  */
-public class PrepareLessonsShortEntity implements Parcelable {
+public class PrepareLessonsShortEntity extends BaseTitleItemBar implements Parcelable {
 
     /**
      * subjectPic : 6ca4eff5-dba8-4283-b9a0-8986ce6d91ab.jpg

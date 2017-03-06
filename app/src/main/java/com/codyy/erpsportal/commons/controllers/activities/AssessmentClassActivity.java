@@ -119,7 +119,7 @@ public class AssessmentClassActivity extends BaseHttpActivity {
             }
         });
         mDrawerLayout = (DrawerLayout) findViewById(R.id.assessment_class_drawerlayout);
-        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
 
@@ -144,26 +144,6 @@ public class AssessmentClassActivity extends BaseHttpActivity {
         if (mUserInfo != null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.assessment_list_select_layout, mScreenFragments.get(0)).commit();
         }
-//        this.setFilterListener(new IFilterListener() {
-//            @Override
-//            public void onFilterClick(MenuItem item) {
-//                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-//                    mDrawerLayout.openDrawer(Gravity.RIGHT);
-//                } else {
-//                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
-//                    doFilter();
-//                }
-//            }
-//
-//            @Override
-//            public void onPreFilterCreate(Menu menu) {
-//                if(mDrawerLayout.isDrawerOpen(Gravity.RIGHT)){
-//                    menu.getItem(0).setIcon(R.drawable.ic_done_white);
-//                }else{
-//                    menu.getItem(0).setIcon(R.drawable.ic_filter);
-//                }
-//            }
-//        });
         this.setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
             @Override
             protected void doFilterConfirmed() {

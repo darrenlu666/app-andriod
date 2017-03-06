@@ -10,6 +10,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.VideoMeetingDetailActivity;
@@ -105,6 +106,7 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
         intent.putExtra("meetingType", mCurType);
         intent.putExtra(Constants.USER_INFO , mUserInfo);
         this.startActivityForResult(intent, REQUEST_VIDEO_MEETING_OUT);
+        UIUtils.addEnterAnim(getActivity());
     }
 
     @Override

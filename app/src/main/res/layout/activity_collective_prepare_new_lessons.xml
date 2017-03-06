@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:ptr="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
-    android:orientation="vertical">
-
-    <include layout="@layout/view_title_head2" />
-
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    >
+    <include layout="@layout/toolbar_layout"/>
     <android.support.v4.widget.DrawerLayout
-        android:id="@+id/dl_collective_prepare_lesson_new_drawerlayout"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -63,19 +60,19 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.codyy.lrticlassroom.controllers.fragments.VideosFragment">
-
-                <com.handmark.pulltorefresh.library.PullToRefreshListView
-                    android:id="@+id/ptrl_prepare_lseeons_list"
+                >
+                <com.codyy.erpsportal.commons.widgets.RefreshLayout
+                    android:id="@+id/refresh_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:cacheColorHint="#00000000"
-                    android:divider="@null"
-                    android:horizontalSpacing="4dp"
-                    android:listSelector="#00000000"
-                    android:numColumns="2"
-                    ptr:ptrDrawable="@drawable/loading_bg" />
-
+                    >
+                    <com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="#fff"
+                        />
+                </com.codyy.erpsportal.commons.widgets.RefreshLayout>
                 <com.codyy.erpsportal.commons.widgets.EmptyView
                     android:id="@+id/empty_view"
                     android:layout_width="match_parent"
@@ -83,7 +80,6 @@
                     android:visibility="gone" />
             </FrameLayout>
         </LinearLayout>
-
         <FrameLayout
             android:id="@+id/activity_collective_new_filter_fragment"
             android:layout_width="wrap_content"
