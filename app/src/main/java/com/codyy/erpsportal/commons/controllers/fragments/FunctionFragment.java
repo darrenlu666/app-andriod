@@ -61,7 +61,7 @@ public class FunctionFragment extends BaseHttpFragment {
     @Bind(R.id.rcv_frag_function) RecyclerView mRecyclerView;
     @Bind(R.id.empty_view)EmptyView mEmptyView;
 
-    protected List<AppInfo> mData;
+    protected List<AppInfo> mData =new ArrayList<>();
     private FunctionParentAdapter mParentAdapter ;
     private List<Student> mStudents = new ArrayList<>();//家长名下孩子集合 .
     private List<ClassCont> mClassList = new ArrayList<>();//老师下面的班级.
@@ -96,7 +96,7 @@ public class FunctionFragment extends BaseHttpFragment {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG,response != null ?response.toString():" null ");
         if(null == mRecyclerView ) return;
         List<Student> mStudentList = Student.parseData(response);
@@ -178,14 +178,14 @@ public class FunctionFragment extends BaseHttpFragment {
                 public void onError() {
                     if(null == mRecyclerView ) return;
                     mEmptyView.setLoading(false);
-                    requestData();
+                    requestData(true);
                 }
             });
         }
         //load data .
         if(UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())){
             mRecyclerTabLayout.setVisibility(View.VISIBLE);
-            requestData();
+            requestData(true);
         }else{
             mRecyclerTabLayout.setVisibility(View.GONE);
         }
@@ -207,10 +207,10 @@ public class FunctionFragment extends BaseHttpFragment {
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
                 if(UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())){
                     mRecyclerTabLayout.setVisibility(View.VISIBLE);
-                    requestData();
+                    requestData(true);
                 }
             }
         });
@@ -392,7 +392,7 @@ public class FunctionFragment extends BaseHttpFragment {
             //反注册防止/退出登录后引起无线死循环
             ConfigBus.unregister(mModuleConfigListener);
             AppConfig.instance().updateConfigTitles();
-            requestData();
+            requestData(true);
         }
     };
 
@@ -409,11 +409,12 @@ public class FunctionFragment extends BaseHttpFragment {
         if(null != mUserInfo && null != mUserInfo.getSelectedChild() ){
             params.put("studentId",mUserInfo.getSelectedChild().getStudentId());
         }
-        requestData(URLConfig.URL_GET_APPS, params, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.URL_GET_APPS, params,true, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, "onResponse:" + response);
                 if(null == mRecyclerView ) return;
+                if(isRefreshing) mData.clear();
                 if ("success".equals(response.optString("result"))) {
                     mData = AppInfo.parseData(response.optJSONArray("useList"),userType);
                     if(mData!=null && mData.size() >0 ){
@@ -453,10 +454,11 @@ public class FunctionFragment extends BaseHttpFragment {
         if (mUserInfo != null) {
             data.put("userId",mUserInfo.getBaseUserId());
         }
-        requestData(URLConfig.GET_TEACHER_CLASS_LIST, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_TEACHER_CLASS_LIST, data,true, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null == mRecyclerView ) return;
+                if(isRefreshing) mClassList.clear();
                 mRecyclerView.setEnabled(true);
                 TeacherClassParse teacherClassParse = new Gson().fromJson(response.toString(),TeacherClassParse.class);
                 if(null != teacherClassParse && teacherClassParse.getDataList()!=null && teacherClassParse.getDataList().size()>0){

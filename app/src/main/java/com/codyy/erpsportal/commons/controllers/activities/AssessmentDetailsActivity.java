@@ -93,7 +93,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         AssessmentDetails.getAssessmentDetail(response, assessmentDetails);
         setData();
     }
@@ -267,9 +267,9 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
         HashMap<String, String> data = new HashMap<>();
         data.put("uuid", mUserInfo.getUuid());
         data.put("evaluationId", assessmentDetails.getEvaluationId());
-        requestData(URLConfig.REJECT_EVLUATION, data, new IRequest() {
+        requestData(URLConfig.REJECT_EVLUATION, data, false,new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 dialogUtil.cancel();
                 if ("success".equals(response.optString("result"))) {
                     ToastUtil.showToast(AssessmentDetailsActivity.this, "已拒绝");
@@ -304,7 +304,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (REQUEST_CODE_SET_TEACHER == resultCode) {
-            requestData();
+            requestData(true);
         }
     }
 }

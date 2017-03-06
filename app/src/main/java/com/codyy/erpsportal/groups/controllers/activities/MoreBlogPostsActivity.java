@@ -92,9 +92,10 @@ public class MoreBlogPostsActivity extends BaseHttpActivity implements BaseRecyc
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mDataList.clear();
         mRecyclerView.setRefreshing(false);
         mAdapter.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -146,7 +147,8 @@ public class MoreBlogPostsActivity extends BaseHttpActivity implements BaseRecyc
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     public void init() {
@@ -165,7 +167,7 @@ public class MoreBlogPostsActivity extends BaseHttpActivity implements BaseRecyc
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -211,11 +213,10 @@ public class MoreBlogPostsActivity extends BaseHttpActivity implements BaseRecyc
         mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
             @Override
             public void onMoreData() {
-                requestData();
+                requestData(false);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-//        this.enableLoadMore(mRecyclerView);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         mFilterFragment = CategoryFilterFragment.create(mFilterType);
@@ -273,9 +274,8 @@ public class MoreBlogPostsActivity extends BaseHttpActivity implements BaseRecyc
     //刷新数据
     private void refresh() {
         mRecyclerView.setRefreshing(true);
-        mDataList.clear();
         mAdapter.setHasMoreData(false);
-        requestData();
+        requestData(true);
     }
 
     @Override

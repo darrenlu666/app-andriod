@@ -128,7 +128,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, "onResponse:" + response);
         String result = response.optString("result");
         if ("success".equals(result)) {
@@ -244,7 +244,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
         mCommentsAdapter = new BaseCommentsAdapter();
         mCommentsRv.setAdapter(mCommentsAdapter);
         //get detail data .
-        requestData();
+        requestData(true);
     }
 
     @OnClick({R.id.activity_theme_text_down1,R.id.btn_download})
@@ -366,9 +366,9 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
         HashMap<String, String> map = new HashMap<>(2);
         map.put("uuid", mUserInfo.getUuid());
         map.put("commentId", commentId);
-        requestData(URLConfig.DELETE_NET_TEACH_COMMENT, map, new IRequest() {
+        requestData(URLConfig.DELETE_NET_TEACH_COMMENT, map, false,new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, "getComments response", response);
                 stopRefreshing();
                 if ("success".equals(response.optString("result"))) {
@@ -407,9 +407,9 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
         params.put("uuid", mUserInfo.getUuid());
         params.put("meetingId", mPreparationId);
         mIsLoadingMore = true;
-        requestData(URLConfig.GET_NET_TEACH_COMMENT_LIST,params,new IRequest(){
+        requestData(URLConfig.GET_NET_TEACH_COMMENT_LIST,params,false,new IRequest(){
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, "getComments response", response);
                 mIsLoadingMore = false;
                 stopRefreshing();
@@ -488,9 +488,9 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
         int start = rethinkComment.getCurrentCount();
         params.put("start", start + "");
         params.put("end", start + 4 + "");
-        requestData(URLConfig.GET_NET_TEACH_SECOND_COMMENT_LIST, params, new IRequest() {
+        requestData(URLConfig.GET_NET_TEACH_SECOND_COMMENT_LIST, params, false,new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, "onMoreReplyClick response=", response);
                 if ("success".equals(response.optString("result"))) {
                     JSONArray repliesJa = response.optJSONArray("list");
@@ -553,9 +553,9 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
             params.put("replyToId", mReplyingComment.getUserId());
         }
 
-        requestData(URLConfig.SEND_NET_TEACH_COMMENT, params, new IRequest() {
+        requestData(URLConfig.SEND_NET_TEACH_COMMENT, params,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, "publishComment response:", response);
                 mDetector.hide();
                 mSendingDialogPresenter.dismiss();

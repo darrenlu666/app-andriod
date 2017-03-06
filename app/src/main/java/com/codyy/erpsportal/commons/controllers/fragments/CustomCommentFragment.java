@@ -159,9 +159,10 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, response.toString());
         if (null == mRecyclerView) return;
+        if(isRefreshing) mData.clear();
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
@@ -242,8 +243,8 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
             public void onRefresh() {
                 //下拉刷新
                 mRecyclerView.setRefreshing(true);
-                mData.clear();
-                requestData();
+//                mData.clear();
+                requestData(true);
             }
         });
         // TODO: 16-4-6 检测点击事件 ，隐藏输入框
@@ -257,7 +258,8 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
             }
         });
         //get data .
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     private void clickItem(BaseComment blogComment) {
@@ -366,7 +368,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                         //load more ...
                         mData.remove(mData.size() - 1);
                         showMore();
-                        requestData();
+                        requestData(false);
                         break;
                     case ITEM_TYPE_SECOND_LEVEL_MORE://二级更多
                         //load more ...
@@ -409,11 +411,12 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         data.put("start", "" + start);
         data.put("end", "" + (start + sPageCount - 1));
 
-        requestData(URLConfig.GET_BLOG_SECOND_COMMENT_LIST, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_BLOG_SECOND_COMMENT_LIST, data,false, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, response.toString());
                 if (null == mRecyclerView) return;
+                if(isRefreshing) mData.clear();
                 refreshSecondLevel(blogCommentId, response);
             }
 
@@ -461,9 +464,9 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                 break;
         }
 
-        requestData(url, data, new BaseHttpActivity.IRequest() {
+        requestData(url, data, false,new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if (null != response && "success".equals(response.optString("result"))) {
                     Cog.d(TAG, response.toString());
                     String message = response.optString("message");
@@ -510,9 +513,9 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         data.put("replyToId", replyToId);
         data.put("comment", comment);
 
-        requestData(URLConfig.ADD_COMMENT_LECTURE, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.ADD_COMMENT_LECTURE, data,false, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if (null != response && "success".equals(response.optString("result"))) {
                     Cog.d(TAG, response.toString());
                     String message = response.optString("message");
@@ -554,9 +557,9 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         }
         data.put("commentId", blogCommentId);
 
-        requestData(URLConfig.DELETE_COMMENT_LECTURE, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.DELETE_COMMENT_LECTURE, data,false, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if (null != response && ("success".equals(response.optString("result")) || response.optBoolean("result"))) {
                     Cog.d(TAG, response.toString());
                     ToastUtil.showToast("删除成功！");

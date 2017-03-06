@@ -122,7 +122,7 @@ public class MyBlogActivity extends BaseHttpActivity implements BaseRecyclerAdap
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(false);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -185,7 +185,7 @@ public class MyBlogActivity extends BaseHttpActivity implements BaseRecyclerAdap
             @Override
             public void onMoreData() {
                 mAdapter.setRefreshing(true);
-                requestData();
+                requestData(false);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -235,14 +235,14 @@ public class MyBlogActivity extends BaseHttpActivity implements BaseRecyclerAdap
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView ) return;
-//        hideMore();
         mRecyclerView.setRefreshing(false);
         mAdapter.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -313,8 +313,7 @@ public class MyBlogActivity extends BaseHttpActivity implements BaseRecyclerAdap
     //刷新数据
     private void refresh() {
         mRecyclerView.setRefreshing(true);
-        mDataList.clear();
-        requestData();
+        requestData(true);
     }
 
     public static void start(Context from ,UserInfo userInfo){

@@ -98,7 +98,7 @@ public class GroupBlogActivity extends BaseHttpActivity {
             public void onReloadClick() {
                 mRecyclerView.setEnabled(false);
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -178,13 +178,15 @@ public class GroupBlogActivity extends BaseHttpActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mDataList.clear();
         mRecyclerView.setEnabled(true);
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -252,9 +254,8 @@ public class GroupBlogActivity extends BaseHttpActivity {
     }
     //刷新数据
     private void refresh() {
-        mDataList.clear();
         mAdapter.setHasMoreData(false);
-        requestData();
+        requestData(true);
     }
 
     /**

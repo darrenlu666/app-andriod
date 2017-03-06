@@ -111,7 +111,7 @@ public class GroupMemberActivity extends BaseHttpActivity {
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(false);
-                requestData();
+                requestData(true);
             }
         });
         mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
@@ -164,13 +164,15 @@ public class GroupMemberActivity extends BaseHttpActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response ,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mDataList.clear();
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
@@ -179,7 +181,7 @@ public class GroupMemberActivity extends BaseHttpActivity {
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
-                requestData();
+                requestData(true);
             }
         });
 
@@ -239,10 +241,10 @@ public class GroupMemberActivity extends BaseHttpActivity {
     }
     //刷新数据
     private void refresh() {
-        mDataList.clear();
+
         mRecyclerView.setRefreshing(true);
         mAdapter.setHasMoreData(false);
-        requestData();
+        requestData(true);
     }
 
     /**
@@ -252,11 +254,10 @@ public class GroupMemberActivity extends BaseHttpActivity {
         if(null == mSender) return;
         HashMap hashMap = getParam();
         hashMap.put("type",TYPE_REQUEST_MEMBER);
-        requestData(obtainAPI(), hashMap, new IRequest() {
+        requestData(obtainAPI(), hashMap,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG , response.toString());
-//                onSuccess(response);
                 List<GroupMember> memberList = getGroupMembers(response);
                 if(null != memberList ){
                     mDataList.add(new BaseTitleItemBar("普通成员",ITEM_TYPE_TITLE));

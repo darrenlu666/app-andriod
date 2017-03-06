@@ -121,7 +121,7 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response ,boolean isRefreshing) {
         if ("success".equals(response.optString("result"))) {
             Toast.makeText(SettingActivity.this, "退出成功!", Toast.LENGTH_SHORT).show();
             goLogin();
@@ -264,9 +264,9 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
         }
         mCheckUpdateDialog.show(getSupportFragmentManager(), "check_update");
         final long startTime = System.currentTimeMillis();
-        requestData(URLConfig.VERSION, null, new IRequest() {
+        requestData(URLConfig.VERSION, null,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, "+fetchLatestVersion response:" + response);
                 String result = response.optString("result");
                 final String version = response.optString("version");

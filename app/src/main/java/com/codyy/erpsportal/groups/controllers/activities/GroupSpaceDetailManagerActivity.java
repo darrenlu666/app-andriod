@@ -131,7 +131,7 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mEmptyView) return;
         mEmptyView.setLoading(false);
@@ -180,7 +180,7 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         mTitleTextView.setText(getString(R.string.group_detail));
@@ -205,7 +205,9 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
         mOperatorLeftTv.setEnabled(false);
         mOperatorRightTv.setEnabled(false);
         //load data .
-        requestData();
+        mEmptyView.setVisibility(View.VISIBLE);
+        mEmptyView.setLoading(true);
+        requestData(true);
     }
 
     private void refreshUI() {
@@ -386,9 +388,9 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
         if(null !=mInputEdt &&!TextUtils.isEmpty(mInputEdt.getText().toString())){
             hashMap.put("rejectReason",mInputEdt.getText().toString());
         }
-        requestData(URLConfig.UPDATE_GROUP_CHECK, hashMap, new IRequest() {
+        requestData(URLConfig.UPDATE_GROUP_CHECK, hashMap,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null == mOperatorLeftTv || null == response ) return;
                 String message = response.optString("message");
                 if("success".equals(response.optString("result"))){
@@ -432,9 +434,9 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
         hashMap.put("uuid",mUserInfo.getUuid());
         hashMap.put("groupId",mGroupSpace.getGroupId());
         hashMap.put("type",action);
-        requestData(URLConfig.UPDATE_GROUP_RECOMMEND, hashMap, new IRequest() {
+        requestData(URLConfig.UPDATE_GROUP_RECOMMEND, hashMap, false , new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null == mOperatorLeftTv || null == response) return;
                 Cog.d(TAG,response.toString());
                 if("success".equals(response.optString("result"))){
@@ -492,9 +494,9 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
         hashMap.put("groupId",mGroupSpace.getGroupId());
         hashMap.put("type",(close?"true":"false"));
 
-        requestData(URLConfig.UPDATE_GROUP_CLOSE, hashMap, new IRequest() {
+        requestData(URLConfig.UPDATE_GROUP_CLOSE, hashMap,false, new IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if(null == mOperatorLeftTv || null == response) return;
                 Cog.d(TAG,response.toString());
                 String message = response.optString("message");

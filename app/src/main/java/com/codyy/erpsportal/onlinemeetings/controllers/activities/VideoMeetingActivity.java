@@ -2,6 +2,7 @@ package com.codyy.erpsportal.onlinemeetings.controllers.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -9,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -22,18 +22,16 @@ import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.VideoMeetingFragment;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.Bind;
 
 /**
  * 视频会议
  * Created by ldh on 2015/7/30.
+ * modified by poe on 2016.
  */
 public class VideoMeetingActivity extends BaseHttpActivity{
     public static final String TAG = "VideoMeetingActivity";
@@ -65,7 +63,7 @@ public class VideoMeetingActivity extends BaseHttpActivity{
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
 
     }
 
@@ -85,6 +83,8 @@ public class VideoMeetingActivity extends BaseHttpActivity{
         mListFragments = makeTabs();
         mAdapter = new SimpleFragmentAdapter<>(getSupportFragmentManager(),mListFragments);
         mViewPager.setAdapter(mAdapter);
+        /** 解决自动销毁fragment->onDestroyView的问题**/
+        mViewPager.setOffscreenPageLimit(3);
         addFilterFragment();
         mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
@@ -179,39 +179,12 @@ public class VideoMeetingActivity extends BaseHttpActivity{
 
             }
         });
-
-        /*this.setFilterListener(new IFilterListener() {
-            @Override
-            public void onFilterClick(MenuItem item) {
-                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
-                } else {
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                    mListFragments.get(mTabLayout.getSelectedTabPosition()).execFilter(mFilterVideoMeetingFragment.GetSelectedItem());
-                }
-            }
-
-            @Override
-            public void onPreFilterCreate(Menu menu) {
-                if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    menu.getItem(0).setActionView(R.layout.textview_filter_confirm_button);
-                    TextView tv = (TextView) menu.getItem(0).getActionView().findViewById(R.id.tv_title);
-                    tv.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                            mListFragments.get(mTabLayout.getSelectedTabPosition()).execFilter(mFilterVideoMeetingFragment.GetSelectedItem());
-                        }
-                    });
-                } else {
-                    menu.getItem(0).setIcon(R.drawable.ic_filter);
-                }
-            }
-        });*/
         setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
             @Override
             protected void doFilterConfirmed() {
-                mListFragments.get(mTabLayout.getSelectedTabPosition()).execFilter(mFilterVideoMeetingFragment.GetSelectedItem());
+                Bundle bd = new Bundle();
+                bd.putString("state",mFilterVideoMeetingFragment.GetSelectedItem());
+                mListFragments.get(mTabLayout.getSelectedTabPosition()).doFilter(bd);
             }
         });
 

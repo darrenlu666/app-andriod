@@ -90,8 +90,9 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mData.clear();
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
@@ -148,7 +149,7 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -168,7 +169,7 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
             @Override
             public void onRefresh() {
                 mRecyclerView.setEnabled(false);
-                requestData();
+                requestData(true);
             }
         });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -251,9 +252,9 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
         data.put("size", "8");
         data.put("uuid",mUserInfo.getUuid());
 
-        requestData(URLConfig.GET_RECOMMEND_SCHEDULE, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_RECOMMEND_SCHEDULE, data,false, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
@@ -305,8 +306,8 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
     public void onConfigLoaded(ModuleConfig config) {
         baseAreaId = config.getBaseAreaId();
         schoolId = config.getSchoolId();
-        mData.clear();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     @Override

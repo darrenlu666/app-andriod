@@ -84,7 +84,7 @@ public class AssessmentClassActivity extends BaseHttpActivity {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
     }
 
     @Override

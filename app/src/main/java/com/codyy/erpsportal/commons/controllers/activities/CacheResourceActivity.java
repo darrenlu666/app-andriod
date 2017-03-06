@@ -307,7 +307,7 @@ public class CacheResourceActivity extends BaseHttpActivity implements Handler.C
     }
 
     @Override
-    public void onSuccess(JSONObject response) { }
+    public void onSuccess(JSONObject response,boolean isRefreshing) { }
 
     @Override
     public void onFailure(VolleyError error) { }

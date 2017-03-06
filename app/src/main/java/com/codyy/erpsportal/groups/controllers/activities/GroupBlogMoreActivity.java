@@ -95,9 +95,10 @@ public class GroupBlogMoreActivity extends BaseHttpActivity implements BaseRecyc
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mDataList.clear();
         mAdapter.setRefreshing(false);
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -154,7 +155,8 @@ public class GroupBlogMoreActivity extends BaseHttpActivity implements BaseRecyc
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        requestData();
+        mRefreshLayout.setRefreshing(true);
+        requestData(true);
     }
 
     public void init() {
@@ -167,7 +169,7 @@ public class GroupBlogMoreActivity extends BaseHttpActivity implements BaseRecyc
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(false);
-                requestData();
+                requestData(true);
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
@@ -215,7 +217,7 @@ public class GroupBlogMoreActivity extends BaseHttpActivity implements BaseRecyc
         mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
             @Override
             public void onMoreData() {
-                requestData();
+                requestData(false);
             }
         });
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -276,9 +278,8 @@ public class GroupBlogMoreActivity extends BaseHttpActivity implements BaseRecyc
     //刷新数据
     private void refresh() {
         mRecyclerView.setRefreshing(true);
-        mDataList.clear();
         mAdapter.setHasMoreData(false);
-        requestData();
+        requestData(true);
     }
 
     @Override

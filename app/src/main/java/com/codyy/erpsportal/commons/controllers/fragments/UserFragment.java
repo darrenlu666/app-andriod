@@ -169,7 +169,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
         if (null != mUserInfo) {
             if (UserInfo.USER_TYPE_TEACHER.equals(mUserInfo.getUserType())) { //老师获取班级信息
                 if (mUserInfo.getClassList() == null || mUserInfo.getClassList().size() == 0) {
-                    requestData();
+                    requestData(true);
                 }else{
                     //直接填充数据
                     mClassList = mUserInfo.getClassList();
@@ -177,7 +177,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
                 }
             }else  if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {//家长获取班级信息
                 if (mUserInfo.getChildList() == null || mUserInfo.getChildList().size() == 0 || mStudentParse == null) {
-                    requestData();
+                    requestData(true);
                 }else{
                     mStudents = mUserInfo.getChildList();
                     setClassName();
@@ -192,7 +192,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     }
 
     @Override
-    public void onSuccess(JSONObject response) {
+    public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, response.toString());
         if (null == mSimpleDraweeView) return;
         if ("success".equals(response.optString("result"))) {
@@ -697,9 +697,9 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     private void getAreaPath() {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseUserId", mUserInfo.getBaseUserId());
-        requestData(URLConfig.GET_PERSON_INFO, data, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_PERSON_INFO, data,true, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response) {
+            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, response != null ? response.toString() : " null ");
                 if (null == mUserNameTv || null == mAreaTv) return;
                 UserInfo userInfo = UserInfo.parseJson(response);
