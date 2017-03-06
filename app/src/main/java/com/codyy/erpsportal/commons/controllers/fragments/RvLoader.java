@@ -80,8 +80,8 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
             throw new RuntimeException("The object passed has to implement ListExtractor!");
         }
         mItemDecoration = new DividerItemDecoration(context);
-        mAdapter = newRecyclerAdapter();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mAdapter = newRecyclerAdapter();
     }
 
     public void setRecyclerView(RecyclerView recyclerView) {
