@@ -112,7 +112,7 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                     final FilterItem item = mOptionsAdapter.getItem(position);
                     RequestQueue requestQueue = RequestManager.getRequestQueue();
                     Map<String, String> params = new HashMap<>();
-                    mLastOptionPos = position;
+//                    mLastOptionPos = position;
                     Response.ErrorListener errorListener = new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
@@ -304,7 +304,7 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                                 FilterItem classLevelItem = mOptionsAdapter.getItem(0);
                                 Choice classLevel = classLevelItem.getChoice();
                                 if (classLevel == null || classLevel.getId() == null) {
-                                    unCheckItem(2);
+                                    unCheckItem(1);
                                     shortlyToast(getString(R.string.exam_filter_toast, mOptionsAdapter.getItem(0).getTypeName()));
                                     return;
                                 }
@@ -347,6 +347,7 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                             }
                         }, errorListener));
                     }
+                    mLastOptionPos = position;
                 }
             });
 
