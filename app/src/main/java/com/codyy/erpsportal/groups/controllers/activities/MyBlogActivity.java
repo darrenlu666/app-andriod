@@ -243,6 +243,7 @@ public class MyBlogActivity extends BaseHttpActivity implements BaseRecyclerAdap
     public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG , response.toString());
         if(null == mRecyclerView ) return;
+        if(isRefreshing) mDataList.clear();
         mRecyclerView.setRefreshing(false);
         mAdapter.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -312,6 +313,7 @@ public class MyBlogActivity extends BaseHttpActivity implements BaseRecyclerAdap
     }
     //刷新数据
     private void refresh() {
+        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         mRecyclerView.setRefreshing(true);
         requestData(true);
     }

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.personal.StudentParse;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassMemberActivity;
@@ -82,6 +83,11 @@ public class FunctionFragment extends BaseHttpFragment {
 
     @Override
     public String obtainAPI() {
+        if (UserInfo.USER_TYPE_TEACHER.equals(mUserInfo.getUserType())) {
+            return URLConfig.GET_TEACHER_CLASS_LIST;
+        } else if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {
+            return URLConfig.GET_PARENT_CHILDREN;
+        }
         return URLConfig.GET_PARENT_CHILDREN;
     }
 
@@ -99,8 +105,26 @@ public class FunctionFragment extends BaseHttpFragment {
     public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG,response != null ?response.toString():" null ");
         if(null == mRecyclerView ) return;
+        if ("success".equals(response.optString("result"))) {
+            if (UserInfo.USER_TYPE_TEACHER.equals(mUserInfo.getUserType())) {//1.教师
+                parseTeacher(response);
+            } else if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {//2.家长
+                parseChildren(response);
+            }
+        }
+        loadData();
+    }
+
+    private void parseTeacher(JSONObject response) {
+        TeacherClassParse teacherClassParse = new Gson().fromJson(response.toString(), TeacherClassParse.class);
+        if (null != teacherClassParse && teacherClassParse.getDataList() != null) {
+            mUserInfo.setClassList(teacherClassParse.getDataList());
+            mClassList = teacherClassParse.getDataList();
+        }
+    }
+
+    private void parseChildren(JSONObject response) {
         List<Student> mStudentList = Student.parseData(response);
-        //mStudentParse = new Gson().fromJson(response.toString(), StudentParse.class);
         if (null != mStudentList) {
             mUserInfo.setChildList(mStudentList);
             if (mStudentList.size() > 0) {
@@ -130,9 +154,7 @@ public class FunctionFragment extends BaseHttpFragment {
                     return mStudents.size();
                 }
             });
-
             mRecyclerTabLayout.setUpWithAdapter(mParentAdapter);
-            loadData();
         }
     }
 
