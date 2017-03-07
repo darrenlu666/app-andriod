@@ -49,7 +49,7 @@ public class HomeWorkNewActivity extends TabsWithFilterActivity {
         ArrayList<FilterItem> items;
         items = new ArrayList<>();
         items.add(new FilterItem(getString(R.string.exam_grade), "classLevelId", URLConfig.ALL_CLASS_LEVEL_BY_SCHOOL_ID, FilterItem.OBJECT, new Choice.BaseChoiceParser()));//ALL_CLASS_LEVEL ClassLevelJsonParser()
-        items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_LIST,FilterItem.OBJECT, new Choice.BaseChoiceParser() ));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
+        items.add(new FilterItem(getString(R.string.exam_subject), "subjectId", URLConfig.ALL_SUBJECTS_BY_CLASS_ID,FilterItem.OBJECT, new Choice.BaseChoiceParser() ));//ALL_SUBJECTS_LIST  FilterItem.ARRAY
         addFilterFragment(0, ClassFilterFragment.newInstance(items, UserInfoKeeper.obtainUserInfo().getUuid()));
     }
 }
