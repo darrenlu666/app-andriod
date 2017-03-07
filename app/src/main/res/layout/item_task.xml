@@ -26,7 +26,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/class_icon"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textColor="@color/list_item_title"
         android:textSize="16sp"
         tools:text="张三" />
@@ -35,16 +35,14 @@
         android:id="@+id/school_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/tv_work_count"
-        android:layout_alignRight="@+id/tv_work_count"
         android:layout_below="@id/teacher_name"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/class_icon"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textColor="#929292"
         android:textSize="14sp"
-        tools:text="苏大附中"/>
+        tools:text="苏大附中dgadfdafdasdfsdfds"/>
 
     <TextView
         android:id="@+id/class_type"
@@ -54,7 +52,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/class_icon"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textColor="#929292"
         android:textSize="14sp"
         tools:text="六年级·英语"/>
