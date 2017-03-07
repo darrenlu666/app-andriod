@@ -189,6 +189,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
      */
     public void refresh() {
         if(null == mRecyclerView ) return;
+        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         mRecyclerView.setRefreshing(true);
         mAdapter.setHasMoreData(false);
         requestData(true);
