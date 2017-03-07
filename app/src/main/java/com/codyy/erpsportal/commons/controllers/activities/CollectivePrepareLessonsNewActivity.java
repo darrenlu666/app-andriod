@@ -1,58 +1,51 @@
 package com.codyy.erpsportal.commons.controllers.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.RatingBar;
+import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
+import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterGradeSubject;
-import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
-import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.controllers.viewholders.LessonsViewHold;
 import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
+import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.commons.widgets.UpOrDownButton;
-import com.codyy.erpsportal.commons.widgets.components.FilterButton;
 import com.codyy.url.URLConfig;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.handmark.pulltorefresh.library.PullToRefreshAdapterViewBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
-
-import org.joda.time.format.DateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import butterknife.Bind;
 
 
 /**
- * * 集体备课、互动听课排序列表
+ * * 频道页－网络授课－更多(集体备课、互动听课排序列表)
  * Created by yangxinwu on 2015/7/27.
  */
-public class CollectivePrepareLessonsNewActivity extends FragmentActivity implements View.OnClickListener, PullToRefreshBase.OnRefreshListener2, AdapterView.OnItemClickListener {
-
+public class CollectivePrepareLessonsNewActivity extends BaseHttpActivity implements View.OnClickListener{
     private final static String TAG = "CollectivePrepareLessonsNewActivity";
     private final static String SORT_TYPE_VIEW = "VIEW";//点击量排序
     private final static String SORT_TYPE_TIME = "TIME";//时间排序
@@ -60,35 +53,19 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
     private final static String ORDER_TYPE_DESC = "DESC";//降序
     private final static String ORDER_TYPE_ASC = "ASC";//升序
 
-    private UpOrDownButton mUDBTime;
-    private UpOrDownButton mUDBQuality;
-    private UpOrDownButton mUDBCount;
-    private FilterButton mFilterBtn;
-    private Button mBtnBack;
-    private PullToRefreshListView mListView;
-    private EmptyView mEmptyView;
-    private ObjectsAdapter<PrepareLessonsShortEntity, LessonsViewHold1> mAdapter;
-    /**
-     * 开始请求位置
-     */
-    private int mStart = 0;
-    /**
-     * 每次加载内容条数
-     */
-    private int mLoadCount = 9;
-    /**
-     * 筛选抽屉
-     */
-    private DrawerLayout mDrawerLayout;
-    /**
-     * 网络请求
-     */
-    private RequestSender mSender;
-    /**
-     * 类型：评课\互动听课\集体备课
-     */
-    private int type;
-    private String mURL;
+    @Bind(R.id.toolbar)Toolbar mToolBar;
+    @Bind(R.id.toolbar_title)TextView mTitleTextView;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @Bind(R.id.empty_view) EmptyView mEmptyView;
+    @Bind(R.id.refresh_layout)RefreshLayout mRefreshLayout;
+    @Bind(R.id.recycler_view)SimpleRecyclerView mRecyclerView;
+    @Bind(R.id.udb_by_time) UpOrDownButton mUDBTime;
+    @Bind(R.id.udb_by_quality) UpOrDownButton mUDBQuality;
+    @Bind(R.id.udb_by_count) UpOrDownButton mUDBCount;
+    private List<PrepareLessonsShortEntity> mDataList = new ArrayList<>();
+    private BaseRecyclerAdapter<PrepareLessonsShortEntity,LessonsViewHold> mAdapter ;
+    /*** 类型：评课\互动听课\集体备课 */
+    private int mFromType;
     private String mShortType = "";
     private String mOrderType = ORDER_TYPE_DESC;
     private String mGradeId = "";
@@ -99,86 +76,201 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
     private FilterGradeSubject mFilterGradeSubject;
     private String baseAreaId;
     private String schoolId;
-    private UserInfo mUserInfo;
+    private int mTotal = 0 ;//数据总数.
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        baseAreaId = getIntent().getStringExtra("baseAreaId");
-        schoolId = getIntent().getStringExtra("schoolId");
-        setContentView(R.layout.activity_collective_prepare_new_lessons);
-        type = getIntent().getIntExtra("type", -1);
-        //        type=TeachingResearchBase.PREPARE_LESSON;
-        mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
-        initView();
+    public int obtainLayoutId() {
+        return R.layout.activity_collective_prepare_new_lessons;
     }
 
-    private void initView() {
-        mSender = new RequestSender(this);
-        mUDBTime = (UpOrDownButton) findViewById(R.id.udb_by_time);
-        mUDBQuality = (UpOrDownButton) findViewById(R.id.udb_by_quality);
-        mUDBCount = (UpOrDownButton) findViewById(R.id.udb_by_count);
+    @Override
+    public String obtainAPI() {
+        if(TeachingResearchBase.PREPARE_LESSON == mFromType){
+            return URLConfig.GET_PREPARE_LESSON;
+        }else if(TeachingResearchBase.EVALUATION_LESSON == mFromType){
+            return URLConfig.GET_EVALUATION_LESSON;
+        }else if(TeachingResearchBase.INTERAC_LESSON == mFromType){
+            return URLConfig.GET_INTERAC_LESSON;
+        }
+        return "";
+    }
+
+    @Override
+    public HashMap<String, String> getParam() {
+        HashMap<String, String> param = new HashMap<>();
+        param.put("userType", mUserInfo.getUserType());
+        param.put("uuid", mUserInfo.getUuid());
+        param.put("areaId", baseAreaId);
+        param.put("schoolId", schoolId);
+        param.put("sortType", mShortType);
+        param.put("orderType", mOrderType);
+        param.put("subjectId", mSubjectId);
+        param.put("classLevelId", mGradeId);
+        param.put("start", String.valueOf(mDataList.size()));
+        param.put("end", String.valueOf(mDataList.size()+sPageCount-1));
+        return param;
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        initData();
+    }
+
+    @Override
+    public void init() {
+        baseAreaId = getIntent().getStringExtra("baseAreaId");
+        schoolId = getIntent().getStringExtra("schoolId");
+        mFromType = getIntent().getIntExtra("mFromType", -1);
+        UiMainUtils.setNavigationTintColor(this,R.color.main_green);
+        if(null == mUserInfo) return;
+
+        String title = Titles.sPagetitleNetteachAllprepare;
+        switch (mFromType) {
+            case TeachingResearchBase.PREPARE_LESSON:
+                title = Titles.sPagetitleNetteachAllprepare;
+                break;
+            case TeachingResearchBase.EVALUATION_LESSON:
+                title = Titles.sPagetitleNetteachDisucss;
+                break;
+            case TeachingResearchBase.INTERAC_LESSON:
+                title = Titles.sPagetitleNetteachInteract;
+                break;
+        }
+        Cog.i(TAG,"title " + title);
+        mTitleTextView.setText(title);
+        initToolbar(mToolBar);
+
+        mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
+            @Override
+            public void onReloadClick() {
+                mEmptyView.setLoading(true);
+                requestData(true);
+            }
+        });
+        Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
+        mRecyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
+        mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initData();
+            }
+        });
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         mUDBTime.setOnClickListener(this);
         mUDBQuality.setOnClickListener(this);
         mUDBCount.setOnClickListener(this);
         mUDBTime.setText(R.string.by_create_time);
         mUDBQuality.setText(R.string.by_quality);
         mUDBCount.setText(R.string.by_count);
-//        mUDBTime.setChecked();
-        mBtnBack = (Button) findViewById(R.id.btn_back);
-        mBtnBack.setOnClickListener(this);
-        mFilterBtn = (FilterButton) findViewById(R.id.btn_filter);
-        mFilterBtn.setOnClickListener(this);
-        mListView = (PullToRefreshListView) findViewById(R.id.ptrl_prepare_lseeons_list);
-        mEmptyView = (EmptyView) findViewById(R.id.empty_view);
-        mListView.setEmptyView(mEmptyView);
-        mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
+
+        addGradeSubjectFilter();
+        mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<LessonsViewHold>() {
             @Override
-            public void onReloadClick() {
-                httpConnect(true);
+            public LessonsViewHold createViewHolder(ViewGroup parent, int viewType) {
+                return new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare_lessons),mFromType);
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                return 0;
             }
         });
-        initPullToRefresh(mListView);
-        mListView.setOnItemClickListener(this);
-        mAdapter = new ObjectsAdapter<>(this, new ObjectsAdapter.ViewHolderBuilder() {
+        mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
             @Override
-            public AbsViewHolder createViewHolder() {
-                return new LessonsViewHold1();
+            public void onMoreData() {
+                requestData(false);
             }
         });
-        mListView.setAdapter(mAdapter);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_collective_prepare_lesson_new_drawerlayout);
-        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<PrepareLessonsShortEntity>() {
+            @Override
+            public void onItemClicked(View v, int position, PrepareLessonsShortEntity data) throws Exception {
+                ItemClick(data);
+            }
+
+
+        });
+        mRecyclerView.setAdapter(mAdapter);
+        this.enableLoadMore(mRecyclerView,false);
+        setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
+            @Override
+            protected void doFilterConfirmed() {
+                //filter data to refresh .
+                execSearch();
+            }
+        });
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+                supportInvalidateOptionsMenu();
+            }
+
             @Override
             public void onDrawerOpened(View drawerView) {
-                mFilterBtn.setFiltering(true);
+                super.onDrawerOpened(drawerView);
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
-                mFilterBtn.setFiltering(false);
+                super.onDrawerClosed(drawerView);
+                supportInvalidateOptionsMenu();
             }
         });
-        TextView textView = (TextView) findViewById(R.id.tv_title);
-        switch (type) {
-            case TeachingResearchBase.PREPARE_LESSON:
-                textView.setText(Titles.sPagetitleNetteachAllprepare);
-                addGradeSubjectFilter();
-                mURL = URLConfig.GET_PREPARE_LESSON;
-                httpConnect(true);
-                break;
-            case TeachingResearchBase.EVALUATION_LESSON:
-                textView.setText(Titles.sPagetitleNetteachDisucss);
-                addGradeSubjectFilter();
-                mURL = URLConfig.GET_EVALUATION_LESSON;
-                httpConnect(true);
-                break;
-            case TeachingResearchBase.INTERAC_LESSON:
-                textView.setText(Titles.sPagetitleNetteachInteract);
-                addGradeSubjectFilter();
-                mURL = URLConfig.GET_INTERAC_LESSON;
-                httpConnect(true);
-                break;
+    }
+
+    /** 初始化数据　or 筛选**/
+    private void initData() {
+        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
+        requestData(true);
+    }
+
+    @Override
+    public void onSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+        if(null == mRefreshLayout) return;
+        if(isRefreshing) mDataList.clear();
+        mRecyclerView.setRefreshing(false);
+        mAdapter.setRefreshing(false);
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
+        mEmptyView.setLoading(false);
+        parseEntity(response);
+        mAdapter.setData(mDataList);
+        //load more ...
+        if(mDataList.size() <  mTotal){
+            mAdapter.setRefreshing(true);
+            mAdapter.setHasMoreData(true);
+        }else{
+            mAdapter.setHasMoreData(false);
+        }
+        mAdapter.notifyDataSetChanged();
+
+        if(mDataList.size()<=0){
+            mEmptyView.setLoading(false);
+            mEmptyView.setVisibility(View.VISIBLE);
+        }else {
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
+
+
+    @Override
+    public void onFailure(VolleyError error) throws Exception {
+        if(null == mRecyclerView || null == mRefreshLayout) return;
+        mRecyclerView.setRefreshing(false);
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
+        mAdapter.notifyDataSetChanged();
+        if(mDataList.size()<=0){
+            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyView.setLoading(false);
+        }else {
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -193,14 +285,6 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
         getSupportFragmentManager().beginTransaction().replace(R.id.activity_collective_new_filter_fragment, mFilterGradeSubject).commit();
     }
 
-    private void initPullToRefresh(PullToRefreshAdapterViewBase<?> view) {
-        view.setMode(PullToRefreshBase.Mode.BOTH);
-        view.getLoadingLayoutProxy(false, true).setPullLabel(getString(R.string.pull_to_refresh));
-        view.getLoadingLayoutProxy(false, true).setRefreshingLabel(getString(R.string.loading));
-        view.getLoadingLayoutProxy(false, true).setReleaseLabel(getString(R.string.release_to_refresh));
-        view.setOnRefreshListener(this);
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -211,10 +295,10 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
                 mShortType = SORT_TYPE_TIME;
                 if (mUDBTime.getCurUpOrDown()) {
                     mOrderType = ORDER_TYPE_DESC;
-                    httpConnect(true);
+                    initData();
                 } else {
                     mOrderType = ORDER_TYPE_ASC;
-                    httpConnect(true);
+                    initData();
                 }
                 break;
             case R.id.udb_by_quality:
@@ -224,10 +308,10 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
                 mShortType = SORT_TYPE_SCORE;
                 if (mUDBQuality.getCurUpOrDown()) {
                     mOrderType = ORDER_TYPE_DESC;
-                    httpConnect(true);
+                    initData();
                 } else {
                     mOrderType = ORDER_TYPE_ASC;
-                    httpConnect(true);
+                    initData();
                 }
                 break;
             case R.id.udb_by_count:
@@ -237,127 +321,25 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
                 mShortType = SORT_TYPE_VIEW;
                 if (mUDBCount.getCurUpOrDown()) {
                     mOrderType = ORDER_TYPE_DESC;
-                    httpConnect(true);
+                    initData();
                 } else {
                     mOrderType = ORDER_TYPE_ASC;
-                    httpConnect(true);
+                    initData();
                 }
                 break;
             case R.id.btn_back:
                 this.finish();
                 overridePendingTransition(R.anim.layout_show, R.anim.slidemenu_hide);
                 break;
-            case R.id.btn_filter:
-                if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    mDrawerLayout.closeDrawer(GravityCompat.END);
-                    execSearch();
-                    mFilterBtn.setFiltering(false);
-                } else {
-                    mDrawerLayout.openDrawer(GravityCompat.END);
-                    mFilterBtn.setFiltering(true);
-                }
-                break;
             default:
                 break;
         }
     }
 
-    /**
-     * 网络请求
-     */
-    private void httpConnect(final boolean refresh) {
-        mEmptyView.setLoading(true);
-        HashMap<String, String> data = new HashMap<>();
-        data.put("userType", mUserInfo.getUserType());
-        data.put("uuid", mUserInfo.getUuid());
-        data.put("areaId", baseAreaId);
-        data.put("schoolId", schoolId);
-        data.put("sortType", mShortType);
-        data.put("orderType", mOrderType);
-        data.put("subjectId", mSubjectId);
-        data.put("classLevelId", mGradeId);
-        if (refresh) {
-            mStart = 0;
-        }
-        int start = mStart;
-        int end = start + mLoadCount;
-        data.put("start", String.valueOf(start));
-        data.put("end", String.valueOf(end));
-        mSender.sendRequest(new RequestSender.RequestData(mURL, data, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "onResponse:" + response);
-                if ("success".equals(response.optString("result"))) {
-                    try {
-                        JSONObject jsonObject = null;
-                        switch (type) {
-                            case TeachingResearchBase.PREPARE_LESSON:
-                                jsonObject = response.getJSONObject("groupPreparation");
-                                break;
-                            case TeachingResearchBase.EVALUATION_LESSON:
-                                jsonObject = response.getJSONObject("evaluationAndDiscussion");
-                                break;
-                            case TeachingResearchBase.INTERAC_LESSON:
-                                jsonObject = response.getJSONObject("interactionListen");
-                                break;
-                        }
-
-                        int total = jsonObject.optInt("total");
-                        if (total == 0) {
-                            mAdapter.setData(null);
-                            mAdapter.notifyDataSetChanged();
-                            mListView.onRefreshComplete();
-                            mEmptyView.setLoading(false);
-                            mListView.setMode(PullToRefreshBase.Mode.DISABLED);
-                        } else {
-                            JSONArray jsonArray = jsonObject.optJSONArray("list");
-                            List<PrepareLessonsShortEntity> prepareLessonsShortEntityList = PrepareLessonsShortEntity.parseJsonArray(jsonArray);
-                            if (refresh) {
-                                mAdapter.setData(prepareLessonsShortEntityList);
-                            } else {
-                                mAdapter.addData(prepareLessonsShortEntityList);
-                            }
-
-                            mAdapter.notifyDataSetChanged();
-
-                            mListView.onRefreshComplete();
-                            //如果已经加载所有，下拉更多关闭
-                            if (total <= mAdapter.getCount()) {
-                                mListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                            } else {
-                                mListView.setMode(PullToRefreshBase.Mode.BOTH);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    mStart = mAdapter.getCount();
-                } else {
-                    mListView.onRefreshComplete();
-                    mEmptyView.setLoading(false);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.e(TAG, "onErrorResponse:" + error);
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-                if (refresh && mAdapter.getCount() == 0) {
-                    mListView.setMode(PullToRefreshBase.Mode.DISABLED);
-                }
-                mListView.onRefreshComplete();
-                mEmptyView.setLoading(false);
-            }
-        }));
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        PrepareLessonsShortEntity item = mAdapter.getItem(position - 1);
-        Intent intent = new Intent(this, ActivityThemeActivity.class);
-        switch (type) {
+    private void ItemClick(PrepareLessonsShortEntity item) {
+        switch (mFromType) {
             case TeachingResearchBase.PREPARE_LESSON:
-                intent.putExtra("type", ActivityThemeActivity.PREPARE_LESSON);
+                ActivityThemeActivity.start(this,ActivityThemeActivity.PREPARE_LESSON,item.getId(),item.getViewCount());
                 break;
             case TeachingResearchBase.EVALUATION_LESSON:
                 EvaluationScore evaluationScore = new EvaluationScore();
@@ -370,25 +352,12 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
                     e.printStackTrace();
                 }
                 evaluationScore.setTotalScore(totalScore);
-                intent.putExtra("type", ActivityThemeActivity.EVALUATION_LESSON);
-                intent.putExtra("score", evaluationScore);
+                ActivityThemeActivity.start(this,ActivityThemeActivity.EVALUATION_LESSON,item.getId(),item.getViewCount(),evaluationScore);
                 break;
             case TeachingResearchBase.INTERAC_LESSON:
-                intent.putExtra("type", ActivityThemeActivity.INTERACT_LESSON);
+                ActivityThemeActivity.start(this,ActivityThemeActivity.INTERACT_LESSON,item.getId(),item.getViewCount());
                 break;
         }
-        intent.putExtra("id", item.getId());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-        httpConnect(true);
-    }
-
-    @Override
-    public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-        httpConnect(false);
     }
 
     /**
@@ -405,75 +374,38 @@ public class CollectivePrepareLessonsNewActivity extends FragmentActivity implem
         } else {
             mSubjectId = "";
         }
-        httpConnect(true);
+        initData();
     }
 
-    class LessonsViewHold1 extends AbsViewHolder<PrepareLessonsShortEntity> {
-        SimpleDraweeView headerImage;
-        TextView title;
-        TextView teachName;
-        TextView date;
-        TextView clickCount;
-        RatingBar ratingBar;
-        TextView teacherTitle;
-        TextView scoreTv;
-        TextView rateTv;
-
-        @Override
-        public int obtainLayoutId() {
-            return R.layout.item_collective_prepare_lessons;
-        }
-
-        @Override
-        public void mapFromView(View view) {
-            headerImage = (SimpleDraweeView) view.findViewById(R.id.img_lesson_item);
-            title = (TextView) view.findViewById(R.id.tv_lesson_title);
-            teachName = (TextView) view.findViewById(R.id.tv_teacher);
-            date = (TextView) view.findViewById(R.id.tv_date);
-            clickCount = (TextView) view.findViewById(R.id.tv_count);
-            ratingBar = (RatingBar) view.findViewById(R.id.rb_star);
-            teacherTitle = (TextView) view.findViewById(R.id.tv_teacher_view);
-            scoreTv = (TextView) view.findViewById(R.id.tv_star);
-            rateTv = (TextView) view.findViewById(R.id.tv_rate);
-        }
-
-        @Override
-        public void setDataToView(PrepareLessonsShortEntity data, Context context) {
-            switch (type) {
+    /**解析实体类**/
+    private void parseEntity(JSONObject response) throws JSONException {
+        if ("success".equals(response.optString("result"))) {
+            JSONObject jsonObject = null;
+            switch (mFromType) {
+                case TeachingResearchBase.PREPARE_LESSON:
+                    jsonObject = response.getJSONObject("groupPreparation");
+                    break;
                 case TeachingResearchBase.EVALUATION_LESSON:
-                    teacherTitle.setText(Titles.sMasterTeacher);//"主讲教师");
-                    if ("SCORE".equals(data.getScoreType())) {
-                        rateTv.setVisibility(View.GONE);
-                        ratingBar.setVisibility(View.GONE);
-                        scoreTv.setText("评分   " + data.getAverageScore() + "/" + data.getTotalScore());
-                    } else {
-                        rateTv.setVisibility(View.VISIBLE);
-                        ratingBar.setVisibility(View.VISIBLE);
-                        scoreTv.setText("评分");
-                        ratingBar.setRating(data.getAverageScore() / 2f);
-                    }
+                    jsonObject = response.getJSONObject("evaluationAndDiscussion");
                     break;
                 case TeachingResearchBase.INTERAC_LESSON:
-                    teacherTitle.setText(Titles.sMasterTeacher);//"主讲教师");
-                case TeachingResearchBase.PREPARE_LESSON:
-
+                    jsonObject = response.getJSONObject("interactionListen");
                     break;
             }
-            rateTv.setText(context.getString(R.string.f_score, data.getAverageScore()));
-            title.setText(data.getTitle());
-            teachName.setText(data.getMainTeacher());
-            date.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(data.getStartTime()));
-            clickCount.setText(String.valueOf(data.getViewCount()));
-            ratingBar.setProgress((int)data.getAverageScore());
-            ImageFetcher.getInstance(context).fetchImage(headerImage, data.getSubjectPic());
+
+            mTotal = jsonObject.optInt("total");
+            JSONArray jsonArray = jsonObject.optJSONArray("list");
+            List<PrepareLessonsShortEntity> prepareLessonsShortEntityList = PrepareLessonsShortEntity.parseJsonArray(jsonArray);
+            if(null != prepareLessonsShortEntityList) mDataList.addAll(prepareLessonsShortEntityList);
         }
     }
 
     public static void start(Context context, int type, String schoolId, String baseAreaId) {
         Intent intent = new Intent(context, CollectivePrepareLessonsNewActivity.class);
-        intent.putExtra("type", type);
+        intent.putExtra("mFromType", type);
         intent.putExtra("schoolId", schoolId);
         intent.putExtra("baseAreaId", baseAreaId);
         context.startActivity(intent);
+        UIUtils.addEnterAnim((Activity) context);
     }
 }

@@ -115,7 +115,7 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
     }
 
     public void init(AttributeSet attrs, int defStyle) {
-//        if(!isInEditMode()){
+        if(!isInEditMode()){
             TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.BnVideoView, defStyle, 0);
             mShouldDrawError = typedArray.getBoolean(R.styleable.BnVideoView_shouldDrawError, true);
             typedArray.recycle();
@@ -123,7 +123,7 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
             mSurfaceHold = getHolder();
             mSurfaceHold.addCallback(this);
             mHandler = new Handler(this);
-//        }
+        }
     }
 
 

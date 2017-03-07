@@ -73,5 +73,4 @@ public interface GroupFilterInterface {
      * 获取筛选结果
      */
     Bundle getFilterData();
-
 }

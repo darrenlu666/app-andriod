@@ -8,6 +8,7 @@ import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsDetailActivity;
@@ -72,66 +73,6 @@ public class CollectivePrepareLessonsFragment extends SimpleRecyclerFragment<Pre
             TipProgressFragment fragment = TipProgressFragment.newInstance(TipProgressFragment.OUT_STATUS_TIP);
             fragment.show(getFragmentManager(), "showtips");
         }
-    }
-
-    @Override
-    public String getAPI() {
-        return getURL(mCurType, mType);
-    }
-
-    @Override
-    public HashMap<String, String> getParams() {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("uuid", mUserInfo.getUuid());
-        if (mGradeId != null) params.put("classlevelId", "" + mGradeId);
-        if (mSubjectId != null) params.put("subjectId", "" + mSubjectId);
-        if (mStatus != null) params.put("status", "" + mStatus);
-        if (mAreaId != null) params.put("baseAreaId", "" + mAreaId);
-        if (mClsSchoolId != null) params.put("clsSchoolId", "" + mClsSchoolId);
-        params.put("start", "" + mDataList.size());
-        params.put("end", "" + (mDataList.size()+sPageCount-1));
-        return params;
-    }
-
-    @Override
-    public void parseData(JSONObject response) {
-        if ("success".equals(response.optString("result"))) {
-            mTotal = response.optInt("total");
-            JSONArray jsonArray = null;
-            if (mType.equals(Constants.TYPE_PREPARE_LESSON)) {
-                jsonArray = response.optJSONArray("preparation");
-            } else {
-                jsonArray = response.optJSONArray("lecture");
-            }
-            List<PreparationEntity> data = PreparationEntity.parseJsonArray(jsonArray, mType);
-
-            if(null != data) mDataList.addAll(data);
-        }
-    }
-
-    @Override
-    public BaseRecyclerViewHolder<PreparationEntity> getViewHolder(ViewGroup parent) {
-        return new PrePareLessonsViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare));
-    }
-
-    @Override
-    public void OnItemClicked(View v, int position, PreparationEntity data) {
-        if (mType.equals(Constants.TYPE_PREPARE_LESSON)) { //点击进入集体备课详情
-            Intent intent = new Intent(getActivity(), CollectivePrepareLessonsDetailActivity.class);
-            intent.putExtra(Constants.PREPARATIONID, data.getPreparationId());
-            this.startActivityForResult(intent, REQUEST_COLLECTIVE_PREPARE_OUT);
-            UIUtils.addEnterAnim(getActivity());
-        } else {
-            Intent intent = new Intent(getActivity(), ListenDetailsActivity.class);//点击进入互动听课详情
-            intent.putExtra(Constants.PREPARATIONID, data.getPreparationId());
-            this.startActivityForResult(intent, REQUEST_COLLECTIVE_PREPARE_OUT);
-            UIUtils.addEnterAnim(getActivity());
-        }
-    }
-
-    @Override
-    public int getTotal() {
-        return mTotal;
     }
 
     /**
@@ -202,5 +143,70 @@ public class CollectivePrepareLessonsFragment extends SimpleRecyclerFragment<Pre
             mClsSchoolId = areaBase.getSchoolID();
         }
         initData();
+    }
+
+    @Override
+    public SimpleRecyclerDelegate<PreparationEntity> getSimpleRecyclerDelegate() {
+        return new SimpleRecyclerDelegate<PreparationEntity>() {
+            @Override
+            public String obtainAPI() {
+                return getURL(mCurType, mType);
+            }
+
+            @Override
+            public HashMap<String, String> getParams() {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("uuid", mUserInfo.getUuid());
+                if (mGradeId != null) params.put("classlevelId", "" + mGradeId);
+                if (mSubjectId != null) params.put("subjectId", "" + mSubjectId);
+                if (mStatus != null) params.put("status", "" + mStatus);
+                if (mAreaId != null) params.put("baseAreaId", "" + mAreaId);
+                if (mClsSchoolId != null) params.put("clsSchoolId", "" + mClsSchoolId);
+                params.put("start", "" + mDataList.size());
+                params.put("end", "" + (mDataList.size()+sPageCount-1));
+                return params;
+            }
+
+            @Override
+            public void parseData(JSONObject response) {
+                if ("success".equals(response.optString("result"))) {
+                    mTotal = response.optInt("total");
+                    JSONArray jsonArray = null;
+                    if (mType.equals(Constants.TYPE_PREPARE_LESSON)) {
+                        jsonArray = response.optJSONArray("preparation");
+                    } else {
+                        jsonArray = response.optJSONArray("lecture");
+                    }
+                    List<PreparationEntity> data = PreparationEntity.parseJsonArray(jsonArray, mType);
+
+                    if(null != data) mDataList.addAll(data);
+                }
+            }
+
+            @Override
+            public BaseRecyclerViewHolder<PreparationEntity> getViewHolder(ViewGroup parent) {
+                return new PrePareLessonsViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare));
+            }
+
+            @Override
+            public void OnItemClicked(View v, int position, PreparationEntity data) {
+                if (mType.equals(Constants.TYPE_PREPARE_LESSON)) { //点击进入集体备课详情
+                    Intent intent = new Intent(getActivity(), CollectivePrepareLessonsDetailActivity.class);
+                    intent.putExtra(Constants.PREPARATIONID, data.getPreparationId());
+                    CollectivePrepareLessonsFragment.this.startActivityForResult(intent, REQUEST_COLLECTIVE_PREPARE_OUT);
+                    UIUtils.addEnterAnim(getActivity());
+                } else {
+                    Intent intent = new Intent(getActivity(), ListenDetailsActivity.class);//点击进入互动听课详情
+                    intent.putExtra(Constants.PREPARATIONID, data.getPreparationId());
+                    CollectivePrepareLessonsFragment.this.startActivityForResult(intent, REQUEST_COLLECTIVE_PREPARE_OUT);
+                    UIUtils.addEnterAnim(getActivity());
+                }
+            }
+
+            @Override
+            public int getTotal() {
+                return mTotal;
+            }
+        };
     }
 }

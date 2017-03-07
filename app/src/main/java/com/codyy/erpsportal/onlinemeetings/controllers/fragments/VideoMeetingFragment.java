@@ -10,7 +10,9 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.VideoMeetingDetailActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.VideoMeetingViewHolder;
@@ -46,7 +48,6 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
         return  fragment;
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,59 +58,9 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
     }
 
     @Override
-    public String getAPI() {
-        return URLConfig.GET_VIDEOMEETING;
-    }
-
-    @Override
-    public HashMap<String, String> getParams() {
-        HashMap<String, String> hashMap = new HashMap<>();
-        if(null != mUserInfo) hashMap.put("uuid", mUserInfo.getUuid());
-        if(null != mState) hashMap.put("meet_sate", mState);
-        hashMap.put("meet_type",String.valueOf(mCurType));
-        hashMap.put("start",mDataList.size()+"");
-        hashMap.put("end",(mDataList.size()+sPageCount-1)+"");
-        return hashMap;
-    }
-
-    @Override
-    public void parseData(JSONObject response) {
-        if ("success".equals(response.optString("result"))) {
-            mTotal = response.optInt("total");//total为列表条数
-            JSONArray jsonArray = response.optJSONArray("list");
-            List<VideoMeetingEntity> result = VideoMeetingEntity.parseJsonArray(jsonArray);
-            if(null != result && result.size()>0){
-                for(VideoMeetingEntity entity : result){
-                    entity.setBaseViewHoldType(0);
-                    mDataList.add(entity);
-                }
-            }
-        }
-    }
-
-    @Override
     public void onViewLoadCompleted() {
         super.onViewLoadCompleted();
         initData();
-    }
-
-    @Override
-    public BaseRecyclerViewHolder<VideoMeetingEntity> getViewHolder(ViewGroup parent) {
-        return new VideoMeetingViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_videomeeting));
-    }
-
-    @Override
-    public void OnItemClicked(View v, int position, VideoMeetingEntity data) {
-        Intent intent = new Intent(getActivity(), VideoMeetingDetailActivity.class);
-        intent.putExtra("mid", data.getId());
-        intent.putExtra("meetingType", mCurType);
-        intent.putExtra(Constants.USER_INFO , mUserInfo);
-        this.startActivityForResult(intent, REQUEST_VIDEO_MEETING_OUT);
-    }
-
-    @Override
-    public int getTotal() {
-        return mTotal;
     }
 
     @Override
@@ -127,5 +78,61 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
             mState   =   bd.getString("state");
             initData();
         }
+    }
+
+    @Override
+    public SimpleRecyclerDelegate<VideoMeetingEntity> getSimpleRecyclerDelegate() {
+        return new SimpleRecyclerDelegate<VideoMeetingEntity>() {
+            @Override
+            public String obtainAPI() {
+                return URLConfig.GET_VIDEOMEETING;
+            }
+
+            @Override
+            public HashMap<String, String> getParams() {
+                HashMap<String, String> hashMap = new HashMap<>();
+                if(null != mUserInfo) hashMap.put("uuid", mUserInfo.getUuid());
+                if(null != mState) hashMap.put("meet_sate", mState);
+                hashMap.put("meet_type",String.valueOf(mCurType));
+                hashMap.put("start",mDataList.size()+"");
+                hashMap.put("end",(mDataList.size()+sPageCount-1)+"");
+                return hashMap;
+            }
+
+            @Override
+            public void parseData(JSONObject response) {
+                if ("success".equals(response.optString("result"))) {
+                    mTotal = response.optInt("total");//total为列表条数
+                    JSONArray jsonArray = response.optJSONArray("list");
+                    List<VideoMeetingEntity> result = VideoMeetingEntity.parseJsonArray(jsonArray);
+                    if(null != result && result.size()>0){
+                        for(VideoMeetingEntity entity : result){
+                            entity.setBaseViewHoldType(0);
+                            mDataList.add(entity);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public BaseRecyclerViewHolder<VideoMeetingEntity> getViewHolder(ViewGroup parent) {
+                return new VideoMeetingViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_videomeeting));
+            }
+
+            @Override
+            public void OnItemClicked(View v, int position, VideoMeetingEntity data) {
+                Intent intent = new Intent(getActivity(), VideoMeetingDetailActivity.class);
+                intent.putExtra("mid", data.getId());
+                intent.putExtra("meetingType", mCurType);
+                intent.putExtra(Constants.USER_INFO , mUserInfo);
+                VideoMeetingFragment.this.startActivityForResult(intent, REQUEST_VIDEO_MEETING_OUT);
+                UIUtils.addEnterAnim(getActivity());
+            }
+
+            @Override
+            public int getTotal() {
+                return mTotal;
+            }
+        };
     }
 }
