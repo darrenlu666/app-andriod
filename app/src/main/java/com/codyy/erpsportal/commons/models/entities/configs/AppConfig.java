@@ -32,7 +32,7 @@ import com.codyy.erpsportal.county.controllers.activities.CountyListActivity;
 import com.codyy.erpsportal.exam.controllers.activities.ExamActivity;
 import com.codyy.erpsportal.groups.controllers.activities.GroupManagerActivity;
 import com.codyy.erpsportal.homework.controllers.activities.WorkListsActivity;
-import com.codyy.erpsportal.info.controllers.activities.InfoActivity;
+import com.codyy.erpsportal.info.controllers.activities.InfoDeleteActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.VideoMeetingActivity;
 import com.codyy.erpsportal.onlineteach.controllers.activities.OnlineTeachActivity;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepActivity;
@@ -690,7 +690,8 @@ public class AppConfig {
                     jumpable = null;
                     break;
                 case 13://资讯
-                    jumpable = new DirectJumper(InfoActivity.class);
+//                    jumpable = new DirectJumper(InfoActivity.class);
+                    jumpable = new DirectJumper(InfoDeleteActivity.class);
                     break;
                 case 14://辅导
                     jumpable = new DirectJumper(TutorshipActivity.class);

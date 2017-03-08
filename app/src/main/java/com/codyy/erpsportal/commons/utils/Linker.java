@@ -9,10 +9,16 @@ import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 
 /**
+ * 跳转链接
  * Created by gujiajia on 2016/4/20.
  */
 public class Linker {
 
+    /**
+     * 用户信息跳转
+     * @param activity 原Activity
+     * @param userId 用户id
+     */
     public static void linkUserIcon(Activity activity, String userId) {
         if (activity == null) return;
         if (TextUtils.isEmpty(userId)) {

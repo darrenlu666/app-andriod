@@ -32,7 +32,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.filters.BaseFilterFrag
 import com.codyy.erpsportal.commons.controllers.fragments.filters.NetTeachFilterFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingCommonRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
 import com.codyy.erpsportal.commons.models.Jumpable;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -396,6 +396,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
         @Bind(R.id.rl_course_tour)
         RelativeLayout mRelativeLayout;
+
         private Context mContext;
 
         public ClassroomViewHolder(View itemView) {

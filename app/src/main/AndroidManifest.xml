@@ -109,8 +109,13 @@
         <activity
             android:name=".info.controllers.activities.InfoActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_main"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".info.controllers.activities.InfoDeleteActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".commons.controllers.activities.CollectivePrepareLessonsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

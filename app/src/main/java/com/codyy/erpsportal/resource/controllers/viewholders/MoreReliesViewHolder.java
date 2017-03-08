@@ -6,7 +6,7 @@ import android.widget.Button;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingRvHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.resource.models.entities.MoreRelies;
 

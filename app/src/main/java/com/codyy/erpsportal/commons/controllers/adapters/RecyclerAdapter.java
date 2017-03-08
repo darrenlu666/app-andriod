@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 有加载更多的RecyclerView的适配器
  * Created by gujiajia on 2015/12/21.
  */
 public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends RecyclerView.Adapter {
@@ -61,7 +62,7 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
     }
 
     /**
-     *
+     * 更新跨度抬头
      * @return whether updated
      */
     public boolean updateSpanSizeLookup() {
@@ -83,6 +84,10 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
         }
     }
 
+    /**
+     * 添加滑动监听
+     * @param recyclerView 回收器组件
+     */
     private void addOnScrollListenerToRecyclerView(RecyclerView recyclerView) {
         final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -118,6 +123,10 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
         mList = infoList;
     }
 
+    /**
+     * 增加一个列表的数据项
+     * @param infoList 数据项列表
+     */
     public void addData(List<T> infoList) {
         if (mList != null) {
             mList.addAll(infoList);
@@ -126,11 +135,27 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
         }
     }
 
+    /**
+     * 添加项
+     * @param info 项
+     */
     public void addItem(T info) {
         if (mList == null) {
             mList = new ArrayList<>();
         }
         mList.add(info);
+    }
+
+    /**
+     * 根据位置获取项数据
+     * @param position 位置
+     * @return 项数据
+     */
+    public T obtainItem(int position) {
+        if (mList == null || position < 0 || position >= mList.size()) {
+            return null;
+        }
+        return mList.get(position);
     }
 
     @Override

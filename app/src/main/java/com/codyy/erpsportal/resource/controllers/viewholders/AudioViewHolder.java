@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingRvHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.resource.models.entities.Audio;
 import com.codyy.erpsportal.resource.models.entities.AudioEvent;
 

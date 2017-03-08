@@ -2,7 +2,6 @@ package com.codyy.erpsportal.resource.controllers.viewholders;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingRvHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -113,16 +112,5 @@ public class CommentViewHolder extends BindingRvHolder<Comment> {
         } else {
             commentDivider.setVisibility(View.VISIBLE);
         }
-    }
-
-    private static Activity scanForActivity(Context cont) {
-        if (cont == null)
-            return null;
-        else if (cont instanceof Activity)
-            return (Activity) cont;
-        else if (cont instanceof ContextWrapper)
-            return scanForActivity(((ContextWrapper) cont).getBaseContext());
-
-        return null;
     }
 }

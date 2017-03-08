@@ -11,7 +11,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
 import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
 import com.codyy.erpsportal.info.controllers.fragments.InfoListFragment.InfoViewHolder;

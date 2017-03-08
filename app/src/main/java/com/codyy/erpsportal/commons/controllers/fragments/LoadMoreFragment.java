@@ -81,6 +81,11 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
      */
     private Map<String, String> mParams;
 
+    /**
+     * 加载回调
+     */
+    private LoadedCallback mLoadedCallback;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -269,14 +274,15 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
     /**
      * 处理请求响应
      *
-     * @param response
-     * @param isRefreshing
+     * @param response 响应
+     * @param isRefreshing true刷新
      */
     private void handleNormalResponse(JSONObject response, boolean isRefreshing) {
         mAdapter.setLoading(false);
         mSwipeRefreshLayout.setRefreshing(false);
         if (checkSuccessful(response)) {
             List<T> list = getList(response);
+            int loadedFrag = 0;//是否成功加载1:成功刷新2：成功加载更多
             if (list == null || list.size() == 0) {
                 if (isRefreshing) {
                     handleEmpty();//
@@ -288,10 +294,12 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
                     mEmptyTv.setVisibility(View.GONE);
                     mAdapter.setData(list);
                     mAdapter.notifyItemRangeInserted(0, list.size());
+                    loadedFrag = 1;
                 } else {
                     mAdapter.removeItem(mAdapter.getItemCount() - 1);
                     mAdapter.addData(list);
                     mAdapter.notifyDataSetChanged();
+                    loadedFrag = 2;
                 }
             }
             //如果已经加载所有，下拉更多关闭
@@ -302,6 +310,11 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
             }
             mAdapter.notifyDataSetChanged();
             mStart = mAdapter.getItemCount();
+            if (loadedFrag == 2) {//成功加载更多
+                onRefreshSuccess();
+            } else {//成功刷新
+                onLoadMoreSuccess();
+            }
         } else {
             if (isRefreshing) {
                 handleEmpty();
@@ -310,10 +323,24 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
     }
 
     /**
+     * 刷新成功回调方法
+     */
+    protected void onRefreshSuccess() {
+        if (mLoadedCallback != null) mLoadedCallback.onRefreshSuccess();
+    }
+
+    /**
+     * 加载更多成功回调方法
+     */
+    protected void onLoadMoreSuccess() {
+        if (mLoadedCallback != null) mLoadedCallback.onLoadMoreSuccess();
+    }
+
+    /**
      * 检查请求是否成功，默认检查result字段值是否为success
      *
-     * @param response
-     * @return
+     * @param response 响应
+     * @return 响应是否成功
      */
     protected boolean checkSuccessful(JSONObject response) {
         return "success".equals(response.optString("result"));
@@ -430,4 +457,18 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
         loadData(mParams, refresh);
     }
 
+    /**
+     * 加载完成回调
+     */
+    public interface LoadedCallback{
+        /**
+         * 刷新成功回调方法
+         */
+        void onRefreshSuccess();
+
+        /**
+         * 加载更多成功回调方法
+         */
+        void onLoadMoreSuccess();
+    }
 }
