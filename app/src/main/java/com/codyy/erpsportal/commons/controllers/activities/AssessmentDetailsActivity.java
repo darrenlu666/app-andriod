@@ -9,11 +9,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.android.volley.VolleyError;
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.entities.EmumIndex;
-import com.codyy.erpsportal.commons.utils.DateUtils;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationsFragment;
@@ -294,7 +293,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
     public void EvaluationDetails() {
         Intent intent = new Intent(this, EvaluationActivity.class);
         intent.putExtra("assessmentDetails", assessmentDetails);
-        intent.putExtra("userInfo",mUserInfo);
+        intent.putExtra(Constants.USER_INFO,mUserInfo);
         intent.putExtra("type", type);
         startActivityForResult(intent, REQUEST_CODE_SET_TEACHER);
         overridePendingTransition(R.anim.slidemenu_show, R.anim.layout_hide);

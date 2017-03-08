@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.CommentAdapter;
@@ -199,7 +200,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.evaluation_details);
         mInputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         mAssessmentDetails = getIntent().getParcelableExtra("assessmentDetails");
-        userInfo = getIntent().getParcelableExtra("userInfo");
+        userInfo = getIntent().getParcelableExtra(Constants.USER_INFO);
         type = getIntent().getIntExtra("type", 0);
         init();
         mResourceDetails = new ResourceDetails();

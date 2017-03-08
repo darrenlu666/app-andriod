@@ -130,15 +130,7 @@ public abstract class BaseHttpFragment extends Fragment {
      * 请求数据
      */
     public void requestData( boolean isRefreshing) {
-        HashMap<String,String> params = getParam();
-        /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
-        if(isRefreshing){
-            params.put("start",0+"");
-            params.put("end",(sPageCount-1)+"");
-            //取消loadMore的状态
-            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(false);
-        }
-        requestData(obtainAPI(), params,isRefreshing, new BaseHttpActivity.IRequest() {
+        requestData(obtainAPI(), getParam(),isRefreshing, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 try {
@@ -172,6 +164,13 @@ public abstract class BaseHttpFragment extends Fragment {
         if (!NetworkUtils.isConnected()) {
             ToastUtil.showToast(getString(R.string.net_error));
             return;
+        }
+        /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
+        if(isRefreshing){
+            params.put("start",0+"");
+            params.put("end",(sPageCount-1)+"");
+            //取消loadMore的状态
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(false);
         }
         mSender.sendRequest(new RequestSender.RequestData(url, params, new Response.Listener<JSONObject>() {
 

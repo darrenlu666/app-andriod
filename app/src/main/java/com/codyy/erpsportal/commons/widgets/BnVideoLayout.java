@@ -41,6 +41,9 @@ public class BnVideoLayout extends FrameLayout implements BnVideoView.OnPlayingL
     }
 
     private void init(AttributeSet attrs){
+        if(isInEditMode()){
+            return;
+        }
         LayoutInflater.from(getContext()).inflate(R.layout.bn_video_layout, this, true);
     }
 
@@ -49,6 +52,9 @@ public class BnVideoLayout extends FrameLayout implements BnVideoView.OnPlayingL
         super.onFinishInflate();
         mBnVideoView = (BnVideoView) findViewById(R.id.bnVideoView);
         mHintTv = (TextView) findViewById(R.id.hintText);
+        if (isInEditMode()){
+            return;
+        }
         mBnVideoView.setPlayingListener(this);
         mBnVideoView.setErrorListener(this);
     }

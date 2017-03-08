@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -534,6 +535,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
         intent.putExtra("id", id);
         intent.putExtra("viewCount", viewCount);
         context.startActivity(intent);
+        UIUtils.addEnterAnim((Activity) context);
     }
 
     public static void start(Context context, int type, String id, int viewCount, EvaluationScore evaluationScore) {
@@ -543,6 +545,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
         intent.putExtra("viewCount", viewCount);
         intent.putExtra("score", evaluationScore);
         context.startActivity(intent);
+        UIUtils.addEnterAnim((Activity) context);
     }
 
     @Override

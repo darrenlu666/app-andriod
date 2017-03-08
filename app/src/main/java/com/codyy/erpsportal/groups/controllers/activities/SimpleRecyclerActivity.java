@@ -1,18 +1,18 @@
-package com.codyy.erpsportal.groups.controllers.fragments;
+package com.codyy.erpsportal.groups.controllers.activities;
 
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.BaseHttpFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
@@ -20,9 +20,7 @@ import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
-import com.codyy.erpsportal.onlineteach.models.entities.NetTeach;
-
-import org.apache.http.MethodNotSupportedException;
+import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,37 +28,40 @@ import java.util.List;
 import butterknife.Bind;
 
 /**
- * 适应-单个RecyclerView的Fragment场景
- * 1.下拉刷新
- * 2.为空判断EmptyView
- * Created by poe on 16-1-20.
+ * １．实现一个纯粹列表的页面
+ * 2. 带有ToolBar和返回键
+ * 3. 拥有自由切换filter功能
+ * 4. 可实现下拉刷新
+ * 5. 能够自动加载更多
+ * Created by poe on 3/6/17.
  */
-public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
-    private final static String TAG = "SimpleRecyclerFragment";
+public abstract class SimpleRecyclerActivity<T> extends BaseHttpActivity {
+    private final static String TAG = "SimpleRecyclerActivity";
     /**     * 单页最大数据请求    */
     public static final int sPageCount = 10 ;
-    @Bind(R.id.empty_view) EmptyView mEmptyView;
+    @Bind(R.id.toolbar)Toolbar mToolBar;
+    @Bind(R.id.toolbar_title)TextView mTitleTextView;
+    @Bind(R.id.empty_view)  EmptyView mEmptyView;
+    @Bind(R.id.drawer_videoMeeting)  DrawerLayout mDrawerLayout;
     @Bind(R.id.refresh_layout)RefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view)SimpleRecyclerView mRecyclerView;
     public List<T> mDataList = new ArrayList<>();
     protected BaseRecyclerAdapter<T,BaseRecyclerViewHolder<T>> mAdapter ;
-    public int mTotal = 0;//总数据量
     public abstract SimpleRecyclerDelegate<T> getSimpleRecyclerDelegate();
 
     @Override
     public int obtainLayoutId() {
-        return R.layout.fragment_single_recycleview;
+        return R.layout.activity_single_recycler_view;
     }
 
     @Override
     public String obtainAPI() {
         if(getSimpleRecyclerDelegate() == null){
-            throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
+            throw new IllegalAccessError("method {@link　SimpleRecyclerDelegate} has not implemented !");
         }
         return getSimpleRecyclerDelegate().obtainAPI();
     }
 
-    /**请求数据传递的参数**/
     @Override
     public HashMap<String, String> getParam() {
         if(getSimpleRecyclerDelegate() == null){
@@ -69,8 +70,90 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
         return getSimpleRecyclerDelegate().getParams();
     }
 
+    /**获取参数配置　before {#init()} **/
+    public abstract  void preInitArguments();
+    /** 设置标题 **/
+    public void setTitle(String title) {
+        if(null != mTitleTextView && !TextUtils.isEmpty(title)){
+            mTitleTextView.setText(title);
+        }
+    }
+
     @Override
-    public void onSuccess(JSONObject response,boolean isRefreshing) {
+    public void init() {
+        if(getSimpleRecyclerDelegate() == null){
+            throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
+        }
+        preInitArguments();
+        initToolbar(mToolBar);
+        mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
+            @Override
+            public void onReloadClick() {
+                mEmptyView.setLoading(true);
+                requestData(true);
+            }
+        });
+        Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
+        mRecyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
+        mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();
+            }
+        });
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<T>>() {
+            @Override
+            public BaseRecyclerViewHolder<T> createViewHolder(ViewGroup parent, int viewType) {
+                return getSimpleRecyclerDelegate().getViewHolder(parent);
+            }
+
+            @Override
+            public int getItemViewType(int position) {
+                return 0;
+            }
+        });
+        mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
+            @Override
+            public void onMoreData() {
+                requestData(false);
+            }
+        });
+        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<T>() {
+            @Override
+            public void onItemClicked(View v, int position, T data) {
+                if(getSimpleRecyclerDelegate() == null){
+                    throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
+                }
+                getSimpleRecyclerDelegate().OnItemClicked(v,position,data);
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
+        this.enableLoadMore(mRecyclerView,false);
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+                supportInvalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                supportInvalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                supportInvalidateOptionsMenu();
+            }
+        });
+    }
+
+    @Override
+    public void onSuccess(JSONObject response, boolean isRefreshing) throws Exception {
         Cog.d(TAG , response.toString());
         if(getSimpleRecyclerDelegate() == null){
             throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
@@ -103,7 +186,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(VolleyError error) throws Exception {
         if(null == mRecyclerView || null == mRefreshLayout) return;
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -119,77 +202,11 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
             mEmptyView.setVisibility(View.GONE);
         }
     }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if(getSimpleRecyclerDelegate() == null){
-            throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
-        }
-        mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
-            @Override
-            public void onReloadClick() {
-                mEmptyView.setLoading(true);
-                requestData(true);
-            }
-        });
-        Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-        mRecyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
-        mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.main_color));
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh();
-            }
-        });
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<T>>() {
-            @Override
-            public BaseRecyclerViewHolder<T> createViewHolder(ViewGroup parent, int viewType) {
-                return getSimpleRecyclerDelegate().getViewHolder(parent);
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                return 0;
-            }
-        });
-        mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
-            @Override
-            public void onMoreData() {
-                requestData(false);
-            }
-        });
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<T>() {
-            @Override
-            public void onItemClicked(View v, int position, T data) {
-                if(getSimpleRecyclerDelegate() == null){
-                    throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
-                }
-                getSimpleRecyclerDelegate().OnItemClicked(v,position,data);
-            }
-        });
-        mRecyclerView.setAdapter(mAdapter);
-        this.enableLoadMore(mRecyclerView,false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Cog.i(TAG,"onActivityCreated ~ ");
-    }
-
-    /** * 初始化数据 */
-    public void initData(){
-        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
-        requestData(true);
-    }
     /**
      * 下拉刷新
      */
     public void refresh() {
         if(null == mRecyclerView ) return;
-        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         mRecyclerView.setRefreshing(true);
         mAdapter.setHasMoreData(false);
         requestData(true);

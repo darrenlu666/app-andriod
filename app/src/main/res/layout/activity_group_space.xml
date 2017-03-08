@@ -8,7 +8,7 @@
         android:fitsSystemWindows="true"
         android:background="@color/white"
         >
-        <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/toolbar_layout"/>
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"

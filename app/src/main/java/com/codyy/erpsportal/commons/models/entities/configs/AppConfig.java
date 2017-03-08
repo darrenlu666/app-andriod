@@ -718,7 +718,7 @@ public class AppConfig {
             return;
         }
         if (jumper == null) {
-            ToastUtil.showToast(EApplication.instance(), String.format(EApplication.instance().getString(R.string.title_function_no_imp), "模块"));
+//            ToastUtil.showToast(EApplication.instance(), String.format(EApplication.instance().getString(R.string.title_function_no_imp), "模块"));
         } else {
             jumper.jump(context);
         }

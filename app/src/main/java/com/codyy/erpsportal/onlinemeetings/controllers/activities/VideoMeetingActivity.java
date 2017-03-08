@@ -86,7 +86,7 @@ public class VideoMeetingActivity extends BaseHttpActivity{
         /** 解决自动销毁fragment->onDestroyView的问题**/
         mViewPager.setOffscreenPageLimit(3);
         addFilterFragment();
-        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
