@@ -106,11 +106,12 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <activity
-            android:name=".info.controllers.activities.InfoActivity"
+            android:name=".info.controllers.activities.InfoDeleteActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_main"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".commons.controllers.activities.CollectivePrepareLessonsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -127,18 +128,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".commons.controllers.activities.LiveClassActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme" />
-        <activity
-            android:name=".commons.controllers.activities.HomeWorkActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
-            android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".commons.controllers.activities.HomeWorkNewActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -198,9 +187,6 @@
             android:name=".commons.controllers.activities.EvaluationAllActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".commons.controllers.activities.RemoteDirectorListActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".commons.controllers.activities.RemoteDirectorNewActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -255,9 +241,6 @@
         <activity
             android:name=".statistics.controllers.activities.StatisticalActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".commons.controllers.activities.RemoteDirectorListForClassActivity"
-            android:label="@string/title_activity_statistical" />
         <activity
             android:name=".statistics.controllers.activities.OrgStatActivity"
             android:screenOrientation="portrait" />

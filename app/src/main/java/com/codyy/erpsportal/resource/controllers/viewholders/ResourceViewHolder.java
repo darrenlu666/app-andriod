@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.erpsportal.resource.utils.DraweeViewUtils;

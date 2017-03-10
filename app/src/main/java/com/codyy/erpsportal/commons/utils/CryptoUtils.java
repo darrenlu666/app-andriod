@@ -143,6 +143,7 @@ public class CryptoUtils {
     }
 
     public static String encryptText(String text) {
+        Cog.d(TAG, "encryptText src=", text);
         PublicKey publicKey = loadPublicKey(RSA_PUBLIC_KEY);
         if (publicKey == null) {
             throw new IllegalStateException("Can not load public key!");

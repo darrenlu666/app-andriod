@@ -255,7 +255,7 @@ public class CacheResourceActivity extends BaseHttpActivity implements Handler.C
     private void tryToLoadData() {
         if (BNAVFramework.isInited()) {
             LoadingDialog loadingDialog = (LoadingDialog) getSupportFragmentManager().findFragmentByTag("loading");
-            if (loadingDialog != null && loadingDialog.getDialog() != null && loadingDialog.getDialog().isShowing()) {
+            if (loadingDialog != null) {
                 loadingDialog.dismiss();
             }
             loadData();

@@ -32,7 +32,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.filters.BaseFilterFrag
 import com.codyy.erpsportal.commons.controllers.fragments.filters.NetTeachFilterFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingCommonRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
 import com.codyy.erpsportal.commons.models.Jumpable;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -155,7 +155,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
         mDrawerLayout.addDrawerListener(mDrawerListener);
 //        mLiveFilterFragment = (LiveFilterFragment) getSupportFragmentManager().findFragmentByTag("class_tour_filter");
         createFilter();
-        loadData(true);
+        loadData();
     }
 
     /**
@@ -202,7 +202,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     public void onFilterBtnClick(View view) {
         if (mFilterBtn.isFiltering()) {
             mBundleFilter = mFilterFragment.getFilterData();
-            loadData(true);
+            loadData();
             mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
             mDrawerLayout.openDrawer(GravityCompat.END);
@@ -256,11 +256,11 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     }
 
     //default search
-    private void loadData(final boolean refresh) {
+    private void loadData() {
         if (mBundleFilter != null) {
-            loadData(refresh, obtainParam("areaId"), obtainParam("directSchoolId"), obtainParam("class"), obtainParam("subject"), mBundleFilter.getBoolean("hasDirect"));
+            loadData(obtainParam("areaId"), obtainParam("directSchoolId"), obtainParam("class"), obtainParam("subject"), mBundleFilter.getBoolean("hasDirect"));
         } else {
-            loadData(refresh, null, null, null, null, false);
+            loadData(null, null, null, null, false);
         }
     }
 
@@ -270,15 +270,13 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
     /**
      * 加载课堂巡视
-     *
-     * @param refresh      是否是刷新
-     * @param areaId       地区id
+     *  @param areaId       地区id
      * @param schoolId     学校id
      * @param classLevelId 年级id
      * @param subjectId    学科id
      * @param hasDirect    是否是直属
      */
-    private void loadData(final boolean refresh, String areaId, String schoolId, String classLevelId, String subjectId, boolean hasDirect) {
+    private void loadData(String areaId, String schoolId, String classLevelId, String subjectId, boolean hasDirect) {
         mLoader.addParam("uuid", mUserInfo.getUuid());
 
         if (!TextUtils.isEmpty(schoolId)) {
@@ -308,15 +306,6 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
             mLoader.addParam("directly", "true");
         }
         mLoader.loadData(true);
-    }
-
-    private void showRefreshing(final boolean refreshing) {
-        mRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mRefreshLayout.setRefreshing(refreshing);
-            }
-        });
     }
 
     @Override
@@ -396,6 +385,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
         @Bind(R.id.rl_course_tour)
         RelativeLayout mRelativeLayout;
+
         private Context mContext;
 
         public ClassroomViewHolder(View itemView) {

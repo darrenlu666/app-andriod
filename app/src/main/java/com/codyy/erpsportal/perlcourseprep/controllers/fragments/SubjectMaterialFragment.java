@@ -14,7 +14,7 @@ import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPictur
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity.OnFilterObserver;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreGridFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator.LayoutId;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.perlcourseprep.controllers.fragments.SubjectMaterialFragment.SmViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;

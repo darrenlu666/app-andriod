@@ -596,6 +596,9 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         loadTeacherRecommended(config.getBaseAreaId(), config.getSchoolId());
     }
 
+    /**
+     * 初始化标题
+     */
     private void initTitles() {
         mResTitleTv.setText(Titles.sPagetitleIndexCompositeResource);
         mLiveClassroomTv.setText(Titles.sPagetitleIndexCompositeOlclass);
@@ -615,7 +618,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
             params.put("schoolId", schoolId);
         }
         params.put("baseAreaId", areaId);
-        params.put("size", "4");
+        params.put("size", "4");//请求4个数据
         params.put("type", "composite");
         mOnLoadingCount++;
         Cog.d(TAG, "loadTeacherRecommended url=", URLConfig.MAIN_TEACHER_RECOMMENDED, params);
@@ -654,6 +657,10 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         }));
     }
 
+    /**
+     * 添加教师推荐项
+     * @param teacherObj 教师json数据
+     */
     private void addTeacher(JSONObject teacherObj) {
         View view = mInflater.inflate(R.layout.famousteacher_layout_item, mTeachersGl, false);
         SimpleDraweeView draweeView = (SimpleDraweeView) view.findViewById(R.id.famousteacher_image);

@@ -45,9 +45,9 @@ public class WifiBroadCastReceiver extends BroadcastReceiver {
             Cog.d(TAG, "wifiNet connected = ", wifiNetInfo.isConnected());
 
             if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected()) {
-                if(listener != null )listener.onWifiClose();
+                if(listener != null) listener.onWifiClose();
             } else {
-                if(listener != null )listener.onWifiOpen();
+                if(listener != null) listener.onWifiOpen();
             }
         }
     }
