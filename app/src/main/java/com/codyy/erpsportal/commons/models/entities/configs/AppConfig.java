@@ -186,6 +186,7 @@ public class AppConfig {
                     public void jump(Context context) {
                         Intent intent = new Intent(context, ClassRoomListActivity.class);
                         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, ClassRoomContants.TYPE_CUSTOM_LIVE);
+                        intent.putExtra(Constants.USER_INFO , UserInfoKeeper.obtainUserInfo());
                         context.startActivity(intent);
                     }
                 },
@@ -267,6 +268,7 @@ public class AppConfig {
                     public void jump(Context context) {
                         Intent intent = new Intent(context, ClassRoomListActivity.class);
                         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, ClassRoomContants.TYPE_LIVE_LIVE);
+                        intent.putExtra(Constants.USER_INFO , UserInfoKeeper.obtainUserInfo());
                         context.startActivity(intent);
                     }
                 },

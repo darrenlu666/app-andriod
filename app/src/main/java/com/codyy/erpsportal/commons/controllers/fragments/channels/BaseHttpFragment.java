@@ -165,6 +165,8 @@ public abstract class BaseHttpFragment extends Fragment {
             ToastUtil.showToast(getString(R.string.net_error));
             return;
         }
+
+        if(null == params) return;
         /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
         if(isRefreshing){
             params.put("start",0+"");

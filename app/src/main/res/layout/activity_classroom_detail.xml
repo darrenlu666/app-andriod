@@ -5,7 +5,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:orientation="vertical">
-
     <LinearLayout
         android:id="@+id/ll_video"
         android:layout_width="match_parent"
@@ -24,8 +23,15 @@
             android:layout_height="wrap_content"
             android:layout="@layout/layout_class_record"/>
     </LinearLayout>
+    <include
+        android:id="@+id/tab_container"
+        layout="@layout/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_video"
+        />
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/ll_title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -60,9 +66,8 @@
             android:text="@string/newest_comment"
             android:textColor="#ff444444"
             android:textSize="18sp"/>
-    </LinearLayout>
-
-    <LinearLayout
+    </LinearLayout>-->
+    <!--<LinearLayout
         android:id="@+id/ll_line"
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -82,18 +87,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
-    </LinearLayout>
-
-    <View
+    </LinearLayout>-->
+<!--    <View
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_below="@+id/ll_line"
-        android:background="@color/divide_line"/>
-
+        android:layout_below="@+id/tab_container"
+        android:background="@color/divide_line"/>-->
     <android.support.v4.view.ViewPager
-        android:id="@+id/vp_class_detail"
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/sliding_tabs"/>
+        android:layout_below="@+id/tab_container"/>
 </RelativeLayout>

@@ -6,8 +6,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.activity.ClassRecordedNoAreaActivity;
 import com.codyy.erpsportal.classroom.models.AreaRecordedDetail;
@@ -19,9 +20,7 @@ import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,21 +36,27 @@ public class AreaRecordListFragment extends LoadMoreFragment<AreaRecordedDetail.
     private String mSchoolId = "";
     private boolean mIsDirect;
     private String mUuid = "";
+    private static UserInfo mUserInfo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFrom = getArguments().getString(ARG_FROM);
-        mUuid = UserInfoKeeper.obtainUserInfo().getUuid();
-        mAreaId = UserInfoKeeper.obtainUserInfo().getBaseAreaId();
-        if (!UserInfoKeeper.obtainUserInfo().isArea()) {
-            mSchoolId = UserInfoKeeper.obtainUserInfo().getSchoolId();
+        if(null != getArguments()){
+            mFrom = getArguments().getString(ARG_FROM);
+            mUserInfo = getArguments().getParcelable(Constants.USER_INFO);
+            if(null == mUserInfo) mUserInfo =  UserInfoKeeper.obtainUserInfo();
+            mAreaId =mUserInfo.getBaseAreaId();
+            mUuid = mUserInfo.getUuid();
+            if (!mUserInfo.isArea()) {
+                mSchoolId = UserInfoKeeper.obtainUserInfo().getSchoolId();
+            }
         }
     }
 
-    public static AreaRecordListFragment newInstance(String from) {
+    public static AreaRecordListFragment newInstance(String from,UserInfo userInfo) {
         Bundle args = new Bundle();
         args.putString(ARG_FROM, from);
+        args.putParcelable(Constants.USER_INFO,userInfo);
         AreaRecordListFragment fragment = new AreaRecordListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -154,9 +159,15 @@ public class AreaRecordListFragment extends LoadMoreFragment<AreaRecordedDetail.
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {//跳转到非区域列表
-                    ClassRecordedNoAreaActivity.startActivity(mContext, data.getSchoolId(), mFrom);
+                    ClassRecordedNoAreaActivity.startActivity(mContext,mUserInfo, data.getSchoolId(), mFrom);
                 }
             });
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mUserInfo = null;
     }
 }

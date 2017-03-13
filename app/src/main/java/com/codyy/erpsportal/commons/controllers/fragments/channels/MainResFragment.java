@@ -433,7 +433,7 @@ public class MainResFragment extends Fragment {
                             .parseArray(response.optJSONArray("data"));
                     addItemsBetween(classroomList,
                             new LiveClassroomViewStuffer(getActivity(), new MainLiveClickListener(
-                                    MainResFragment.this)));
+                                    MainResFragment.this,UserInfoKeeper.obtainUserInfo())));
                 }
             }
         }, new ErrorListener() {

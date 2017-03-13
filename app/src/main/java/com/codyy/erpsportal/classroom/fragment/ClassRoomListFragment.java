@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
@@ -29,10 +31,12 @@ import java.util.Map;
  */
 public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.ListEntity, ClassRoomListFragment.ClassRoomViewHolder> {
     private String mFrom;
+    private UserInfo mUserInfo;
 
-    public static ClassRoomListFragment newInstance(String type) {
+    public static ClassRoomListFragment newInstance(String type,UserInfo userInfo) {
         Bundle args = new Bundle();
         args.putString(ClassRoomContants.FROM_WHERE_MODEL, type);
+        args.putParcelable(Constants.USER_INFO,userInfo);
         ClassRoomListFragment fragment = new ClassRoomListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -42,6 +46,8 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFrom = getArguments().getString(ClassRoomContants.FROM_WHERE_MODEL);
+        mUserInfo = getArguments().getParcelable(Constants.USER_INFO);
+        if(null == mUserInfo) mUserInfo = UserInfoKeeper.obtainUserInfo();
     }
 
     @Override
@@ -133,7 +139,11 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ClassRoomDetailActivity.startActivity(getContext(), data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
+                    if (ClassRoomContants.TYPE_CUSTOM_LIVE.equals(mFrom)) {
+                        CustomLiveDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
+                    }else{
+                        ClassRoomDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
+                    }
                 }
             });
         }
