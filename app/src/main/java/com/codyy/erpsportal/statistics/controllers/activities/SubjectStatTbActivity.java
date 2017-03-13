@@ -12,6 +12,8 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog.OnCancelListener;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
@@ -69,6 +71,8 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
 
     private Object mRequestTag = new Object();
 
+    private LoadingDialog mLoadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +106,14 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
                 .findFragmentById(R.id.fragment_stat_table);
         mTableFragment.setOnRowClickListener(this);
         mTitleTv.setText(R.string.subject_statistics);
+        mLoadingDialog = LoadingDialog.newInstance(true);
+        mLoadingDialog.setOnCancelListener(new OnCancelListener() {
+            @Override
+            public void onCancel() {
+                Cog.d(TAG, "cancel loading");
+                mRequestSender.stop(mRequestTag);
+            }
+        });
     }
 
     private void loadData() {
@@ -137,10 +149,12 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
             params.put("schoolId", mAreaInfo.getId());
         }
         putFilterParams(statFilterCarrier, params);
+        mLoadingDialog.show(getSupportFragmentManager(), "loading");
         RequestData requestData = new RequestData(url, params, new Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "+loadData response=" ,response);
+                mLoadingDialog.dismiss();
                 Gson gson = new Gson();
                 SubjectsStatResult subjectsStatResult = gson.fromJson(response.toString(), SubjectsStatResult.class);
                 if (subjectsStatResult.isResult()) {
@@ -153,6 +167,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
             @Override
             public void onErrorResponse(VolleyError error) {
                 Cog.d(TAG, "+loadData error=", error);
+                mLoadingDialog.dismiss();
                 ToastUtil.showToast(SubjectStatTbActivity.this, getString(R.string.net_error));
             }
         }, mRequestTag);
