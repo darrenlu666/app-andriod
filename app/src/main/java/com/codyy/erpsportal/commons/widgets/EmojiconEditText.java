@@ -26,7 +26,7 @@ import com.codyy.erpsportal.R;
 /**
  * @author Hieu Rocker (rockerhieu@gmail.com).
  */
-public class EmojiconEditText extends EditText {
+public class EmojiconEditText extends android.support.v7.widget.AppCompatEditText {
     private int mEmojiconSize;
     private boolean mUseSystemDefault = false;
 

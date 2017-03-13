@@ -99,7 +99,7 @@ public abstract class BaseFilterFragment extends Fragment implements GroupFilter
     /**
      * 用户信息
      */
-    public static UserInfo mUserInfo;
+    public  UserInfo mUserInfo;
     /**
      * 左侧筛选listview适配器的数据源
      */
