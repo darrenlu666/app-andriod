@@ -111,7 +111,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),'proguard-url.pro', 'proguard-rules.pro','proguard-fresco.pro','proguard-eventbus.pro','proguard-butterknife.pro','proguard-mupdf.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-url.pro', 'proguard-rules.pro', 'proguard-fresco.pro', 'proguard-eventbus.pro', 'proguard-butterknife.pro', 'proguard-mupdf.pro'
             signingConfig signingConfigs.config
             versionNameSuffix ".$BUILD_VERSION"
         }
@@ -126,7 +126,7 @@ android {
     productFlavors {
         codyyTest {
             applicationId "com.codyy.erpsportal.ct"
-            buildConfigField("String", "API_HOST", "\"http://mobile.demo.codyy.cn\"")
+            buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85\"")
         }
 
         train {
@@ -158,7 +158,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.nineoldandroids:library:2.4.0'
     compile project(':library-viewpager-indicator')
-    compile project(':pullToRefreshLib')
     compile project(':albumlibrary')
     compile 'com.android.support:multidex:1.0.1'
     compile project(':CalendarListviewLibrary')

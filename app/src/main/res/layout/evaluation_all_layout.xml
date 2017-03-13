@@ -27,8 +27,8 @@
             android:textSize="@dimen/layout_title_text_size" />
     </RelativeLayout>
 
-    <include
-        layout="@layout/listview_layout"
+    <FrameLayout
+        android:id="@+id/comment_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

@@ -73,4 +73,15 @@ public class RefreshEntity implements Parcelable {
         this.position = in.readInt();
     }
 
+    public static final Creator<RefreshEntity> CREATOR = new Creator<RefreshEntity>() {
+        @Override
+        public RefreshEntity createFromParcel(Parcel source) {
+            return new RefreshEntity(source);
+        }
+
+        @Override
+        public RefreshEntity[] newArray(int size) {
+            return new RefreshEntity[size];
+        }
+    };
 }

@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -27,7 +28,7 @@ import java.util.Map;
 /**
  * Created by kmdai on 15-12-21.
  */
-public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragment implements RefreshRecycleView.OnStateChangeLstener, EmptyView.OnReloadClickListener {
+public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragment implements RefreshRecycleView.OnStateChangeLstener {
     /**
      * 下拉刷新
      */
@@ -38,7 +39,7 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
     public static final int STATE_ON_UP_REFRESH = 0x0c02;
     private RequestSender mRequestSender;
     protected RefreshRecycleView mRefreshRecycleView;
-    protected EmptyView mEmptyView;
+    protected TextView mEmptyView;
     private View mRootView;
     protected List<T> mDatas;
     protected RefreshBaseAdapter<T> mRefreshBaseAdapter;
@@ -84,8 +85,13 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
         super.onViewCreated(view, savedInstanceState);
         mRefreshRecycleView = (RefreshRecycleView) view.findViewById(R.id.fragment_refresh_refreshview);
         mRefreshRecycleView.setOnStateChangeLstener(this);
-        mEmptyView = (EmptyView) view.findViewById(R.id.fragment_refresh_emptyview);
-        mEmptyView.setOnReloadClickListener(this);
+        mEmptyView = (TextView) view.findViewById(R.id.fragment_refresh_emptyview);
+        mEmptyView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRefresh();
+            }
+        });
         if (mRefreshRecycleView.getAdapter() == null) {
             mRefreshRecycleView.setAdapter(mRefreshBaseAdapter);
         }
@@ -106,7 +112,6 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
         }
         if (mDatas == null || mDatas.size() <= 0) {
             mEmptyView.setVisibility(View.VISIBLE);
-            mEmptyView.setLoading(false);
         } else {
             mEmptyView.setVisibility(View.GONE);
         }
@@ -170,10 +175,6 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
         }, mHashTag));
     }
 
-    @Override
-    public void onReloadClick() {
-        onRefresh();
-    }
 
     protected void setLastViewState(boolean flag) {
         mRefreshRecycleView.setLastVisibility(flag);
@@ -182,9 +183,7 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
     @Override
     public void onRefresh() {
         if (mURL != null) {
-            if (mEmptyView.isShown()) {
-                mEmptyView.setLoading(true);
-            }
+            mRefreshRecycleView.setRefreshing(true);
             httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
         } else {
             mRefreshRecycleView.postDelayed(new Runnable() {
