@@ -113,14 +113,13 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
             mStatFilterCarrier.setEndDate(
                     localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
         }
-//        StatFilterCarrier statFilterCarrier = new StatFilterCarrier();
-//        statFilterCarrier.setStartDate(
-//                localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
-//        statFilterCarrier.setEndDate(
-//                localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
         loadData( mStatFilterCarrier);
     }
 
+    /**
+     * 加载数据
+     * @param statFilterCarrier 统计筛选参数
+     */
     private void loadData(StatFilterCarrier statFilterCarrier) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
@@ -182,6 +181,10 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
         }
     }
 
+    /**
+     * 填充表数据
+     * @param courseProfilesResult 学科统计请求结果数据
+     */
     private void setTableData(SubjectsStatResult courseProfilesResult) {
         mStatEntities = courseProfilesResult.getStatEntities();
         StatTableModel<StatRow> statTableModel = new StatTableModel<>();
@@ -212,7 +215,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
                 ));
             }
             if (mStatEntities != null && mStatEntities.get(0) != null
-                    && mStatEntities.get(0).getAreaType().equals("school")) {
+                    && mStatEntities.get(0).getAreaType().equals("school")) {//如果是学校第一列显示5个字
                 statTableModel.setEms(5);
             }
         }
