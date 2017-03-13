@@ -2,6 +2,7 @@ package com.codyy.erpsportal.commons.controllers.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
@@ -37,61 +37,51 @@ import com.codyy.erpsportal.commons.widgets.MyDialog;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
+import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentMoreViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.ReplyCommentViewHolder;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
 import butterknife.Bind;
 
 /**
  * 评论页面
  * 单独的 首页-专递课堂-详情-评论
- * Created by poe on 2016/6/16.
+ * Created by poe on 2017/03/0                                                                             7.
  */
-public class CustomCommentFragment extends BaseHttpFragment implements BlogComposeView.OnComposeOperationDelegate {
-    public static final String TAG = "CustomCommentFragment";
+// TODO: 3/7/17 １．支持自定义URL
+// TODO: 3/7/17 2. 实现{@link SimpleRecyclerDelegate}
+// TODO: 3/7/17 3. api接口　与　params 请求拆分　＞＞　．　
+public abstract class BaseCommentFragment<T extends BaseComment> extends BaseHttpFragment implements BlogComposeView.OnComposeOperationDelegate {
+    public static final String TAG = "BaseCommentFragment";
     public final static int ITEM_TYPE_FIRST_LEVEL = 0x01;//一级评论
     public final static int ITEM_TYPE_FIRST_LEVEL_MORE = 0x02;//一级更多
     public final static int ITEM_TYPE_SECOND_LEVEL = 0x03;//二级评论回复
     public final static int ITEM_TYPE_SECOND_LEVEL_MORE = 0x04;//二级更多
+
     @Bind(R.id.recycler_view)SimpleRecyclerView mRecyclerView;
     @Bind(R.id.refresh_layout)RefreshLayout mRefreshLayout;
     @Bind(R.id.tv_comment_count)TextView mAllCommentCountTv;//全部评论数
-    private BlogComposeView mComposeView;
-    private BaseRecyclerAdapter<BaseTitleItemBar, BaseRecyclerViewHolder<BaseTitleItemBar>> mAdapter;
-    private LinkedList<BaseTitleItemBar> mData = new LinkedList<>();
+
+    private BaseRecyclerAdapter<T, BaseRecyclerViewHolder<T>> mAdapter;
+    protected LinkedList<T> mData = new LinkedList<>();
     private InputMethodManager mInputManager;
     private boolean mIsSecondReply = false;//是否回复某条评论 .
     private BaseComment mTempBlog; //被回复的对象.
     private int mCommentCount = 0;//1级评论总数
     private CommentButton mSendComment;
     private EmojiconEditText mInputEditText;
-    private String mid;
-    private int type;
-    boolean isComment;
-    private IBlogComposeView mBlogComposeViewInterface;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
-        mid = bundle.getString("mid");
-        type = bundle.getInt("type");
-        isComment = bundle.getBoolean("isComment", true);
-        mBlogComposeViewInterface = (IBlogComposeView) getActivity();
-        if (null != mBlogComposeViewInterface) {
-            mComposeView = mBlogComposeViewInterface.getBlogComposeView();
-        }
-    }
+    /** 获取评论接口　**/
+    public abstract BlogComposeView getComposeView();
+    /** 获取评论类的代理 **/
+    public abstract BaseCommentDelegate<T> getBaseCommentDelegate();
 
     @Override
     public int obtainLayoutId() {
@@ -100,113 +90,35 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
 
     @Override
     public String obtainAPI() {
-        String url = "";
-        switch (type) {
-            case ActivityThemeActivity.PREPARE_LESSON://集体备课
-            case ActivityThemeActivity.INTERACT_LESSON://互动听课
-                url = URLConfig.GET_COMMENT_NETTEACH;
-                break;
-            case ActivityThemeActivity.EVALUATION_LESSON://评课议课
-                url = URLConfig.GET_COMMENT_LSIT;
-                mComposeView.setVisibility(View.GONE);
-                break;
-            case ActivityThemeActivity.DELIVERY_CLASS://专递课堂
-                url = URLConfig.GET_SCHEDULE_COMMENTLIST;
-                break;
-            case ActivityThemeActivity.LIVE_APPOINTMENT://直录播课堂
-                url = URLConfig.GET_LIVE_APPOINTMENT_COMMENT;
-                break;
-        }
-        return url;
+        if(null == getBaseCommentDelegate() )
+            throw  new IllegalAccessError("the activity must impements {@link BaseCommentDelegate}");
+        return getBaseCommentDelegate().getParentDelegate().obtainAPI();
     }
 
     @Override
     public HashMap<String, String> getParam() {
-        int start = CommentUtils.getFirstCommentCount(mData);
-        HashMap<String, String> data = new HashMap<>();
-        if (mUserInfo != null) {
-            data.put("uuid", mUserInfo.getUuid());
-        }
-        switch (type) {
-            case ActivityThemeActivity.PREPARE_LESSON:
-                data.put("meetingId", mid);
-                data.put("meetType", "PREPARE_LESSON");
-                break;
-            case ActivityThemeActivity.INTERACT_LESSON:
-                data.put("meetingId", mid);
-                data.put("meetType", "INTERACT_LESSON");
-                break;
-            case ActivityThemeActivity.EVALUATION_LESSON:
-                data.put("evaluationId", mid);
-                data.put("meetType", "EVALUATON");
-                break;
-            case ActivityThemeActivity.DELIVERY_CLASS:
-                data.put("scheduleDetailId", mid);
-                break;
-            case ActivityThemeActivity.LIVE_APPOINTMENT:
-                data.put("liveAppointmentId", mid);
-                break;
-        }
-        data.put("start", "" + start);
-        data.put("end", "" + (start != 0 ? (start + sPageCount - 1) : 3));
-        return data;
+        if(null == getBaseCommentDelegate() )
+            throw  new IllegalAccessError("the activity must impements {@link BaseCommentDelegate}");
+        return getBaseCommentDelegate().getParentDelegate().getParams();
     }
 
     @Override
     public void onSuccess(JSONObject response,boolean isRefreshing) {
         Cog.d(TAG, response.toString());
+        if(null == getBaseCommentDelegate() )
+            throw  new IllegalAccessError("the activity must impements {@link BaseCommentDelegate}");
         if (null == mRecyclerView) return;
         if(isRefreshing) mData.clear();
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
-        if (null != response) {
-            BaseCommentParse parse = new Gson().fromJson(response.toString(), BaseCommentParse.class);
-            mCommentCount = parse.getTotal();
-            if (null != parse && parse.getCommentList() != null) {
-                List<BaseComment> commentList = parse.getCommentList();
-                if(commentList.size()!= mCommentCount){
-                    mCommentCount = commentList.size();
-                }
-                if (null != commentList && commentList.size() > 0) {
-
-                    for (BaseComment bc : commentList) {
-                        bc.setBaseViewHoldType(ITEM_TYPE_FIRST_LEVEL);
-                        mData.add(bc);
-                        //二级 ?
-                        if (bc.getReplyList() != null && bc.getReplyList().size() > 0) {
-                            //有二级数据
-                            for (BaseComment replyComment : bc.getReplyList()) {
-                                replyComment.setBaseViewHoldType(ITEM_TYPE_SECOND_LEVEL);
-                                mData.add(replyComment);
-                            }
-                            //二级更多.不足4条则说明没有更多评论，否则尝试加载工多...
-                            if (bc.getReplyList().size() >= 5) {
-                                BaseComment second = new BaseComment();
-                                second.setBaseViewHoldType(ITEM_TYPE_SECOND_LEVEL_MORE);
-                                second.setParentCommentId(bc.getCommentId());
-                                second.setCommentContent("更多");
-                                second.setCommentId(CommentUtils.getSecondMoreId(bc.getCommentId()));
-                                mData.add(second);
-                            }
-                        }
-                    }
-
-                    //1.3 评论数
-
-                    mAllCommentCountTv.setText("(" + mCommentCount + ")");
-                    if (commentList.size() < mCommentCount) {
-                        BaseComment more = new BaseComment();
-                        more.setBaseViewHoldType(ITEM_TYPE_FIRST_LEVEL_MORE);
-                        more.setCommentContent("更多");
-                        more.setCommentId(CommentUtils.getFirstMoreId(mid));
-                        mData.add(more);
-                    }
-                    mAdapter.setData(mData);
-                }
-            }
-        }
+        //parse data
+        getBaseCommentDelegate().getParentDelegate().parseData(response, mData);
+        //判断是否有更多放到接口实现中去处理.
+        //1.3 评论数
+        mAllCommentCountTv.setText("(" + mCommentCount + ")");
+        mAdapter.setData(mData);
         hideMore();
     }
 
@@ -226,9 +138,9 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         super.onViewLoadCompleted();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mInputManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        mInputEditText = mComposeView.getEtText();
-        mSendComment = mComposeView.getBtnSend();
-        mComposeView.setOperationDelegate(this);
+        mInputEditText = getComposeView().getEtText();
+        mSendComment = getComposeView().getBtnSend();
+        getComposeView().setOperationDelegate(this);
         setAdapter();
         UiMainUtils.setDrawableLeft(mSendComment, R.drawable.ic_message_count, mCommentCount > 9999 ? "9999" : (mCommentCount + ""));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -243,8 +155,8 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         mRefreshLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (mComposeView.isKeyboardVisible() || mComposeView.isEmojiVisible()) {
-                    mComposeView.hideEmojiOptAndKeyboard();
+                if (getComposeView().isKeyboardVisible() || getComposeView().isEmojiVisible()) {
+                    getComposeView().hideEmojiOptAndKeyboard();
                 }
                 return false;
             }
@@ -254,7 +166,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         requestData(true);
     }
 
-    private void clickItem(BaseComment blogComment) {
+   /* private void clickItem(BaseComment blogComment) {
         Cog.i(TAG, "clicked item ~");
         if (mUserInfo.getBaseUserId().equals(blogComment.getBaseUserId())) {
             //delete options .
@@ -270,14 +182,14 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
             mInputEditText.requestFocus();
             mIsSecondReply = true;
         }
-    }
+    }*/
 
     /**
      * 删除自己发表的评论
      *
      * @param blogComment 自己发表的评论
      */
-    private void makeSureDeleteDialog(final BaseComment blogComment) {
+    public void makeSureDeleteDialog(final BaseComment blogComment) {
         MyDialog dialog = MyDialog.newInstance("确定删除？", MyDialog.DIALOG_STYLE_TYPE_0, new MyDialog.OnclickListener() {
             @Override
             public void leftClick(MyDialog myDialog) {
@@ -300,7 +212,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     }
 
     private void setAdapter() {
-        mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<BaseTitleItemBar>>() {
+        mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<T>>() {
             @Override
             public BaseRecyclerViewHolder createViewHolder(ViewGroup parent, int viewType) {
                 BaseRecyclerViewHolder viewHolder = null;
@@ -310,13 +222,15 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                                 inflate(R.layout.item_blog_detail_more, parent, false));
                         break;
                     case ITEM_TYPE_FIRST_LEVEL:
-                        viewHolder = new CommentViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.item_blog_comment, parent, false),
-                                type == ActivityThemeActivity.EVALUATION_LESSON);//当前是评课议课时则隐藏回复
+//                        viewHolder = new CommentViewHolder(LayoutInflater.from(parent.getContext())
+//                                .inflate(R.layout.item_blog_comment, parent, false),
+//                                type == ActivityThemeActivity.EVALUATION_LESSON);//当前是评课议课时则隐藏回复
+                        getBaseCommentDelegate().getParentDelegate().getViewHolder(parent);
                         break;
                     case ITEM_TYPE_SECOND_LEVEL:
-                        viewHolder = new ReplyCommentViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),
-                                R.layout.item_blog_comment_child));
+                        /*viewHolder = new ReplyCommentViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),
+                                R.layout.item_blog_comment_child));*/
+                        viewHolder = getBaseCommentDelegate().getChildrenDelegate().getViewHolder(parent);
                         break;
                     case ITEM_TYPE_SECOND_LEVEL_MORE:
                         viewHolder = new CommentMoreViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
@@ -332,13 +246,13 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
             }
         });
 
-        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<BaseTitleItemBar>() {
+        mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<T>() {
             @Override
-            public void onItemClicked(View v, int position, BaseTitleItemBar data) {
-                BaseComment bc = (BaseComment) data;
+            public void onItemClicked(View v, int position, T data) {
+                BaseComment bc = data;
                 switch (mAdapter.getItemViewType(position)) {
                     case ITEM_TYPE_FIRST_LEVEL://一级
-                        if (v.getId() == R.id.sdv_pic) {
+                        /*if (v.getId() == R.id.sdv_pic) {
                             if (!UserInfo.USER_TYPE_AREA_USER.equals(bc.getUserType()) && !UserInfo.USER_TYPE_SCHOOL_USER.equals(bc.getUserType())) {
                                 //1.自己的信息跳转到首页-"我的"
                                 if (bc.getBaseUserId().equals(mUserInfo.getBaseUserId())) {
@@ -351,10 +265,12 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                             }
                         } else {
                             clickItem(bc);
-                        }
+                        }*/
+                        getBaseCommentDelegate().getParentDelegate().OnItemClicked(v,position,data);
                         break;
                     case ITEM_TYPE_SECOND_LEVEL://二级
-                        clickItem(bc);
+                        getBaseCommentDelegate().getChildrenDelegate().OnItemClicked(v,position,data);
+//                        clickItem(bc);
                         break;
                     case ITEM_TYPE_FIRST_LEVEL_MORE://一级更多
                         //load more ...
@@ -393,23 +309,17 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
      * @param blogCommentId 父类id
      */
     private void loadSecondCommentMore(final String blogCommentId) {
-        int start = CommentUtils.getReplyCount(blogCommentId, mData);
-        HashMap<String, String> data = new HashMap<>();
-        if (mUserInfo != null) {
-            data.put("uuid", mUserInfo.getUuid());
-        }
-        if (null != blogCommentId)
-            data.put("commentId", blogCommentId);
-        data.put("start", "" + start);
-        data.put("end", "" + (start + sPageCount - 1));
+//        int start = getReplyCount(blogCommentId, mData);
+        HashMap<String, String> data = getBaseCommentDelegate().getChildrenDelegate().getParams();
 
-        requestData(URLConfig.GET_BLOG_SECOND_COMMENT_LIST, data,false, new BaseHttpActivity.IRequest() {
+        requestData(getBaseCommentDelegate().getChildrenDelegate().obtainAPI(), data,false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, response.toString());
                 if (null == mRecyclerView) return;
-                if(isRefreshing) mData.clear();
+
                 refreshSecondLevel(blogCommentId, response);
+
             }
 
             @Override
@@ -425,37 +335,10 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
      * @param comment 评论
      */
     private void sendComment(final String comment) {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("uuid", mUserInfo.getUuid());
-        String url = "";
-        switch (type) {
-            case ActivityThemeActivity.PREPARE_LESSON://集体备课
-            case ActivityThemeActivity.INTERACT_LESSON://互动听课
-                url = URLConfig.ADD_COMMENT_LECTURE;
-                data.put("meetingId", mid);
-                data.put("comment", comment);
-                break;
-            case ActivityThemeActivity.EVALUATION_LESSON://评课议课　
-                url = URLConfig.ADD_COMMENT_EVA;
-                data.put("evaluationId", mid);
-                data.put("commentContent", comment);
-                break;
-            case ActivityThemeActivity.DELIVERY_CLASS://专递课堂
-                url = URLConfig.ADD_SCHEDULE_COMMENT;
-                data.put("scheduleDetailId", mid);
-                data.put("commentContent", comment);
-                break;
-            case ActivityThemeActivity.LIVE_APPOINTMENT://名校网络课堂
-                url = URLConfig.ADD_LIVE_APPOINTMENT_COMMENT;
-                data.put("liveAppointmentId", mid);
-                data.put("commentContent", comment);
-                break;
-        }
-
-        requestData(url, data, false,new BaseHttpActivity.IRequest() {
+        requestData(getBaseCommentDelegate().sendCommentDelegate().obtainAPI(), getBaseCommentDelegate().sendCommentDelegate().getParams(), false,new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
-                if (null != response && "success".equals(response.optString("result"))) {
+                /*if (null != response && "success".equals(response.optString("result"))) {
                     Cog.d(TAG, response.toString());
                     String message = response.optString("message");
                     ToastUtil.showToast(TextUtils.isEmpty(message) ? "评论成功！" : message);
@@ -471,11 +354,13 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                     blogComment.setBaseViewHoldType(ITEM_TYPE_FIRST_LEVEL);
                     blogComment.setHeadPic(mUserInfo.getHeadPic());
 
-                    mData.add(0, blogComment);
+                    mData.add(0, (T)blogComment);
                     mAdapter.setData(mData);
                     //更新comment数
                     mCommentCount++;
-                }
+                }*/
+                getBaseCommentDelegate().sendCommentDelegate().parseData(response,mData);
+                mAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -492,19 +377,20 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
      * @param blogCommentId 被回复的评论id
      */
     private void sendReplyComment(final String blogCommentId, String replyToId, final String comment) {
-        HashMap<String, String> data = new HashMap<>();
+        /*HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
         }
         data.put("meetingId", mid);
         data.put("parentCommentId", blogCommentId);
         data.put("replyToId", replyToId);
-        data.put("comment", comment);
-
-        requestData(URLConfig.ADD_COMMENT_LECTURE, data,false, new BaseHttpActivity.IRequest() {
+        data.put("comment", comment);*/
+        String url =getBaseCommentDelegate().sendReplyDelegate().obtainAPI();//URLConfig.ADD_COMMENT_LECTURE;
+        HashMap<String, String> data = getBaseCommentDelegate().sendReplyDelegate().getParams();
+        requestData(url,data,false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
-                if (null != response && "success".equals(response.optString("result"))) {
+                /*if (null != response && "success".equals(response.optString("result"))) {
                     Cog.d(TAG, response.toString());
                     String message = response.optString("message");
                     ToastUtil.showToast(TextUtils.isEmpty(message) ? "评论成功！" : message);
@@ -520,10 +406,11 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                     blogComment.setBaseViewHoldType(ITEM_TYPE_SECOND_LEVEL);
                     blogComment.setReplyName(mTempBlog.getRealName());
                     //在评论底部插入一条数据
-                    int replyCount = CommentUtils.getReplyCount(blogCommentId, mData);
-                    mData.add(CommentUtils.getPos(blogCommentId, mData) + replyCount, blogComment);
-                    mAdapter.notifyItemInserted(CommentUtils.getPos(blogCommentId, mData));
-                }
+                    int replyCount = getReplyCount(blogCommentId, mData);
+                    mData.add(getPos(blogCommentId, mData) + replyCount,(T)blogComment);
+                }*/
+                getBaseCommentDelegate().sendReplyDelegate().parseData(response,mData);
+                mAdapter.notifyItemInserted(getPos(blogCommentId, mData));
             }
 
             @Override
@@ -535,7 +422,6 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
 
     /**
      * 回复评论
-     *
      * @param blogCommentId 被回复的评论id
      */
     private void sendDeleteComment(final String blogCommentId) {
@@ -553,17 +439,16 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                     ToastUtil.showToast("删除成功！");
                     if (null == mRecyclerView) return;
                     //如果删除的是一级评论，则对应的二级评论也要干掉
-                    if (ITEM_TYPE_FIRST_LEVEL == mData.get(CommentUtils.getPos(blogCommentId, mData) - 1).getBaseViewHoldType()) {
+                    if (ITEM_TYPE_FIRST_LEVEL == mData.get(getPos(blogCommentId, mData) - 1).getBaseViewHoldType()) {
                         //迭代删除一级 及 一级以下的所有评论
-                        CommentUtils.removeFirstLevel(blogCommentId, mData);
+                        removeFirstLevel(blogCommentId, mData);
                         //更新comment数
-
                         mCommentCount--;
                         if (mCommentCount >= 0) {
                             mAllCommentCountTv.setText("(" + mCommentCount + ")");
                         }
                     } else {//二级item 则直接删除
-                        mData.remove(CommentUtils.getPos(blogCommentId, mData) - 1);
+                        mData.remove(getPos(blogCommentId, mData) - 1);
                     }
                     mAdapter.notifyDataSetChanged();
                 } else {
@@ -588,16 +473,16 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     private void refreshSecondLevel(String blogCommentId, JSONObject response) {
         BaseCommentParse parse = new Gson().fromJson(response.toString(), BaseCommentParse.class);
         if (null != parse && parse.getCommentList() != null && parse.getCommentList().size() > 0) {
-            List<BaseComment> blogList = new ArrayList<>();
-            int pos = CommentUtils.getPos(blogCommentId, mData);
+            List<T> blogList = new ArrayList<>();
+            int pos = getPos(blogCommentId, mData);
             for (BaseComment bc : parse.getCommentList()) {
                 bc.setBaseViewHoldType(ITEM_TYPE_SECOND_LEVEL);
-                blogList.add(bc);
+                blogList.add((T)bc);
             }
             mData.addAll(pos, blogList);
             mAdapter.notifyItemRangeInserted(pos, blogList.size());
         } else {
-            int pos = CommentUtils.getSecondMorePos(blogCommentId, mData);
+            int pos = getSecondMorePos(blogCommentId, mData);
             mData.remove(pos);
             mAdapter.notifyDataSetChanged();
         }
@@ -622,7 +507,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
                 mInputEditText.setText("");
             }
             //隐藏键盘
-            if (mComposeView.isKeyboardVisible()) {
+            if (getComposeView().isKeyboardVisible()) {
                 UiMainUtils.hideKeyBoard(mInputManager);
             }
         }
@@ -653,8 +538,113 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         UiMainUtils.setBlogSendText(mSendComment, "发送");
     }
 
+    /** 获取一级评论数 **/
+    public int getFirstCommentCount(LinkedList<T> data){
+        int count = 0 ;
+        for(int i = 0 ; i < data.size() ; i++){
+            String parentId = null;
+            String content = "";
+            if(data.get(i) instanceof BaseComment){
+                parentId = data.get(i).getParentCommentId();
+                content = data.get(i).getCommentContent();
+            }
+            if(TextUtils.isEmpty(parentId)){
+                if(!"更多".equals(content)){
+                    count++;
+                }
+            }
+        }
+        return  count ;
+    }
 
-    public interface IBlogComposeView {
-        BlogComposeView getBlogComposeView();
+    /** 当前的评论的二级回复总数 **/
+    public int getReplyCount(String commentId , List<T> data){
+        int count = 0 ;
+        for(int i = 0 ; i < data.size() ; i++){
+            if(data.get(i) instanceof BaseComment){
+                BaseComment ec = data.get(i);
+                if(null != data.get(i)&&null != ec.getParentCommentId() &&ec.getParentCommentId().equals(commentId)){
+                    if(!"更多".equals(ec.getCommentContent()) ){
+                        count++;
+                    }
+                }
+            }
+
+        }
+        return  count ;
+    }
+
+    public int getPos(String blogCommentId , List<T> dataList) {
+        int pos = -1 ;
+        for(int i = 0 ; i < dataList.size() ; i++){
+            if(dataList.get(i) instanceof BaseComment){
+                BaseComment bc = (BaseComment) dataList.get(i);
+                //find the position to insert .
+                if(bc.getCommentId().equals(blogCommentId)){
+                    pos = i+1 ;//下一个位置开始添加
+                    if("更多".equals(bc.getCommentContent()) && pos >0 ){
+                        pos -- ;
+                        break;
+                    }
+                }
+            }
+        }
+        return pos;
+    }
+
+    /** 删除一级评论 **/
+    public void removeFirstLevel(String blogCommentId ,List<T> dataList) {
+        List<BaseComment> deleteList = new ArrayList<>();
+        for(BaseTitleItemBar blog : dataList){
+            if(blog instanceof BaseComment){
+                BaseComment bc = (BaseComment) blog;
+                if(bc.getCommentId().equals(blogCommentId) || (bc.getParentCommentId()!=null && bc.getParentCommentId().equals(blogCommentId))){
+                    deleteList.add(bc);
+                }
+            }
+        }
+
+        if(deleteList.size()>0){
+            dataList.removeAll(deleteList);
+        }
+    }
+
+    /**
+     * 根据评论的id 获取二级评论的更多的列表.
+     * @param blogCommentId
+     * @return
+     */
+    public int getSecondMorePos(String blogCommentId ,LinkedList<T> data) {
+        int pos = -1 ;
+        for(int i = 0 ; i < data.size() ; i++){
+            String id = "";
+            //find the position to insert .
+            if(data.get(i) instanceof BaseComment){
+                id =  ((BaseComment) data.get(i)).getCommentId();
+            }
+            if(id.equals(getSecondMoreId(blogCommentId))){
+                pos = i ;
+                break;
+            }
+        }
+        return pos;
+    }
+
+    /**
+     * 制造一级评论的更多 id
+     * @return
+     */
+    public String getFirstMoreId(String blogId){
+        return "m"+blogId ;
+    }
+
+    /**
+     * 制造二级评论的更多 id
+     * @param blogCommentId
+     * @return
+     */
+    @NonNull
+    public String getSecondMoreId(String blogCommentId) {
+        return "m"+blogCommentId;
     }
 }

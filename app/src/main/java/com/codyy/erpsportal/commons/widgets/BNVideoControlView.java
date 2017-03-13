@@ -430,12 +430,11 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     }
 
     public BNVideoControlView(Context context) {
-        super(context, null, R.attr.videoControlViewStyle);
-        init(context);
+        this(context, null);
     }
 
     public BNVideoControlView(Context context, AttributeSet attrs) {
-        super(context, attrs, R.attr.videoControlViewStyle);
+        super(context, attrs, 0);
         init(context);
     }
 
