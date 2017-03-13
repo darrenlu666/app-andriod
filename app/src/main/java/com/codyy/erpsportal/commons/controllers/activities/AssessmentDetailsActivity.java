@@ -77,7 +77,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
 
     @Override
     public String obtainAPI() {
-        return URLConfig.GET_EVALUATIONDETAIL;
+        return URLConfig.GET_EVALUATION_DETAIL;
     }
 
     @Override

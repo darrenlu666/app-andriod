@@ -262,13 +262,13 @@ public class ComposeView extends LinearLayout implements View.OnClickListener, S
     private void showEmojiPanel() {
         mNeedShowEmojiOnKeyboardClosed = false;
         mLyEmoji.setVisibility(View.VISIBLE);
-        mIvEmoji.setImageResource(R.drawable.btn_emoji_pressed);
+//        mIvEmoji.setImageResource(R.drawable.ic_laugh);
     }
 
     private void hideEmojiPanel() {
         if (mLyEmoji.getVisibility() == View.VISIBLE) {
             mLyEmoji.setVisibility(View.GONE);
-            mIvEmoji.setImageResource(R.drawable.btn_emoji_selector);
+//            mIvEmoji.setImageResource(R.drawable.ic_laugh);
         }
     }
 
