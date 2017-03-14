@@ -39,6 +39,8 @@ import com.codyy.erpsportal.reservation.controllers.activities.ReservationClassA
 import com.codyy.erpsportal.reservation.controllers.activities.ReservationClassDetailActivity;
 import com.codyy.erpsportal.resource.controllers.activities.ResourcesNewActivity;
 import com.codyy.erpsportal.rethink.controllers.activities.RethinkListActivity;
+import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvHistoryActivity;
+import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvProgramListActivity;
 import com.codyy.erpsportal.statistics.controllers.activities.CoursesStatisticsActivity;
 import com.codyy.erpsportal.statistics.controllers.activities.StatisticalActivity;
 import com.codyy.erpsportal.timetable.activities.TimeTableDetailActivity;
@@ -367,29 +369,21 @@ public class AppConfig {
         //4 校园电视台
         //4.1 节目表
         schoolBroadList.add(new AppInfo(R.drawable.ic_child_area_schedule, MENUS[19], Titles.sWorkspaceTvProgramProgramList,
-                AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
+                AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
                 new Jumpable() {
                     @Override
                     public void jump(Context context) {
-                        Intent intent = new Intent(context, CountyListActivity.class);
-                        context.startActivity(intent);
+                        SchoolTvProgramListActivity.start((Activity) context,UserInfoKeeper.getInstance().getUserInfo());
                     }
                 },
                 AppInfo.CATEGORY_SINGLE_MODEL));
         //4.2 往期视频
         schoolBroadList.add(new AppInfo(R.drawable.ic_child_live_lesson, MENUS[19], Titles.sWorkspaceTvProgramReplay,
-                AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
+                AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
                 new Jumpable() {
                     @Override
                     public void jump(Context context) {
-                        UserInfo userInfo = UserInfoKeeper.getInstance().getUserInfo();
-                        if (UserInfo.USER_TYPE_SCHOOL_USER.equals(userInfo.getUserType()) || UserInfo.USER_TYPE_TEACHER.equals(userInfo.getUserType())) {
-                            Intent intent = new Intent(context, TimeTableDetailActivity.class);
-                            context.startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(context, TimeTableListActivity.class);
-                            context.startActivity(intent);
-                        }
+                        SchoolTvHistoryActivity.start((Activity) context,UserInfoKeeper.getInstance().getUserInfo());
                     }
                 },
                 AppInfo.CATEGORY_SINGLE_MODEL));

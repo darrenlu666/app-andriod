@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.groups.controllers.activities;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,11 +43,13 @@ public abstract class SimpleRecyclerActivity<T> extends BaseHttpActivity {
     @Bind(R.id.toolbar)Toolbar mToolBar;
     @Bind(R.id.toolbar_title)TextView mTitleTextView;
     @Bind(R.id.empty_view)  EmptyView mEmptyView;
-    @Bind(R.id.drawer_videoMeeting)  DrawerLayout mDrawerLayout;
-    @Bind(R.id.refresh_layout)RefreshLayout mRefreshLayout;
+    @Bind(R.id.drawer_layout)  DrawerLayout mDrawerLayout;
+    @Bind(R.id.refresh_layout) RefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view)SimpleRecyclerView mRecyclerView;
     public List<T> mDataList = new ArrayList<>();
     protected BaseRecyclerAdapter<T,BaseRecyclerViewHolder<T>> mAdapter ;
+    /**获取参数配置　before {#init()} 可进行UI初始化**/
+    public abstract  void preInitArguments();
     public abstract SimpleRecyclerDelegate<T> getSimpleRecyclerDelegate();
 
     @Override
@@ -70,8 +73,6 @@ public abstract class SimpleRecyclerActivity<T> extends BaseHttpActivity {
         return getSimpleRecyclerDelegate().getParams();
     }
 
-    /**获取参数配置　before {#init()} **/
-    public abstract  void preInitArguments();
     /** 设置标题 **/
     public void setTitle(String title) {
         if(null != mTitleTextView && !TextUtils.isEmpty(title)){

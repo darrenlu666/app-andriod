@@ -2809,6 +2809,28 @@ public class URLConfig {
     @UrlSuffix("/mobile/district/getReceiveCount.do")
     public static String GET_RECEIVE_COUNT_DETAIL;
 
+    /**
+     * 校园电视台-节目单
+     * liveDate	查询日期	string	2017-02-03
+     * schoolId	学校id	string	必填
+     * uuid	uuid	string
+     */
+    @UrlSuffix("/mobile/tvprogram/liveList.do")
+    public static String GET_SCHOOL_TV_PROGRAM_LIST;
+    /**
+     * 校园电视台-往期视频
+     * end		number
+     * orderBy	按什么排序	string	programName 节目名称；viewCnt 点击量；time 按时间
+     * orderType	排序规则	string	asc 正序； desc 倒序
+     * schoolId	学校id	number
+     * start		number
+     * uuid		string
+     */
+    @UrlSuffix("/mobile/tvProgram/getPastProgramList.do")
+    public static String GET_SCHOOL_TV_HISTORY_LIST;
+
+
+
     static {
         UrlBuilder.updateUrls();
     }

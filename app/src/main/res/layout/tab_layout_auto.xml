@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlt_tab_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+     <com.codyy.erpsportal.onlinemeetings.widgets.FixedTabLayout
+         android:id="@+id/tab_layout"
+         android:layout_height="wrap_content"
+         android:layout_width="match_parent"
+         android:background="@color/white"
+         app:tabIndicatorColor="@color/main_color"
+         app:tabIndicatorHeight="@dimen/tab_layout_select_indicator_height"
+         app:tabMode="scrollable"
+         app:tabGravity="fill"
+         />
+     <View
+         android:layout_width="match_parent"
+         android:layout_height="1px"
+         android:background="@color/divide_color"
+         android:layout_below="@id/tab_layout"
+         />
+</RelativeLayout>

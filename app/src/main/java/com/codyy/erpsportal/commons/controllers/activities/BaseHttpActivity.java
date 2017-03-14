@@ -148,6 +148,10 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
             ToastUtil.showToast(getString(R.string.net_error));
             return;
         }
+        if(null == params){
+            ToastUtil.showToast(getString(R.string.null_param_error));
+            return;
+        }
         /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
         if(isRefreshing){
             params.put("start",0+"");

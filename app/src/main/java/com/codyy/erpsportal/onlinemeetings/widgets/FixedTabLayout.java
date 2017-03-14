@@ -51,7 +51,6 @@ public class FixedTabLayout extends TabLayout{
             public void onTabUnselected(Tab tab) {
                 View customView = tab.getCustomView();
                 if(null != customView && customView.findViewById(R.id.tv_tab_item)!=null){
-//                    ((TextView)customView.findViewById(R.id.tv_tab_item)).setTextColor(UiMainUtils.getColor(R.color.gray));
                     ((TextView)customView.findViewById(R.id.tv_tab_item)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 }
             }
@@ -79,29 +78,40 @@ public class FixedTabLayout extends TabLayout{
         super.onFinishInflate();
     }
 
+    /**
+     * 20170314： 修复分割线在Mode_Scrollable模式下无法发准确画出的问题
+     * method: customView.getLeft is the padding left or right
+     * so : startX = paddingLeft + view_Width+paddingRight = customView.getLeft = customView.getRight .
+     */
     private void drawStrips() {
         int tabCount = getTabCount() ;
+        int startX = 0;
         if(tabCount > 1 && mCanvas != null ){//draw strip line .
             Paint paint = new Paint();
             int stripWidth = UIUtils.dip2px(EApplication.instance(),0.5f);
             paint.setStrokeWidth(stripWidth);
             paint.setColor(UiMainUtils.getColor(R.color.grey_divider));
-            int sWidth = getResources().getDisplayMetrics().widthPixels ;
             int height = getHeight();
             int stripHeight = UIUtils.dip2px(EApplication.instance(),18);
             int padding = (height - stripHeight)/2 ;
             int stripNum = tabCount -1 ;
             for(int i = 0 ; i < stripNum ;i++){
-                mCanvas.drawLine(sWidth*(i+1)/tabCount,padding,sWidth*(i+1)/tabCount,padding+stripHeight,paint);
+                View customView = getTabAt(i).getCustomView();
+                startX += customView.getLeft()+customView.getRight();
+                mCanvas.drawLine(startX,padding,startX,padding+stripHeight,paint);
             }
         }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Cog.i(TAG,"onDraw() getTabCount: "+getTabCount());
         super.onDraw(canvas);
         mCanvas = canvas;
         drawStrips();
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
     }
 }

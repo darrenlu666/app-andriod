@@ -734,6 +734,14 @@
             android:name=".commons.controllers.activities.LoadingUserTypeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Transparent.Darker" />
+        <activity
+            android:name=".schooltv.controllers.activities.SchoolTvProgramListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".schooltv.controllers.activities.SchoolTvHistoryActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>
