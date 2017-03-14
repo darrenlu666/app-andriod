@@ -21,10 +21,8 @@ import com.codyy.erpsportal.databinding.ContyClassdetailPopuBinding;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.timetable.models.entities.TimetableDetail;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

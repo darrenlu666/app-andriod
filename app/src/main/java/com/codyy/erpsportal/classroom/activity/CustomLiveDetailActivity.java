@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
@@ -38,6 +37,7 @@ import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.fragment.ClassDetailFragment;
 import com.codyy.erpsportal.classroom.fragment.ClassRoomCommentFragment;
+import com.codyy.erpsportal.classroom.fragment.PeopleTreeFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
@@ -62,11 +62,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * 专递课堂 直录播课堂的 直播 录播详情界面Activity
+ * 专递课堂 -直播
  * Created by ldh on 2016/6/29.
  */
-public class ClassRoomDetailActivity extends AppCompatActivity implements View.OnClickListener, ClassRoomCommentFragment.SoftInputOpenListener {
-    private static final String TAG = ClassRoomDetailActivity.class.getSimpleName();
+public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener, ClassRoomCommentFragment.SoftInputOpenListener {
+    private static final String TAG = CustomLiveDetailActivity.class.getSimpleName();
     @Bind(R.id.tab_layout)TabLayout mTabLayout;
     @Bind(R.id.view_pager)  ViewPager mViewPager;
     RelativeLayout mRlVideoList;
@@ -293,7 +293,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
             }
         });
         mVideoListIndexRcv.setAdapter(mVideoListAdapter);
-        mVideoListIndexRcv.setLayoutManager(new LinearLayoutManager(ClassRoomDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        mVideoListIndexRcv.setLayoutManager(new LinearLayoutManager(CustomLiveDetailActivity.this, LinearLayoutManager.HORIZONTAL, false));
     }
 
     private void hideVideoList() {
@@ -384,9 +384,16 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         //添加最新评论fragment
         mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
         mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
+        //v5.3.3 共xxx人观看
+        mPeopleTab = mTabLayout.newTab().setText("共0000人观看");
+        mTabLayout.addTab(mPeopleTab);
+        mFragmentList.add(PeopleTreeFragment.newInstance(mUserInfo,mScheduleDetailId));
+
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
                 mFragmentList, new String[]{getString(R.string.class_detail),getString(R.string.newest_comment)});
         mViewPager.setAdapter(mViewPagerAdapter);
+        //tips : if you do not set this attr , default only one fragment will be obtained when go to background .
+        mViewPager.setOffscreenPageLimit(2);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -412,6 +419,12 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
 
     public void onClick(View view) {
         switch (view.getId()) {
+            /*case R.id.tv_class_detail:
+                mViewPager.setCurrentItem(0);
+                break;
+            case R.id.tv_latest_comment:
+                mViewPager.setCurrentItem(1);
+                break;*/
             case R.id.iv_back:
                 if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {//直播：全屏状态下点击返回按钮时，返回竖屏
                     if (mIsExpanable) {
@@ -453,7 +466,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
      * 屏幕方向切换
      */
     private void switchWindowOrientation() {
-        Activity activity = ClassRoomDetailActivity.this;
+        Activity activity = CustomLiveDetailActivity.this;
         if (!mIsExpanable) {
             UIUtils.setLandscape(activity);
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
@@ -473,7 +486,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     }
 
     public static void startActivity(Context context,UserInfo userInfo, String scheduleDetailId, String from,String subject) {
-        Intent intent = new Intent(context, ClassRoomDetailActivity.class);
+        Intent intent = new Intent(context, CustomLiveDetailActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID, scheduleDetailId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
         intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT,subject);
@@ -482,7 +495,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     }
 
     public static void startActivity(Context context,UserInfo userInfo, String scheduleDetailId, String from, String status,String subject) {
-        Intent intent = new Intent(context, ClassRoomDetailActivity.class);
+        Intent intent = new Intent(context, CustomLiveDetailActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID, scheduleDetailId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
         intent.putExtra(ClassRoomContants.EXTRA_LIVE_STATUS, status);

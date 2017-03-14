@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
@@ -37,6 +38,7 @@ public class NoAreaRecordedListFragment extends LoadMoreFragment<NoAreaRecordedD
 
     private String mSchoolId;
     private String mFrom;
+    private static UserInfo mUserInfo;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class NoAreaRecordedListFragment extends LoadMoreFragment<NoAreaRecordedD
         if (getArguments() != null) {
             mSchoolId = getArguments().getString(ClassRoomContants.EXTRA_SCHOOL_ID);
             mFrom = getArguments().getString(ClassRoomContants.FROM_WHERE_MODEL);
+            mUserInfo = getArguments().getParcelable(Constants.USER_INFO);
         }
     }
 
@@ -149,7 +152,7 @@ public class NoAreaRecordedListFragment extends LoadMoreFragment<NoAreaRecordedD
                 @Override
                 public void onClick(View v) {
                     if (data.getVideoDeleteFlag().equals("N")) {
-                        ClassRoomDetailActivity.startActivity(mContext, data.getScheduleDetailId(), mFrom,data.getSubject());
+                        ClassRoomDetailActivity.startActivity(mContext, mUserInfo,data.getScheduleDetailId(), mFrom,data.getSubject());
                     } else {
                         ToastUtil.showToast(mContext, "资源被删除！");
                     }

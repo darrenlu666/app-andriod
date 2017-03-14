@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.commons.controllers.fragments.dialogs;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -14,6 +15,8 @@ import com.codyy.erpsportal.R;
  * Created by JiajiaGu on 2014/12/31.
  */
 public class LoadingDialog extends DialogFragment {
+
+    private OnCancelListener mOnCancelListener;
 
     public static LoadingDialog newInstance(@StringRes int resId) {
         LoadingDialog instance = new LoadingDialog();
@@ -65,10 +68,23 @@ public class LoadingDialog extends DialogFragment {
         }
     }
 
-    public boolean isShowing() {
-        if (getDialog() != null && getDialog().isShowing()) {
-            return true;
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        super.onCancel(dialog);
+        if (mOnCancelListener != null) {
+            mOnCancelListener.onCancel();
         }
-        return false;
+    }
+
+    public void setOnCancelListener(OnCancelListener onCancelListener) {
+        mOnCancelListener = onCancelListener;
+    }
+
+    public boolean isShowing() {
+        return getDialog() != null && getDialog().isShowing();
+    }
+
+    public interface OnCancelListener {
+        void onCancel();
     }
 }

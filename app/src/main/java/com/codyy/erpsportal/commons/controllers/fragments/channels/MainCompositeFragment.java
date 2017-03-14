@@ -454,7 +454,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                             mNoClassroomTv,
                             classroomList,
                             new LiveClassroomViewStuffer(getActivity(), new MainLiveClickListener(
-                                    MainCompositeFragment.this)));
+                                    MainCompositeFragment.this,UserInfoKeeper.obtainUserInfo())));
                 }
             }
         }, new ErrorListener() {

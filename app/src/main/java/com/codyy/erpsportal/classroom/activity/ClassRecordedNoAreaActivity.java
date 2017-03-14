@@ -3,10 +3,14 @@ package com.codyy.erpsportal.classroom.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.fragment.ClassFilterFragment;
 import com.codyy.erpsportal.classroom.fragment.NoAreaRecordedListFragment;
@@ -42,13 +46,16 @@ public class ClassRecordedNoAreaActivity extends TabsWithFilterActivity {
      */
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+    private UserInfo mUserInfo;
 
     private void init() {
         mTitle.setText(ClassRoomContants.FROM_WHERE_MODEL.equals(ClassRoomContants.TYPE_CUSTOM_RECORD) ?
                 Titles.sWorkspaceSpeclassLive : Titles.sWorkspaceNetClassReplay);
         mSchoolId = getIntent().getExtras().getString(ClassRoomContants.EXTRA_SCHOOL_ID);
         mFrom = getIntent().getStringExtra(ClassRoomContants.FROM_WHERE_MODEL);
-        isAreaUser = UserInfoKeeper.obtainUserInfo().isAdmin();
+        mUserInfo = getIntent().getParcelableExtra(Constants.USER_INFO);
+        if(null == mUserInfo) mUserInfo = UserInfoKeeper.obtainUserInfo();
+        isAreaUser = mUserInfo.isAdmin();
     }
 
     @Override
@@ -68,6 +75,7 @@ public class ClassRecordedNoAreaActivity extends TabsWithFilterActivity {
         Bundle bundle = new Bundle();
         bundle.putString(ClassRoomContants.EXTRA_SCHOOL_ID, mSchoolId);
         bundle.putString(ClassRoomContants.FROM_WHERE_MODEL, mFrom);
+        bundle.putParcelable(Constants.USER_INFO , mUserInfo);
         addFragment("", NoAreaRecordedListFragment.class, bundle);
     }
 
@@ -76,10 +84,11 @@ public class ClassRecordedNoAreaActivity extends TabsWithFilterActivity {
         super.initToolbar(mToolbar);
     }
 
-    public static void startActivity(Context context, String schoolId, String from) {
+    public static void startActivity(Context context, UserInfo user, String schoolId, String from) {
         Intent intent = new Intent(context, ClassRecordedNoAreaActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHOOL_ID, schoolId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
+        intent.putExtra(Constants.USER_INFO,user);
         context.startActivity(intent);
     }
 }
