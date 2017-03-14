@@ -125,7 +125,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                 5、学校管理员用户，不显示年级班级；
                 6、教师用户不显示年级班级；
                 7、家长用户所属区县、学校、年级班级显示绑定的第一个小孩属性*/
-                switch (data.getUserTypeName()){
+                switch (data.getUserType()){
                     case  UserInfo.USER_TYPE_AREA_USER:
                     case UserInfo.USER_TYPE_SCHOOL_USER:
                         //do nothing .

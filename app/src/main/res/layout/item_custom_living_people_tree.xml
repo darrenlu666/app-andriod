@@ -24,7 +24,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/sdv_group_pic"
         android:layout_marginRight="10dp"
-        tools:text="身份类型身份类型身份类型身份类型身份类型"
+        tools:text="身份类型"
+        android:gravity="right"
         android:maxLines="1"
         android:ellipsize="end"
         />

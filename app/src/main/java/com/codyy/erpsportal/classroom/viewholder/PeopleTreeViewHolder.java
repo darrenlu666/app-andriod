@@ -19,20 +19,11 @@ import butterknife.ButterKnife;
 
 public class PeopleTreeViewHolder extends BaseRecyclerViewHolder<Watcher> {
 
-    @Bind(R.id.sdv_group_pic)
-    SimpleDraweeView mSdvGroupPic;
-    @Bind(R.id.name_tv)
-    TextView mNameTv;
-    @Bind(R.id.role_tv)
-    TextView mRoleTv;
-    @Bind(R.id.tv_area)
-    TextView mTvArea;
-    @Bind(R.id.grade_class_tv)
-    TextView mGradeClassTv;
-    @Bind(R.id.rlt_container)
-    RelativeLayout mRltContainer;
-    @Bind(R.id.area_tv)
-    TextView mAreaTv;
+    @Bind(R.id.sdv_group_pic)SimpleDraweeView mSdvGroupPic;
+    @Bind(R.id.name_tv)TextView mNameTv;
+    @Bind(R.id.role_tv)TextView mRoleTv;
+    @Bind(R.id.grade_class_tv)TextView mGradeClassTv;
+    @Bind(R.id.area_tv)TextView mAreaTv;
 
     public PeopleTreeViewHolder(View itemView) {
         super(itemView);
@@ -52,23 +43,23 @@ public class PeopleTreeViewHolder extends BaseRecyclerViewHolder<Watcher> {
             mRoleTv.setText(data.getUserTypeName());
             //area+school
             StringBuilder jpsb = new StringBuilder("");
-            if(null != data.getAreaPath()){
+            if(null != data.getAreaName()){
                 String path = data.getAreaPath();
-                if(path.contains("-")){
+               /* if(path.contains("-")){
                     path = path.substring(path.lastIndexOf("-")+1);
-                }
+                }*/
                 jpsb.append(path);
-                if(!UserInfo.USER_TYPE_AREA_USER.equals(data.getUserTypeName())){
+                if(!UserInfo.USER_TYPE_AREA_USER.equals(data.getUserType())){
                     jpsb.append("-");
                 }
             }
-            if(null != data.getSchoolName()&&!UserInfo.USER_TYPE_AREA_USER.equals(data.getUserTypeName())){
+            if(null != data.getSchoolName()&&!UserInfo.USER_TYPE_AREA_USER.equals(data.getUserType())){
                 jpsb.append(data.getSchoolName());
             }
             mAreaTv.setText(jpsb.toString());
             mGradeClassTv.setText(data.getBaseClassName());
 
-            switch (data.getUserTypeName()){
+            switch (data.getUserType()){
                 case  UserInfo.USER_TYPE_AREA_USER:
                     mAreaTv.setVisibility(View.GONE);
                     mGradeClassTv.setVisibility(View.GONE);

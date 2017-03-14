@@ -7,6 +7,7 @@ import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
  * Created by poe on 17-3-13.
  */
 public class Watcher extends BaseTitleItemBar {
+    private String areaName;//单独的最小区域名
     private String areaPath;
     private String baseClassName;
     private String baseUserId;
@@ -16,6 +17,14 @@ public class Watcher extends BaseTitleItemBar {
     private String updateTime;
     private String userType;
     private String userTypeName;
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 
     public String getUserType() {
         return userType;

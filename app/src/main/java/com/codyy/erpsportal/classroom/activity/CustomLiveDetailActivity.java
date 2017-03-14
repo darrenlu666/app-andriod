@@ -75,7 +75,6 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     @Bind(R.id.view_pager)  ViewPager mViewPager;
     RelativeLayout mRlVideoList;
     TextView mTitleTv;
-    private TabLayout.Tab mPeopleTab;//总观看人数
     private UserInfo mUserInfo;//当前用户信息
     /**     * 往期录播布局     */
     private FrameLayout mFlRecordVideo;
@@ -116,13 +115,16 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
                 case  MSG_UPDATE_WATCH_COUNT:
                     try {
                         int count = (int) msg.obj;
+                        Cog.i(TAG,"update success now count : "+count);
                         if(count <0 ) return;
+                        View tabView = mTabLayout.getTabAt(2).getCustomView();
+                        TextView tv = (TextView) tabView.findViewById(R.id.tv_tab_item);
                         if (count < MAX_COUNT) {
-                            mPeopleTab.setText(count + "人观看");
+                            tv.setText(count + "人观看");
                         } else if(count%10000 == 0){
-                            mPeopleTab.setText(count/10000 + "万人观看");
+                            tv.setText(count/10000 + "万人观看");
                         }else if(count%10000 > 0){
-                            mPeopleTab.setText(count/10000 + "万+人观看");
+                            tv.setText(count/10000 + "万+人观看");
                         }
                     }catch(ClassCastException e){
                         e.printStackTrace();
@@ -407,8 +409,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
         mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
         //v5.3.3 共xxx人观看
-        mPeopleTab = mTabLayout.newTab().setText("10万+人观看");
-        mTabLayout.addTab(mPeopleTab);
+        mTabLayout.addTab(mTabLayout.newTab().setText("0人观看"));
         mFragmentList.add(PeopleTreeFragment.newInstance(mUserInfo,mScheduleDetailId));
 
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
@@ -683,5 +684,6 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mHandler.removeCallbacks(mHeartJump);
     }
 }
