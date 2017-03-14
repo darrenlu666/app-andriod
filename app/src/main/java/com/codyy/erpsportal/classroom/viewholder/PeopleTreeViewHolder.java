@@ -10,7 +10,6 @@ import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHold
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

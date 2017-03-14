@@ -11,10 +11,13 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.Watcher;
 import com.codyy.erpsportal.classroom.models.WatcherParse;
 import com.codyy.erpsportal.classroom.viewholder.PeopleTreeViewHolder;
+import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
+import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.groups.controllers.activities.BlogPostDetailActivity;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
 import com.codyy.url.URLConfig;
@@ -114,9 +117,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                 点击标签显示用户列表。列表显示用户头像、姓名、所属区域、学校名称、
                 用户身份类型（管理员、教师、学生、家长）、年级班级。
                 点击头像进入个人访客页面，点击管理员头像无响应。
-
                 列表数据规则：
-
                 1、按照用户进入观看的时间倒序排列；
                 2、省市县校用户身份类型为管理员；
                 3、所属区域显示示例：xx市（市级管理员）、xx县（教师），即所属区域的最后一个节点；
@@ -124,8 +125,21 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                 5、学校管理员用户，不显示年级班级；
                 6、教师用户不显示年级班级；
                 7、家长用户所属区县、学校、年级班级显示绑定的第一个小孩属性*/
-
-
+                switch (data.getUserTypeName()){
+                    case  UserInfo.USER_TYPE_AREA_USER:
+                    case UserInfo.USER_TYPE_SCHOOL_USER:
+                        //do nothing .
+                        break;
+                    case UserInfo.USER_TYPE_TEACHER:
+                    case UserInfo.USER_TYPE_STUDENT:
+                    case UserInfo.USER_TYPE_PARENT:
+                        if(data.getBaseUserId().equals(mUserInfo.getBaseUserId())){
+                            MainActivity.start(getActivity() , mUserInfo , 2);
+                        }else{//2.访客
+                            PublicUserActivity.start(getActivity() , data.getBaseUserId());
+                        }
+                        break;
+                }
             }
 
             @Override

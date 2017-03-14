@@ -129,6 +129,10 @@ android {
             buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85\"")
         }
 
+        codyyTest2 {
+            applicationId "com.codyy.erpsportal.ct"
+            buildConfigField("String", "API_HOST", "\"http://9itest.mobile.codyy.cn:85\"")
+        }
         train {
             applicationId "com.codyy.erpsportal.tr"
             buildConfigField("String", "API_HOST", "\"http://mobile.needu.cn\"")
@@ -138,11 +142,17 @@ android {
             applicationId "com.codyy.erpsportal.web"
             buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile\"")
         }
+
+        web8081 {
+            applicationId "com.codyy.erpsportal.web"
+            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8081/mobile\"")
+        }
     }
 
     dataBinding {
         enabled = true
     }
+    buildToolsVersion '25.0.2'
 }
 dependencies {
     compile "com.android.support:support-v4:${SUPPORT_VERSION}"
