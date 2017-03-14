@@ -111,7 +111,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),'proguard-url.pro', 'proguard-rules.pro','proguard-fresco.pro','proguard-eventbus.pro','proguard-butterknife.pro','proguard-mupdf.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-url.pro', 'proguard-rules.pro', 'proguard-fresco.pro', 'proguard-eventbus.pro', 'proguard-butterknife.pro', 'proguard-mupdf.pro'
             signingConfig signingConfigs.config
             versionNameSuffix ".$BUILD_VERSION"
         }
@@ -126,9 +126,13 @@ android {
     productFlavors {
         codyyTest {
             applicationId "com.codyy.erpsportal.ct"
-            buildConfigField("String", "API_HOST", "\"http://mobile.demo.codyy.cn\"")
+            buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85\"")
         }
 
+        codyyTest2 {
+            applicationId "com.codyy.erpsportal.ct"
+            buildConfigField("String", "API_HOST", "\"http://9itest.mobile.codyy.cn:85\"")
+        }
         train {
             applicationId "com.codyy.erpsportal.tr"
             buildConfigField("String", "API_HOST", "\"http://mobile.needu.cn\"")
@@ -138,11 +142,17 @@ android {
             applicationId "com.codyy.erpsportal.web"
             buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile\"")
         }
+
+        web8081 {
+            applicationId "com.codyy.erpsportal.web"
+            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8081/mobile\"")
+        }
     }
 
     dataBinding {
         enabled = true
     }
+    buildToolsVersion '25.0.2'
 }
 dependencies {
     compile "com.android.support:support-v4:${SUPPORT_VERSION}"
@@ -158,7 +168,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.nineoldandroids:library:2.4.0'
     compile project(':library-viewpager-indicator')
-    compile project(':pullToRefreshLib')
     compile project(':albumlibrary')
     compile 'com.android.support:multidex:1.0.1'
     compile project(':CalendarListviewLibrary')
