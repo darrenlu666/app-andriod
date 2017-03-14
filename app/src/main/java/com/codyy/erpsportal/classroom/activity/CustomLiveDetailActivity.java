@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.ColorRes;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,6 +46,7 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
@@ -65,77 +66,72 @@ import butterknife.ButterKnife;
  * 专递课堂 -直播
  * Created by ldh on 2016/6/29.
  */
-public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener, ClassRoomCommentFragment.SoftInputOpenListener {
+public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = CustomLiveDetailActivity.class.getSimpleName();
+    private static final int MSG_UPDATE_WATCH_COUNT = 0x001;//update the count of people mount sea .
+    private static final int MAX_COUNT = 10*10000;
+    private static final int UPDATE_TIME_DELAY = 30*1000;//更新观看人数.
     @Bind(R.id.tab_layout)TabLayout mTabLayout;
     @Bind(R.id.view_pager)  ViewPager mViewPager;
     RelativeLayout mRlVideoList;
     TextView mTitleTv;
     private TabLayout.Tab mPeopleTab;//总观看人数
     private UserInfo mUserInfo;//当前用户信息
-    /**
-     * 往期录播布局
-     */
+    /**     * 往期录播布局     */
     private FrameLayout mFlRecordVideo;
-
-    /**
-     * 标题栏
-     */
+    /**     * 标题栏     */
     private RelativeLayout mVideoTitleLl;
-    /**
-     * 显示隐藏类
-     */
+    /**     * 显示隐藏类    */
     private AutoHideUtils mAutoHide;
-
-    /**
-     * 顶部包括返回按钮和学校名称的条
-     */
+    /**     * 顶部包括返回按钮和学校名称的条     */
     private LinearLayout mTopLine;
-
-    /**
-     * 实时直播播放器
-     */
+    /**     * 实时直播播放器     */
     private BnVideoLayout2 mVideoLayout;
-
-    /**
-     * 往期录播播放器的控制器
-     */
+    /**     * 往期录播播放器的控制器     */
     private BNVideoControlView mVideoControl;
-    /**
-     * 实时直播未开始的提示
-     */
+    /**     * 实时直播未开始的提示     */
     private TextView mVideoFailureTv;
-
-    /**
-     * 当前播放的视频片段index
-     */
+    /**     * 当前播放的视频片段index     */
     private int mCurrentPlayIndex;
-
-    /**
-     * 视频列表适配器
-     */
+    /**     * 视频列表适配器     */
     private ListAdapter mVideoListAdapter;
-
-    /**
-     * 实时直播详情实体类
-     */
+    /**     * 实时直播详情实体类     */
     private ClassRoomDetail mClassRoomDetail;
-
-    /**
-     * 往期录播详情实体类
-     */
+    /**     * 往期录播详情实体类     */
     private RecordRoomDetail mRecordRoomDetail;
-
-    /**
-     * 是否是横屏
-     */
+    /**     * 是否是横屏     */
     private boolean mIsExpanable;
-
     private String mScheduleDetailId;//课程id
     private String mFrom;//专递课堂/直录播课堂
     private String mStatus;//进行中 or 未开始
     private String mSubject ;//传递的自定义学科字段
     private String mRequestUrl;
+    private RequestSender mRequestSender;
+    private Handler mHandler =new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what){
+                case  MSG_UPDATE_WATCH_COUNT:
+                    try {
+                        int count = (int) msg.obj;
+                        if(count <0 ) return;
+                        if (count < MAX_COUNT) {
+                            mPeopleTab.setText(count + "人观看");
+                        } else if(count%10000 == 0){
+                            mPeopleTab.setText(count/10000 + "万人观看");
+                        }else if(count%10000 > 0){
+                            mPeopleTab.setText(count/10000 + "万+人观看");
+                        }
+                    }catch(ClassCastException e){
+                        e.printStackTrace();
+                        Cog.e(TAG,e == null?"cast error !":e.getMessage());
+                    }
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -171,6 +167,32 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mViewStub.inflate();
     }
 
+    private Runnable mHeartJump = new Runnable() {
+        @Override
+        public void run() {
+            HashMap<String,String> params = new HashMap<>();
+            params.put("clsScheduleDetailId",mScheduleDetailId);
+            params.put("uuid",mUserInfo.getUuid());
+            mRequestSender.sendRequest(new RequestSender.RequestData(URLConfig.GET_CUSTOMER_LIVING_WATCH_COUNT, params, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject jsonObject) {
+                    if("success".equals(jsonObject.optString("result"))){
+                        int count = jsonObject.optInt("count");
+                        //send message to update count number .
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_UPDATE_WATCH_COUNT,count));
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Cog.e(TAG,volleyError == null ? "error":volleyError.getMessage());
+                }
+            }));
+
+            mHandler.postDelayed(mHeartJump, UPDATE_TIME_DELAY);
+        }
+    };
     /**
      * 分别为实时直播和往期录播加载不同的view
      */
@@ -338,8 +360,8 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mTitleTv = (TextView) findViewById(R.id.tv_school_name);
         mTitleTv.setVisibility(View.INVISIBLE);
 
-        RequestSender requestSender = new RequestSender(this);
-        requestSender.sendRequest(new RequestSender.RequestData(mRequestUrl,
+        mRequestSender = new RequestSender(this);
+        mRequestSender.sendRequest(new RequestSender.RequestData(mRequestUrl,
                 mParams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -385,7 +407,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
         mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
         //v5.3.3 共xxx人观看
-        mPeopleTab = mTabLayout.newTab().setText("共0000人观看");
+        mPeopleTab = mTabLayout.newTab().setText("10万+人观看");
         mTabLayout.addTab(mPeopleTab);
         mFragmentList.add(PeopleTreeFragment.newInstance(mUserInfo,mScheduleDetailId));
 
@@ -411,20 +433,12 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
             }
         });
 
-    }
-
-    private int getColorResource(@ColorRes int colorId) {
-        return ResourcesCompat.getColor(getResources(), colorId, null);
+        //start pooling .
+         mHandler.post(mHeartJump);
     }
 
     public void onClick(View view) {
         switch (view.getId()) {
-            /*case R.id.tv_class_detail:
-                mViewPager.setCurrentItem(0);
-                break;
-            case R.id.tv_latest_comment:
-                mViewPager.setCurrentItem(1);
-                break;*/
             case R.id.iv_back:
                 if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {//直播：全屏状态下点击返回按钮时，返回竖屏
                     if (mIsExpanable) {
@@ -529,18 +543,6 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         if (mVideoFailureTv == null)
             mVideoFailureTv = (TextView) findViewById(R.id.tv_un_start_tip);
         mVideoFailureTv.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void open() {
-//        mTabLine.setVisibility(View.GONE);
-//        mTabLineBottom.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void close() {
-//        mTabLine.setVisibility(View.VISIBLE);
-//        mTabLineBottom.setVisibility(View.VISIBLE);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

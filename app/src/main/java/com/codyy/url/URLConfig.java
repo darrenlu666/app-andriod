@@ -447,6 +447,25 @@ public class URLConfig {
     public static String HISTORY_VIDEO_ONLINE_CLASS;
 
     /**
+     * 专递课堂 直播 获取实时总在线人数
+     * clsScheduleDetailId	课堂id	string
+     * uuid	uuid	string
+     */
+    @UrlSuffix("/onlineclass/getJoinUserRecord.do")
+    public static String GET_CUSTOMER_LIVING_WATCH_COUNT;
+
+    /**
+     * 专递课堂 直播 获取实时总在线人数列表
+     * lsScheduleDetailId	课堂id	string
+     * count	每页显示条数	number
+     * studentId	如果是家长需传入对应孩子的Id	string
+     * updateTime	前一次加载的最后一条数据的时间	string
+     * uuid	uuid	string
+     */
+    @UrlSuffix("/onlineclass/selectJoinUserPageList.do")
+    public static String GET_CUSTOMER_LIVING_WATCHER_LIST;
+
+    /**
      * 专递课堂 区域用户往期录播 new
      */
     @UrlSuffix("/onlineclass/getAreaReplyList.do")
