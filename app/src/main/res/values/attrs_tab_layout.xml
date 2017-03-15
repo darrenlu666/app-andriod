@@ -1,0 +1,6 @@
+<resources>
+    <declare-styleable name="FlexTabLayout">
+        <attr name="isSingleLineText" format="boolean" />
+        <attr name="selectItemColor" format="color" />
+    </declare-styleable>
+</resources>

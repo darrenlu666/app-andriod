@@ -3,8 +3,10 @@ package com.codyy.erpsportal.schooltv.controllers.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
@@ -52,9 +54,16 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
         arrayList.add("星期日");
 
         for(String title : arrayList){
-            mTabLayout.addTab(mTabLayout.newTab().setText(title));
+            View customView = LayoutInflater.from(this).inflate(R.layout.tab_item_two_line_text,null);
+            ((TextView)customView.findViewById(R.id.tab_item_title)).setText(title);
+            ((TextView)customView.findViewById(R.id.tab_item_content)).setText("03-15");
+            mTabLayout.addTab(mTabLayout.newTab().setText(title).setCustomView(customView));
         }
 
+        mTabLayout.setTabTextColors(R.color.grey_444,R.color.main_color);
+//        mTabLayout.setScrollPosition(3,0f,true);
+        mTabLayout.getTabAt(3).select();
+        mTabLayout.setSelectedTabIndicatorHeight(0);
         setTitle(Titles.sWorkspaceTvProgramProgramList);
     }
 

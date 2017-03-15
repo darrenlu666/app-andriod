@@ -5,14 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
-     <com.codyy.erpsportal.onlinemeetings.widgets.FixedTabLayout
+     <com.codyy.erpsportal.onlinemeetings.widgets.FlexTabLayout
          android:id="@+id/tab_layout"
-         android:layout_height="wrap_content"
+         android:layout_height="56dp"
          android:layout_width="match_parent"
          android:background="@color/white"
          app:tabIndicatorColor="@color/main_color"
          app:tabIndicatorHeight="@dimen/tab_layout_select_indicator_height"
          app:tabMode="scrollable"
+         app:isSingleLineText="false"
+         app:selectItemColor="@color/main_color"
          app:tabGravity="fill"
          />
      <View
