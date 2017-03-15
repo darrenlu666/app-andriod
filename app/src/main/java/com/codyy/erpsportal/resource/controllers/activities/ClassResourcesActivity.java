@@ -294,7 +294,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
                 .setOnMenuClickListener(new OnMenuClickListener() {
                     @Override
                     public void onPropertiesBtnClick() {
-                        ResourcePropertyFilterAct.startForResult(ClassResourcesActivity.this, new AreaInfo(mUserInfo));
+                        ResourcePropertyFilterAct.startForResult(ClassResourcesActivity.this, new AreaInfo(mUserInfo), mUserInfo.isStudent());
                     }
 
                     @Override

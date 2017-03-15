@@ -323,7 +323,9 @@ public class ResourcesNewActivity extends AppCompatActivity{
                 .setOnMenuClickListener(new OnMenuClickListener() {
                     @Override
                     public void onPropertiesBtnClick() {
-                        ResourcePropertyFilterAct.startForResult(ResourcesNewActivity.this, new AreaInfo(mUserInfo));
+                        ResourcePropertyFilterAct.startForResult(ResourcesNewActivity.this,
+                                new AreaInfo(mUserInfo),
+                                mUserInfo.isStudent());
                     }
 
                     @Override
