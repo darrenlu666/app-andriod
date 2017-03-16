@@ -66,7 +66,7 @@ import butterknife.ButterKnife;
  * 专递课堂 -直播
  * Created by ldh on 2016/6/29.
  */
-public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener{
+public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener ,PeopleTreeFragment.ISyncCount{
     private static final String TAG = CustomLiveDetailActivity.class.getSimpleName();
     private static final int MSG_UPDATE_WATCH_COUNT = 0x001;//update the count of people mount sea .
     private static final int MAX_COUNT = 10*10000;
@@ -106,6 +106,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     private String mSubject ;//传递的自定义学科字段
     private String mRequestUrl;
     private RequestSender mRequestSender;
+    private int mPeopleCount = 0;
     private Handler mHandler =new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -116,7 +117,8 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
                     try {
                         int count = (int) msg.obj;
                         Cog.i(TAG,"update success now count : "+count);
-                        if(count <0 ) return;
+                        if(count <=0 ) count=1;
+                        mPeopleCount = count;
                         View tabView = mTabLayout.getTabAt(2).getCustomView();
                         TextView tv = (TextView) tabView.findViewById(R.id.tv_tab_item);
                         if (count < MAX_COUNT) {
@@ -544,6 +546,13 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         if (mVideoFailureTv == null)
             mVideoFailureTv = (TextView) findViewById(R.id.tv_un_start_tip);
         mVideoFailureTv.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void sync(int currentCount) {
+        if(mPeopleCount < currentCount){
+            mHandler.post(mHeartJump);
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

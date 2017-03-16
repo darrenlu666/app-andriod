@@ -8,7 +8,7 @@ import java.util.List;
 public class WatcherParse {
     private String errorCode;
     private String result;
-    private int total;
+    private int total =0;//default : 0
     private List<Watcher> data;
 
     public String getErrorCode() {

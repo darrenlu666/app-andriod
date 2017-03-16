@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
 import com.codyy.erpsportal.classroom.models.Watcher;
 import com.codyy.erpsportal.classroom.models.WatcherParse;
 import com.codyy.erpsportal.classroom.viewholder.PeopleTreeViewHolder;
@@ -37,7 +38,8 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
 
     private String mClassId;//class id .
     private String mUpdateTime;//the last one request return updateTime .
-
+    private ISyncCount mSyncInterface;
+    private boolean mHasMore = true;
 
     public static PeopleTreeFragment newInstance(UserInfo userInfo, String scheduleDetailId) {
         Bundle args = new Bundle();
@@ -51,6 +53,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSyncInterface = (CustomLiveDetailActivity) getActivity();
         if(null != getArguments()){
             mClassId  = getArguments().getString(ARG_CLASS_ID);
         }
@@ -91,12 +94,17 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                 WatcherParse parse = new Gson().fromJson(response.toString(),WatcherParse.class);
                 if(null != parse){
                     //do something .
-                    mTotal  =   parse.getTotal();
                     if (parse.getData() != null && parse.getData().size() > 0) {
+                        //has more
+                        if(isRefreshing) mHasMore = true;
                         for (Watcher group : parse.getData()) {
                             group.setBaseViewHoldType(0);
                             mDataList.add(group);
                         }
+
+                        if(null != mSyncInterface&&isRefreshing) mSyncInterface.sync(parse.getTotal());
+                    }else{// load more end !
+                        mHasMore = false;
                     }
                     // record the newest update time .(tips : order updateTime desc .)
                     if(mDataList!= null && mDataList.size()>0){
@@ -144,8 +152,16 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
 
             @Override
             public int getTotal() {
-                return mTotal;
+                return mDataList.size()+(mHasMore?1:0);
             }
         };
+    }
+
+    /**
+     * 实现数据上的同步Tab上方的数字需要与列表数据保持统一
+     * 如果发现数据不同一，在外部Activity中需要做一次数据更新sync.
+     */
+    public interface ISyncCount{
+        void sync(int currentCount);
     }
 }
