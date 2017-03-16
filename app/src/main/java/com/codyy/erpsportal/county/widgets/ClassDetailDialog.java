@@ -90,7 +90,7 @@ public class ClassDetailDialog extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mLayoutInflater = getLayoutInflater(savedInstanceState);
+        mLayoutInflater = LayoutInflater.from(getContext());
         mReceiveLayout = (LinearLayout) view.findViewById(R.id.receive_layout);
         mDirectLayout = (LinearLayout) view.findViewById(R.id.direct_layout);
         if (mScheduleListBean == null) {
