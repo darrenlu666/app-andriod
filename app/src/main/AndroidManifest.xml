@@ -742,6 +742,10 @@
             android:name=".schooltv.controllers.activities.SchoolTvHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".schooltv.controllers.activities.SchoolProgramDetail"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

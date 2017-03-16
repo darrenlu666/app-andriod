@@ -194,7 +194,7 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
 
             @Override
             public void OnItemClicked(View v, int position, SchoolProgram data) {
-
+                SchoolProgramDetail.start(SchoolTvProgramListActivity.this,mUserInfo,data.getTvProgramDetailId());
             }
 
             @Override

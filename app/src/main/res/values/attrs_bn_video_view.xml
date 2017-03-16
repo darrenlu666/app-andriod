@@ -4,5 +4,6 @@
     </declare-styleable>
     <declare-styleable name="VideoControlView">
         <attr name="videoControlViewStyle" format="reference"/>
+        <attr name="play_mode" format="integer"/>
     </declare-styleable>
 </resources>

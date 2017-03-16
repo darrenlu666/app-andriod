@@ -770,4 +770,11 @@
     <string name="user_locked">账号已被锁定，请联系管理员</string>
     <string name="deleting">删除中…</string>
 
+    <!-- 校园电视台-节目-->
+    <string name="tv_detail_program_title">节目名称:</string>
+    <string name="tv_detail_program_time">节目时间:</string>
+    <string name="tv_detail_program_master">主持人:</string>
+    <string name="tv_detail_program_detail">简介:</string>
+    <string name="tv_detail_video_un_start">当前无直播，请稍等...</string>
+    
 </resources>

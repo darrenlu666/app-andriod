@@ -2818,6 +2818,14 @@ public class URLConfig {
     @UrlSuffix("/mobile/tvprogram/liveList.do")
     public static String GET_SCHOOL_TV_PROGRAM_LIST;
     /**
+     * 校园电视台-节目单
+     * schoolId	学校id	string
+     * tvProgramDetailId	节目id	string
+     * uuid		string
+     */
+    @UrlSuffix("/mobile/tvprogram/detail.do")
+    public static String GET_SCHOOL_TV_PROGRAM_DETAIL;
+    /**
      * 校园电视台-往期视频
      * end		number
      * orderBy	按什么排序	string	programName 节目名称；viewCnt 点击量；time 按时间
