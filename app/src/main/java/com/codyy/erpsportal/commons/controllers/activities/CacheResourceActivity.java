@@ -77,7 +77,7 @@ public class CacheResourceActivity extends BaseHttpActivity implements Handler.C
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         return null;
     }
 

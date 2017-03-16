@@ -78,7 +78,7 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
         data.put("schoolId", schoolId);

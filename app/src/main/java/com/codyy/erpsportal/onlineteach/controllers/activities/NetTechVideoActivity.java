@@ -120,7 +120,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         params.put("lessonId", mPreparationId);

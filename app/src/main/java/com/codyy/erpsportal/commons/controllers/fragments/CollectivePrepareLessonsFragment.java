@@ -154,7 +154,7 @@ public class CollectivePrepareLessonsFragment extends SimpleRecyclerFragment<Pre
             }
 
             @Override
-            public HashMap<String, String> getParams() {
+            public HashMap<String, String> getParams(boolean isRefreshing) {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("uuid", mUserInfo.getUuid());
                 if (mGradeId != null) params.put("classlevelId", "" + mGradeId);
@@ -168,7 +168,7 @@ public class CollectivePrepareLessonsFragment extends SimpleRecyclerFragment<Pre
             }
 
             @Override
-            public void parseData(JSONObject response) {
+            public void parseData(JSONObject response,boolean isRefreshing) {
                 if ("success".equals(response.optString("result"))) {
                     mTotal = response.optInt("total");
                     JSONArray jsonArray = null;
@@ -184,7 +184,7 @@ public class CollectivePrepareLessonsFragment extends SimpleRecyclerFragment<Pre
             }
 
             @Override
-            public BaseRecyclerViewHolder<PreparationEntity> getViewHolder(ViewGroup parent) {
+            public BaseRecyclerViewHolder<PreparationEntity> getViewHolder(ViewGroup parent,int viewType) {
                 return new PrePareLessonsViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare));
             }
 

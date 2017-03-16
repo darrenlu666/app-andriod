@@ -67,7 +67,7 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         return null;
     }
 

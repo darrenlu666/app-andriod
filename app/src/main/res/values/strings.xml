@@ -49,6 +49,7 @@
     <string name="exit">退\ \ \ 出</string>
     <string name="title_activity_video_details">VideoDetailsActivity</string>
     <string name="filter">筛选</string>
+    <string name="daily_report">筛选</string>
     <string name="loading">加载中…</string>
     <string name="pull_to_refresh">下拉刷新</string>
     <string name="release_to_refresh">释放刷新</string>

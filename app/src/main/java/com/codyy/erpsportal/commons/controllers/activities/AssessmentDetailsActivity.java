@@ -81,7 +81,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("uuid", mUserInfo.getUuid());
         if (type == AssessmentClassActivity.INVITED) {

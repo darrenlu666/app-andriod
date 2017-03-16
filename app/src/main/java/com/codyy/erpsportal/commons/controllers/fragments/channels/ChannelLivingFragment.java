@@ -73,7 +73,7 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
         data.put("size", "4");

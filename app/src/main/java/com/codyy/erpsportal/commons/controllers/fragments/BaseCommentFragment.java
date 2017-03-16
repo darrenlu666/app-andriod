@@ -96,7 +96,7 @@ public abstract class BaseCommentFragment<T extends BaseComment> extends BaseHtt
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         if(null == getBaseCommentDelegate() )
             throw  new IllegalAccessError("the activity must impements {@link BaseCommentDelegate}");
         return getBaseCommentDelegate().getParentDelegate().getParams();

@@ -2,18 +2,24 @@ package com.codyy.erpsportal.commons.utils;
 
 import android.text.TextUtils;
 
+import com.codyy.erpsportal.schooltv.models.WeekDay;
+
 import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class DateUtil {
     public final static String PATTERN = "yyyy-MM-dd HH:mm:ss";
     public final static String DEF_FORMAT = "yyyy-MM-dd HH:mm";
     public final static String YEAR_MONTH_DAY = "yyyy-MM-dd";
+    public final static String MONTH_DAY = "MM-dd";
+    public final static String HH_MM = "HH:mm";
 
     public static String getNow(String format) {
         if (null == format || "".equals(format)) {
@@ -220,7 +226,7 @@ public class DateUtil {
     /**
      * 判断当前日期是星期几
      * @param  pTime     设置的需要判断的时间  //格式如2012-09-08
-     * @return dayForWeek 判断结果
+     * @return dayForWeek 判断结果 星期天
      * @Exception 发生异常
      */
     public static String getWeek(String pTime) {
@@ -258,4 +264,64 @@ public class DateUtil {
 
         return Week;
     }
+
+    /**
+     * 得到本周周一
+     *
+     * @return yyyy-MM-dd
+     */
+    public static String getMondayOfThisWeek(String format) {
+        SimpleDateFormat df2 = new SimpleDateFormat(format);
+        Calendar c = Calendar.getInstance();
+        int day_of_week = c.get(Calendar.DAY_OF_WEEK) - 1;
+        if (day_of_week == 0)
+            day_of_week = 7;
+        c.add(Calendar.DATE, -day_of_week + 1);
+        return df2.format(c.getTime());
+    }
+
+    /**
+     * 得到本周周日
+     *
+     * @return yyyy-MM-dd
+     */
+    public static String getSundayOfThisWeek(String format) {
+        SimpleDateFormat df2 = new SimpleDateFormat(format);
+        Calendar c = Calendar.getInstance();
+        int day_of_week = c.get(Calendar.DAY_OF_WEEK) - 1;
+        if (day_of_week == 0)
+            day_of_week = 7;
+        c.add(Calendar.DATE, -day_of_week + 7);
+        return df2.format(c.getTime());
+    }
+
+    public static List<WeekDay> getCurrentWeek(String format){
+        List<WeekDay> wList =new ArrayList<>();
+        SimpleDateFormat df2 = new SimpleDateFormat(format);
+        //周天
+        Calendar c = Calendar.getInstance();
+        int day_of_week = c.get(Calendar.DAY_OF_WEEK) - 1;
+        if (day_of_week == 0)
+            day_of_week = 7;
+
+        for(int i=0;i<7;i++){
+            WeekDay wd = new WeekDay();
+            if(i==0){
+                //switch to monday. //周一
+                c.add(Calendar.DATE, -day_of_week + 1);
+            }else{
+                c.add(Calendar.DATE, 1);
+            }
+            wd.setWeekDate(df2.format(c.getTime()));
+            SimpleDateFormat df = new SimpleDateFormat("MM-dd");
+            wd.setShortWeekDate(df.format(c.getTime()));
+            wd.setWeekDay(WEEK[i]);
+            wList.add(wd);
+        }
+        return wList;
+    }
+
+    public  static String [] WEEK = {
+        "星期一","星期二","星期三","星期四","星期五","星期六","星期日"
+    };
 }

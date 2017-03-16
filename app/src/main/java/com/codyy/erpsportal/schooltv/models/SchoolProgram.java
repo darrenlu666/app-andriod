@@ -8,6 +8,11 @@ import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
  */
 
 public class SchoolProgram extends BaseTitleItemBar {
+
+    public static final int STATUS_INIT =   0;//un start init .
+    public static final int STATUS_ON = 1;//is continue .
+    public static final int STATUS_END = 2;//already end .
+
     private long endTime;
     private String programName;
     private long startTime;

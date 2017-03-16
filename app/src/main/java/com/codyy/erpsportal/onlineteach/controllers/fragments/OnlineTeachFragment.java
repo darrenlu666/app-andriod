@@ -110,7 +110,7 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
              * @return
              */
             @Override
-            public HashMap<String, String> getParams() {
+            public HashMap<String, String> getParams(boolean isRefreshing) {
                 HashMap hashMap = new HashMap();
                 if(null != mUserInfo) hashMap.put("uuid" , mUserInfo.getUuid());
                 if(null != mBaseAreaId) hashMap.put("areaId",mBaseAreaId);
@@ -126,7 +126,7 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
             }
 
             @Override
-            public void parseData(JSONObject response) {
+            public void parseData(JSONObject response,boolean isRefreshing) {
                 NetTeachParse parse = new Gson().fromJson(response.toString() , NetTeachParse.class);
                 if(null != parse) {
                     mTotal  =   parse.getTotal();
@@ -140,7 +140,7 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
             }
 
             @Override
-            public BaseRecyclerViewHolder<NetTeach> getViewHolder(ViewGroup parent) {
+            public BaseRecyclerViewHolder<NetTeach> getViewHolder(ViewGroup parent,int viewType) {
                 return new NetTeachManagerViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_net_teach));
             }
 

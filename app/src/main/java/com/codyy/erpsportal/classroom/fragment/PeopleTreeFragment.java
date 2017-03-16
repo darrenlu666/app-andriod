@@ -72,7 +72,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
             }
 
             @Override
-            public HashMap<String, String> getParams() {
+            public HashMap<String, String> getParams(boolean isRefreshing) {
                 HashMap<String, String> param = new HashMap<>();
                 if(null != mClassId) param.put("clsScheduleDetailId",mClassId);
                 if(null != mUserInfo){
@@ -82,12 +82,12 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                     }
                 }
                 param.put("count",String.valueOf(sPageCount));
-                if(null != mUpdateTime) param.put("updateTime",mUpdateTime);
+                if(null != mUpdateTime && !isRefreshing) param.put("updateTime",mUpdateTime);
                 return param;
             }
 
             @Override
-            public void parseData(JSONObject response) {
+            public void parseData(JSONObject response,boolean isRefreshing) {
                 WatcherParse parse = new Gson().fromJson(response.toString(),WatcherParse.class);
                 if(null != parse){
                     //do something .
@@ -106,7 +106,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
             }
 
             @Override
-            public BaseRecyclerViewHolder<Watcher> getViewHolder(ViewGroup parent) {
+            public BaseRecyclerViewHolder<Watcher> getViewHolder(ViewGroup parent,int viewType) {
                 return new PeopleTreeViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(), R.layout.item_custom_living_people_tree));
             }
 

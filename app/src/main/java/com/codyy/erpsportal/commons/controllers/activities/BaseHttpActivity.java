@@ -79,7 +79,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * 参数拼接
      * @return 数据请求parmas
      */
-    public abstract HashMap<String,String> getParam();
+    public abstract HashMap<String,String> getParam(boolean isRefreshing);
 
     /**
      * 初始化视图的初始化
@@ -113,7 +113,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * 请求数据
      */
     public void requestData(boolean isRefreshing){
-        requestData(obtainAPI(), getParam(),isRefreshing, new IRequest() {
+        requestData(obtainAPI(), getParam(isRefreshing),isRefreshing, new IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 try {

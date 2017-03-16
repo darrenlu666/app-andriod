@@ -89,7 +89,7 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
             }
 
             @Override
-            public HashMap<String, String> getParams() {
+            public HashMap<String, String> getParams(boolean isRefreshing) {
                 HashMap<String, String> hashMap = new HashMap<>();
                 if(null != mUserInfo) hashMap.put("uuid", mUserInfo.getUuid());
                 if(null != mState) hashMap.put("meet_sate", mState);
@@ -100,7 +100,7 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
             }
 
             @Override
-            public void parseData(JSONObject response) {
+            public void parseData(JSONObject response,boolean isRefreshing) {
                 if ("success".equals(response.optString("result"))) {
                     mTotal = response.optInt("total");//total为列表条数
                     JSONArray jsonArray = response.optJSONArray("list");
@@ -115,7 +115,7 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
             }
 
             @Override
-            public BaseRecyclerViewHolder<VideoMeetingEntity> getViewHolder(ViewGroup parent) {
+            public BaseRecyclerViewHolder<VideoMeetingEntity> getViewHolder(ViewGroup parent,int viewType) {
                 return new VideoMeetingViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_videomeeting));
             }
 

@@ -100,7 +100,7 @@ public class VideoMeetingDetailActivity extends BaseHttpActivity {
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo == null ? "" : mUserInfo.getUuid());
         params.put("mid", mMeetingID);

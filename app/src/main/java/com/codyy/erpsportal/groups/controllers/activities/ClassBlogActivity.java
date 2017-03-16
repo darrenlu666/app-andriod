@@ -75,7 +75,7 @@ public class ClassBlogActivity extends BaseHttpActivity {
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
@@ -283,7 +283,7 @@ public class ClassBlogActivity extends BaseHttpActivity {
     private void loadMoreData() {
         if(null == mSender) return;
         // TODO: 16-3-13 重新输入 start & end ...
-        HashMap hashMap = getParam();
+        HashMap hashMap = getParam(false);
         hashMap.put("start",mAllBlogList.size()+"");
         hashMap.put("end",(mAllBlogList.size()+sPageCount-1)+"");
 

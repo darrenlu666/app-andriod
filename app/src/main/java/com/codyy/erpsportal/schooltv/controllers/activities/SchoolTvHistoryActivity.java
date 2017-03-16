@@ -47,18 +47,18 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
             }
 
             @Override
-            public HashMap<String, String> getParams() {
+            public HashMap<String, String> getParams(boolean isRefreshing) {
 
                 return null;
             }
 
             @Override
-            public void parseData(JSONObject response) {
+            public void parseData(JSONObject response,boolean isRefreshing) {
 
             }
 
             @Override
-            public BaseRecyclerViewHolder<SchoolVideo> getViewHolder(ViewGroup parent) {
+            public BaseRecyclerViewHolder<SchoolVideo> getViewHolder(ViewGroup parent,int viewType) {
                 return null;
             }
 
