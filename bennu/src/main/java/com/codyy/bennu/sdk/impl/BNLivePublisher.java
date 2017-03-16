@@ -136,7 +136,8 @@ public class BNLivePublisher implements BNPublisher
 			mVideoParameters.setValue("width", mWidth);
 			mVideoParameters.setValue("height", mHeight);
 			mVideoParameters.setValue("framerate", 20);
-			mVideoParameters.setValue("bitrate", 1024000);
+			mVideoParameters.setValue("bitrate", 300000);
+//			mVideoParameters.setValue("bitrate", 1024000);
 			doLog("Has videoParameters");
 		}
 		return 0;
