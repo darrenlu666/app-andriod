@@ -13,6 +13,8 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog.OnCancelListener;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -101,6 +103,10 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
 
     private List<CourseProfile> mCourseProfiles;
 
+    private Object mRequestTag = new Object();
+
+    private LoadingDialog mLoadingDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,7 +143,7 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
                         Titles.sMasterRoom,
                         Titles.sInvited));
             } else if (mType == TYPE_PROFILE_RECEIVING){
-                mTitleTv.setText(getString(R.string.stat_receive_role_format,
+                mTitleTv.setText( getString(R.string.stat_receive_role_format,
                         Titles.sWorkspaceCountTutiongeneral,
                         Titles.sReceiveRoom));
             } else {
@@ -146,6 +152,14 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
         } else {
             mTitleTv.setText(mAreaInfo.getName() + Titles.sWorkspaceCountTutiongeneral);
         }
+        mLoadingDialog = LoadingDialog.newInstance(true);
+        mLoadingDialog.setOnCancelListener(new OnCancelListener() {
+            @Override
+            public void onCancel() {
+                Cog.d(TAG, "cancel loading");
+                mRequestSender.stop(mRequestTag);
+            }
+        });
     }
 
     private void loadData() {
@@ -176,10 +190,12 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
         } else {
             putFilterParams(statFilterCarrier, params);
         }
+        mLoadingDialog.show(getSupportFragmentManager(), "loading");
         mRequestSender.sendRequest(new RequestData(URLConfig.COURSES_PROFILE_STAT, params, new Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "+loadDate response=" ,response);
+                mLoadingDialog.dismiss();
                 Gson gson;
                 if (mUserInfo.isSchool()) {//如果是学校跳过doClsroomRate和avgRate字段，web端不给力
                     gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
@@ -208,9 +224,10 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
             @Override
             public void onErrorResponse(VolleyError error) {
                 Cog.d(TAG, "+loadDate error=", error);
+                mLoadingDialog.dismiss();
                 ToastUtil.showToast(ClassStatTableActivity.this, getString(R.string.net_error));
             }
-        }));
+        }, mRequestTag));
     }
 
     /**

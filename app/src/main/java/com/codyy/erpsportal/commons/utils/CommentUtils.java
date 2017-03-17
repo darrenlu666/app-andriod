@@ -14,7 +14,6 @@ import java.util.List;
  */
 public class CommentUtils {
 
-
     /**
      * 根据评论的id 返回在mData中的下一个位置 .
      * @param blogCommentId
@@ -55,27 +54,6 @@ public class CommentUtils {
         if(deleteList.size()>0){
             dataList.removeAll(deleteList);
         }
-    }
-
-    /**
-     * 返回二级评论列表的条数 .
-     * @param commentId
-     * @return
-     */
-    public static int getReplyCount(String commentId , List<BaseTitleItemBar> data){
-        int count = 0 ;
-        for(int i = 0 ; i < data.size() ; i++){
-            if(data.get(i) instanceof BaseComment){
-                BaseComment ec = (BaseComment) data.get(i);
-                if(null != data.get(i)&&null != ec.getParentCommentId() &&ec.getParentCommentId().equals(commentId)){
-                    if(!"更多".equals(ec.getCommentContent()) ){
-                        count++;
-                    }
-                }
-            }
-
-        }
-        return  count ;
     }
 
     /**

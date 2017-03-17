@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -47,6 +48,9 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     public static final int MSG_WHAT_NOTIFY_HIDE = 100;// hide thread notify main thread to hide title
     public static final int MSG_WHAT_AUTO_HIDE = 103;//hide the view
     public static final int ERROR_VIDEO_TOOL_SHORT = 201;//too short video less than 1000ms .
+    public static final int MODE_LIVING = 1;//直播.
+    public static final int MODE_RECORD = 0;//录播.
+
     @Bind(R.id.imgPlayOfVideoControl)    ImageButton mPlayImageButton;
     @Bind(R.id.imgExpandOfVideoControl)    ImageButton mExpandImageButton;
     @Bind(R.id.seekBarOfVideoControl)    SeekBar mSeekBar;
@@ -61,9 +65,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private ExpandListener mExpandListener;
     private Context mContext;
     private PlaySate state = PlaySate.STOP;
-
     public enum PlaySate {STOP, PLAY, PAUSE}
-
     private BnVideoView2 mVideoView = null;
     private int mTotal = 100;
     /**
@@ -87,18 +89,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private long mStartPlayTime = -1;
     private boolean mIsExpandable = true ;//是否支持横竖屏 default：true
     private FragmentManager mFragmentManager ;
-
-    public void setDisplayListener(DisplayListener mDisplayListener) {
-        this.mDisplayListener = mDisplayListener;
-    }
-
-    public FragmentManager getFragmentManager() {
-        return mFragmentManager;
-    }
-
-    public void setFragmentManager(FragmentManager mFragmentManager) {
-        this.mFragmentManager = mFragmentManager;
-    }
+    private int mPlayMode = MODE_RECORD;//播放模式默认录播 ，如果设置为直播则没有开始/暂停 和 播放进度显示
 
     @Override
     public boolean handleMessage(Message msg) {
@@ -113,6 +104,276 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                 break;
         }
         return false;
+    }
+
+
+    public BNVideoControlView(Context context) {
+        this(context, null);
+    }
+
+    public BNVideoControlView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public BNVideoControlView(Context context, AttributeSet attrs, int defStyleAttr) {
+        this(context, attrs, defStyleAttr,0);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public BNVideoControlView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context ,attrs,defStyleAttr);
+    }
+
+    private void init(Context context, AttributeSet attrs, int defStyle) {
+        TypedArray ta = getContext().obtainStyledAttributes(attrs,R.styleable.VideoControlView,defStyle,0);
+        mPlayMode = ta.getInteger(R.styleable.VideoControlView_play_mode,MODE_RECORD);
+        ta.recycle();
+
+        View rootView = LayoutInflater.from(context).inflate(R.layout.video_control_view, this, true);
+        ButterKnife.bind(rootView);
+        updateMode();
+        mContext = context;
+        mHideHandlerThread.start();
+        mHandler = new Handler(this);
+        mHandlerHide = new Handler(mHideHandlerThread.getLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                if (MSG_WHAT_NOTIFY_HIDE == msg.what) {//通知Main UI hide .
+                    mHandler.sendEmptyMessage(MSG_WHAT_AUTO_HIDE);
+                }
+            }
+        };
+        if (!this.isInEditMode()) {
+            mWifiBroadCastUtil = new WiFiBroadCastUtils(mContext, mFragmentManager,new WiFiBroadCastUtils.PlayStateListener() {
+                @Override
+                public void play() {
+                    start();
+                }
+
+                @Override
+                public void stop() {
+                    BNVideoControlView.this.stop();
+                }
+            });
+        }
+    }
+
+    private void updateMode() {
+        if(MODE_LIVING == mPlayMode){
+            mPlayImageButton.setVisibility(INVISIBLE);
+            mSeekBar.setVisibility(INVISIBLE);
+            mCurrentTextView.setVisibility(INVISIBLE);
+            mTotalTextView.setVisibility(INVISIBLE);
+        }
+    }
+
+    public int getPlayMode() {
+        return mPlayMode;
+    }
+
+    public void setPlayMode(int playMode) {
+        this.mPlayMode = playMode;
+//        invalidate();
+        updateMode();
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        Cog.e(TAG, "onFinishInflate()");
+        this.setVisibility(GONE);
+
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                if (null != mVideoView && !TextUtils.isEmpty(urlPath)) {
+                    if (fromUser) {
+                        mDestPos = progress;
+                        Cog.e("progress::", "^^^^^^^^^" + progress + " Max:" + seekBar.getMax());
+                    }
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Cog.e(TAG, "onStartrackingTouch()~");
+                isOnTouch = true;
+                pause();
+                touchControl();
+            }
+
+            @Override
+            public void onStopTrackingTouch(final SeekBar seekBar) {
+
+                isOnTouch = false;
+                //防止播放完成之后记录的位置得不到更新
+                if (mLastPercent != mDestPos) {
+                    mLastPercent = mDestPos;
+                }
+                if (mIsLocal) {
+                    resume();
+                    mVideoView.seekTo(mDestPos);
+                } else {
+                    Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
+                        @Override
+                        public void onNetError() {
+
+                        }
+
+                        @Override
+                        public void onContinue() {
+                            resume();
+                            mVideoView.seekTo(mDestPos);
+                        }
+                    });
+                }
+                touchControl();
+            }
+        });
+
+
+        mPlayImageButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                touchControl();
+                if (null != mVideoView) {
+                    if (state == PlaySate.STOP || state == PlaySate.PAUSE) {
+                        if (mIsLocal) {
+                            //                            start();
+                            if (state == PlaySate.STOP) {
+                                start();
+                            } else {
+                                resume();
+                            }
+                        } else {
+                            Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
+                                @Override
+                                public void onNetError() {
+
+                                }
+
+                                @Override
+                                public void onContinue() {
+                                    if (state == PlaySate.STOP) {
+                                        start();
+                                    } else {
+                                        resume();
+                                    }
+
+                                }
+                            });
+                        }
+                    } else if (state == PlaySate.PLAY) {
+                        pause();
+                    }
+                }
+            }
+        });
+
+        mExpandImageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mIsExpandable){
+                    touchControl();
+                    Activity activity = (Activity) getContext();
+                    if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+                        UIUtils.setLandscape(activity);
+                        if(null != mExpandListener) mExpandListener.expand();
+                    } else if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                        UIUtils.setPortrait(activity);
+                        if(null != mExpandListener) mExpandListener.collapse();
+                    }
+
+
+                }
+            }
+        });
+
+        showControl();
+    }
+
+
+    //延时消失
+    @Override
+    public void touchControl() {
+        Cog.e(TAG, " touchControl()~");
+        mHandlerHide.removeMessages(MSG_WHAT_NOTIFY_HIDE);
+        mHandlerHide.sendEmptyMessageDelayed(MSG_WHAT_NOTIFY_HIDE, 3 * 1000);
+    }
+
+    @Override
+    public void destroyView() {
+
+    }
+
+    @Override
+    public void showControl() {
+        Cog.e(TAG, "showControl()~");
+        touchControl();
+        if (getVisibility() == View.GONE) {
+
+            this.setVisibility(View.VISIBLE);
+            Animation anim = AnimationUtils.loadAnimation(mContext, R.anim.abc_fade_in);
+            this.startAnimation(anim);
+
+            if (null != mDisplayListener) {
+                mDisplayListener.show();
+            }
+
+            if (state == PlaySate.PAUSE) {
+                setProgress(mLastPercent);
+            } else if (state == PlaySate.PLAY) {
+                setProgress(mCurrentPosition);
+            } else if (state == PlaySate.STOP) {
+                setProgress(mCurrentPosition);
+            }
+        }
+
+    }
+
+    @Override
+    public void hideControl() {
+        Cog.e(TAG, "hideControl");
+        this.setVisibility(View.GONE);
+
+        if (null != mDisplayListener) {
+            mDisplayListener.hide();
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        if (null != mVideoView) {
+            mVideoView = null;
+        }
+
+        //解除广播接收器
+        if (null != mWifiBroadCastUtil) {
+            mWifiBroadCastUtil.destroy();
+        }
+
+        if (null != mHideHandlerThread && null != mHandler.getLooper()) {
+            mHideHandlerThread.getLooper().quit();
+        }
+
+    }
+
+    public void setDisplayListener(DisplayListener mDisplayListener) {
+        this.mDisplayListener = mDisplayListener;
+    }
+
+    public FragmentManager getFragmentManager() {
+        return mFragmentManager;
+    }
+
+    public void setFragmentManager(FragmentManager mFragmentManager) {
+        this.mFragmentManager = mFragmentManager;
     }
 
     /**
@@ -427,242 +688,6 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             String current = StringUtils.convertTime(currentPosition / 1000);
             setProgress(current, currentPosition);
         }
-    }
-
-    public BNVideoControlView(Context context) {
-        super(context, null, R.attr.videoControlViewStyle);
-        init(context);
-    }
-
-    public BNVideoControlView(Context context, AttributeSet attrs) {
-        super(context, attrs, R.attr.videoControlViewStyle);
-        init(context);
-    }
-
-    public BNVideoControlView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BNVideoControlView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
-    }
-
-    private void init(Context context) {
-        View rootView = LayoutInflater.from(context).inflate(R.layout.video_control_view, this, true);
-        ButterKnife.bind(rootView);
-        mContext = context;
-        mHideHandlerThread.start();
-        mHandler = new Handler(this);
-        mHandlerHide = new Handler(mHideHandlerThread.getLooper()) {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if (MSG_WHAT_NOTIFY_HIDE == msg.what) {//通知Main UI hide .
-                    mHandler.sendEmptyMessage(MSG_WHAT_AUTO_HIDE);
-                }
-            }
-        };
-        if (!this.isInEditMode()) {
-            mWifiBroadCastUtil = new WiFiBroadCastUtils(mContext, mFragmentManager,new WiFiBroadCastUtils.PlayStateListener() {
-                @Override
-                public void play() {
-                    start();
-                }
-
-                @Override
-                public void stop() {
-                    BNVideoControlView.this.stop();
-                }
-            });
-        }
-    }
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        Cog.e(TAG, "onFinishInflate()");
-        this.setVisibility(GONE);
-
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                if (null != mVideoView && !TextUtils.isEmpty(urlPath)) {
-                    if (fromUser) {
-                        mDestPos = progress;
-                        Cog.e("progress::", "^^^^^^^^^" + progress + " Max:" + seekBar.getMax());
-                    }
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                Cog.e(TAG, "onStartrackingTouch()~");
-                isOnTouch = true;
-                pause();
-                touchControl();
-            }
-
-            @Override
-            public void onStopTrackingTouch(final SeekBar seekBar) {
-
-                isOnTouch = false;
-                //防止播放完成之后记录的位置得不到更新
-                if (mLastPercent != mDestPos) {
-                    mLastPercent = mDestPos;
-                }
-                if (mIsLocal) {
-                    resume();
-                    mVideoView.seekTo(mDestPos);
-                } else {
-                    Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
-                        @Override
-                        public void onNetError() {
-
-                        }
-
-                        @Override
-                        public void onContinue() {
-                            resume();
-                            mVideoView.seekTo(mDestPos);
-                        }
-                    });
-                }
-                touchControl();
-            }
-        });
-
-
-        mPlayImageButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                touchControl();
-                if (null != mVideoView) {
-                    if (state == PlaySate.STOP || state == PlaySate.PAUSE) {
-                        if (mIsLocal) {
-                            //                            start();
-                            if (state == PlaySate.STOP) {
-                                start();
-                            } else {
-                                resume();
-                            }
-                        } else {
-                            Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
-                                @Override
-                                public void onNetError() {
-
-                                }
-
-                                @Override
-                                public void onContinue() {
-                                    if (state == PlaySate.STOP) {
-                                        start();
-                                    } else {
-                                        resume();
-                                    }
-
-                                }
-                            });
-                        }
-                    } else if (state == PlaySate.PLAY) {
-                        pause();
-                    }
-                }
-            }
-        });
-
-        mExpandImageButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mIsExpandable){
-                    touchControl();
-                    Activity activity = (Activity) getContext();
-                    if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                        UIUtils.setLandscape(activity);
-                        if(null != mExpandListener) mExpandListener.expand();
-                    } else if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                        UIUtils.setPortrait(activity);
-                        if(null != mExpandListener) mExpandListener.collapse();
-                    }
-
-
-                }
-            }
-        });
-
-        showControl();
-    }
-
-
-    //延时消失
-    @Override
-    public void touchControl() {
-        Cog.e(TAG, " touchControl()~");
-        mHandlerHide.removeMessages(MSG_WHAT_NOTIFY_HIDE);
-        mHandlerHide.sendEmptyMessageDelayed(MSG_WHAT_NOTIFY_HIDE, 3 * 1000);
-    }
-
-    @Override
-    public void destroyView() {
-
-    }
-
-    @Override
-    public void showControl() {
-        Cog.e(TAG, "showControl()~");
-        touchControl();
-        if (getVisibility() == View.GONE) {
-
-            this.setVisibility(View.VISIBLE);
-            Animation anim = AnimationUtils.loadAnimation(mContext, R.anim.abc_fade_in);
-            this.startAnimation(anim);
-
-            if (null != mDisplayListener) {
-                mDisplayListener.show();
-            }
-
-            if (state == PlaySate.PAUSE) {
-                setProgress(mLastPercent);
-            } else if (state == PlaySate.PLAY) {
-                setProgress(mCurrentPosition);
-            } else if (state == PlaySate.STOP) {
-                setProgress(mCurrentPosition);
-            }
-        }
-
-    }
-
-    @Override
-    public void hideControl() {
-        Cog.e(TAG, "hideControl");
-        this.setVisibility(View.GONE);
-
-        if (null != mDisplayListener) {
-            mDisplayListener.hide();
-        }
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-
-        if (null != mVideoView) {
-            mVideoView = null;
-        }
-
-        //解除广播接收器
-        if (null != mWifiBroadCastUtil) {
-            mWifiBroadCastUtil.destroy();
-        }
-
-        if (null != mHideHandlerThread && null != mHandler.getLooper()) {
-            mHideHandlerThread.getLooper().quit();
-        }
-
     }
 
     public boolean isPlaying() {

@@ -96,7 +96,7 @@ public class CollectivePrepareLessonsNewActivity extends BaseHttpActivity implem
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> param = new HashMap<>();
         param.put("userType", mUserInfo.getUserType());
         param.put("uuid", mUserInfo.getUuid());

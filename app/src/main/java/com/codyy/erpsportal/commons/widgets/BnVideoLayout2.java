@@ -26,6 +26,7 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
     private TextView mHintTv;
     private BnVideoView2.OnBNErrorListener mOnErrorListener;
     private BnVideoView2.OnPlayingListener mOnPlayingListener;
+    private ITextClickListener mTextClickListener;
 
     public BnVideoLayout2(Context context) {
         this(context, null);
@@ -82,6 +83,8 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                         mBnVideoView.playNow();
                     }
                 }
+
+                if(null != mTextClickListener) mTextClickListener.onClick(v);
             }
         });
     }
@@ -100,16 +103,34 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
 
     @Override
     public void onError(int errorCode , String errorMsg) {
-        if (errorCode == -2 || 0 == errorCode) {
+        if (errorCode == -2 || 0 == errorCode ) {
+            if(mBnVideoView.getURLType() == BnVideoView2.BN_URL_TYPE_RTMP_LIVE){
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mHintTv.setText(R.string.txt_video_meeting_no_input_stream_retry);
+                        mHintTv.setVisibility(VISIBLE);
+                    }
+                });
+            }else{
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mHintTv.setText(R.string.tv_detail_video_un_start);
+                        mHintTv.setVisibility(VISIBLE);
+                    }
+                });
+            }
+        } else if( errorCode == -1){//不支持硬解，改为软解
+            mBnVideoView.setEncodeType(BnVideoView2.BN_ENCODE_SOFTWARE);
+        } else if(9 == errorCode){//9 no playable stream .
             post(new Runnable() {
                 @Override
                 public void run() {
-                    mHintTv.setText(R.string.txt_video_meeting_no_input_stream_retry);
+                    mHintTv.setText(R.string.tv_detail_video_un_start);
                     mHintTv.setVisibility(VISIBLE);
                 }
             });
-        } else if( errorCode == -1){//不支持硬解，改为软解
-            mBnVideoView.setEncodeType(BnVideoView2.BN_ENCODE_SOFTWARE);
         }
 
         if(null != mOnErrorListener) {
@@ -158,6 +179,10 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
 
     public void setReceiveVideo(boolean bReceived){
         mBnVideoView.setReceiveVideo(bReceived);
+    }
+
+    public void setTextClickListener(ITextClickListener textClickListener) {
+        this.mTextClickListener = textClickListener;
     }
 
     /**
@@ -239,5 +264,9 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
 
     public void setOnTipsTouchListener(View.OnClickListener listener){
         mHintTv.setOnClickListener(listener);
+    }
+
+    public interface  ITextClickListener {
+       void onClick(View v);
     }
 }

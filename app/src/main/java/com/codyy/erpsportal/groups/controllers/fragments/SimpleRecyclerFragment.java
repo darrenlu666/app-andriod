@@ -62,11 +62,11 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
 
     /**请求数据传递的参数**/
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         if(getSimpleRecyclerDelegate() == null){
             throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
         }
-        return getSimpleRecyclerDelegate().getParams();
+        return getSimpleRecyclerDelegate().getParams(isRefreshing);
     }
 
     @Override
@@ -83,7 +83,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
             mRefreshLayout.setRefreshing(false);
         }
         mEmptyView.setLoading(false);
-        getSimpleRecyclerDelegate().parseData(response);
+        getSimpleRecyclerDelegate().parseData(response,isRefreshing);
         mAdapter.setData(mDataList);
         //load more ...
         if(mDataList.size() <  getSimpleRecyclerDelegate().getTotal()){
@@ -121,7 +121,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(getSimpleRecyclerDelegate() == null){
             throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
@@ -146,7 +146,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
         mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<T>>() {
             @Override
             public BaseRecyclerViewHolder<T> createViewHolder(ViewGroup parent, int viewType) {
-                return getSimpleRecyclerDelegate().getViewHolder(parent);
+                return getSimpleRecyclerDelegate().getViewHolder(parent,viewType);
             }
 
             @Override

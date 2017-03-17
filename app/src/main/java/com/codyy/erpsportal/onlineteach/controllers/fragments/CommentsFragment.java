@@ -82,7 +82,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("uuid", mUserInfo.getUuid());
         data.put("evaluationId", mId);

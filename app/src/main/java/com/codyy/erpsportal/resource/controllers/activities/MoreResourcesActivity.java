@@ -321,9 +321,9 @@ public class MoreResourcesActivity extends AppCompatActivity {
                         if (mSemesterId != null) {
                             String semesterPlaceId = getSemesterPlaceId();
                             ResourcePropertyFilterAct.startForResult(MoreResourcesActivity.this, mAreaInfo,
-                                    new Choice(mSemesterId, semesterPlaceId, mSemesterName));
+                                    new Choice(mSemesterId, semesterPlaceId, mSemesterName), mUserInfo.isStudent());
                         } else {
-                            ResourcePropertyFilterAct.startForResult(MoreResourcesActivity.this, mAreaInfo);
+                            ResourcePropertyFilterAct.startForResult(MoreResourcesActivity.this, mAreaInfo, mUserInfo.isStudent());
                         }
                     }
 

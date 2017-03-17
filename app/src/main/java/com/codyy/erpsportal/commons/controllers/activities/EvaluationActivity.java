@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -20,13 +19,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,8 +32,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.fragments.EvaluationCommentFragment;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.adapters.CommentAdapter;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
@@ -47,7 +43,6 @@ import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
-import com.codyy.erpsportal.commons.models.dao.CacheDao;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
 import com.codyy.erpsportal.commons.models.entities.Comment;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -56,8 +51,6 @@ import com.codyy.erpsportal.commons.models.entities.evaluation.EvaluationVideoPa
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
 import com.google.gson.Gson;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import org.json.JSONObject;
 
@@ -99,8 +92,8 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
      * 获取直播地址
      */
     private final static int GET_LIVE_URL = 0x006;
-    private PullToRefreshListView mPullToRefreshListView;
-    private ListView mListView;
+//    private PullToRefreshListView mPullToRefreshListView;
+//    private ListView mListView;
     /**
      * 网络请求
      */
@@ -109,7 +102,6 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
     private AssessmentDetails mAssessmentDetails;
     private UserInfo userInfo;
     private ArrayList<Comment> mComments;
-    private CommentAdapter mCommentAdapter;
 
     private LinearLayout mLinearLayout;
     /**
@@ -166,9 +158,6 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
      */
     private RelativeLayout mTitleLayout;
 
-//    private Button mVideoListBtn;
-
-    private ListView mVideoListView;
 
     private BnVideoView2 mBnVideoView;
 //    private BNPlayerFactory mBnPlayerFactory;
@@ -182,17 +171,13 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
 
     private boolean isRate = false;
 
-    /**
-     * lsit头部view
-     */
-    private View mHeadView;
-    private TextView mNoAssessment;
     private TextView mTextNoVideo;
 
     //3G提示框
     private DialogUtil mDialogUtil;
     private RecyclerView mRecyclerView;
     private ResourceDetails mResourceDetails;
+    private EvaluationCommentFragment mEvaluationCommentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +187,8 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         mAssessmentDetails = getIntent().getParcelableExtra("assessmentDetails");
         userInfo = getIntent().getParcelableExtra(Constants.USER_INFO);
         type = getIntent().getIntExtra("type", 0);
+        mEvaluationCommentFragment = EvaluationCommentFragment.newInstance(mAssessmentDetails);
+        getSupportFragmentManager().beginTransaction().replace(R.id.comment_fragment, mEvaluationCommentFragment).commit();
         init();
         mResourceDetails = new ResourceDetails();
         if (userInfo != null) {
@@ -214,31 +201,20 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         mHandler = new Handler();
         mDialogUtil = new DialogUtil(this, left, right);
         mSender = new RequestSender(this);
-        mCommentAdapter = new CommentAdapter(this, mComments, mAssessmentDetails.getScoreType(), userInfo.getBaseUserId(), mAssessmentDetails.isScoreVisible(), mAssessmentDetails.getStatus());
-        mHeadView = LayoutInflater.from(this).inflate(R.layout.evaluation_lsit_heardview, null);
-        mRecyclerView = (RecyclerView) mHeadView.findViewById(R.id.evaluation_list_heardview_recycleview);
+        mRecyclerView = (RecyclerView) findViewById(R.id.evaluation_list_heardview_recycleview);
+        mRelativeLayoutAll = (RelativeLayout) findViewById(R.id.all_rate_layout);
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.my_rate_layout);
+        mRatingBar = (RatingBar) findViewById(R.id.evaluation_list_ratingbar);
+        mRatingBarAll = (RatingBar) findViewById(R.id.evaluation_list_all_ratingbar);
+        mLinearLayout = (LinearLayout) findViewById(R.id.evaluation_list_heardview_mark_linear);
+        mGradeBtn = (Button) findViewById(R.id.evaluation_list_mark);
+        mCommentBtn = (TextView) findViewById(R.id.evaluation_list_item_comment);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRelativeLayoutAll = (RelativeLayout) mHeadView.findViewById(R.id.all_rate_layout);
         mTextNoVideo = (TextView) findViewById(R.id.evaluation_textview_novideo);
-        mNoAssessment = (TextView) findViewById(R.id.evaluation_layout_textview);
-        mNoAssessment.setOnClickListener(this);
-        mRelativeLayout = (RelativeLayout) mHeadView.findViewById(R.id.my_rate_layout);
-        mPullToRefreshListView = (PullToRefreshListView) findViewById(R.id.evaluation_layout_listview);
-        mRatingBar = (RatingBar) mHeadView.findViewById(R.id.evaluation_list_ratingbar);
-        mRatingBarAll = (RatingBar) mHeadView.findViewById(R.id.evaluation_list_all_ratingbar);
-        mLinearLayout = (LinearLayout) mHeadView.findViewById(R.id.evaluation_list_heardview_mark_linear);
-        mGradeBtn = (Button) mHeadView.findViewById(R.id.evaluation_list_mark);
-        mCommentBtn = (TextView) mHeadView.findViewById(R.id.evaluation_list_item_comment);
         mCommentBtn.setOnClickListener(this);
-        mListView = mPullToRefreshListView.getRefreshableView();
-        mListView.addHeaderView(mHeadView);
-        mListView.setAdapter(mCommentAdapter);
-        mPullToRefreshListView.setOnRefreshListener(refreshListener2);
-
         commentDialogInit();
-
         mFullScreenBtn = (ImageView) findViewById(R.id.evaluation_details_fullscreen);
         mFullScreenBtn.setOnClickListener(this);
         mBnVideoView = (BnVideoView2) findViewById(R.id.evaluation_details_bnVideoView);
@@ -257,21 +233,8 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         });
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position > 1) {
-                    Intent intent = new Intent(EvaluationActivity.this, EvaluationAllActivity.class);
-                    intent.putParcelableArrayListExtra("mComments", mComments);
-                    intent.putExtra("userInfo", userInfo);
-                    intent.putExtra("assessmentDetails", mAssessmentDetails);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.slidemenu_show, R.anim.layout_hide);
-                }
-            }
-        });
         findViewById(R.id.evaluation_title_btn_down).setOnClickListener(this);
-        headViewSet(mHeadView);
+        headViewSet();
     }
 
 
@@ -359,26 +322,26 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
     }
 
     /**
-     * @param view
+     * @param
      */
-    private void headViewSet(View view) {
+    private void headViewSet() {
         mVideosAdapter = new DownLoadAdapter();
         mRecyclerView.setAdapter(mVideosAdapter);
-        ((TextView) view.findViewById(R.id.evaluation_list_heardview_text_video_number)).setText("共" + String.valueOf(mAssessmentDetails.getVideoIds().size()) + "段>");
-        TextView meRateText = (TextView) view.findViewById(R.id.evaluation_rate_me_text);
-        TextView allRateText = (TextView) view.findViewById(R.id.evaluation_rate_all_text);
+        ((TextView) findViewById(R.id.evaluation_list_heardview_text_video_number)).setText("共" + String.valueOf(mAssessmentDetails.getVideoIds().size()) + "段>");
+        TextView meRateText = (TextView) findViewById(R.id.evaluation_rate_me_text);
+        TextView allRateText = (TextView) findViewById(R.id.evaluation_rate_all_text);
 
         if (mAssessmentDetails.getVideoIds().size() <= 1) {
             mRecyclerView.setVisibility(View.GONE);
-            view.findViewById(R.id.evaluation_list_heardview_recycleview_line).setVisibility(View.GONE);
-            view.findViewById(R.id.evaluation_title_btn_down).setVisibility(View.VISIBLE);
+            findViewById(R.id.evaluation_list_heardview_recycleview_line).setVisibility(View.GONE);
+            findViewById(R.id.evaluation_title_btn_down).setVisibility(View.VISIBLE);
         } else {
-            view.findViewById(R.id.evaluation_list_heardview_recycleview_line).setVisibility(View.VISIBLE);
-            view.findViewById(R.id.evaluation_title_btn_down).setVisibility(View.GONE);
+            findViewById(R.id.evaluation_list_heardview_recycleview_line).setVisibility(View.VISIBLE);
+            findViewById(R.id.evaluation_title_btn_down).setVisibility(View.GONE);
         }
         if (mAssessmentDetails.getVideoIds().size() == 0) {
             findViewById(R.id.evaluation_list_heardview_btn_down).setVisibility(View.GONE);
-            view.findViewById(R.id.evaluation_title_btn_down).setVisibility(View.GONE);
+            findViewById(R.id.evaluation_title_btn_down).setVisibility(View.GONE);
         } else {
             findViewById(R.id.evaluation_list_heardview_btn_down).setOnClickListener(this);
             findViewById(R.id.evaluation_list_heardview_btn_down).setVisibility(View.VISIBLE);
@@ -532,35 +495,10 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onResponse(JSONObject response) {
                 switch (msg) {
-                    case GET_COMMENT:
-                        if (mPullToRefreshListView.isRefreshing()) {
-                            mPullToRefreshListView.onRefreshComplete();
-                        }
-                        if (start == 0) {
-                            mComments.clear();
-                        }
-                        Comment.getComment(response, mComments);
-                        mCommentAdapter.notifyDataSetChanged();
-                        if (mComments.size() < end) {
-                            mPullToRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-                        } else {
-                            mPullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
-                        }
-                        if (mComments.size() == 0) {
-                            mNoAssessment.setVisibility(View.VISIBLE);
-                        } else {
-                            mNoAssessment.setVisibility(View.GONE);
-                        }
-                        break;
-                    case HTTPCONNECT_ERROE:
-                        if (mPullToRefreshListView.isRefreshing()) {
-                            mPullToRefreshListView.onRefreshComplete();
-                        }
-                        break;
                     case SEND_MSG_SUCESS:
                         if ("success".equals(response.optString("result"))) {
                             ToastUtil.showToast(EvaluationActivity.this, "评论成功");
-                            mPullToRefreshListView.setRefreshing();
+                            mEvaluationCommentFragment.loadData();
                             mCommentText.setText("");
                         } else {
                             ToastUtil.showToast(EvaluationActivity.this, "评论失败");
@@ -571,7 +509,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
                         if ("success".equals(response.optString("result"))) {
                             ToastUtil.showToast(EvaluationActivity.this, "打分成功");
                             isRate = true;
-                            mPullToRefreshListView.setRefreshing();
+                            mEvaluationCommentFragment.loadData();
                             mAssessmentDetails.setMyScore(mRatingBar.getRating());
                         } else {
                             ToastUtil.showToast(EvaluationActivity.this, "打分失败");
@@ -580,7 +518,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
                         break;
                     case GET_ASSESSMENT_DETAIL:
                         AssessmentDetails.getAssessmentDetail(response, mAssessmentDetails);
-                        headViewSet(mHeadView);
+                        headViewSet();
                         break;
                     case GET_LIVE_URL:
                         if ("success".equals(response.optString("result"))) {
@@ -617,27 +555,6 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         mBnVideoView.play(BnVideoView2.BN_PLAY_DEFAULT);
         mHandler.postDelayed(mRunnable, 3000);
     }
-
-    /**
-     * 刷新监听
-     */
-    private PullToRefreshBase.OnRefreshListener2 refreshListener2 = new PullToRefreshBase.OnRefreshListener2() {
-        @Override
-        public void onPullDownToRefresh(PullToRefreshBase refreshView) {
-            start = 0;
-            end = start + cont;
-            getComment();
-        }
-
-        @Override
-        public void onPullUpToRefresh(PullToRefreshBase refreshView) {
-            if (mComments.size() >= end) {
-                start = mComments.size();
-                end = start + cont;
-                getComment();
-            }
-        }
-    };
 
 
     /**
@@ -731,9 +648,6 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
                 mHandler.removeCallbacks(mRunnable);
                 mHandler.postDelayed(mRunnable, 3000);
                 break;
-            case R.id.evaluation_layout_textview://没有评论时刷新
-                mPullToRefreshListView.setRefreshing();
-                break;
         }
     }
 
@@ -778,7 +692,6 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private CacheDao rDao;
 
     /**
      * 下载
@@ -826,52 +739,6 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         }
     };
     private int videoIndex = 0;
-
-    /**
-     * 视频列表list adapter
-     */
-    class videosAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return mAssessmentDetails.getVideoIds().size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            convertView = LayoutInflater.from(EvaluationActivity.this).inflate(R.layout.evaluation_video_list_item, null);
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.evaluation_video_item_iamge);
-            TextView textView = (TextView) convertView.findViewById(R.id.evaluation_video_item_text);
-            Button button = (Button) convertView.findViewById(R.id.evaluation_video_item_btn);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    downLoadVideo(mAssessmentDetails.getVideoIds()[position]);
-                }
-            });
-            textView.setText("视频文件 " + (position + 1));
-            if (videoIndex == position) {
-                imageView.setVisibility(View.VISIBLE);
-                TextPaint tp = textView.getPaint();
-                tp.setFakeBoldText(true);
-            } else {
-                imageView.setVisibility(View.GONE);
-                TextPaint tp = textView.getPaint();
-                tp.setFakeBoldText(false);
-            }
-            return convertView;
-        }
-    }
 
     class DownLoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

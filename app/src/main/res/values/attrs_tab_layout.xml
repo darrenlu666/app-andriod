@@ -1,0 +1,12 @@
+<resources>
+    <declare-styleable name="FlexTabLayout">
+        <!-- true:单行text false: 采用CustomView-->
+        <attr name="isSingleLineText" format="boolean" />
+        <!-- 选中的item颜色-->
+        <attr name="selectItemColor" format="color" />
+        <!--分割线样式-->
+        <attr name="dividerMode" format="integer" />
+        <!--分割线颜色-->
+        <attr name="dividerColor" format="color" />
+    </declare-styleable>
+</resources>

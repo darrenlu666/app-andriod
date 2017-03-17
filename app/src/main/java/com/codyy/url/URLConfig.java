@@ -447,6 +447,25 @@ public class URLConfig {
     public static String HISTORY_VIDEO_ONLINE_CLASS;
 
     /**
+     * 专递课堂 直播 获取实时总在线人数
+     * clsScheduleDetailId	课堂id	string
+     * uuid	uuid	string
+     */
+    @UrlSuffix("/onlineclass/getJoinUserRecord.do")
+    public static String GET_CUSTOMER_LIVING_WATCH_COUNT;
+
+    /**
+     * 专递课堂 直播 获取实时总在线人数列表
+     * lsScheduleDetailId	课堂id	string
+     * count	每页显示条数	number
+     * studentId	如果是家长需传入对应孩子的Id	string
+     * updateTime	前一次加载的最后一条数据的时间	string
+     * uuid	uuid	string
+     */
+    @UrlSuffix("/onlineclass/selectJoinUserPageList.do")
+    public static String GET_CUSTOMER_LIVING_WATCHER_LIST;
+
+    /**
      * 专递课堂 区域用户往期录播 new
      */
     @UrlSuffix("/onlineclass/getAreaReplyList.do")
@@ -2789,6 +2808,36 @@ public class URLConfig {
      */
     @UrlSuffix("/mobile/district/getReceiveCount.do")
     public static String GET_RECEIVE_COUNT_DETAIL;
+
+    /**
+     * 校园电视台-节目单
+     * liveDate	查询日期	string	2017-02-03
+     * schoolId	学校id	string	必填
+     * uuid	uuid	string
+     */
+    @UrlSuffix("/mobile/tvprogram/liveList.do")
+    public static String GET_SCHOOL_TV_PROGRAM_LIST;
+    /**
+     * 校园电视台-节目单
+     * schoolId	学校id	string
+     * tvProgramDetailId	节目id	string
+     * uuid		string
+     */
+    @UrlSuffix("/mobile/tvprogram/detail.do")
+    public static String GET_SCHOOL_TV_PROGRAM_DETAIL;
+    /**
+     * 校园电视台-往期视频
+     * end		number
+     * orderBy	按什么排序	string	programName 节目名称；viewCnt 点击量；time 按时间
+     * orderType	排序规则	string	asc 正序； desc 倒序
+     * schoolId	学校id	number
+     * start		number
+     * uuid		string
+     */
+    @UrlSuffix("/mobile/tvProgram/getPastProgramList.do")
+    public static String GET_SCHOOL_TV_HISTORY_LIST;
+
+
 
     static {
         UrlBuilder.updateUrls();

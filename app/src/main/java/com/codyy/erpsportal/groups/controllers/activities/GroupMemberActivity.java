@@ -84,7 +84,7 @@ public class GroupMemberActivity extends BaseHttpActivity {
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
@@ -252,7 +252,7 @@ public class GroupMemberActivity extends BaseHttpActivity {
      */
     private void loadMoreData() {
         if(null == mSender) return;
-        HashMap hashMap = getParam();
+        HashMap hashMap = getParam(false);
         hashMap.put("type",TYPE_REQUEST_MEMBER);
         requestData(obtainAPI(), hashMap,false, new IRequest() {
             @Override

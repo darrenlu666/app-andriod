@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_item_class"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:paddingLeft="16dp"
+    android:paddingTop="20dp">
+
+    <TextView
+        android:id="@+id/school_name_tv"
+        style="@style/ListItemTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/division_line"
+        android:maxLines="1"
+        tools:text="舒城县王烈桥中心王烈桥中心小学dfaadfasdfa" />
+    <TextView
+        android:id="@+id/status_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/school_name_tv"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/ic_tag_on_yellow"
+        android:paddingLeft="12dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:textSize="10sp"
+        tools:text="进行中" />
+    <TextView
+        android:id="@+id/class_detail_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/school_name_tv"
+        android:layout_alignBottom="@id/status_tv"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/status_tv"
+        android:gravity="bottom"
+        android:singleLine="true"
+        tools:text="六年级/语文/张三三张三三" />
+</RelativeLayout>

@@ -100,7 +100,7 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap hashMap = new HashMap();
         hashMap.put("uuid", mUserInfo.getUuid());
         return hashMap;

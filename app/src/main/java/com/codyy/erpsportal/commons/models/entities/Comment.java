@@ -3,6 +3,8 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.codyy.erpsportal.statistics.models.entities.BaseEntity;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,7 +13,15 @@ import java.util.List;
 /**
  * Created by kmdai on 2015/4/21.
  */
-public class Comment implements Parcelable {
+public class Comment extends RefreshEntity implements Parcelable {
+    /**
+     * heardview
+     */
+    public final static int REFRESH_TYPE_TITLE_VIEW = REFRESH_TYPE_LASTVIEW + 1;
+    /**
+     * 列表
+     */
+    public final static int REFRESH_TYPE_ITEM_VIEW = REFRESH_TYPE_TITLE_VIEW + 1;
     private int total;
     private String commentId;
     private String baseUserId;
@@ -108,6 +118,7 @@ public class Comment implements Parcelable {
                 comment.setBaseUserId(jsonObject.optString("baseUserId"));
                 comment.setRealName(jsonObject.optString("realName"));
                 comment.setHeadPic(jsonObject.optString("headPic"));
+                comment.setmHolderType(REFRESH_TYPE_ITEM_VIEW);
                 comment.setCreateTime(jsonObject.optString("createTime"));
                 comment.setCommentContent(jsonObject.optString("commentContent"));
                 comment.setShowScore(jsonObject.optDouble("showScore", -1));
@@ -127,6 +138,7 @@ public class Comment implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
         dest.writeInt(this.total);
         dest.writeString(this.commentId);
         dest.writeString(this.baseUserId);
@@ -139,6 +151,7 @@ public class Comment implements Parcelable {
     }
 
     protected Comment(Parcel in) {
+        super(in);
         this.total = in.readInt();
         this.commentId = in.readString();
         this.baseUserId = in.readString();
@@ -151,10 +164,12 @@ public class Comment implements Parcelable {
     }
 
     public static final Creator<Comment> CREATOR = new Creator<Comment>() {
+        @Override
         public Comment createFromParcel(Parcel source) {
             return new Comment(source);
         }
 
+        @Override
         public Comment[] newArray(int size) {
             return new Comment[size];
         }

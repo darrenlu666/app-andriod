@@ -49,7 +49,7 @@ import butterknife.OnClick;
  * 视频会议-观看视频
  * Created by poe on 2017/7/19.
  */
-public class VideoMeetingPlayActivity extends BaseHttpActivity implements BnVideoView2.OnBNCompleteListener, Handler.Callback {
+public  class VideoMeetingPlayActivity extends BaseHttpActivity implements BnVideoView2.OnBNCompleteListener, Handler.Callback {
     private String TAG = VideoMeetingPlayActivity.class.getSimpleName();
      /**     * 标题     */
     private static final String EXTRA_TITLE = "title";
@@ -89,7 +89,7 @@ public class VideoMeetingPlayActivity extends BaseHttpActivity implements BnVide
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         params.put("remoteId", mPreparationId);

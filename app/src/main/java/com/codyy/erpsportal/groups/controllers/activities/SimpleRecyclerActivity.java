@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.groups.controllers.activities;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
+import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
@@ -35,18 +37,20 @@ import butterknife.Bind;
  * 5. 能够自动加载更多
  * Created by poe on 3/6/17.
  */
-public abstract class SimpleRecyclerActivity<T> extends BaseHttpActivity {
+public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends BaseHttpActivity {
     private final static String TAG = "SimpleRecyclerActivity";
     /**     * 单页最大数据请求    */
     public static final int sPageCount = 10 ;
     @Bind(R.id.toolbar)Toolbar mToolBar;
     @Bind(R.id.toolbar_title)TextView mTitleTextView;
     @Bind(R.id.empty_view)  EmptyView mEmptyView;
-    @Bind(R.id.drawer_videoMeeting)  DrawerLayout mDrawerLayout;
+    @Bind(R.id.drawer_layout)  DrawerLayout mDrawerLayout;
     @Bind(R.id.refresh_layout)RefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view)SimpleRecyclerView mRecyclerView;
     public List<T> mDataList = new ArrayList<>();
     protected BaseRecyclerAdapter<T,BaseRecyclerViewHolder<T>> mAdapter ;
+    /**获取参数配置　before {#init()} 可进行UI初始化**/
+    public abstract  void preInitArguments();
     public abstract SimpleRecyclerDelegate<T> getSimpleRecyclerDelegate();
 
     @Override
@@ -63,15 +67,13 @@ public abstract class SimpleRecyclerActivity<T> extends BaseHttpActivity {
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         if(getSimpleRecyclerDelegate() == null){
             throw new IllegalAccessError("method {@link#SimpleRecyclerDelegate} is not implemented !");
         }
-        return getSimpleRecyclerDelegate().getParams();
+        return getSimpleRecyclerDelegate().getParams(isRefreshing);
     }
 
-    /**获取参数配置　before {#init()} **/
-    public abstract  void preInitArguments();
     /** 设置标题 **/
     public void setTitle(String title) {
         if(null != mTitleTextView && !TextUtils.isEmpty(title)){
@@ -106,12 +108,14 @@ public abstract class SimpleRecyclerActivity<T> extends BaseHttpActivity {
         mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<T>>() {
             @Override
             public BaseRecyclerViewHolder<T> createViewHolder(ViewGroup parent, int viewType) {
-                return getSimpleRecyclerDelegate().getViewHolder(parent);
+                BaseRecyclerViewHolder viewHolder = getSimpleRecyclerDelegate().getViewHolder(parent,viewType);
+                if(null == viewHolder) throw new IllegalArgumentException("ViewHolder should not be NULL !");
+                return viewHolder;
             }
 
             @Override
             public int getItemViewType(int position) {
-                return 0;
+                return mDataList.get(position).getBaseViewHoldType();
             }
         });
         mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
@@ -166,7 +170,7 @@ public abstract class SimpleRecyclerActivity<T> extends BaseHttpActivity {
             mRefreshLayout.setRefreshing(false);
         }
         mEmptyView.setLoading(false);
-        getSimpleRecyclerDelegate().parseData(response);
+        getSimpleRecyclerDelegate().parseData(response,isRefreshing);
         mAdapter.setData(mDataList);
         //load more ...
         if(mDataList.size() <  getSimpleRecyclerDelegate().getTotal()){
@@ -207,8 +211,14 @@ public abstract class SimpleRecyclerActivity<T> extends BaseHttpActivity {
      */
     public void refresh() {
         if(null == mRecyclerView ) return;
+        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         mRecyclerView.setRefreshing(true);
         mAdapter.setHasMoreData(false);
+        requestData(true);
+    }
+
+    public void initData(){
+        if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         requestData(true);
     }
 }

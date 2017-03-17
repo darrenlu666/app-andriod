@@ -119,7 +119,7 @@ public class GroupManagerListFragment extends SimpleRecyclerFragment<Group> {
              * @return
              */
             @Override
-            public HashMap<String, String> getParams() {
+            public HashMap<String, String> getParams(boolean isRefreshing) {
                 HashMap hashMap = new HashMap();
                 if(null != mUserInfo) hashMap.put("uuid" , mUserInfo.getUuid());
                 if(null != mBaseAreaId) hashMap.put("areaId",mBaseAreaId);
@@ -138,7 +138,7 @@ public class GroupManagerListFragment extends SimpleRecyclerFragment<Group> {
             }
 
             @Override
-            public void parseData(JSONObject response) {
+            public void parseData(JSONObject response,boolean isRefreshing) {
                 GroupTeaching groupTeaching = new Gson().fromJson(response.toString(),GroupTeaching.class);
                 if(null != groupTeaching && null != groupTeaching.getTotal()) {
                     mTotal  =   Integer.parseInt(groupTeaching.getTotal());
@@ -152,7 +152,7 @@ public class GroupManagerListFragment extends SimpleRecyclerFragment<Group> {
             }
 
             @Override
-            public BaseRecyclerViewHolder<Group> getViewHolder(ViewGroup parent) {
+            public BaseRecyclerViewHolder<Group> getViewHolder(ViewGroup parent,int viewType) {
                 return new GroupManagerViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_group_manager,parent,false));
             }

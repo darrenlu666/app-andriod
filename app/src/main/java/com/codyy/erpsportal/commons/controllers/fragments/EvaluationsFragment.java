@@ -250,6 +250,6 @@ public class EvaluationsFragment extends BaseRefreshFragment<Assessment> impleme
             data.put("isInvited", "Y");
         }
         data.put("evaluationId", assessment.getEvaluationId());
-        httpConnect(URLConfig.GET_EVALUATIONDETAIL, data, GET_ASSESSMENT_DETAIL);
+        httpConnect(URLConfig.GET_EVALUATION_DETAIL, data, GET_ASSESSMENT_DETAIL);
     }
 }

@@ -6,6 +6,7 @@
     <string name="no_data_for_now">暂时没有相关内容</string>
     <string name="net_error">网络连接错误！</string>
     <string name="net_connect_error">数据请求错误！</string>
+    <string name="null_param_error">参数为NULL错误！</string>
     <string name="share_net_error">共享桌面/视频失败，无法链接服务器！</string>
     <string name="just_now">刚刚</string>
     <string name="beforeMin">%d分钟前</string>
@@ -48,6 +49,7 @@
     <string name="exit">退\ \ \ 出</string>
     <string name="title_activity_video_details">VideoDetailsActivity</string>
     <string name="filter">筛选</string>
+    <string name="daily_report">筛选</string>
     <string name="loading">加载中…</string>
     <string name="pull_to_refresh">下拉刷新</string>
     <string name="release_to_refresh">释放刷新</string>
@@ -768,4 +770,11 @@
     <string name="user_locked">账号已被锁定，请联系管理员</string>
     <string name="deleting">删除中…</string>
 
+    <!-- 校园电视台-节目-->
+    <string name="tv_detail_program_title">节目名称:</string>
+    <string name="tv_detail_program_time">节目时间:</string>
+    <string name="tv_detail_program_master">主持人:</string>
+    <string name="tv_detail_program_detail">简介:</string>
+    <string name="tv_detail_video_un_start">当前无直播，请稍等...</string>
+    
 </resources>

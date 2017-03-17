@@ -59,7 +59,6 @@ import java.util.Map;
 /**
  * 直播详细、视频播放页面
  * Created by caixingming on 2015/4/24.
- * <p/>
  * 多个视频播放、主辅课堂页面
  */
 public class LiveVideoListPlayActivity extends FragmentActivity {
@@ -197,7 +196,7 @@ public class LiveVideoListPlayActivity extends FragmentActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Cog.d(TAG, "fetchMainVideoUrl error=", error);
-                        videoLayout.onError(-2,null == error ?error.getMessage():TAG);
+                        videoLayout.onError(-2,null != error ?error.getMessage():TAG);
                     }
                 });
                 mRequestQueue.add(request);

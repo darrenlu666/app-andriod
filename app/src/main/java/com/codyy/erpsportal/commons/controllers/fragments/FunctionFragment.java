@@ -92,7 +92,7 @@ public class FunctionFragment extends BaseHttpFragment {
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());

@@ -77,11 +77,11 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
 
     @Override
     public String obtainAPI() {
-        return URLConfig.GET_EVALUATIONDETAIL;
+        return URLConfig.GET_EVALUATION_DETAIL;
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("uuid", mUserInfo.getUuid());
         if (type == AssessmentClassActivity.INVITED) {

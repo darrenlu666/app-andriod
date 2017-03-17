@@ -380,6 +380,11 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * 创建学期组件项
+     * @param termEntity 学期项数据
+     * @return CheckBox组件
+     */
     private CheckBox createTermItem(TermEntity termEntity) {
         CheckBox checkBox = new CheckBox(this);
         checkBox.setText(termEntity.getName());
@@ -432,11 +437,20 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }));
     }
 
+    /**
+     * 添加一个学科项
+     * @param subjectEntity 学科项数据
+     */
     private void addSubjectCbList(BaseEntity subjectEntity) {
         CheckBox subjectCb = createSubjectCb(subjectEntity);
         mSubjectsOl.addView(subjectCb);
         mSubjectCbList.add(subjectCb);
         subjectCb.setOnClickListener(mOnSubjectClickListener);
+        if (mFilterCarrier != null && mFilterCarrier.getSubjectId() != null) {
+            if (mFilterCarrier.getSubjectId().equals(subjectEntity.getId())) {
+                subjectCb.setChecked(true);
+            }
+        }
     }
 
     private OnClickListener mOnSubjectClickListener = new OnClickListener() {
@@ -459,8 +473,6 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         checkBox.setText(subject.getName());
         return checkBox;
     }
-
-
 
     @OnClick(R.id.btn_return)
     public void onReturnClick() {

@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -31,9 +32,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.fragment.ClassDetailFragment;
 import com.codyy.erpsportal.classroom.fragment.ClassRoomCommentFragment;
@@ -52,17 +53,13 @@ import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
 import com.codyy.url.URLConfig;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 专递课堂 直录播课堂的 直播 录播详情界面Activity
@@ -70,25 +67,12 @@ import butterknife.OnClick;
  */
 public class ClassRoomDetailActivity extends AppCompatActivity implements View.OnClickListener, ClassRoomCommentFragment.SoftInputOpenListener {
     private static final String TAG = ClassRoomDetailActivity.class.getSimpleName();
-
-    @Bind(R.id.tv_class_detail)
-    TextView mTvClassDetail;
-
-    @Bind(R.id.tv_latest_comment)
-    TextView mTvLatestComment;
-
-    @Bind(R.id.view_fst_fragment_line)
-    View mViewFstFragmentLine;
-
-    @Bind(R.id.view_sec_fragment_line)
-    View mViewSecFragmentLine;
-
-    @Bind(R.id.vp_class_detail)
-    ViewPager mViewPager;
-
+    @Bind(R.id.tab_layout)TabLayout mTabLayout;
+    @Bind(R.id.view_pager)  ViewPager mViewPager;
     RelativeLayout mRlVideoList;
     TextView mTitleTv;
-
+    private TabLayout.Tab mPeopleTab;//总观看人数
+    private UserInfo mUserInfo;//当前用户信息
     /**
      * 往期录播布局
      */
@@ -126,10 +110,6 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
      * 当前播放的视频片段index
      */
     private int mCurrentPlayIndex;
-
-    private LinearLayout mTabLine;
-
-    private LinearLayout mTabLineBottom;
 
     /**
      * 视频列表适配器
@@ -170,6 +150,8 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         mFrom = getIntent().getExtras().getString(ClassRoomContants.FROM_WHERE_MODEL);
         mStatus = getIntent().getExtras().getString(ClassRoomContants.EXTRA_LIVE_STATUS);
         mSubject = getIntent().getExtras().getString(ClassRoomContants.EXTRA_LIVE_SUBJECT);
+        mUserInfo = getIntent().getParcelableExtra(Constants.USER_INFO);
+        if(null == mUserInfo) mUserInfo = UserInfoKeeper.obtainUserInfo();
         initViewStub();
         handleData();
         //禁止锁屏
@@ -193,8 +175,6 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
      * 分别为实时直播和往期录播加载不同的view
      */
     private void initViews() {
-        mTabLine = (LinearLayout) findViewById(R.id.ll_title);
-        mTabLineBottom = (LinearLayout) findViewById(R.id.ll_line);
         mFlRecordVideo = (FrameLayout) findViewById(R.id.fl_record_video);
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
             initLiveVideo();
@@ -387,58 +367,51 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     }
 
     private void addViewPager() {
+        mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.main_green));
+        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         List<Fragment> mFragmentList = new ArrayList<>();
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
+            mTabLayout.addTab(mTabLayout.newTab().setText("课程详情"));
             mFragmentList.add(ClassDetailFragment.newInstance(mFrom, mClassRoomDetail.getArea(), mClassRoomDetail.getClassPeriod(), mClassRoomDetail.getClassTime(),
                     mClassRoomDetail.getGrade(), mClassRoomDetail.getSchoolName(), mClassRoomDetail.getTeacher(), mClassRoomDetail.getSubject(), getReceiveNameList()));
         } else {
+            mTabLayout.addTab(mTabLayout.newTab().setText("课程详情"));
             mFragmentList.add(ClassDetailFragment.newInstance(mFrom, mRecordRoomDetail.getArea(), mRecordRoomDetail.getClassPeriod(), mRecordRoomDetail.getClassTime(),
                     mRecordRoomDetail.getGrade(), mRecordRoomDetail.getSchoolName(), mRecordRoomDetail.getTeacher(), mRecordRoomDetail.getSubject(), getReceiveNameList(),
                     mRecordRoomDetail.getTimeLength(), mRecordRoomDetail.getPlayCount()));
         }
-
         //添加最新评论fragment
-        ClassRoomCommentFragment classRoomCommentFragment;
-        mFragmentList.add(classRoomCommentFragment = ClassRoomCommentFragment.newInstance(UserInfoKeeper.obtainUserInfo(), mScheduleDetailId, mFrom));
-        classRoomCommentFragment.setOnSoftInputOpenListener(this);
+        mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
+        mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
                 mFragmentList, new String[]{getString(R.string.class_detail),getString(R.string.newest_comment)});
-
         mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        mTvClassDetail.setTypeface(Typeface.DEFAULT_BOLD);
-                        mViewFstFragmentLine.setBackgroundColor(getColorResource(R.color.main_color));
-                        mTvLatestComment.setTypeface(Typeface.DEFAULT);
-                        mViewSecFragmentLine.setBackgroundDrawable(null);
-                        break;
-                    case 1:
-                        mTvLatestComment.setTypeface(Typeface.DEFAULT_BOLD);
-                        mViewSecFragmentLine.setBackgroundColor(getColorResource(R.color.main_color));
-                        mTvClassDetail.setTypeface(Typeface.DEFAULT);
-                        mViewFstFragmentLine.setBackgroundDrawable(null);
-                        break;
-                }
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
+
     }
 
     private int getColorResource(@ColorRes int colorId) {
         return ResourcesCompat.getColor(getResources(), colorId, null);
     }
 
-    @OnClick({R.id.tv_class_detail, R.id.tv_latest_comment})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.tv_class_detail:
-                mViewPager.setCurrentItem(0);
-                break;
-            case R.id.tv_latest_comment:
-                mViewPager.setCurrentItem(1);
-                break;
             case R.id.iv_back:
                 if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {//直播：全屏状态下点击返回按钮时，返回竖屏
                     if (mIsExpanable) {
@@ -499,20 +472,22 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         }
     }
 
-    public static void startActivity(Context context, String scheduleDetailId, String from,String subject) {
+    public static void startActivity(Context context,UserInfo userInfo, String scheduleDetailId, String from,String subject) {
         Intent intent = new Intent(context, ClassRoomDetailActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID, scheduleDetailId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
         intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT,subject);
+        intent.putExtra(Constants.USER_INFO,userInfo);
         context.startActivity(intent);
     }
 
-    public static void startActivity(Context context, String scheduleDetailId, String from, String status,String subject) {
+    public static void startActivity(Context context,UserInfo userInfo, String scheduleDetailId, String from, String status,String subject) {
         Intent intent = new Intent(context, ClassRoomDetailActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID, scheduleDetailId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
         intent.putExtra(ClassRoomContants.EXTRA_LIVE_STATUS, status);
         intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT,subject);
+        intent.putExtra(Constants.USER_INFO,userInfo);
         context.startActivity(intent);
     }
 
@@ -545,14 +520,14 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
 
     @Override
     public void open() {
-        mTabLine.setVisibility(View.GONE);
-        mTabLineBottom.setVisibility(View.GONE);
+//        mTabLine.setVisibility(View.GONE);
+//        mTabLineBottom.setVisibility(View.GONE);
     }
 
     @Override
     public void close() {
-        mTabLine.setVisibility(View.VISIBLE);
-        mTabLineBottom.setVisibility(View.VISIBLE);
+//        mTabLine.setVisibility(View.VISIBLE);
+//        mTabLineBottom.setVisibility(View.VISIBLE);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
