@@ -129,10 +129,6 @@ android {
             buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85\"")
         }
 
-        codyyTest2 {
-            applicationId "com.codyy.erpsportal.ct"
-            buildConfigField("String", "API_HOST", "\"http://9itest.mobile.codyy.cn:85\"")
-        }
         train {
             applicationId "com.codyy.erpsportal.tr"
             buildConfigField("String", "API_HOST", "\"http://mobile.needu.cn\"")
