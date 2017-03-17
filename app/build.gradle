@@ -176,5 +176,6 @@ dependencies {
     compile project(':codyymedialibrary')
     compile project(':url-builder-annotations')
     compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.1'
+    compile 'cn.aigestudio.datepicker:DatePicker:2.2.0'
     apt project(':url-builder-compiler')
 }
