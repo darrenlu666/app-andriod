@@ -148,7 +148,6 @@ android {
     dataBinding {
         enabled = true
     }
-    buildToolsVersion '25.0.2'
 }
 dependencies {
     compile "com.android.support:support-v4:${SUPPORT_VERSION}"
