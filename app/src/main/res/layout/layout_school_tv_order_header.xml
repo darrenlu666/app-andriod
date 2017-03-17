@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:gravity="center_vertical"
+    android:background="@color/user_bg_color"
+    >
+
+    <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+        android:id="@+id/time_order_udb"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/tv_order_time"
+        />
+
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="18dp"
+        android:background="#dddddd" />
+
+
+    <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+        android:id="@+id/name_order_udb"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/tv_order_name"
+        />
+
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="18dp"
+        android:background="#dddddd" />
+
+    <com.codyy.erpsportal.commons.widgets.UpOrDownButton
+        android:id="@+id/count_order_udb"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/tv_order_count"
+        />
+</LinearLayout>

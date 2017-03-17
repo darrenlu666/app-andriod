@@ -10,9 +10,9 @@
                 android:clickable="true"
                 android:orientation="horizontal"
                 android:paddingTop="20dp"
-    android:paddingBottom="20dp"
-    android:paddingLeft="16dp"
-    >
+                android:paddingBottom="20dp"
+                android:paddingLeft="16dp"
+                >
     <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/sdv"
         android:layout_width="match_parent"

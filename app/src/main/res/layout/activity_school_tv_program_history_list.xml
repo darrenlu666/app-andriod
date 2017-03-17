@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+    <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/layout_school_tv_order_header" />
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.codyy.erpsportal.commons.widgets.RefreshLayout
+                android:id="@+id/refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="#fff"
+                    />
+            </com.codyy.erpsportal.commons.widgets.RefreshLayout>
+            <com.codyy.erpsportal.commons.widgets.EmptyView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
+        <FrameLayout
+            android:id="@+id/fl_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            />
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

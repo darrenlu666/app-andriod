@@ -26,17 +26,17 @@ import com.codyy.erpsportal.schooltv.controllers.viewholders.SchoolProgramViewHo
 import com.codyy.erpsportal.schooltv.models.SchoolProgram;
 import com.codyy.erpsportal.schooltv.models.SchoolProgramParse;
 import com.codyy.erpsportal.schooltv.models.WeekDay;
+import com.codyy.erpsportal.schooltv.utils.DatePickTheme;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
-
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.Bind;
+import cn.aigestudio.datepicker.bizs.themes.DPTManager;
 import cn.aigestudio.datepicker.cons.DPMode;
 import cn.aigestudio.datepicker.views.DatePicker;
 
@@ -64,47 +64,34 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
     @Override
     public void preInitArguments() {
         mLiveDate = DateUtil.getNow(DateUtil.YEAR_MONTH_DAY);
-//        DateUtil.getWeek()
-        mWeekDayList = DateUtil.getCurrentWeek(DateUtil.YEAR_MONTH_DAY);
-        for(int i=0;i<mWeekDayList.size();i++){
-            System.out.print(" day: "+mWeekDayList.get(i).getWeekDate());
-        }
     }
+
+    TabLayout.OnTabSelectedListener mTabSelectListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            int index = mTabLayout.getSelectedTabPosition();
+            String date = mWeekDayList.get(index).getWeekDate();
+            mLiveDate = date;
+            refresh();
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
 
     @Override
     public void init() {
         super.init();
         setTitle(Titles.sWorkspaceTvProgramProgramList);
-
-        for(WeekDay wd : mWeekDayList){
-            Cog.i(TAG,wd.getWeekDate()+" : "+wd.getShortWeekDate());
-            View customView = LayoutInflater.from(this).inflate(R.layout.tab_item_two_line_text,null);
-            ((TextView)customView.findViewById(R.id.tab_item_title)).setText(wd.getWeekDay());
-            ((TextView)customView.findViewById(R.id.tab_item_content)).setText(wd.getShortWeekDate());
-            mTabLayout.addTab(mTabLayout.newTab().setText(wd.getWeekDay()).setCustomView(customView));
-        }
-
         mTabLayout.setTabTextColors(R.color.grey_444,R.color.main_color);
         mTabLayout.setSelectedTabIndicatorHeight(0);
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int index = mTabLayout.getSelectedTabPosition();
-                mLiveDate = mWeekDayList.get(index).getWeekDate();
-                refresh();
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
         //set filter
         setFilterListener(new IFilterListener() {
             @Override
@@ -117,19 +104,36 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
 
             }
         });
+        //init date table .
+        refreshTabLayout(mLiveDate);
+    }
 
+    //更新头部的时间表
+    private void refreshTabLayout(String date) {
+        Cog.i(TAG,"update date : "+date);
+        //if select different date clear date source .
+       /* if(!mLiveDate.equals(date)){
+            mDataList.clear();
+            mAdapter.notifyDataSetChanged();
+        }*/
+        mWeekDayList = DateUtil.getCurrentWeek(date,DateUtil.YEAR_MONTH_DAY);
+        mTabLayout.removeOnTabSelectedListener(mTabSelectListener);
+        mTabLayout.removeAllTabs();
+        for(WeekDay wd : mWeekDayList){
+            Cog.i(TAG,wd.getWeekDate()+" : "+wd.getShortWeekDate());
+            View customView = LayoutInflater.from(this).inflate(R.layout.tab_item_two_line_text,null);
+            ((TextView)customView.findViewById(R.id.tab_item_title)).setText(wd.getWeekDay());
+            ((TextView)customView.findViewById(R.id.tab_item_content)).setText(wd.getShortWeekDate());
+            mTabLayout.addTab(mTabLayout.newTab().setText(wd.getWeekDay()).setCustomView(customView));
+        }
+        mTabLayout.addOnTabSelectedListener(mTabSelectListener);
         //count today index .
         for(WeekDay wd :mWeekDayList){
-            if(wd.getWeekDate().equals(mLiveDate)){
+            if(wd.getWeekDate().equals(date)){
+                Cog.i(TAG,"jump to index : "+ mWeekDayList.indexOf(wd));
                 mTabLayout.getTabAt(mWeekDayList.indexOf(wd)).select();
             }
         }
-    }
-
-    @Override
-    public void onAttachedToWindow() {
-        super.onAttachedToWindow();
-//        initData(); //use getTabAt(i).select() .
     }
 
     @Override
@@ -204,11 +208,16 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
         };
     }
 
+    private int mYear ;
+    private int mMonth ;
+    private int mDay ;
+
     private void pickerDate() {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
+        DPTManager.getInstance().initCalendar(new DatePickTheme());
         DatePicker picker = new DatePicker(this);
         picker.setDate(DateTime.now().getYear(), DateTime.now().getMonthOfYear());
         picker.setMode(DPMode.SINGLE);
@@ -221,10 +230,11 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
                 try{
                     Date newDate = DateUtil.stringToDate(date,DateUtil.YEAR_MONTH_DAY);
                     String dd = DateUtil.dateToString(newDate,DateUtil.YEAR_MONTH_DAY);
-                    if(null != mLiveDate && !mLiveDate.equals(dd)){
+                    /*if(null != mLiveDate && !mLiveDate.equals(dd)){
                         mLiveDate = dd;
                         refresh();
-                    }
+                    }*/
+                    refreshTabLayout(dd);
                 }catch (Exception e){
                     e.printStackTrace();
                 }

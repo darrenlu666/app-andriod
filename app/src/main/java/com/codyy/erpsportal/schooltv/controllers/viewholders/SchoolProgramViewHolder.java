@@ -45,18 +45,18 @@ public class SchoolProgramViewHolder extends BaseRecyclerViewHolder<SchoolProgra
         //set the state .
         switch (data.getStatus()){
             case SchoolProgram.STATUS_INIT://未开始
-                mStatusTv.setText("未开始");
+//                mStatusTv.setText("未开始");
                 mStatusTv.setBackgroundResource(R.drawable.ic_tag_init_red);
                 break;
             case SchoolProgram.STATUS_ON://进行中
-                mStatusTv.setText("进行中");
+//                mStatusTv.setText("进行中");
                 mStatusTv.setBackgroundResource(R.drawable.ic_tag_on_yellow);
                 break;
             case SchoolProgram.STATUS_END://已结束
-                mStatusTv.setText("已结束");
+//                mStatusTv.setText("已结束");
                 mStatusTv.setBackgroundResource(R.drawable.ic_tag_end_green);
                 break;
         }
-
+        mStatusTv.setText(data.getStatusStr());
     }
 }

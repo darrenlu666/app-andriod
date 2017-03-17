@@ -11,7 +11,7 @@ public class SchoolVideo extends BaseTitleItemBar {
     private String programName;
     private String serverAddress;
     private String speaker;
-    private String startTime;
+    private long startTime;
     private String thumbPath;
     private String tvProgramDetailId;
     private String tvProgramId;
@@ -42,11 +42,11 @@ public class SchoolVideo extends BaseTitleItemBar {
         this.speaker = speaker;
     }
 
-    public String getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 

@@ -40,6 +40,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
     private String mUpdateTime;//the last one request return updateTime .
     private ISyncCount mSyncInterface;
     private boolean mHasMore = true;
+    private int mTotal ;
 
     public static PeopleTreeFragment newInstance(UserInfo userInfo, String scheduleDetailId) {
         Bundle args = new Bundle();
@@ -94,6 +95,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                 WatcherParse parse = new Gson().fromJson(response.toString(),WatcherParse.class);
                 if(null != parse){
                     //do something .
+                    if(isRefreshing && parse.getTotal()>0) mTotal = parse.getTotal();
                     if (parse.getData() != null && parse.getData().size() > 0) {
                         //has more
                         if(isRefreshing) mHasMore = true;
@@ -154,7 +156,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
 
             @Override
             public int getTotal() {
-                return mDataList.size()+(mHasMore?1:0);
+                return mTotal;
             }
         };
     }
