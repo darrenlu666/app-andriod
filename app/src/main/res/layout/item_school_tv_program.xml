@@ -36,7 +36,7 @@
         tools:text="进行中" />
     <TextView
         android:id="@+id/class_detail_tv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/school_name_tv"
         android:layout_alignBottom="@id/status_tv"
@@ -45,5 +45,5 @@
         android:layout_toLeftOf="@+id/status_tv"
         android:gravity="bottom"
         android:singleLine="true"
-        tools:text="六年级/语文/张三三张三三张三三张三三张三三张三三" />
+        tools:text="六年级/语文/张三三张三三" />
 </RelativeLayout>

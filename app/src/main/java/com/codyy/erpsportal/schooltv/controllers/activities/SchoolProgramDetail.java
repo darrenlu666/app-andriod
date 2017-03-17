@@ -18,7 +18,6 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
-import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -194,18 +193,14 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        /*if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_RECORD) || mFrom.equals(ClassRoomContants.TYPE_LIVE_RECORD)) {
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                int height = UIUtils.dip2px(this, 180f);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-                mFlRecordVideo.setLayoutParams(params);
-                mTitleTv.setVisibility(View.INVISIBLE);
-            } else {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                mFlRecordVideo.setLayoutParams(params);
-                mTitleTv.setVisibility(View.VISIBLE);
-            }
-        }*/
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            mVideoFrameLayout.setLayoutParams(lparam);
+        } else {
+            int height = UIUtils.dip2px(this, 180);
+            LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
+            mVideoFrameLayout.setLayoutParams(lparam);
+        }
     }
     private void initStub() {
         if(null != mProgramDetail && mProgramDetail.getStatus()!=SchoolProgram.STATUS_INIT){
@@ -299,6 +294,14 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                     }
                 });
             }
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(null != mProgramDetail && SchoolProgram.STATUS_END == mProgramDetail.getStatus()) {//历史录播流)
+            mVideoControlView.onPause();
         }
     }
 

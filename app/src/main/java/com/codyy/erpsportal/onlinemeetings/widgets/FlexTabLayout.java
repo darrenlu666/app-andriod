@@ -30,9 +30,14 @@ import com.codyy.erpsportal.commons.utils.UiMainUtils;
  */
 public class FlexTabLayout extends TabLayout{
     private static final String TAG = "FixedTabLayout";
-    private static final int DEFAULT_FADE_COLOR = R.color.grey_444;
+    private static final int DEFAULT_FADE_COLOR = R.color.black_666;
+    public static final int DIVIDER_MODE_MIDDLE = 0;
+    public static final int DIVIDER_MODE_FILL  = 1;
+
     private boolean mIsSingleLine = true;
-    private int mSelectColor = -1 ;
+    private int mSelectColor = 0 ;
+    private int mDividerColor = UiMainUtils.getColor(R.color.grey_divider);
+    private int mDividerMode = DIVIDER_MODE_MIDDLE;
 
     public FlexTabLayout(Context context) {
         this(context,null);
@@ -49,12 +54,15 @@ public class FlexTabLayout extends TabLayout{
     }
 
     private void init(final Context context, AttributeSet attrs, int defStyleAttr) {
+        Cog.i(TAG,"init~");
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.FlexTabLayout,defStyleAttr,0);
-        mIsSingleLine = ta.getBoolean(ta.getIndex(R.styleable.FlexTabLayout_isSingleLineText),true);
+        mIsSingleLine = ta.getBoolean(R.styleable.FlexTabLayout_isSingleLineText,true);
         mSelectColor  = ta.getColor(R.styleable.FlexTabLayout_selectItemColor,0);
+        mDividerColor  = ta.getColor(R.styleable.FlexTabLayout_dividerColor,UiMainUtils.getColor(R.color.grey_divider));
+        mDividerMode   = ta.getInteger(R.styleable.FlexTabLayout_dividerMode,DIVIDER_MODE_MIDDLE);
         ta.recycle();
 
-        Cog.e(TAG,"select color : "+mSelectColor);
+        Cog.e(TAG,"select color : "+mSelectColor+" dividerColor:"+mDividerColor+" dividerMode:"+mDividerMode);
         //add listener for text selected color switch .
         addOnTabSelectedListener(new OnTabSelectedListener() {
             @Override
@@ -64,11 +72,11 @@ public class FlexTabLayout extends TabLayout{
                     ((TextView)customView.findViewById(R.id.tv_tab_item)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 }
                 if(null != customView && customView.findViewById(R.id.tab_item_title)!=null){
-                    ((TextView)customView.findViewById(R.id.tab_item_title)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+//                    ((TextView)customView.findViewById(R.id.tab_item_title)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                     ((TextView)customView.findViewById(R.id.tab_item_title)).setTextColor(mSelectColor);
                 }
                 if(null != customView && customView.findViewById(R.id.tab_item_content)!=null){
-                    ((TextView)customView.findViewById(R.id.tab_item_content)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+//                    ((TextView)customView.findViewById(R.id.tab_item_content)).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                     ((TextView)customView.findViewById(R.id.tab_item_content)).setTextColor(mSelectColor);
                 }
             }
@@ -80,11 +88,11 @@ public class FlexTabLayout extends TabLayout{
                     ((TextView)customView.findViewById(R.id.tv_tab_item)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                 }
                 if(null != customView && customView.findViewById(R.id.tab_item_title)!=null){
-                    ((TextView)customView.findViewById(R.id.tab_item_title)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+//                    ((TextView)customView.findViewById(R.id.tab_item_title)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                     ((TextView)customView.findViewById(R.id.tab_item_title)).setTextColor(UiMainUtils.getColor(DEFAULT_FADE_COLOR));
                 }
                 if(null != customView && customView.findViewById(R.id.tab_item_content)!=null){
-                    ((TextView)customView.findViewById(R.id.tab_item_content)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
+//                    ((TextView)customView.findViewById(R.id.tab_item_content)).setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
                     ((TextView)customView.findViewById(R.id.tab_item_content)).setTextColor(UiMainUtils.getColor(DEFAULT_FADE_COLOR));
                 }
             }
@@ -127,21 +135,37 @@ public class FlexTabLayout extends TabLayout{
             Paint paint = new Paint();
             int stripWidth = UIUtils.dip2px(EApplication.instance(),0.5f);
             paint.setStrokeWidth(stripWidth);
-            paint.setColor(UiMainUtils.getColor(R.color.grey_divider));
+            Cog.i(TAG,"divider color : "+mDividerColor);
+//            paint.setColor(UiMainUtils.getColor(R.color.grey_divider));
+            paint.setColor(mDividerColor);
             int height = getHeight();
             int stripHeight = UIUtils.dip2px(EApplication.instance(),18);
             int padding = (height - stripHeight)/2 ;
             int stripNum = tabCount -1 ;
-            for(int i = 0 ; i < stripNum ;i++){
-                View customView = getTabAt(i).getCustomView();
-                startX += customView.getLeft()+customView.getRight();
-                mCanvas.drawLine(startX,padding,startX,padding+stripHeight,paint);
+
+            switch (mDividerMode){
+                case DIVIDER_MODE_MIDDLE://中间
+                    for(int i = 0 ; i < stripNum ;i++){
+                        View customView = getTabAt(i).getCustomView();
+                        startX += customView.getLeft()+customView.getRight();
+                        mCanvas.drawLine(startX,padding,startX,padding+stripHeight,paint);
+                    }
+                    break;
+                case DIVIDER_MODE_FILL://填充 |
+                    for(int i = 0 ; i < stripNum ;i++){
+                        View customView = getTabAt(i).getCustomView();
+                        startX += customView.getLeft()+customView.getRight();
+                        mCanvas.drawLine(startX,0,startX,height,paint);
+                        Cog.i(TAG,"draw line : "+mDividerColor+"::"+startX+","+0+","+startX+","+height+","+paint);
+                    }
+                    break;
             }
         }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        Cog.i(TAG,"onDraw~");
         super.onDraw(canvas);
         mCanvas = canvas;
         drawStrips();

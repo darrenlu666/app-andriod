@@ -6,7 +6,7 @@
     android:fitsSystemWindows="true"
     >
     <include layout="@layout/toolbar_layout"/>
-    <include layout="@layout/tab_layout_auto"/>
+    <include layout="@layout/tab_layout_auto" />
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
