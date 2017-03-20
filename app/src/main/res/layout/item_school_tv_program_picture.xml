@@ -37,7 +37,9 @@
             android:layout_marginRight="5dp"
             android:maxLines="1"
             style="@style/ListItemTitle"
-            tools:text="舒城县王烈桥中心王烈桥中心小学dfaadfasdfa"/>
+            tools:text="舒城县王烈桥中心王烈桥中心小学dfaadfasdfa"
+            android:ellipsize="end"
+            />
 
         <TextView
             android:id="@+id/status_tv"

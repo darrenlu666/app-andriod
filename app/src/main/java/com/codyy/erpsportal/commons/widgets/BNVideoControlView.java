@@ -444,7 +444,6 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             }
         });
 
-
         mVideoView.setOnPlayingListener(new BnVideoView2.OnPlayingListener() {
             @Override
             public void onPlaying() {

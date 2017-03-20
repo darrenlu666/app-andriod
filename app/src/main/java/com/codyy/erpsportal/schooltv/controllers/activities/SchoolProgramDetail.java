@@ -24,6 +24,7 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
+import com.codyy.erpsportal.commons.widgets.BnVideoView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.schooltv.models.SchoolProgram;
@@ -53,6 +54,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     @Bind(R.id.master_tv) TextView mProgramMasterTv;
     @Bind(R.id.desc_tv) TextView mProgramDescTv;
     //viewStub content .
+    ViewStub mViewStub;
     /**     * 视频布局     */
     FrameLayout mVideoFrameLayout;
     /**     * 标题栏     */
@@ -96,7 +98,6 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     @Override
     public void init() {
         mProgramId = getIntent().getStringExtra(EXTRA_PROGRAM_ID);
-        initToolbar(mToolBar);
         mTitleTextView.setText("节目详情");
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
@@ -151,52 +152,16 @@ public class SchoolProgramDetail extends BaseHttpActivity {
         requestData(true);
     }
 
-    //检测是否为3G网络
-    private void check3GWifi() {
-        Check3GUtil.instance().CheckNetType(this, new Check3GUtil.OnWifiListener() {
-            @Override
-            public void onNetError() {
-            }
-
-            @Override
-            public void onContinue() {
-                startPlay();
-            }
-        });
-    }
-
-    private void startPlay() {
-        /*if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
-            mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
-            mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-        }*/
-    }
-
-    private void registerWiFiListener() {
-        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, getSupportFragmentManager(), new WiFiBroadCastUtils.PlayStateListener() {
-            @Override
-            public void play() {
-                if (!mVideoLayout.isPlaying()) {
-                    mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-                }
-            }
-
-            @Override
-            public void stop() {
-                if (mVideoLayout.isPlaying()) {
-                    mVideoLayout.stop();
-                }
-            }
-        });
-    }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            mViewStub.setLayoutParams(lparam);
             mVideoFrameLayout.setLayoutParams(lparam);
         } else {
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            mViewStub.setLayoutParams(param);
             int height = UIUtils.dip2px(this, 180);
             LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
             mVideoFrameLayout.setLayoutParams(lparam);
@@ -204,8 +169,8 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     }
     private void initStub() {
         if(null != mProgramDetail && mProgramDetail.getStatus()!=SchoolProgram.STATUS_INIT){
-            ViewStub vs = (ViewStub) findViewById(R.id.view_stub);
-            vs.inflate();
+            mViewStub = (ViewStub) findViewById(R.id.view_stub);
+            mViewStub.inflate();
 
             mVideoFrameLayout = (FrameLayout) findViewById(R.id.video_frame_layout);
             mVideoTitleRlt = (RelativeLayout) findViewById(R.id.rl_video_title);
@@ -219,22 +184,22 @@ public class SchoolProgramDetail extends BaseHttpActivity {
             mBackImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    finish();
-                    UIUtils.addExitTranAnim(SchoolProgramDetail.this);
+                    if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        UIUtils.setPortrait(SchoolProgramDetail.this);
+                    }else{
+                        finish();
+                        UIUtils.addExitTranAnim(SchoolProgramDetail.this);
+                    }
                 }
             });
-          /*  mVideoLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mVideoControlView.showControl();
-                }
-            });*/
             mVideoLayout.setTextClickListener(new BnVideoLayout2.ITextClickListener() {
                 @Override
                 public void onClick(View v) {
                     mVideoControlView.showControl();
                 }
             });
+            mVideoControlView.bindVideoView(mVideoLayout.getVideoView(),getSupportFragmentManager());
+            mVideoControlView.setOnPlayingListener(mVideoLayout);
             initVideoLayout();
         }
     }
@@ -258,14 +223,11 @@ public class SchoolProgramDetail extends BaseHttpActivity {
 
     /** 初始化视频相关操作**/
     private void initVideoLayout() {
-        mVideoControlView.bindVideoView(mVideoLayout.getVideoView(),getSupportFragmentManager());
         if(mProgramDetail.getStatus() == SchoolProgram.STATUS_ON){//直播流
             mVideoControlView.setPlayMode(BNVideoControlView.MODE_LIVING);
             mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(),BnVideoView2.BN_URL_TYPE_RTMP_LIVE,false);
         }else if(SchoolProgram.STATUS_END == mProgramDetail.getStatus()){//历史录播流
             mVideoControlView.setExpandable(true);
-//            mVideoControlView.setOnCompleteListener(this);
-//            mVideoControlView.setOnErrorListener(mVideoLayout.getoerr);
             mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
 
                 @Override

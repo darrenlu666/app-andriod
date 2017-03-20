@@ -91,6 +91,11 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
 
     @Override
     public void onPlaying() {
+        hideTips();
+        if (mOnPlayingListener != null) mOnPlayingListener.onPlaying();
+    }
+
+    public void hideTips() {
         post(new Runnable() {
             @Override
             public void run() {
@@ -98,7 +103,6 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                 mBnVideoView.requestFocus();
             }
         });
-        if (mOnPlayingListener != null) mOnPlayingListener.onPlaying();
     }
 
     @Override

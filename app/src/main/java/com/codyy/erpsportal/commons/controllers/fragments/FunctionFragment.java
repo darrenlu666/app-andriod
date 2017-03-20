@@ -438,7 +438,7 @@ public class FunctionFragment extends BaseHttpFragment {
                 if(null == mRecyclerView ) return;
                 if(isRefreshing) mData.clear();
                 if ("success".equals(response.optString("result"))) {
-                    mData = AppInfo.parseData(response.optJSONArray("useList"),userType);
+                     mData = AppInfo.parseData(response.optJSONArray("useList"),userType);
                     if(mData!=null && mData.size() >0 ){
                         mAdapter.setData(mData);
                     }

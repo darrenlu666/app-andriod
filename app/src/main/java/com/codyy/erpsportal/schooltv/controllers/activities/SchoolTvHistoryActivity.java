@@ -66,6 +66,10 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
         mTimeUdp.setOnClickListener(this);
         mNameUdp.setOnClickListener(this);
         mCountUdp.setOnClickListener(this);
+        //按照时间倒序排列
+        mTimeUdp.setChecked();
+        mNameUdp.setInitView();
+        mCountUdp.setInitView();
     }
 
     @Override
@@ -147,7 +151,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
                 mCountUdp.setInitView();
 
                 mFilterType = TYPE_ORDER_TIME;
-                mOrderType = mTimeUdp.isUp()?ORDER_ASC:ORDER_DESC;
+                mOrderType = mTimeUdp.isUp()?ORDER_DESC:ORDER_ASC;
                 refresh();
                 break;
             case R.id.name_order_udb:
@@ -156,7 +160,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
                 mCountUdp.setInitView();
 
                 mFilterType = TYPE_ORDER_NAME;
-                mOrderType = mNameUdp.isUp()?ORDER_ASC:ORDER_DESC;
+                mOrderType = mNameUdp.isUp()?ORDER_DESC:ORDER_ASC;
                 refresh();
                 break;
             case R.id.count_order_udb:
@@ -165,7 +169,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
                 mCountUdp.setChecked();
 
                 mFilterType = TYPE_ORDER_CLICK_COUNT;
-                mOrderType = mCountUdp.isUp()?ORDER_ASC:ORDER_DESC;
+                mOrderType = mCountUdp.isUp()?ORDER_DESC:ORDER_ASC;
                 refresh();
                 break;
         }

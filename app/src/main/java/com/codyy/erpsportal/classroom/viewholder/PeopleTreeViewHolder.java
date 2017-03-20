@@ -44,10 +44,7 @@ public class PeopleTreeViewHolder extends BaseRecyclerViewHolder<Watcher> {
             //area+school
             StringBuilder jpsb = new StringBuilder("");
             if(null != data.getAreaName()){
-                String path = data.getAreaPath();
-               /* if(path.contains("-")){
-                    path = path.substring(path.lastIndexOf("-")+1);
-                }*/
+                String path = data.getAreaName();
                 jpsb.append(path);
                 if(!UserInfo.USER_TYPE_AREA_USER.equals(data.getUserType())){
                     jpsb.append("-");
@@ -60,19 +57,13 @@ public class PeopleTreeViewHolder extends BaseRecyclerViewHolder<Watcher> {
             mGradeClassTv.setText(data.getBaseClassName());
 
             switch (data.getUserType()){
-                case  UserInfo.USER_TYPE_AREA_USER:
-                    mAreaTv.setVisibility(View.GONE);
-                    mGradeClassTv.setVisibility(View.GONE);
-                    break;
+                case UserInfo.USER_TYPE_AREA_USER:
                 case UserInfo.USER_TYPE_SCHOOL_USER:
                 case UserInfo.USER_TYPE_TEACHER:
                     mAreaTv.setVisibility(View.VISIBLE);
                     mGradeClassTv.setVisibility(View.GONE);
                     break;
                 case UserInfo.USER_TYPE_STUDENT:
-                    mAreaTv.setVisibility(View.VISIBLE);
-                    mGradeClassTv.setVisibility(View.VISIBLE);
-                    break;
                 case UserInfo.USER_TYPE_PARENT:
                     mAreaTv.setVisibility(View.VISIBLE);
                     mGradeClassTv.setVisibility(View.VISIBLE);
