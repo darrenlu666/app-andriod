@@ -1,12 +1,12 @@
 package com.codyy.erpsportal.resource.utils;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.Cog;
+
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -36,7 +36,7 @@ public class CountIncreaser {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "increaseDownloadCount error=", error);
             }
         }, requestTag));
@@ -58,7 +58,7 @@ public class CountIncreaser {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "increaseViewCount error=", error);
             }
         }, requestTag));

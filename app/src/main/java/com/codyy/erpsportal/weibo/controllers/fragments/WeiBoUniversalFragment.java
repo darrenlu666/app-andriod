@@ -8,20 +8,19 @@ import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.BaseRefreshFragment;
-import com.codyy.erpsportal.commons.widgets.RefreshRecycleView;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.RefreshEntity;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.widgets.RefreshRecycleView;
 import com.codyy.erpsportal.weibo.controllers.adapters.WeiBoUniversalAdapter;
 import com.codyy.erpsportal.weibo.models.entities.WeiBoMessage;
 import com.codyy.erpsportal.weibo.models.entities.WeiBoSearchPeople;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -129,7 +128,7 @@ public class WeiBoUniversalFragment extends BaseRefreshFragment implements WeiBo
     }
 
     @Override
-    protected void onRequestError(VolleyError error, int msg) {
+    protected void onRequestError(Throwable error, int msg) {
         mEnd = mDatas.size();
         super.onRequestError(error, msg);
     }

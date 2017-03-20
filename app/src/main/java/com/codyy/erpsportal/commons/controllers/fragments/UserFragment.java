@@ -23,7 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
@@ -228,7 +228,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         LogUtils.log(error);
     }
 
@@ -710,7 +710,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
 
             }
         });

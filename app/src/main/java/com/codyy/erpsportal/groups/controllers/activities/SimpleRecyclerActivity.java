@@ -10,7 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
@@ -190,7 +190,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
     }
 
     @Override
-    public void onFailure(VolleyError error) throws Exception {
+    public void onFailure(Throwable error) throws Exception {
         if(null == mRecyclerView || null == mRefreshLayout) return;
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {

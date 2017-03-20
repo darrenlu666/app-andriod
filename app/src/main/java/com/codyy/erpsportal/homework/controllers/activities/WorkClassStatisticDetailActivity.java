@@ -9,25 +9,22 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerBaseAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewBaseHolder;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.homework.models.entities.ClassEntity;
-import com.codyy.erpsportal.homework.models.entities.WorkStatisticInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.homework.models.entities.WorkStatisticInfo;
 import com.codyy.erpsportal.homework.utils.WorkUtils;
 import com.codyy.erpsportal.homework.widgets.RoundProgressBar;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -113,7 +110,7 @@ public class WorkClassStatisticDetailActivity extends ToolbarActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Log.e(TAG, "数据获取失败！");
             }
         }));

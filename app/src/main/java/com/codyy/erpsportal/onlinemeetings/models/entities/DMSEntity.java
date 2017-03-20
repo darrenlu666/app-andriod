@@ -4,15 +4,16 @@ import android.app.Activity;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -206,7 +207,7 @@ public class DMSEntity implements Parcelable{
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 ToastUtil.showToast("获取DMC失败!");
                 /*if(null != mCallBack){
@@ -229,6 +230,6 @@ public class DMSEntity implements Parcelable{
          * 网络请求错误
          * @param error
          */
-        void onError(VolleyError error);
+        void onError(Throwable error);
     }
 }

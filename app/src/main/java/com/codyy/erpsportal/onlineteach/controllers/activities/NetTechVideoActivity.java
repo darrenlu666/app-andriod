@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
@@ -166,7 +166,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         Cog.e(TAG, "onErrorResponse:" + error);
         UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
         //get first level comments .
@@ -380,7 +380,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 stopRefreshing();
                 Cog.d(TAG, "getComments error", error);
                 UIUtils.toast(NetTechVideoActivity.this, "删除评论失败，请检查网络。", Toast.LENGTH_SHORT);
@@ -442,7 +442,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 Cog.d(TAG, "getComments error", error);
                 mIsLoadingMore = false;
                 stopRefreshing();
@@ -508,7 +508,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 Cog.d(TAG, "onMoreReplyClick error=", error);
                 UIUtils.toast(NetTechVideoActivity.this, "获取更多回复失败！", Toast.LENGTH_SHORT);
             }
@@ -569,7 +569,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 mSendingDialogPresenter.dismiss();
                 Cog.d(TAG, "publishComment error:", error);
                 UIUtils.toast(NetTechVideoActivity.this, "评论个人备课失败。请检查网络。", Toast.LENGTH_SHORT);

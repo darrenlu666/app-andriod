@@ -5,21 +5,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.AssessmentClassActivity;
 import com.codyy.erpsportal.commons.controllers.activities.AssessmentDetailsActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.AssessmentAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
-import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.AreaBase;
 import com.codyy.erpsportal.commons.models.entities.Assessment;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.utils.DialogUtil;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -186,7 +188,7 @@ public class EvaluationsFragment extends BaseRefreshFragment<Assessment> impleme
     }
 
     @Override
-    protected void onRequestError(VolleyError error, int msg) {
+    protected void onRequestError(Throwable error, int msg) {
         super.onRequestError(error, msg);
         if (dialogUtil != null) {
             dialogUtil.cancel();

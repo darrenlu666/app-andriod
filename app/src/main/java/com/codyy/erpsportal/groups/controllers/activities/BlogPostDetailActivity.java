@@ -24,7 +24,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
@@ -208,7 +208,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mAllCommentCountTv ) return;
         ToastUtil.showToast(error.getMessage());
         LogUtils.log(error);
@@ -504,7 +504,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
@@ -539,7 +539,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
 
             }
         });
@@ -591,7 +591,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("评论失败！");
             }
         });
@@ -653,7 +653,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("评论失败！");
             }
         });
@@ -698,7 +698,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("删除失败！");
             }
         });

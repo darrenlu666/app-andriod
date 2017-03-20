@@ -31,29 +31,28 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
-import com.codyy.erpsportal.exam.controllers.activities.media.MMSelectorActivity;
-import com.codyy.erpsportal.exam.controllers.activities.media.image.MMImageBean;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.services.uploadServices.AbstractUploadServiceReceiver;
 import com.codyy.erpsportal.commons.services.uploadServices.UploadRequest;
 import com.codyy.erpsportal.commons.services.uploadServices.UploadService;
 import com.codyy.erpsportal.commons.utils.InputUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.EmojiEditText;
+import com.codyy.erpsportal.commons.widgets.EmojiView;
+import com.codyy.erpsportal.commons.widgets.NoScrollGridView;
+import com.codyy.erpsportal.exam.controllers.activities.media.MMSelectorActivity;
+import com.codyy.erpsportal.exam.controllers.activities.media.image.MMImageBean;
 import com.codyy.erpsportal.weibo.controllers.fragments.WeiBoImageFilpperDialog2;
 import com.codyy.erpsportal.weibo.controllers.fragments.WeiBoUpVideoDialogFragment;
 import com.codyy.erpsportal.weibo.models.entities.WeiBoGroup;
 import com.codyy.erpsportal.weibo.models.entities.WeiBoListInfo;
 import com.codyy.erpsportal.weibo.models.entities.WeiBoSearchPeople;
-import com.codyy.erpsportal.commons.widgets.EmojiEditText;
-import com.codyy.erpsportal.commons.widgets.EmojiView;
-import com.codyy.erpsportal.commons.widgets.NoScrollGridView;
+import com.codyy.url.URLConfig;
 import com.codyy.widgets.AlbumActivity;
 import com.codyy.widgets.model.entities.PhotoInfo;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -366,7 +365,7 @@ public class WeiBoNewActivity extends ToolbarActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 if (isFinishing()) {
                     return;
                 }

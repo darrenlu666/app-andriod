@@ -4,25 +4,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.ScheduleLiveView;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.NormalGetRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 获取直播地址
@@ -121,7 +121,7 @@ public class LiveViewUtils {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(mContext, mContext.getString(R.string.net_error));
             }
         }));
@@ -132,25 +132,28 @@ public class LiveViewUtils {
      * @param scheduleLiveView
      */
     private void loadDmcStream(final ScheduleLiveView scheduleLiveView) {
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
+        WebApi webApi = RsGenerator.create(WebApi.class);
         String url = scheduleLiveView.getDmsServerHost() + "?method=play&stream=class_" + scheduleLiveView.getClassroomId() + "_u_" + scheduleLiveView.getScheduleDetailId() + "__main";
-        requestQueue.add(new NormalGetRequest(url, new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadDmcStream response=", response);
-                String serverAddress = response.optString("result");
-                String streamAddress = serverAddress + "/class_" + scheduleLiveView.getClassroomId() + "_u_" + scheduleLiveView.getScheduleDetailId() + "__main";
-                scheduleLiveView.setStreamUrl(streamAddress);
-                notifyListener();
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "loadDmcStream error=", error);
-                ToastUtil.showToast(mContext, mContext.getString(R.string.net_error));
-                notifyListener();
-            }
-        }));
+        webApi.getJson(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadDmcStream response=", response);
+                        String serverAddress = response.optString("result");
+                        String streamAddress = serverAddress + "/class_" + scheduleLiveView.getClassroomId() + "_u_" + scheduleLiveView.getScheduleDetailId() + "__main";
+                        scheduleLiveView.setStreamUrl(streamAddress);
+                        notifyListener();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "loadDmcStream error=", error);
+                        ToastUtil.showToast(mContext, mContext.getString(R.string.net_error));
+                        notifyListener();
+                    }
+                });
     }
 
     /**

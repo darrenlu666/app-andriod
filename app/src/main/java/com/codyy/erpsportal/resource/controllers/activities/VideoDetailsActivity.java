@@ -18,10 +18,10 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
@@ -30,13 +30,12 @@ import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2.OnPlayingListener;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.resource.controllers.adapters.TabsAdapter;
 import com.codyy.erpsportal.resource.controllers.fragments.ResCommentsFragment;
 import com.codyy.erpsportal.resource.controllers.fragments.ResourceDetailsFragment;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
 import com.codyy.erpsportal.resource.utils.CountIncreaser;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -249,7 +248,7 @@ public class VideoDetailsActivity extends FragmentActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
             }

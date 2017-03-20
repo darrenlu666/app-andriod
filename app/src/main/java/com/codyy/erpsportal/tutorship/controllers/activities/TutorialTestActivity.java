@@ -10,25 +10,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.TabsAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.tutorship.models.entities.TutorialTest;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.exam.models.entities.QuestionInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
+import com.codyy.erpsportal.exam.models.entities.QuestionInfo;
+import com.codyy.erpsportal.tutorship.models.entities.TutorialTest;
+import com.codyy.url.URLConfig;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -144,7 +143,7 @@ public class TutorialTestActivity extends AppCompatActivity implements OnPageCha
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "loadData error=", error);
                 dismissLoadingDialog();
                 UIUtils.toast(TutorialTestActivity.this, getString(R.string.get_tutorial_test_failed), Toast.LENGTH_SHORT);

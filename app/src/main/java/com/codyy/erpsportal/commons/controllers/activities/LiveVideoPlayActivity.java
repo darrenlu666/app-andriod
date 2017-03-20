@@ -11,18 +11,16 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.Classroom;
 import com.codyy.erpsportal.commons.models.entities.LiveClassListModel;
 import com.codyy.erpsportal.commons.models.entities.LiveVideoDetail;
 import com.codyy.erpsportal.commons.models.entities.SchoolNetClassListModel;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.parsers.ClassTourClassroomParser;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
@@ -42,6 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -221,28 +222,26 @@ public class LiveVideoPlayActivity extends AppCompatActivity {
                             if(classroomList.get(i).getType().equals("receive")){
                                 mAssociateClassroom = classroomList.get(i);
                                 if(classroomList.get(i).getStreamingServerType().equals("DMC")){
-                                    RequestQueue queue = Volley.newRequestQueue(LiveVideoPlayActivity.this);
-                                    StringRequest stringRequest = new StringRequest(classroomList.get(i).getDmsServerHost() + "?method=play&stream=class_" + classroomList.get(i).getClassRoomId() + "_u_" + classroomList.get(i).getId(), new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            String result = response.substring(response.indexOf(":") + 2,response.length() - 2);
-                                            mAssociateVideoUrl = result + "/class_" + mMainClassroom.getClassRoomId() + "_u_" + mAssociateClassroom.getId() + "_" + mAssociateClassroom.getClassRoomId();
-                                            videoList.add(mAssociateVideoUrl);
-//                                            setVolumes();
-//                                            playWithAudioMix();
-                                        }
-                                    }, new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            ToastUtil.showToast(LiveVideoPlayActivity.this, error.toString());
-                                        }
-                                    });
-                                    queue.add(stringRequest);
+                                    WebApi webApi = RsGenerator.create(WebApi.class);
+                                    webApi.get4Str(classroomList.get(i).getDmsServerHost() + "?method=play&stream=class_" + classroomList.get(i).getClassRoomId() + "_u_" + classroomList.get(i).getId())
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(new Consumer<String>() {
+                                                @Override
+                                                public void accept(String response) throws Exception {
+                                                    String result = response.substring(response.indexOf(":") + 2, response.length() - 2);
+                                                    mAssociateVideoUrl = result + "/class_" + mMainClassroom.getClassRoomId() + "_u_" + mAssociateClassroom.getId() + "_" + mAssociateClassroom.getClassRoomId();
+                                                    videoList.add(mAssociateVideoUrl);
+                                                }
+                                            }, new Consumer<Throwable>() {
+                                                @Override
+                                                public void accept(Throwable error) throws Exception {
+                                                    ToastUtil.showToast(LiveVideoPlayActivity.this, error.toString());
+                                                }
+                                            });
                                 }else{
                                     mAssociateVideoUrl = mAssociateClassroom.getVideoUrl() + "/class_" + mMainClassroom.getClassRoomId() + "_u_" + mAssociateClassroom.getId() + "_" + mAssociateClassroom.getClassRoomId();
                                     videoList.add(mAssociateVideoUrl);
-//                                    setVolumes();
-//                                    playWithAudioMix();
                                 }
                             }
                         }
@@ -251,7 +250,7 @@ public class LiveVideoPlayActivity extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "loadReceivingClassroomStreams onErrorResponse:", error);
             }
         }));

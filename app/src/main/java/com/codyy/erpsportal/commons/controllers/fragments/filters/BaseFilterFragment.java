@@ -10,18 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.groups.controllers.viewholders.FilterChoiceViewHolder;
-import com.codyy.erpsportal.groups.controllers.viewholders.FilterConditionViewHolder;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.filter.AreaItem;
 import com.codyy.erpsportal.commons.models.entities.filter.AreaList;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
 import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
 import com.codyy.erpsportal.commons.models.network.RequestManager;
@@ -29,11 +27,17 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.erpsportal.groups.controllers.viewholders.FilterChoiceViewHolder;
+import com.codyy.erpsportal.groups.controllers.viewholders.FilterConditionViewHolder;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

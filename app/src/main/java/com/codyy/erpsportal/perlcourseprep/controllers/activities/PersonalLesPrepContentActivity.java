@@ -45,13 +45,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.HttpVideoPlayerActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.Courseware;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.models.tasks.DownloadTask;
+import com.codyy.erpsportal.commons.models.tasks.DownloadTask.DownloadListener;
 import com.codyy.erpsportal.commons.services.SaveLessonPlanRethinkService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
@@ -63,14 +68,8 @@ import com.codyy.erpsportal.commons.utils.WebViewUtils;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.WrapLinearLayoutManager;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.Courseware;
 import com.codyy.erpsportal.perlcourseprep.models.entities.LessonPlanDetails;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.erpsportal.commons.models.tasks.DownloadTask;
-import com.codyy.erpsportal.commons.models.tasks.DownloadTask.DownloadListener;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -180,7 +179,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onErrorResponse error:", error);
             }
         }, mRequestTag));

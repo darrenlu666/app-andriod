@@ -15,27 +15,26 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.DocListViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.MainOrReceiveSchoolViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.ParticipateSchoolViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.RecorderPriorityViewHolder;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.FixedRecyclerView;
 import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
 import com.codyy.erpsportal.commons.models.entities.interact.RecordPriority;
-import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.FixedRecyclerView;
+import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
+import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -234,7 +233,7 @@ public class ListenDetailsActivity extends BaseHttpActivity implements View.OnCl
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         Cog.e(TAG, "onErrorResponse:" + error);
         if (mEmptyView == null) return;
         UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);

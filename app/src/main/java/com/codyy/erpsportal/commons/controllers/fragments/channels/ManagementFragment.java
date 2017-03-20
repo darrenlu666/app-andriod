@@ -16,19 +16,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.ChannelFragment;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.CountData;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.WordyNestedScrollView;
@@ -39,6 +35,10 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 首页（监管）
@@ -190,27 +190,29 @@ public class ManagementFragment extends Fragment{
     public void loadHomePageCount(String areaCode) {
         Cog.d(TAG, "+loadHomePageCount areaCode=" + areaCode);
         if (TextUtils.isEmpty(areaCode)) return;
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
+        WebApi webApi = RsGenerator.create(WebApi.class);
         Map<String, String> params = new HashMap<>();
         params.put("areaCode", areaCode);
         Cog.d(TAG, "loadHomePageCount url=", URLConfig.URL_HOME_PAGE_COUNT, params);
-        requestQueue.add(new NormalPostRequest(
-                URLConfig.URL_HOME_PAGE_COUNT, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadHomePageCount:" + response);
-                if ("success".equals(response.optString("result"))) {
-                    CountData countData = CountData.parseJson(response);
-                    setCountDataToViews(countData);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "onErrorResponse:" + error);
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-            }
-        }).setRetryPolicy(new DefaultRetryPolicy(10000, 1, 1.0f)));
+        webApi.post4Json(URLConfig.URL_HOME_PAGE_COUNT, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadHomePageCount:" + response);
+                        if ("success".equals(response.optString("result"))) {
+                            CountData countData = CountData.parseJson(response);
+                            setCountDataToViews(countData);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "onErrorResponse:" + error);
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                    }
+                });
     }
 
     /**

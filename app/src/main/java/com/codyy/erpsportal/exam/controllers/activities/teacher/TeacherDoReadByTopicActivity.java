@@ -37,15 +37,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.ScreenUtils;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
 import com.codyy.erpsportal.commons.controllers.activities.TeacherReadByTopicActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.services.WeiBoMediaService;
+import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.HtmlUtils;
+import com.codyy.erpsportal.commons.utils.StringUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.WebViewUtils;
 import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
 import com.codyy.erpsportal.exam.controllers.activities.student.StudentReadActivity;
 import com.codyy.erpsportal.exam.controllers.fragments.dialogs.SwitchTopicDialog;
@@ -56,15 +61,9 @@ import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragmen
 import com.codyy.erpsportal.homework.models.entities.ItemInfoClass;
 import com.codyy.erpsportal.homework.widgets.AudioBar;
 import com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.perlcourseprep.models.entities.SubjectMaterialPicture;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.services.WeiBoMediaService;
-import com.codyy.erpsportal.commons.utils.DialogUtil;
-import com.codyy.erpsportal.commons.utils.StringUtils;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.WebViewUtils;
+import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 
@@ -230,7 +229,7 @@ public class TeacherDoReadByTopicActivity extends TeacherReadByTopicActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mDialog.cancel();
                 ToastUtil.showToast(TeacherDoReadByTopicActivity.this, "提交失败!");
             }
@@ -252,7 +251,7 @@ public class TeacherDoReadByTopicActivity extends TeacherReadByTopicActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
 
             }
         }));

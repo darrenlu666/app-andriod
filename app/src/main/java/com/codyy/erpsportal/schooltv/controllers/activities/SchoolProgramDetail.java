@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -130,7 +130,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     }
 
     @Override
-    public void onFailure(VolleyError error) throws Exception {
+    public void onFailure(Throwable error) throws Exception {
         ToastUtil.showSnake("数据请求出错了",mProgramMasterTv);
         if(null == mProgramDetail){
             mEmptyView.setVisibility(View.VISIBLE);

@@ -10,17 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.common.EndlessRecyclerOnScrollListener;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.exception.LogUtils;
-import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 
@@ -117,7 +116,7 @@ public abstract class BaseHttpFragment extends Fragment {
      *
      * @param error
      */
-    public abstract void onFailure(VolleyError error) throws Exception;
+    public abstract void onFailure(Throwable error) throws Exception;
 
     /**
      * 视图加载完成....执行数据操作
@@ -142,7 +141,7 @@ public abstract class BaseHttpFragment extends Fragment {
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 try {
                     onFailure(error);
                 } catch (Exception e) {
@@ -190,7 +189,7 @@ public abstract class BaseHttpFragment extends Fragment {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 if (null != requestListener) {
                     requestListener.onRequestFailure(error);
                 }

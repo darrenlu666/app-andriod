@@ -15,26 +15,25 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TaskActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
-import com.codyy.erpsportal.exam.controllers.fragments.dialogs.SwitchTopicDialog;
-import com.codyy.erpsportal.exam.models.entities.QuestionInfo;
-import com.codyy.erpsportal.homework.models.entities.ItemInfoClass;
-import com.codyy.erpsportal.homework.widgets.MySubmitDialog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.TaskAnswerDao;
-import com.codyy.erpsportal.homework.models.entities.task.TaskAnswer;
-import com.codyy.erpsportal.homework.models.entities.task.TaskPicInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.exam.controllers.fragments.dialogs.SwitchTopicDialog;
+import com.codyy.erpsportal.exam.models.entities.QuestionInfo;
+import com.codyy.erpsportal.homework.models.entities.ItemInfoClass;
+import com.codyy.erpsportal.homework.models.entities.task.TaskAnswer;
+import com.codyy.erpsportal.homework.models.entities.task.TaskPicInfo;
+import com.codyy.erpsportal.homework.widgets.MySubmitDialog;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -353,7 +352,7 @@ public class StudentPracticeDetailActivity extends TaskActivity implements View.
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mDialog.cancel();
                 ToastUtil.showToast(getString(R.string.exam_submit_fail));
 

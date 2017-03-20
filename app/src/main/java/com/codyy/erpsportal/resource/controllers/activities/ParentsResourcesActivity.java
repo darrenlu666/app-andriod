@@ -30,14 +30,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -450,7 +449,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
                     }
                 }, new ErrorListener() {
                     @Override
-                    public void onErrorResponse(final VolleyError error) {
+                    public void onErrorResponse(final Throwable error) {
                         Cog.e(TAG, "onErrorResponse:" + error);
                         delayResponding(startTime, new ResponseCallable() {
                             @Override

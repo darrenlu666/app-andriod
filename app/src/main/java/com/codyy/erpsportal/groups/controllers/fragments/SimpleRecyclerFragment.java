@@ -2,14 +2,12 @@ package com.codyy.erpsportal.groups.controllers.fragments;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.BaseHttpFragment;
@@ -20,13 +18,13 @@ import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
-import com.codyy.erpsportal.onlineteach.models.entities.NetTeach;
 
-import org.apache.http.MethodNotSupportedException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import butterknife.Bind;
 
 /**
@@ -103,7 +101,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mRecyclerView || null == mRefreshLayout) return;
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {

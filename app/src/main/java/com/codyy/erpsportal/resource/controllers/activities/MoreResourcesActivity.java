@@ -26,9 +26,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.Choice;
@@ -36,9 +33,10 @@ import com.codyy.erpsportal.commons.models.entities.EduLevel;
 import com.codyy.erpsportal.commons.models.entities.EduLevelResult;
 import com.codyy.erpsportal.commons.models.entities.FilterItem;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.NormalGetRequest;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -407,7 +405,8 @@ public class MoreResourcesActivity extends AppCompatActivity {
             url = url + "?schoolId=" + mAreaInfo.getId();
         }
         Cog.d(TAG, "initSemesterFilterItems url=", url);
-        mRequestSender.add(new NormalGetRequest(url, new Listener<JSONObject>() {
+
+        mRequestSender.sendGetRequest(new RequestData(url, null,new Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "initSemesterFilterItems response=" + response);
@@ -426,7 +425,7 @@ public class MoreResourcesActivity extends AppCompatActivity {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "initSemesterFilterItems error=" + error);
                 Toast.makeText(MoreResourcesActivity.this, "获取学段列表失败。", Toast.LENGTH_SHORT).show();
             }
@@ -680,7 +679,7 @@ public class MoreResourcesActivity extends AppCompatActivity {
                     }
                 }, new ErrorListener() {
                     @Override
-                    public void onErrorResponse(final VolleyError error) {
+                    public void onErrorResponse(final Throwable error) {
                         Cog.e(TAG, "onErrorResponse:" + error);
                         delayResponding(startTime, new ResponseCallable() {
                             @Override
@@ -859,7 +858,7 @@ public class MoreResourcesActivity extends AppCompatActivity {
      * @param error   错误信息
      * @param refresh 是否是刷新
      */
-    private void handleErrorResponse(VolleyError error, boolean refresh) {
+    private void handleErrorResponse(Throwable error, boolean refresh) {
         if (!refresh) {
             mAdapter.removeItem(mAdapter.getItemCount() - 1);
             mAdapter.notifyItemRemoved(mAdapter.getItemCount());

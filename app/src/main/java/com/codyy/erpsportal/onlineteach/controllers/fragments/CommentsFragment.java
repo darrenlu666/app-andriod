@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.codyy.url.URLConfig;
@@ -149,7 +149,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mRecyclerView ) return;
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
@@ -354,7 +354,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("评论失败！");
             }
         });
@@ -401,7 +401,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("删除失败！");
             }
         });
@@ -443,7 +443,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
 
             }
         });
@@ -490,7 +490,7 @@ public class CommentsFragment extends BaseHttpFragment implements BlogComposeVie
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("评论失败！");
             }
         });

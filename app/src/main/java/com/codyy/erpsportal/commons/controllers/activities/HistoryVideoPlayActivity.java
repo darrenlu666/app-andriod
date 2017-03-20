@@ -20,29 +20,29 @@ import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.StringUtils;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.CacheItem;
 import com.codyy.erpsportal.commons.models.entities.HistoryVideoDetail;
-import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
+import com.codyy.url.URLConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 直播详细、视频播放页面
@@ -266,10 +266,13 @@ public class HistoryVideoPlayActivity extends AppCompatActivity implements BnVid
         if (type != null && "1".equals(type)) {
             base = URLConfig.HISTORY_VIDEO_ONLINE_VIDEO;
         }
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, base + "?id=" + resID + "&uuid=" + UserInfoKeeper.getInstance().getUserInfo().getUuid(),
-                new Response.Listener<String>() {
+        WebApi webApi = RsGenerator.create(WebApi.class);
+        webApi.get4Str(base + "?id=" + resID + "&uuid=" + UserInfoKeeper.getInstance().getUserInfo().getUuid())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onResponse(String response) {
+                    public void accept(String response) throws Exception {
                         mPlayUrl = response;
                         if (from.equals(TYPE_NOT_DEFAULT)) {
                             mVideoControl.setVideoPath(mPlayUrl, BnVideoView2.BN_URL_TYPE_HTTP, mIsLocal);
@@ -277,13 +280,12 @@ public class HistoryVideoPlayActivity extends AppCompatActivity implements BnVid
                             init();
                         }
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-        Volley.newRequestQueue(this).add(stringRequest);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Cog.d(TAG, "getUrl error=", throwable.getMessage());
+                    }
+                });
     }
 
     /**

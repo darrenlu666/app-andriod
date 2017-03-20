@@ -18,20 +18,21 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
-import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.commons.models.entities.MeetingShow;
-import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -341,7 +342,7 @@ public class UiOnlineMeetingUtils {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
                 if (null != callback) callback.onNetError();
@@ -383,7 +384,7 @@ public class UiOnlineMeetingUtils {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
                 if (null != callback) callback.onNetError();
@@ -425,7 +426,7 @@ public class UiOnlineMeetingUtils {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 UIUtils.toast( R.string.net_error, Toast.LENGTH_SHORT);
                 if (null != callback) callback.onNetError();
@@ -466,7 +467,7 @@ public class UiOnlineMeetingUtils {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 UIUtils.toast( R.string.net_error, Toast.LENGTH_SHORT);
                 if (null != callback) callback.onNetError();
@@ -511,7 +512,7 @@ public class UiOnlineMeetingUtils {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 UIUtils.toast( R.string.net_error, Toast.LENGTH_SHORT);
                 if (null != callback) callback.onNetError();
@@ -552,7 +553,7 @@ public class UiOnlineMeetingUtils {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(  R.string.net_error, Toast.LENGTH_SHORT);
                 if (null != callback) callback.onNetError();

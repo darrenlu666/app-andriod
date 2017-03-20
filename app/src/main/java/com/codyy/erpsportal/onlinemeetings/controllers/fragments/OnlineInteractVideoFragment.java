@@ -20,31 +20,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.widgets.BNMultipleLiveControlView;
-import com.codyy.erpsportal.groups.utils.SnackToastUtils;
-import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
-import com.codyy.erpsportal.onlinemeetings.models.entities.DMSEntity;
 import com.codyy.erpsportal.commons.models.entities.MeetingAction;
-import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
-import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.commons.models.entities.SpeakerEntity;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.PullXmlUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingAnimationUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.BNLiveControlView;
+import com.codyy.erpsportal.commons.widgets.BNMultipleLiveControlView;
 import com.codyy.erpsportal.commons.widgets.BnChatVideoView;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
+import com.codyy.erpsportal.groups.utils.SnackToastUtils;
+import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
+import com.codyy.erpsportal.onlinemeetings.models.entities.DMSEntity;
+import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
@@ -331,7 +333,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
             }
 
             @Override
-            public void onError(VolleyError error) {
+            public void onError(Throwable error) {
                 Snackbar.make(mMainBnVideoView, getResources().getString(R.string.net_error), Snackbar.LENGTH_SHORT).show();
             }
         });

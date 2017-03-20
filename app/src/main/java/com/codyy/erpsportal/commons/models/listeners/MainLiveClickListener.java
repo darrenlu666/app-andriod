@@ -4,19 +4,18 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
-import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.models.engine.LiveClassroomViewStuffer.OnLiveClassroomClickListener;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -78,7 +77,7 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onLiveClassroomClick error=", error);
                 Toast.makeText(mFragment.getContext(), "获取权限失败！", Toast.LENGTH_SHORT).show();
             }

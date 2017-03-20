@@ -20,9 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.debug.hv.ViewServer;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
@@ -30,6 +27,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.ChannelFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.FunctionFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.UserFragment;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
@@ -37,9 +35,7 @@ import com.codyy.erpsportal.commons.models.entities.LocationBean;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.UpdatePortalEvent;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.ConfigRequest;
-import com.codyy.erpsportal.commons.models.network.ConfigRequest.ConfigParser;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver;
 import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver.WifiChangeListener;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -57,6 +53,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.Bind;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 主界面
@@ -194,7 +196,6 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
 
     public void loadModuleConfig(String areaId, String schoolId) {
         Cog.d(TAG, "loadModuleConfig areaId=", areaId, ",schoolId=", schoolId);
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
         Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("schoolId", schoolId);
@@ -203,37 +204,46 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         } else if (mUserInfo != null) {
             if (!TextUtils.isEmpty(mUserInfo.getSchoolId())) {
                 params.put("schoolId", mUserInfo.getSchoolId());
+                schoolId = mUserInfo.getSchoolId();
             }
             if (!TextUtils.isEmpty(mUserInfo.getBaseAreaId())) {
                 params.put("baseAreaId", mUserInfo.getBaseAreaId());
+                areaId = mUserInfo.getBaseAreaId();
             }
         }
         Cog.d(TAG, "loadModuleConfig url=", URLConfig.CONFIG, params);
         ConfigBus.postLoading();
-        requestQueue.add(new ConfigRequest(URLConfig.CONFIG, params, new ConfigParser() {
-            @Override
-            public ModuleConfig onParse(JSONObject response) {
-                Cog.d(TAG, "loadModuleConfig response:", response);
-                String result = response.optString("result");
-                if ("success".equals(result)) {
-                    return ModuleConfig.parseJsonObject(response);
-                }
-                return null;
-            }
-        }, new Response.Listener<ModuleConfig>() {
-            @Override
-            public void onResponse(ModuleConfig moduleConfig) {
-                Cog.d(TAG, "loadModuleConfig moduleConfig:", moduleConfig);
-                mModuleConfig = moduleConfig;
-                if (mModuleConfig != null) ConfigBus.post(mModuleConfig);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "loadModuleConfig error:", error);
-                ConfigBus.postError();
-            }
-        }));
+        WebApi webApi = RsGenerator.create(WebApi.class);
+        webApi.getHomePageInitInfo(schoolId, areaId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<JSONObject, ObservableSource<ModuleConfig>>() {
+                    @Override
+                    public ObservableSource<ModuleConfig> apply(JSONObject jsonObject) throws Exception {
+                        Cog.d(TAG, "loadModuleConfig jsonObject:", jsonObject);
+                        String result = jsonObject.optString("result");
+                        if ("success".equals(result)) {
+                            ModuleConfig moduleConfig = ModuleConfig.parseJsonObject(jsonObject);
+                            mModuleConfig = moduleConfig;
+                            return Observable.just(moduleConfig);
+                        } else {
+                            return Observable.error(new RuntimeException("result=" + result));
+                        }
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ModuleConfig>() {
+                    @Override
+                    public void accept(ModuleConfig moduleConfig) throws Exception {
+                        ConfigBus.post(moduleConfig);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Cog.d(TAG, "loadModuleConfig error:", throwable.getMessage());
+                        ConfigBus.postError();
+                    }
+                });
     }
 
     /**

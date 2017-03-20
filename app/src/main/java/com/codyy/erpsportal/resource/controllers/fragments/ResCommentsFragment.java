@@ -30,13 +30,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.DeleteCommentDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.DeleteCommentDialog.OnOkClickListener;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.models.presenters.IFragmentManagerProvider;
+import com.codyy.erpsportal.commons.models.presenters.SendingDialogPresenter;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.InputUtils;
@@ -44,11 +47,6 @@ import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.EmojiView;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.erpsportal.commons.models.presenters.IFragmentManagerProvider;
-import com.codyy.erpsportal.commons.models.presenters.SendingDialogPresenter;
 import com.codyy.erpsportal.resource.controllers.activities.DocumentCommentActivity;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourceCommentsAdapter;
 import com.codyy.erpsportal.resource.models.entities.Comment;
@@ -58,6 +56,7 @@ import com.codyy.erpsportal.resource.models.entities.DeleteReplyEvent;
 import com.codyy.erpsportal.resource.models.entities.MoreCommentsEvent;
 import com.codyy.erpsportal.resource.models.entities.MoreRelies;
 import com.codyy.erpsportal.resource.models.entities.Reply;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -337,7 +336,7 @@ public class ResCommentsFragment extends Fragment implements IFragmentManagerPro
                 }
             }, new ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(Throwable error) {
                     Cog.e(TAG, "delete comment error=", error);
                 }
             }));
@@ -416,7 +415,7 @@ public class ResCommentsFragment extends Fragment implements IFragmentManagerPro
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "getComments error", error);
                 mIsLoadingMore = false;
                 stopRefreshing();
@@ -484,7 +483,7 @@ public class ResCommentsFragment extends Fragment implements IFragmentManagerPro
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onMoreReplyClick error=", error);
                 mIsLoadingMore = false;
                 UIUtils.toast(getContext(), "获取更多回复失败！",Toast.LENGTH_SHORT);
@@ -570,7 +569,7 @@ public class ResCommentsFragment extends Fragment implements IFragmentManagerPro
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "publishComment error:", error);
                 mSendingDialogPresenter.dismiss();
                 UIUtils.toast( getContext(), "评论教学反思失败。请检查网络。", Toast.LENGTH_SHORT);

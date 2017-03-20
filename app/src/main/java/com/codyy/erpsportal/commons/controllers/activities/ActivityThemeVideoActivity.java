@@ -25,15 +25,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.common.EmotionInputDetector;
 import com.codyy.erpsportal.commons.controllers.adapters.HorizontalListViewAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.GroupCollectiveVideoDetailFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.DeleteCommentDialog;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.MoreRelies;
+import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.entities.VideoDetails;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.models.presenters.IFragmentManagerProvider;
+import com.codyy.erpsportal.commons.models.presenters.SendingDialogPresenter;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -43,14 +49,6 @@ import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.erpsportal.commons.widgets.EmojiView;
 import com.codyy.erpsportal.commons.widgets.HorizontalListView;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.MoreRelies;
-import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.entities.VideoDetails;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.presenters.IFragmentManagerProvider;
-import com.codyy.erpsportal.commons.models.presenters.SendingDialogPresenter;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
 import com.codyy.erpsportal.rethink.controllers.adapters.BaseCommentsAdapter;
 import com.codyy.erpsportal.rethink.models.entities.DeleteCommentEvent;
@@ -59,6 +57,7 @@ import com.codyy.erpsportal.rethink.models.entities.MoreCommentsEvent;
 import com.codyy.erpsportal.rethink.models.entities.RethinkComment;
 import com.codyy.erpsportal.rethink.models.entities.RethinkCommentBase;
 import com.codyy.erpsportal.rethink.models.entities.RethinkReply;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -369,7 +368,7 @@ public class ActivityThemeVideoActivity extends FragmentActivity implements BnVi
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "getComments error", error);
                 UIUtils.toast(ActivityThemeVideoActivity.this, "删除评论失败，请检查网络。", Toast.LENGTH_SHORT);
             }
@@ -448,7 +447,7 @@ public class ActivityThemeVideoActivity extends FragmentActivity implements BnVi
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "getComments error", error);
                 mIsLoadingMore = false;
                 stopRefreshing();
@@ -516,7 +515,7 @@ public class ActivityThemeVideoActivity extends FragmentActivity implements BnVi
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onMoreReplyClick error=", error);
                 mIsLoadingMore = false;
                 UIUtils.toast(ActivityThemeVideoActivity.this, "获取更多回复失败！", Toast.LENGTH_SHORT);
@@ -579,7 +578,7 @@ public class ActivityThemeVideoActivity extends FragmentActivity implements BnVi
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "publishComment error:", error);
                 mSendingDialogPresenter.dismiss();
                 UIUtils.toast(ActivityThemeVideoActivity.this, "评论个人备课失败。请检查网络。", Toast.LENGTH_SHORT);
@@ -666,7 +665,7 @@ public class ActivityThemeVideoActivity extends FragmentActivity implements BnVi
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
             }

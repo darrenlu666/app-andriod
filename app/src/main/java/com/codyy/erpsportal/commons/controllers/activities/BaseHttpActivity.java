@@ -13,8 +13,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.common.EndlessRecyclerOnScrollListener;
@@ -22,12 +21,16 @@ import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+
 import org.json.JSONObject;
+
 import java.util.HashMap;
+
 import butterknife.ButterKnife;
 
 /**
@@ -96,7 +99,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * 数据请求错误
      * @param error 数据请求失败
      */
-    public abstract void onFailure(VolleyError error)throws Exception;
+    public abstract void onFailure(Throwable error)throws Exception;
 
     /**
      * 基本数据操作involved by {Activity#OnCrate(SavedInstance)}
@@ -125,7 +128,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 try {
                     onFailure(error);
                 } catch (Exception e) {
@@ -175,7 +178,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 if(null != requestListener){
                     requestListener.onRequestFailure(error);
                 }
@@ -344,7 +347,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
          * fail 失败
          * @param error error message .
          */
-        void onRequestFailure(VolleyError error);
+        void onRequestFailure(Throwable error);
     }
 
     /**

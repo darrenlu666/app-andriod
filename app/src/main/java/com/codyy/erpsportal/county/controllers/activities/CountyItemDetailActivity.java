@@ -13,8 +13,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity;
@@ -22,6 +20,7 @@ import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.county.controllers.fragments.ContyListFragment;
 import com.codyy.erpsportal.county.controllers.models.entities.CountyListItem;
@@ -211,7 +210,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
 
             }
         }, mHashTag));

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
@@ -123,7 +123,7 @@ public abstract class BaseCommentFragment<T extends BaseComment> extends BaseHtt
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         LogUtils.log(error);
         if (null == mRecyclerView) return;
         mRecyclerView.setRefreshing(false);
@@ -323,7 +323,7 @@ public abstract class BaseCommentFragment<T extends BaseComment> extends BaseHtt
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
 
             }
         });
@@ -364,7 +364,7 @@ public abstract class BaseCommentFragment<T extends BaseComment> extends BaseHtt
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("评论失败！");
             }
         });
@@ -414,7 +414,7 @@ public abstract class BaseCommentFragment<T extends BaseComment> extends BaseHtt
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("评论失败！");
             }
         });
@@ -457,7 +457,7 @@ public abstract class BaseCommentFragment<T extends BaseComment> extends BaseHtt
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("删除失败！");
             }
         });

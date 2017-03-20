@@ -11,17 +11,16 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
+import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.info.utils.Info;
-import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -31,6 +30,9 @@ import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 资讯详情
@@ -62,6 +64,8 @@ public class InfoDetailActivity extends AppCompatActivity {
 
     private RequestQueue mRequestQueue;
 
+    private WebApi mWebApi;
+
     private String mInformation;
 
     /**
@@ -80,6 +84,7 @@ public class InfoDetailActivity extends AppCompatActivity {
         mInformation = getIntent().getStringExtra(EXTRA_INFO_ID);
         mFrom = getIntent().getIntExtra(EXTRA_FROM, FROM_FUNCTION);
         mRequestQueue = RequestManager.getRequestQueue();
+        mWebApi = RsGenerator.create(WebApi.class);
         getInfo();
     }
 
@@ -95,46 +100,49 @@ public class InfoDetailActivity extends AppCompatActivity {
         HashMap<String, String> data = new HashMap<>();
         data.put("informationId", mInformation);
         Cog.d(TAG, "getInfo url=", URLConfig.INFORMATION_DETAIL, data);
-        mRequestQueue.add(new NormalPostRequest( URLConfig.INFORMATION_DETAIL, data, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "getInfo response=" + response);
-                if ("success".equals(response.optString("result"))) {
-                    JSONObject object = response.optJSONObject("information");
-                    if (object != null) {
-                        if (Info.TYPE_NEWS.equals(object.optString("infoType"))) {
-                            if (mFrom == FROM_FUNCTION)
-                                mTitleBar.setTitle(Titles.sWorkspaceInfoNew);
-                            else
-                                mTitleBar.setTitle(Titles.sPagetitleIndexInfoNew);
-                        } else if (Info.TYPE_NOTICE.equals(object.optString("infoType"))) {
-                            if (mFrom == FROM_FUNCTION)
-                                mTitleBar.setTitle(Titles.sWorkspaceNoticeAnnouncementNotice);
-                            else
-                                mTitleBar.setTitle(Titles.sPagetitleIndexInfoNotice);
-                        } else {
-                            if (mFrom == FROM_FUNCTION)
-                                mTitleBar.setTitle(Titles.sWorkspaceNoticeAnnouncementAnnouncement);
-                            else
-                                mTitleBar.setTitle(Titles.sPagetitleIndexInfoAnnouncement);
-                        }
-                        String content = object.optString("richContent");
-                        String url = URLConfig.GET_NEW_DELTAIL + object.optString("informationId") + ".html";
-                        Cog.d(TAG, "information detail url=", url);
+        mWebApi.post4Json(URLConfig.INFORMATION_DETAIL, data)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "getInfo response=" + response);
+                        if ("success".equals(response.optString("result"))) {
+                            JSONObject object = response.optJSONObject("information");
+                            if (object != null) {
+                                if (Info.TYPE_NEWS.equals(object.optString("infoType"))) {
+                                    if (mFrom == FROM_FUNCTION)
+                                        mTitleBar.setTitle(Titles.sWorkspaceInfoNew);
+                                    else
+                                        mTitleBar.setTitle(Titles.sPagetitleIndexInfoNew);
+                                } else if (Info.TYPE_NOTICE.equals(object.optString("infoType"))) {
+                                    if (mFrom == FROM_FUNCTION)
+                                        mTitleBar.setTitle(Titles.sWorkspaceNoticeAnnouncementNotice);
+                                    else
+                                        mTitleBar.setTitle(Titles.sPagetitleIndexInfoNotice);
+                                } else {
+                                    if (mFrom == FROM_FUNCTION)
+                                        mTitleBar.setTitle(Titles.sWorkspaceNoticeAnnouncementAnnouncement);
+                                    else
+                                        mTitleBar.setTitle(Titles.sPagetitleIndexInfoAnnouncement);
+                                }
+                                String content = object.optString("richContent");
+                                String url = URLConfig.GET_NEW_DELTAIL + object.optString("informationId") + ".html";
+                                Cog.d(TAG, "information detail url=", url);
 //                        if (TextUtils.isEmpty(content)) {
-                            mContentWv.loadUrl(url);
+                                mContentWv.loadUrl(url);
 //                        } else {
 //                            WebViewUtils.setContentToWebView(mContentWv, content);
 //                        }
+                            }
+                        }
                     }
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                    }
+                });
     }
 
     @IntDef(value={FROM_CHANNEL,FROM_FUNCTION})

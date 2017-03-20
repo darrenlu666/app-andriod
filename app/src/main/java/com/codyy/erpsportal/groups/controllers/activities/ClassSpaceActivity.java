@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
@@ -158,7 +158,7 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if (null == mRecyclerView || null == mRefreshLayout) return;
         mRecyclerView.setEnabled(true);
         if (mRefreshLayout.isRefreshing()) {

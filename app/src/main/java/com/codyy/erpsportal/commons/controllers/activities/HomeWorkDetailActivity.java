@@ -11,24 +11,23 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.HomeWorkDetailAdapter;
-import com.codyy.erpsportal.commons.utils.NetworkUtils;
-import com.codyy.erpsportal.homework.widgets.MySubmitDialog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.HomeWorkDetail;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.homenews.FamousClassBean;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.services.uploadServices.AbstractUploadServiceReceiver;
 import com.codyy.erpsportal.commons.services.uploadServices.UploadRequest;
 import com.codyy.erpsportal.commons.services.uploadServices.UploadService;
+import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.weibo.controllers.fragments.WeiBoUpVideoDialogFragment;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.homework.widgets.MySubmitDialog;
+import com.codyy.erpsportal.weibo.controllers.fragments.WeiBoUpVideoDialogFragment;
+import com.codyy.url.URLConfig;
 import com.codyy.widgets.AlbumActivity;
 import com.codyy.widgets.model.entities.PhotoInfo;
 import com.google.gson.Gson;
@@ -159,7 +158,7 @@ public class HomeWorkDetailActivity extends ToolbarActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
 
             }
         }, mHashTag));
@@ -278,7 +277,7 @@ public class HomeWorkDetailActivity extends ToolbarActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mEmptyView.setVisibility(View.VISIBLE);
                 mEmptyView.setLoading(false);
                 ToastUtil.showToast(HomeWorkDetailActivity.this, "获取数据失败");

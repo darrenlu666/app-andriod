@@ -6,26 +6,29 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.activities.LoginActivity;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.tasks.SavePasswordTask;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.activities.LoginActivity;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 请求发送者，自动附带uuid失效验证处理
@@ -37,7 +40,11 @@ public class RequestSender {
 
     private final static int DEFAULT_TIMEOUT_MS = 15000;
 
-    private RequestQueue mRequestQueue;
+//    private RequestQueue mRequestQueue;
+
+    private WebApi mWebApi;
+
+    private CompositeDisposable mCompositeDisposable;
 
     private Context mContext;
 
@@ -49,8 +56,10 @@ public class RequestSender {
 
     public RequestSender(Context context) {
         mContext = context;
-        mRequestQueue = RequestManager.getRequestQueue();
+//        mRequestQueue = RequestManager.getRequestQueue();
+        mWebApi = RsGenerator.create(WebApi.class);
         mHandler = new Handler();
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     protected void gotoLoginActivity() {
@@ -71,11 +80,13 @@ public class RequestSender {
         requestData.addSendCount();
         requestData.setStartTime();
         Cog.d(TAG, "sendRequest:", requestData.toString());
-        Request<JSONObject> request = new NormalPostRequest(requestData.getUrl(), requestData.getParam(),
-                new Response.Listener<JSONObject>() {
 
+        Disposable disposable =  mWebApi.post4Json(requestData.getUrl(), requestData.getParam())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
                     @Override
-                    public void onResponse(final JSONObject response) {
+                    public void accept(final JSONObject response) throws Exception {
                         Cog.d(TAG, "+onResponse:" + response);
                         String result = response.optString("result");
                         if ("forbidden".equals(result)) {//登录超时
@@ -84,7 +95,7 @@ public class RequestSender {
                                 clearLoginData();
                                 gotoLoginActivity();
                             } else {
-                                sendLoginRequest(requestData);
+                                sendLoginRequest(requestData, false);
                             }
                         } else {
                             if (requestData.isToShowLoading()) {
@@ -104,27 +115,14 @@ public class RequestSender {
                             }
                         }
                     }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.e(TAG, "+onErrorResponse:" + error);
-                requestData.getErrorListener().onErrorResponse(error);
-            }
-        });
-
-        int timeOut = requestData.getTimeout();
-        if (requestData.isNeedRetry()) {
-            setRequestRetryPolicy(request, timeOut > 0? timeOut: DEFAULT_TIMEOUT_MS, 1);
-        } else {
-            setRequestRetryPolicy(request, timeOut > 0? timeOut: DEFAULT_TIMEOUT_MS * 2, 0);
-        }
-        //长期最小化后在最大化之后，请求队列为空
-        if (mRequestQueue == null) {
-            mRequestQueue = RequestManager.getRequestQueue();
-        }
-        request.setTag(requestData.getTag());
-        mRequestQueue.add(request);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Cog.e(TAG, "+onErrorResponse:" + throwable);
+                        requestData.getErrorListener().onErrorResponse(throwable);
+                    }
+                });
+        mCompositeDisposable.add( disposable);
         return true;
     }
 
@@ -144,11 +142,12 @@ public class RequestSender {
 
         String url = requestData.mUrl + requestData.getParams();
         Cog.d(TAG, "sendRequest:" + url);
-        Request<JSONObject> request = new NormalGetRequest(url,
-                new Response.Listener<JSONObject>() {
-
+        Disposable disposable = mWebApi.getJson(requestData.mUrl)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
                     @Override
-                    public void onResponse(final JSONObject response) {
+                    public void accept(final JSONObject response) throws Exception {
                         Cog.d(TAG, "+onResponse:" + response);
                         String result = response.optString("result");
                         if ("forbidden".equals(result)) {//登录超时
@@ -157,7 +156,7 @@ public class RequestSender {
                                 clearLoginData();
                                 gotoLoginActivity();
                             } else {
-                                sendLoginRequest(requestData);
+                                sendLoginRequest(requestData, true);
                             }
                         } else {
                             if (requestData.isToShowLoading()) {
@@ -177,27 +176,14 @@ public class RequestSender {
                             }
                         }
                     }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.e(TAG, "+onErrorResponse:" + error);
-                requestData.getErrorListener().onErrorResponse(error);
-            }
-        });
-
-        int timeOut = requestData.getTimeout();
-        if (requestData.isNeedRetry()) {
-            setRequestRetryPolicy(request, timeOut > 0? timeOut: DEFAULT_TIMEOUT_MS, 1);
-        } else {
-            setRequestRetryPolicy(request, timeOut > 0? timeOut: DEFAULT_TIMEOUT_MS * 2, 0);
-        }
-        //长期最小化后在最大化之后，请求队列为空
-        if (mRequestQueue == null) {
-            mRequestQueue = RequestManager.getRequestQueue();
-        }
-        request.setTag(requestData.getTag());
-        mRequestQueue.add(request);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Cog.e(TAG, "+onErrorResponse:" + throwable);
+                        requestData.getErrorListener().onErrorResponse(throwable);
+                    }
+                });
+        mCompositeDisposable.add(disposable);
         return true;
     }
 
@@ -210,11 +196,7 @@ public class RequestSender {
      * @param <T>     所请求数据类型
      */
     public <T> void add(Request<T> request) {
-        mRequestQueue.add(request);
-    }
-
-    private void setRequestRetryPolicy(Request request, int timeoutMs, int retryTimes) {
-        request.setRetryPolicy(new DefaultRetryPolicy(timeoutMs, retryTimes, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+//        mRequestQueue.add(request);
     }
 
     private void clearLoginData() {
@@ -225,12 +207,7 @@ public class RequestSender {
      * 取消所有请求
      */
     public void stop() {
-        mRequestQueue.cancelAll(new RequestQueue.RequestFilter() {
-            @Override
-            public boolean apply(Request<?> request) {
-                return true;
-            }
-        });
+        mCompositeDisposable.dispose();
     }
 
     /**
@@ -239,7 +216,7 @@ public class RequestSender {
      * @param tag
      */
     public void stop(Object tag) {
-        mRequestQueue.cancelAll(tag);
+        stop();
     }
 
     /**
@@ -247,7 +224,7 @@ public class RequestSender {
      *
      * @param requestData
      */
-    private void sendLoginRequest(final RequestData requestData) {
+    protected void sendLoginRequest(final RequestData requestData, final boolean isGet) {
         SharedPreferences sp = mContext.getSharedPreferences(Constants.SHARED_KEY_PASSWORD, Context.MODE_PRIVATE);
         final String username = sp.getString("username", null);
         if (username == null) {
@@ -258,11 +235,12 @@ public class RequestSender {
         Map<String, String> data = new HashMap<>();
         data.put("userName", username);
         data.put("password", password);
-        NormalPostRequest loginRequest = new NormalPostRequest(URLConfig.LOGIN, data,
-                new Response.Listener<JSONObject>() {
-
+        Disposable disposable = mWebApi.post4Json(URLConfig.LOGIN, data)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "sendLoginRequest:" + response);
                         String result = response.optString("result");
                         if (!"success".equals(result)) {
@@ -277,22 +255,24 @@ public class RequestSender {
                             String uuid = response.optString("uuid");
                             if (uuid != null) {
                                 requestData.getParam().put("uuid", uuid);
-                                sendRequest(requestData);
+                                if (isGet) {
+                                    sendGetRequest(requestData);
+                                } else {
+                                    sendRequest(requestData);
+                                }
                             } else {
                                 gotoLoginActivity();
                             }
                         }
                     }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.e(TAG, "sendLoginRequest error:" + error);
-                requestData.getErrorListener().onErrorResponse(error);
-            }
-        });
-        loginRequest.setTag(requestData.getTag());
-        mRequestQueue.add(loginRequest);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Cog.e(TAG, "sendLoginRequest error:" + throwable);
+                        requestData.getErrorListener().onErrorResponse(throwable);
+                    }
+                });
+        mCompositeDisposable.add( disposable);
     }
 
     private void updateLoginInfo(JSONObject response) {
@@ -331,7 +311,8 @@ public class RequestSender {
         }
 
         public RequestData(String url, Map<String, String> param,
-                           Response.Listener<JSONObject> listener, Response.ErrorListener errorListener, Object tag) {
+                           Response.Listener<JSONObject> listener, Response.ErrorListener errorListener,
+                           Object tag) {
             this(url, param, listener, errorListener, true, true);
             this.mTag = tag;
         }
@@ -346,13 +327,16 @@ public class RequestSender {
             this.mNeedRetry = needRetry;
         }
 
-        public RequestData(String url, Map<String, String> param, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener, boolean needRetry, Object tag) {
+        public RequestData(String url, Map<String, String> param, Response.Listener<JSONObject> listener,
+                           Response.ErrorListener errorListener, boolean needRetry,
+                           Object tag) {
             this(url, param, listener, errorListener, true, needRetry);
             this.mTag = tag;
         }
 
         public RequestData(String url, Map<String, String> param,
-                           Response.Listener<JSONObject> listener, Response.ErrorListener errorListener, boolean isToShowLoading) {
+                           Response.Listener<JSONObject> listener, Response.ErrorListener errorListener,
+                           boolean isToShowLoading) {
             this.mUrl = url;
             this.mParam = param;
             this.setListener(listener);
@@ -405,16 +389,16 @@ public class RequestSender {
             return mListener;
         }
 
-        public void setListener(Response.Listener<JSONObject> mListener) {
-            this.mListener = mListener;
+        public void setListener(Response.Listener<JSONObject> listener) {
+            this.mListener = listener;
         }
 
         public Response.ErrorListener getErrorListener() {
             return mErrorListener;
         }
 
-        public void setErrorListener(Response.ErrorListener mErrorListener) {
-            this.mErrorListener = mErrorListener;
+        public void setErrorListener(Response.ErrorListener errorListener) {
+            this.mErrorListener = errorListener;
         }
 
         public int getSendCount() {

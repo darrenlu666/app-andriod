@@ -11,27 +11,30 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
-import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineDocumentViewHolder;
-import com.codyy.erpsportal.onlinemeetings.models.entities.DocumentDetailEntity;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineDocumentViewHolder;
+import com.codyy.erpsportal.onlinemeetings.models.entities.DocumentDetailEntity;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.Bind;
 import de.greenrobot.event.EventBus;
 
@@ -170,7 +173,7 @@ public class OnlineDocumentsFragment extends OnlineFragmentBase {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Snackbar.make(mRecyclerView, getResources().getString(R.string.net_error), Snackbar.LENGTH_SHORT).show();
                 mEmptyView.setVisibility(View.VISIBLE);
                 mEmptyView.setLoading(false);

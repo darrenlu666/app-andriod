@@ -11,9 +11,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -21,34 +18,30 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
-import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialogMD;
-import com.codyy.erpsportal.commons.widgets.TimeTable.SuperTimeTableLayout;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.CalendarScrollView;
 import com.codyy.erpsportal.commons.widgets.CalendarViewPager;
 import com.codyy.erpsportal.commons.widgets.RecycleViewPopuWindow;
+import com.codyy.erpsportal.commons.widgets.TimeTable.SuperTimeTableLayout;
 import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
-import com.codyy.erpsportal.county.controllers.fragments.DialogStatisticsFragment;
 import com.codyy.erpsportal.county.controllers.fragments.ListDialog;
 import com.codyy.erpsportal.county.controllers.models.entities.CountyClassDetial;
 import com.codyy.erpsportal.county.controllers.models.entities.CountyDetialFilter;
 import com.codyy.erpsportal.county.widgets.ClassDetailDialog;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,7 +50,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import butterknife.Bind;
 
@@ -379,7 +371,7 @@ public class CountyClassDetailActivity extends ToolbarActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mLoadingDialog.dismiss();
                 switch (msg) {
                     case GET_DETIAL:
