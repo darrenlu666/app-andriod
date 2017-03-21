@@ -146,6 +146,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
 
         if(!NetworkUtils.isConnected()){
             ToastUtil.showToast(getString(R.string.net_error));
+            requestListener.onRequestFailure(new VolleyError(getString(R.string.net_error)));
             return;
         }
         if(null == params){

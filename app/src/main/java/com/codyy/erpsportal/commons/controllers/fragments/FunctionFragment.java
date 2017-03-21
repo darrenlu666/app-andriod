@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.models.personal.StudentParse;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassMemberActivity;

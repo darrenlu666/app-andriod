@@ -132,9 +132,10 @@ public class SchoolProgramDetail extends BaseHttpActivity {
 
     @Override
     public void onFailure(VolleyError error) throws Exception {
-        ToastUtil.showSnake("数据请求出错了",mProgramMasterTv);
+//        ToastUtil.showSnake("数据请求出错了",mProgramMasterTv);
         if(null == mProgramDetail){
             mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyView.setLoading(false);
         }else{
             mEmptyView.setVisibility(View.GONE);
         }
