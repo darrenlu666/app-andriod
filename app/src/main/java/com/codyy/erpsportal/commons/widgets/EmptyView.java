@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -71,6 +72,21 @@ public class EmptyView extends RelativeLayout {
         mLoadingBar = (ProgressBar) findViewById(R.id.pro_loading);
         Drawable drawable = getResources().getDrawable(R.drawable.progress_loading);
         mLoadingBar.setIndeterminateDrawable(drawable);
+        SpannableString spStr = getSpannableString(R.string.no_data_for_now);
+        mEmptyTv.setText(spStr);
+        mEmptyTv.setHighlightColor(Color.TRANSPARENT);
+        mEmptyTv.setMovementMethod(LinkMovementMethod.getInstance());
+        if (mLoading) {
+            mEmptyTv.setVisibility(View.GONE);
+            mLoadingBar.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyTv.setVisibility(View.VISIBLE);
+            mLoadingBar.setVisibility(View.GONE);
+        }
+    }
+
+    @NonNull
+    private SpannableString getSpannableString(int str) {
         ClickableSpan mMyClickableSpan = new ClickableSpan() {
 
             @Override
@@ -86,18 +102,9 @@ public class EmptyView extends RelativeLayout {
             }
         };
 
-        SpannableString spStr = new SpannableString(getContext().getString(R.string.no_data_for_now));
-        spStr.setSpan(mMyClickableSpan, 0, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        mEmptyTv.setText(spStr);
-        mEmptyTv.setHighlightColor(Color.TRANSPARENT);
-        mEmptyTv.setMovementMethod(LinkMovementMethod.getInstance());
-        if (mLoading) {
-            mEmptyTv.setVisibility(View.GONE);
-            mLoadingBar.setVisibility(View.VISIBLE);
-        } else {
-            mEmptyTv.setVisibility(View.VISIBLE);
-            mLoadingBar.setVisibility(View.GONE);
-        }
+        SpannableString spStr = new SpannableString(getContext().getString(str));
+        spStr.setSpan(mMyClickableSpan, 0, spStr.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spStr;
     }
 
     public void setOnReloadClickListener(OnReloadClickListener onReloadClickListener) {
@@ -112,6 +119,13 @@ public class EmptyView extends RelativeLayout {
         } else {
             mEmptyTv.setVisibility(View.VISIBLE);
             mLoadingBar.setVisibility(View.GONE);
+        }
+    }
+
+    public void setText(int title){
+        if(null != mEmptyTv) {
+            SpannableString spStr = getSpannableString(title);
+            mEmptyTv.setText(spStr);
         }
     }
 

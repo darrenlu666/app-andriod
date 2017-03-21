@@ -90,6 +90,7 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
     public void init() {
         super.init();
         setTitle(Titles.sWorkspaceTvProgramProgramList);
+        setEmptyText(R.string.tv_no_data_for_now);
         mTabLayout.setTabTextColors(R.color.grey_444,R.color.main_color);
         mTabLayout.setSelectedTabIndicatorHeight(0);
         //set filter
@@ -111,11 +112,6 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
     //更新头部的时间表
     private void refreshTabLayout(String date) {
         Cog.i(TAG,"update date : "+date);
-        //if select different date clear date source .
-       /* if(!mLiveDate.equals(date)){
-            mDataList.clear();
-            mAdapter.notifyDataSetChanged();
-        }*/
         mWeekDayList = DateUtil.getCurrentWeek(date,DateUtil.YEAR_MONTH_DAY);
         mTabLayout.removeOnTabSelectedListener(mTabSelectListener);
         mTabLayout.removeAllTabs();
@@ -207,10 +203,6 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
             }
         };
     }
-
-    private int mYear ;
-    private int mMonth ;
-    private int mDay ;
 
     private void pickerDate() {
         final AlertDialog dialog = new AlertDialog.Builder(this).create();

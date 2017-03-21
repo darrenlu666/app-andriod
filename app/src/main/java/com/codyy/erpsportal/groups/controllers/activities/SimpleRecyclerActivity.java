@@ -221,4 +221,8 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
         if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         requestData(true);
     }
+
+    public void setEmptyText(int tips){
+        if(null != mEmptyView) mEmptyView.setText(tips);
+    }
 }
