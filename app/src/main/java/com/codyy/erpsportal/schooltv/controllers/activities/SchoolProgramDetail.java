@@ -99,6 +99,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     public void init() {
         mProgramId = getIntent().getStringExtra(EXTRA_PROGRAM_ID);
         mTitleTextView.setText("节目详情");
+        initToolbar(mToolBar);
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {

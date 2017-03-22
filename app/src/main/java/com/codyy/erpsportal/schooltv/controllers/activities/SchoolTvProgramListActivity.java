@@ -211,39 +211,55 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
         };
     }
 
+    private AlertDialog mDialog;
+    private DatePicker mDatePicker;
     private void pickerDate() {
-        final AlertDialog dialog = new AlertDialog.Builder(this).create();
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
-        DPTManager.getInstance().initCalendar(new DatePickTheme());
-        DatePicker picker = new DatePicker(this);
-        picker.setDate(DateTime.now().getYear(), DateTime.now().getMonthOfYear());
-        picker.setMode(DPMode.SINGLE);
-        picker.setTodayDisplay(true);
-        picker.setHolidayDisplay(false);
-        picker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
-            @Override
-            public void onDatePicked(String date) {
-                dialog.dismiss();
-                try{
-                    Date newDate = DateUtil.stringToDate(date,DateUtil.YEAR_MONTH_DAY);
-                    String dd = DateUtil.dateToString(newDate,DateUtil.YEAR_MONTH_DAY);
-                    /*if(null != mLiveDate && !mLiveDate.equals(dd)){
-                        mLiveDate = dd;
-                        refresh();
-                    }*/
-                    refreshTabLayout(dd);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
+        if(null == mDialog){
+            mDialog  = new AlertDialog.Builder(this).create();
+            mDialog.setCancelable(true);
+            mDialog.setCanceledOnTouchOutside(true);
+            mDialog.show();
+            if(null == mDatePicker){
+                DPTManager.getInstance().initCalendar(new DatePickTheme());
+                mDatePicker = new DatePicker(this);
+                mDatePicker.setDate(DateTime.now().getYear(), DateTime.now().getMonthOfYear());
+                mDatePicker.setMode(DPMode.SINGLE);
+                mDatePicker.setTodayDisplay(true);
+                mDatePicker.setHolidayDisplay(false);
+                mDatePicker.setOnDatePickedListener(new DatePicker.OnDatePickedListener() {
+                    @Override
+                    public void onDatePicked(String date) {
+                        mDialog.dismiss();
+                        try{
+                            Date newDate = DateUtil.stringToDate(date,DateUtil.YEAR_MONTH_DAY);
+                            String dd = DateUtil.dateToString(newDate,DateUtil.YEAR_MONTH_DAY);
+                            refreshTabLayout(dd);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
-        });
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setContentView(picker, params);
-            dialog.getWindow().setGravity(Gravity.CENTER);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            if (mDialog.getWindow() != null) {
+                mDialog.getWindow().setContentView(mDatePicker, params);
+                mDialog.getWindow().setGravity(Gravity.CENTER);
+            }
+        }else{
+            mDialog.show();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(null !=mDialog){
+            mDialog = null;
+        }
+        if(null != mDatePicker) {
+            mDatePicker.destroyDrawingCache();
+            mDatePicker = null;
         }
     }
 
