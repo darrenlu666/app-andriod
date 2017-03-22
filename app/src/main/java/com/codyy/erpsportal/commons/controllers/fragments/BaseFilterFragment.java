@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity.FilterParamsProvider;
 import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
@@ -27,7 +26,6 @@ import com.codyy.erpsportal.commons.models.entities.ChoicesOption;
 import com.codyy.erpsportal.commons.models.entities.DirectSchoolsChoice;
 import com.codyy.erpsportal.commons.models.entities.FilterItem;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -108,8 +106,6 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
     }
 
     public static BaseFilterFragment newInstance(UserInfo userInfo, String areaId) {
-//        BaseFilterFragment fragment = new BaseFilterFragment();
-//        Bundle bundle = new Bundle();
         AreaInfo areaInfo = new AreaInfo();
         if (userInfo.isArea()) {
             areaInfo.setType(AreaInfo.TYPE_AREA);
@@ -118,12 +114,6 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
             areaInfo.setType(AreaInfo.TYPE_SCHOOL);
             areaInfo.setId(userInfo.getSchoolId());
         }
-//        bundle.putParcelable(ARG_AREA_INFO, areaInfo);
-//
-//        if (!TextUtils.isEmpty(areaId)) {
-//            bundle.putString(ARG_AREA_ID, areaId);
-//        }
-//        fragment.setArguments(bundle);
         return newInstance(areaInfo, areaId);
     }
 
@@ -164,7 +154,6 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
                         updateChoices(choicesOption, choicesOption.getChoices());
                         return;
                     }
-                    RequestQueue requestQueue = RequestManager.getRequestQueue();
                     WebApi webApi = RsGenerator.create(WebApi.class);
                     Map<String, String> params = new HashMap<>();
                     if ("classLevelId".equals(item.getParamName()) || "subjectId".equals(item.getParamName())) {
@@ -234,7 +223,6 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
             });
 
             mChoiceLv = (ListView) mView.findViewById(R.id.second);
-//        mChoiceLv.setEmptyView(mSecondEmptyView);
             mChoiceLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -256,7 +244,8 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
                             boolean newAdded = false;
                             if (!choice.isAll() && !areaFilterItem.isSchool()) {
                                 AreaFilterItem newAreaFilterItem;
-                                if (choice instanceof DirectSchoolsChoice) {
+                                if (choice instanceof DirectSchoolsChoice) {//直属校被点
+                                    if (onDirectSchoolClick()) return;
                                     newAreaFilterItem = fetchSchools(choice.getId());
                                 } else {
                                     newAreaFilterItem = fetchAreaFilterItem(choice.getId());
@@ -265,7 +254,7 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
                                 newAdded = true;
                             }
                             mOptionsAdapter.notifyDataSetChanged();
-                            if (newAdded) {
+                            if (newAdded) {//如果有新加项，切到新项
                                 mOptionsLv.performItemClick(null, nextPosition, 0);
                             }
                         }
@@ -292,6 +281,14 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
             initOptionItems();
         }
         return mView;
+    }
+
+    /**
+     * 直属校被点击
+     * @return true 已被处理
+     */
+    protected boolean onDirectSchoolClick() {
+        return false;
     }
 
     private void handleJsonItems(JSONArray jsonArray, FilterItem item) {
@@ -353,7 +350,7 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
         super.onActivityCreated(savedInstanceState);
     }
 
-    private void initOptionItems() {
+    protected void initOptionItems() {
         List<FilterItem> items = new ArrayList<>();
 
         if (mAreaId != null) {
@@ -361,11 +358,6 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
             items.add(areaFilterItem);
         }
 
-        FilterItem classLevelFilterItem = new FilterItem("年级", "classLevelId", obtainClassLevelUrl(), FilterItem.OBJECT);
-        FilterItem subjectFilterItem = new FilterItem("学科", "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT);
-        subjectFilterItem.addPrecondition(classLevelFilterItem, "classlevelId");
-        items.add(classLevelFilterItem);
-        items.add(subjectFilterItem);
         appendExtraOptions(items);
         mOptionsAdapter.addData(items);
     }
@@ -385,8 +377,18 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
         return URLConfig.ALL_CLASS_LEVEL;
     }
 
+    /**
+     * 子类复写可以追加筛选项
+     * @param items 筛选项列表
+     */
     protected void appendExtraOptions(List<FilterItem> items) {
-
+        if (mAreaInfo != null) {
+            FilterItem classLevelFilterItem = new FilterItem("年级", "classLevelId", obtainClassLevelUrl(), FilterItem.OBJECT);
+            FilterItem subjectFilterItem = new FilterItem("学科", "subjectId", URLConfig.ALL_SUBJECTS_LIST, FilterItem.OBJECT);
+            subjectFilterItem.addPrecondition(classLevelFilterItem, "classlevelId");
+            items.add(classLevelFilterItem);
+            items.add(subjectFilterItem);
+        }
     }
 
     @NonNull
@@ -395,7 +397,6 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
         final AreaFilterItem areaFilterItem = new AreaFilterItem();
         areaFilterItem.setUrl(URLConfig.GET_AREA);
         params.put("areaId", areaId);
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
         WebApi webApi = RsGenerator.create(WebApi.class);
         Cog.d(TAG, "fetchAreaFilterItem url=", URLConfig.GET_AREA, params);
         webApi.post4Json(areaFilterItem.getUrl(), params)
@@ -410,7 +411,12 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
                             areaFilterItem.setTypeName(levelName);
                             boolean hasDirect = "Y".equals(response.optString("hasDirect"));
                             JSONArray jsonArray = response.optJSONArray("areas");
-                            if (jsonArray.length() == 0) {
+                            if (jsonArray.length() == 0) {//当前是最下级区域，请求学校
+                                if (onLowestAreaClick()) {
+                                    mOptionsAdapter.removeItem(areaFilterItem);
+                                    mOptionsAdapter.notifyDataSetChanged();
+                                    return;
+                                }
                                 fetchSchools(areaFilterItem, params);
                                 return;
                             }
@@ -438,6 +444,14 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
                     }
                 });
         return areaFilterItem;
+    }
+
+    /**
+     * 最下级地区被点击
+     * @return true 点击事件被处理了
+     */
+    protected boolean onLowestAreaClick() {
+        return false;
     }
 
     private AreaFilterItem fetchSchools(String areaId) {

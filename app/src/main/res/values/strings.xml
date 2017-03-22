@@ -776,5 +776,12 @@
     <string name="tv_detail_program_master">主持人:</string>
     <string name="tv_detail_program_detail">简介:</string>
     <string name="tv_detail_video_un_start">当前无直播，请稍等...</string>
-    
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="malfunction_count">问题总数 %1$d</string>
+    <string name="handled_count">已处理问题数 %1$d</string>
+    <string name="common_malfunction">常见问题</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
 </resources>

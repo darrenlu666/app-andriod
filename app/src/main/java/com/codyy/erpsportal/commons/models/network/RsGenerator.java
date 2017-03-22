@@ -30,6 +30,7 @@ public class RsGenerator {
                 .connectTimeout(30L, TimeUnit.SECONDS)
                 .readTimeout(1L, TimeUnit.MINUTES)
                 .writeTimeout(1L, TimeUnit.MINUTES)
+                .addInterceptor(new FakeInterceptor())
                 .build();
         sRetrofit = new Retrofit.Builder()
                 .baseUrl(URLConfig.BASE)

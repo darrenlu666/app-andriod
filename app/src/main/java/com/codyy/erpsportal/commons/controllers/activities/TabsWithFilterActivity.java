@@ -265,11 +265,6 @@ public abstract class TabsWithFilterActivity extends ToolbarActivity implements 
         } else {
             menu.getItem(FIRST_MENU_ITEM_POSITION).setVisible(true);
         }
-//        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-//            menu.getItem(FIRST_MENU_ITEM_POSITION).setIcon(R.drawable.ic_done_white);
-//        } else {
-//            menu.getItem(FIRST_MENU_ITEM_POSITION).setIcon(R.drawable.ic_filter);
-//        }
         menu.getItem(FIRST_MENU_ITEM_POSITION).setActionView(R.layout.menu_item_filter_btn);
         View view = menu.getItem(FIRST_MENU_ITEM_POSITION).getActionView();
         Button filterBtn = (Button) view.findViewById(R.id.btn_filter);

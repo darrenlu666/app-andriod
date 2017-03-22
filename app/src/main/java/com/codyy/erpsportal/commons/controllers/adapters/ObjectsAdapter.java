@@ -131,6 +131,10 @@ public class ObjectsAdapter<T, VH extends AbsViewHolder<T>> extends BaseAdapter 
         }
     }
 
+    public boolean removeItem(T item) {
+        return mData != null && mData.remove(item);
+    }
+
     public void addItem(int position, T item) {
         if (mData != null) {
             mData.add(position, item);

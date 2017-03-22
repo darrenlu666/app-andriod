@@ -2837,7 +2837,11 @@ public class URLConfig {
     @UrlSuffix("/mobile/tvProgram/getPastProgramList.do")
     public static String GET_SCHOOL_TV_HISTORY_LIST;
 
+    @UrlSuffix("/mobile/repairs/getRepairsSchools.do")
+    public static String GET_REPAIRS_SCHOOLS;
 
+    @UrlSuffix("/mobile/repairs/getRepairRecords.do")
+    public static String GET_REPAIR_RECORDS;
 
     static {
         UrlBuilder.updateUrls();

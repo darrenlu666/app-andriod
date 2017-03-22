@@ -10,11 +10,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -62,8 +60,6 @@ public class InfoDetailActivity extends AppCompatActivity {
     @Bind(R.id.wv_info_content)
     WebView mContentWv;
 
-    private RequestQueue mRequestQueue;
-
     private WebApi mWebApi;
 
     private String mInformation;
@@ -83,7 +79,6 @@ public class InfoDetailActivity extends AppCompatActivity {
         mContentWv.addJavascriptInterface(this, "android");
         mInformation = getIntent().getStringExtra(EXTRA_INFO_ID);
         mFrom = getIntent().getIntExtra(EXTRA_FROM, FROM_FUNCTION);
-        mRequestQueue = RequestManager.getRequestQueue();
         mWebApi = RsGenerator.create(WebApi.class);
         getInfo();
     }

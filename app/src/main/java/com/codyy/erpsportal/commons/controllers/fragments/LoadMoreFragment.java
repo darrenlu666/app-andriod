@@ -321,6 +321,10 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
         }
     }
 
+    public void setLoadedCallback(LoadedCallback loadedCallback) {
+        mLoadedCallback = loadedCallback;
+    }
+
     /**
      * 刷新成功回调方法
      */

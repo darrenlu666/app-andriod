@@ -150,8 +150,7 @@
         <item name="android:layout_marginRight">50dp</item>
     </style>
 
-    <style name="EtVerificationCode" parent="EtLoginBase">
-    </style>
+    <style name="EtVerificationCode" parent="EtLoginBase"></style>
 
     <style name="EtLoginBase">
         <item name="android:background">@drawable/bg_et_frame</item>

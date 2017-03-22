@@ -468,7 +468,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
             } else {
                 throw new RuntimeException("No activity or fragment passed");
             }
-            if (mInfo == null) throw new RuntimeException("Please set info!");
+//            if (mInfo == null) throw new RuntimeException("Please set info!");
             instance.setInfo(mInfo);
             return instance;
         }
