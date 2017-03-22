@@ -12,62 +12,84 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.DateUtil;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
-import com.codyy.erpsportal.commons.widgets.BnVideoView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.schooltv.models.SchoolProgram;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
+
 import org.json.JSONObject;
+
 import java.util.HashMap;
+
 import butterknife.Bind;
 
 /**
  * 校园电视台-节目单-详情
  * Created by poe on 17-3-16.
  */
-
 public class SchoolProgramDetail extends BaseHttpActivity {
     private static final String TAG = "SchoolProgramDetail";
     private static final String EXTRA_PROGRAM_ID = "school.tv.program.id";
     private String mProgramId;
     private SchoolProgram mProgramDetail;//节目详情
-    @Bind(R.id.toolbar)Toolbar mToolBar;
-    @Bind(R.id.toolbar_title)TextView mTitleTextView;
-    @Bind(R.id.empty_view) EmptyView mEmptyView;
-    @Bind(R.id.detail_title_tv) TextView mProgramTitleBigTv;
-    @Bind(R.id.program_name_linear_layout) LinearLayout mTitleLinearLayout;
-    @Bind(R.id.detail_title_small_tv) TextView mProgramTitleSmallTv;
-    @Bind(R.id.time_tv) TextView mProgramTimeTv;
-    @Bind(R.id.master_tv) TextView mProgramMasterTv;
-    @Bind(R.id.desc_tv) TextView mProgramDescTv;
+    @Bind(R.id.toolbar)
+    Toolbar mToolBar;
+    @Bind(R.id.toolbar_title)
+    TextView mTitleTextView;
+    @Bind(R.id.empty_view)
+    EmptyView mEmptyView;
+    @Bind(R.id.detail_title_tv)
+    TextView mProgramTitleBigTv;
+    @Bind(R.id.program_name_linear_layout)
+    LinearLayout mTitleLinearLayout;
+    @Bind(R.id.detail_title_small_tv)
+    TextView mProgramTitleSmallTv;
+    @Bind(R.id.time_tv)
+    TextView mProgramTimeTv;
+    @Bind(R.id.master_tv)
+    TextView mProgramMasterTv;
+    @Bind(R.id.desc_tv)
+    TextView mProgramDescTv;
     //viewStub content .
     ViewStub mViewStub;
-    /**     * 视频布局     */
+    /**
+     * 视频布局
+     */
     FrameLayout mVideoFrameLayout;
-    /**     * 标题栏     */
+    /**
+     * 标题栏
+     */
     RelativeLayout mVideoTitleRlt;
-    /**     * 顶部包括返回按钮和学校名称的条     */
+    /**
+     * 顶部包括返回按钮和学校名称的条
+     */
     LinearLayout mVideoTitleLinearLayout;
-    /**     * 实时直播播放器     */
+    /**
+     * 实时直播播放器
+     */
     BnVideoLayout2 mVideoLayout;
-    /**     * 实时直播未开始的提示     */
+    /**
+     * 实时直播未开始的提示
+     */
     TextView mVideoFailureTv;
-    /** 横竖平控制及播放进度控制**/
+    /**
+     * 横竖平控制及播放进度控制
+     **/
     BNVideoControlView mVideoControlView;
-    /** back image **/
+    /**
+     * back image
+     **/
     ImageView mBackImage;//back img .
 
     @Override
@@ -82,16 +104,16 @@ public class SchoolProgramDetail extends BaseHttpActivity {
 
     @Override
     public HashMap<String, String> getParam(boolean isRefreshing) {
-        HashMap<String,String> param = new HashMap<>();
-        if(null != mUserInfo){
-            param.put("uuid",mUserInfo.getUuid());
-            if(UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())){
-                param.put("schoolId",mUserInfo.getSelectedChild().getSchoolId());
-            }else{
-                param.put("schoolId",mUserInfo.getSchoolId());
+        HashMap<String, String> param = new HashMap<>();
+        if (null != mUserInfo) {
+            param.put("uuid", mUserInfo.getUuid());
+            if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {
+                param.put("schoolId", mUserInfo.getSelectedChild().getSchoolId());
+            } else {
+                param.put("schoolId", mUserInfo.getSchoolId());
             }
         }
-        if(null != mProgramId)param.put("tvProgramDetailId",mProgramId);
+        if (null != mProgramId) param.put("tvProgramDetailId", mProgramId);
         return param;
     }
 
@@ -107,26 +129,25 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                 requestData(true);
             }
         });
-
     }
 
     @Override
     public void onSuccess(JSONObject response, boolean isRefreshing) throws Exception {
-        if(null == mEmptyView) return;
+        if (null == mEmptyView) return;
         mEmptyView.setLoading(false);
 
-        if(null != response && null != response.optJSONObject("detail")){
-            SchoolProgram sp = new Gson().fromJson(response.optJSONObject("detail").toString(),SchoolProgram.class);
-            if(null != sp){
+        if (null != response && null != response.optJSONObject("detail")) {
+            SchoolProgram sp = new Gson().fromJson(response.optJSONObject("detail").toString(), SchoolProgram.class);
+            if (null != sp) {
                 mProgramDetail = sp;
             }
         }
         initStub();
         initData();
 
-        if(null == mProgramDetail){
+        if (null == mProgramDetail) {
             mEmptyView.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mEmptyView.setVisibility(View.GONE);
         }
     }
@@ -134,10 +155,10 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     @Override
     public void onFailure(VolleyError error) throws Exception {
 //        ToastUtil.showSnake("数据请求出错了",mProgramMasterTv);
-        if(null == mProgramDetail){
+        if (null == mProgramDetail) {
             mEmptyView.setVisibility(View.VISIBLE);
             mEmptyView.setLoading(false);
-        }else{
+        } else {
             mEmptyView.setVisibility(View.GONE);
         }
     }
@@ -169,8 +190,9 @@ public class SchoolProgramDetail extends BaseHttpActivity {
             mVideoFrameLayout.setLayoutParams(lparam);
         }
     }
+
     private void initStub() {
-        if(null != mProgramDetail && mProgramDetail.getStatus()!=SchoolProgram.STATUS_INIT){
+        if (null != mProgramDetail && mProgramDetail.getStatus() != SchoolProgram.STATUS_INIT) {
             mViewStub = (ViewStub) findViewById(R.id.view_stub);
             mViewStub.inflate();
 
@@ -188,7 +210,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                 public void onClick(View view) {
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                         UIUtils.setPortrait(SchoolProgramDetail.this);
-                    }else{
+                    } else {
                         finish();
                         UIUtils.addExitTranAnim(SchoolProgramDetail.this);
                     }
@@ -200,35 +222,37 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                     mVideoControlView.showControl();
                 }
             });
-            mVideoControlView.bindVideoView(mVideoLayout.getVideoView(),getSupportFragmentManager());
+            mVideoControlView.bindVideoView(mVideoLayout.getVideoView(), getSupportFragmentManager());
             mVideoControlView.setOnPlayingListener(mVideoLayout);
             initVideoLayout();
         }
     }
 
     private void initData() {
-        if(null != mProgramDetail){
-            if(mProgramDetail.getStatus()!=SchoolProgram.STATUS_INIT){
+        if (null != mProgramDetail) {
+            if (mProgramDetail.getStatus() != SchoolProgram.STATUS_INIT) {
                 mToolBar.setVisibility(View.GONE);
                 mProgramTitleBigTv.setVisibility(View.GONE);
                 mTitleLinearLayout.setVisibility(View.VISIBLE);
                 mProgramTitleSmallTv.setText(mProgramDetail.getProgramName());
-            }else{
+            } else {
                 mProgramTitleBigTv.setText(mProgramDetail.getProgramName());
             }
 
-            mProgramTimeTv.setText(DateUtil.getDateStr(mProgramDetail.getStartTime(),DateUtil.HH_MM)+"-"+DateUtil.getDateStr(mProgramDetail.getEndTime(),DateUtil.HH_MM));
-            mProgramMasterTv.setText(TextUtils.isEmpty(mProgramDetail.getSpeaker())?"无":mProgramDetail.getSpeaker());
-            mProgramDescTv.setText(TextUtils.isEmpty(mProgramDetail.getBrief())?"无":mProgramDetail.getBrief());
+            mProgramTimeTv.setText(DateUtil.getDateStr(mProgramDetail.getStartTime(), DateUtil.HH_MM) + "-" + DateUtil.getDateStr(mProgramDetail.getEndTime(), DateUtil.HH_MM));
+            mProgramMasterTv.setText(TextUtils.isEmpty(mProgramDetail.getSpeaker()) ? "无" : mProgramDetail.getSpeaker());
+            mProgramDescTv.setText(TextUtils.isEmpty(mProgramDetail.getBrief()) ? "无" : mProgramDetail.getBrief());
         }
     }
 
-    /** 初始化视频相关操作**/
+    /**
+     * 初始化视频相关操作
+     **/
     private void initVideoLayout() {
-        if(mProgramDetail.getStatus() == SchoolProgram.STATUS_ON){//直播流
+        if (mProgramDetail.getStatus() == SchoolProgram.STATUS_ON) {//直播流
             mVideoControlView.setPlayMode(BNVideoControlView.MODE_LIVING);
-            mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(),BnVideoView2.BN_URL_TYPE_RTMP_LIVE,false);
-        }else if(SchoolProgram.STATUS_END == mProgramDetail.getStatus()){//历史录播流
+            mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE, false);
+        } else if (SchoolProgram.STATUS_END == mProgramDetail.getStatus()) {//历史录播流
             mVideoControlView.setExpandable(true);
             mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
 
@@ -245,10 +269,10 @@ public class SchoolProgramDetail extends BaseHttpActivity {
             });
 
             //录播没有视频提示
-            if(SchoolProgram.TRANS_SUCCESS.equals(mProgramDetail.getTransFlag())){
+            if (SchoolProgram.TRANS_SUCCESS.equals(mProgramDetail.getTransFlag())) {
                 mVideoFailureTv.setVisibility(View.GONE);
-                mVideoControlView.setVideoPath(mProgramDetail.getVideoPath(),BnVideoView2.BN_URL_TYPE_HTTP,false);
-            }else{
+                mVideoControlView.setVideoPath(mProgramDetail.getVideoPath(), BnVideoView2.BN_URL_TYPE_HTTP, false);
+            } else {
                 //tips no video .
                 mVideoFailureTv.setVisibility(View.VISIBLE);
                 mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
@@ -264,15 +288,15 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(null != mProgramDetail && SchoolProgram.STATUS_END == mProgramDetail.getStatus()) {//历史录播流)
+        if (null != mProgramDetail && SchoolProgram.STATUS_END == mProgramDetail.getStatus()) {//历史录播流)
             mVideoControlView.onPause();
         }
     }
 
-    public static void start(Activity act , UserInfo userInfo , String programId){
-        Intent intent = new Intent(act,SchoolProgramDetail.class);
-        intent.putExtra(EXTRA_PROGRAM_ID,programId);
-        intent.putExtra(Constants.USER_INFO,userInfo);
+    public static void start(Activity act, UserInfo userInfo, String programId) {
+        Intent intent = new Intent(act, SchoolProgramDetail.class);
+        intent.putExtra(EXTRA_PROGRAM_ID, programId);
+        intent.putExtra(Constants.USER_INFO, userInfo);
         act.startActivity(intent);
         UIUtils.addEnterAnim(act);
     }

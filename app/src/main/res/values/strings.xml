@@ -777,6 +777,7 @@
     <string name="tv_detail_program_detail">简介:</string>
     <string name="tv_detail_video_un_start">当前无直播，请稍等...</string>
     <string name="tv_no_data_for_now">暂无节目！</string>
+    <string name="tv_no_data_for_video">暂无视频</string>
 
     <string name="tv_order_time">按时间</string>
     <string name="tv_order_name">按名称</string>

@@ -51,11 +51,16 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     public static final int MODE_LIVING = 1;//直播.
     public static final int MODE_RECORD = 0;//录播.
 
-    @Bind(R.id.imgPlayOfVideoControl)    ImageButton mPlayImageButton;
-    @Bind(R.id.imgExpandOfVideoControl)    ImageButton mExpandImageButton;
-    @Bind(R.id.seekBarOfVideoControl)    SeekBar mSeekBar;
-    @Bind(R.id.txtTotalTimeOfVideoControl)    TextView mTotalTextView;
-    @Bind(R.id.txtPlayTimeOfVideoControl)    TextView mCurrentTextView;
+    @Bind(R.id.imgPlayOfVideoControl)
+    ImageButton mPlayImageButton;
+    @Bind(R.id.imgExpandOfVideoControl)
+    ImageButton mExpandImageButton;
+    @Bind(R.id.seekBarOfVideoControl)
+    SeekBar mSeekBar;
+    @Bind(R.id.txtTotalTimeOfVideoControl)
+    TextView mTotalTextView;
+    @Bind(R.id.txtPlayTimeOfVideoControl)
+    TextView mCurrentTextView;
     private BnVideoView2.OnBNErrorListener mOnErrorListener;
     private BnVideoView2.OnBNDurationChangeListener mOnDurationChangeListener;
     private BnVideoView2.OnBNBufferUpdateListener mOnBufferUpdateListener;
@@ -65,7 +70,9 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private ExpandListener mExpandListener;
     private Context mContext;
     private PlaySate state = PlaySate.STOP;
+
     public enum PlaySate {STOP, PLAY, PAUSE}
+
     private BnVideoView2 mVideoView = null;
     private int mTotal = 100;
     /**
@@ -85,10 +92,10 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private Handler mHandlerHide;//线程hide的控制handler
     private Handler mHandler;//主线程的handler
     private boolean mDestroy = false;//是否调用过surfaceDestroyed .
-    private boolean mPaused = false ;//是否突然被赞听过.
+    private boolean mPaused = false;//是否突然被赞听过.
     private long mStartPlayTime = -1;
-    private boolean mIsExpandable = true ;//是否支持横竖屏 default：true
-    private FragmentManager mFragmentManager ;
+    private boolean mIsExpandable = true;//是否支持横竖屏 default：true
+    private FragmentManager mFragmentManager;
     private int mPlayMode = MODE_RECORD;//播放模式默认录播 ，如果设置为直播则没有开始/暂停 和 播放进度显示
 
     @Override
@@ -116,18 +123,18 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     }
 
     public BNVideoControlView(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr,0);
+        this(context, attrs, defStyleAttr, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BNVideoControlView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context ,attrs,defStyleAttr);
+        init(context, attrs, defStyleAttr);
     }
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
-        TypedArray ta = getContext().obtainStyledAttributes(attrs,R.styleable.VideoControlView,defStyle,0);
-        mPlayMode = ta.getInteger(R.styleable.VideoControlView_play_mode,MODE_RECORD);
+        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.VideoControlView, defStyle, 0);
+        mPlayMode = ta.getInteger(R.styleable.VideoControlView_play_mode, MODE_RECORD);
         ta.recycle();
 
         View rootView = LayoutInflater.from(context).inflate(R.layout.video_control_view, this, true);
@@ -146,7 +153,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             }
         };
         if (!this.isInEditMode()) {
-            mWifiBroadCastUtil = new WiFiBroadCastUtils(mContext, mFragmentManager,new WiFiBroadCastUtils.PlayStateListener() {
+            mWifiBroadCastUtil = new WiFiBroadCastUtils(mContext, mFragmentManager, new WiFiBroadCastUtils.PlayStateListener() {
                 @Override
                 public void play() {
                     start();
@@ -161,7 +168,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     }
 
     private void updateMode() {
-        if(MODE_LIVING == mPlayMode){
+        if (MODE_LIVING == mPlayMode) {
             mPlayImageButton.setVisibility(INVISIBLE);
             mSeekBar.setVisibility(INVISIBLE);
             mCurrentTextView.setVisibility(INVISIBLE);
@@ -207,12 +214,12 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
 
             @Override
             public void onStopTrackingTouch(final SeekBar seekBar) {
-
+                Cog.e(TAG, "onStopTrackingTouch()~");
                 isOnTouch = false;
                 //防止播放完成之后记录的位置得不到更新
-                if (mLastPercent != mDestPos) {
+                /*if (mLastPercent != mDestPos) {
                     mLastPercent = mDestPos;
-                }
+                }*/
                 if (mIsLocal) {
                     resume();
                     mVideoView.seekTo(mDestPos);
@@ -277,15 +284,15 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         mExpandImageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIsExpandable){
+                if (mIsExpandable) {
                     touchControl();
                     Activity activity = (Activity) getContext();
                     if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                         UIUtils.setLandscape(activity);
-                        if(null != mExpandListener) mExpandListener.expand();
+                        if (null != mExpandListener) mExpandListener.expand();
                     } else if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                         UIUtils.setPortrait(activity);
-                        if(null != mExpandListener) mExpandListener.collapse();
+                        if (null != mExpandListener) mExpandListener.collapse();
                     }
 
 
@@ -393,7 +400,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
      *
      * @param view
      */
-    public void bindVideoView(@NonNull BnVideoView2 view ,FragmentManager manager) {
+    public void bindVideoView(@NonNull BnVideoView2 view, FragmentManager manager) {
         this.mVideoView = view;
         this.mFragmentManager = manager;
         mVideoView.setVolume(100);
@@ -405,10 +412,13 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             @Override
             public void onDurationUpdate(int duration) {
                 Cog.e(TAG, " total : " + duration);
-                mTotal = duration;
-                setDuration(duration);
-                if (null != mOnDurationChangeListener)
-                    mOnDurationChangeListener.onDurationUpdate(duration);
+                if (mTotal != duration) {
+                    Cog.e(TAG, " total changed from : " + mTotal + " to :" + duration);
+                    mTotal = duration;
+                    setDuration(duration);
+                    if (null != mOnDurationChangeListener)
+                        mOnDurationChangeListener.onDurationUpdate(duration);
+                }
             }
         });
 
@@ -416,7 +426,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             @Override
             public void onBufferUpdate(int position) {
                 Cog.i(TAG, "pos : " + position);
-                if (position != mCurrentPosition) {
+                if (mCurrentPosition != position) {
                     mCurrentPosition = position;
                     setProgress(position);
                 }
@@ -447,10 +457,10 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         mVideoView.setOnPlayingListener(new BnVideoView2.OnPlayingListener() {
             @Override
             public void onPlaying() {
-                Cog.e(TAG, "onPlaying()~~~~~~~~~~~~~~~~mLastPercent" + mLastPercent);
+                Cog.e(TAG, "onPlaying()~~~~~~~~~~~~~~~~mLastPercent" + mLastPercent + " mcurrent:" + mCurrentPosition);
                 setPlaySate();
                 if (Math.abs(mLastPercent - mCurrentPosition) >= 1000) {//防止拖动seekbar后两者差值在1000ms内引起的无限seek .
-                    Cog.e(TAG, "onPlaying()~~~~~~~~~~~~~~~~seek:" + mLastPercent + " mcurrent:" + mCurrentPosition);
+                    Cog.e(TAG, "onPlaying()~~~~~~~~~~~~~~~~seek : mLastPercent " + mLastPercent + " mcurrent:" + mCurrentPosition);
                     mVideoView.seekTo(mLastPercent);
                     mCurrentPosition = mLastPercent;
                 }
@@ -588,7 +598,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     }
 
     public void initConfig() {
-        Cog.e(TAG, "+initConfig " + mLastPercent                                                                                                                                                                                        );
+        Cog.e(TAG, "+initConfig " + mLastPercent);
         mLastPercent = 0;
         mCurrentPosition = 0;
         mTotal = 100;
@@ -609,10 +619,10 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             mVideoView.setUrl(urlPath, mURLType);
             mVideoView.play(BnVideoView2.BN_PLAY_DEFAULT);
             if (mLastPercent > 0) {
-                if(mPaused){//paused by some action .
+                if (mPaused) {//paused by some action .
                     mPaused = false;
                     mVideoView.seekTo(mLastPercent);
-                }else if(mDestroy){//surface Destroyed .
+                } else if (mDestroy) {//surface Destroyed .
                     mDestroy = false;
                     mVideoView.seekTo(mLastPercent);
                 }
@@ -647,10 +657,16 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         mPlayImageButton.setImageResource(R.drawable.poe_select_video_play);
     }
 
+    /**
+     * 记录暂停状态
+     * 将当前的播放位置记录到mLastPercent.
+     * 当前的播放位置值空.
+     */
     private void setPauseState() {
         //记录当前的位置，方便resume后seek .
         mLastPercent = mCurrentPosition;
-        mCurrentPosition = 0;
+        //为什么要设置为0? 去除本行解决seek后2次重复seek的问题
+//        mCurrentPosition = 0;
         state = PlaySate.PAUSE;
         mPlayImageButton.setImageResource(R.drawable.poe_select_video_play);
     }
@@ -724,9 +740,9 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
 
     public void setExpandable(boolean isExpandable) {
         this.mIsExpandable = isExpandable;
-        if(!mIsExpandable){
+        if (!mIsExpandable) {
             mExpandImageButton.setVisibility(INVISIBLE);
-        }else{
+        } else {
             mExpandImageButton.setVisibility(VISIBLE);
         }
     }
@@ -757,7 +773,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     /**
      * 横竖屏监听
      */
-    public interface ExpandListener{
+    public interface ExpandListener {
         /**
          * 点击了 Expand 图标
          */
