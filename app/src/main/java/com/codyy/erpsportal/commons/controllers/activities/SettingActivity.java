@@ -19,6 +19,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ConfirmDownloadDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.exception.LogUtils;
+import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
@@ -192,6 +193,8 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
     private void clearLoginInfo() {
         UserInfoDao.delete(this);
         UserInfoKeeper.getInstance().clearUserInfo();
+        //清空应用缓存
+        AppConfig.instance().destroy();
     }
 
     /**

@@ -772,4 +772,13 @@ public class AppConfig {
         }
         return result;
     }
+
+    /**
+     * 清空缓存
+     */
+    public void destroy(){
+        mChildItem.clear();
+        MENU_ICON.clear();
+        sAppInstance = null;
+    }
 }
