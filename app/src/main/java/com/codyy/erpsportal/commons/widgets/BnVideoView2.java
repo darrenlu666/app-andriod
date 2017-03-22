@@ -195,8 +195,10 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
         if (isPlaying()){
             return;
         }
+        if(null == mPlayer){
             mPlayer = BNMediaPlayer.createPlayer();
             initListener();
+        }
         if (TextUtils.isEmpty(mUrl))
             throw new IllegalStateException("Please call setUrl firstly.");
         playNow();

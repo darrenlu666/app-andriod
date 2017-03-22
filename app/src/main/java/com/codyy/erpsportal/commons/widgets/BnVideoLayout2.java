@@ -71,7 +71,7 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
             @Override
             public void onClick(View v) {
                 //living type retry connect ．　
-                if(null != mBnVideoView && mBnVideoView.getUrl() != null && BnVideoView2.BN_URL_TYPE_RTMP_LIVE == mBnVideoView.getURLType()){
+                if(null != mBnVideoView && mBnVideoView.getUrl() != null ){//&& BnVideoView2.BN_URL_TYPE_RTMP_LIVE == mBnVideoView.getURLType()
                     if(!getResources().getString(R.string.loading).equals(mHintTv.getText().toString())){
                         post(new Runnable() {
                             @Override
@@ -108,7 +108,6 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
     @Override
     public void onError(int errorCode , String errorMsg) {
         if (errorCode == -2 || 0 == errorCode ) {
-            if(mBnVideoView.getURLType() == BnVideoView2.BN_URL_TYPE_RTMP_LIVE){
                 post(new Runnable() {
                     @Override
                     public void run() {
@@ -116,22 +115,13 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                         mHintTv.setVisibility(VISIBLE);
                     }
                 });
-            }else{
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mHintTv.setText(R.string.tv_detail_video_un_start);
-                        mHintTv.setVisibility(VISIBLE);
-                    }
-                });
-            }
         } else if( errorCode == -1){//不支持硬解，改为软解
             mBnVideoView.setEncodeType(BnVideoView2.BN_ENCODE_SOFTWARE);
         } else if(9 == errorCode){//9 no playable stream .
             post(new Runnable() {
                 @Override
                 public void run() {
-                    mHintTv.setText(R.string.tv_detail_video_un_start);
+                    mHintTv.setText(R.string.txt_video_meeting_no_input_stream_retry);
                     mHintTv.setVisibility(VISIBLE);
                 }
             });

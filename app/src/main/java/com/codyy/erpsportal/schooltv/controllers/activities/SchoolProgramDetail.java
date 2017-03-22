@@ -154,7 +154,6 @@ public class SchoolProgramDetail extends BaseHttpActivity {
 
     @Override
     public void onFailure(VolleyError error) throws Exception {
-//        ToastUtil.showSnake("数据请求出错了",mProgramMasterTv);
         if (null == mProgramDetail) {
             mEmptyView.setVisibility(View.VISIBLE);
             mEmptyView.setLoading(false);
@@ -178,6 +177,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        //横竖屏后做相应的控件大小设置
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             mViewStub.setLayoutParams(lparam);
@@ -190,7 +190,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
             mVideoFrameLayout.setLayoutParams(lparam);
         }
     }
-
+    //控制视频控件是否应该显示
     private void initStub() {
         if (null != mProgramDetail && mProgramDetail.getStatus() != SchoolProgram.STATUS_INIT) {
             mViewStub = (ViewStub) findViewById(R.id.view_stub);
@@ -222,12 +222,12 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                     mVideoControlView.showControl();
                 }
             });
-            mVideoControlView.bindVideoView(mVideoLayout.getVideoView(), getSupportFragmentManager());
-            mVideoControlView.setOnPlayingListener(mVideoLayout);
+            mVideoControlView.bindVideoView(mVideoLayout, getSupportFragmentManager());
             initVideoLayout();
         }
     }
 
+    //填充对应的数据
     private void initData() {
         if (null != mProgramDetail) {
             if (mProgramDetail.getStatus() != SchoolProgram.STATUS_INIT) {
@@ -250,8 +250,22 @@ public class SchoolProgramDetail extends BaseHttpActivity {
      **/
     private void initVideoLayout() {
         if (mProgramDetail.getStatus() == SchoolProgram.STATUS_ON) {//直播流
-            mVideoControlView.setPlayMode(BNVideoControlView.MODE_LIVING);
-            mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE, false);
+            //直播没有视频流提示
+            if (!TextUtils.isEmpty(mProgramDetail.getStreamUrl())) {
+                mVideoFailureTv.setVisibility(View.GONE);
+                mVideoControlView.setPlayMode(BNVideoControlView.MODE_LIVING);
+                mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE, false);
+            } else {
+                //tips no video .
+                mVideoFailureTv.setVisibility(View.VISIBLE);
+                mVideoFailureTv.setText(getString(R.string.tv_detail_video_un_start));
+                mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mVideoControlView.showControl();
+                    }
+                });
+            }
         } else if (SchoolProgram.STATUS_END == mProgramDetail.getStatus()) {//历史录播流
             mVideoControlView.setExpandable(true);
             mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
@@ -275,6 +289,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
             } else {
                 //tips no video .
                 mVideoFailureTv.setVisibility(View.VISIBLE);
+                mVideoFailureTv.setText(getString(R.string.tv_no_data_for_video));
                 mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

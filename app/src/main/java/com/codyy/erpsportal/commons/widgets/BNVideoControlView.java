@@ -91,7 +91,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private HandlerThread mHideHandlerThread = new HandlerThread("hide");//控制视图自动隐藏的子线程
     private Handler mHandlerHide;//线程hide的控制handler
     private Handler mHandler;//主线程的handler
-    private boolean mDestroy = false;//是否调用过surfaceDestroyed .
+    private boolean mSurfaceDestroy = false;//是否调用过surfaceDestroyed .
     private boolean mPaused = false;//是否突然被赞听过.
     private long mStartPlayTime = -1;
     private boolean mIsExpandable = true;//是否支持横竖屏 default：true
@@ -156,7 +156,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             mWifiBroadCastUtil = new WiFiBroadCastUtils(mContext, mFragmentManager, new WiFiBroadCastUtils.PlayStateListener() {
                 @Override
                 public void play() {
-                    start();
+                    if(!mSurfaceDestroy) start();
                 }
 
                 @Override
@@ -396,8 +396,19 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     }
 
     /**
+     * bind BnVideoLayout2 , set listener .
+     * you should invoked this method before {@link #setVideoPath(String, int, boolean)}
+     * @param videoLayout2
+     */
+    public void bindVideoView(@NonNull BnVideoLayout2 videoLayout2, FragmentManager manager) {
+        this.bindVideoView(videoLayout2.getVideoView(),manager);
+        //setOnErrorListener will be instead by the bindVideoView method , so you need
+        setOnPlayingListener(videoLayout2);
+    }
+
+    /**
      * bind surfaceView , set listener .
-     *
+     * you should invoked this method before {@link #setVideoPath(String, int, boolean)}
      * @param view
      */
     public void bindVideoView(@NonNull BnVideoView2 view, FragmentManager manager) {
@@ -475,6 +486,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 Cog.e(TAG, "surfaceCreated()~~~~~~~~~~~~~~~~mLastPercent" + mLastPercent);
+                mSurfaceDestroy = false;
                 if (mVideoView != null && !TextUtils.isEmpty(urlPath)) {
                     if (mIsLocal) {
                         start();
@@ -506,7 +518,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 Cog.e(TAG, "surfaceDestroyed()~~~~~~~~~~~~~~~~");
-                mDestroy = true;
+                mSurfaceDestroy = true;
                 stop();
                 mVideoView.close();
                 if (null != mOnSurfaceChangeListener)
@@ -610,6 +622,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     }
 
     /**
+     * be carefully : please make sure mDestroyView is not set true before invoked this method .
      * 开始播放
      */
     public void start() {
@@ -618,15 +631,14 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         if (!TextUtils.isEmpty(urlPath)) {
             mVideoView.setUrl(urlPath, mURLType);
             mVideoView.play(BnVideoView2.BN_PLAY_DEFAULT);
-            if (mLastPercent > 0) {
+            if (mLastPercent > 0 ) {
                 if (mPaused) {//paused by some action .
                     mPaused = false;
                     mVideoView.seekTo(mLastPercent);
-                } else if (mDestroy) {//surface Destroyed .
-                    mDestroy = false;
+                } /*else if (mSurfaceDestroy) {//surface Destroyed . if the surface is destroyed ... then .
+                    mSurfaceDestroy = false;
                     mVideoView.seekTo(mLastPercent);
-                }
-
+                }*/
             }
             setPlaySate();
         }
