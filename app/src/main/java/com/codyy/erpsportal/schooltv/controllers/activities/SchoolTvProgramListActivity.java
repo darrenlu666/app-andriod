@@ -70,6 +70,7 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             int index = mTabLayout.getSelectedTabPosition();
+            Cog.i(TAG,"onTabSelected : "+index);
             String date = mWeekDayList.get(index).getWeekDate();
             mLiveDate = date;
             refresh();
@@ -126,8 +127,14 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
         //count today index .
         for(WeekDay wd :mWeekDayList){
             if(wd.getWeekDate().equals(date)){
-                Cog.i(TAG,"jump to index : "+ mWeekDayList.indexOf(wd));
-                mTabLayout.getTabAt(mWeekDayList.indexOf(wd)).select();
+                int index = mWeekDayList.indexOf(wd);
+                Cog.i(TAG,"jump to index : "+ index);
+                mTabLayout.getTabAt(index).select();
+                if(index == 0){
+                    //index 0 will be not invoked by mTabSelectListener . so you need request new data .
+                    mLiveDate = date;
+                    refresh();
+                }
             }
         }
     }
