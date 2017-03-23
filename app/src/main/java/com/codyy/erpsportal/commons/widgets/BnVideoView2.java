@@ -195,10 +195,10 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
         if (isPlaying()){
             return;
         }
-        if(null == mPlayer){
-            mPlayer = BNMediaPlayer.createPlayer();
-            initListener();
-        }
+        mPlayer = BNMediaPlayer.createPlayer();
+        initListener();
+        /*if(null == mPlayer){ 做了非空判断后在stop中会引起崩溃? for what ?
+        }*/
         if (TextUtils.isEmpty(mUrl))
             throw new IllegalStateException("Please call setUrl firstly.");
         playNow();

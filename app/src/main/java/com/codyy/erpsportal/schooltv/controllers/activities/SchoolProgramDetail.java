@@ -216,15 +216,19 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                     }
                 }
             });
-            mVideoLayout.setTextClickListener(new BnVideoLayout2.ITextClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mVideoControlView.showControl();
-                }
-            });
-            mVideoControlView.bindVideoView(mVideoLayout, getSupportFragmentManager());
+
             initVideoLayout();
         }
+    }
+
+    private void initVideoControlListener() {
+        mVideoLayout.setTextClickListener(new BnVideoLayout2.ITextClickListener() {
+            @Override
+            public void onClick(View v) {
+                mVideoControlView.showControl();
+            }
+        });
+        mVideoControlView.bindVideoView(mVideoLayout, getSupportFragmentManager());
     }
 
     //填充对应的数据
@@ -249,53 +253,71 @@ public class SchoolProgramDetail extends BaseHttpActivity {
      * 初始化视频相关操作
      **/
     private void initVideoLayout() {
+
         if (mProgramDetail.getStatus() == SchoolProgram.STATUS_ON) {//直播流
             //直播没有视频流提示
             if (!TextUtils.isEmpty(mProgramDetail.getStreamUrl())) {
                 mVideoFailureTv.setVisibility(View.GONE);
+                initVideoControlListener();
                 mVideoControlView.setPlayMode(BNVideoControlView.MODE_LIVING);
                 mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE, false);
+                mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
+
+                    @Override
+                    public void show() {
+                        mVideoTitleLinearLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void hide() {
+                        mVideoTitleLinearLayout.setVisibility(View.GONE);
+                    }
+
+                });
             } else {
                 //tips no video .
+                mVideoControlView.setVisibility(View.GONE);
                 mVideoFailureTv.setVisibility(View.VISIBLE);
                 mVideoFailureTv.setText(getString(R.string.tv_detail_video_un_start));
-                mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
+               /* mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mVideoControlView.showControl();
                     }
-                });
+                });*/
             }
         } else if (SchoolProgram.STATUS_END == mProgramDetail.getStatus()) {//历史录播流
             mVideoControlView.setExpandable(true);
-            mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
-
-                @Override
-                public void show() {
-                    mVideoTitleLinearLayout.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void hide() {
-                    mVideoTitleLinearLayout.setVisibility(View.GONE);
-                }
-
-            });
 
             //录播没有视频提示
             if (SchoolProgram.TRANS_SUCCESS.equals(mProgramDetail.getTransFlag())) {
                 mVideoFailureTv.setVisibility(View.GONE);
+                initVideoControlListener();
                 mVideoControlView.setVideoPath(mProgramDetail.getVideoPath(), BnVideoView2.BN_URL_TYPE_HTTP, false);
+                mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
+
+                    @Override
+                    public void show() {
+                        mVideoTitleLinearLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void hide() {
+                        mVideoTitleLinearLayout.setVisibility(View.GONE);
+                    }
+
+                });
             } else {
                 //tips no video .
+                mVideoControlView.setVisibility(View.GONE);
                 mVideoFailureTv.setVisibility(View.VISIBLE);
                 mVideoFailureTv.setText(getString(R.string.tv_no_data_for_video));
-                mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
+                /*mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mVideoControlView.showControl();
                     }
-                });
+                });*/
             }
         }
     }

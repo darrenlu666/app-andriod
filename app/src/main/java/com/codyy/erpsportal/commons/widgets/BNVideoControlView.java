@@ -606,6 +606,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         Cog.d("----------------------------:", "stop()");
         Cog.e(TAG, "+stop " + mLastPercent);
         setStopState();
+        if(null != mVideoView)
         mVideoView.stop();
     }
 
