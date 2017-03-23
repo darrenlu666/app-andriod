@@ -91,7 +91,7 @@ public class AppConfig {
             R.drawable.ic_fun_resource,//优课资源 16
             R.drawable.ic_fun_analysis,//统计 17
             R.drawable.ic_fun_net_teach,//网络授课 18
-            R.drawable.ic_fun_live_record_lesson,//校园电视台 19
+            R.drawable.ic_fun_school_tv,//校园电视台 19
     };
     /**
      * 二级菜单icon .
@@ -368,7 +368,7 @@ public class AppConfig {
 
         //4 校园电视台
         //4.1 节目表
-        schoolBroadList.add(new AppInfo(R.drawable.ic_child_area_schedule, MENUS[19], Titles.sWorkspaceTvProgramProgramList,
+        schoolBroadList.add(new AppInfo(R.drawable.ic_child_school_program_schedule, MENUS[19], Titles.sWorkspaceTvProgramProgramList,
                 AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
                 new Jumpable() {
                     @Override
@@ -378,7 +378,7 @@ public class AppConfig {
                 },
                 AppInfo.CATEGORY_SINGLE_MODEL));
         //4.2 往期视频
-        schoolBroadList.add(new AppInfo(R.drawable.ic_child_live_lesson, MENUS[19], Titles.sWorkspaceTvProgramReplay,
+        schoolBroadList.add(new AppInfo(R.drawable.ic_child_school_history_video, MENUS[19], Titles.sWorkspaceTvProgramReplay,
                 AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
                 new Jumpable() {
                     @Override

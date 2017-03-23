@@ -635,10 +635,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                 if (mPaused) {//paused by some action .
                     mPaused = false;
                     mVideoView.seekTo(mLastPercent);
-                } /*else if (mSurfaceDestroy) {//surface Destroyed . if the surface is destroyed ... then .
-                    mSurfaceDestroy = false;
-                    mVideoView.seekTo(mLastPercent);
-                }*/
+                }
             }
             setPlaySate();
         }
