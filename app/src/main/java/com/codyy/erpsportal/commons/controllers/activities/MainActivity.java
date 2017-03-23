@@ -336,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
     protected void onDestroy() {
         super.onDestroy();
         ConfigBus.clear();
+        AppConfig.instance().destroy();
         Cog.d(TAG, "Stop polling service...");
         PollingUtils.stopPollingService(EApplication.instance(), PollingService.class, PollingService.ACTION);
         if (BuildConfig.DEBUG) ViewServer.get(this).removeWindow(this);
