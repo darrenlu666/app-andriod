@@ -227,14 +227,14 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mAutoHide = new AutoHideUtils(mVideoTitleLl);
         mVideoLayout = (BnVideoLayout2) findViewById(R.id.bnVideoViewOfLiveVideoLayout);
         mVideoLayout.setVolume(100);
-        mVideoLayout.setOnTouchListener(new View.OnTouchListener() {
+        mVideoLayout.getVideoView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mAutoHide.showControl();
-                return false;
+                return true;
             }
         });
-        mVideoLayout.setOnTipsTouchListener(new View.OnClickListener() {
+        mVideoLayout.setTextClickListener(new BnVideoLayout2.ITextClickListener() {
             @Override
             public void onClick(View v) {
                 mAutoHide.showControl();

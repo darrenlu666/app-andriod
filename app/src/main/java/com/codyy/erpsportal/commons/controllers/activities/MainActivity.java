@@ -346,17 +346,6 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         return mUserInfo;
     }
 
-    /*@Override
-    public void onLogout() {
-        UserInfoDao.delete(this);
-        mTabHost.setCurrentTab(0);
-        mUserInfo = null;
-        UserInfoKeeper.getInstance().clearUserInfo();
-        loadModuleConfig();
-        //清空应用缓存
-        AppConfig.instance().destroy();
-    }*/
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

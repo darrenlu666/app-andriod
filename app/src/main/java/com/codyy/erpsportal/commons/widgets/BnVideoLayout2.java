@@ -256,10 +256,6 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
         mBnVideoView.setOnSurfaceChangeListener(surfaceChangeListener);
     }
 
-    public void setOnTipsTouchListener(View.OnClickListener listener){
-        mHintTv.setOnClickListener(listener);
-    }
-
     public interface  ITextClickListener {
        void onClick(View v);
     }
