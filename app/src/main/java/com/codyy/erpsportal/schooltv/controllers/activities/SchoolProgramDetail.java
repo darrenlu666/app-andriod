@@ -139,6 +139,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
         if (null != response && null != response.optJSONObject("detail")) {
             SchoolProgram sp = new Gson().fromJson(response.optJSONObject("detail").toString(), SchoolProgram.class);
             if (null != sp) {
+                //mock data .
                 mProgramDetail = sp;
             }
         }
@@ -242,8 +243,8 @@ public class SchoolProgramDetail extends BaseHttpActivity {
             } else {
                 mProgramTitleBigTv.setText(mProgramDetail.getProgramName());
             }
-
-            mProgramTimeTv.setText(DateUtil.getDateStr(mProgramDetail.getStartTime(), DateUtil.HH_MM) + "-" + DateUtil.getDateStr(mProgramDetail.getEndTime(), DateUtil.HH_MM));
+            String time = DateUtil.getDateStr(mProgramDetail.getStartTime(), DateUtil.DEF_FORMAT) + "-" + DateUtil.getDateStr(mProgramDetail.getEndTime(), DateUtil.HH_MM);
+            mProgramTimeTv.setText(time);
             mProgramMasterTv.setText(TextUtils.isEmpty(mProgramDetail.getSpeaker()) ? "无" : mProgramDetail.getSpeaker());
             mProgramDescTv.setText(TextUtils.isEmpty(mProgramDetail.getBrief()) ? "无" : mProgramDetail.getBrief());
         }
@@ -279,12 +280,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                 mVideoControlView.setVisibility(View.GONE);
                 mVideoFailureTv.setVisibility(View.VISIBLE);
                 mVideoFailureTv.setText(getString(R.string.tv_detail_video_un_start));
-               /* mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mVideoControlView.showControl();
-                    }
-                });*/
+
             }
         } else if (SchoolProgram.STATUS_END == mProgramDetail.getStatus()) {//历史录播流
             mVideoControlView.setExpandable(true);

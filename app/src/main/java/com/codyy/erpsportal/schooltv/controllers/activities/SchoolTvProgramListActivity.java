@@ -91,7 +91,7 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
     public void init() {
         super.init();
         setTitle(Titles.sWorkspaceTvProgramProgramList);
-        setEmptyText(R.string.tv_no_data_for_now);
+        setEmptyText(R.string.tv_no_data_for_now,R.color.remote_text_nor);
         mTabLayout.setTabTextColors(R.color.grey_444,R.color.main_color);
         mTabLayout.setSelectedTabIndicatorHeight(0);
         //set filter

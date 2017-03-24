@@ -41,7 +41,7 @@ public class SchoolProgramViewHolder extends BaseRecyclerViewHolder<SchoolProgra
             ImageFetcher.getInstance(mSchoolNameTv.getContext()).fetchSmall(mSdv,data.getThumbPath());
         }
         mSchoolNameTv.setText(data.getProgramName());
-        mClassTv.setText(DateUtil.getDateStr(data.getStartTime(),DateUtil.HH_MM)+"-"+DateUtil.getDateStr(data.getEndTime(),DateUtil.HH_MM));
+        mClassTv.setText(DateUtil.getDateStr(data.getStartTime(),DateUtil.HH_MM)+"--"+DateUtil.getDateStr(data.getEndTime(),DateUtil.HH_MM));
         //set the state .
         switch (data.getStatus()){
             case SchoolProgram.STATUS_INIT://未开始

@@ -222,7 +222,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
         requestData(true);
     }
 
-    public void setEmptyText(int tips){
-        if(null != mEmptyView) mEmptyView.setText(tips);
+    public void setEmptyText(int tips,int color){
+        if(null != mEmptyView) mEmptyView.setText(tips,color);
     }
 }

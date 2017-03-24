@@ -11,7 +11,6 @@
                 android:orientation="horizontal"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
-                android:paddingLeft="16dp"
                 >
     <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/sdv"
@@ -23,6 +22,7 @@
         app:dominantMeasurement="width"
         app:placeholderImage="@drawable/icon_default_video"
         android:layout_weight="2"
+        android:layout_marginLeft="16dp"
         />
     <RelativeLayout
         android:layout_width="match_parent"
