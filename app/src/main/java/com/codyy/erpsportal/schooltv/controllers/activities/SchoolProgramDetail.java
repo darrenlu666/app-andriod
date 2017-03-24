@@ -262,19 +262,6 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                 initVideoControlListener();
                 mVideoControlView.setPlayMode(BNVideoControlView.MODE_LIVING);
                 mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE, false);
-                mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
-
-                    @Override
-                    public void show() {
-                        mVideoTitleLinearLayout.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void hide() {
-                        mVideoTitleLinearLayout.setVisibility(View.GONE);
-                    }
-
-                });
             } else {
                 //tips no video .
                 mVideoControlView.setVisibility(View.GONE);
@@ -284,36 +271,16 @@ public class SchoolProgramDetail extends BaseHttpActivity {
             }
         } else if (SchoolProgram.STATUS_END == mProgramDetail.getStatus()) {//历史录播流
             mVideoControlView.setExpandable(true);
-
             //录播没有视频提示
             if (SchoolProgram.TRANS_SUCCESS.equals(mProgramDetail.getTransFlag())) {
                 mVideoFailureTv.setVisibility(View.GONE);
                 initVideoControlListener();
                 mVideoControlView.setVideoPath(mProgramDetail.getVideoPath(), BnVideoView2.BN_URL_TYPE_HTTP, false);
-                mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
-
-                    @Override
-                    public void show() {
-                        mVideoTitleLinearLayout.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void hide() {
-                        mVideoTitleLinearLayout.setVisibility(View.GONE);
-                    }
-
-                });
             } else {
                 //tips no video .
                 mVideoControlView.setVisibility(View.GONE);
                 mVideoFailureTv.setVisibility(View.VISIBLE);
                 mVideoFailureTv.setText(getString(R.string.tv_no_data_for_video));
-                /*mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        mVideoControlView.showControl();
-                    }
-                });*/
             }
         }
     }

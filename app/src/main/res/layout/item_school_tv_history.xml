@@ -79,7 +79,7 @@
             android:layout_below="@id/master_tv_tag"
             android:layout_toLeftOf="@id/date_tv"
             android:layout_marginTop="8dp"
-            android:drawableLeft="@drawable/media_courseware"
+            android:drawableLeft="@drawable/ic_school_tv_play"
             android:drawablePadding="10dp"
             android:textColor="#929292"
             android:textSize="14sp"
