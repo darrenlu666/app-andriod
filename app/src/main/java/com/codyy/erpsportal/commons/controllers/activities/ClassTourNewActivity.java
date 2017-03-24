@@ -366,7 +366,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     }
 
     @LayoutId(R.layout.item_course_tour)
-    public static class ClassroomViewHolder extends BindingCommonRvHolder<TourClassroom, Status> {
+    public static class ClassroomViewHolder extends BindingCommonRvHolder<TourClassroom> {
 
         @Bind(R.id.iv_thumb)
         SimpleDraweeView mThumbIv;
@@ -394,12 +394,13 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
         }
 
         @Override
-        public void setDataToView(final TourClassroom classroom, Status status) {
+        public <INFO> void setDataToView(final TourClassroom classroom, INFO info) {
             if(UserInfoKeeper.obtainUserInfo().isSchool()){
                 mSchoolNameTv.setText(classroom.getTeacherName());
             }else{
                 mSchoolNameTv.setText(classroom.getSchoolName());
             }
+            Status status = (Status) info;
             if (status.showThumb) {
                 mThumbIv.setVisibility(View.VISIBLE);
                 if ("main".equals(classroom.getType())) {

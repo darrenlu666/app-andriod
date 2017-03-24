@@ -8,9 +8,14 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 /**
+ * PopupWindow工具类
  * Created by gujiajia on 2016/7/19.
  */
 public class PopupWindowUtils {
+    /**
+     * 弹窗背后半透明
+     * @param popupWindow 弹窗
+     */
     public static void dimBehind(PopupWindow popupWindow) {
         View container;
         if (popupWindow.getBackground() == null) {

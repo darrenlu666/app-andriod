@@ -2843,6 +2843,12 @@ public class URLConfig {
     @UrlSuffix("/mobile/repairs/getRepairRecords.do")
     public static String GET_REPAIR_RECORDS;
 
+    @UrlSuffix("/mobile/repairs/getClassrooms.do")
+    public static String GET_CLASSROOMS;
+
+    @UrlSuffix("/mobile/repairs/searchMalfunc.do")
+    public static String SEARCH_MALFUNC;
+
     static {
         UrlBuilder.updateUrls();
     }

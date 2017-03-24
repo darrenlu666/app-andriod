@@ -726,4 +726,5 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black_666</item>
     </style>
+
 </resources>

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by gujiajia on 2016/7/13.
  */
-public abstract class RecyclerCommonViewHolder<T, INFO> extends RecyclerViewHolder<T> {
+public abstract class RecyclerCommonViewHolder<T> extends RecyclerViewHolder<T> {
     public RecyclerCommonViewHolder(View itemView) {
         super(itemView);
     }
@@ -17,7 +17,7 @@ public abstract class RecyclerCommonViewHolder<T, INFO> extends RecyclerViewHold
      * @param position 位置
      * @param list 数据实体列表
      */
-    public void setDataToView(List<T> list, int position, INFO info) {
+    public <INFO> void  setDataToView(List<T> list, int position, INFO info) {
         setDataToView(list.get(position), position, info);
     }
 
@@ -26,7 +26,7 @@ public abstract class RecyclerCommonViewHolder<T, INFO> extends RecyclerViewHold
      * @param position 位置
      * @param data 数据实体
      */
-    public void setDataToView(T data, int position, INFO info) {
+    public <INFO> void  setDataToView(T data, int position, INFO info) {
         setDataToView(data, info);
     }
 
@@ -34,5 +34,5 @@ public abstract class RecyclerCommonViewHolder<T, INFO> extends RecyclerViewHold
      *
      * @param data
      */
-    public void setDataToView(T data, INFO info){}
+    public <INFO> void setDataToView(T data, INFO info){}
 }

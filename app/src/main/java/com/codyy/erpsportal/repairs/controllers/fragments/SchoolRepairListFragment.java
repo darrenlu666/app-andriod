@@ -89,7 +89,7 @@ public class SchoolRepairListFragment extends LoadMoreFragment<RepairSchool,Repa
         }
 
         @Override
-        public void setDataToView(RepairSchool repairSchool) {
+        public void setDataToView(final RepairSchool repairSchool) {
             Context context = itemView.getContext();
             mNameTv.setText(repairSchool.getAreaName() + "-" + repairSchool.getSchoolName());
             mTotalCountTv.setText(context.getString(R.string.malfunction_count, repairSchool.getMalfunctionCount()));
@@ -101,7 +101,7 @@ public class SchoolRepairListFragment extends LoadMoreFragment<RepairSchool,Repa
             itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SchoolRepairsActivity.start(v.getContext());
+                    SchoolRepairsActivity.start(v.getContext(), repairSchool.getSchoolId());
                 }
             });
         }

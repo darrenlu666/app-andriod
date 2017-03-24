@@ -34,25 +34,31 @@
         </com.codyy.erpsportal.commons.widgets.TitleBar>
 
         <LinearLayout
+            android:id="@+id/ll_filters_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_filter_bar"
             android:orientation="horizontal">
 
             <FrameLayout
+                android:id="@+id/fl_classroom_filter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:padding="12dp">
 
-                <Button
+                <CheckedTextView
+                    android:id="@+id/tv_classroom_filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:drawableEnd="@drawable/ic_pop_slope"
                     android:drawableRight="@drawable/ic_pop_slope"
+                    android:lines="1"
+                    android:ellipsize="end"
                     android:text="报修教室（全部）"
-                    android:textColor="@color/list_item_label"
+                    android:textColor="@color/sl_repair_btn_filter"
                     android:textSize="18dp" />
             </FrameLayout>
 
@@ -60,27 +66,32 @@
                 android:layout_width="0.5dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
-                android:background="#ff888888" />
+                android:background="#ffaaaaaa" />
 
             <FrameLayout
+                android:id="@+id/fl_status_filter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:padding="12dp">
 
-                <Button
+                <CheckedTextView
+                    android:id="@+id/tv_status_filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:drawableEnd="@drawable/ic_pop_slope"
                     android:drawableRight="@drawable/ic_pop_slope"
+                    android:lines="1"
                     android:text="处理状态（全部）"
-                    android:textColor="@color/list_item_label"
+                    android:textColor="@color/sl_repair_btn_filter"
                     android:textSize="18dp" />
             </FrameLayout>
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/fl_list_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
@@ -105,6 +116,22 @@
                 android:text="@string/no_data_for_now"
                 android:textSize="@dimen/empty_text"
                 android:visibility="gone" />
+
+            <FrameLayout
+                android:id="@+id/fl_filter_list_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#44000000"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_filter_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="200dp"
+                    android:background="@color/white" />
+            </FrameLayout>
         </FrameLayout>
     </LinearLayout>
 
