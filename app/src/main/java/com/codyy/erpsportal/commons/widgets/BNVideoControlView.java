@@ -220,9 +220,15 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                 /*if (mLastPercent != mDestPos) {
                     mLastPercent = mDestPos;
                 }*/
+                //update the play progress text .
+                if(getVisibility() == VISIBLE){
+                    setTextProgress(StringUtils.convertTime(mDestPos / 1000));
+                }
+
                 if (mIsLocal) {
                     resume();
                     mVideoView.seekTo(mDestPos);
+                    mLastPercent = mCurrentPosition = mDestPos;
                 } else {
                     Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
                         @Override
@@ -234,6 +240,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                         public void onContinue() {
                             resume();
                             mVideoView.seekTo(mDestPos);
+                            mLastPercent = mCurrentPosition = mDestPos;
                         }
                     });
                 }
@@ -248,6 +255,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             public void onClick(View v) {
                 touchControl();
                 if (null != mVideoView) {
+                    Cog.i(TAG,"playButton clicked !");
                     if (state == PlaySate.STOP || state == PlaySate.PAUSE) {
                         if (mIsLocal) {
                             //                            start();
@@ -260,7 +268,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                             Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
                                 @Override
                                 public void onNetError() {
-
+                                    Cog.e(TAG,"nett error !");
                                 }
 
                                 @Override
@@ -390,9 +398,13 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
      * @param progress
      */
     private void setProgress(String current, int progress) {
-        mCurrentTextView.setText(current + "/");
+        setTextProgress(current);
         mSeekBar.setMax(mTotal);
         mSeekBar.setProgress(progress);
+    }
+
+    private void setTextProgress(String current) {
+        mCurrentTextView.setText(current + "/");
     }
 
     /**
@@ -437,9 +449,14 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             @Override
             public void onBufferUpdate(int position) {
                 Cog.i(TAG, "pos : " + position);
+                //判断上次拖动后是否出现了抖动，抖动频率低于1000ms不做进度更新.
+                if(Math.abs(position-mLastPercent)>=1000){
+                    setProgress(position);
+                }else if(position == mTotal){
+                    setProgress(position);
+                }
                 if (mCurrentPosition != position) {
                     mCurrentPosition = position;
-                    setProgress(position);
                 }
 
                 if (null != mOnBufferUpdateListener)

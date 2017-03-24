@@ -417,11 +417,11 @@ public class FunctionFragment extends BaseHttpFragment {
         }
     };
 
-    //set the application datas
+    //get the application data .
     private void loadData() {
         Cog.e(TAG,"loadData() ~~");
         if(null == mUserInfo || null == getActivity()){
-            Cog.e(TAG,"Line 187 getActivity() is NULL ~~~!!!");
+            Cog.e(TAG,"Line 424 getActivity() is NULL ~~~!!!");
             return;
         }
         HashMap<String, String> params = new HashMap<>();
