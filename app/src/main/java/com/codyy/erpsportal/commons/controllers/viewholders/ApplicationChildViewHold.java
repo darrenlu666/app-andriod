@@ -25,10 +25,12 @@ public class ApplicationChildViewHold extends BaseRecyclerViewHolder<AppInfo>{
 
     public static final String TAG = "ApplicationChildViewHold";
     @Bind(R.id.lin_container)LinearLayout mContainerLinearLayout;
+    private IChildItemClickListener mChildItemClickListener ;
 
-    public ApplicationChildViewHold(View itemView) {
+    public ApplicationChildViewHold(View itemView,IChildItemClickListener childItemClickListener ) {
         super(itemView);
         ButterKnife.bind(this,itemView);
+        this.mChildItemClickListener = childItemClickListener;
     }
 
     @Override
@@ -49,8 +51,15 @@ public class ApplicationChildViewHold extends BaseRecyclerViewHolder<AppInfo>{
     private View.OnClickListener mCurrentClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Jumpable tag = (Jumpable) v.getTag();
-            AppConfig.jumpToActivity(tag, mContainerLinearLayout.getContext());
+            if(null == v.getTag()) return;
+            AppInfo app = (AppInfo) v.getTag();
+            if(null != app ){
+                if(app.getJumpable() != null){
+                    AppConfig.jumpToActivity(app.getJumpable(), mContainerLinearLayout.getContext());
+                }else{
+                    if(null != mChildItemClickListener) mChildItemClickListener.onClick(v,app);
+                }
+            }
         }
     };
 
@@ -91,7 +100,13 @@ public class ApplicationChildViewHold extends BaseRecyclerViewHolder<AppInfo>{
                 int index = FunctionFragment.ITEM_COUNT_CHILD * i + j;
                 AppInfo app = childGroups.get(index);
                 View child = lin.inflate(R.layout.item_frag_function_child, null);
-                child.setTag(app.getJumpable());
+//                child.setId(j);
+                /*if(child.getTag() != null ){
+                    child.setTag(app.getJumpable());
+                }else{
+
+                }*/
+                child.setTag(app);
                 child.setId(index);
                 child.setOnClickListener(mCurrentClickListener);
                 FunctionChildViewHolder fv = new FunctionChildViewHolder(child);
@@ -107,4 +122,14 @@ public class ApplicationChildViewHold extends BaseRecyclerViewHolder<AppInfo>{
         }
     }
 
+    /**
+     * 点击事件传递到Activity接口.
+     */
+    public interface IChildItemClickListener{
+        /**
+         * 孩子item点击事件.
+         * @param app
+         */
+        void onClick(View v ,AppInfo app);
+    }
 }

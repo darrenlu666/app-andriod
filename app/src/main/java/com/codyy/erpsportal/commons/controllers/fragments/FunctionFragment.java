@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvHistoryActivity;
+import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvProgramListActivity;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassMemberActivity;
@@ -265,7 +268,27 @@ public class FunctionFragment extends BaseHttpFragment {
                         viewHolder  =   new ApplicationViewHold(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_function_child,parent,false));
                         break;
                     case ApplicationViewHold.ITEM_TYPE_CHILD://children views mode .
-                        viewHolder  =   new ApplicationChildViewHold(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_function_child_container,parent,false));
+                        viewHolder  =   new ApplicationChildViewHold(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_function_child_container, parent, false), new ApplicationChildViewHold.IChildItemClickListener() {
+                            @Override
+                            public void onClick(View v, AppInfo data) {
+                                //校园电视台
+                                if("tvProgram.id".equals(data.getMenuID())){
+                                    String schoolId = "";
+                                    if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {
+                                        schoolId = mUserInfo.getSelectedChild().getSchoolId();
+                                    } else {
+                                        schoolId = mUserInfo.getSchoolId();
+                                    }
+                                    if(Titles.sWorkspaceTvProgramProgramList.equals(data.getAppName())){
+                                        SchoolTvProgramListActivity.start(getActivity(),UserInfoKeeper.getInstance().getUserInfo(),schoolId);
+                                    }else if(Titles.sWorkspaceTvProgramReplay.equals(data.getAppName())){
+                                        SchoolTvHistoryActivity.start(getActivity(),UserInfoKeeper.getInstance().getUserInfo(),schoolId);
+                                    }
+                                }else{
+                                    AppConfig.jumpToActivity(data.getJumpable(), getActivity());
+                                }
+                            }
+                        });
                         break;
                 }
                 return viewHolder;
@@ -280,6 +303,7 @@ public class FunctionFragment extends BaseHttpFragment {
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<AppInfo>() {
             @Override
             public void onItemClicked(View v, int position, AppInfo data) {
+                Cog.i(TAG,"onItemClicked clicked !");
                 switch (mAdapter.getItemViewType(position)){
                     case ApplicationViewHold.ITEM_TYPE_SINGLE://单独点击
                         if("class.member.id".equals(data.getMenuID())){//班级成员
@@ -366,7 +390,7 @@ public class FunctionFragment extends BaseHttpFragment {
                                         }
                                         newApp.setTargetPos(position%3);
                                         if(pos > mData.size()){
-                                            for(int i = 0 ;i < (pos-mData.size());i++){
+                                            for(int i = 0 ;i < (pos-mData.size()+1);i++){
                                                 AppInfo appInfo  = new AppInfo();
                                                 appInfo.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_SINGLE_EMPTY);
                                                 mData.add(appInfo);
@@ -382,7 +406,7 @@ public class FunctionFragment extends BaseHttpFragment {
                             }
                         break;
                     case ApplicationViewHold.ITEM_TYPE_CHILD://children views mode .
-                        AppConfig.jumpToActivity(data.getJumpable(), getActivity());
+                        Cog.i(TAG,"item_type_child clicked !"+v.getId());
                         break;
                 }
             }

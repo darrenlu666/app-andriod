@@ -39,6 +39,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
     private static final String TYPE_ORDER_CLICK_COUNT="viewCnt";
     private static final String ORDER_ASC = "asc";
     private static final String ORDER_DESC = "desc";
+    private static final String EXTRA_SCHOOL_ID = "school.id";
 
     @Bind(R.id.time_order_udb)UpOrDownButton mTimeUdp;
     @Bind(R.id.name_order_udb)UpOrDownButton mNameUdp;
@@ -47,6 +48,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
     private int mTotal = 0 ;//总数
     private String mFilterType = TYPE_ORDER_TIME;//按什么排序	string	programName 节目名称；viewCnt 点击量；time 按时间
     private String mOrderType = ORDER_DESC;//排序规则	string	asc 正序； desc 倒序
+    private String mSchoolId;
 
     @Override
     public int obtainLayoutId() {
@@ -55,7 +57,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
 
     @Override
     public void preInitArguments() {
-
+        mSchoolId = getIntent().getStringExtra(EXTRA_SCHOOL_ID);
     }
 
     @Override
@@ -91,12 +93,8 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
                 HashMap<String,String> param = new HashMap<>();
                 if(null != mUserInfo) {
                     param.put("uuid",mUserInfo.getUuid());
-                    if(UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())){
-                        param.put("schoolId",mUserInfo.getSelectedChild().getSchoolId());
-                    }else{
-                        param.put("schoolId",mUserInfo.getSchoolId());
-                    }
                 }
+                if(null != mSchoolId) param.put("schoolId",mSchoolId);
                 if(null != mFilterType) param.put("orderBy",mFilterType);
                 if(null != mOrderType) param.put("orderType",mOrderType);
                 param.put("start",mDataList.size()+"");
@@ -135,9 +133,10 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
         };
     }
 
-    public static void start(Activity act , UserInfo userInfo){
+    public static void start(Activity act , UserInfo userInfo ,String schoolId){
         Intent intent = new Intent(act,SchoolTvHistoryActivity.class);
         intent.putExtra(Constants.USER_INFO,userInfo);
+        intent.putExtra(EXTRA_SCHOOL_ID,schoolId);
         act.startActivity(intent);
         UIUtils.addEnterAnim(act);
     }

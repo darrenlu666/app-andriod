@@ -182,7 +182,6 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
 
     public void setPlayMode(int playMode) {
         this.mPlayMode = playMode;
-//        invalidate();
         updateMode();
     }
 
@@ -449,8 +448,8 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             @Override
             public void onBufferUpdate(int position) {
                 Cog.i(TAG, "pos : " + position);
-                //判断上次拖动后是否出现了抖动，抖动频率低于1000ms不做进度更新.
-                if(Math.abs(position-mLastPercent)>=1000){
+                //判断上次拖动后是否出现了抖动，抖动频率低于700ms不做进度更新.
+                if(position>mLastPercent){
                     setProgress(position);
                 }else if(position == mTotal){
                     setProgress(position);

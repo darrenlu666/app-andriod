@@ -50,10 +50,12 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
     private static final int TYPE_VIEW_HOLDER_WITH_PICTURE= 0x001;
     /** item without picture **/
     private static final int TYPE_VIEW_HOLDER_WITHOUT_PICTURE= 0x002;
+    private static final String EXTRA_SCHOOL_ID = "school.id";
 
     @Bind(R.id.tab_layout)TabLayout mTabLayout;
     private List<WeekDay> mWeekDayList = new ArrayList<>();
     private String mLiveDate ;//默认今天
+    private String mSchoolId;
 
     @Override
     public int obtainLayoutId() {
@@ -63,6 +65,7 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
 
     @Override
     public void preInitArguments() {
+        mSchoolId = getIntent().getStringExtra(EXTRA_SCHOOL_ID);
         mLiveDate = DateUtil.getNow(DateUtil.YEAR_MONTH_DAY);
     }
 
@@ -158,12 +161,8 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
                 HashMap<String,String> param = new HashMap<>();
                 if(null != mUserInfo) {
                     param.put("uuid",mUserInfo.getUuid());
-                    if(UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())){
-                        param.put("schoolId",mUserInfo.getSelectedChild().getSchoolId());
-                    }else{
-                        param.put("schoolId",mUserInfo.getSchoolId());
-                    }
                 }
+                if(null != mSchoolId) param.put("schoolId",mSchoolId);
                 if(null != mLiveDate) param.put("liveDate",mLiveDate);
                 return param;
             }
@@ -263,9 +262,10 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
         }
     }
 
-    public static void start(Activity act , UserInfo userInfo){
+    public static void start(Activity act , UserInfo userInfo,String schoolId){
         Intent intent = new Intent(act,SchoolTvProgramListActivity.class);
         intent.putExtra(Constants.USER_INFO,userInfo);
+        intent.putExtra(EXTRA_SCHOOL_ID,schoolId);
         act.startActivity(intent);
         UIUtils.addEnterAnim(act);
     }
