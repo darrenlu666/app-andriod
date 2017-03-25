@@ -34,7 +34,7 @@ public class FunctionChildViewHolder extends AbsViewHolder<AppInfo>{
     public void mapFromView(View view) {
         //do inflate by butterknife in construct function of super .
         ButterKnife.bind(this,view);
-        mTitleTextView.setTextColor(EApplication.instance().getResources().getColor(R.color.md_green_A700));
+//        mTitleTextView.setTextColor(EApplication.instance().getResources().getColor(R.color.md_green_A700));
     }
 
     @Override

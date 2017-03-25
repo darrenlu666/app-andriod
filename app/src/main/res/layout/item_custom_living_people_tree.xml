@@ -16,7 +16,7 @@
         style="@style/sdv_item_style"
         android:layout_width="@dimen/poe_head_pic_size_small"
         android:layout_height="@dimen/poe_head_pic_size_small"
-        app:placeholderImage="@drawable/default_group_icon"
+        app:placeholderImage="@drawable/default_person_head"
         android:layout_centerVertical="true"
         />
     <RelativeLayout
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/role_tv"
-            tools:text="圈组名称"
+            tools:text="习近平"
             />
 
         <TextView

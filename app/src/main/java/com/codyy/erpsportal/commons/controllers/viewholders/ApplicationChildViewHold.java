@@ -100,12 +100,6 @@ public class ApplicationChildViewHold extends BaseRecyclerViewHolder<AppInfo>{
                 int index = FunctionFragment.ITEM_COUNT_CHILD * i + j;
                 AppInfo app = childGroups.get(index);
                 View child = lin.inflate(R.layout.item_frag_function_child, null);
-//                child.setId(j);
-                /*if(child.getTag() != null ){
-                    child.setTag(app.getJumpable());
-                }else{
-
-                }*/
                 child.setTag(app);
                 child.setId(index);
                 child.setOnClickListener(mCurrentClickListener);
