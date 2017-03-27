@@ -1004,6 +1004,11 @@ public class Titles {
         sWorkspaceAskAndAnsMyAsk = jsonObject.optString("front.workspace.askandans.myask.par", "我的提问");
         sWorkspaceAskAndAnsMyAnswer = jsonObject.optString("front.workspace.askandans.myanswer.par", "我的回答");
         sWorkspaceAskAndAnsWaitMyAnswer = jsonObject.optString("front.workspace.askandans.waitmyanswer.par", "等我来答");
+
+        //校园电视台
+        sWorkspaceTvProgramLive = jsonObject.optString("front.workspace.tvProgram.live.stu", "直播");
+        sWorkspaceTvProgramReplay = jsonObject.optString("front.workspace.tvProgram.replay.stu", "往期视频");
+        sWorkspaceTvProgramProgramList = jsonObject.optString("front.workspace.tvProgram.programlist.stu", "节目表");
     }
 
     /**
