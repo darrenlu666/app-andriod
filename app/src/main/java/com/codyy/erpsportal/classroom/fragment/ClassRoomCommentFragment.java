@@ -479,6 +479,8 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
                     String toastStr;
                     if (commentBase instanceof RethinkComment) {
                         toastStr = "删除评论成功！";
+                        mTotal = mTotal - 1;
+                        updateCommentsCount();
                     } else {
                         toastStr = "删除回复成功！";
                     }
