@@ -90,6 +90,8 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     private BNVideoControlView mVideoControl;
     /**     * 实时直播未开始的提示     */
     private TextView mVideoFailureTv;
+    /** 横竖平按钮**/
+    private ImageView mIvFullScreen;
     /**     * 当前播放的视频片段index     */
     private int mCurrentPlayIndex;
     /**     * 视频列表适配器     */
@@ -190,7 +192,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-                    Cog.e(TAG,volleyError == null ? "error":volleyError.getMessage());
+                    Cog.e(TAG,(volleyError == null||volleyError.getMessage() ==null) ? "error":volleyError.getMessage());
                 }
             }));
 
@@ -205,7 +207,13 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
             initLiveVideo();
             if ("INIT".equals(mStatus)) {
+                mIvFullScreen.setVisibility(View.GONE);
                 handleRequestFailure();
+            }else{
+                check3GWifi();
+                registerWiFiListener();
+                mAutoHide.showControl();
+                mIvFullScreen.setVisibility(View.VISIBLE);
             }
         } else {
             initRecordVideo();
@@ -224,13 +232,13 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
      */
     private void initLiveVideo() {
         mVideoTitleLl = (RelativeLayout) findViewById(R.id.rl_video_title);
-        mAutoHide = new AutoHideUtils(mVideoTitleLl);
+
         mVideoLayout = (BnVideoLayout2) findViewById(R.id.bnVideoViewOfLiveVideoLayout);
         mVideoLayout.setVolume(100);
         mVideoLayout.getVideoView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mAutoHide.showControl();
+                if(null != mAutoHide) mAutoHide.showControl();
                 return true;
             }
         });
@@ -257,11 +265,9 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
 
             }
         });
-        mAutoHide.showControl();
-        check3GWifi();
-        registerWiFiListener();
-        ImageView mIvFullScreen = (ImageView) findViewById(R.id.iv_full_screen);
+        mIvFullScreen = (ImageView) findViewById(R.id.iv_full_screen);
         mIvFullScreen.setOnClickListener(this);
+        mAutoHide = new AutoHideUtils(mIvFullScreen);
     }
 
     /**
@@ -543,8 +549,16 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
      * 当请求数据返回error时，做如下处理
      */
     private void handleRequestFailure() {
-        if (mVideoFailureTv == null)
+        if (mVideoFailureTv == null){
             mVideoFailureTv = (TextView) findViewById(R.id.tv_un_start_tip);
+            mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // do nothing .
+                    if(null != mAutoHide) mAutoHide.showControl();
+                }
+            });
+        }
         mVideoFailureTv.setVisibility(View.VISIBLE);
     }
 
@@ -653,6 +667,9 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {
+                    if(TextUtils.isEmpty(mVideoLayout.getVideoView().getUrl())){
+                        mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+                    }
                     mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
                 }
             }

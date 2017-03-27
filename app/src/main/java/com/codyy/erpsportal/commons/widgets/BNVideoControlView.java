@@ -507,7 +507,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                     if (mIsLocal) {
                         start();
                     } else {
-                        Check3GUtil.instance().CheckNetType(EApplication.instance(), new Check3GUtil.OnWifiListener() {
+                        Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
                             @Override
                             public void onContinue() {
                                 start();

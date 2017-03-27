@@ -140,6 +140,9 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
                 @Override
                 public void onClick(View v) {
                     if (ClassRoomContants.TYPE_CUSTOM_LIVE.equals(mFrom)) {
+//                        data.setStatus("INIT");
+//                        data.setStatus("PROGRESS");
+//                        data.setStatus("END");
                         CustomLiveDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
                     }else{
                         ClassRoomDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
