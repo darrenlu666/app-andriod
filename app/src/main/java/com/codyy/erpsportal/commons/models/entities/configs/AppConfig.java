@@ -185,7 +185,7 @@ public class AppConfig {
                 AppInfo.CATEGORY_SINGLE_MODEL));
 
         //1.2实时直播，标题没有配置项
-        list1.add(new AppInfo(R.drawable.ic_child_live_lesson, MENUS[0], Titles.sWorkspaceSpeclassLive,
+        list1.add(new AppInfo(R.drawable.ic_child_live_reocrd, MENUS[0], Titles.sWorkspaceSpeclassLive,
                 AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
                 new Jumpable() {
                     @Override

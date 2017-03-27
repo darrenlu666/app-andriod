@@ -51,6 +51,8 @@ public class ApplicationChildViewHold extends BaseRecyclerViewHolder<AppInfo>{
     private View.OnClickListener mCurrentClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+            Cog.i(TAG,"v clicked position : top: "+v.getTop()+" bottom: "+v.getBottom());
             if(null == v.getTag()) return;
             AppInfo app = (AppInfo) v.getTag();
             if(null != app ){
