@@ -3,6 +3,7 @@ package com.codyy.erpsportal.schooltv.controllers.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -229,7 +231,12 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                 mVideoControlView.showControl();
             }
         });
-        mVideoControlView.bindVideoView(mVideoLayout, getSupportFragmentManager());
+        mVideoControlView.bindVideoView(mVideoLayout, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
     }
 
     //填充对应的数据

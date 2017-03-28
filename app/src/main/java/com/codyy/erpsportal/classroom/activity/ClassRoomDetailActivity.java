@@ -41,6 +41,7 @@ import com.codyy.erpsportal.classroom.fragment.ClassRoomCommentFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -65,7 +66,7 @@ import butterknife.ButterKnife;
  * 专递课堂 直录播课堂的 直播 录播详情界面Activity
  * Created by ldh on 2016/6/29.
  */
-public class ClassRoomDetailActivity extends AppCompatActivity implements View.OnClickListener, ClassRoomCommentFragment.SoftInputOpenListener {
+public class ClassRoomDetailActivity extends AppCompatActivity implements View.OnClickListener, ClassRoomCommentFragment.SoftInputOpenListener ,IFragmentMangerInterface {
     private static final String TAG = ClassRoomDetailActivity.class.getSimpleName();
     @Bind(R.id.tab_layout)TabLayout mTabLayout;
     @Bind(R.id.view_pager)  ViewPager mViewPager;
@@ -244,7 +245,12 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     private void initRecordVideo() {
         BnVideoView2 mVideoView = (BnVideoView2) findViewById(R.id.video_view);
         mVideoControl = (BNVideoControlView) findViewById(R.id.videoControl);
-        mVideoControl.bindVideoView(mVideoView, getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
             @Override
             public void show() {
@@ -404,6 +410,11 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
             }
         });
 
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 
     private int getColorResource(@ColorRes int colorId) {
@@ -624,7 +635,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     }
 
     private void registerWiFiListener() {
-        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, getSupportFragmentManager(), new WiFiBroadCastUtils.PlayStateListener() {
+        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {

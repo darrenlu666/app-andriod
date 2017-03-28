@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -112,7 +114,12 @@ public class VideoDetailsActivity extends FragmentActivity {
         mTitleRl.setVisibility(View.GONE);
 
         mVideoControl = (BNVideoControlView) findViewById(R.id.videoControl);
-        mVideoControl.bindVideoView(mVideoView,getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
 
             @Override

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.view.Gravity;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
@@ -137,7 +139,12 @@ public  class VideoMeetingPlayActivity extends BaseHttpActivity implements BnVid
         GridLayoutManager manager = new GridLayoutManager(this,3,GridLayoutManager.VERTICAL,false);
         mVideoRecyclerView.setLayoutManager(manager);
 
-        mVideoControl.bindVideoView(mVideoView,getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setOnCompleteListener(this);
         mVideoControl.setExpandable(false);
         mVideoControl.setOnErrorListener(new BnVideoView2.OnBNErrorListener() {

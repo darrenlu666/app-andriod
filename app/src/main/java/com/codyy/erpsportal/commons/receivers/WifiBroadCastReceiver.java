@@ -44,7 +44,7 @@ public class WifiBroadCastReceiver extends BroadcastReceiver {
             Cog.d(TAG, "mobNet connected = ", mobNetInfo.isConnected());
             Cog.d(TAG, "wifiNet connected = ", wifiNetInfo.isConnected());
 
-            if (!mobNetInfo.isConnected() && !wifiNetInfo.isConnected()) {
+            if ( !wifiNetInfo.isConnected()) {//!mobNetInfo.isConnected() &&  //此处去掉对移动网络的判断,否则会造成有移动网络的手机关闭wifi后继续播放视频.
                 if(listener != null) listener.onWifiClose();
             } else {
                 if(listener != null) listener.onWifiOpen();
@@ -66,5 +66,6 @@ public class WifiBroadCastReceiver extends BroadcastReceiver {
          * 打开Wi-Fi
          */
         void onWifiOpen();
+
     }
 }

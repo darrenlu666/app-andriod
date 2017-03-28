@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -29,7 +31,7 @@ import de.greenrobot.event.EventBus;
  * 视频共享/桌面共享
  * Created by caixingming on 2015/4/24.
  */
-public class OnlineLiveVideoPlayActivity extends AppCompatActivity {
+public class OnlineLiveVideoPlayActivity extends AppCompatActivity implements IFragmentMangerInterface{
     private String TAG = OnlineLiveVideoPlayActivity.class.getSimpleName();
     /** 共享视频 ＊*/
     public static final String TYPE_SHARE_VIDEO = "0";
@@ -86,7 +88,7 @@ public class OnlineLiveVideoPlayActivity extends AppCompatActivity {
         mBNLiveControlView.bindVideoView(mBnVideoView, mSpeakerName,BnVideoView2.BN_ENCODE_HARDWARE);
         check3GWifi();
         if(null != mMainSpeakerUrl){
-            mMainVideoControl.bindVideoView(mMainBnVideoView,getSupportFragmentManager());
+            mMainVideoControl.bindVideoView(mMainBnVideoView, this);
             mMainVideoControl.setVideoPath(mMainSpeakerUrl,BnVideoView2.BN_URL_TYPE_RTMP_LIVE,false);
         }
     }
@@ -174,5 +176,10 @@ public class OnlineLiveVideoPlayActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 }

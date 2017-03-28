@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -32,6 +33,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.commons.models.entities.Classroom;
@@ -61,7 +63,7 @@ import java.util.Map;
  * Created by caixingming on 2015/4/24.
  * 多个视频播放、主辅课堂页面
  */
-public class LiveVideoListPlayActivity extends FragmentActivity {
+public class LiveVideoListPlayActivity extends FragmentActivity implements IFragmentMangerInterface{
 
     private String TAG = LiveVideoListPlayActivity.class.getSimpleName();
 
@@ -303,6 +305,11 @@ public class LiveVideoListPlayActivity extends FragmentActivity {
         intent.putExtra(EXTRA_TYPE, type);
         activity.startActivity(intent);
         UIUtils.addEnterAnim(activity);
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 
 //    private BNPlayerFactory mBnPlayerFactory = new BNPlayerFactory();

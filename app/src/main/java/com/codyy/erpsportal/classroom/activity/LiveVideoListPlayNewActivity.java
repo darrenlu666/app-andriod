@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
@@ -43,7 +45,7 @@ import java.util.List;
  * Created by ldh on 2016/08/17.
  * 多个视频播放、主辅课堂页面
  */
-public class LiveVideoListPlayNewActivity extends FragmentActivity {
+public class LiveVideoListPlayNewActivity extends FragmentActivity implements IFragmentMangerInterface{
 
     private String TAG = LiveVideoListPlayNewActivity.class.getSimpleName();
 
@@ -189,6 +191,11 @@ public class LiveVideoListPlayNewActivity extends FragmentActivity {
     protected void onRestart() {
         super.onRestart();
         playCurrent();
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 
     /**

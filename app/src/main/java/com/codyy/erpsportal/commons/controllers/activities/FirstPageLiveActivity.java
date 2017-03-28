@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.entities.ScheduleLiveView;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
@@ -31,7 +33,7 @@ import butterknife.ButterKnife;
  * 首页直播页面
  * Created by kmdai on 2015/9/15.
  */
-public class FirstPageLiveActivity extends AppCompatActivity implements LiveViewUtils.OnUrlResultListener {
+public class FirstPageLiveActivity extends AppCompatActivity implements LiveViewUtils.OnUrlResultListener,IFragmentMangerInterface {
     public static final String INTENT_ID = "url";
     public static final String INTENT_LIVE_TYPE = "livetype";
 
@@ -118,7 +120,7 @@ public class FirstPageLiveActivity extends AppCompatActivity implements LiveView
 
     private void registerWiFiListener() {
 
-        wfb = new WiFiBroadCastUtils(this,getSupportFragmentManager(), new WiFiBroadCastUtils.PlayStateListener() {
+        wfb = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mBnVideoLayout.isPlaying()) {
@@ -215,5 +217,10 @@ public class FirstPageLiveActivity extends AppCompatActivity implements LiveView
         if(null != mAutoHide){
             mAutoHide.destroyView();
         }
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 }

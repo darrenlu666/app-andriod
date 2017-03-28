@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -28,7 +30,7 @@ import com.codyy.erpsportal.commons.widgets.BnVideoView2.OnBNBufferUpdateListene
 import com.codyy.erpsportal.commons.widgets.BnVideoView2.OnBNCompleteListener;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2.OnPlayingListener;
 
-public class HttpVideoPlayerActivity extends AppCompatActivity {
+public class HttpVideoPlayerActivity extends AppCompatActivity implements IFragmentMangerInterface{
 
     private final static String TAG = "HttpVideoPlayerActivity";
     public static final String EXTRA_TITLE = "title";
@@ -176,7 +178,7 @@ public class HttpVideoPlayerActivity extends AppCompatActivity {
     }
 
     private void registerWiFiListener() {
-        mWiFiBroadCastUtils = new WiFiBroadCastUtils(this,getSupportFragmentManager(), new WiFiBroadCastUtils.PlayStateListener() {
+        mWiFiBroadCastUtils = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {
@@ -248,5 +250,10 @@ public class HttpVideoPlayerActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_URL, videoUrl);
         activity.startActivity(intent);
         UIUtils.addEnterAnim(activity);
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 }

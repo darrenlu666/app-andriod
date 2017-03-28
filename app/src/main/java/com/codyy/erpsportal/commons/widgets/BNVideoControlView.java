@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.StringUtils;
@@ -43,7 +44,7 @@ import butterknife.ButterKnife;
  * home按键后自动seek回原来的位置播放 只需要在onPause中调用本view中的onPause()
  * 无需在恢复后手动做任何操作！
  */
-public class BNVideoControlView extends RelativeLayout implements AutoHide, Handler.Callback {
+public class BNVideoControlView extends RelativeLayout implements AutoHide, Handler.Callback ,IFragmentMangerInterface{
     private String TAG = BNVideoControlView.class.getSimpleName();
     public static final int MSG_WHAT_NOTIFY_HIDE = 100;// hide thread notify main thread to hide title
     public static final int MSG_WHAT_AUTO_HIDE = 103;//hide the view
@@ -71,6 +72,11 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private Context mContext;
     private PlaySate state = PlaySate.STOP;
 
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return mFragmentManagerInterface==null?null:mFragmentManagerInterface.getNewFragmentManager();
+    }
+
     public enum PlaySate {STOP, PLAY, PAUSE}
 
     private BnVideoView2 mVideoView = null;
@@ -95,7 +101,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private boolean mPaused = false;//是否突然被赞听过.
     private long mStartPlayTime = -1;
     private boolean mIsExpandable = true;//是否支持横竖屏 default：true
-    private FragmentManager mFragmentManager;
+    private IFragmentMangerInterface mFragmentManagerInterface;
     private int mPlayMode = MODE_RECORD;//播放模式默认录播 ，如果设置为直播则没有开始/暂停 和 播放进度显示
 
     @Override
@@ -153,10 +159,15 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             }
         };
         if (!this.isInEditMode()) {
-            mWifiBroadCastUtil = new WiFiBroadCastUtils(mContext, mFragmentManager, new WiFiBroadCastUtils.PlayStateListener() {
+            mWifiBroadCastUtil = new WiFiBroadCastUtils(new IFragmentMangerInterface() {
+                @Override
+                public FragmentManager getNewFragmentManager() {
+                    return mFragmentManagerInterface ==null?null:mFragmentManagerInterface.getNewFragmentManager();
+                }
+            }, new WiFiBroadCastUtils.PlayStateListener() {
                 @Override
                 public void play() {
-                    if(!mSurfaceDestroy) start();
+                    if (!mSurfaceDestroy) start();
                 }
 
                 @Override
@@ -229,7 +240,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                     mVideoView.seekTo(mDestPos);
                     mLastPercent = mCurrentPosition = mDestPos;
                 } else {
-                    Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
+                    Check3GUtil.instance().CheckNetType(BNVideoControlView.this, new Check3GUtil.OnWifiListener() {
                         @Override
                         public void onNetError() {
 
@@ -264,7 +275,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                                 resume();
                             }
                         } else {
-                            Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
+                            Check3GUtil.instance().CheckNetType(BNVideoControlView.this, new Check3GUtil.OnWifiListener() {
                                 @Override
                                 public void onNetError() {
                                     Cog.e(TAG,"nett error !");
@@ -382,14 +393,6 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         this.mDisplayListener = mDisplayListener;
     }
 
-    public FragmentManager getFragmentManager() {
-        return mFragmentManager;
-    }
-
-    public void setFragmentManager(FragmentManager mFragmentManager) {
-        this.mFragmentManager = mFragmentManager;
-    }
-
     /**
      * 设置进度条
      *
@@ -411,7 +414,8 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
      * you should invoked this method before {@link #setVideoPath(String, int, boolean)}
      * @param videoLayout2
      */
-    public void bindVideoView(@NonNull BnVideoLayout2 videoLayout2, FragmentManager manager) {
+    public void bindVideoView(@NonNull BnVideoLayout2 videoLayout2, IFragmentMangerInterface manager) {
+        Cog.d(TAG,"ifragment manager interface :"+manager);
         this.bindVideoView(videoLayout2.getVideoView(),manager);
         //setOnErrorListener will be instead by the bindVideoView method , so you need
         setOnPlayingListener(videoLayout2);
@@ -422,9 +426,9 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
      * you should invoked this method before {@link #setVideoPath(String, int, boolean)}
      * @param view
      */
-    public void bindVideoView(@NonNull BnVideoView2 view, FragmentManager manager) {
+    public void bindVideoView(@NonNull BnVideoView2 view, IFragmentMangerInterface manager) {
         this.mVideoView = view;
-        this.mFragmentManager = manager;
+        this.mFragmentManagerInterface = manager;
         mVideoView.setVolume(100);
         initListener();
     }
@@ -507,7 +511,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                     if (mIsLocal) {
                         start();
                     } else {
-                        Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
+                        Check3GUtil.instance().CheckNetType(BNVideoControlView.this, new Check3GUtil.OnWifiListener() {
                             @Override
                             public void onContinue() {
                                 start();
@@ -573,7 +577,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         }
 
         if (!isLocal) {
-            Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
+            Check3GUtil.instance().CheckNetType(BNVideoControlView.this, new Check3GUtil.OnWifiListener() {
                 @Override
                 public void onNetError() {
                 }

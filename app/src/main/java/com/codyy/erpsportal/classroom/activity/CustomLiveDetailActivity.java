@@ -41,6 +41,7 @@ import com.codyy.erpsportal.classroom.fragment.PeopleTreeFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -66,7 +67,7 @@ import butterknife.ButterKnife;
  * 专递课堂 -直播
  * Created by ldh on 2016/6/29.
  */
-public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener ,PeopleTreeFragment.ISyncCount{
+public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener ,PeopleTreeFragment.ISyncCount,IFragmentMangerInterface{
     private static final String TAG = CustomLiveDetailActivity.class.getSimpleName();
     private static final int MSG_UPDATE_WATCH_COUNT = 0x001;//update the count of people mount sea .
     private static final int MAX_COUNT = 10*10000;
@@ -276,7 +277,12 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     private void initRecordVideo() {
         BnVideoView2 mVideoView = (BnVideoView2) findViewById(R.id.video_view);
         mVideoControl = (BNVideoControlView) findViewById(R.id.videoControl);
-        mVideoControl.bindVideoView(mVideoView, getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
             @Override
             public void show() {
@@ -569,6 +575,11 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         }
     }
 
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
+    }
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> fragmentList;
         private String[] titles;
@@ -663,11 +674,11 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     }
 
     private void registerWiFiListener() {
-        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, getSupportFragmentManager(), new WiFiBroadCastUtils.PlayStateListener() {
+        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {
-                    if(TextUtils.isEmpty(mVideoLayout.getVideoView().getUrl())){
+                    if (TextUtils.isEmpty(mVideoLayout.getVideoView().getUrl())) {
                         mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
                     }
                     mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);

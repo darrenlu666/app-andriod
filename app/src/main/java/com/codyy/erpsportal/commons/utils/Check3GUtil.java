@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
 import java.lang.ref.WeakReference;
 
@@ -16,6 +17,7 @@ import java.lang.ref.WeakReference;
 public class Check3GUtil {
     private String TAG = "Check3GUtil";
     private static Check3GUtil mInstance ;
+    private MyDialog mNetDialog = null ;
     private Check3GUtil(){
     }
 
@@ -28,24 +30,26 @@ public class Check3GUtil {
 
     /**
      * 监听网络类型/分类处理
+     * 增加同步锁 防止因为调用过快拥有多个MyDialog框的问题. s
      * @param listener
      */
-    public void CheckNetType(Context context , OnWifiListener listener){
-        WeakReference<Context> owner = new WeakReference<>(context);
-        FragmentManager fragmentManager  ;
-        Activity activity  ;
-        MyDialog dialog = initDialog(listener);
-        if(!VideoDownloadUtils.isConnected(context)){
+    public synchronized void CheckNetType(IFragmentMangerInterface mangerInterface, OnWifiListener listener){
+        Cog.i(TAG,"CheckNetType ~~（） : "+mNetDialog);
+        if(!VideoDownloadUtils.isConnected(EApplication.instance())){
             if(listener!= null){
                 listener.onNetError();
             }
         }else{
-            if(!NetworkUtils.isNetWorkTypeWifi(context)){//3G/4G
-                if(null != owner.get()){
-                    activity = (Activity) context;
-                    if(null != activity && activity instanceof FragmentActivity){
-                        fragmentManager = ((FragmentActivity)activity).getSupportFragmentManager();
-                        dialog.show(fragmentManager,"check3G");
+            if(!NetworkUtils.isNetWorkTypeWifi(EApplication.instance())){//3G/4G
+                Cog.i(TAG,"dismiss dialog ~~（）start  : "+mNetDialog);
+                if(null != mNetDialog ){
+                    mNetDialog.dismissAllowingStateLoss();
+                    Cog.i(TAG,"dismiss dialog ~~（） end : "+mNetDialog);
+                }
+                mNetDialog = initDialog(listener);
+                if(null != mangerInterface){
+                    if(null != mangerInterface.getNewFragmentManager()){
+                        mNetDialog.showAllowStateLoss(mangerInterface.getNewFragmentManager(),"check3G");
                     }
                 }
             }else{//wifi 继续 ...
@@ -56,7 +60,7 @@ public class Check3GUtil {
         }
     }
 
-    private static MyDialog initDialog(final OnWifiListener listener) {
+    private  MyDialog initDialog(final OnWifiListener listener) {
         return MyDialog.newInstance(EApplication.instance().getString(R.string.txt_dialog_wifi_play_video_tips),
                 MyDialog.DIALOG_STYLE_TYPE_0,
                 "取消观看",
