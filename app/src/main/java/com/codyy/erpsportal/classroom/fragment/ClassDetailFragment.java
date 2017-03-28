@@ -188,7 +188,7 @@ public class ClassDetailFragment extends Fragment {
             mTvClassRoomTimeValue.setText(numArr[Integer.valueOf(mClassPeriod)]);
         } else {
             mTvClassRoomTimesTitle.setText(getString(R.string.class_room_time));
-            mTvClassRoomTimeValue.setText(TextUtils.isEmpty(mClassTime)?"未开始":mClassTime);
+            mTvClassRoomTimeValue.setText(mClassTime);
         }
     }
 

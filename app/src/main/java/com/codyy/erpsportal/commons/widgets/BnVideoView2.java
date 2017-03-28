@@ -207,7 +207,18 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
         Cog.d(TAG, "-play:" + getObjectId());
     }
 
-    public void playNow() {
+    /**
+     * 获取播放类型 0:play() 1:playWithChat() 2:audio mix
+     * @return
+     */
+    public int getPlayType(){
+        return mPlayType;
+    }
+
+    /**
+     * this is a hide method , you should not invoked this method for some player leak error .
+     */
+    private void playNow() {
         Cog.d(TAG, "+playNow");
         if (isPlaying())
             return;

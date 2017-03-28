@@ -84,7 +84,7 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                                     mHintTv.setVisibility(VISIBLE);
                                 }
                             });
-                            mBnVideoView.playNow();
+                            mBnVideoView.play(mBnVideoView.getPlayType());
                         }
                     }
 
