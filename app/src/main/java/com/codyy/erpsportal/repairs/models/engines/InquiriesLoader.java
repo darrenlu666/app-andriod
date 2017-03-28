@@ -1,4 +1,4 @@
-package com.codyy.erpsportal.commons.controllers.fragments;
+package com.codyy.erpsportal.repairs.models.engines;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,17 +14,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnItemClickListener;
-import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnLoadMoreListener;
-import com.codyy.erpsportal.commons.controllers.adapters.RecyclerCommonAdapter;
-import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
+import com.codyy.erpsportal.repairs.controllers.adapters.InquiriesAdapter;
+import com.codyy.erpsportal.repairs.controllers.adapters.InquiriesAdapter.OnItemClickListener;
+import com.codyy.erpsportal.repairs.controllers.adapters.InquiriesAdapter.OnLoadMoreListener;
+import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
 
 import org.json.JSONObject;
 
@@ -36,7 +35,7 @@ import java.util.Map;
  * RecyclerView数据加载器
  * Created by gujiajia on 2016/7/12.
  */
-public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRefreshListener, OnLoadMoreListener {
+public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
     private static final String TAG = "RvLoader";
     private static final int LOAD_COUNT = 10;
     /**
@@ -47,18 +46,18 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
     private View mEmptyView;
     private SwipeRefreshLayout mRefreshLayout;
     private RequestSender mRequestSender;
-    protected RecyclerCommonAdapter<T, VH, INFO> mAdapter;
+    protected InquiriesAdapter mAdapter;
     private int mStart;
     private Handler mHandler;
     private Map<String, String> mParams;
-    private ListExtractor<T, VH> mListExtractor;
+    private ListExtractor<InquiryItem> mListExtractor;
 
     /**
      * 项与项间的分隔线
      */
     private ItemDecoration mItemDecoration;
 
-    private RvLoader() {
+    private InquiriesLoader() {
     }
 
     private void init(Object object) {
@@ -75,7 +74,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
         mHandler = new Handler();
         mParams = new HashMap<>();
         if (object instanceof ListExtractor) {
-            this.mListExtractor = (ListExtractor<T, VH>) object;
+            this.mListExtractor = (ListExtractor<InquiryItem>) object;
         } else {
             throw new RuntimeException("The object passed has to implement ListExtractor!");
         }
@@ -97,10 +96,6 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
         this.mRefreshLayout.setOnRefreshListener(this);
     }
 
-    public void setInfo(INFO info) {
-        mAdapter.setInfo(info);
-    }
-
     public void notifyInfoChanged() {
         mAdapter.notifyDataSetChanged();
     }
@@ -110,18 +105,8 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
      *
      * @return
      */
-    protected RecyclerCommonAdapter<T, VH, INFO> newRecyclerAdapter() {
-        return new RecyclerCommonAdapter<>(mRecyclerView, this, newViewHolderCreator());
-    }
-
-    /**
-     * 创建RecyclerViewHolder创建器
-     *
-     * @return
-     */
-    protected ViewHolderCreator<VH> newViewHolderCreator() {
-        if (mListExtractor == null) return null;
-        return mListExtractor.newViewHolderCreator();
+    protected InquiriesAdapter newRecyclerAdapter() {
+        return new InquiriesAdapter(mRecyclerView, this);
     }
 
     /**
@@ -202,7 +187,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
         mRecyclerView.removeItemDecoration(mItemDecoration);
     }
 
-    public void setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener<InquiryItem> onItemClickListener) {
         mAdapter.setOnItemClickListener(onItemClickListener);
     }
 
@@ -223,7 +208,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
         mAdapter.setLoading(false);
         mRefreshLayout.setRefreshing(false);
         if (checkSuccessful(response)) {
-            List<T> list = getList(response);
+            List<InquiryItem> list = getList(response);
             if (list == null || list.size() == 0) {
                 if (isRefreshing) {
                     handleEmpty();
@@ -256,7 +241,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
         }
     }
 
-    protected List<T> getList(JSONObject response) {
+    protected List<InquiryItem> getList(JSONObject response) {
         if (mListExtractor == null) return null;
         return mListExtractor.extractList(response);
     }
@@ -386,9 +371,8 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
      * 列表抽取器，从响应数据中获取实体对象列表
      *
      * @param <O>  实体类
-     * @param <VH> ViewHolder类{@link RecyclerViewHolder}
      */
-    public interface ListExtractor<O, VH extends RecyclerViewHolder<O>> {
+    public interface ListExtractor<O> {
         /**
          * 请求列表数据的url
          *
@@ -404,21 +388,13 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
          */
         List<O> extractList(JSONObject response);
 
-        /**
-         * 获取{@link RecyclerViewHolder}的创建器
-         *
-         * @return
-         */
-        ViewHolderCreator<VH> newViewHolderCreator();
     }
 
     /**
      * 列表数据加载器
-     * @param <TT> 实体
-     * @param <VHH> 实体组持器
-     * @param <InfoT> 公用信息类
+
      */
-    public static class Builder<TT, VHH extends RecyclerViewHolder<TT>, InfoT> {
+    public static class Builder {
 
         private RecyclerView mRecyclerView;
 
@@ -430,47 +406,40 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
 
         private Fragment mFragment;
 
-        private InfoT mInfo;
+        private OnItemClickListener<InquiryItem> mOnItemClickListener;
 
-        private OnItemClickListener<TT> mOnItemClickListener;
-
-        public Builder<TT, VHH, InfoT> setRecyclerView(RecyclerView recyclerView) {
+        public Builder setRecyclerView(RecyclerView recyclerView) {
             mRecyclerView = recyclerView;
             return this;
         }
 
-        public Builder<TT, VHH, InfoT> setEmptyView(View emptyView) {
+        public Builder setEmptyView(View emptyView) {
             mEmptyView = emptyView;
             return this;
         }
 
-        public Builder<TT, VHH, InfoT> setRefreshLayout(SwipeRefreshLayout refreshLayout) {
+        public Builder setRefreshLayout(SwipeRefreshLayout refreshLayout) {
             mRefreshLayout = refreshLayout;
             return this;
         }
 
-        public Builder<TT, VHH, InfoT> setActivity(Activity activity) {
+        public Builder setActivity(Activity activity) {
             mActivity = activity;
             return this;
         }
 
-        public Builder<TT, VHH, InfoT> setFragment(Fragment fragment) {
+        public Builder setFragment(Fragment fragment) {
             mFragment = fragment;
             return this;
         }
 
-        public Builder<TT, VHH, InfoT> setInfo(InfoT info) {
-            mInfo = info;
-            return this;
-        }
-
-        public Builder<TT, VHH, InfoT> setOnItemClickListener(OnItemClickListener<TT> onItemClickListener) {
+        public Builder setOnItemClickListener(OnItemClickListener<InquiryItem> onItemClickListener) {
             mOnItemClickListener = onItemClickListener;
             return this;
         }
 
-        public RvLoader<TT, VHH, InfoT> build() {
-            RvLoader<TT, VHH, InfoT> instance = new RvLoader<>();
+        public InquiriesLoader build() {
+            InquiriesLoader instance = new InquiriesLoader();
             if (mRefreshLayout == null) throw new RuntimeException("No SwipeRefreshLayout passed");
             instance.setRefreshLayout(mRefreshLayout);
             if (mRecyclerView == null) throw new RuntimeException("No RecyclerView passed");
@@ -484,8 +453,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
             } else {
                 throw new RuntimeException("No activity or fragment passed");
             }
-//            if (mInfo == null) throw new RuntimeException("Please set info!");
-            instance.setInfo(mInfo);
+
             if (mOnItemClickListener != null) {
                 instance.setOnItemClickListener(mOnItemClickListener);
             }

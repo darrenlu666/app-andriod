@@ -1,9 +1,9 @@
 package com.codyy.url;
 
 import com.codyy.erpsportal.BuildConfig;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.urlbuilder.UrlBuilder;
 import com.codyy.erpsportal.urlbuilder.annotations.UrlSuffix;
-import com.codyy.erpsportal.commons.utils.Cog;
 
 /**
  * Created by kmdai on 2015/4/13.
@@ -2848,6 +2848,12 @@ public class URLConfig {
 
     @UrlSuffix("/mobile/repairs/searchMalfunc.do")
     public static String SEARCH_MALFUNC;
+
+    @UrlSuffix("/mobile/repairs/getRepairDetails.do")
+    public static String GET_REPAIR_DETAILS;
+
+    @UrlSuffix("/mobile/repairs/getRepairTracking.do")
+    public static String GET_REPAIR_TRACKING;
 
     static {
         UrlBuilder.updateUrls();

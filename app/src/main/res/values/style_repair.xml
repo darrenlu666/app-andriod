@@ -24,4 +24,32 @@
         <item name="android:textSize">14dp</item>
         <item name="android:textColor">#999999</item>
     </style>
+
+    <style name="RepairDetailItem">
+        <item name="android:divider">@drawable/dv_v_repair_detail</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:showDividers">middle</item>
+    </style>
+
+    <style name="RepairDetailsLb">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="RepairDetailsContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#444444</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="TextAppearanceTab">
+        <item name="android:textSize">16dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">#444444</item>
+    </style>
 </resources>

@@ -1,21 +1,21 @@
 package com.codyy.erpsportal.commons.widgets;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
+import android.os.Build.VERSION_CODES;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 
 import com.codyy.erpsportal.R;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 /**
- * 固定比例的DraweeView
- * Created by gujiajia on 2016/12/12.
+ * 固定比例的FrameLayout
+ * Created by gujiajia on 2017/3/24.
  */
 
-public class AspectRatioDraweeView extends SimpleDraweeView {
+public class AspectRatioFrameLayout extends FrameLayout {
 
     public static final int MEASUREMENT_WIDTH = 0;
     public static final int MEASUREMENT_HEIGHT = 1;
@@ -28,26 +28,22 @@ public class AspectRatioDraweeView extends SimpleDraweeView {
     private boolean aspectRatioEnabled;
     private int dominantMeasurement;
 
-    public AspectRatioDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
-        super(context, hierarchy);
-    }
-
-    public AspectRatioDraweeView(Context context) {
+    public AspectRatioFrameLayout(Context context) {
         super(context);
     }
 
-    public AspectRatioDraweeView(Context context, AttributeSet attrs) {
+    public AspectRatioFrameLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initAttributes(context, attrs);
     }
 
-    public AspectRatioDraweeView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public AspectRatioFrameLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         initAttributes(context, attrs);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AspectRatioDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    @RequiresApi(api = VERSION_CODES.LOLLIPOP)
+    public AspectRatioFrameLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initAttributes(context, attrs);
     }
@@ -128,5 +124,4 @@ public class AspectRatioDraweeView extends SimpleDraweeView {
         this.dominantMeasurement = dominantMeasurement;
         requestLayout();
     }
-
 }

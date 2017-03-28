@@ -337,7 +337,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                         minusLoadingCount();
                     }
                 });
-        mCompositeDisposable.add(mCompositeDisposable);
+        mCompositeDisposable.add(disposable);
     }
 
     /**

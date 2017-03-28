@@ -24,9 +24,11 @@ public class RecyclerCommonAdapter<T, VH extends RecyclerViewHolder<T>, INFO> ex
         if (holder instanceof RecyclerCommonViewHolder) {
             RecyclerCommonViewHolder<T> viewHolder = (RecyclerCommonViewHolder<T>) holder;
             viewHolder.setDataToView(mList, position, mInfo);
+            addItemClickListener(holder);
         } else if (holder instanceof RecyclerViewHolder){
             RecyclerViewHolder<T> viewHolder = (RecyclerViewHolder<T>) holder;
             viewHolder.setDataToView(mList, position);
+            addItemClickListener(holder);
         } else {
             LastItemHolder itemHolder = (LastItemHolder) holder;
             itemHolder.setDataToView(mLoadMoreEnabled);

@@ -2,7 +2,9 @@ package com.codyy.erpsportal.commons.models.network;
 
 import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.repairs.models.entities.ClassroomFilterItem;
+import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
 import com.codyy.erpsportal.repairs.models.entities.Malfunction;
+import com.codyy.erpsportal.repairs.models.entities.RepairDetails;
 import com.codyy.erpsportal.repairs.models.entities.RepairRecord;
 import com.codyy.erpsportal.repairs.models.entities.RepairSchool;
 import com.codyy.url.URLConfig;
@@ -63,6 +65,54 @@ public class FakeInterceptor implements Interceptor {
                             , i));
                 }
                 return buildResponse(chain, malfunctions);
+            } else if (urlStr.equals(URLConfig.GET_REPAIR_DETAILS)) {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("result", "success");
+                RepairDetails repairDetails = new RepairDetails();
+                repairDetails.setId("1");
+                repairDetails.setSerial("zx201512120001");
+                repairDetails.setClassroomSerial("教室编号");
+                repairDetails.setClassroomName("教室名称教室名称");
+                repairDetails.setDescription("声音太小听不到？声音太小听不到？声音太小听不到？");
+                repairDetails.setCategories("硬件故障-班班通故障-声卡问题");
+                repairDetails.setReporter("雪诺");
+                repairDetails.setPhone("1388888888");
+                repairDetails.setReportTime(System.currentTimeMillis());
+                repairDetails.setStatus(4);
+                repairDetails.setHandlerName("张三");
+                responseMap.put("data", repairDetails);
+                return buildResponse(chain, new Gson().toJson(responseMap));
+            } else if (urlStr.equals(URLConfig.GET_REPAIR_TRACKING)) {
+                List<InquiryItem> inquiryItems = new ArrayList<>();
+                InquiryItem inquiryItem = new InquiryItem();
+                inquiryItem.setReply(false);
+                inquiryItem.setContent("听不见，我听不见");
+                inquiryItem.setTime(System.currentTimeMillis());
+                inquiryItems.add(inquiryItem);
+
+                InquiryItem inquiryItem1 = new InquiryItem();
+                inquiryItem1.setReply(true);
+                inquiryItem1.setContent("请找医生看眼科");
+                inquiryItem1.setHandlerName("张三");
+                inquiryItem1.setTime(System.currentTimeMillis());
+                inquiryItem1.setReply(true);
+                inquiryItems.add(inquiryItem1);
+
+                InquiryItem inquiryItem2 = new InquiryItem();
+                inquiryItem2.setReply(false);
+                inquiryItem2.setContent("听不见，我还是听不见");
+                inquiryItem2.setTime(System.currentTimeMillis());
+                inquiryItems.add(inquiryItem2);
+
+                InquiryItem inquiryItem3 = new InquiryItem();
+                inquiryItem3.setReply(true);
+                inquiryItem3.setContent("再去看");
+                inquiryItem3.setHandlerName("张三");
+                inquiryItem3.setTime(System.currentTimeMillis());
+                inquiryItem3.setReply(true);
+                inquiryItems.add(inquiryItem3);
+
+                return buildResponse(chain, inquiryItems);
             }
         }
         return chain.proceed(chain.request());
@@ -70,17 +120,21 @@ public class FakeInterceptor implements Interceptor {
 
     private <T> Response buildResponse(Chain chain, List<T> list) {
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("total", 5);
+        responseMap.put("total", list.size());
         responseMap.put("result", "success");
         responseMap.put("list", list);
         Gson gson = new Gson();
         String responseString = gson.toJson(responseMap);
+        return buildResponse(chain, responseString);
+    }
+
+    private Response buildResponse(Chain chain, String responseBody) {
         return new Response.Builder()
                 .code(200)
-                .message(responseString)
+                .message(responseBody)
                 .request(chain.request())
                 .protocol(Protocol.HTTP_1_0)
-                .body(ResponseBody.create(MediaType.parse("application/json"), responseString.getBytes()))
+                .body(ResponseBody.create(MediaType.parse("application/json"), responseBody.getBytes()))
                 .addHeader("content-type", "application/json")
                 .build();
     }

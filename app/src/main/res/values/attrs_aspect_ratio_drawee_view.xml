@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="AspectRatioDraweeView">
+    <declare-styleable name="AspectRatioComponent">
         <attr name="aspectRatio" format="float" />
         <attr name="aspectRatioEnabled" format="boolean" />
         <attr name="dominantMeasurement">

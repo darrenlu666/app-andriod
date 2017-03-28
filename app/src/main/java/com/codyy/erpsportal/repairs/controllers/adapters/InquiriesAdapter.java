@@ -1,10 +1,11 @@
-package com.codyy.erpsportal.commons.controllers.adapters;
+package com.codyy.erpsportal.repairs.controllers.adapters;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.GridLayoutManager.SpanSizeLookup;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,8 +14,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.repairs.controllers.viewholders.InquiryReplyVh;
+import com.codyy.erpsportal.repairs.controllers.viewholders.InquiryVh;
+import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +28,15 @@ import java.util.List;
  * 有加载更多的RecyclerView的适配器
  * Created by gujiajia on 2015/12/21.
  */
-public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends RecyclerView.Adapter {
+public class InquiriesAdapter extends RecyclerView.Adapter {
 
-    private final static int TYPE_ITEM = 0;
+    private final static int TYPE_INQUIRY = 1;
 
-    private final static int TYPE_LAST = 1;
+    private final static int TYPE_REPLY = 2;
 
-    protected List<T> mList;
+    private final static int TYPE_LAST = 0;
+
+    protected List<InquiryItem> mList;
 
     private int mVisibleThreshold = 2;
 
@@ -46,16 +53,18 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    private ViewHolderCreator<VH> mViewHolderCreator;
+    private SparseArray<ViewHolderCreator<?>> mVhCreators;
 
     private RecyclerView mRecyclerView;
 
-    protected OnItemClickListener<T> mOnItemClickListener;
+    protected OnItemClickListener<InquiryItem> mOnItemClickListener;
 
-    public RecyclerAdapter(RecyclerView recyclerView, OnLoadMoreListener onLoadMoreListener, ViewHolderCreator<VH> viewHolderCreator) {
+    public InquiriesAdapter(RecyclerView recyclerView, OnLoadMoreListener onLoadMoreListener) {
+        mVhCreators = new SparseArray<>();
+        mVhCreators.put(TYPE_INQUIRY, new EasyVhrCreator<>(InquiryVh.class));
+        mVhCreators.put(TYPE_REPLY, new EasyVhrCreator<>(InquiryReplyVh.class));
         mRecyclerView = recyclerView;
         mOnLoadMoreListener = onLoadMoreListener;
-        mViewHolderCreator = viewHolderCreator;
         if (updateSpanSizeLookup()) {
             addOnScrollListenerToRecyclerView(recyclerView);
         } else if (recyclerView.getLayoutManager() instanceof LinearLayoutManager){
@@ -122,7 +131,7 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
         mLoading = isLoading;
     }
 
-    public void setData(List<T> infoList) {
+    public void setData(List<InquiryItem> infoList) {
         mList = infoList;
     }
 
@@ -130,7 +139,7 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
      * 增加一个列表的数据项
      * @param infoList 数据项列表
      */
-    public void addData(List<T> infoList) {
+    public void addData(List<InquiryItem> infoList) {
         if (mList != null) {
             mList.addAll(infoList);
         } else {
@@ -142,7 +151,7 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
      * 添加项
      * @param info 项
      */
-    public void addItem(T info) {
+    public void addItem(InquiryItem info) {
         if (mList == null) {
             mList = new ArrayList<>();
         }
@@ -154,7 +163,7 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
      * @param position 位置
      * @return 项数据
      */
-    public T obtainItem(int position) {
+    public InquiryItem obtainItem(int position) {
         if (mList == null || position < 0 || position >= mList.size()) {
             return null;
         }
@@ -163,8 +172,10 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_ITEM) {
-            return mViewHolderCreator.createViewHolder(parent);
+        if (viewType == TYPE_INQUIRY) {
+            return mVhCreators.get(TYPE_INQUIRY).createViewHolder(parent);
+        } else if (viewType == TYPE_REPLY) {
+            return mVhCreators.get(TYPE_REPLY).createViewHolder(parent);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_last, parent, false);
             return new LastItemHolder(view);
@@ -174,7 +185,7 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         if (holder instanceof RecyclerViewHolder) {
-            VH viewHolder = (VH) holder;
+            RecyclerViewHolder<InquiryItem> viewHolder = (RecyclerViewHolder<InquiryItem>) holder;
             viewHolder.setDataToView(mList, position);
             addItemClickListener(holder);
         } else {
@@ -203,7 +214,17 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
 
     @Override
     public int getItemViewType(int position) {
-        return mList.get(position) == null ? TYPE_LAST : TYPE_ITEM;
+        Object item = mList.get(position);
+        if (item == null) {
+            return TYPE_LAST;
+        } else {
+            InquiryItem inquiryItem = (InquiryItem) item;
+            if (inquiryItem.isReply()) {
+                return TYPE_REPLY;
+            } else {
+                return TYPE_INQUIRY;
+            }
+        }
     }
 
     @Override
@@ -224,14 +245,16 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
     }
 
     public void removeItem(int i) {
-        mList.remove(i);
+        if (mList != null) {
+            mList.remove(i);
+        }
     }
 
     public boolean isEmpty() {
         return getItemCount() == 0;
     }
 
-    public void setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
+    public void setOnItemClickListener(OnItemClickListener<InquiryItem> onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 

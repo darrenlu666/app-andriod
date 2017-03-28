@@ -1,9 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.codyy.erpsportal.repairs.controllers.activities.ReportRepairActivity">
+    tools:context="com.codyy.erpsportal.repairs.controllers.fragments.RepairDetailsFragment">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="?android:listDivider"
+        android:orientation="vertical"
+        android:showDividers="middle|end">
+
+        <com.codyy.erpsportal.commons.widgets.TitleBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="报修">
+
+
+
+        </com.codyy.erpsportal.commons.widgets.TitleBar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/dv_v_repair_detail"
+            android:orientation="horizontal"
+            android:padding="13dp"
+            android:paddingEnd="15dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingStart="15dp"
+            android:showDividers="middle">
+
+            <TextView
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="end"
+                android:text="报修教室"
+                android:textColor="#666666"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/tv_classroom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="#444444"
+                android:textSize="16dp"
+                tools:text="教室编号（教室名称教室名称）" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_scan_serial" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@null"
+                android:src="@drawable/arrow" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/RepairDetailItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/RepairDetailsLb"
+                android:layout_gravity="center_vertical"
+                android:text="故障类别" />
+
+            <TextView
+                android:id="@+id/tv_categories"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:textColor="#444444"
+                android:textSize="16dp"
+                tools:text="硬件故障-班班通故障-声卡问题" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@null"
+                android:src="@drawable/arrow" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/RepairDetailItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/RepairDetailsLb"
+                android:layout_gravity="center_vertical"
+                android:text="报修人" />
+
+            <EditText
+                android:id="@+id/tv_reporter"
+                style="@style/RepairDetailsContent"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/transparent"
+                android:maxLength="20"
+                tools:text="雪诺" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/RepairDetailItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/RepairDetailsLb"
+                android:text="联系电话" />
+
+            <EditText
+                android:id="@+id/tv_phone"
+                style="@style/RepairDetailsContent"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:background="@color/transparent"
+                android:textColor="#19ab20"
+                tools:text="13888888888" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_lb_description"
+                style="@style/RepairDetailsLb"
+                android:text="故障描述" />
+
+            <EditText
+                android:id="@+id/tv_desc"
+                style="@style/RepairDetailsContent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_toEndOf="@id/tv_lb_description"
+                android:layout_toRightOf="@id/tv_lb_description"
+                android:background="@color/transparent"
+                tools:text="声音太小听不到？声音太小听不到？声音太小听不到？声音太小听不到？" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_photos_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@id/tv_desc"
+            android:layout_alignStart="@id/tv_desc"
+            android:layout_below="@id/tv_desc"
+            android:divider="@drawable/dv_v_dp5"
+            android:orientation="horizontal"
+            android:showDividers="middle"
+            android:padding="8dp"
+            android:weightSum="4">
+
+            <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
+                android:id="@+id/dv_icon1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:aspectRatio="1"
+                app:aspectRatioEnabled="true"
+                app:dominantMeasurement="width"
+                app:placeholderImage="@drawable/icon_default_video" />
+
+            <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
+                android:id="@+id/dv_icon2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:aspectRatio="1"
+                app:aspectRatioEnabled="true"
+                app:dominantMeasurement="width"
+                app:placeholderImage="@drawable/icon_default_video" />
+
+            <com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:shadowColor="#444444"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="1.5"
+                    android:text="共6张" />
+            </com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout>
+
+            <com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:shadowColor="#444444"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="1.5"
+                    android:text="共6张" />
+            </com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

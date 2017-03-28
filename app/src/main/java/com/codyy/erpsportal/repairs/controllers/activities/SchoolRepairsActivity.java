@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.Builder;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.ListExtractor;
@@ -195,6 +196,13 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                 .setRefreshLayout(mRefreshLayout)
                 .setRecyclerView(mListRv)
                 .setEmptyView(mEmptyTv)
+                .setOnItemClickListener(new RecyclerAdapter.OnItemClickListener<RepairRecord>() {
+                    @Override
+                    public void onItemClick(int position, RepairRecord item) {
+                        Cog.d(TAG, "onItemClick position=", position);
+                        RepairDetailsActivity.start(SchoolRepairsActivity.this, item.getId());
+                    }
+                })
                 .build();
         mLoader.showDivider();
     }
@@ -288,6 +296,12 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
     @Override
     public ViewHolderCreator<RepairRecordVh> newViewHolderCreator() {
         return new EasyVhrCreator<>(RepairRecordVh.class);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     public static void start(Context context, String schoolId) {
