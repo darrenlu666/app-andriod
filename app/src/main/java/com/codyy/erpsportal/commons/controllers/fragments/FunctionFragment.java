@@ -58,6 +58,7 @@ import de.greenrobot.event.EventBus;
  */
 public class FunctionFragment extends BaseHttpFragment {
     private static final String TAG = "FunctionFragment";
+    public static final int ITEM_COUNT_PARENT = 3;//一级目录列数
     public static final int ITEM_COUNT_CHILD = 4;//二级目录列数
 
     @Bind(R.id.recycler_tab_layout)RecyclerTabLayoutSimple mRecyclerTabLayout;//孩子列表
@@ -239,13 +240,13 @@ public class FunctionFragment extends BaseHttpFragment {
             }
         });
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), ITEM_COUNT_PARENT);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
 
                 if(position <mData.size() && mAdapter.getItemViewType(position) == ApplicationViewHold.ITEM_TYPE_CHILD){
-                    return  3;
+                    return  ITEM_COUNT_PARENT;
                 }
                 return 1;
             }
@@ -352,6 +353,7 @@ public class FunctionFragment extends BaseHttpFragment {
                         // TODO: 16-8-27 do nothing ... with any click event .
                         break;
                     case ApplicationViewHold.ITEM_TYPE_MULTI://show children view with animation .
+                        Cog.e(TAG,"position : "+position +" v.top :"+v.getTop()+" "+v.getLeft()+" "+v.getRight()+" "+v.getBottom());
                             if(data.getChildGroups()!=null && data.getChildGroups().size()>0){
                                 Cog.i(TAG," last pos: "+mLastExpandPos +" current : "+position);
                                 //判断是否已经展开
@@ -367,13 +369,13 @@ public class FunctionFragment extends BaseHttpFragment {
                                 }else{//expand .
                                     try {
                                         int lastClick = mLastExpandPos ;
-                                        int pos = position+(3-position%3);
+                                        int pos = position+(ITEM_COUNT_PARENT-position%ITEM_COUNT_PARENT);
                                         //重新计算位置...
                                         if(deletePos < pos){
                                             if(position>0 && deletePos>0){
                                                 position = position - 1;
                                             }
-                                            pos = position+(3-position%3);
+                                            pos = position+(ITEM_COUNT_PARENT-position%ITEM_COUNT_PARENT);
                                         }else if(deletePos == pos ){
                                             Cog.i(TAG," deletePos pos: "+deletePos +"expand pos : "+pos);
                                         }
@@ -383,12 +385,12 @@ public class FunctionFragment extends BaseHttpFragment {
                                         sCurrentPosition    =   position ;
                                         AppInfo newApp = data.clone();
                                         newApp.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_CHILD);
-                                         if(Math.abs(lastClick-position)<3){
-                                            newApp.setStartPos(lastClick%3);
+                                         if(Math.abs(lastClick-position)<ITEM_COUNT_PARENT){
+                                            newApp.setStartPos(lastClick%ITEM_COUNT_PARENT);
                                         }else{//从0开始
                                             newApp.setStartPos(-1);
                                         }
-                                        newApp.setTargetPos(position%3);
+                                        newApp.setTargetPos(position%ITEM_COUNT_PARENT);
                                         if(pos > mData.size()){
                                             for(int i = 0 ;i < (pos-mData.size()+1);i++){
                                                 AppInfo appInfo  = new AppInfo();
@@ -403,6 +405,10 @@ public class FunctionFragment extends BaseHttpFragment {
                                         e.printStackTrace();
                                     }
                                 }
+                                //自动滚动判断
+                                int vY = (v.getTop()+v.getBottom())*(position/ITEM_COUNT_PARENT);
+                                if(vY>0)
+                                    mRecyclerView.scrollBy(0,vY);
                             }
                         break;
                     case ApplicationViewHold.ITEM_TYPE_CHILD://children views mode .
