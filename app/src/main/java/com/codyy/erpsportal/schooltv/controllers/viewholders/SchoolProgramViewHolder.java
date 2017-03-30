@@ -38,7 +38,7 @@ public class SchoolProgramViewHolder extends BaseRecyclerViewHolder<SchoolProgra
     @Override
     public void setData(int position, SchoolProgram data) throws Throwable {
         if(null != mSdv){
-            ImageFetcher.getInstance(mSchoolNameTv.getContext()).fetchSmall(mSdv,data.getThumbPath());
+            ImageFetcher.getInstance(mSchoolNameTv.getContext()).fetchSmall(mSdv,data.getThumbPath(),false);
         }
         mSchoolNameTv.setText(data.getProgramName());
         mClassTv.setText(DateUtil.getDateStr(data.getStartTime(),DateUtil.HH_MM)+"--"+DateUtil.getDateStr(data.getEndTime(),DateUtil.HH_MM));

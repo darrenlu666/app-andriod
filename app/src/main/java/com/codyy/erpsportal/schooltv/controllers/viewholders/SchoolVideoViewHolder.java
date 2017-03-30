@@ -41,7 +41,7 @@ public class SchoolVideoViewHolder extends BaseRecyclerViewHolder<SchoolVideo> {
     @Override
     public void setData(int position, SchoolVideo data) throws Throwable {
 
-        ImageFetcher.getInstance(mSdv.getContext()).fetchSmall(mSdv,data.getThumbPath());
+        ImageFetcher.getInstance(mSdv.getContext()).fetchSmall(mSdv,data.getThumbPath(),false);
         mSchoolNameTv.setText(data.getProgramName());
         if(TextUtils.isEmpty(data.getSpeaker())){
             mMasterTagTv.setVisibility(View.INVISIBLE);
