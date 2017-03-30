@@ -2855,6 +2855,12 @@ public class URLConfig {
     @UrlSuffix("/mobile/repairs/getRepairTracking.do")
     public static String GET_REPAIR_TRACKING;
 
+    /**
+     * 故障类型分类
+     */
+    @UrlSuffix("/mobile/repairs/getMalfuncCategories")
+    public static String GET_MALFUNC_CATEGORIES;
+
     static {
         UrlBuilder.updateUrls();
     }

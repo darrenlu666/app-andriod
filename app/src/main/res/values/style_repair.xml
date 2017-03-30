@@ -52,4 +52,20 @@
         <item name="textAllCaps">false</item>
         <item name="android:textColor">#444444</item>
     </style>
+
+    <style name="BottomDialog" parent="@android:style/Theme.Light.Panel">
+        <item name="android:windowAnimationStyle">@style/BottomDialogAnimation</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="BottomDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up_to_show</item>
+        <item name="android:windowExitAnimation">@anim/slide_down_to_hide</item>
+    </style>
+
+    <style name="CategoryTabText" parent="@style/TextAppearance.AppCompat.Large" >
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">15dp</item>
+    </style>
 </resources>

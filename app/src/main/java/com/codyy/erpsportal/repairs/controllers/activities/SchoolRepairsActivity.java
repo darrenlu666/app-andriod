@@ -280,6 +280,11 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
         }
     }
 
+    @OnClick(R.id.fab_report)
+    public void onReportClick() {
+        ReportRepairActivity.start(this);
+    }
+
     @Override
     public String getUrl() {
         return URLConfig.GET_REPAIR_RECORDS;

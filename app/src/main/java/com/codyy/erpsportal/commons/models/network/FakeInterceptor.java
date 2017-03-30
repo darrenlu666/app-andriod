@@ -3,6 +3,7 @@ package com.codyy.erpsportal.commons.models.network;
 import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.repairs.models.entities.ClassroomFilterItem;
 import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
+import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
 import com.codyy.erpsportal.repairs.models.entities.Malfunction;
 import com.codyy.erpsportal.repairs.models.entities.RepairDetails;
 import com.codyy.erpsportal.repairs.models.entities.RepairRecord;
@@ -113,6 +114,15 @@ public class FakeInterceptor implements Interceptor {
                 inquiryItems.add(inquiryItem3);
 
                 return buildResponse(chain, inquiryItems);
+            } else if (urlStr.equals(URLConfig.GET_MALFUNC_CATEGORIES)) {
+                List<MalfuncCategory> categories = new ArrayList<>();
+                for (int i=0; i < 8; i++) {
+                    MalfuncCategory malfuncCategory = new MalfuncCategory();
+                    malfuncCategory.setId("" + i);
+                    malfuncCategory.setName("故障类型" + i);
+                    categories.add(malfuncCategory);
+                }
+                return buildResponse(chain, categories);
             }
         }
         return chain.proceed(chain.request());

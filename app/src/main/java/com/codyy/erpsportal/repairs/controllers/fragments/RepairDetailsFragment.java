@@ -48,7 +48,7 @@ public class RepairDetailsFragment extends Fragment {
     @Bind(R.id.tv_lb_description)
     TextView mLbDescriptionTv;
 
-    @Bind(R.id.tv_desc)
+    @Bind(R.id.et_desc)
     TextView mDescTv;
 
     @Bind(R.id.dv_icon1)
@@ -66,7 +66,7 @@ public class RepairDetailsFragment extends Fragment {
     @Bind(R.id.tv_reporter)
     TextView mReporterTv;
 
-    @Bind(R.id.tv_phone)
+    @Bind(R.id.et_phone)
     TextView mPhoneTv;
 
     @Bind(R.id.tv_repair_time)

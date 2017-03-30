@@ -52,7 +52,7 @@
             />
     </RelativeLayout>
     <TextView
-        android:id="@+id/tv_desc"
+        android:id="@+id/et_desc"
         tools:text="blog detail desc ..........blog detail desc ..........blog detail desc ..........blog detail desc ..........blog detail desc .........."
         style="@style/txt_group_txt_desc"
         android:layout_width="match_parent"

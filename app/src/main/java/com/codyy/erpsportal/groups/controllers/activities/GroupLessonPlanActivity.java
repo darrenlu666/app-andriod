@@ -698,7 +698,7 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
             context = view.getContext();
             dvIcon = (SimpleDraweeView) view.findViewById(R.id.dv_icon);
             nameTv = (TextView) view.findViewById(R.id.tv_name);
-            descTv = (TextView) view.findViewById(R.id.tv_desc);
+            descTv = (TextView) view.findViewById(R.id.et_desc);
         }
 
         @Override
