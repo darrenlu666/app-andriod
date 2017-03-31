@@ -18,7 +18,6 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.SearchInputActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.MapFragment;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.LoadingHandler;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
@@ -78,10 +77,10 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
             if (mPrevOffset != verticalOffset) {
                 Cog.d(TAG, "onOffsetChanged verticalOffset=", verticalOffset);
-                if (mMapFragmentRf != null) {
-                    if (mMapFragmentRf.get() != null) {
-                        MapFragment mapFragment = mMapFragmentRf.get();
-                        mapFragment.notifyParentRise(verticalOffset);
+                if (mTitleRiseListenerRef != null) {
+                    if (mTitleRiseListenerRef.get() != null) {
+                        TitleBarRiseListener listener = mTitleRiseListenerRef.get();
+                        listener.notifyRise(verticalOffset);
                     }
                 }
                 mPrevOffset = verticalOffset;
@@ -230,14 +229,21 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
         }
     }
 
-    private WeakReference<MapFragment> mMapFragmentRf;
+    private WeakReference<TitleBarRiseListener> mTitleRiseListenerRef;
 
-    public void setMapFragment(MapFragment mapFragment) {
-        mMapFragmentRf = new WeakReference<>(mapFragment);
+    public void setTitleRiseListener(TitleBarRiseListener mapFragment) {
+        mTitleRiseListenerRef = new WeakReference<>(mapFragment);
     }
 
-    public interface OnAreaClickListener {
-        void onAreaClick();
+    /**
+     * title升起监听，给子碎片发送标题栏升起多少px
+     */
+    public interface TitleBarRiseListener {
+        /**
+         * 通知标题栏升起
+         * @param verticalOffset 垂直偏移量
+         */
+        void notifyRise(int verticalOffset);
     }
 
 }

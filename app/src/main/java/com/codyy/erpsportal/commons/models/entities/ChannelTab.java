@@ -3,11 +3,12 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.os.Bundle;
 
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter.ChannelTabInfo;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.InfoIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainCompositeFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ManagementFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.MapFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TeachingResearchFragment;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -108,12 +109,14 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)){
                     clazz = MainResFragment.class;
                     tabId = 2;
-                } else {
-                    clazz = MapFragment.class;
+                } else if (ModuleConfig.TEMPLATE_TJ.equals(indexTemplateId)){
+                    clazz = TianJinFragment.class;
                     tabId = 11;
+                } else {
+                    clazz = FeiXianFragment.class;
+                    tabId = 12;
                 }
-                //TODO 删除这个
-//                clazz = MapFragment.class;
+
                 break;
             case "onlineclassid"://专递课堂
 //                clazz = DeliveryClassFragment.class;
