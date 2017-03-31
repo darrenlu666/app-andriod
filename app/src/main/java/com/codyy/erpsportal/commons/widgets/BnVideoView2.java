@@ -98,6 +98,8 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
 
     private boolean mIsReceiveVideo = true;//是否接收视频
 
+    private boolean mIsSurfaceNeedBinding = true;//是否需要调用setSurface() . default: true 依赖此flag来判断是否应该反复调用mPlayer.setSurface();
+
 
     public BnVideoView2(Context context) {
         super(context);
@@ -195,15 +197,28 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
         if (isPlaying()){
             return;
         }
-            mPlayer = BNMediaPlayer.createPlayer();
-            initListener();
+        mPlayer = BNMediaPlayer.createPlayer();
+        //一个新的player实例需要绑定一次#setSurface()
+        mIsSurfaceNeedBinding = true;
+        initListener();
         if (TextUtils.isEmpty(mUrl))
             throw new IllegalStateException("Please call setUrl firstly.");
         playNow();
         Cog.d(TAG, "-play:" + getObjectId());
     }
 
-    public void playNow() {
+    /**
+     * 获取播放类型 0:play() 1:playWithChat() 2:audio mix
+     * @return
+     */
+    public int getPlayType(){
+        return mPlayType;
+    }
+
+    /**
+     * this is a hide method , you should not invoked this method for some player leak error .
+     */
+    private void playNow() {
         Cog.d(TAG, "+playNow");
         if (isPlaying())
             return;
@@ -299,7 +314,12 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
             } else {
                 mPlayer.setUri(mUrl);
             }
-            mPlayer.setSurface(mSurface);
+            //防止无效播放地址->横竖屏->后多次调用引起的libc->gui crash .
+            if(mIsSurfaceNeedBinding){
+                mIsSurfaceNeedBinding = false;
+                Cog.e(TAG,"setSurface method invoked ~~~~~~~~~~~~~!!!!!!!");
+                mPlayer.setSurface(mSurface);
+            }
             if (mEncodeType == BN_ENCODE_HARDWARE) {
                 mPlayer.setDecodeType(true);
             } else {
@@ -362,6 +382,8 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Cog.d(TAG, "surfaceDestroyed！");
+        //surface 销毁后需要重新绑定.
+        mIsSurfaceNeedBinding = true;
         if (null != mOnSurfaceChangeListener) {
             mOnSurfaceChangeListener.surfaceDestroyed(holder);
         }
@@ -373,7 +395,9 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
                 @Override
                 public void error(BNMediaPlayer player, int errorCode, String errorMsg) {
                     Cog.e(TAG, "onError=" + errorCode+" , "+errorMsg);
-                    if (errorCode == 0) {
+                    if (errorCode == -2 ||errorCode == 0) {
+                        //在错误出现后总会调用stop方法，此处确保setSurface会被调用？可能不需要?但是暂停是不销毁的，防止暂停后画面不更新此处必须添加！
+                        mIsSurfaceNeedBinding = true;
                         stop();
                     }
                     Bundle bd = new Bundle();
@@ -388,6 +412,7 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
                 @Override
                 public void endOfStream(BNMediaPlayer player) {
                     Cog.e(TAG, "+onClose @" + getObjectId());
+                    mIsSurfaceNeedBinding = true;
                     mHandler.sendEmptyMessage(MSG_BN_ON_COMPLETE);
                 }
             });

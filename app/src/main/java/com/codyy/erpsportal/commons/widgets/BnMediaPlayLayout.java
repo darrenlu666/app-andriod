@@ -1,14 +1,10 @@
 package com.codyy.erpsportal.commons.widgets;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -16,23 +12,20 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
 import com.codyy.bennu.sdk.BNMediaPlayer;
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -43,7 +36,7 @@ import butterknife.ButterKnife;
  * 自带状态设置!
  * created by poe 2016/06/14.
  */
-public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.OnPlayingListener, BnVideoView2.OnBNErrorListener , Handler.Callback {
+public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.OnPlayingListener, BnVideoView2.OnBNErrorListener , Handler.Callback,IFragmentMangerInterface {
     private static final String TAG = BnMediaPlayLayout.class.getSimpleName();
     public static final int MEDIA_TYPE_VIDEO = 0x001;//视频点播
     public static final int MEDIA_TYPE_AUDIO = 0x002;//普通音频文件播放
@@ -53,7 +46,6 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
     @Bind(R.id.seekBarOfVideoControl)SeekBar mSeekBar;
     @Bind(R.id.txtTotalTimeOfVideoControl)TextView mTotalTextView;
 
-//    private BnVideoView2 mVideoView;
     @Bind(R.id.hintText) TextView mHintTv;
     private BnVideoView2.OnBNErrorListener mOnErrorListener;
     private BnVideoView2.OnPlayingListener mOnPlayingListener;
@@ -77,7 +69,7 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
     private long mStartPlayTime = -1;
     private boolean mIsExpandable = true ;//是否支持横竖屏 default：true
     private BNVideoControlView.PlaySate state = BNVideoControlView.PlaySate.STOP;
-    private FragmentManager mFragmentManager ;
+    private IFragmentMangerInterface mFragmentManagerInterface ;
 
     private int obtainLayoutId(){
         return  R.layout.bn_media_layout ;
@@ -104,8 +96,8 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
     private void init(AttributeSet attrs){
         View rootView = LayoutInflater.from(getContext()).inflate(obtainLayoutId(), this, true);
         ButterKnife.bind(rootView);
-        if (!this.isInEditMode()&&null != mFragmentManager) {
-            mWifiBroadCastUtil = new WiFiBroadCastUtils(EApplication.instance(),mFragmentManager, new WiFiBroadCastUtils.PlayStateListener() {
+        if (!this.isInEditMode()) {
+            mWifiBroadCastUtil = new WiFiBroadCastUtils(mFragmentManagerInterface, new WiFiBroadCastUtils.PlayStateListener() {
                 @Override
                 public void play() {
                     start();
@@ -119,12 +111,8 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
         }
     }
 
-    public FragmentManager getFragmentManager() {
-        return mFragmentManager;
-    }
-
-    public void setFragmentManager(FragmentManager mFragmentManager) {
-        this.mFragmentManager = mFragmentManager;
+    public void setmFragmentManagerInterface(IFragmentMangerInterface mFragmentManager) {
+        this.mFragmentManagerInterface = mFragmentManager;
     }
 
     /**
@@ -175,10 +163,11 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
                     resume();
                     mVideoView.seekTo(mDestPos);
                 } else {
-                    Check3GUtil.instance().CheckNetType(EApplication.instance(), new Check3GUtil.OnWifiListener() {
+                    Check3GUtil.instance().CheckNetType(BnMediaPlayLayout.this, new Check3GUtil.OnWifiListener() {
                         @Override
                         public void onNetError() {
                         }
+
                         @Override
                         public void onContinue() {
                             Cog.i(TAG, "seek to ()~" + mDestPos);
@@ -203,7 +192,7 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
                                 resume();
                             }
                         } else {
-                            Check3GUtil.instance().CheckNetType(EApplication.instance(), new Check3GUtil.OnWifiListener() {
+                            Check3GUtil.instance().CheckNetType(BnMediaPlayLayout.this, new Check3GUtil.OnWifiListener() {
                                 @Override
                                 public void onNetError() {
                                 }
@@ -225,7 +214,6 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
         });
         //设置音量
         mVideoView.setVolume(100);
-//        initListener();
     }
 
     @Override
@@ -427,7 +415,7 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
                     if (mIsLocal) {
                         start();
                     } else {
-                        Check3GUtil.instance().CheckNetType(EApplication.instance(), new Check3GUtil.OnWifiListener() {
+                        Check3GUtil.instance().CheckNetType(BnMediaPlayLayout.this, new Check3GUtil.OnWifiListener() {
                             @Override
                             public void onContinue() {
                                 start();
@@ -493,7 +481,7 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
         }
 
         if (!isLocal) {
-            Check3GUtil.instance().CheckNetType(EApplication.instance(), new Check3GUtil.OnWifiListener() {
+            Check3GUtil.instance().CheckNetType(BnMediaPlayLayout.this, new Check3GUtil.OnWifiListener() {
                 @Override
                 public void onNetError() {
                 }
@@ -652,5 +640,10 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
         if (null != mVideoView) {
             mVideoView = null;
         }
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return mFragmentManagerInterface.getNewFragmentManager();
     }
 }

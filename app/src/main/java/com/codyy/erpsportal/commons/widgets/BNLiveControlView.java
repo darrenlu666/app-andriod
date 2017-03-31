@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
@@ -39,7 +41,7 @@ import butterknife.ButterKnife;
  * <p/>
  * home按键后自动seek回原来的位置播放
  */
-public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurfaceChangeListener {
+public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurfaceChangeListener,IFragmentMangerInterface {
     private String TAG = "BNLiveControlView";
     /**
      * 通知隐藏
@@ -260,7 +262,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
         Cog.d("url", "check it : " + path);
         this.urlPath = path;
         mAudioMixer  = mixer ;
-        Check3GUtil.instance().CheckNetType(getContext(), new Check3GUtil.OnWifiListener() {
+        Check3GUtil.instance().CheckNetType(this, new Check3GUtil.OnWifiListener() {
             @Override
             public void onNetError() {
                 ToastUtil.showToast(EApplication.instance() , "网络异常！");
@@ -447,6 +449,11 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
         if (getVisibility() == View.VISIBLE) {
             mTitleText.setText(title);
         }
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getNewFragmentManager();
     }
 
     /**

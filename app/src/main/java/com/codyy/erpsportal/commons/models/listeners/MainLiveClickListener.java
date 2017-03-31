@@ -31,9 +31,11 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
     private final static String TAG = "MainLiveClickListener";
 
     private Fragment mFragment;
+    private UserInfo mUserInfo;
 
-    public MainLiveClickListener(Fragment fragment) {
+    public MainLiveClickListener(Fragment fragment,UserInfo userInfo) {
         mFragment = fragment;
+        mUserInfo = userInfo;
     }
 
     @Override
@@ -56,10 +58,10 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
                     boolean canView = response.optBoolean("canView");
                     if (canView) {
                         if (MainResClassroom.TYPE_LIVE.equals(liveClassroom.getType())) {
-                            ClassRoomDetailActivity.startActivity(mFragment.getActivity(),
+                            ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
                                     liveClassroom.getId(), ClassRoomContants.TYPE_LIVE_LIVE,liveClassroom.getSubjectName());
                         } else {
-                            ClassRoomDetailActivity.startActivity(mFragment.getActivity(),
+                            ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
                                     liveClassroom.getId(), ClassRoomContants.TYPE_CUSTOM_LIVE,liveClassroom.getSubjectName());
                         }
                     } else {

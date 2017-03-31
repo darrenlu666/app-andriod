@@ -5,7 +5,6 @@
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:orientation="vertical">
-
     <LinearLayout
         android:id="@+id/ll_video"
         android:layout_width="match_parent"
@@ -24,76 +23,16 @@
             android:layout_height="wrap_content"
             android:layout="@layout/layout_class_record"/>
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_title"
+    <include
+        android:id="@+id/tab_container"
+        layout="@layout/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_below="@+id/ll_video"
-        android:background="@color/res_tab_widget"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_class_detail"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/class_detail"
-            android:textColor="#ff444444"
-            android:textStyle="bold"
-            android:textSize="18sp"/>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="20dp"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:background="@color/divide_line"/>
-
-        <TextView
-            android:id="@+id/tv_latest_comment"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/newest_comment"
-            android:textColor="#ff444444"
-            android:textSize="18sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_line"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@+id/ll_title"
-        android:background="@color/res_tab_widget"
-        android:orientation="horizontal">
-
-        <View
-            android:id="@+id/view_fst_fragment_line"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/main_color"/>
-
-        <View
-            android:id="@+id/view_sec_fragment_line"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
-    <View
-        android:id="@+id/sliding_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_below="@+id/ll_line"
-        android:background="@color/divide_line"/>
-
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_video"
+        />
     <android.support.v4.view.ViewPager
-        android:id="@+id/vp_class_detail"
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/sliding_tabs"/>
+        android:layout_below="@+id/tab_container"/>
 </RelativeLayout>

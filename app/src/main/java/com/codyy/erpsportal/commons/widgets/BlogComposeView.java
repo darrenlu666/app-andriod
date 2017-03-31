@@ -16,7 +16,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.EmojiViewPagerAdapter;
@@ -28,7 +27,6 @@ import com.codyy.erpsportal.commons.utils.SoftKeyboardStateHelper;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.viewpagerindicator.CirclePageIndicator;
-
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,6 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
     private static final int MAX_INPUT_SIZE = 150;
     private ImageView mIvEmoji;
     private Animation mShowAnim, mDismissAnim;
-//    private Button mBtnSend;
     private CommentButton mBtnSend;
     private EmojiconEditText mEtText;
     private OnComposeOperationDelegate mDelegate;
@@ -54,38 +51,6 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
     private boolean mIsEmojiVisible;
     private boolean mNeedShowEmojiOnKeyboardClosed;
 
-    public interface OnComposeOperationDelegate {
-        /**
-         * 发送评论
-         *
-         * @param text
-         */
-        void onSendText(String text);
-
-        /**
-         * 打开软键盘
-         */
-        void onSoftWareKeyOpen();
-
-        /**
-         * 关闭软键盘
-         */
-        void onSoftWareKeyClose();
-
-        /**
-         * 显示表情键盘
-         */
-        void onEmojiPanOpen();
-
-        /**
-         * 隐藏表情键盘
-         */
-        void onEmojiPanClose();
-    }
-
-//    public Button getBtnSend() {
-//        return mBtnSend;
-//    }
     public CommentButton getBtnSend() {
         return mBtnSend;
     }
@@ -327,7 +292,7 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
     private void showEmojiPanel() {
         mNeedShowEmojiOnKeyboardClosed = false;
         mLyEmoji.setVisibility(View.VISIBLE);
-        mIvEmoji.setImageResource(R.drawable.btn_emoji_pressed);
+//        mIvEmoji.setImageResource(R.drawable.ic_laugh);
         mIsEmojiVisible = true;
         if (null != mDelegate) mDelegate.onEmojiPanOpen();
     }
@@ -335,7 +300,7 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
     private void hideEmojiPanel() {
         if (mLyEmoji.getVisibility() == View.VISIBLE) {
             mLyEmoji.setVisibility(View.GONE);
-            mIvEmoji.setImageResource(R.drawable.btn_emoji_selector);
+//            mIvEmoji.setImageResource(R.drawable.ic_laugh);
             mIsEmojiVisible = false;
             if (null != mDelegate) mDelegate.onEmojiPanClose();
         }
@@ -581,6 +546,35 @@ public class BlogComposeView extends LinearLayout implements View.OnClickListene
 
         }
         return encodeMsg;
+    }
+
+    public interface OnComposeOperationDelegate {
+        /**
+         * 发送评论
+         *
+         * @param text
+         */
+        void onSendText(String text);
+
+        /**
+         * 打开软键盘
+         */
+        void onSoftWareKeyOpen();
+
+        /**
+         * 关闭软键盘
+         */
+        void onSoftWareKeyClose();
+
+        /**
+         * 显示表情键盘
+         */
+        void onEmojiPanOpen();
+
+        /**
+         * 隐藏表情键盘
+         */
+        void onEmojiPanClose();
     }
 
 

@@ -1,40 +1,34 @@
 package com.codyy.erpsportal.commons.utils;
 
-import android.content.Context;
 import android.content.IntentFilter;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.LocalBroadcastManager;
-
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
-
-import java.lang.ref.WeakReference;
 
 /**
  * Created by caixingming on 2015/6/5.
  * 注册、解绑 Wifi相关的广播类
  */
 public class WiFiBroadCastUtils {
-//    private Context mContext;//必须为Activity的引用 ，因为要使用dialog
-    private WeakReference<Context> mContextWeakReference ;
+    private static final String TAG = "WiFiBroadCastUtils";
     private LocalBroadcastManager mLocalBroadcastManager;
     private WifiBroadCastReceiver myBroadcastReceive;
     private PlayStateListener   mPlayStateListener;
-    private FragmentManager mFragmentManager;
+    private MyDialog mNetDialog = null ;
+    private IFragmentMangerInterface mFragmentManagerInterface = null;
 
     /**
      *
-     * @param context  必须为Activity的引用 ，因为要使用dialog
      * @param mPlayStateListener
      * 注册Wi-fi通知广播
      * 解绑：：destroy()
      */
-    public WiFiBroadCastUtils(Context context,FragmentManager fragmentManager, PlayStateListener mPlayStateListener) {
-        if(null == context) return;
-        this.mFragmentManager = fragmentManager ;
-        mContextWeakReference = new WeakReference<>(context);
+    public WiFiBroadCastUtils(IFragmentMangerInterface fragmentMangerInterface,PlayStateListener mPlayStateListener) {
+        this.mFragmentManagerInterface = fragmentMangerInterface;
         this.mPlayStateListener =   mPlayStateListener;
         registerMyBroadCast();
     }
@@ -47,34 +41,26 @@ public class WiFiBroadCastUtils {
             @Override
             public void onWifiClose() {
 //                "当前为非Wi-Fi状态,10分钟大约40M\n是否继续观看？"
-                mPlayStateListener.stop();
-                MyDialog myDialog = MyDialog.newInstance(mContextWeakReference.get().getString(R.string.txt_dialog_wifi_play_video_tips), MyDialog.DIALOG_STYLE_TYPE_0, new MyDialog.OnclickListener() {
-                    @Override
-                    public void leftClick(MyDialog myDialog) {
-                        myDialog.dismiss();
-                    }
-
-                    @Override
-                    public void rightClick(MyDialog myDialog) {
-                        mPlayStateListener.play();
-                        myDialog.dismiss();
-                    }
-
-                    @Override
-                    public void dismiss() {
-
-                    }
-                });
-
+                Cog.i(TAG," onWifiClose");
+                if(null != mPlayStateListener) mPlayStateListener.stop();
+                if(null != mNetDialog&& mNetDialog.isVisible()) mNetDialog.dismissAllowingStateLoss();
+                mNetDialog = initDialog();
                 try{
-                    myDialog.showAllowStateLoss(mFragmentManager, "cache_clear");
+                    Cog.i(TAG," onWifiClose prepare alert !~"+mFragmentManagerInterface);
+                    if(mFragmentManagerInterface !=null && mFragmentManagerInterface.getNewFragmentManager() != null){
+                        mNetDialog.showAllowStateLoss(mFragmentManagerInterface.getNewFragmentManager(), "cache_clear");
+                        Cog.i(TAG," onWifiClose prepare alert success!~"+mFragmentManagerInterface);
+                    }
                 }catch (IllegalStateException e){
+                    e.printStackTrace();
+                }catch (Exception e){
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onWifiOpen() {
+                Cog.i(TAG," onWifiOpen");
                 if(null != mPlayStateListener){
                     mPlayStateListener.play();
                 }
@@ -88,6 +74,27 @@ public class WiFiBroadCastUtils {
         mLocalBroadcastManager.registerReceiver(myBroadcastReceive,iFilter);
     }
 
+    private MyDialog initDialog(){
+            MyDialog dialog = MyDialog.newInstance(EApplication.instance().getString(R.string.txt_dialog_wifi_play_video_tips), MyDialog.DIALOG_STYLE_TYPE_0, new MyDialog.OnclickListener() {
+                @Override
+                public void leftClick(MyDialog myDialog) {
+                    myDialog.dismiss();
+                }
+
+                @Override
+                public void rightClick(MyDialog myDialog) {
+                    if(null != mPlayStateListener) mPlayStateListener.play();
+                    myDialog.dismiss();
+                }
+
+                @Override
+                public void dismiss() {
+
+                }
+            });
+       return  dialog;
+    }
+
     /**
      * 解除广播的绑定
      */
@@ -98,6 +105,7 @@ public class WiFiBroadCastUtils {
             mLocalBroadcastManager  = null;
             this.myBroadcastReceive = null;
         }
+//        if(null != mContextWeakReference) mContextWeakReference.clear();
         this.mPlayStateListener =   null;
     }
 
@@ -115,6 +123,6 @@ public class WiFiBroadCastUtils {
          * 执行停止
          */
         void stop();
-    }
 
+    }
 }

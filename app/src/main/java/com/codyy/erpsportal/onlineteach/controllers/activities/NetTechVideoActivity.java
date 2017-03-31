@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.common.EmotionInputDetector;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -120,7 +121,7 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         params.put("lessonId", mPreparationId);
@@ -178,7 +179,12 @@ public class NetTechVideoActivity extends BaseHttpActivity implements BnVideoVie
         mPreparationId = getIntent().getStringExtra(Constants.PREPARATIONID);
         mSendingDialogPresenter = new SendingDialogPresenter(this);
         rltTitle.setVisibility(View.GONE);
-        mVideoControl.bindVideoView(mVideoView,getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setOnCompleteListener(this);
         mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
 

@@ -103,7 +103,7 @@ public abstract class BaseHttpFragment extends Fragment {
      *
      * @return
      */
-    public abstract HashMap<String, String> getParam();
+    public abstract HashMap<String, String> getParam(boolean isRefreshing);
 
     /**
      * 数据请求返回结果
@@ -130,7 +130,7 @@ public abstract class BaseHttpFragment extends Fragment {
      * 请求数据
      */
     public void requestData( boolean isRefreshing) {
-        requestData(obtainAPI(), getParam(),isRefreshing, new BaseHttpActivity.IRequest() {
+        requestData(obtainAPI(), getParam(isRefreshing),isRefreshing, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 try {
@@ -165,6 +165,8 @@ public abstract class BaseHttpFragment extends Fragment {
             ToastUtil.showToast(getString(R.string.net_error));
             return;
         }
+
+        if(null == params) return;
         /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
         if(isRefreshing){
             params.put("start",0+"");

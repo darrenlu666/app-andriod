@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -26,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -172,7 +174,12 @@ public class HistoryVideoPlayActivity extends AppCompatActivity implements BnVid
                 }
             }
         });
-        mVideoControl.bindVideoView(mVideoView,getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setOnCompleteListener(this);
         mVideoControl.setOnErrorListener(new BnVideoView2.OnBNErrorListener() {
             @Override

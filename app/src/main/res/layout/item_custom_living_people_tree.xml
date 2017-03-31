@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlt_container"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    android:paddingLeft="16dp"
+    >
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_group_pic"
+        style="@style/sdv_item_style"
+        android:layout_width="@dimen/poe_head_pic_size_small"
+        android:layout_height="@dimen/poe_head_pic_size_small"
+        app:placeholderImage="@drawable/default_person_head"
+        android:layout_centerVertical="true"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_group_pic"
+        android:layout_centerVertical="true"
+        >
+        <TextView
+            android:id="@+id/role_tv"
+            style="@style/txt_group_txt_desc"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            tools:text="身份类型"
+            android:gravity="right"
+            android:maxLines="1"
+            android:ellipsize="end"
+            />
+        <TextView
+            android:id="@+id/name_tv"
+            style="@style/txt_group_txt_Title"
+            android:maxLines="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/role_tv"
+            tools:text="习近平"
+            />
+
+        <TextView
+            android:id="@+id/area_tv"
+            style="@style/txt_group_txt_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/tv_member"
+            android:layout_below="@id/name_tv"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            tools:text="区县-学校名称学校名称学校名称学校名称学校名称"
+            android:maxLines="1"
+            />
+        <TextView
+            android:id="@+id/grade_class_tv"
+            style="@style/txt_group_txt_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/area_tv"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            tools:text="一年级(二)班"
+            />
+    </RelativeLayout>
+
+</RelativeLayout>

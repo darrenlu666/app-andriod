@@ -369,6 +369,12 @@ public class Titles {
     public static String sWorkspaceNetTeachMyCourse = "我的课程";
     public static String sWorkspaceNetTeachSubCourse = "课程订阅";
 
+    //校园电视台
+    public static String sWorkspaceTvProgram = "校园电视台";
+    public static String sWorkspaceTvProgramProgramList = "节目表";
+    public static String sWorkspaceTvProgramLive = "直播";
+    public static String sWorkspaceTvProgramReplay = "往期视频";
+
     /**
      * front.field.masterschool	主讲学校
      */
@@ -607,7 +613,7 @@ public class Titles {
         sWorkspaceOnlineClassExam = jsonObject.optString("front.workspace.onlineclassexam","随堂测验");
         sWorkspaceQuestionnaire = jsonObject.optString("front.workspace.questionnaire","调查问卷");
         sWorkspaceNetTeach = jsonObject.optString("front.workspace.netteach","网络授课");
-
+        sWorkspaceTvProgram = jsonObject.optString("front.workspace.tvProgram","校园电视台");
     }
 
     private static void parseAreaTitles(JSONObject jsonObject){
@@ -830,6 +836,11 @@ public class Titles {
         //网络授课
         sWorkspaceNetTeachMyCreate = jsonObject.optString("front.workspace.netteach.mycreate.school", "我创建的");
         sWorkspaceNetTeachManage = jsonObject.optString("front.workspace.netteach.manage.school", "本校课程管理");
+
+        //校园电视台
+        sWorkspaceTvProgramLive = jsonObject.optString("front.workspace.tvProgram.live.school", "直播");
+        sWorkspaceTvProgramReplay = jsonObject.optString("front.workspace.tvProgram.replay.school", "往期视频");
+        sWorkspaceTvProgramProgramList = jsonObject.optString("front.workspace.tvProgram.programlist.school", "节目表");
     }
 
     private static void parseTeacherTitles(JSONObject jsonObject){
@@ -919,6 +930,11 @@ public class Titles {
         //网络授课
         sWorkspaceNetTeachMyCreate = jsonObject.optString("front.workspace.netteach.mycreate.tea", "我创建的");
         sWorkspaceNetTeachMyCourse = jsonObject.optString("front.workspace.netteach.mycourse.tea", "我的课程");
+
+        //校园电视台
+        sWorkspaceTvProgramLive = jsonObject.optString("front.workspace.tvProgram.live.tea", "直播");
+        sWorkspaceTvProgramReplay = jsonObject.optString("front.workspace.tvProgram.replay.tea", "往期视频");
+        sWorkspaceTvProgramProgramList = jsonObject.optString("front.workspace.tvProgram.programlist.tea", "节目表");
     }
 
     private static void parseStudentTitles(JSONObject jsonObject){
@@ -966,6 +982,11 @@ public class Titles {
         //网络授课
         sWorkspaceNetTeachMyCourse = jsonObject.optString("front.workspace.netteach.mycourse.stu", "我的课程");
         sWorkspaceNetTeachSubCourse = jsonObject.optString("front.workspace.netteach.subcourse.stu", "课程订阅");
+
+        //校园电视台
+        sWorkspaceTvProgramLive = jsonObject.optString("front.workspace.tvProgram.live.stu", "直播");
+        sWorkspaceTvProgramReplay = jsonObject.optString("front.workspace.tvProgram.replay.stu", "往期视频");
+        sWorkspaceTvProgramProgramList = jsonObject.optString("front.workspace.tvProgram.programlist.stu", "节目表");
     }
 
     private static void parseParentTitles(JSONObject jsonObject){
@@ -983,6 +1004,11 @@ public class Titles {
         sWorkspaceAskAndAnsMyAsk = jsonObject.optString("front.workspace.askandans.myask.par", "我的提问");
         sWorkspaceAskAndAnsMyAnswer = jsonObject.optString("front.workspace.askandans.myanswer.par", "我的回答");
         sWorkspaceAskAndAnsWaitMyAnswer = jsonObject.optString("front.workspace.askandans.waitmyanswer.par", "等我来答");
+
+        //校园电视台
+        sWorkspaceTvProgramLive = jsonObject.optString("front.workspace.tvProgram.live.stu", "直播");
+        sWorkspaceTvProgramReplay = jsonObject.optString("front.workspace.tvProgram.replay.stu", "往期视频");
+        sWorkspaceTvProgramProgramList = jsonObject.optString("front.workspace.tvProgram.programlist.stu", "节目表");
     }
 
     /**

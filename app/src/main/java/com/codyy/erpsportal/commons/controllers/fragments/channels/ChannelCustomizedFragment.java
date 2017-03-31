@@ -78,7 +78,7 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
         data.put("schoolId", schoolId);
@@ -226,15 +226,15 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
                     case LivingClassViewHolder.ITEM_TYPE_LIVING_PREPARE:
                         //解决半边view无法点击
                         LivingClass lc = (LivingClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),lc.getId(),ClassRoomContants.TYPE_CUSTOM_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,lc.getId(),ClassRoomContants.TYPE_CUSTOM_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                         HistoryClass hc = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),hc.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
                         HistoryClass hc2 = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),hc2.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc2.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                 }
             }

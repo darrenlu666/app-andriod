@@ -37,6 +37,7 @@ import com.codyy.erpsportal.commons.models.entities.LocationBean;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.UpdatePortalEvent;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
 import com.codyy.erpsportal.commons.models.network.ConfigRequest;
 import com.codyy.erpsportal.commons.models.network.ConfigRequest.ConfigParser;
 import com.codyy.erpsportal.commons.models.network.RequestManager;
@@ -62,7 +63,7 @@ import butterknife.Bind;
  * 主界面
  */
 public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTabClickListener,
-        UserFragment.OnLogoutListener, Callback {
+        Callback {
 
     private final static String TAG = "MainActivity";
     public final static int REQUEST_AREA = 13;
@@ -116,9 +117,6 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         if (savedInstanceState != null) {
             mTabHost.setCurrentTab(savedInstanceState.getInt("tab"));
         }
-        //Start polling service
-        Cog.d(TAG, "Start polling service...");
-//        PollingUtils.startPollingService(EApplication.instance(), 5, PollingService.class, PollingService.ACTION);
     }
 
     /**
@@ -338,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
     protected void onDestroy() {
         super.onDestroy();
         ConfigBus.clear();
+        AppConfig.instance().destroy();
         Cog.d(TAG, "Stop polling service...");
         PollingUtils.stopPollingService(EApplication.instance(), PollingService.class, PollingService.ACTION);
         if (BuildConfig.DEBUG) ViewServer.get(this).removeWindow(this);
@@ -345,15 +344,6 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
 
     public UserInfo getUserInfo() {
         return mUserInfo;
-    }
-
-    @Override
-    public void onLogout() {
-        UserInfoDao.delete(this);
-        mTabHost.setCurrentTab(0);
-        mUserInfo = null;
-        UserInfoKeeper.getInstance().clearUserInfo();
-        loadModuleConfig();
     }
 
     @Override

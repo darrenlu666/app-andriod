@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
 
 
 /**
@@ -71,23 +73,7 @@ public class EmptyView extends RelativeLayout {
         mLoadingBar = (ProgressBar) findViewById(R.id.pro_loading);
         Drawable drawable = getResources().getDrawable(R.drawable.progress_loading);
         mLoadingBar.setIndeterminateDrawable(drawable);
-        ClickableSpan mMyClickableSpan = new ClickableSpan() {
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                Cog.d(TAG, "updateDrawState");
-                ds.setColor(getResources().getColor(R.color.green));
-            }
-
-            @Override
-            public void onClick(View widget) {
-                if (mOnReloadClickListener != null)
-                    mOnReloadClickListener.onReloadClick();
-            }
-        };
-
-        SpannableString spStr = new SpannableString(getContext().getString(R.string.no_data_for_now));
-        spStr.setSpan(mMyClickableSpan, 0, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        SpannableString spStr = getSpannableString(R.string.no_data_for_now,R.color.green);
         mEmptyTv.setText(spStr);
         mEmptyTv.setHighlightColor(Color.TRANSPARENT);
         mEmptyTv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -98,6 +84,28 @@ public class EmptyView extends RelativeLayout {
             mEmptyTv.setVisibility(View.VISIBLE);
             mLoadingBar.setVisibility(View.GONE);
         }
+    }
+
+    @NonNull
+    private SpannableString getSpannableString(int str,final int color) {
+        ClickableSpan mMyClickableSpan = new ClickableSpan() {
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                Cog.d(TAG, "updateDrawState");
+                ds.setColor(UiMainUtils.getColor(color));
+            }
+
+            @Override
+            public void onClick(View widget) {
+                if (mOnReloadClickListener != null)
+                    mOnReloadClickListener.onReloadClick();
+            }
+        };
+
+        SpannableString spStr = new SpannableString(getContext().getString(str));
+        spStr.setSpan(mMyClickableSpan, 0, spStr.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        return spStr;
     }
 
     public void setOnReloadClickListener(OnReloadClickListener onReloadClickListener) {
@@ -112,6 +120,13 @@ public class EmptyView extends RelativeLayout {
         } else {
             mEmptyTv.setVisibility(View.VISIBLE);
             mLoadingBar.setVisibility(View.GONE);
+        }
+    }
+
+    public void setText(int title,int color){
+        if(null != mEmptyTv) {
+            SpannableString spStr = getSpannableString(title,color);
+            mEmptyTv.setText(spStr);
         }
     }
 

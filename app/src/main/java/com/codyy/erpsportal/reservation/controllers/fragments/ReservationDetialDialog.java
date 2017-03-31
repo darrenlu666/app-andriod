@@ -83,7 +83,7 @@ public class ReservationDetialDialog extends AppCompatDialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mReceiveLayout = (LinearLayout) view.findViewById(R.id.receive_layout);
         mDirectLayout = (LinearLayout) view.findViewById(R.id.direct_layout);
-        mLayoutInflater = getLayoutInflater(savedInstanceState);
+        mLayoutInflater = LayoutInflater.from(getContext());
         getClassTableDetial();
         view.findViewById(R.id.linearlayout).setOnClickListener(new View.OnClickListener() {
             @Override

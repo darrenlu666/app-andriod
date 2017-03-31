@@ -139,13 +139,21 @@ public class MyDialog extends DialogFragment {
         }
     }
 
+    /**
+     * 显示fragmentDialog
+     * @param fragmentManager
+     * @param TAG
+     */
     public void showAllowStateLoss(FragmentManager fragmentManager , String TAG){
+        Cog.i(this.TAG , "showAllowStateLoss () ~~"+TAG);
         if (fragmentManager == null) return;
         FragmentTransaction ft = fragmentManager.beginTransaction() ;
         if (ft == null) return;
         ft.add(this ,TAG);
         ft.commitAllowingStateLoss();
     }
+
+
 
     @Override
     public void onDismiss(DialogInterface dialog) {

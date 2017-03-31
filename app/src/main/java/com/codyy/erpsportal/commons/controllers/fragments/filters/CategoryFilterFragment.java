@@ -126,7 +126,7 @@ public  class CategoryFilterFragment extends BaseHttpFragment {
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String,String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         if(CATEGORY_TYPE_GROUP.equals(mType)){

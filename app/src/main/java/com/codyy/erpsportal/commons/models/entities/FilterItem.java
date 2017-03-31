@@ -30,7 +30,7 @@ public class FilterItem implements Parcelable {
     public final static int ARRAY = 1;
 
     /**
-     * 过滤项类型名,如学科，年级
+     * 过滤项类型名,中文的,如学科，年级
      */
     private String typeName;
 

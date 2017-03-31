@@ -14,6 +14,7 @@ import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
 import com.codyy.erpsportal.commons.models.tasks.SavePasswordTask;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.LoginActivity;
@@ -219,6 +220,8 @@ public class RequestSender {
 
     private void clearLoginData() {
         UserInfoDao.delete(mContext);
+        //清空应用缓存
+        AppConfig.instance().destroy();
     }
 
     /**

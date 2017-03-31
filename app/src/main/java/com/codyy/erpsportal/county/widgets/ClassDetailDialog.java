@@ -21,10 +21,8 @@ import com.codyy.erpsportal.databinding.ContyClassdetailPopuBinding;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.timetable.models.entities.TimetableDetail;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,7 +90,7 @@ public class ClassDetailDialog extends DialogFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mLayoutInflater = getLayoutInflater(savedInstanceState);
+        mLayoutInflater = LayoutInflater.from(getContext());
         mReceiveLayout = (LinearLayout) view.findViewById(R.id.receive_layout);
         mDirectLayout = (LinearLayout) view.findViewById(R.id.direct_layout);
         if (mScheduleListBean == null) {

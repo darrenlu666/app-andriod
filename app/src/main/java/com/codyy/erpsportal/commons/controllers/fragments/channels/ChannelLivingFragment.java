@@ -73,7 +73,7 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
         data.put("size", "4");
@@ -216,15 +216,15 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
                 switch (mAdapter.getItemViewType(position)){
                     case LivingRecordViewHolder.ITEM_TYPE_LIVING:
                         LivingRecordLesson lc = (LivingRecordLesson) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),lc.getId(),ClassRoomContants.TYPE_LIVE_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,lc.getId(),ClassRoomContants.TYPE_LIVE_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                         HistoryClass hc = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),hc.getId(),ClassRoomContants.TYPE_LIVE_RECORD,hc.getSubjectName());// ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc.getId(),ClassRoomContants.TYPE_LIVE_RECORD,hc.getSubjectName());// ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
                         HistoryClass lrc = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),lrc.getId(),ClassRoomContants.TYPE_LIVE_RECORD,lrc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,lrc.getId(),ClassRoomContants.TYPE_LIVE_RECORD,lrc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                 }
             }

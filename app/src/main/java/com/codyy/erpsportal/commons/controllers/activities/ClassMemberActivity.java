@@ -136,7 +136,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> map = new HashMap<>();
         map.put("baseClassId", mClassID);
         map.put("userId", mUserId);

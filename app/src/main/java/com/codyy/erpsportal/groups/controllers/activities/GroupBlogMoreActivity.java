@@ -82,7 +82,7 @@ public class GroupBlogMoreActivity extends BaseHttpActivity implements BaseRecyc
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());

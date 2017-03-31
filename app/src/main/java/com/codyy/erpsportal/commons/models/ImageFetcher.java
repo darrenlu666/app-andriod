@@ -53,9 +53,31 @@ public class ImageFetcher {
      * @param imageUrl 图片原始链接
      */
     public void fetchSmall(DraweeView dv, String imageUrl) {
-        if (dv == null) return;
+        /*if (dv == null) return;
         if (mShowImage && imageUrl!=null && imageUrl.trim().length() > 0) {
             if (loadAnimatingGif(dv, imageUrl)) return;
+            String uriStr = UriUtils.buildSmallImageUrl(imageUrl);
+            if (!TextUtils.isEmpty(uriStr)) {
+                dv.setImageURI(Uri.parse(uriStr));
+                return;
+            }
+        }
+        dv.setImageURI(null);*/
+        fetchSmall(dv,imageUrl,true);
+    }
+
+    /**
+     * 抓取缩略图，会自动给图片链接插入.smalll,
+     * 如http://your.image.url/imageName.png会转为
+     *  http://your.image.url/imageName.small.png
+     *
+     * @param dv 显示图片的DraweeView
+     * @param imageUrl 图片原始链接
+     */
+    public void fetchSmall(DraweeView dv, String imageUrl,boolean isLoadGif) {
+        if (dv == null) return;
+        if (mShowImage && imageUrl!=null && imageUrl.trim().length() > 0) {
+            if (isLoadGif && loadAnimatingGif(dv, imageUrl)) return;
             String uriStr = UriUtils.buildSmallImageUrl(imageUrl);
             if (!TextUtils.isEmpty(uriStr)) {
                 dv.setImageURI(Uri.parse(uriStr));

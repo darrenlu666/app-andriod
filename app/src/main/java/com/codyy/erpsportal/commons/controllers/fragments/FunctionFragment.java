@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.models.personal.StudentParse;
+import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvHistoryActivity;
+import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvProgramListActivity;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassMemberActivity;
@@ -56,6 +58,7 @@ import de.greenrobot.event.EventBus;
  */
 public class FunctionFragment extends BaseHttpFragment {
     private static final String TAG = "FunctionFragment";
+    public static final int ITEM_COUNT_PARENT = 3;//一级目录列数
     public static final int ITEM_COUNT_CHILD = 4;//二级目录列数
 
     @Bind(R.id.recycler_tab_layout)RecyclerTabLayoutSimple mRecyclerTabLayout;//孩子列表
@@ -92,7 +95,7 @@ public class FunctionFragment extends BaseHttpFragment {
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
@@ -237,13 +240,13 @@ public class FunctionFragment extends BaseHttpFragment {
             }
         });
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), ITEM_COUNT_PARENT);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
 
                 if(position <mData.size() && mAdapter.getItemViewType(position) == ApplicationViewHold.ITEM_TYPE_CHILD){
-                    return  3;
+                    return  ITEM_COUNT_PARENT;
                 }
                 return 1;
             }
@@ -266,7 +269,27 @@ public class FunctionFragment extends BaseHttpFragment {
                         viewHolder  =   new ApplicationViewHold(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_function_child,parent,false));
                         break;
                     case ApplicationViewHold.ITEM_TYPE_CHILD://children views mode .
-                        viewHolder  =   new ApplicationChildViewHold(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_function_child_container,parent,false));
+                        viewHolder  =   new ApplicationChildViewHold(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_function_child_container, parent, false), new ApplicationChildViewHold.IChildItemClickListener() {
+                            @Override
+                            public void onClick(View v, AppInfo data) {
+                                //校园电视台
+                                if("tvProgram.id".equals(data.getMenuID())){
+                                    String schoolId = "";
+                                    if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {
+                                        schoolId = mUserInfo.getSelectedChild().getSchoolId();
+                                    } else {
+                                        schoolId = mUserInfo.getSchoolId();
+                                    }
+                                    if(Titles.sWorkspaceTvProgramProgramList.equals(data.getAppName())){
+                                        SchoolTvProgramListActivity.start(getActivity(),UserInfoKeeper.getInstance().getUserInfo(),schoolId);
+                                    }else if(Titles.sWorkspaceTvProgramReplay.equals(data.getAppName())){
+                                        SchoolTvHistoryActivity.start(getActivity(),UserInfoKeeper.getInstance().getUserInfo(),schoolId);
+                                    }
+                                }else{
+                                    AppConfig.jumpToActivity(data.getJumpable(), getActivity());
+                                }
+                            }
+                        });
                         break;
                 }
                 return viewHolder;
@@ -281,6 +304,7 @@ public class FunctionFragment extends BaseHttpFragment {
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<AppInfo>() {
             @Override
             public void onItemClicked(View v, int position, AppInfo data) {
+                Cog.i(TAG,"onItemClicked clicked !");
                 switch (mAdapter.getItemViewType(position)){
                     case ApplicationViewHold.ITEM_TYPE_SINGLE://单独点击
                         if("class.member.id".equals(data.getMenuID())){//班级成员
@@ -329,6 +353,7 @@ public class FunctionFragment extends BaseHttpFragment {
                         // TODO: 16-8-27 do nothing ... with any click event .
                         break;
                     case ApplicationViewHold.ITEM_TYPE_MULTI://show children view with animation .
+                        Cog.e(TAG,"position : "+position +" v.top :"+v.getTop()+" "+v.getLeft()+" "+v.getRight()+" "+v.getBottom());
                             if(data.getChildGroups()!=null && data.getChildGroups().size()>0){
                                 Cog.i(TAG," last pos: "+mLastExpandPos +" current : "+position);
                                 //判断是否已经展开
@@ -344,13 +369,13 @@ public class FunctionFragment extends BaseHttpFragment {
                                 }else{//expand .
                                     try {
                                         int lastClick = mLastExpandPos ;
-                                        int pos = position+(3-position%3);
+                                        int pos = position+(ITEM_COUNT_PARENT-position%ITEM_COUNT_PARENT);
                                         //重新计算位置...
                                         if(deletePos < pos){
                                             if(position>0 && deletePos>0){
                                                 position = position - 1;
                                             }
-                                            pos = position+(3-position%3);
+                                            pos = position+(ITEM_COUNT_PARENT-position%ITEM_COUNT_PARENT);
                                         }else if(deletePos == pos ){
                                             Cog.i(TAG," deletePos pos: "+deletePos +"expand pos : "+pos);
                                         }
@@ -360,14 +385,14 @@ public class FunctionFragment extends BaseHttpFragment {
                                         sCurrentPosition    =   position ;
                                         AppInfo newApp = data.clone();
                                         newApp.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_CHILD);
-                                         if(Math.abs(lastClick-position)<3){
-                                            newApp.setStartPos(lastClick%3);
+                                         if(Math.abs(lastClick-position)<ITEM_COUNT_PARENT){
+                                            newApp.setStartPos(lastClick%ITEM_COUNT_PARENT);
                                         }else{//从0开始
                                             newApp.setStartPos(-1);
                                         }
-                                        newApp.setTargetPos(position%3);
+                                        newApp.setTargetPos(position%ITEM_COUNT_PARENT);
                                         if(pos > mData.size()){
-                                            for(int i = 0 ;i < (pos-mData.size());i++){
+                                            for(int i = 0 ;i < (pos-mData.size()+1);i++){
                                                 AppInfo appInfo  = new AppInfo();
                                                 appInfo.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_SINGLE_EMPTY);
                                                 mData.add(appInfo);
@@ -380,10 +405,14 @@ public class FunctionFragment extends BaseHttpFragment {
                                         e.printStackTrace();
                                     }
                                 }
+                                //自动滚动判断
+                                int vY = (v.getTop()+v.getBottom())*(position/ITEM_COUNT_PARENT);
+                                if(vY>0)
+                                    mRecyclerView.scrollBy(0,vY);
                             }
                         break;
                     case ApplicationViewHold.ITEM_TYPE_CHILD://children views mode .
-                        AppConfig.jumpToActivity(data.getJumpable(), getActivity());
+                        Cog.i(TAG,"item_type_child clicked !"+v.getId());
                         break;
                 }
             }
@@ -418,11 +447,11 @@ public class FunctionFragment extends BaseHttpFragment {
         }
     };
 
-    //set the application datas
+    //get the application data .
     private void loadData() {
         Cog.e(TAG,"loadData() ~~");
         if(null == mUserInfo || null == getActivity()){
-            Cog.e(TAG,"Line 187 getActivity() is NULL ~~~!!!");
+            Cog.e(TAG,"Line 424 getActivity() is NULL ~~~!!!");
             return;
         }
         HashMap<String, String> params = new HashMap<>();
@@ -438,7 +467,7 @@ public class FunctionFragment extends BaseHttpFragment {
                 if(null == mRecyclerView ) return;
                 if(isRefreshing) mData.clear();
                 if ("success".equals(response.optString("result"))) {
-                    mData = AppInfo.parseData(response.optJSONArray("useList"),userType);
+                     mData = AppInfo.parseData(response.optJSONArray("useList"),userType);
                     if(mData!=null && mData.size() >0 ){
                         mAdapter.setData(mData);
                     }

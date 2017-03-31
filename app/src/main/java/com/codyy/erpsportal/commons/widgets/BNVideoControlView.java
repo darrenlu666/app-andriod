@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.StringUtils;
@@ -42,16 +44,24 @@ import butterknife.ButterKnife;
  * home按键后自动seek回原来的位置播放 只需要在onPause中调用本view中的onPause()
  * 无需在恢复后手动做任何操作！
  */
-public class BNVideoControlView extends RelativeLayout implements AutoHide, Handler.Callback {
+public class BNVideoControlView extends RelativeLayout implements AutoHide, Handler.Callback ,IFragmentMangerInterface{
     private String TAG = BNVideoControlView.class.getSimpleName();
     public static final int MSG_WHAT_NOTIFY_HIDE = 100;// hide thread notify main thread to hide title
     public static final int MSG_WHAT_AUTO_HIDE = 103;//hide the view
     public static final int ERROR_VIDEO_TOOL_SHORT = 201;//too short video less than 1000ms .
-    @Bind(R.id.imgPlayOfVideoControl)    ImageButton mPlayImageButton;
-    @Bind(R.id.imgExpandOfVideoControl)    ImageButton mExpandImageButton;
-    @Bind(R.id.seekBarOfVideoControl)    SeekBar mSeekBar;
-    @Bind(R.id.txtTotalTimeOfVideoControl)    TextView mTotalTextView;
-    @Bind(R.id.txtPlayTimeOfVideoControl)    TextView mCurrentTextView;
+    public static final int MODE_LIVING = 1;//直播.
+    public static final int MODE_RECORD = 0;//录播.
+
+    @Bind(R.id.imgPlayOfVideoControl)
+    ImageButton mPlayImageButton;
+    @Bind(R.id.imgExpandOfVideoControl)
+    ImageButton mExpandImageButton;
+    @Bind(R.id.seekBarOfVideoControl)
+    SeekBar mSeekBar;
+    @Bind(R.id.txtTotalTimeOfVideoControl)
+    TextView mTotalTextView;
+    @Bind(R.id.txtPlayTimeOfVideoControl)
+    TextView mCurrentTextView;
     private BnVideoView2.OnBNErrorListener mOnErrorListener;
     private BnVideoView2.OnBNDurationChangeListener mOnDurationChangeListener;
     private BnVideoView2.OnBNBufferUpdateListener mOnBufferUpdateListener;
@@ -61,6 +71,11 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private ExpandListener mExpandListener;
     private Context mContext;
     private PlaySate state = PlaySate.STOP;
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return mFragmentManagerInterface==null?null:mFragmentManagerInterface.getNewFragmentManager();
+    }
 
     public enum PlaySate {STOP, PLAY, PAUSE}
 
@@ -82,23 +97,12 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     private HandlerThread mHideHandlerThread = new HandlerThread("hide");//控制视图自动隐藏的子线程
     private Handler mHandlerHide;//线程hide的控制handler
     private Handler mHandler;//主线程的handler
-    private boolean mDestroy = false;//是否调用过surfaceDestroyed .
-    private boolean mPaused = false ;//是否突然被赞听过.
+    private boolean mSurfaceDestroy = false;//是否调用过surfaceDestroyed .
+    private boolean mPaused = false;//是否突然被赞听过.
     private long mStartPlayTime = -1;
-    private boolean mIsExpandable = true ;//是否支持横竖屏 default：true
-    private FragmentManager mFragmentManager ;
-
-    public void setDisplayListener(DisplayListener mDisplayListener) {
-        this.mDisplayListener = mDisplayListener;
-    }
-
-    public FragmentManager getFragmentManager() {
-        return mFragmentManager;
-    }
-
-    public void setFragmentManager(FragmentManager mFragmentManager) {
-        this.mFragmentManager = mFragmentManager;
-    }
+    private boolean mIsExpandable = true;//是否支持横竖屏 default：true
+    private IFragmentMangerInterface mFragmentManagerInterface;
+    private int mPlayMode = MODE_RECORD;//播放模式默认录播 ，如果设置为直播则没有开始/暂停 和 播放进度显示
 
     @Override
     public boolean handleMessage(Message msg) {
@@ -115,344 +119,33 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         return false;
     }
 
-    /**
-     * 设置进度条
-     *
-     * @param current
-     * @param progress
-     */
-    private void setProgress(String current, int progress) {
-        mCurrentTextView.setText(current + "/");
-        mSeekBar.setMax(mTotal);
-        mSeekBar.setProgress(progress);
-    }
-
-    /**
-     * bind surfaceView , set listener .
-     *
-     * @param view
-     */
-    public void bindVideoView(@NonNull BnVideoView2 view ,FragmentManager manager) {
-        this.mVideoView = view;
-        this.mFragmentManager = manager;
-        mVideoView.setVolume(100);
-        initListener();
-    }
-
-    private void initListener() {
-        mVideoView.setOnDurationChangeListener(new BnVideoView2.OnBNDurationChangeListener() {
-            @Override
-            public void onDurationUpdate(int duration) {
-                Cog.e(TAG, " total : " + duration);
-                mTotal = duration;
-                setDuration(duration);
-                if (null != mOnDurationChangeListener)
-                    mOnDurationChangeListener.onDurationUpdate(duration);
-            }
-        });
-
-        mVideoView.setOnBufferUpdateListener(new BnVideoView2.OnBNBufferUpdateListener() {
-            @Override
-            public void onBufferUpdate(int position) {
-                Cog.i(TAG, "pos : " + position);
-                if (position != mCurrentPosition) {
-                    mCurrentPosition = position;
-                    setProgress(position);
-                }
-
-                if (null != mOnBufferUpdateListener)
-                    mOnBufferUpdateListener.onBufferUpdate(position);
-            }
-        });
-
-        mVideoView.setOnCompleteListener(new BnVideoView2.OnBNCompleteListener() {
-            @Override
-            public void onComplete() {
-                Cog.e("----------dd------------------", "onComplete");
-                stop();
-                mLastPercent = 0;//恢复为0否则，在此点击播放按钮会被seek到上一次seek的位置 .
-                long nowTime = System.currentTimeMillis();
-                if ((nowTime - mStartPlayTime) < 1 * 1000) {
-                    mHandler.sendEmptyMessage(ERROR_VIDEO_TOOL_SHORT);
-                }
-
-                if (mOnCompleteListener != null) {
-                    Cog.e(TAG, "---------------------------- onComplete involved !");
-                    mOnCompleteListener.onComplete();
-                }
-            }
-        });
-
-
-        mVideoView.setOnPlayingListener(new BnVideoView2.OnPlayingListener() {
-            @Override
-            public void onPlaying() {
-                Cog.e(TAG, "onPlaying()~~~~~~~~~~~~~~~~mLastPercent" + mLastPercent);
-                setPlaySate();
-                if (Math.abs(mLastPercent - mCurrentPosition) >= 1000) {//防止拖动seekbar后两者差值在1000ms内引起的无限seek .
-                    Cog.e(TAG, "onPlaying()~~~~~~~~~~~~~~~~seek:" + mLastPercent + " mcurrent:" + mCurrentPosition);
-                    mVideoView.seekTo(mLastPercent);
-                    mCurrentPosition = mLastPercent;
-                }
-
-                if (null != mOnPlayingListener) {
-                    mOnPlayingListener.onPlaying();
-                }
-            }
-        });
-
-        mVideoView.setOnSurfaceChangeListener(new BnVideoView2.OnSurfaceChangeListener() {
-            @Override
-            public void surfaceCreated(SurfaceHolder holder) {
-                Cog.e(TAG, "surfaceCreated()~~~~~~~~~~~~~~~~mLastPercent" + mLastPercent);
-                if (mVideoView != null && !TextUtils.isEmpty(urlPath)) {
-                    if (mIsLocal) {
-                        start();
-                    } else {
-                        Check3GUtil.instance().CheckNetType(EApplication.instance(), new Check3GUtil.OnWifiListener() {
-                            @Override
-                            public void onContinue() {
-                                start();
-                            }
-
-                            @Override
-                            public void onNetError() {
-                                // has no network...
-
-                            }
-                        });
-                    }
-                }
-
-                if (null != mOnSurfaceChangeListener)
-                    mOnSurfaceChangeListener.surfaceCreated(holder);
-            }
-
-            @Override
-            public void surfaceChanged(SurfaceHolder holder) {
-
-            }
-
-            @Override
-            public void surfaceDestroyed(SurfaceHolder holder) {
-                Cog.e(TAG, "surfaceDestroyed()~~~~~~~~~~~~~~~~");
-                mDestroy = true;
-                stop();
-                mVideoView.close();
-                if (null != mOnSurfaceChangeListener)
-                    mOnSurfaceChangeListener.surfaceDestroyed(holder);
-            }
-        });
-
-
-        //设置点击事件
-        mVideoView.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                showControl();
-                return false;
-            }
-        });
-    }
-
-    /**
-     * 设置播放路径 并播放
-     *
-     * @param path
-     * @param urlType 视频地址类型 {@link BnVideoView2}
-     * @param isLocal 是否是本地文件
-     */
-    public void setVideoPath(String path, int urlType, boolean isLocal) {
-        initConfig();
-        this.mURLType = urlType;
-        this.mIsLocal = isLocal;
-        Cog.d("url", "check it : " + path);
-        if (null != urlPath && this.urlPath.equals(path)) {
-            Cog.e(TAG, "the same url is give :" + path);
-        } else {
-            this.urlPath = path;
-            tryEndLastVideo();
-        }
-
-        if (!isLocal) {
-            Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
-                @Override
-                public void onNetError() {
-                }
-
-                @Override
-                public void onContinue() {
-                    start();
-                }
-            });
-        } else {
-            start();
-        }
-
-        mStartPlayTime = System.currentTimeMillis();
-    }
-
-    private void tryEndLastVideo() {
-        if (null != mVideoView) {
-            if (state == PlaySate.PAUSE) {
-                resume();
-                mVideoView.stop();
-            } else if (state == PlaySate.PLAY) {
-                stop();
-            }
-        }
-    }
-
-
-    /**
-     * 按住home键执行暂停操作，记住当前位置 等待seek .
-     * HOME - >
-     */
-    public void onPause() {
-        Cog.e(TAG, "+onPause start... " + mLastPercent);
-        mPaused = true;
-        int pos = mCurrentPosition;
-        stop();
-        mLastPercent = pos;
-        Cog.e(TAG, "+onPause end... " + mLastPercent);
-    }
-
-    /**
-     * 停止播放
-     */
-    public void stop() {
-        Cog.d("----------------------------:", "stop()");
-        Cog.e(TAG, "+stop " + mLastPercent);
-        setStopState();
-        mVideoView.stop();
-    }
-
-    public void initConfig() {
-        Cog.e(TAG, "+initConfig " + mLastPercent                                                                                                                                                                                        );
-        mLastPercent = 0;
-        mCurrentPosition = 0;
-        mTotal = 100;
-        isOnTouch = false;
-        showControl();
-        setDuration(mTotal);//进度恢复
-        setProgress(mCurrentPosition);//进度条恢复
-        state = PlaySate.STOP;
-    }
-
-    /**
-     * 开始播放
-     */
-    public void start() {
-        Cog.e(TAG, "+start " + urlPath + " mLastper:" + mLastPercent);
-        if (mVideoView == null) return;//实测有null情况
-        if (!TextUtils.isEmpty(urlPath)) {
-            mVideoView.setUrl(urlPath, mURLType);
-            mVideoView.play(BnVideoView2.BN_PLAY_DEFAULT);
-            if (mLastPercent > 0) {
-                if(mPaused){//paused by some action .
-                    mPaused = false;
-                    mVideoView.seekTo(mLastPercent);
-                }else if(mDestroy){//surface Destroyed .
-                    mDestroy = false;
-                    mVideoView.seekTo(mLastPercent);
-                }
-
-            }
-            setPlaySate();
-        }
-
-        if (null != mDisplayListener) {
-            mDisplayListener.show();
-        }
-    }
-
-    /**
-     * 页面失去焦点后 强制暂停
-     */
-    private void pause() {
-        Cog.e(TAG, "pause()~");
-        if (mVideoView.isPlaying()) {
-            setPauseState();
-            mVideoView.pause();
-        }
-    }
-
-    private void setPlaySate() {
-        state = PlaySate.PLAY;
-        mPlayImageButton.setImageResource(R.drawable.poe_select_video_pause);
-    }
-
-    private void setStopState() {
-        state = PlaySate.STOP;
-        mPlayImageButton.setImageResource(R.drawable.poe_select_video_play);
-    }
-
-    private void setPauseState() {
-        //记录当前的位置，方便resume后seek .
-        mLastPercent = mCurrentPosition;
-        mCurrentPosition = 0;
-        state = PlaySate.PAUSE;
-        mPlayImageButton.setImageResource(R.drawable.poe_select_video_play);
-    }
-
-    private void resume() {
-        Cog.e(TAG, "resume()~mLastPercent : " + mLastPercent);
-        if (getPlayState() == PlaySate.PAUSE) {
-            setPlaySate();
-            mVideoView.resume();
-        } else {
-            start();
-        }
-    }
-
-    public PlaySate getPlayState() {
-        return state;
-    }
-
-    /**
-     * @param total 单位ms
-     */
-    public void setDuration(final int total) {
-        String sTotal = StringUtils.convertTime(total / 1000);
-        mTotalTextView.setText(sTotal);
-    }
-
-    /**
-     * 设置进度条
-     *
-     * @param currentPosition
-     */
-    public void setProgress(int currentPosition) {
-        if (!isOnTouch && getVisibility() == View.VISIBLE) {
-            String current = StringUtils.convertTime(currentPosition / 1000);
-            setProgress(current, currentPosition);
-        }
-    }
 
     public BNVideoControlView(Context context) {
-        super(context, null, R.attr.videoControlViewStyle);
-        init(context);
+        this(context, null);
     }
 
     public BNVideoControlView(Context context, AttributeSet attrs) {
-        super(context, attrs, R.attr.videoControlViewStyle);
-        init(context);
+        this(context, attrs, 0);
     }
 
     public BNVideoControlView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context);
+        this(context, attrs, defStyleAttr, 0);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BNVideoControlView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context);
+        init(context, attrs, defStyleAttr);
     }
 
-    private void init(Context context) {
+    private void init(Context context, AttributeSet attrs, int defStyle) {
+        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.VideoControlView, defStyle, 0);
+        mPlayMode = ta.getInteger(R.styleable.VideoControlView_play_mode, MODE_RECORD);
+        ta.recycle();
+
         View rootView = LayoutInflater.from(context).inflate(R.layout.video_control_view, this, true);
         ButterKnife.bind(rootView);
+        updateMode();
         mContext = context;
         mHideHandlerThread.start();
         mHandler = new Handler(this);
@@ -466,10 +159,15 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             }
         };
         if (!this.isInEditMode()) {
-            mWifiBroadCastUtil = new WiFiBroadCastUtils(mContext, mFragmentManager,new WiFiBroadCastUtils.PlayStateListener() {
+            mWifiBroadCastUtil = new WiFiBroadCastUtils(new IFragmentMangerInterface() {
+                @Override
+                public FragmentManager getNewFragmentManager() {
+                    return mFragmentManagerInterface ==null?null:mFragmentManagerInterface.getNewFragmentManager();
+                }
+            }, new WiFiBroadCastUtils.PlayStateListener() {
                 @Override
                 public void play() {
-                    start();
+                    if (!mSurfaceDestroy) start();
                 }
 
                 @Override
@@ -478,6 +176,24 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                 }
             });
         }
+    }
+
+    private void updateMode() {
+        if (MODE_LIVING == mPlayMode) {
+            mPlayImageButton.setVisibility(INVISIBLE);
+            mSeekBar.setVisibility(INVISIBLE);
+            mCurrentTextView.setVisibility(INVISIBLE);
+            mTotalTextView.setVisibility(INVISIBLE);
+        }
+    }
+
+    public int getPlayMode() {
+        return mPlayMode;
+    }
+
+    public void setPlayMode(int playMode) {
+        this.mPlayMode = playMode;
+        updateMode();
     }
 
     @Override
@@ -508,17 +224,23 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
 
             @Override
             public void onStopTrackingTouch(final SeekBar seekBar) {
-
+                Cog.e(TAG, "onStopTrackingTouch()~");
                 isOnTouch = false;
                 //防止播放完成之后记录的位置得不到更新
-                if (mLastPercent != mDestPos) {
+                /*if (mLastPercent != mDestPos) {
                     mLastPercent = mDestPos;
+                }*/
+                //update the play progress text .
+                if(getVisibility() == VISIBLE){
+                    setTextProgress(StringUtils.convertTime(mDestPos / 1000));
                 }
+
                 if (mIsLocal) {
                     resume();
                     mVideoView.seekTo(mDestPos);
+                    mLastPercent = mCurrentPosition = mDestPos;
                 } else {
-                    Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
+                    Check3GUtil.instance().CheckNetType(BNVideoControlView.this, new Check3GUtil.OnWifiListener() {
                         @Override
                         public void onNetError() {
 
@@ -528,6 +250,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                         public void onContinue() {
                             resume();
                             mVideoView.seekTo(mDestPos);
+                            mLastPercent = mCurrentPosition = mDestPos;
                         }
                     });
                 }
@@ -542,6 +265,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             public void onClick(View v) {
                 touchControl();
                 if (null != mVideoView) {
+                    Cog.i(TAG,"playButton clicked !");
                     if (state == PlaySate.STOP || state == PlaySate.PAUSE) {
                         if (mIsLocal) {
                             //                            start();
@@ -551,10 +275,10 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                                 resume();
                             }
                         } else {
-                            Check3GUtil.instance().CheckNetType(mContext, new Check3GUtil.OnWifiListener() {
+                            Check3GUtil.instance().CheckNetType(BNVideoControlView.this, new Check3GUtil.OnWifiListener() {
                                 @Override
                                 public void onNetError() {
-
+                                    Cog.e(TAG,"nett error !");
                                 }
 
                                 @Override
@@ -578,15 +302,15 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         mExpandImageButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mIsExpandable){
+                if (mIsExpandable) {
                     touchControl();
                     Activity activity = (Activity) getContext();
                     if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                         UIUtils.setLandscape(activity);
-                        if(null != mExpandListener) mExpandListener.expand();
+                        if (null != mExpandListener) mExpandListener.expand();
                     } else if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                         UIUtils.setPortrait(activity);
-                        if(null != mExpandListener) mExpandListener.collapse();
+                        if (null != mExpandListener) mExpandListener.collapse();
                     }
 
 
@@ -665,6 +389,352 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
 
     }
 
+    public void setDisplayListener(DisplayListener mDisplayListener) {
+        this.mDisplayListener = mDisplayListener;
+    }
+
+    /**
+     * 设置进度条
+     *
+     * @param current
+     * @param progress
+     */
+    private void setProgress(String current, int progress) {
+        setTextProgress(current);
+        mSeekBar.setMax(mTotal);
+        mSeekBar.setProgress(progress);
+    }
+
+    private void setTextProgress(String current) {
+        mCurrentTextView.setText(current + "/");
+    }
+
+    /**
+     * bind BnVideoLayout2 , set listener .
+     * you should invoked this method before {@link #setVideoPath(String, int, boolean)}
+     * @param videoLayout2
+     */
+    public void bindVideoView(@NonNull BnVideoLayout2 videoLayout2, IFragmentMangerInterface manager) {
+        Cog.d(TAG,"ifragment manager interface :"+manager);
+        this.bindVideoView(videoLayout2.getVideoView(),manager);
+        //setOnErrorListener will be instead by the bindVideoView method , so you need
+        setOnPlayingListener(videoLayout2);
+    }
+
+    /**
+     * bind surfaceView , set listener .
+     * you should invoked this method before {@link #setVideoPath(String, int, boolean)}
+     * @param view
+     */
+    public void bindVideoView(@NonNull BnVideoView2 view, IFragmentMangerInterface manager) {
+        this.mVideoView = view;
+        this.mFragmentManagerInterface = manager;
+        mVideoView.setVolume(100);
+        initListener();
+    }
+
+    private void initListener() {
+        mVideoView.setOnDurationChangeListener(new BnVideoView2.OnBNDurationChangeListener() {
+            @Override
+            public void onDurationUpdate(int duration) {
+                Cog.e(TAG, " total : " + duration);
+                if (mTotal != duration) {
+                    Cog.e(TAG, " total changed from : " + mTotal + " to :" + duration);
+                    mTotal = duration;
+                    setDuration(duration);
+                    if (null != mOnDurationChangeListener)
+                        mOnDurationChangeListener.onDurationUpdate(duration);
+                }
+            }
+        });
+
+        mVideoView.setOnBufferUpdateListener(new BnVideoView2.OnBNBufferUpdateListener() {
+            @Override
+            public void onBufferUpdate(int position) {
+                Cog.i(TAG, "pos : " + position);
+                //判断上次拖动后是否出现了抖动，抖动频率低于700ms不做进度更新.
+                if(position>mLastPercent){
+                    setProgress(position);
+                }else if(position == mTotal){
+                    setProgress(position);
+                }
+                if (mCurrentPosition != position) {
+                    mCurrentPosition = position;
+                }
+
+                if (null != mOnBufferUpdateListener)
+                    mOnBufferUpdateListener.onBufferUpdate(position);
+            }
+        });
+
+        mVideoView.setOnCompleteListener(new BnVideoView2.OnBNCompleteListener() {
+            @Override
+            public void onComplete() {
+                Cog.e("----------dd------------------", "onComplete");
+                stop();
+                mLastPercent = 0;//恢复为0否则，在此点击播放按钮会被seek到上一次seek的位置 .
+                long nowTime = System.currentTimeMillis();
+                if ((nowTime - mStartPlayTime) < 1 * 1000) {
+                    mHandler.sendEmptyMessage(ERROR_VIDEO_TOOL_SHORT);
+                }
+
+                if (mOnCompleteListener != null) {
+                    Cog.e(TAG, "---------------------------- onComplete involved !");
+                    mOnCompleteListener.onComplete();
+                }
+            }
+        });
+
+        mVideoView.setOnPlayingListener(new BnVideoView2.OnPlayingListener() {
+            @Override
+            public void onPlaying() {
+                Cog.e(TAG, "onPlaying()~~~~~~~~~~~~~~~~mLastPercent" + mLastPercent + " mcurrent:" + mCurrentPosition);
+                setPlaySate();
+                if (Math.abs(mLastPercent - mCurrentPosition) >= 1000) {//防止拖动seekbar后两者差值在1000ms内引起的无限seek .
+                    Cog.e(TAG, "onPlaying()~~~~~~~~~~~~~~~~seek : mLastPercent " + mLastPercent + " mcurrent:" + mCurrentPosition);
+                    mVideoView.seekTo(mLastPercent);
+                    mCurrentPosition = mLastPercent;
+                }
+
+                if (null != mOnPlayingListener) {
+                    mOnPlayingListener.onPlaying();
+                }
+            }
+        });
+
+        mVideoView.setOnSurfaceChangeListener(new BnVideoView2.OnSurfaceChangeListener() {
+            @Override
+            public void surfaceCreated(SurfaceHolder holder) {
+                Cog.e(TAG, "surfaceCreated()~~~~~~~~~~~~~~~~mLastPercent" + mLastPercent);
+                mSurfaceDestroy = false;
+                if (mVideoView != null && !TextUtils.isEmpty(urlPath)) {
+                    if (mIsLocal) {
+                        start();
+                    } else {
+                        Check3GUtil.instance().CheckNetType(BNVideoControlView.this, new Check3GUtil.OnWifiListener() {
+                            @Override
+                            public void onContinue() {
+                                start();
+                            }
+
+                            @Override
+                            public void onNetError() {
+                                // has no network...
+
+                            }
+                        });
+                    }
+                }
+
+                if (null != mOnSurfaceChangeListener)
+                    mOnSurfaceChangeListener.surfaceCreated(holder);
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                Cog.e(TAG, "surfaceDestroyed()~~~~~~~~~~~~~~~~");
+                mSurfaceDestroy = true;
+                stop();
+                mVideoView.close();
+                if (null != mOnSurfaceChangeListener)
+                    mOnSurfaceChangeListener.surfaceDestroyed(holder);
+            }
+        });
+
+
+        //设置点击事件
+        mVideoView.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                showControl();
+                return false;
+            }
+        });
+    }
+
+    /**
+     * 设置播放路径 并播放
+     *
+     * @param path
+     * @param urlType 视频地址类型 {@link BnVideoView2}
+     * @param isLocal 是否是本地文件
+     */
+    public void setVideoPath(String path, int urlType, boolean isLocal) {
+        initConfig();
+        this.mURLType = urlType;
+        this.mIsLocal = isLocal;
+        Cog.d("url", "check it : " + path);
+        if (null != urlPath && this.urlPath.equals(path)) {
+            Cog.e(TAG, "the same url is give :" + path);
+        } else {
+            this.urlPath = path;
+            tryEndLastVideo();
+        }
+
+        if (!isLocal) {
+            Check3GUtil.instance().CheckNetType(BNVideoControlView.this, new Check3GUtil.OnWifiListener() {
+                @Override
+                public void onNetError() {
+                }
+
+                @Override
+                public void onContinue() {
+                    start();
+                }
+            });
+        } else {
+            start();
+        }
+
+        mStartPlayTime = System.currentTimeMillis();
+    }
+
+    private void tryEndLastVideo() {
+        if (null != mVideoView) {
+            if (state == PlaySate.PAUSE) {
+                resume();
+                mVideoView.stop();
+            } else if (state == PlaySate.PLAY) {
+                stop();
+            }
+        }
+    }
+
+
+    /**
+     * 按住home键执行暂停操作，记住当前位置 等待seek .
+     * HOME - >
+     */
+    public void onPause() {
+        Cog.e(TAG, "+onPause start... " + mLastPercent);
+        mPaused = true;
+        int pos = mCurrentPosition;
+        stop();
+        mLastPercent = pos;
+        Cog.e(TAG, "+onPause end... " + mLastPercent);
+    }
+
+    /**
+     * 停止播放
+     */
+    public void stop() {
+        Cog.d("----------------------------:", "stop()");
+        Cog.e(TAG, "+stop " + mLastPercent);
+        setStopState();
+        if(null != mVideoView)
+        mVideoView.stop();
+    }
+
+    public void initConfig() {
+        Cog.e(TAG, "+initConfig " + mLastPercent);
+        mLastPercent = 0;
+        mCurrentPosition = 0;
+        mTotal = 100;
+        isOnTouch = false;
+        showControl();
+        setDuration(mTotal);//进度恢复
+        setProgress(mCurrentPosition);//进度条恢复
+        state = PlaySate.STOP;
+    }
+
+    /**
+     * be carefully : please make sure mDestroyView is not set true before invoked this method .
+     * 开始播放
+     */
+    public void start() {
+        Cog.e(TAG, "+start " + urlPath + " mLastper:" + mLastPercent);
+        if (mVideoView == null) return;//实测有null情况
+        if (!TextUtils.isEmpty(urlPath)) {
+            mVideoView.setUrl(urlPath, mURLType);
+            mVideoView.play(BnVideoView2.BN_PLAY_DEFAULT);
+            if (mLastPercent > 0 ) {
+                if (mPaused) {//paused by some action .
+                    mPaused = false;
+                    mVideoView.seekTo(mLastPercent);
+                }
+            }
+            setPlaySate();
+        }
+
+        if (null != mDisplayListener) {
+            mDisplayListener.show();
+        }
+    }
+
+    /**
+     * 页面失去焦点后 强制暂停
+     */
+    private void pause() {
+        Cog.e(TAG, "pause()~");
+        if (mVideoView.isPlaying()) {
+            setPauseState();
+            mVideoView.pause();
+        }
+    }
+
+    private void setPlaySate() {
+        state = PlaySate.PLAY;
+        mPlayImageButton.setImageResource(R.drawable.poe_select_video_pause);
+    }
+
+    private void setStopState() {
+        state = PlaySate.STOP;
+        mPlayImageButton.setImageResource(R.drawable.poe_select_video_play);
+    }
+
+    /**
+     * 记录暂停状态
+     * 将当前的播放位置记录到mLastPercent.
+     * 当前的播放位置值空.
+     */
+    private void setPauseState() {
+        //记录当前的位置，方便resume后seek .
+        mLastPercent = mCurrentPosition;
+        //为什么要设置为0? 去除本行解决seek后2次重复seek的问题
+//        mCurrentPosition = 0;
+        state = PlaySate.PAUSE;
+        mPlayImageButton.setImageResource(R.drawable.poe_select_video_play);
+    }
+
+    private void resume() {
+        Cog.e(TAG, "resume()~mLastPercent : " + mLastPercent);
+        if (getPlayState() == PlaySate.PAUSE) {
+            setPlaySate();
+            mVideoView.resume();
+        } else {
+            start();
+        }
+    }
+
+    public PlaySate getPlayState() {
+        return state;
+    }
+
+    /**
+     * @param total 单位ms
+     */
+    public void setDuration(final int total) {
+        String sTotal = StringUtils.convertTime(total / 1000);
+        mTotalTextView.setText(sTotal);
+    }
+
+    /**
+     * 设置进度条
+     *
+     * @param currentPosition
+     */
+    public void setProgress(int currentPosition) {
+        if (!isOnTouch && getVisibility() == View.VISIBLE) {
+            String current = StringUtils.convertTime(currentPosition / 1000);
+            setProgress(current, currentPosition);
+        }
+    }
+
     public boolean isPlaying() {
         return null != mVideoView && mVideoView.isPlaying();
     }
@@ -700,9 +770,9 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
 
     public void setExpandable(boolean isExpandable) {
         this.mIsExpandable = isExpandable;
-        if(!mIsExpandable){
+        if (!mIsExpandable) {
             mExpandImageButton.setVisibility(INVISIBLE);
-        }else{
+        } else {
             mExpandImageButton.setVisibility(VISIBLE);
         }
     }
@@ -733,7 +803,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     /**
      * 横竖屏监听
      */
-    public interface ExpandListener{
+    public interface ExpandListener {
         /**
          * 点击了 Expand 图标
          */

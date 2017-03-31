@@ -19,13 +19,14 @@ import com.codyy.erpsportal.commons.utils.Cog;
  * 增加编码控制 .
  * created by poe .
  */
-public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayingListener, BnVideoView2.OnBNErrorListener  {
+public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayingListener, BnVideoView2.OnBNErrorListener {
 
     private static final String TAG = "BnVideoLayout2";
     private BnVideoView2 mBnVideoView;
     private TextView mHintTv;
     private BnVideoView2.OnBNErrorListener mOnErrorListener;
     private BnVideoView2.OnPlayingListener mOnPlayingListener;
+    private ITextClickListener mTextClickListener;
 
     public BnVideoLayout2(Context context) {
         this(context, null);
@@ -45,49 +46,61 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    private void init(AttributeSet attrs){
-        LayoutInflater.from(getContext()).inflate(R.layout.bn_video_layout2, this, true);
+    private void init(AttributeSet attrs) {
+        if (!this.isInEditMode()) {
+            LayoutInflater.from(getContext()).inflate(R.layout.bn_video_layout2, this, true);
+        }
     }
 
     /**
      * 获取播放的实体类.
+     *
      * @return
      */
     public BNMediaPlayer getPlayer() {
-        if(null != mBnVideoView)
-            return  mBnVideoView.getPlayer();
+        if (null != mBnVideoView)
+            return mBnVideoView.getPlayer();
         return null;
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mBnVideoView = (BnVideoView2) findViewById(R.id.bnVideoView);
-        mHintTv = (TextView) findViewById(R.id.hintText);
-        mBnVideoView.setOnPlayingListener(this);
-        mBnVideoView.setOnErrorListener(this);
-        mHintTv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //living type retry connect ．　
-                if(null != mBnVideoView && mBnVideoView.getUrl() != null && BnVideoView2.BN_URL_TYPE_RTMP_LIVE == mBnVideoView.getURLType()){
-                    if(!getResources().getString(R.string.loading).equals(mHintTv.getText().toString())){
-                        post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mHintTv.setText(R.string.loading);
-                                mHintTv.setVisibility(VISIBLE);
-                            }
-                        });
-                        mBnVideoView.playNow();
+        if (!this.isInEditMode()) {
+            mBnVideoView = (BnVideoView2) findViewById(R.id.bnVideoView);
+            mHintTv = (TextView) findViewById(R.id.hintText);
+            mBnVideoView.setOnPlayingListener(this);
+            mBnVideoView.setOnErrorListener(this);
+            mHintTv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //living type retry connect ．　
+                    if (null != mBnVideoView && mBnVideoView.getUrl() != null) {//&& BnVideoView2.BN_URL_TYPE_RTMP_LIVE == mBnVideoView.getURLType()
+                        if (!getResources().getString(R.string.loading).equals(mHintTv.getText().toString())) {
+                            post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mHintTv.setText(R.string.loading);
+                                    mHintTv.setVisibility(VISIBLE);
+                                }
+                            });
+                            mBnVideoView.play(mBnVideoView.getPlayType());
+                        }
                     }
+
+                    if (null != mTextClickListener) mTextClickListener.onClick(v);
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
     public void onPlaying() {
+        hideTips();
+        if (mOnPlayingListener != null) mOnPlayingListener.onPlaying();
+    }
+
+    public void hideTips() {
         post(new Runnable() {
             @Override
             public void run() {
@@ -95,11 +108,10 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                 mBnVideoView.requestFocus();
             }
         });
-        if (mOnPlayingListener != null) mOnPlayingListener.onPlaying();
     }
 
     @Override
-    public void onError(int errorCode , String errorMsg) {
+    public void onError(int errorCode, String errorMsg) {
         if (errorCode == -2 || 0 == errorCode) {
             post(new Runnable() {
                 @Override
@@ -108,12 +120,20 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                     mHintTv.setVisibility(VISIBLE);
                 }
             });
-        } else if( errorCode == -1){//不支持硬解，改为软解
+        } else if (errorCode == -1) {//不支持硬解，改为软解
             mBnVideoView.setEncodeType(BnVideoView2.BN_ENCODE_SOFTWARE);
+        } else if (9 == errorCode) {//9 no playable stream .
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    mHintTv.setText(R.string.txt_video_meeting_no_input_stream_retry);
+                    mHintTv.setVisibility(VISIBLE);
+                }
+            });
         }
 
-        if(null != mOnErrorListener) {
-            mOnErrorListener.onError(errorCode,errorMsg);
+        if (null != mOnErrorListener) {
+            mOnErrorListener.onError(errorCode, errorMsg);
         }
     }
 
@@ -125,8 +145,8 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
      * @param videoUrl
      * @param urlType
      */
-    public void setUrl(String videoUrl,int urlType) {
-        if (mBnVideoView.setUrl(videoUrl,urlType)) {
+    public void setUrl(String videoUrl, int urlType) {
+        if (mBnVideoView.setUrl(videoUrl, urlType)) {
             post(new Runnable() {
                 @Override
                 public void run() {
@@ -156,23 +176,29 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
         mBnVideoView.setVolume(i);
     }
 
-    public void setReceiveVideo(boolean bReceived){
+    public void setReceiveVideo(boolean bReceived) {
         mBnVideoView.setReceiveVideo(bReceived);
+    }
+
+    public void setTextClickListener(ITextClickListener textClickListener) {
+        this.mTextClickListener = textClickListener;
     }
 
     /**
      * 设置混音器
+     *
      * @param mixer
      */
-    public void setAudioMixer(BNAudioMixer mixer){
+    public void setAudioMixer(BNAudioMixer mixer) {
         mBnVideoView.setAudioMixer(mixer);
     }
 
     /**
      * 开始之后调用...
+     *
      * @param timeOut
      */
-    public void setTimeOut(int timeOut){
+    public void setTimeOut(int timeOut) {
         mBnVideoView.setTimeOut(timeOut);
     }
 
@@ -200,12 +226,12 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
         return mBnVideoView.isPause();
     }
 
-    public void close(){
-        Cog.e(TAG,"close ~");
+    public void close() {
+        Cog.e(TAG, "close ~");
         mBnVideoView.close();
     }
 
-    public void setEncodeType(int encodeType){
+    public void setEncodeType(int encodeType) {
         mBnVideoView.setEncodeType(encodeType);
     }
 
@@ -237,7 +263,7 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
         mBnVideoView.setOnSurfaceChangeListener(surfaceChangeListener);
     }
 
-    public void setOnTipsTouchListener(View.OnClickListener listener){
-        mHintTv.setOnClickListener(listener);
+    public interface ITextClickListener {
+        void onClick(View v);
     }
 }

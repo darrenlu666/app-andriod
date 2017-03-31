@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -40,6 +41,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.AppointmentInfo.ReceiveListBean;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.ClassTourInfo.DetailBean;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.ClassTourInfo.DetailBean.ReceiveTeacherListBean;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -68,7 +70,7 @@ import java.util.Map;
  * <p>
  * 多个视频播放、主辅课堂页面
  */
-public class ClassTourPagerActivity extends FragmentActivity {
+public class ClassTourPagerActivity extends FragmentActivity implements IFragmentMangerInterface{
 
     private String TAG = "ClassTourPagerActivity";
 
@@ -413,6 +415,11 @@ public class ClassTourPagerActivity extends FragmentActivity {
         intent.putExtra(EXTRA_TYPE, type);
         activity.startActivity(intent);
         UIUtils.addEnterAnim(activity);
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 
 

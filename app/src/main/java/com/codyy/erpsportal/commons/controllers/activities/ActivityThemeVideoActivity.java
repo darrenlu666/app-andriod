@@ -29,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.common.EmotionInputDetector;
 import com.codyy.erpsportal.commons.controllers.adapters.HorizontalListViewAdapter;
@@ -173,7 +174,12 @@ public class ActivityThemeVideoActivity extends FragmentActivity implements BnVi
             }
         });
 
-        mVideoControl.bindVideoView(mVideoView,getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setOnCompleteListener(this);
         mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
 

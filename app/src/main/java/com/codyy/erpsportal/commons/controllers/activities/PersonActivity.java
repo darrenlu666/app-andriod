@@ -116,7 +116,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseUserId",mUserId);
         return data;

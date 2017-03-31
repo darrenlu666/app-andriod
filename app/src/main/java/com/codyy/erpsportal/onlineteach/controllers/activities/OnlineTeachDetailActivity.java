@@ -111,7 +111,7 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         params.put("mid", mPreparationId);//"2b10394a9fc3440691280a3ac96a26b2");//mPreparationId

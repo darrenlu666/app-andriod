@@ -55,7 +55,6 @@ import butterknife.Bind;
 /**
  * 评论页面
  * 单独的 首页-专递课堂-详情-评论
- * 带完善...
  * Created by poe on 2016/6/16.
  */
 public class CustomCommentFragment extends BaseHttpFragment implements BlogComposeView.OnComposeOperationDelegate {
@@ -64,15 +63,10 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     public final static int ITEM_TYPE_FIRST_LEVEL_MORE = 0x02;//一级更多
     public final static int ITEM_TYPE_SECOND_LEVEL = 0x03;//二级评论回复
     public final static int ITEM_TYPE_SECOND_LEVEL_MORE = 0x04;//二级更多
-    @Bind(R.id.recycler_view)
-    SimpleRecyclerView mRecyclerView;
-    //    @Bind(R.id.compose)
+    @Bind(R.id.recycler_view)SimpleRecyclerView mRecyclerView;
+    @Bind(R.id.refresh_layout)RefreshLayout mRefreshLayout;
+    @Bind(R.id.tv_comment_count)TextView mAllCommentCountTv;//全部评论数
     private BlogComposeView mComposeView;
-    @Bind(R.id.refresh_layout)
-    RefreshLayout mRefreshLayout;
-    @Bind(R.id.tv_comment_count)
-    TextView mAllCommentCountTv;//全部评论数
-
     private BaseRecyclerAdapter<BaseTitleItemBar, BaseRecyclerViewHolder<BaseTitleItemBar>> mAdapter;
     private LinkedList<BaseTitleItemBar> mData = new LinkedList<>();
     private InputMethodManager mInputManager;
@@ -127,7 +121,7 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
     }
 
     @Override
-    public HashMap<String, String> getParam() {
+    public HashMap<String, String> getParam(boolean isRefreshing) {
         int start = CommentUtils.getFirstCommentCount(mData);
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
@@ -236,14 +230,12 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         mSendComment = mComposeView.getBtnSend();
         mComposeView.setOperationDelegate(this);
         setAdapter();
-//        mSendComment.setText(mCommentCount>99?"99+":(mCommentCount+""));
         UiMainUtils.setDrawableLeft(mSendComment, R.drawable.ic_message_count, mCommentCount > 9999 ? "9999" : (mCommentCount + ""));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 //下拉刷新
                 mRecyclerView.setRefreshing(true);
-//                mData.clear();
                 requestData(true);
             }
         });
@@ -438,10 +430,6 @@ public class CustomCommentFragment extends BaseHttpFragment implements BlogCompo
         String url = "";
         switch (type) {
             case ActivityThemeActivity.PREPARE_LESSON://集体备课
-//                url = URLConfig.ADD_COMMENT_PREPARATION;
-//                data.put("preparationId", mid);
-//                data.put("commentContent", comment);
-//                break;
             case ActivityThemeActivity.INTERACT_LESSON://互动听课
                 url = URLConfig.ADD_COMMENT_LECTURE;
                 data.put("meetingId", mid);
