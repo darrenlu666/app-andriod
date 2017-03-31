@@ -39,7 +39,8 @@
                     android:maxLength="150"
                     android:maxLines="12"
                     android:minLines="8"
-                    android:padding="15dp" />
+                    android:padding="15dp"
+                    tools:text="adsfasdfasdfasdddddddddddddddddddddddddddddddddddddddddddddddddddd" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"

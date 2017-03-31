@@ -82,8 +82,8 @@ android {
         applicationId "com.codyy.erpsportal"
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
-        versionCode 1
-        versionName "5.3.2.009"
+        versionCode APP_VERSION_CODE as int
+        versionName APP_VERSION_NAME
         multiDexEnabled true
 //        setProperty("archivesBaseName", "InteractiveLearning-$versionName.$BUILD_VERSION")
         println("version:$versionName.$BUILD_VERSION");
