@@ -9,6 +9,7 @@ import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.repairs.models.entities.RepairFilterItem;
 
 /**
+ * 报修记录筛选组持着
  * Created by gujiajia on 2017/3/22.
  */
 @LayoutId(R.layout.item_checked_text)

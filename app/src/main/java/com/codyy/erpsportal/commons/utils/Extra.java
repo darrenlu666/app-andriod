@@ -20,4 +20,6 @@ public class Extra {
     public final static String CLASS_ID = "com.codyy.erpsportal.EXTRA_CLASS_ID";
 
     public static final String USER_ID = "com.codyy.erpsportal.EXTRA_USER_ID";
+
+    public final static String EXTRA_DATA = "com.codyy.erpsportal.EXTRA_DATA";
 }

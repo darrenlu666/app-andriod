@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.exam.controllers.activities.media;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
@@ -42,19 +43,26 @@ public class MMSelectorActivity extends ToolbarActivity {
             switch (getIntent().getStringExtra(EXTRA_TYPE)) {
                 case EXTRA_TYPE_IMAGE:
                     mTitle.setText(getString(R.string.exam_image_select));
-                    getSupportFragmentManager().beginTransaction().replace(R.id.content, MMImageAlbumFragment.newInstance(getIntent().getIntExtra("EXTRA_SIZE", 0))).commitAllowingStateLoss();
+                    replaceConentWithFragment(MMImageAlbumFragment.newInstance(getIntent().getIntExtra("EXTRA_SIZE", 8)));
                     break;
                 case EXTRA_TYPE_AUDIO:
                     mTitle.setText(getString(R.string.exam_audio_select));
-                    getSupportFragmentManager().beginTransaction().replace(R.id.content, new MMAudioAlbumFragment()).commitAllowingStateLoss();
+                    replaceConentWithFragment(new MMAudioAlbumFragment());
                     break;
                 case EXTRA_TYPE_VIDEO:
                     mTitle.setText(getString(R.string.exam_video_select));
-                    getSupportFragmentManager().beginTransaction().replace(R.id.content, MMVideoAlbumFragment.newInstance(getIntent().getIntExtra("EXTRA_SIZE", sVideoDefaultSize) * 1024 * 1024 + 1)).commitAllowingStateLoss();
+                    replaceConentWithFragment(MMVideoAlbumFragment.newInstance(getIntent().getIntExtra("EXTRA_SIZE", sVideoDefaultSize) * 1024 * 1024 + 1));
                     break;
             }
 
         }
         setViewAnim(false, mTitle);
+    }
+
+    private void replaceConentWithFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.content,fragment)
+                .commitAllowingStateLoss();
     }
 }

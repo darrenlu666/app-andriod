@@ -41,7 +41,6 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
 
     private static final int REQUEST_CODE_PREVIEW = 1 << 3;
     private static final int REQUEST_CODE_CAPTURE = 1 << 4;
-    private static int IMAGE_MAX_COUNT = 1 << 3;
     private static final int SPAN_COUNT = 4;
     protected static final String EXTRA_DATA = ToolbarActivity.class.getPackage() + ".EXTRA_DATA";
     public static final String EXTRA_TYPE = ToolbarActivity.class.getPackage() + ".EXTRA_TYPE";
@@ -53,7 +52,10 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
     private Button mConfirm;
     private MMImageGridAdapter mImageGridAdapter;
     private int mPreviewCount;
-    private int mImageSize;
+    /**
+     * 需要几张图
+     */
+    private int mNeedImageCount;
     private Handler mHandler;
 
     public static MMImageAlbumFragment newInstance(int size) {
@@ -69,9 +71,8 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
         super.onCreate(savedInstanceState);
         mHandler = new Handler(this);
         if (getArguments() != null) {
-            mImageSize = getArguments().getInt(ARG_SIZE);
+            mNeedImageCount = getArguments().getInt(ARG_SIZE);
         }
-
     }
 
     @Override
@@ -140,8 +141,8 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
                             relativeLayout.setBackgroundResource(R.color.transparent);
                             ((ImageView) relativeLayout.getChildAt(0)).setImageResource(R.drawable.ic_exam_select_n);
                         } else {
-                            if (mPreviewCount == (IMAGE_MAX_COUNT - mImageSize)) {
-                                Snackbar.make(v, getString(R.string.exam_image_max_count, (IMAGE_MAX_COUNT - mImageSize)), Snackbar.LENGTH_SHORT).show();
+                            if (mPreviewCount == (mNeedImageCount)) {
+                                Snackbar.make(v, getString(R.string.exam_image_max_count, (mNeedImageCount)), Snackbar.LENGTH_SHORT).show();
                                 return;
                             }
                             values.setSeleted(true);

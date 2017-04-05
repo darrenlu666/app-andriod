@@ -29,6 +29,7 @@
             android:id="@+id/ll_classroom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
             android:divider="@drawable/dv_v_repair_detail"
             android:orientation="horizontal"
             android:padding="13dp"
@@ -81,7 +82,8 @@
             android:id="@+id/ll_malfunction_categories"
             style="@style/RepairDetailItem"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?selectableItemBackground">
 
             <TextView
                 style="@style/RepairDetailsLb"
@@ -173,23 +175,30 @@
                 android:gravity="top"
                 android:hint="输入故障描述"
                 android:inputType="textMultiLine"
+                android:maxLength="1000"
                 android:padding="10dp"
                 android:textColor="#444444"
                 android:textSize="16dp"
-                android:maxLength="1000"
                 tools:text="声音太小听不到？声音太小听不发动机发动机覅的到？声音太小听不到？声音太小听不到？" />
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/et_desc"
+                android:layout_marginTop="5dp"/>
+
+            <!--<LinearLayout
                 android:id="@+id/ll_photos_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignLeft="@id/et_desc"
                 android:layout_alignStart="@id/et_desc"
                 android:layout_below="@id/et_desc"
+                android:layout_marginTop="5dp"
                 android:divider="@drawable/dv_v_dp5"
                 android:orientation="horizontal"
                 android:showDividers="middle"
-                android:layout_marginTop="5dp"
                 android:weightSum="4">
 
                 <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
@@ -243,7 +252,7 @@
                         android:shadowRadius="1.5"
                         android:text="共6张" />
                 </com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout>
-            </LinearLayout>
+            </LinearLayout>-->
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

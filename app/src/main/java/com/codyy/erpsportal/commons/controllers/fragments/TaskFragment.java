@@ -106,6 +106,7 @@ import java.util.Map;
  * Created by eachann on 2015/12/30.
  */
 public class TaskFragment extends Fragment implements View.OnClickListener {
+
     private static final String TAG = TaskFragment.class.getSimpleName();
     /**
      * 单选题
@@ -237,6 +238,13 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
      */
     public static final String TYPE_VIDEO = "type_video";
 
+    /**
+     * 最多上传8张图
+     */
+    private static final int IMAGE_MAX_COUNT = 8;
+
+    private final static int REQUEST_PREVIEW = 7;
+
     protected View mRootView;
     protected LinearLayout mLinearLayout;//习题界面最外层布局
     private static int mSpaceing;
@@ -328,19 +336,19 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             @Override
             public void OnClickListener(View parentV, View v, Integer position, ImageDetail values) {
                 Intent intent = new Intent(getActivity(), PreviewImageActivity.class);
-                PreviewImageActivity.setOnDeleteListener(new PreviewImageActivity.OnDeleteSuccess() {
-                    @Override
-                    public void onPreviewResult(ArrayList<ImageDetail> result, String deleteUrl) {
-                        if (result.size() > 0)
-                            addImageLayout(result);
-                        else
-                            deleteImageLayout();
-
-                        mTaskAnswerDao.deleteOnePicInfo(mStudentId, mTaskId, mTaskItemId, mTaskItemType, deleteUrl);
-                    }
-                });
+//                PreviewImageActivity.setOnDeleteListener(new PreviewImageActivity.OnDeleteSuccess() {
+//                    @Override
+//                    public void onPreviewResult(List<ImageDetail> result, String deleteUrl) {
+//                        if (result.size() > 0)
+//                            addImageLayout(result);
+//                        else
+//                            deleteImageLayout();
+//
+//                        mTaskAnswerDao.deleteOnePicInfo(mStudentId, mTaskId, mTaskItemId, mTaskItemType, deleteUrl);
+//                    }
+//                });
                 intent.putParcelableArrayListExtra(EXTRA_DATA, mSelectedImageUrlList);
-                startActivity(intent);
+                startActivityForResult(intent, 88);
             }
 
             @Override
@@ -1043,6 +1051,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MMSelectorActivity.class);
                 intent.putExtra("EXTRA_TYPE", "IMAGE");
+                intent.putExtra("EXTRA_SIZE", IMAGE_MAX_COUNT);
                 startActivityForResult(intent, REQUEST_CODE);
                 UIUtils.addEnterAnim(getActivity());
             }
@@ -1397,6 +1406,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     }
 
     private ArrayList<ImageDetail> mSelectedImageUrlList = new ArrayList<>();//选择图片上传成功后返回的message集合
+
     private static final int REQUEST_CODE = 1 << 4;
 
     /**
@@ -2181,10 +2191,10 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 List<TaskPicInfo> picInfoList = mTaskAnswerDao.queryPicInfo(mStudentId, mTaskId, mTaskItemId, mTaskItemType);
-                if (picInfoList.size() < 8) {
+                if (picInfoList.size() < IMAGE_MAX_COUNT) {
                     Intent intent = new Intent(getActivity(), MMSelectorActivity.class);
                     intent.putExtra("EXTRA_TYPE", "IMAGE");
-                    intent.putExtra("EXTRA_SIZE", picInfoList.size());
+                    intent.putExtra("EXTRA_SIZE", IMAGE_MAX_COUNT - picInfoList.size());
                     startActivityForResult(intent, REQUEST_CODE);
                     UIUtils.addEnterAnim(getActivity());
                 } else {

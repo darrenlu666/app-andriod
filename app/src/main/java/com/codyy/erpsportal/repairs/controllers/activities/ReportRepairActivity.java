@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -11,16 +13,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFragment;
+import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.REQUEST_CODE_ADD_IMAGES;
+
 /**
  * 报修
  */
 public class ReportRepairActivity extends AppCompatActivity {
+
+    private static final int MAX_IMAGES = 10;
 
     @Bind(R.id.btn_commit)
     Button mCommitBtn;
@@ -49,16 +58,29 @@ public class ReportRepairActivity extends AppCompatActivity {
     @Bind(R.id.et_desc)
     EditText mDescEt;
 
-    @Bind(R.id.ll_photos_container)
-    LinearLayout mPhotosContainerLl;
+    @Bind(R.id.rv_images)
+    RecyclerView mImagesRv;
+
+    private RepairImageAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_repair);
         ButterKnife.bind(this);
+        mAdapter = new RepairImageAdapter(MAX_IMAGES);
+        mImagesRv.setAdapter(mAdapter);
+        mImagesRv.addItemDecoration(new ImageItemDecoration(UIUtils.dip2px(this, 5), 4));
+        mImagesRv.setLayoutManager(new GridLayoutManager(this, 4));
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_IMAGES && resultCode == RESULT_OK) {
+            mAdapter.processResultData(data);
+        }
+    }
 
     @OnClick(R.id.ll_malfunction_categories)
     public void onMalfunctionCategoriesClick() {

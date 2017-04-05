@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.repairs.controllers.activities.MakeDetailedInquiryActivity;
 import com.codyy.erpsportal.repairs.controllers.adapters.InquiriesAdapter.OnItemClickListener;
 import com.codyy.erpsportal.repairs.models.engines.InquiriesLoader;
 import com.codyy.erpsportal.repairs.models.engines.InquiriesLoader.Builder;
@@ -90,6 +91,7 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
 
     @OnClick(R.id.btn_make_inquiry)
     public void onMakeInquiryClick() {
+        MakeDetailedInquiryActivity.start(getContext());
     }
 
     @Override
