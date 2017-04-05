@@ -48,6 +48,11 @@ public class ModuleConfig {
     public final static String TEMPLATE_TJ = "index.template.TJ";
 
     /**
+     * 首页模板：费县
+     */
+    public final static String TEMPLATE_FX = "index.template.fx";
+
+    /**
      * 地区
      */
     public final static String VISIT_TYPE_AREA = "area";

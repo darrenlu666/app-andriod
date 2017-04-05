@@ -112,7 +112,7 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_TJ.equals(indexTemplateId)){
                     clazz = TianJinFragment.class;
                     tabId = 11;
-                } else {
+                } else {//费县
                     clazz = FeiXianFragment.class;
                     tabId = 12;
                 }
