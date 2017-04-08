@@ -173,6 +173,8 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                 @Override
                 public void stop() {
                     BNVideoControlView.this.stop();
+                    //网络问题引起的重播，应该从0开始
+                    mLastPercent = 0;
                 }
             });
         }
@@ -226,10 +228,6 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
             public void onStopTrackingTouch(final SeekBar seekBar) {
                 Cog.e(TAG, "onStopTrackingTouch()~");
                 isOnTouch = false;
-                //防止播放完成之后记录的位置得不到更新
-                /*if (mLastPercent != mDestPos) {
-                    mLastPercent = mDestPos;
-                }*/
                 //update the play progress text .
                 if(getVisibility() == VISIBLE){
                     setTextProgress(StringUtils.convertTime(convertTimeRound(mDestPos)));
@@ -419,6 +417,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
         this.bindVideoView(videoLayout2.getVideoView(),manager);
         //setOnErrorListener will be instead by the bindVideoView method , so you need
         setOnPlayingListener(videoLayout2);
+        setOnErrorListener(videoLayout2);
     }
 
     /**
@@ -434,6 +433,21 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     }
 
     private void initListener() {
+        mVideoView.setOnErrorListener(new BnVideoView2.OnBNErrorListener() {
+            @Override
+            public void onError(int errorCode, String errorMsg) {
+                //播放出错后，防止上一次拖动位置没有重置导致进度条不更新问题 .
+                if (errorCode == -2 || 0 == errorCode) {
+                    mLastPercent = 0;
+                } else if (errorCode == -1) {//不支持硬解，改为软解
+                    mLastPercent = 0;
+                } else if (9 == errorCode) {//9 no playable stream .
+                    mLastPercent = 0;
+                }
+
+                if(null != mOnErrorListener) mOnErrorListener.onError(errorCode,errorMsg);
+            }
+        });
         mVideoView.setOnDurationChangeListener(new BnVideoView2.OnBNDurationChangeListener() {
             @Override
             public void onDurationUpdate(int duration) {
@@ -754,7 +768,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
 
 
     public void setOnErrorListener(BnVideoView2.OnBNErrorListener errorListener) {
-        mVideoView.setOnErrorListener(errorListener);
+        mOnErrorListener = errorListener;
     }
 
     public void setOnDurationChangeListener(BnVideoView2.OnBNDurationChangeListener durationChangeListener) {
