@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/gl_data_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="66dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/bg_map_data_panel"
+        android:padding="16dp"
+        app:columnCount="5">
+
+        <TextView
+            android:text="主讲教室"
+            app:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tv_school_count"
+            android:gravity="end"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            app:layout_columnWeight="1"
+            tools:text="34" />
+
+        <Space android:layout_width="24dp" />
+
+        <TextView
+            android:text="接收教室"
+            app:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tv_classroom_count"
+            android:gravity="end"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            app:layout_columnWeight="1"
+            tools:text="324" />
+
+        <Space
+            android:layout_height="12dp"
+            app:layout_columnSpan="5" />
+
+        <TextView
+            android:text="受益教师"
+            app:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tv_teacher_count"
+            android:gravity="end"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            app:layout_columnWeight="1"
+            tools:text="32344" />
+
+        <Space />
+
+        <TextView
+            android:text="受益学生"
+            app:layout_gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/tv_student_count"
+            android:gravity="end"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            app:layout_columnWeight="1"
+            tools:text="3107" />
+    </android.support.v7.widget.GridLayout>
+
+    <TextView
+        android:id="@+id/tv_panel_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/gl_data_panel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:text="费县"
+        android:textColor="#424242"
+        android:textSize="24sp" />
+
+    <WebView
+        android:id="@+id/wv_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/tv_panel_title"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true" />
+</RelativeLayout>
