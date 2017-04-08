@@ -232,7 +232,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
                 }*/
                 //update the play progress text .
                 if(getVisibility() == VISIBLE){
-                    setTextProgress(StringUtils.convertTime(mDestPos / 1000));
+                    setTextProgress(StringUtils.convertTime(convertTimeRound(mDestPos)));
                 }
 
                 if (mIsLocal) {
@@ -719,7 +719,7 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
      * @param total 单位ms
      */
     public void setDuration(final int total) {
-        String sTotal = StringUtils.convertTime(total / 1000);
+        String sTotal = StringUtils.convertTime(convertTimeRound(total));
         mTotalTextView.setText(sTotal);
     }
 
@@ -730,9 +730,22 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
      */
     public void setProgress(int currentPosition) {
         if (!isOnTouch && getVisibility() == View.VISIBLE) {
-            String current = StringUtils.convertTime(currentPosition / 1000);
+            String current = StringUtils.convertTime(convertTimeRound(currentPosition));
             setProgress(current, currentPosition);
         }
+    }
+
+    /**
+     * 四舍五入传入的数据 ms -> s .
+     * 59500 -> 60
+     * 59300 -> 59
+     * @param position
+     * @return
+     */
+    private int convertTimeRound(int position){
+        int now = Math.round((float)position / 1000);
+        Cog.i(TAG,"convertTimeRound ~ progress : "+ now);
+        return now;
     }
 
     public boolean isPlaying() {
