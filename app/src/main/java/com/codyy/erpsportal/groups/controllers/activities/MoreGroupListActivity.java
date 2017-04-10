@@ -283,12 +283,12 @@ public class MoreGroupListActivity extends BaseHttpActivity {
         setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
             @Override
             protected void doFilterConfirmed() {
-                doFilterConfirmed();
+                doFilterConfirm();
             }
         });
     }
 
-    private void doFilterConfirmed() {
+    private void doFilterConfirm() {
         Cog.i(TAG," doFilterConfirmed ~");
         Bundle bd = mFilterFragment.getFilterData();
         if(null != bd){
