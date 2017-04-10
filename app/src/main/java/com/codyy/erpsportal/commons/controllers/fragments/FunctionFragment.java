@@ -472,6 +472,8 @@ public class FunctionFragment extends BaseHttpFragment {
                 if ("success".equals(response.optString("result"))) {
                      mData = AppInfo.parseData(response.optJSONArray("useList"),userType);
                     if(mData!=null && mData.size() >0 ){
+                        //初始化标记位置解决重复刷新数据标记位指示错乱.
+                        sCurrentPosition = -1;
                         mAdapter.setData(mData);
                     }
                 }
