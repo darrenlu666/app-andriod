@@ -22,4 +22,7 @@ public class ClassRoomContants {
 
     public static final String EXTRA_LIVE_STATUS = "live.status";
     public static final String EXTRA_LIVE_SUBJECT = "live.custom.subject";//自定义学科
+
+    public static final String EXTRA_STUDENT_ID = "live.student.id";//学生id
+    public static final String SHARE_PREFERENCE_STUDENT_ID = "sp.student.id";//学生id
 }

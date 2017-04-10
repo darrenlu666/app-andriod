@@ -15,13 +15,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.Cog;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

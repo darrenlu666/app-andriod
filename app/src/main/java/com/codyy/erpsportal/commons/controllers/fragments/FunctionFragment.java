@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
 import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvHistoryActivity;
 import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvProgramListActivity;
 import com.codyy.url.URLConfig;
@@ -134,6 +136,7 @@ public class FunctionFragment extends BaseHttpFragment {
                 //if first get the result . set default first student as the selected student by parent .
                 if (mUserInfo.getSelectedChild() == null) {
                     mUserInfo.setSelectedChild(mStudentList.get(0));
+                    SharedPreferenceUtil.putString(ClassRoomContants.SHARE_PREFERENCE_STUDENT_ID, mStudentList.get(0).getStudentId());
                 }
                 mStudents = mStudentList;
             }

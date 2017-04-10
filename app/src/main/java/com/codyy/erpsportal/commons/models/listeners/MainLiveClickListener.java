@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
@@ -61,7 +62,7 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
                             ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
                                     liveClassroom.getId(), ClassRoomContants.TYPE_LIVE_LIVE,liveClassroom.getSubjectName());
                         } else {
-                            ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
+                            CustomLiveDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
                                     liveClassroom.getId(), ClassRoomContants.TYPE_CUSTOM_LIVE,liveClassroom.getSubjectName());
                         }
                     } else {
