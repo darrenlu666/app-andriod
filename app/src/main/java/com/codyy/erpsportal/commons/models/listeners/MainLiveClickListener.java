@@ -58,6 +58,7 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
                 if ("success".equals(response.optString("result"))){
                     boolean canView = response.optBoolean("canView");
                     if (canView) {
+                        Cog.i(TAG," live type : " +liveClassroom.getType());
                         if (MainResClassroom.TYPE_LIVE.equals(liveClassroom.getType())) {
                             ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
                                     liveClassroom.getId(), ClassRoomContants.TYPE_LIVE_LIVE,liveClassroom.getSubjectName());
