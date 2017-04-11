@@ -116,14 +116,19 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
         });
     }
 
+    /**
+     * 默认数据加载
+     */
     private void loadData() {
         LocalDate localDate = LocalDate.now();
         if (mStatFilterCarrier == null) {
             mStatFilterCarrier = new StatFilterCarrier();
+            //默认筛选本周
             mStatFilterCarrier.setStartDate(
                     localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
             mStatFilterCarrier.setEndDate(
                     localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
+            mStatFilterCarrier.setSubjectId("-1");
         }
         loadData( mStatFilterCarrier);
     }
