@@ -103,7 +103,7 @@ public abstract class BaseHttpFragment extends Fragment {
      *
      * @return
      */
-    public abstract HashMap<String, String> getParam(boolean isRefreshing);
+    public abstract HashMap<String, String> getParam(boolean isRefreshing) throws Exception;
 
     /**
      * 数据请求返回结果
@@ -130,7 +130,13 @@ public abstract class BaseHttpFragment extends Fragment {
      * 请求数据
      */
     public void requestData( boolean isRefreshing) {
-        requestData(obtainAPI(), getParam(isRefreshing),isRefreshing, new BaseHttpActivity.IRequest() {
+        HashMap<String,String> params = new HashMap<>();
+        try {
+            params = getParam(isRefreshing);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        requestData(obtainAPI(), params,isRefreshing, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 try {

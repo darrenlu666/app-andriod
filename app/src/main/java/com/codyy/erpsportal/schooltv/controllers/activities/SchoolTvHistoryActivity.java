@@ -123,7 +123,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
 
             @Override
             public void OnItemClicked(View v, int position, SchoolVideo data) {
-                SchoolProgramDetail.start(SchoolTvHistoryActivity.this,mUserInfo,data.getTvProgramDetailId());
+                SchoolProgramDetail.start(SchoolTvHistoryActivity.this,mUserInfo,data.getTvProgramDetailId(),mSchoolId);
             }
 
             @Override
