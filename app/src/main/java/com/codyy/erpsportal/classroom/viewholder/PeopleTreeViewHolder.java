@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.classroom.viewholder;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,7 +44,7 @@ public class PeopleTreeViewHolder extends BaseRecyclerViewHolder<Watcher> {
             mRoleTv.setText(data.getUserTypeName());
             //area+school
             StringBuilder jpsb = new StringBuilder("");
-            if(null != data.getAreaName()){
+            if(!TextUtils.isEmpty(data.getAreaName())){
                 String path = data.getAreaName();
                 jpsb.append(path);
                 if(!UserInfo.USER_TYPE_AREA_USER.equals(data.getUserType())){

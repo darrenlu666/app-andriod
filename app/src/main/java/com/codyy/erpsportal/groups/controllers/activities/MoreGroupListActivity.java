@@ -252,34 +252,6 @@ public class MoreGroupListActivity extends BaseHttpActivity {
                 supportInvalidateOptionsMenu();
             }
         });
-        /*this.setFilterListener(new IFilterListener() {
-            @Override
-            public void onFilterClick(MenuItem item) {
-                if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    mDrawerLayout.openDrawer(Gravity.RIGHT);
-                } else {
-                    mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                    doFilterConfirmed();
-                }
-            }
-
-            @Override
-            public void onPreFilterCreate(Menu menu) {
-                if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    menu.getItem(0).setActionView(R.layout.textview_filter_confirm_button);
-                    TextView tv = (TextView) menu.getItem(0).getActionView().findViewById(R.id.tv_title);
-                    tv.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mDrawerLayout.closeDrawer(Gravity.RIGHT);
-                            doFilterConfirmed();
-                        }
-                    });
-                } else {
-                    menu.getItem(0).setIcon(R.drawable.ic_filter);
-                }
-            }
-        });*/
         setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
             @Override
             protected void doFilterConfirmed() {
