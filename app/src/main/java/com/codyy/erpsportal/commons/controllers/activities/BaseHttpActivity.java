@@ -169,7 +169,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
             params.put("start",0+"");
             params.put("end",(sPageCount-1)+"");
             //取消loadMore的状态
-            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(false);
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(true);
         }
 
         mSender.sendRequest(new RequestSender.RequestData(url, params, new Response.Listener<JSONObject>() {
