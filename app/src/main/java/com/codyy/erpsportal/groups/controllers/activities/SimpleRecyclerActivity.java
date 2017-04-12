@@ -179,6 +179,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
             mAdapter.setHasMoreData(true);
         }else{
             mAdapter.setHasMoreData(false);
+            notifyLoadCompleted();
         }
         mAdapter.notifyDataSetChanged();
 

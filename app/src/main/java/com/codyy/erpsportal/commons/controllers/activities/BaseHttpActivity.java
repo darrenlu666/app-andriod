@@ -298,6 +298,14 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
 
     }
 
+    /**
+     * 加载数据完成,没有更多数据阻止多发送一次网络请求.
+     */
+    public void notifyLoadCompleted(){
+        if(null != mEndlessRecyclerOnScrollListener)
+            mEndlessRecyclerOnScrollListener.setLoading(true);
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){

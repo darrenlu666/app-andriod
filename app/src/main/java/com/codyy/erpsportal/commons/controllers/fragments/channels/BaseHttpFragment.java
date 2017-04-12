@@ -241,6 +241,13 @@ public abstract class BaseHttpFragment extends Fragment {
     }
 
     /**
+     * 加载数据完成,没有更多数据阻止多发送一次网络请求.
+     */
+    public void notifyLoadCompleted(){
+        if(null != mEndlessRecyclerOnScrollListener)
+            mEndlessRecyclerOnScrollListener.setLoading(true);
+    }
+    /**
      * 退出应用时调用
      */
     private void stopRequest() {

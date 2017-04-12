@@ -92,6 +92,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
             mAdapter.setHasMoreData(true);
         }else{
             mAdapter.setHasMoreData(false);
+            notifyLoadCompleted();
         }
         mAdapter.notifyDataSetChanged();
 
