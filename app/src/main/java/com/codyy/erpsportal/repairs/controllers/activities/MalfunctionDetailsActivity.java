@@ -63,6 +63,11 @@ public class MalfunctionDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Cog.d(TAG, "onResponse response=", response);
+                        JSONObject jsonObject = response.optJSONObject("data");
+                        if (jsonObject != null) {
+                            mTitleTv.setText(jsonObject.optString("summary"));
+                            mContentWv.loadData(jsonObject.optString("description"), "text/html; charset=UTF-8", null);
+                        }
                     }
                 },
                 new ErrorListener() {

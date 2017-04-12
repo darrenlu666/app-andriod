@@ -96,7 +96,7 @@ public class CommonMalfunctionsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Cog.d(TAG, "loadData response = ", response);
-                        if (response.optBoolean("result")) {
+                        if ("success".equals(response.optString("result"))) {
                             Type type = new TypeToken<List<MalfunctionCatalog>>(){}.getType();
                             List<MalfunctionCatalog> malfunctionCatalogs = new Gson()
                                     .fromJson(response.optString("data"), type);
@@ -197,9 +197,25 @@ public class CommonMalfunctionsActivity extends AppCompatActivity {
         UIUtils.addExitTranAnim(this);
     }
 
+    /**
+     * 点击最新问题栏
+     */
+    @OnClick(R.id.ib_latest_malfunction)
+    public void onLatestMalfunctionClick() {
+        MalfunctionListActivity.startLatest(this, mUserInfo);
+    }
+
+    /**
+     * 点击最热问题栏
+     */
+    @OnClick(R.id.ib_hot_malfunction)
+    public void onHotMalfunctionClick() {
+        MalfunctionListActivity.startHot(this, mUserInfo);
+    }
+
     @OnClick(R.id.btn_search)
     public void onSearchBtn() {
-        SearchMalfunctionsActivity.start(this);
+        SearchMalfunctionsActivity.start(this, mUserInfo);
     }
 
     @Override

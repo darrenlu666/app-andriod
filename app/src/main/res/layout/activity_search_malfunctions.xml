@@ -57,7 +57,8 @@
                 android:minWidth="0dp"
                 android:padding="8dp"
                 android:textColorHint="#cacaca"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:maxLength="50"/>
 
             <ImageButton
                 android:id="@+id/ib_clear_keywords"
@@ -68,7 +69,9 @@
                 android:contentDescription="@null"
                 android:padding="8dp"
                 android:src="@drawable/delete_x_b"
-                android:textSize="16dp" />
+                android:textSize="16dp"
+                android:visibility="invisible"
+                tools:visibility="visible"/>
         </LinearLayout>
 
     </RelativeLayout>

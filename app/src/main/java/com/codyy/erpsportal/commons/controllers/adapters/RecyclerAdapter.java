@@ -236,6 +236,16 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
     }
 
     /**
+     * 清除数据
+     */
+    public void clear() {
+        if (mList != null) {
+            mList.clear();
+        }
+        notifyDataSetChanged();
+    }
+
+    /**
      * 最后一项，用于显示没有更多或加载数据ProgressBar
      */
     protected static class LastItemHolder extends ViewHolder {

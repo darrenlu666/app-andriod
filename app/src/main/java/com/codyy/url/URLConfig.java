@@ -2817,6 +2817,7 @@ public class URLConfig {
      */
     @UrlSuffix("/mobile/tvprogram/liveList.do")
     public static String GET_SCHOOL_TV_PROGRAM_LIST;
+
     /**
      * 校园电视台-节目单
      * schoolId	学校id	string
@@ -2825,6 +2826,7 @@ public class URLConfig {
      */
     @UrlSuffix("/mobile/tvprogram/detail.do")
     public static String GET_SCHOOL_TV_PROGRAM_DETAIL;
+
     /**
      * 校园电视台-往期视频
      * end		number
@@ -2846,7 +2848,7 @@ public class URLConfig {
     @UrlSuffix("mobile/malfunction/getSchoolClassRoomList.do")
     public static String GET_CLASSROOMS;
 
-    @UrlSuffix("mobile/repairs/searchMalfunc.do")
+    @UrlSuffix("mobile/malguidefunction/getSearchMalPageList.do")
     public static String SEARCH_MALFUNC;
 
     @UrlSuffix("mobile/repairs/getRepairDetails.do")
@@ -2870,6 +2872,12 @@ public class URLConfig {
     @UrlSuffix("mobile/malguidefunction/getMalByCatalogPageList.do")
     public static String GET_MALFUNCTIONS_BY_CATALOG;
 
+    @UrlSuffix("mobile/malguidefunction/getHotMalList.do")
+    public static String GET_HOT_MALFUNCTIONS;
+
+    @UrlSuffix("mobile/malguidefunction/getNewestMalList.do")
+    public static String GET_LATEST_MALFUNCTIONS;
+
     @UrlSuffix("mobile/malguidefunction/getMalDetailById.do")
     public static String GET_MALFUNCTION_DETAILS;
 
@@ -2880,21 +2888,6 @@ public class URLConfig {
     public static void updateUrls(String newBase) {
         BASE = newBase;
         long start = System.currentTimeMillis();
-        start = System.currentTimeMillis();
-//        for (Field field: URLConfig.class.getFields()) {
-//            Annotation[] annotations = field.getDeclaredAnnotations();
-//            if (annotations.length < 1) {
-//                continue;
-//            }
-//            if (annotations[0] instanceof UrlSuffix) {
-//                UrlSuffix urlSuffix = (UrlSuffix) annotations[0];
-//                try {
-//                    field.set(null, BASE + urlSuffix.value());
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
         UrlBuilder.updateUrls();
         Cog.d(TAG, "updateUrls spend=", System.currentTimeMillis() - start);
     }

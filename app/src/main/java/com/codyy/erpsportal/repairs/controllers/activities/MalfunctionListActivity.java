@@ -45,6 +45,23 @@ public class MalfunctionListActivity extends AppCompatActivity implements ListEx
 
     private final static String EXTRA_CHILD_CATALOG_ID = "com.codyy.erpsportal.EXTRA_CHILD_CATALOG_ID";
 
+    private final static String EXTRA_TYPE = "com.codyy.erpsportal.EXTRA_TYPE";
+
+    /**
+     * 按类型获取常见问题列表
+     */
+    private final static int TYPE_CATALOG = 0;
+
+    /**
+     * 获取最热门问题
+     */
+    private final static int TYPE_HOT = 1;
+
+    /**
+     * 获取最新问题
+     */
+    private final static int TYPE_LATEST = 2;
+
     @Bind(R.id.title_bar)
     TitleBar mTitleBar;
 
@@ -58,6 +75,8 @@ public class MalfunctionListActivity extends AppCompatActivity implements ListEx
     TextView mEmptyTv;
 
     private UserInfo mUserInfo;
+
+    private int mType;
 
     private String mTitle;
 
@@ -79,13 +98,20 @@ public class MalfunctionListActivity extends AppCompatActivity implements ListEx
 
     private void initAttributes() {
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
+        mType = getIntent().getIntExtra(EXTRA_TYPE, TYPE_CATALOG);
         mTitle = getIntent().getStringExtra(Extra.TITLE);
         mCatalogId = getIntent().getStringExtra(EXTRA_CATALOG_ID);
         mChildCatalogId = getIntent().getStringExtra(EXTRA_CHILD_CATALOG_ID);
     }
 
     private void initComponents() {
-        mTitleBar.setText(mTitle);
+        if (mType == TYPE_CATALOG) {
+            mTitleBar.setText(mTitle);
+        } else if (mType == TYPE_HOT) {
+            mTitleBar.setText("热门问题");
+        } else {
+            mTitleBar.setText("最新问题");
+        }
         mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.main_color));
         Builder<Malfunction, MalfunctionVh, Void> controllerBuilder = new Builder<>();
         mLoader = controllerBuilder
@@ -96,7 +122,7 @@ public class MalfunctionListActivity extends AppCompatActivity implements ListEx
                 .setOnItemClickListener(new OnItemClickListener<Malfunction>() {
                     @Override
                     public void onItemClick(int position, Malfunction item) {
-
+                        MalfunctionDetailsActivity.start(MalfunctionListActivity.this, mUserInfo, item.getMalGuideId());
                     }
                 })
                 .build();
@@ -104,17 +130,25 @@ public class MalfunctionListActivity extends AppCompatActivity implements ListEx
     }
 
     private void loadData() {
-        mLoader.addParam("guideCatalog1", mCatalogId);
-        if (!TextUtils.isEmpty(mChildCatalogId)) {
-            mLoader.addParam("guideCatalog2", mChildCatalogId);
-        }
         mLoader.addParam("uuid", mUserInfo.getUuid());
+        if (mType == TYPE_CATALOG) {
+            mLoader.addParam("guideCatalog1", mCatalogId);
+            if (!TextUtils.isEmpty(mChildCatalogId)) {
+                mLoader.addParam("guideCatalog2", mChildCatalogId);
+            }
+        }
         mLoader.loadData(true);
     }
 
     @Override
     public String getUrl() {
-        return URLConfig.GET_MALFUNCTIONS_BY_CATALOG;
+        if (mType == TYPE_CATALOG) {
+            return URLConfig.GET_MALFUNCTIONS_BY_CATALOG;
+        } else if (mType == TYPE_HOT) {
+            return URLConfig.GET_HOT_MALFUNCTIONS;
+        } else {
+            return URLConfig.GET_LATEST_MALFUNCTIONS;
+        }
     }
 
     @Override
@@ -130,11 +164,47 @@ public class MalfunctionListActivity extends AppCompatActivity implements ListEx
 
     public static void start(Context context, UserInfo userInfo, String title,
                              String catalogId, String childCatalogId) {
+        start(context, userInfo, TYPE_CATALOG, title, catalogId, childCatalogId);
+    }
+
+    /**
+     * 进入最热门问题
+     * @param context 上下文
+     * @param userInfo 登录用户信息
+     */
+    public static void startHot(Context context, UserInfo userInfo) {
+        start(context, userInfo, TYPE_HOT, null, null, null);
+    }
+
+    /**
+     * 进入最新问题
+     * @param context 上下文
+     * @param userInfo 登录用户信息
+     */
+    public static void startLatest(Context context, UserInfo userInfo) {
+        start(context, userInfo, TYPE_LATEST, null, null, null);
+    }
+
+    /**
+     * 按分类启动常见问题
+     *
+     * @param context        上下文
+     * @param userInfo       用户信息
+     * @param type           类型：按类型、最热、最新
+     * @param title          标题
+     * @param catalogId      父级类型id
+     * @param childCatalogId 子集类型id
+     */
+    public static void start(Context context, UserInfo userInfo, int type, String title,
+                             String catalogId, String childCatalogId) {
         Intent intent = new Intent(context, MalfunctionListActivity.class);
         intent.putExtra(Extra.USER_INFO, userInfo);
-        intent.putExtra(Extra.TITLE, title);
-        intent.putExtra(EXTRA_CATALOG_ID, catalogId);
-        intent.putExtra(EXTRA_CHILD_CATALOG_ID, childCatalogId);
+        intent.putExtra(EXTRA_TYPE, type);
+        if (type == TYPE_CATALOG) {
+            intent.putExtra(Extra.TITLE, title);
+            intent.putExtra(EXTRA_CATALOG_ID, catalogId);
+            intent.putExtra(EXTRA_CHILD_CATALOG_ID, childCatalogId);
+        }
         context.startActivity(intent);
         if (context instanceof Activity) {
             UIUtils.addEnterAnim((Activity) context);

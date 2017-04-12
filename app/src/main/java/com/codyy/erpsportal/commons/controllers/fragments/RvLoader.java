@@ -149,29 +149,30 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
             });
         }
         mRequestSender.sendRequest(new RequestData(getUrl(), mParams,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(final JSONObject response) {
-                            Cog.d(TAG, "onResponse:" + response);
-                            delayResponding(startTime, new ResponseCallable() {
-                                @Override
-                                public void handle() {
-                                    handleNormalResponse(response, refresh);
-                                }
-                            });
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(final Throwable error) {
-                            Cog.e(TAG, "onErrorResponse:" + error);
-                            delayResponding(startTime, new ResponseCallable() {
-                                @Override
-                                public void handle() {
-                                    handleErrorResponse(error, refresh);
-                                }
-                            });
-                        }
-                    }));
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(final JSONObject response) {
+                        Cog.d(TAG, "onResponse:" + response);
+                        delayResponding(startTime, new ResponseCallable() {
+                            @Override
+                            public void handle() {
+                                handleNormalResponse(response, refresh);
+                            }
+                        });
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(final Throwable error) {
+                        Cog.e(TAG, "onErrorResponse:" + error);
+                        delayResponding(startTime, new ResponseCallable() {
+                            @Override
+                            public void handle() {
+                                handleErrorResponse(error, refresh);
+                            }
+                        });
+                    }
+                }));
     }
 
     /**
@@ -204,6 +205,14 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
 
     public void setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
         mAdapter.setOnItemClickListener(onItemClickListener);
+    }
+
+    /**
+     * 清除数据
+     */
+    public void clearData() {
+        mAdapter.clear();
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     /**
