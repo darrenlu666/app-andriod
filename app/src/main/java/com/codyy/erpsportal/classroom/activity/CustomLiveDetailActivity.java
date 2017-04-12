@@ -447,8 +447,9 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
 
             }
         });
-
+        Cog.i(TAG,"init heart jump!");
         //start pooling .
+        mHandler.removeCallbacks(mHeartJump);
          mHandler.post(mHeartJump);
     }
 
@@ -570,7 +571,9 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
 
     @Override
     public void sync(int currentCount) {
+        Cog.i(TAG,"sync heart jump!");
         if(mPeopleCount < currentCount){
+            mHandler.removeCallbacks(mHeartJump);
             mHandler.post(mHeartJump);
         }
     }
