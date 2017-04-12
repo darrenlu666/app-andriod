@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground">
@@ -10,8 +10,35 @@
         android:id="@id/dv_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:aspectRatioEnabled="true"
         app:aspectRatio="1"
-        app:dominantMeasurement="width"/>
+        app:aspectRatioEnabled="true"
+        app:dominantMeasurement="width" />
+
+    <LinearLayout
+        android:id="@+id/ll_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#96999999"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_uploading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/upload_progress_animation"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_failed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/audio_upload_failure"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </FrameLayout>

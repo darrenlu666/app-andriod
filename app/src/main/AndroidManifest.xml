@@ -768,6 +768,9 @@
         <activity
             android:name=".repairs.controllers.activities.SearchMalfunctionsActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".repairs.controllers.activities.ScanSerialActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

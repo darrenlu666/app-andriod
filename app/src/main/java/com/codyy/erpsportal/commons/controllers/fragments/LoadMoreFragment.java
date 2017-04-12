@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter;
+import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnItemClickListener;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnLoadMoreListener;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
@@ -457,6 +458,10 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
 
     public void loadData(boolean refresh) {
         loadData(mParams, refresh);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
+        mAdapter.setOnItemClickListener(onItemClickListener);
     }
 
     /**

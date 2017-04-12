@@ -7,84 +7,102 @@ package com.codyy.erpsportal.repairs.models.entities;
 
 public class RepairRecord {
 
-    public RepairRecord(String id, String classroomSerial, String classroomName, String reporterName,
-                        long reportTime, String content, int status) {
-        this.id = id;
-        this.classroomSerial = classroomSerial;
-        this.classroomName = classroomName;
-        this.reporterName = reporterName;
-        this.reportTime = reportTime;
-        this.content = content;
+    public RepairRecord(String malDetailId, String skey, String classRoomName, String reporter,
+                        long createTime, String malDescription, String status) {
+        this.malDetailId = malDetailId;
+        this.skey = skey;
+        this.classRoomName = classRoomName;
+        this.reporter = reporter;
+        this.createTime = createTime;
+        this.malDescription = malDescription;
         this.status = status;
     }
 
-    private String id;
+    /**
+     * 报修记录id
+     */
+    private String malDetailId;
 
-    private String classroomSerial;
+    /**
+     * 教室编号
+     */
+    private String skey;
 
-    private String classroomName;
+    /**
+     * 教室名称
+     */
+    private String classRoomName;
 
-    private String reporterName;
+    /**
+     * 报修人名
+     */
+    private String reporter;
 
-    private long reportTime;
+    /**
+     * 报修时间
+     */
+    private long createTime;
 
-    private String content;
+    private String malDescription;
 
-    private int status;
+    /**
+     * 处理状态
+     */
+    private String status;
 
-    public String getId() {
-        return id;
+    public String getMalDetailId() {
+        return malDetailId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setMalDetailId(String malDetailId) {
+        this.malDetailId = malDetailId;
     }
 
-    public String getClassroomSerial() {
-        return classroomSerial;
+    public String getSkey() {
+        return skey;
     }
 
-    public void setClassroomSerial(String classroomSerial) {
-        this.classroomSerial = classroomSerial;
+    public void setSkey(String skey) {
+        this.skey = skey;
     }
 
-    public String getClassroomName() {
-        return classroomName;
+    public String getClassRoomName() {
+        return classRoomName;
     }
 
-    public void setClassroomName(String classroomName) {
-        this.classroomName = classroomName;
+    public void setClassRoomName(String classRoomName) {
+        this.classRoomName = classRoomName;
     }
 
-    public String getReporterName() {
-        return reporterName;
+    public String getReporter() {
+        return reporter;
     }
 
-    public void setReporterName(String reporterName) {
-        this.reporterName = reporterName;
+    public void setReporter(String reporter) {
+        this.reporter = reporter;
     }
 
-    public long getReportTime() {
-        return reportTime;
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public void setReportTime(long reportTime) {
-        this.reportTime = reportTime;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
-    public String getContent() {
-        return content;
+    public String getMalDescription() {
+        return malDescription;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setMalDescription(String malDescription) {
+        this.malDescription = malDescription;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

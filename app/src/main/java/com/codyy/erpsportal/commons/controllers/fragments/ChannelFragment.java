@@ -243,8 +243,4 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
         mMapFragmentRf = new WeakReference<>(mapFragment);
     }
 
-    public interface OnAreaClickListener {
-        void onAreaClick();
-    }
-
 }

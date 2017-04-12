@@ -103,9 +103,15 @@ public class ChangeServerDialog extends DialogFragment {
                     newBaseUrl = "http://" + serverAddress;
                     serverChanged = true;
                 }
-                if (newBaseUrl != null && !URLConfig.BASE.equals(newBaseUrl)) {
-                    URLConfig.updateUrls(newBaseUrl);
-                    saveBaseUrl();
+
+                if (newBaseUrl != null) {
+                    if (!newBaseUrl.endsWith("/")) {
+                        newBaseUrl = newBaseUrl + "/";
+                    }
+                    if (!URLConfig.BASE.equals(newBaseUrl)) {
+                        URLConfig.updateUrls(newBaseUrl);
+                        saveBaseUrl();
+                    }
                 }
                 saveServerAddress();
                 dismiss();

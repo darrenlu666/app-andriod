@@ -2837,29 +2837,41 @@ public class URLConfig {
     @UrlSuffix("/mobile/tvProgram/getPastProgramList.do")
     public static String GET_SCHOOL_TV_HISTORY_LIST;
 
-    @UrlSuffix("/mobile/repairs/getRepairsSchools.do")
+    @UrlSuffix("mobile/malfunction/getMalFunctionDetailPageList.do")
     public static String GET_REPAIRS_SCHOOLS;
 
-    @UrlSuffix("/mobile/repairs/getRepairRecords.do")
+    @UrlSuffix("mobile/malfunction/getSchoolMalDetailPageList.do")
     public static String GET_REPAIR_RECORDS;
 
-    @UrlSuffix("/mobile/repairs/getClassrooms.do")
+    @UrlSuffix("mobile/malfunction/getSchoolClassRoomList.do")
     public static String GET_CLASSROOMS;
 
-    @UrlSuffix("/mobile/repairs/searchMalfunc.do")
+    @UrlSuffix("mobile/repairs/searchMalfunc.do")
     public static String SEARCH_MALFUNC;
 
-    @UrlSuffix("/mobile/repairs/getRepairDetails.do")
+    @UrlSuffix("mobile/repairs/getRepairDetails.do")
     public static String GET_REPAIR_DETAILS;
 
-    @UrlSuffix("/mobile/repairs/getRepairTracking.do")
+    @UrlSuffix("mobile/repairs/getRepairTracking.do")
     public static String GET_REPAIR_TRACKING;
 
     /**
      * 故障类型分类
      */
-    @UrlSuffix("/mobile/repairs/getMalfuncCategories")
+    @UrlSuffix("mobile/malfunction/getSubCatalogListById.do")
     public static String GET_MALFUNC_CATEGORIES;
+
+    /**
+     * 获取常见问题分类
+     */
+    @UrlSuffix("mobile/malguidefunction/getCatalogList.do")
+    public static String GET_MAL_GUIDE_CATALOGS;
+
+    @UrlSuffix("mobile/malguidefunction/getMalByCatalogPageList.do")
+    public static String GET_MALFUNCTIONS_BY_CATALOG;
+
+    @UrlSuffix("mobile/malguidefunction/getMalDetailById.do")
+    public static String GET_MALFUNCTION_DETAILS;
 
     static {
         UrlBuilder.updateUrls();

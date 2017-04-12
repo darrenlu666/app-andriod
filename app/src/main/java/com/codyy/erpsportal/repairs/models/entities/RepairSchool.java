@@ -1,7 +1,7 @@
 package com.codyy.erpsportal.repairs.models.entities;
 
 /**
- * 有报修时间的学校
+ * 有报修记录的学校
  * Created by gujiajia on 2017/3/20.
  */
 
@@ -11,29 +11,38 @@ public class RepairSchool {
         super();
     }
 
-    public RepairSchool(String schoolId, String schoolName, String areaName, int malfunctionCount, int handledCount) {
+    public RepairSchool(String schoolId, String schoolName, String areaName, int allCount, int dealCount) {
         this.schoolId = schoolId;
         this.schoolName = schoolName;
         this.areaName = areaName;
-        this.malfunctionCount = malfunctionCount;
-        this.handledCount = handledCount;
+        this.allCount = allCount;
+        this.dealCount = dealCount;
     }
 
+    /**
+     * 学校id
+     */
     private String schoolId;
 
+    /**
+     * 学校名称
+     */
     private String schoolName;
 
+    /**
+     * 学校所在区域名称，取最下级
+     */
     private String areaName;
 
     /**
      * 问题总数
      */
-    private int malfunctionCount;
+    private int allCount;
 
     /**
      * 已处理问题数
      */
-    private int handledCount;
+    private int dealCount;
 
     public String getSchoolId() {
         return schoolId;
@@ -59,19 +68,19 @@ public class RepairSchool {
         this.areaName = areaName;
     }
 
-    public int getMalfunctionCount() {
-        return malfunctionCount;
+    public int getAllCount() {
+        return allCount;
     }
 
-    public void setMalfunctionCount(int malfunctionCount) {
-        this.malfunctionCount = malfunctionCount;
+    public void setAllCount(int allCount) {
+        this.allCount = allCount;
     }
 
-    public int getHandledCount() {
-        return handledCount;
+    public int getDealCount() {
+        return dealCount;
     }
 
-    public void setHandledCount(int handledCount) {
-        this.handledCount = handledCount;
+    public void setDealCount(int dealCount) {
+        this.dealCount = dealCount;
     }
 }

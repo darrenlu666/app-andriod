@@ -115,7 +115,7 @@ public class SearchMalfunctionsActivity extends AppCompatActivity implements Lis
     @Override
     public List<Malfunction> extractList(JSONObject response) {
         Type type = new TypeToken<List<Malfunction>>(){}.getType();
-        return new Gson().fromJson(response.optJSONArray("list").toString(), type);
+        return new Gson().fromJson(response.optJSONArray("data").toString(), type);
     }
 
     @Override

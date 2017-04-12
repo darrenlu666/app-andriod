@@ -1,13 +1,9 @@
 package com.codyy.erpsportal.commons.models.network;
 
 import com.codyy.erpsportal.BuildConfig;
-import com.codyy.erpsportal.repairs.models.entities.ClassroomFilterItem;
 import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
 import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
-import com.codyy.erpsportal.repairs.models.entities.Malfunction;
 import com.codyy.erpsportal.repairs.models.entities.RepairDetails;
-import com.codyy.erpsportal.repairs.models.entities.RepairRecord;
-import com.codyy.erpsportal.repairs.models.entities.RepairSchool;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
@@ -36,37 +32,7 @@ public class FakeInterceptor implements Interceptor {
         if(BuildConfig.DEBUG) {
             HttpUrl httpUrl = chain.request().url();
             String urlStr = httpUrl.url().toString();
-            if (urlStr.equals(URLConfig.GET_REPAIRS_SCHOOLS)) {
-                List<RepairSchool> repairSchools = new ArrayList<>(5);
-                for (int i=0; i < 5; i++) {
-                    repairSchools.add(new RepairSchool(i+"aaa"
-                            , i + "学校", i + "号地区" , 200, 100));
-                }
-                return buildResponse(chain, repairSchools);
-            } else if (urlStr.equals(URLConfig.GET_REPAIR_RECORDS)) {
-                List<RepairRecord> repairSchools = new ArrayList<>(5);
-                for (int i=0; i < 5; i++) {
-                    repairSchools.add(new RepairRecord(i + "aaa"
-                            , i + "编号", i + "号教室" , "2B小姐姐", System.currentTimeMillis(), "内容" + i, 0));
-                }
-                return buildResponse(chain, repairSchools);
-            } else if (urlStr.equals(URLConfig.GET_CLASSROOMS)) {
-                List<ClassroomFilterItem> items = new ArrayList<>(20);
-                for (int i=0; i<20; i++) {
-                    items.add(new ClassroomFilterItem(i + ""
-                            , "编号" + i * 1000
-                            , "3年" + i + "班"));
-                }
-                return buildResponse(chain, items);
-            } else if (urlStr.equals(URLConfig.SEARCH_MALFUNC)) {
-                List<Malfunction> malfunctions = new ArrayList<>(8);
-                for (int i=0; i<8; i++) {
-                    malfunctions.add(new Malfunction("aaa" + i
-                            , "问题1"
-                            , i));
-                }
-                return buildResponse(chain, malfunctions);
-            } else if (urlStr.equals(URLConfig.GET_REPAIR_DETAILS)) {
+            if (urlStr.equals(URLConfig.GET_REPAIR_DETAILS)) {
                 Map<String, Object> responseMap = new HashMap<>();
                 responseMap.put("result", "success");
                 RepairDetails repairDetails = new RepairDetails();

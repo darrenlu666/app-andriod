@@ -18,9 +18,11 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.exam.controllers.activities.media.MMSelectorActivity;
 import com.codyy.erpsportal.exam.controllers.activities.media.image.MMImageBean;
 import com.codyy.erpsportal.exam.controllers.activities.media.video.MMVideoAlbumFragment;
+import com.codyy.erpsportal.homework.controllers.activities.PreviewImageActivity;
 import com.codyy.erpsportal.homework.models.entities.student.ImageDetail;
 import com.codyy.erpsportal.repairs.controllers.viewholders.AddImageVh;
 import com.codyy.erpsportal.repairs.controllers.viewholders.RepairImageVh;
+import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +40,15 @@ public class RepairImageAdapter extends Adapter {
 
     private final static int TYPE_IMAGE = 1;
 
-    public static final int REQUEST_CODE_ADD_IMAGES = 1;
+    public static final int REQUEST_CODE_ADD_IMAGES = 11;
+
+    public static final int REQUEST_PREVIEW = 12;
 
     private static final String EXTRA_DATA = ToolbarActivity.class.getPackage() + ".EXTRA_DATA";
 
     private final SparseArray<ViewHolderCreator> mVhCreators = new SparseArray<>(2);
 
-    private List<ImageDetail> mItems;
+    private List<UploadingImage> mItems;
 
     private OnAddImageClickListener mAddImageClickListener = new OnAddImageClickListener() {
         @Override
@@ -82,12 +86,41 @@ public class RepairImageAdapter extends Adapter {
                 @Override
                 public void onClick(View v) {
                     Cog.d(TAG, "onAddImageClick");
+                    //进入图片选择界面
                     mAddImageClickListener.onAddImageClick(v, mMaxCount - holder.getAdapterPosition());
                 }
             });
         } else {
-            ((RepairImageVh)holder).bindData(mItems.get(position));
+            ((RepairImageVh)holder).setDataToView(mItems.get(position));
+            holder.itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //点击图片进入图片预览界面
+                    gotoPreview(v, holder.getAdapterPosition());
+                }
+            });
         }
+    }
+
+    /**
+     * 跳转到预览
+     * @param view 被点击图片组件
+     * @param position 图片预览位置
+     */
+    private void gotoPreview(View view, int position) {
+        Activity activity = ContextUtils.getActivity(view);
+        if (activity == null) return;
+        ArrayList<ImageDetail> imageDetails = new ArrayList<>(mItems.size());
+        for (UploadingImage image: mItems){
+            ImageDetail imageDetail = new ImageDetail();
+            imageDetail.setPicUrl(image.getPath());
+            imageDetails.add(imageDetail);
+        }
+        Intent intent = new Intent(activity, PreviewImageActivity.class);
+        intent.putParcelableArrayListExtra( EXTRA_DATA, imageDetails);
+        intent.putExtra( PreviewImageActivity.EXTRA_SHOW_NUMBER, true);
+        intent.putExtra( PreviewImageActivity.EXTRA_POSITION, position);
+        activity.startActivityForResult(intent, REQUEST_PREVIEW);
     }
 
     @Override
@@ -111,20 +144,53 @@ public class RepairImageAdapter extends Adapter {
         return mItems.size() + 1;
     }
 
-    public void addImage(ImageDetail image) {
+    public void addImage(UploadingImage image) {
         mItems.add(image);
     }
 
-    public void processResultData(Intent data) {
+    /**
+     * 处理选择图片界面返回信息数据
+     * @param data 数据
+     */
+    public List<UploadingImage> processAddImagesResultData(Intent data) {
         List<MMImageBean> imageList = data.getParcelableArrayListExtra(EXTRA_DATA);
         String resourceType = data.getExtras().getString(MMVideoAlbumFragment.EXTRA_TYPE);
+        List<UploadingImage> newAddedImages = new ArrayList<>();
         for (MMImageBean imageBean: imageList) {
-            ImageDetail imageDetail = new ImageDetail();
-            imageDetail.setLoadInfo(ImageDetail.TYPE_LOADING);
-            imageDetail.setPicUrl(imageBean.getPath());
-            addImage(imageDetail);
+            UploadingImage imageDetail = new UploadingImage();
+            imageDetail.setStatus( UploadingImage.STATUS_UPLOADING);
+            imageDetail.setPath( imageBean.getPath());
+            addImage( imageDetail);
+            newAddedImages.add( imageDetail);
         }
         notifyDataSetChanged();
+        return newAddedImages;
+    }
+
+    /**
+     * 处理预览删除图片界面返回信息数据
+     * @param data 数据
+     */
+    public void processDeleteImagesResultData(Intent data) {
+        List<ImageDetail> imageDetails = data.getParcelableArrayListExtra(EXTRA_DATA);
+        List<UploadingImage> uploadingImages= new ArrayList<>(imageDetails.size());
+        for (ImageDetail imageDetail: imageDetails) {
+            UploadingImage uploadingImage = new UploadingImage();
+            uploadingImage.setPath( imageDetail.getPicUrl());
+            uploadingImage.setStatus( UploadingImage.STATUS_UPLOADING);
+            mItems.add( uploadingImage);
+        }
+        mItems = uploadingImages;
+        notifyDataSetChanged();
+    }
+
+    public void cancelAll() {
+        if (mItems == null) return;
+        for (UploadingImage uploadingImage: mItems) {
+            if (uploadingImage.getStatus() == UploadingImage.STATUS_UPLOADING) {
+                uploadingImage.setStatus(UploadingImage.STATUS_CANCEL);
+            }
+        }
     }
 
     /**
@@ -133,7 +199,7 @@ public class RepairImageAdapter extends Adapter {
     public interface OnAddImageClickListener{
         /**
          * 添加图片被点击
-         * @param count 还可以加几张图
+         * @param count 最多还可以加几张图
          */
         void onAddImageClick(View view, int count);
     }

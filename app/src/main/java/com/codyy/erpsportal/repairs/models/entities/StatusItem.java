@@ -1,5 +1,10 @@
 package com.codyy.erpsportal.repairs.models.entities;
 
+import android.support.annotation.StringDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * 状态筛选项
  * Created by gujiajia on 2017/3/22.
@@ -7,11 +12,32 @@ package com.codyy.erpsportal.repairs.models.entities;
 
 public class StatusItem implements RepairFilterItem {
 
+    /**
+     * 新建、待处理
+     */
+    public final static String STATUS_NEW = "NEW";
+
+    /**
+     * 处理中
+     */
+    public final static String STATUS_PROGRESS = "PROGRESS";
+
+    /**
+     * 处理完成
+     */
+    public final static String STATUS_DONE = "DONE";
+
+    /**
+     * 已验收
+     */
+    public final static String STATUS_VERIFIED = "VERIFIED";
+
     private String name;
 
-    private int status;
+    @RepairStatus
+    private String status;
 
-    public StatusItem(String name, int status) {
+    public StatusItem(String name, String status) {
         this.name = name;
         this.status = status;
     }
@@ -24,11 +50,11 @@ public class StatusItem implements RepairFilterItem {
         this.name = name;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -36,4 +62,8 @@ public class StatusItem implements RepairFilterItem {
     public String content() {
         return name;
     }
+
+    @StringDef({STATUS_NEW, STATUS_PROGRESS, STATUS_DONE, STATUS_VERIFIED})
+    @Retention(RetentionPolicy.SOURCE)
+    @interface RepairStatus{}
 }

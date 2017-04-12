@@ -1,5 +1,7 @@
 package com.codyy.erpsportal.repairs.controllers.activities;
 
+import android.os.Bundle;
+
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Extra;
@@ -27,7 +29,9 @@ public class AreaRepairsActivity extends TabsWithFilterActivity {
 
     @Override
     protected void addFragments() {
-        addFragment("学校列表", SchoolRepairListFragment.class, null);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Extra.USER_INFO, mUserInfo);
+        addFragment("学校列表", SchoolRepairListFragment.class, bundle);
     }
 
     @Override

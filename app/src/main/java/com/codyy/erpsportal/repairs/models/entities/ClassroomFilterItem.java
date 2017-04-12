@@ -7,48 +7,57 @@ package com.codyy.erpsportal.repairs.models.entities;
 
 public class ClassroomFilterItem implements RepairFilterItem {
 
-    private String classroomId;
+    /**
+     * 教室id
+     */
+    private String clsClassroomId;
 
-    private String classroomNo;
+    /**
+     * 教室编号
+     */
+    private String skey;
 
-    private String classroomName;
+    /**
+     * 教室名称
+     */
+    private String roomName;
 
-    public ClassroomFilterItem(String classroomId, String classroomNo, String classroomName) {
-        this.classroomId = classroomId;
-        this.classroomNo = classroomNo;
-        this.classroomName = classroomName;
+    public ClassroomFilterItem(String clsClassroomId, String skey, String roomName) {
+        this.clsClassroomId = clsClassroomId;
+        this.skey = skey;
+        this.roomName = roomName;
     }
 
-    public String getClassroomId() {
-        return classroomId;
+    public String getClsClassroomId() {
+        return clsClassroomId;
     }
 
-    public void setClassroomId(String classroomId) {
-        this.classroomId = classroomId;
+    public void setClsClassroomId(String clsClassroomId) {
+        this.clsClassroomId = clsClassroomId;
     }
 
-    public String getClassroomNo() {
-        return classroomNo;
+    public String getSkey() {
+        return skey;
     }
 
-    public void setClassroomNo(String classroomNo) {
-        this.classroomNo = classroomNo;
+    public void setSkey(String skey) {
+        this.skey = skey;
     }
 
-    public String getClassroomName() {
-        return classroomName;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public void setClassroomName(String classroomName) {
-        this.classroomName = classroomName;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
     @Override
     public String content() {
-        if (classroomId == null) {
+        if (clsClassroomId == null) {
             return "全部";
         } else {
-            return classroomNo + "（" + classroomName + "）";
+            return skey + "（" + roomName + "）";
         }
     }
 }

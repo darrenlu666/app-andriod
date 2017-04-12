@@ -1,6 +1,6 @@
-package com.codyy.erpsportal.homework.widgets;
+package com.codyy.erpsportal.repairs.utils;
 
-import android.os.AsyncTask;
+import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -13,38 +13,18 @@ import java.net.URL;
 import java.util.UUID;
 
 /**
- * 抽象出来的上传文件流功能
- * Created by ldh on 2016/6/23.
+ * 上传工具
+ * Created by gujiajia on 2017/4/6.
  */
-public abstract class UploadAsyncTask extends AsyncTask<String, Integer, String> {
 
-    public abstract void onMyPreExecute();
-
-    public abstract void onMyProgressUpdate(Integer... values);
-
-    public abstract void onMyPostExecute(String result);
-
-    public void setCancel(boolean cancel){
-        isCancel = cancel;
-    }
-
-    private boolean isCancel;
-
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        onMyPreExecute();
-    }
-
-    @Override
-    protected String doInBackground(String... params) {
+public class UploadUtil {
+    public static String upload(UploadingImage image, String urlStr) {
         String result = null;
         String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
         String PREFIX = "--", LINE_END = "\r\n";
         String CONTENT_TYPE = "multipart/form-data"; // 内容类型
         try {
-            URL url = new URL(params[1]);
+            URL url = new URL(urlStr);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setChunkedStreamingMode(1024);
             conn.setReadTimeout(10 * 1000);
@@ -56,7 +36,7 @@ public abstract class UploadAsyncTask extends AsyncTask<String, Integer, String>
             conn.setRequestProperty("Charset", "utf-8"); // 设置编码
             conn.setRequestProperty("connection", "keep-alive");
             conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
-            File file = new File(params[0]);
+            File file = new File(image.getPath());
             if (file != null) {
                 /**
                  * 当文件不为空，把文件包装并且上传
@@ -78,12 +58,12 @@ public abstract class UploadAsyncTask extends AsyncTask<String, Integer, String>
                 InputStream is = new FileInputStream(file);
                 byte[] bytes = new byte[1024];
                 int len;
-                int count = 0;
-                int total = is.available();
-                while ((len = is.read(bytes)) != -1 && !isCancel) {
+//                int count = 0;
+//                int total = is.available();
+                while ((len = is.read(bytes)) != -1 && image.getStatus() == UploadingImage.STATUS_UPLOADING) {
                     dos.write(bytes, 0, len);
-                    count += len;
-                    publishProgress((int) ((count / (float) total) * 100));
+//                    count += len;
+//                    publishProgress((int) ((count / (float) total) * 100));
                 }
                 is.close();
                 dos.write(LINE_END.getBytes());
@@ -109,18 +89,4 @@ public abstract class UploadAsyncTask extends AsyncTask<String, Integer, String>
         }
         return result;
     }
-
-    @Override
-    protected void onProgressUpdate(Integer... values) {
-        super.onProgressUpdate(values);
-        onMyProgressUpdate(values);
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        onMyPostExecute(s);
-    }
 }
-
-

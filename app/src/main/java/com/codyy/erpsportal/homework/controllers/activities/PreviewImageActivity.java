@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +30,6 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 
@@ -43,26 +43,46 @@ public class PreviewImageActivity extends ToolbarActivity {
 
     public final static String EXTRA_DELETING = "com.codyy.erpsportal.EXTRA_DELETING";
 
+    public final static String EXTRA_POSITION = "com.codyy.erpsportal.EXTRA_POSITION";
+
+    public final static String EXTRA_SHOW_NUMBER = "com.codyy.erpsportal.EXTRA_SHOW_NUMBER";
+
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
     @Bind(R.id.toolbar_title)
-    TextView mTitle;
+    TextView mTitleTv;
 
     @Bind(R.id.view_pager)
     HackyViewPager mHackyViewPager;
 
     private HackyPagerAdapter mHackyPagerAdapter;
 
-    private List<ImageDetail> mImageBeans;
+    private ArrayList<ImageDetail> mImageBeans;
 
     private ArrayList<ImageDetail> mDeletingImages;
+
+    /**
+     * 初始位置
+     */
+    private int mPosition;
+
+    /**
+     * 标题栏显示（第几张/总数）
+     */
+    private boolean mShowNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTitle.setText(getString(R.string.exam_image_preview));
+        mShowNumber = getIntent().getBooleanExtra(EXTRA_SHOW_NUMBER, false);
+        mPosition = getIntent().getIntExtra(EXTRA_POSITION, 0);
         mImageBeans = getIntent().getParcelableArrayListExtra(EXTRA_DATA);
+        if (mShowNumber) {
+            updateTitleNumber(mPosition);
+        } else {
+            mTitleTv.setText(getString(R.string.exam_image_preview));
+        }
         Cog.d(TAG, mImageBeans.toString());
         new Handler().post(new Runnable() {
             @Override
@@ -70,10 +90,23 @@ public class PreviewImageActivity extends ToolbarActivity {
                 if (mImageBeans.size() > 0) {
                     mHackyPagerAdapter = new HackyPagerAdapter(PreviewImageActivity.this);
                     mHackyViewPager.setAdapter(mHackyPagerAdapter);
+                    mHackyViewPager.setCurrentItem(mPosition, false);
+                }
+            }
+        });
+        mHackyViewPager.addOnPageChangeListener(new SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                if (mShowNumber) {
+                    updateTitleNumber(position);
                 }
             }
         });
         mDeletingImages = new ArrayList<>();
+    }
+
+    private void updateTitleNumber(int position) {
+        mTitleTv.setText((position + 1) + "/" + mImageBeans.size());
     }
 
     @Override
@@ -87,28 +120,19 @@ public class PreviewImageActivity extends ToolbarActivity {
             @Override
             public void onClick(View v) {
                 removeItem(mHackyViewPager.getCurrentItem());
+                if (mShowNumber) {
+                    updateTitleNumber(mHackyViewPager.getCurrentItem());
+                }
             }
         });
         return super.onCreateOptionsMenu(menu);
     }
 
-    public interface OnDeleteSuccess {
-        void onPreviewResult(List<ImageDetail> result, String deleteUrl);
-    }
-
-    private static OnDeleteSuccess mOnDeleteSuccess;
-
-    public static void setOnDeleteListener(OnDeleteSuccess listener) {
-        mOnDeleteSuccess = listener;
-    }
-
     public void removeItem(int position) {
         if (mImageBeans.size() > 0) {
             ImageDetail deletingImage = mImageBeans.remove(position);
-            String deleteUrl = deletingImage.getPicUrl();
             mDeletingImages.add(deletingImage);
             mHackyPagerAdapter.notifyDataSetChanged();
-            mOnDeleteSuccess.onPreviewResult(mImageBeans, deleteUrl);
             if (mImageBeans.size() == 0) {
                 finish();
             }
@@ -121,6 +145,7 @@ public class PreviewImageActivity extends ToolbarActivity {
             setResult(RESULT_CANCELED);
         } else {
             Intent intent = new Intent();
+            intent.putExtra(EXTRA_DATA, mImageBeans);
             intent.putExtra(EXTRA_DELETING, mDeletingImages);
             setResult(RESULT_OK, intent);
         }

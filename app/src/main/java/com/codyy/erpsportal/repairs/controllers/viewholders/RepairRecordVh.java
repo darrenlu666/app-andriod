@@ -7,6 +7,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.repairs.models.entities.RepairRecord;
+import com.codyy.erpsportal.repairs.models.entities.StatusItem;
 
 import org.joda.time.format.DateTimeFormat;
 
@@ -40,20 +41,20 @@ public class RepairRecordVh extends BindingRvHolder<RepairRecord> {
 
     @Override
     public void setDataToView(RepairRecord repairRecord) {
-        mClassroomTv.setText(repairRecord.getClassroomName());
-        mReporterTv.setText(repairRecord.getReporterName());
-        if (repairRecord.getStatus() == 0) {
+        mClassroomTv.setText(repairRecord.getClassRoomName());
+        mReporterTv.setText(repairRecord.getReporter());
+        if (StatusItem.STATUS_NEW.equals(repairRecord.getStatus())) {
             mStatusTv.setText(R.string.status_await_handle);
-        } else if (repairRecord.getStatus() == 1) {
+        } else if (StatusItem.STATUS_PROGRESS.equals(repairRecord.getStatus())) {
             mStatusTv.setText(R.string.status_handling);
-        } else if (repairRecord.getStatus() == 2) {
+        } else if (StatusItem.STATUS_DONE.equals(repairRecord.getStatus())) {
             mStatusTv.setText(R.string.status_handled);
         } else {
             mStatusTv.setText(R.string.status_accepted);
         }
         mReportTimeTv.setText(DateTimeFormat
                 .forPattern("yyyy-MM-dd HH:mm")
-                .print(repairRecord.getReportTime()));
-        mContentTv.setText(repairRecord.getContent());
+                .print(repairRecord.getCreateTime()));
+        mContentTv.setText(repairRecord.getMalDescription());
     }
 }

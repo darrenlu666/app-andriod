@@ -11,6 +11,8 @@ public class Extra {
 
     public final static String SCHOOL_ID = "com.codyy.erpsportal.SCHOOL_ID";
 
+    public final static String SCHOOL_NAME = "com.codyy.erpsportal.SCHOOL_NAME";
+
     public final static String SEMESTER_ID = "com.codyy.erpsportal.EXTRA_SEMESTER_ID";
 
     public final static String SEMESTER_NAME = "com.codyy.erpsportal.EXTRA_SEMESTER_NAME";
@@ -22,4 +24,6 @@ public class Extra {
     public static final String USER_ID = "com.codyy.erpsportal.EXTRA_USER_ID";
 
     public final static String EXTRA_DATA = "com.codyy.erpsportal.EXTRA_DATA";
+
+    public final static String TITLE = "com.codyy.erpsportal.TITLE";
 }

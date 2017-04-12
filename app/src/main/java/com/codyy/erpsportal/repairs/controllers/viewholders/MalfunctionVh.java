@@ -30,7 +30,7 @@ public class MalfunctionVh extends BindingRvHolder<Malfunction> {
 
     @Override
     public void setDataToView(Malfunction data) {
-        mTitleTv.setText(data.getTitle());
-        mHitsTv.setText(String.valueOf(data.getHits()));
+        mTitleTv.setText(data.getShortSummary());
+        mHitsTv.setText(String.valueOf(data.getViewCount()));
     }
 }

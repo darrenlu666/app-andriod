@@ -60,5 +60,4 @@ public interface WebApi {
 
     @GET
     Observable<String> get4Str(@Url String url);
-
 }
