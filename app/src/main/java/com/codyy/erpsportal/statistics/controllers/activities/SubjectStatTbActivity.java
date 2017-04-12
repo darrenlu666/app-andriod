@@ -234,7 +234,8 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
                         , numberFormat.format(statEntity.getDownRate()) + "%"
                 ));
             }
-            if (mStatEntities != null && mStatEntities.get(0) != null
+            if (mStatEntities != null && mStatEntities.size() > 0
+                    && mStatEntities.get(0) != null
                     && mStatEntities.get(0).getAreaType().equals("school")) {//如果是学校第一列显示5个字
                 statTableModel.setEms(5);
             }
