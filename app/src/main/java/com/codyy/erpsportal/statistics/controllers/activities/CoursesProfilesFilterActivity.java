@@ -446,6 +446,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         mSubjectsOl.addView(subjectCb);
         mSubjectCbList.add(subjectCb);
         subjectCb.setOnClickListener(mOnSubjectClickListener);
+        //如果已经筛选过，选中原来选中的学科
         if (mFilterCarrier != null && mFilterCarrier.getSubjectId() != null) {
             if (mFilterCarrier.getSubjectId().equals(subjectEntity.getId())) {
                 subjectCb.setChecked(true);
@@ -746,10 +747,6 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
      * @param userInfo
      * @param title
      */
-    public static void startSubjectFilter(Activity activity, UserInfo userInfo, String title) {
-        startSubjectFilter(activity, userInfo, title, null);
-    }
-
     public static void startSubjectFilter(Activity activity, UserInfo userInfo, String title,
                                           StatFilterCarrier statFilterCarrier) {
         Intent intent = new Intent(activity, CoursesProfilesFilterActivity.class);
@@ -764,10 +761,6 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }
         activity.startActivityForResult(intent, REQUEST_CODE);
         activity.overridePendingTransition(R.anim.slide_up_to_show, R.anim.layout_hide);
-    }
-
-    public static void startProfileFilter(Activity activity, UserInfo userInfo, String title) {
-        startProfileFilter(activity, userInfo, title, null);
     }
 
     /**
