@@ -97,6 +97,8 @@ public class SchoolTvProgramListActivity extends SimpleRecyclerActivity<SchoolPr
         setEmptyText(R.string.tv_no_data_for_now,R.color.remote_text_nor);
         mTabLayout.setTabTextColors(R.color.grey_444,R.color.main_color);
         mTabLayout.setSelectedTabIndicatorHeight(0);
+        //不需要分页显示，一次加载全部数据
+        setPageListEnable(false);
         //set filter
         setFilterListener(new IFilterListener() {
             @Override
