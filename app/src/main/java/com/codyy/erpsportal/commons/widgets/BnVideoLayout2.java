@@ -22,11 +22,13 @@ import com.codyy.erpsportal.commons.utils.Cog;
 public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayingListener, BnVideoView2.OnBNErrorListener {
 
     private static final String TAG = "BnVideoLayout2";
+    private final static int MIN_TIME_OUT = 6*1000;
     private BnVideoView2 mBnVideoView;
     private TextView mHintTv;
     private BnVideoView2.OnBNErrorListener mOnErrorListener;
     private BnVideoView2.OnPlayingListener mOnPlayingListener;
     private ITextClickListener mTextClickListener;
+    private int mTimeOut = MIN_TIME_OUT;
 
     public BnVideoLayout2(Context context) {
         this(context, null);
@@ -85,6 +87,10 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                                 }
                             });
                             mBnVideoView.play(mBnVideoView.getPlayType());
+                            //reset the timeout .
+                            if(mTimeOut > MIN_TIME_OUT){
+                                mBnVideoView.setTimeOut(mTimeOut);
+                            }
                         }
                     }
 
@@ -122,7 +128,7 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
             });
         } else if (errorCode == -1) {//不支持硬解，改为软解
             mBnVideoView.setEncodeType(BnVideoView2.BN_ENCODE_SOFTWARE);
-        } else if (9 == errorCode) {//9 no playable stream .
+        } else if (9 == errorCode || 1 == errorCode) {//9 no playable stream . 1:internal play error.
             post(new Runnable() {
                 @Override
                 public void run() {
@@ -199,6 +205,9 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
      * @param timeOut
      */
     public void setTimeOut(int timeOut) {
+        if(timeOut > MIN_TIME_OUT){
+            mTimeOut = timeOut;
+        }
         mBnVideoView.setTimeOut(timeOut);
     }
 

@@ -271,6 +271,8 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                 initVideoControlListener();
                 mVideoControlView.setPlayMode(BNVideoControlView.MODE_LIVING);
                 mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE, false);
+                //超时设置
+                mVideoLayout.setTimeOut(15);
             } else {
                 //tips no video .
                 mVideoControlView.setVisibility(View.GONE);
