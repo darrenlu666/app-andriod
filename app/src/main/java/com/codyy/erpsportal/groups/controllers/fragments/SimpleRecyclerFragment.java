@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.groups.controllers.fragments;
 
 import android.graphics.drawable.Drawable;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -91,6 +92,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
             mAdapter.setHasMoreData(true);
         }else{
             mAdapter.setHasMoreData(false);
+            notifyLoadCompleted();
         }
         mAdapter.notifyDataSetChanged();
 
@@ -130,6 +132,7 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
+                Cog.i(TAG," EmptyView () requestData ~");
                 requestData(true);
             }
         });
@@ -182,16 +185,19 @@ public abstract class SimpleRecyclerFragment<T> extends BaseHttpFragment {
     /** * 初始化数据 */
     public void initData(){
         if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
+        Cog.i(TAG," initData () requestData ~");
         requestData(true);
     }
     /**
      * 下拉刷新
      */
     public void refresh() {
+        Cog.i(TAG," refresh () ~");
         if(null == mRecyclerView ) return;
         if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         mRecyclerView.setRefreshing(true);
         mAdapter.setHasMoreData(false);
+        Cog.i(TAG," refresh () requestData ~");
         requestData(true);
     }
 }

@@ -116,14 +116,19 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
         });
     }
 
+    /**
+     * 默认数据加载
+     */
     private void loadData() {
         LocalDate localDate = LocalDate.now();
         if (mStatFilterCarrier == null) {
             mStatFilterCarrier = new StatFilterCarrier();
+            //默认筛选本周
             mStatFilterCarrier.setStartDate(
                     localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
             mStatFilterCarrier.setEndDate(
                     localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
+            mStatFilterCarrier.setSubjectId("-1");
         }
         loadData( mStatFilterCarrier);
     }
@@ -229,7 +234,8 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
                         , numberFormat.format(statEntity.getDownRate()) + "%"
                 ));
             }
-            if (mStatEntities != null && mStatEntities.get(0) != null
+            if (mStatEntities != null && mStatEntities.size() > 0
+                    && mStatEntities.get(0) != null
                     && mStatEntities.get(0).getAreaType().equals("school")) {//如果是学校第一列显示5个字
                 statTableModel.setEms(5);
             }

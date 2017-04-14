@@ -295,10 +295,12 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
             }
         }
         statTableModel.setRows(statRows);
-        CourseProfile courseProfile = mCourseProfiles.get(0);
-        if (courseProfile != null && mAreaInfo.isArea()
-                && AreaInfo.TYPE_SCHOOL.equals(courseProfile.getType())) {
-            statTableModel.setEms(5);
+        if (mCourseProfiles.size() > 0) {
+            CourseProfile courseProfile = mCourseProfiles.get(0);
+            if (courseProfile != null && mAreaInfo.isArea()
+                    && AreaInfo.TYPE_SCHOOL.equals(courseProfile.getType())) {
+                statTableModel.setEms(5);
+            }
         }
         mTableFragment.setTableModel(statTableModel);
     }

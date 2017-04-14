@@ -40,15 +40,12 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
     private String mStudentId;
     private String mUpdateTime;//the last one request return updateTime .
     private ISyncCount mSyncInterface;
-    private boolean mHasMore = true;
     private int mTotal ;
 
     public static PeopleTreeFragment newInstance(UserInfo userInfo, String scheduleDetailId) {
         Bundle args = new Bundle();
         args.putParcelable(Constants.USER_INFO, userInfo);
         args.putString(ARG_CLASS_ID, scheduleDetailId);
-      /*  if(null != studentId)
-            args.putString(ARG_STUDENT_ID , studentId);*/
         PeopleTreeFragment fragment = new PeopleTreeFragment();
         fragment.setArguments(args);
         return fragment;
@@ -119,19 +116,16 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                     if(isRefreshing && parse.getTotal()>0) mTotal = parse.getTotal();
                     if (parse.getData() != null && parse.getData().size() > 0) {
                         //has more
-                        if(isRefreshing) mHasMore = true;
                         for (Watcher group : parse.getData()) {
                             group.setBaseViewHoldType(0);
                             mDataList.add(group);
                         }
 
                         if(null != mSyncInterface&&isRefreshing) mSyncInterface.sync(parse.getTotal());
-                    }else{// load more end !
-                        mHasMore = false;
                     }
                     // record the newest update time .(tips : order updateTime desc .)
                     if(mDataList!= null && mDataList.size()>0){
-                        mUpdateTime = mDataList.get(0).getUpdateTime();
+                        mUpdateTime = mDataList.get(mDataList.size()-1).getUpdateTime();
                     }
                 }
             }

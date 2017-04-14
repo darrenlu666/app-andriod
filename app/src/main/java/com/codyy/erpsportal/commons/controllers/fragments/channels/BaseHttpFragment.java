@@ -103,7 +103,7 @@ public abstract class BaseHttpFragment extends Fragment {
      *
      * @return
      */
-    public abstract HashMap<String, String> getParam(boolean isRefreshing);
+    public abstract HashMap<String, String> getParam(boolean isRefreshing) throws Exception;
 
     /**
      * 数据请求返回结果
@@ -130,7 +130,13 @@ public abstract class BaseHttpFragment extends Fragment {
      * 请求数据
      */
     public void requestData( boolean isRefreshing) {
-        requestData(obtainAPI(), getParam(isRefreshing),isRefreshing, new BaseHttpActivity.IRequest() {
+        HashMap<String,String> params = new HashMap<>();
+        try {
+            params = getParam(isRefreshing);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        requestData(obtainAPI(), params,isRefreshing, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 try {
@@ -172,7 +178,7 @@ public abstract class BaseHttpFragment extends Fragment {
             params.put("start",0+"");
             params.put("end",(sPageCount-1)+"");
             //取消loadMore的状态
-            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(false);
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(true);
         }
         mSender.sendRequest(new RequestSender.RequestData(url, params, new Response.Listener<JSONObject>() {
 
@@ -234,6 +240,13 @@ public abstract class BaseHttpFragment extends Fragment {
         recyclerView.addOnScrollListener(mEndlessRecyclerOnScrollListener);
     }
 
+    /**
+     * 加载数据完成,没有更多数据阻止多发送一次网络请求.
+     */
+    public void notifyLoadCompleted(){
+        if(null != mEndlessRecyclerOnScrollListener)
+            mEndlessRecyclerOnScrollListener.setLoading(true);
+    }
     /**
      * 退出应用时调用
      */

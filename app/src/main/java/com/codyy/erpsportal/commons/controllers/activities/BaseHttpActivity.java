@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
  * 3.增加返回动画
  * 4.增加ToolBar初始化
  * 5.增加Menu筛选功能{@link #setFilterListener(IFilterListener)}
+ * 6. 默认分页加载数据，如需关闭{setPageListEnable(false);}
  * Created by poe on 16-1-19.
  */
 public abstract class BaseHttpActivity extends AppCompatActivity{
@@ -53,6 +54,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
     private IFilterListener mFilterListener;
     private int mCurrentPageIndex = 1 ;//当前默认页面
     private  EndlessRecyclerOnScrollListener mEndlessRecyclerOnScrollListener;
+    private boolean mPageListEnable = true;//默认打开加载更多开关
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +81,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * 参数拼接
      * @return 数据请求parmas
      */
-    public abstract HashMap<String,String> getParam(boolean isRefreshing);
+    public abstract HashMap<String,String> getParam(boolean isRefreshing) throws Exception;
 
     /**
      * 初始化视图的初始化
@@ -113,7 +115,13 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * 请求数据
      */
     public void requestData(boolean isRefreshing){
-        requestData(obtainAPI(), getParam(isRefreshing),isRefreshing, new IRequest() {
+        HashMap<String,String> params = new HashMap<>();
+        try {
+            params = getParam(isRefreshing);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        requestData(obtainAPI(), params,isRefreshing, new IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 try {
@@ -157,11 +165,11 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
             return;
         }
         /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
-        if(isRefreshing){
+        if(isRefreshing && mPageListEnable){
             params.put("start",0+"");
             params.put("end",(sPageCount-1)+"");
             //取消loadMore的状态
-            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(false);
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(true);
         }
 
         mSender.sendRequest(new RequestSender.RequestData(url, params, new Response.Listener<JSONObject>() {
@@ -229,6 +237,10 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
         });
     }
 
+    public void setPageListEnable(boolean loadMoreEnable) {
+        this.mPageListEnable = loadMoreEnable;
+    }
+
     /**
      * 设置自动加载更多 默认不会自动加载更多...
      * @param recyclerView the recycler view which will auto load more .
@@ -241,7 +253,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
                 public void onLoadMore(int current_page) {
                     Cog.d(TAG, "current page index :" + current_page);
                     //更新下拉刷新...
-                    if (current_page != mCurrentPageIndex) {
+                    if (current_page != mCurrentPageIndex && mPageListEnable) {
                         mCurrentPageIndex = current_page;
                         new Thread(new Runnable() {
                             @Override
@@ -284,6 +296,14 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
                     .start();
         }
 
+    }
+
+    /**
+     * 加载数据完成,没有更多数据阻止多发送一次网络请求.
+     */
+    public void notifyLoadCompleted(){
+        if(null != mEndlessRecyclerOnScrollListener)
+            mEndlessRecyclerOnScrollListener.setLoading(true);
     }
 
     @Override

@@ -35,6 +35,7 @@ import butterknife.Bind;
  * 3. 拥有自由切换filter功能
  * 4. 可实现下拉刷新
  * 5. 能够自动加载更多
+ * 6. 是否拥有加载更多可以关闭/打开控制.
  * Created by poe on 3/6/17.
  */
 public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends BaseHttpActivity {
@@ -121,7 +122,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
         mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
             @Override
             public void onMoreData() {
-                requestData(false);
+                    requestData(false);
             }
         });
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<T>() {
@@ -178,6 +179,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
             mAdapter.setHasMoreData(true);
         }else{
             mAdapter.setHasMoreData(false);
+            notifyLoadCompleted();
         }
         mAdapter.notifyDataSetChanged();
 

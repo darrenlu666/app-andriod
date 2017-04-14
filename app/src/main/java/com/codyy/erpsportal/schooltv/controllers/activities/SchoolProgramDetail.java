@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -94,6 +95,8 @@ public class SchoolProgramDetail extends BaseHttpActivity {
      **/
     ImageView mBackImage;//back img .
 
+    private String mSchoolId = null ;
+
     @Override
     public int obtainLayoutId() {
         return R.layout.activity_school_tv_program_detail;
@@ -109,10 +112,8 @@ public class SchoolProgramDetail extends BaseHttpActivity {
         HashMap<String, String> param = new HashMap<>();
         if (null != mUserInfo) {
             param.put("uuid", mUserInfo.getUuid());
-            if (UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())) {
-                param.put("schoolId", mUserInfo.getSelectedChild().getSchoolId());
-            } else {
-                param.put("schoolId", mUserInfo.getSchoolId());
+            if (!TextUtils.isEmpty(mSchoolId)) {
+                param.put("schoolId", mSchoolId);
             }
         }
         if (null != mProgramId) param.put("tvProgramDetailId", mProgramId);
@@ -122,6 +123,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     @Override
     public void init() {
         mProgramId = getIntent().getStringExtra(EXTRA_PROGRAM_ID);
+        mSchoolId = getIntent().getStringExtra(Constants.USER_INFO_SCHOOL_ID);
         mTitleTextView.setText("节目详情");
         initToolbar(mToolBar);
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
@@ -269,6 +271,8 @@ public class SchoolProgramDetail extends BaseHttpActivity {
                 initVideoControlListener();
                 mVideoControlView.setPlayMode(BNVideoControlView.MODE_LIVING);
                 mVideoControlView.setVideoPath(mProgramDetail.getStreamUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE, false);
+                //超时设置
+                mVideoLayout.setTimeOut(15);
             } else {
                 //tips no video .
                 mVideoControlView.setVisibility(View.GONE);
@@ -300,10 +304,11 @@ public class SchoolProgramDetail extends BaseHttpActivity {
         }
     }
 
-    public static void start(Activity act, UserInfo userInfo, String programId) {
+    public static void start(Activity act, UserInfo userInfo, String programId,String schoolId) {
         Intent intent = new Intent(act, SchoolProgramDetail.class);
         intent.putExtra(EXTRA_PROGRAM_ID, programId);
         intent.putExtra(Constants.USER_INFO, userInfo);
+        intent.putExtra(Constants.USER_INFO_SCHOOL_ID,schoolId);
         act.startActivity(intent);
         UIUtils.addEnterAnim(act);
     }
