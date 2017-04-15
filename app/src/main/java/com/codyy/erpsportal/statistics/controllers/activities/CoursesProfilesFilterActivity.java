@@ -3,7 +3,6 @@ package com.codyy.erpsportal.statistics.controllers.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.text.TextUtils;
@@ -22,6 +21,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
@@ -76,18 +76,10 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
 
     public final static int REQUEST_CODE = 1;
 
-    public final static int BY_WEEK = 1;
-
-    public final static int BY_MONTH = 2;
-
-    public final static int BY_SPECIFIC_DATE = 3;
-
-    public final static int BY_TERM = 4;
-
     /**
      * 按什么筛选
      */
-    @FilterBy
+    @StatFilterBy
     private int mFilterBy;
 
     @Bind(R.id.tv_title)
@@ -254,44 +246,44 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         } else {//二次筛选，原来筛选参数
             setFilterBy(mFilterCarrier.getFilterBy());
             switch(mFilterBy) {
-                case BY_WEEK:
+                case StatFilterBy.BY_WEEK:
                     mWeekDate = LocalDate.parse(mFilterCarrier.getStartDate());
                     mWeekBeginTv.setText(mFilterCarrier.getStartDate());
                     mWeekEndTv.setText(mFilterCarrier.getEndDate());
                     break;
-                case BY_MONTH:
+                case StatFilterBy.BY_MONTH:
                     mMonthDate = LocalDate.parse(mFilterCarrier.getStartDate());
                     mMonthBeginTv.setText(mFilterCarrier.getStartDate());
                     mMonthEndTv.setText(mFilterCarrier.getEndDate());
                     break;
-                case BY_SPECIFIC_DATE:
+                case StatFilterBy.BY_SPECIFIC_DATE:
                     mSpecificDateBeginBtn.setText(mFilterCarrier.getStartDate());
                     mSpecificDateEndBtn.setText(mFilterCarrier.getEndDate());
                     break;
-                case BY_TERM:
+                case StatFilterBy.BY_TERM:
                     break;
             }
         }
     }
 
     private void setFilterByTerm() {
-        mFilterBy = BY_TERM;
+        mFilterBy = StatFilterBy.BY_TERM;
         mByTermRb.setChecked(true);
     }
 
     private void setFilterBy(int filterBy) {
         mFilterBy = filterBy;
         switch(mFilterBy) {
-            case BY_WEEK:
+            case StatFilterBy.BY_WEEK:
                 mByWeekRb.setChecked(true);
                 break;
-            case BY_MONTH:
+            case StatFilterBy.BY_MONTH:
                 mByMonthRb.setChecked(true);
                 break;
-            case BY_SPECIFIC_DATE:
+            case StatFilterBy.BY_SPECIFIC_DATE:
                 mBySpecificDateRb.setChecked(true);
                 break;
-            case BY_TERM:
+            case StatFilterBy.BY_TERM:
                 mByTermRb.setChecked(true);
                 break;
         }
@@ -601,12 +593,12 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     }
 
     private void setFilterByWeek() {
-        mFilterBy = BY_WEEK;
+        mFilterBy = StatFilterBy.BY_WEEK;
         mByWeekRb.setChecked(true);
     }
 
     private void setFilterByMonth() {
-        mFilterBy = BY_MONTH;
+        mFilterBy = StatFilterBy.BY_MONTH;
         mByMonthRb.setChecked(true);
     }
 
@@ -627,7 +619,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     };
 
     private void setFilterBySpecificDate() {
-        mFilterBy = BY_SPECIFIC_DATE;
+        mFilterBy = StatFilterBy.BY_SPECIFIC_DATE;
         mBySpecificDateRb.setChecked(true);
     }
 
@@ -671,16 +663,16 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     public void onRadioButtonClick(View view) {
         switch (view.getId()) {
             case R.id.rb_by_week:
-                mFilterBy = BY_WEEK;
+                mFilterBy = StatFilterBy.BY_WEEK;
                 break;
             case R.id.rb_by_month:
-                mFilterBy = BY_MONTH;
+                mFilterBy = StatFilterBy.BY_MONTH;
                 break;
             case R.id.rb_by_specific_date:
-                mFilterBy = BY_SPECIFIC_DATE;
+                mFilterBy = StatFilterBy.BY_SPECIFIC_DATE;
                 break;
             case R.id.rb_by_term:
-                mFilterBy = BY_TERM;
+                mFilterBy = StatFilterBy.BY_TERM;
                 break;
         }
     }
@@ -737,9 +729,6 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }
         return statFilterCarrier;
     }
-
-    @IntDef({BY_WEEK, BY_MONTH, BY_SPECIFIC_DATE, BY_TERM})
-    public @interface FilterBy{}
 
     /**
      * 学科统计筛选
