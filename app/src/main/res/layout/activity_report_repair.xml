@@ -76,6 +76,8 @@
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@null"
                 android:src="@drawable/arrow" />
+
+            <requestFocus/>
         </LinearLayout>
 
         <LinearLayout

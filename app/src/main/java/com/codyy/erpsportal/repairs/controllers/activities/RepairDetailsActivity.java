@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.TabsAdapter;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.repairs.controllers.fragments.RepairDetailsFragment;
 import com.codyy.erpsportal.repairs.controllers.fragments.RepairTrackingFragment;
@@ -39,6 +41,8 @@ public class RepairDetailsActivity extends AppCompatActivity {
     @Bind(R.id.viewPager)
     ViewPager mViewPager;
 
+    private UserInfo mUserInfo;
+
     private String mReportId;
 
     @Override
@@ -46,14 +50,24 @@ public class RepairDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repair_details);
         ButterKnife.bind(this);
+        initAttributes();
+        initComponents();
+    }
+
+    private void initAttributes() {
+        mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
         mReportId = getIntent().getStringExtra(EXTRA_REPAIR_ID);
+    }
+
+    private void initComponents() {
         TabsAdapter tabsAdapter = new TabsAdapter(this, getSupportFragmentManager(), mViewPager);
         mViewPager.setAdapter(tabsAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-        Bundle bundle1 = new Bundle();
-        bundle1.putString(RepairDetailsFragment.ARG_REPAIR_ID, mReportId);
-        tabsAdapter.addTab("报修信息", RepairDetailsFragment.class, bundle1);
-        tabsAdapter.addTab("问题追踪", RepairTrackingFragment.class, null);
+        Bundle bundle = new Bundle();
+        bundle.putString(Extra.ID, mReportId);
+        bundle.putParcelable(Extra.USER_INFO, mUserInfo);
+        tabsAdapter.addTab("报修信息", RepairDetailsFragment.class, bundle);
+        tabsAdapter.addTab("问题追踪", RepairTrackingFragment.class, bundle);
         addDividerBetweenTabs();
     }
 
@@ -69,8 +83,9 @@ public class RepairDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public static void start(Context context, String repairId){
+    public static void start(Context context, UserInfo userInfo, String repairId){
         Intent intent = new Intent(context, RepairDetailsActivity.class);
+        intent.putExtra(Extra.USER_INFO, userInfo);
         intent.putExtra(EXTRA_REPAIR_ID, repairId);
         context.startActivity(intent);
     }

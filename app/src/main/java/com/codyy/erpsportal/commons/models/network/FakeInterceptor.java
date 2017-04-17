@@ -1,14 +1,9 @@
 package com.codyy.erpsportal.commons.models.network;
 
 import com.codyy.erpsportal.BuildConfig;
-import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
-import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
-import com.codyy.erpsportal.repairs.models.entities.RepairDetails;
-import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,24 +27,24 @@ public class FakeInterceptor implements Interceptor {
         if(BuildConfig.DEBUG) {
             HttpUrl httpUrl = chain.request().url();
             String urlStr = httpUrl.url().toString();
-            if (urlStr.equals(URLConfig.GET_REPAIR_DETAILS)) {
+            /*if (urlStr.equals(URLConfig.GET_REPAIR_DETAILS)) {
                 Map<String, Object> responseMap = new HashMap<>();
                 responseMap.put("result", "success");
                 RepairDetails repairDetails = new RepairDetails();
                 repairDetails.setId("1");
-                repairDetails.setSerial("zx201512120001");
-                repairDetails.setClassroomSerial("教室编号");
-                repairDetails.setClassroomName("教室名称教室名称");
-                repairDetails.setDescription("声音太小听不到？声音太小听不到？声音太小听不到？");
+                repairDetails.setMalCode("zx201512120001");
+                repairDetails.setSkey("教室编号");
+                repairDetails.setClassRoomName("教室名称教室名称");
+                repairDetails.setMalDescription("声音太小听不到？声音太小听不到？声音太小听不到？");
                 repairDetails.setCategories("硬件故障-班班通故障-声卡问题");
                 repairDetails.setReporter("雪诺");
-                repairDetails.setPhone("1388888888");
-                repairDetails.setReportTime(System.currentTimeMillis());
+                repairDetails.setReporterContact("1388888888");
+                repairDetails.setCreateTime(System.currentTimeMillis());
                 repairDetails.setStatus(4);
-                repairDetails.setHandlerName("张三");
+                repairDetails.setRepairman("张三");
                 responseMap.put("data", repairDetails);
                 return buildResponse(chain, new Gson().toJson(responseMap));
-            } else if (urlStr.equals(URLConfig.GET_REPAIR_TRACKING)) {
+            } else *//*if (urlStr.equals(URLConfig.GET_REPAIR_TRACKING)) {
                 List<InquiryItem> inquiryItems = new ArrayList<>();
                 InquiryItem inquiryItem = new InquiryItem();
                 inquiryItem.setReply(false);
@@ -60,7 +55,7 @@ public class FakeInterceptor implements Interceptor {
                 InquiryItem inquiryItem1 = new InquiryItem();
                 inquiryItem1.setReply(true);
                 inquiryItem1.setContent("请找医生看眼科");
-                inquiryItem1.setHandlerName("张三");
+                inquiryItem1.setAnswererName("张三");
                 inquiryItem1.setTime(System.currentTimeMillis());
                 inquiryItem1.setReply(true);
                 inquiryItems.add(inquiryItem1);
@@ -74,22 +69,13 @@ public class FakeInterceptor implements Interceptor {
                 InquiryItem inquiryItem3 = new InquiryItem();
                 inquiryItem3.setReply(true);
                 inquiryItem3.setContent("再去看");
-                inquiryItem3.setHandlerName("张三");
+                inquiryItem3.setAnswererName("张三");
                 inquiryItem3.setTime(System.currentTimeMillis());
                 inquiryItem3.setReply(true);
                 inquiryItems.add(inquiryItem3);
 
                 return buildResponse(chain, inquiryItems);
-            } else if (urlStr.equals(URLConfig.GET_MALFUNC_CATEGORIES)) {
-                List<MalfuncCategory> categories = new ArrayList<>();
-                for (int i=0; i < 8; i++) {
-                    MalfuncCategory malfuncCategory = new MalfuncCategory();
-                    malfuncCategory.setId("" + i);
-                    malfuncCategory.setName("故障类型" + i);
-                    categories.add(malfuncCategory);
-                }
-                return buildResponse(chain, categories);
-            }
+            }*/
         }
         return chain.proceed(chain.request());
     }

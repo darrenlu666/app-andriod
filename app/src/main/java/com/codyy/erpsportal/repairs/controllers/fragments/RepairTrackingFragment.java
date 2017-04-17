@@ -14,6 +14,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.repairs.controllers.activities.MakeDetailedInquiryActivity;
 import com.codyy.erpsportal.repairs.controllers.adapters.InquiriesAdapter.OnItemClickListener;
 import com.codyy.erpsportal.repairs.models.engines.InquiriesLoader;
@@ -54,7 +56,20 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
 
     private InquiriesLoader mInquiriesLoader;
 
+    private UserInfo mUserInfo;
+
+    private String mRepairId;
+
     public RepairTrackingFragment() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mUserInfo = getArguments().getParcelable(Extra.USER_INFO);
+            mRepairId = getArguments().getString(Extra.ID);
+        }
     }
 
     @Override
@@ -86,6 +101,8 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mInquiriesLoader.addParam("malDetailId", mRepairId);
+        mInquiriesLoader.addParam("uuid", mUserInfo.getUuid());
         mInquiriesLoader.loadData(false);
     }
 
@@ -102,6 +119,6 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
     @Override
     public List<InquiryItem> extractList(JSONObject response) {
         Type type = new TypeToken<List<InquiryItem>>(){}.getType();
-        return new Gson().fromJson(response.optJSONArray("list").toString(), type);
+        return new Gson().fromJson(response.optJSONArray("data").toString(), type);
     }
 }

@@ -11,32 +11,31 @@ import android.widget.ImageView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
-import com.codyy.erpsportal.repairs.controllers.fragments.MalfuncCategoriesFragment.OnItemClickListener;
-import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
+import com.codyy.erpsportal.repairs.models.entities.ClassroomSelectItem;
 
 import java.util.List;
 
 import butterknife.Bind;
 
 /**
- * 故障类型适配器
+ * 供选择班级适配器
  */
-public class MalfuncCategoryRvAdapter extends RecyclerView.Adapter<MalfuncCategoryRvAdapter.ViewHolder> {
+public class ClassroomsSelectingRvAdapter extends RecyclerView.Adapter<ClassroomsSelectingRvAdapter.ViewHolder> {
 
-    private List<MalfuncCategory> mCategoryList;
+    private List<ClassroomSelectItem> mClassroomSelectItems;
 
     private OnItemClickListener mListener;
 
     private int mPosition = -1;
 
-    public MalfuncCategoryRvAdapter() { }
+    public ClassroomsSelectingRvAdapter() { }
 
     public void setListener(OnItemClickListener listener) {
         mListener = listener;
     }
 
-    public void setCategoryList(List<MalfuncCategory> categoryList) {
-        mCategoryList = categoryList;
+    public void setClassroomSelectItems(List<ClassroomSelectItem> classroomSelectItems) {
+        mClassroomSelectItems = classroomSelectItems;
         notifyDataSetChanged();
     }
 
@@ -49,7 +48,7 @@ public class MalfuncCategoryRvAdapter extends RecyclerView.Adapter<MalfuncCatego
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        MalfuncCategory category = mCategoryList.get(position);
+        ClassroomSelectItem category = mClassroomSelectItems.get(position);
         holder.setDataToView(category, position == mPosition);
         holder.itemView.setOnClickListener(new OnClickListener() {
             @Override
@@ -57,7 +56,7 @@ public class MalfuncCategoryRvAdapter extends RecyclerView.Adapter<MalfuncCatego
                 int pos = holder.getAdapterPosition();
                 if (mPosition == pos) return;//点击的已选中的就什么都不用搞了
                 if (mListener != null) {
-                    mListener.onItemClick(mCategoryList.get(pos), pos);
+                    mListener.onItemClick(mClassroomSelectItems.get(pos), pos);
                 }
                 int originalPos = mPosition;
                 mPosition = pos;
@@ -77,11 +76,11 @@ public class MalfuncCategoryRvAdapter extends RecyclerView.Adapter<MalfuncCatego
 
     @Override
     public int getItemCount() {
-        return mCategoryList == null? 0: mCategoryList.size();
+        return mClassroomSelectItems == null? 0: mClassroomSelectItems.size();
     }
 
     @LayoutId(R.layout.item_malfunc_category)
-    public static class ViewHolder extends BindingRvHolder<MalfuncCategory> {
+    public static class ViewHolder extends BindingRvHolder<ClassroomSelectItem> {
 
         @Bind(R.id.tv_category_name)
         CheckedTextView mCategoryNameTv;
@@ -93,14 +92,18 @@ public class MalfuncCategoryRvAdapter extends RecyclerView.Adapter<MalfuncCatego
             super(view);
         }
 
-        public void setDataToView(MalfuncCategory data, boolean isSelected) {
+        public void setDataToView(ClassroomSelectItem item, boolean isSelected) {
             mCategoryNameTv.setChecked(isSelected);
-            mCategoryNameTv.setText(data.getName());
+            mCategoryNameTv.setText(item.getRoomName());
             if (isSelected) {
                 mSelectedMarkIv.setVisibility(View.VISIBLE);
             } else {
                 mSelectedMarkIv.setVisibility(View.GONE);
             }
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(ClassroomSelectItem item, int position);
     }
 }

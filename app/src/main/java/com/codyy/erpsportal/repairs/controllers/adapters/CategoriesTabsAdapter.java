@@ -1,15 +1,17 @@
 package com.codyy.erpsportal.repairs.controllers.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
+import android.view.ViewGroup;
 
-import java.lang.ref.WeakReference;
+import com.codyy.erpsportal.repairs.controllers.fragments.MalfuncCategoriesFragment;
+import com.codyy.erpsportal.repairs.models.entities.CategoriesPageInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,22 +19,30 @@ import java.util.List;
  * 标签下页面适配器
  * Created by G++
  */
-public  class CategoriesTabsAdapter extends FragmentPagerAdapter{
+public  class CategoriesTabsAdapter extends FragmentStatePagerAdapter {
     private final Context mContext;
     private final ViewPager mViewPager;
     private final List<TabInfo> mTabs = new ArrayList<>();
 
-    private final SparseArray<WeakReference<Fragment>> mFragments = new SparseArray<>();
+    private final SparseArray<Fragment> mFragments = new SparseArray<>();
+
+    public void update(int position, CategoriesPageInfo categoriesPageInfo) {
+        if (position < 0 || position >= mTabs.size()) {
+            return;
+        }
+        mTabs.get(position).categoriesPageInfo = categoriesPageInfo;
+    }
 
     static final class TabInfo {
-        private String title;
-        private final Class<?> clss;
-        private final Bundle args;
 
-        TabInfo(String _title, Class<?> _class, Bundle _args) {
-            title = _title;
-            clss = _class;
-            args = _args;
+        private CategoriesPageInfo categoriesPageInfo;
+
+        TabInfo(CategoriesPageInfo _info) {
+            categoriesPageInfo = _info;
+        }
+
+        private String getTitle() {
+            return categoriesPageInfo.getSelectedName();
         }
     }
 
@@ -43,22 +53,26 @@ public  class CategoriesTabsAdapter extends FragmentPagerAdapter{
         mViewPager.setAdapter(this);
     }
 
-    public void addTab(String title, Class<?> clss, Bundle args) {
-        TabInfo info = new TabInfo(title, clss, args);
+    public void addTab(CategoriesPageInfo pageInfo) {
+        TabInfo info = new TabInfo(pageInfo);
         mTabs.add(info);
         notifyDataSetChanged();
     }
 
-    public void setTitle(int position, String title) {
-        if (position < 0 || position >= mTabs.size()) return;
-        mTabs.get(position).title = title;
+    public void addTabs(List<CategoriesPageInfo> pageInfos) {
+        if (pageInfos != null && pageInfos.size() > 0) {
+            for (CategoriesPageInfo pageInfo: pageInfos) {
+                TabInfo info = new TabInfo(pageInfo);
+                mTabs.add(info);
+            }
+            notifyDataSetChanged();
+        }
     }
 
     public void remove(int start) {
         while (mTabs.size() > start) {
             int index = mTabs.size() - 1;
             mTabs.remove( index);
-            mFragments.remove( index);
         }
         notifyDataSetChanged();
     }
@@ -69,14 +83,25 @@ public  class CategoriesTabsAdapter extends FragmentPagerAdapter{
      * @return 所在位置的碎片
      */
     public Fragment getFragmentAt(int position) {
-        WeakReference<Fragment> reference = mFragments.get(position);
-        if (reference == null) return null;
-        return reference.get();
+        return mFragments.get(position);
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        MalfuncCategoriesFragment fragment = (MalfuncCategoriesFragment) super.instantiateItem(container,
+                position);
+        mFragments.put(position, fragment);
+        return fragment;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mTabs.get(position).title;
+        return mTabs.get(position).getTitle();
     }
 
     @Override
@@ -87,8 +112,16 @@ public  class CategoriesTabsAdapter extends FragmentPagerAdapter{
     @Override
     public Fragment getItem(int position) {
         TabInfo info = mTabs.get(position);
-        Fragment fragment = Fragment.instantiate(mContext, info.clss.getName(), info.args);
-        mFragments.put(position, new WeakReference<>(fragment));
+        MalfuncCategoriesFragment fragment = (MalfuncCategoriesFragment) Fragment
+                .instantiate(mContext, MalfuncCategoriesFragment.class.getName(), null);
+        fragment.setInfo(info.categoriesPageInfo);
+        mFragments.put(position, fragment);
         return fragment;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
+        mFragments.remove(position);
     }
 }

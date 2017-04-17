@@ -35,7 +35,7 @@ public class InquiryVh extends BindingRvHolder<InquiryItem> {
 
     @Override
     public void setDataToView(InquiryItem data) {
-        mTimeTv.setText(DateTimeFormat.forPattern("YYYY-MM-dd HH:mm").print(data.getTime()));
-        mContentTv.setText(data.getContent());
+        mTimeTv.setText(DateTimeFormat.forPattern("YYYY-MM-dd HH:mm").print(data.getCreateTime()));
+        mContentTv.setText(data.getAppendDescription());
     }
 }

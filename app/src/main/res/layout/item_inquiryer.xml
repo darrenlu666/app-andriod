@@ -90,6 +90,7 @@
                 app:aspectRatio="1"
                 app:dominantMeasurement="width"
                 app:placeholderImage="@drawable/icon_default_video"/>
+
             <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
                 android:layout_width="72dp"
                 android:layout_height="0dp"
@@ -97,9 +98,7 @@
                 app:aspectRatio="1"
                 app:dominantMeasurement="width"
                 app:placeholderImage="@drawable/icon_default_video"/>
+
         </com.google.android.flexbox.FlexboxLayout>
     </LinearLayout>
-
-
-
 </RelativeLayout>

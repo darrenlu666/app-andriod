@@ -1,8 +1,11 @@
 package com.codyy.erpsportal.repairs.models.entities;
 
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 
 import com.codyy.erpsportal.R;
+
+import java.util.List;
 
 /**
  * 报修详情
@@ -11,84 +14,100 @@ import com.codyy.erpsportal.R;
 
 public class RepairDetails {
 
-    private String id;
+    private String malCode;
 
-    private String serial;
+    private String skey;
 
-    private String classroomSerial;
+    private String classRoomName;
 
-    private String classroomName;
+    private String malDescription;
 
-    private String description;
+    private List<ImageBean> imgs;
 
-    private String[] photos;
+    private String malCatalogName1;
 
-    private String categories;
+    private String malCatalogName2;
+
+    private String malCatalogName3;
 
     private String reporter;
 
-    private String phone;
+    private String reporterContact;
 
-    private long reportTime;
+    private long createTime;
 
-    private int status;
+    private String status;
 
-    private String handlerName;
+    private String repairman;
 
-    public String getId() {
-        return id;
+    public String getMalCode() {
+        return malCode;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setMalCode(String malCode) {
+        this.malCode = malCode;
     }
 
-    public String getSerial() {
-        return serial;
+    public String getSkey() {
+        return skey;
     }
 
-    public void setSerial(String serial) {
-        this.serial = serial;
+    public void setSkey(String skey) {
+        this.skey = skey;
     }
 
-    public String getClassroomSerial() {
-        return classroomSerial;
+    public String getClassRoomName() {
+        return classRoomName;
     }
 
-    public void setClassroomSerial(String classroomSerial) {
-        this.classroomSerial = classroomSerial;
+    public void setClassRoomName(String classRoomName) {
+        this.classRoomName = classRoomName;
     }
 
-    public String getClassroomName() {
-        return classroomName;
+    public String getMalDescription() {
+        return malDescription;
     }
 
-    public void setClassroomName(String classroomName) {
-        this.classroomName = classroomName;
+    public void setMalDescription(String malDescription) {
+        this.malDescription = malDescription;
     }
 
-    public String getDescription() {
-        return description;
+    public List<ImageBean> getImgs() {
+        return imgs;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String[] getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(String[] photos) {
-        this.photos = photos;
+    public void setImgs(List<ImageBean> imgs) {
+        this.imgs = imgs;
     }
 
     public String getCategories() {
-        return categories;
+        return (TextUtils.isEmpty(malCatalogName1)? "": malCatalogName1)
+                + (TextUtils.isEmpty(malCatalogName2)? "": "-" + malCatalogName2)
+                + (TextUtils.isEmpty(malCatalogName3)? "": "-" + malCatalogName3);
     }
 
-    public void setCategories(String categories) {
-        this.categories = categories;
+    public String getMalCatalogName1() {
+        return malCatalogName1;
+    }
+
+    public void setMalCatalogName1(String malCatalogName1) {
+        this.malCatalogName1 = malCatalogName1;
+    }
+
+    public String getMalCatalogName2() {
+        return malCatalogName2;
+    }
+
+    public void setMalCatalogName2(String malCatalogName2) {
+        this.malCatalogName2 = malCatalogName2;
+    }
+
+    public String getMalCatalogName3() {
+        return malCatalogName3;
+    }
+
+    public void setMalCatalogName3(String malCatalogName3) {
+        this.malCatalogName3 = malCatalogName3;
     }
 
     public String getReporter() {
@@ -99,47 +118,47 @@ public class RepairDetails {
         this.reporter = reporter;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getReporterContact() {
+        return reporterContact;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setReporterContact(String reporterContact) {
+        this.reporterContact = reporterContact;
     }
 
-    public long getReportTime() {
-        return reportTime;
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public void setReportTime(long reportTime) {
-        this.reportTime = reportTime;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public String getHandlerName() {
-        return handlerName;
+    public String getRepairman() {
+        return repairman;
     }
 
-    public void setHandlerName(String handlerName) {
-        this.handlerName = handlerName;
+    public void setRepairman(String repairman) {
+        this.repairman = repairman;
     }
 
     public @StringRes int statusStr() {
         switch (status) {
-            case 1:
+            case StatusItem.STATUS_NEW:
                 return R.string.status_await_handle;
-            case 2:
+            case StatusItem.STATUS_PROGRESS:
                 return R.string.status_handling;
-            case 3:
+            case StatusItem.STATUS_DONE:
                 return R.string.status_handled;
-            case 4:
+            case StatusItem.STATUS_VERIFIED:
                 return R.string.status_accepted;
         }
         return android.R.string.unknownName;

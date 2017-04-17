@@ -236,7 +236,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                     @Override
                     public void onItemClick(int position, RepairRecord item) {
                         Cog.d(TAG, "onItemClick position=", position);
-                        RepairDetailsActivity.start(SchoolRepairsActivity.this, item.getMalDetailId());
+                        RepairDetailsActivity.start(SchoolRepairsActivity.this, mUserInfo, item.getMalDetailId());
                     }
                 })
                 .build();

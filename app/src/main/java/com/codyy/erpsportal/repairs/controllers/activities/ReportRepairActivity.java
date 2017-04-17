@@ -20,6 +20,9 @@ import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFragment;
+import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFragment.OnCategorySelectedListener;
+import com.codyy.erpsportal.repairs.controllers.fragments.SelectClassroomDgFragment;
+import com.codyy.erpsportal.repairs.models.entities.CategoriesPageInfo;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
 import com.codyy.erpsportal.repairs.utils.UploadUtil;
 import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
@@ -38,6 +41,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.codyy.erpsportal.R.id.ll_classroom;
 import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.REQUEST_CODE_ADD_IMAGES;
 import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.REQUEST_PREVIEW;
 
@@ -59,7 +63,7 @@ public class ReportRepairActivity extends AppCompatActivity {
     @Bind(R.id.iv_scan_serial)
     ImageView mScanSerialIv;
 
-    @Bind(R.id.ll_classroom)
+    @Bind(ll_classroom)
     LinearLayout mClassroomLl;
 
     @Bind(R.id.tv_categories)
@@ -88,6 +92,11 @@ public class ReportRepairActivity extends AppCompatActivity {
     private RepairImageAdapter mAdapter;
 
     private CompositeDisposable mDisposables;
+
+    /**
+     * 上次选择的故障类别
+     */
+    private List<CategoriesPageInfo> mSelectedCategories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,9 +175,29 @@ public class ReportRepairActivity extends AppCompatActivity {
                 });
     }
 
+    @OnClick(R.id.ll_classroom)
+    public void onClassroomClick() {
+        SelectClassroomDgFragment fragment = SelectClassroomDgFragment.newInstance(mUserInfo);
+        fragment.show(getSupportFragmentManager(), "selectClassroom");
+    }
+
     @OnClick(R.id.ll_malfunction_categories)
     public void onMalfunctionCategoriesClick() {
-        SelectCategoriesDgFragment fragment = new SelectCategoriesDgFragment();
+        SelectCategoriesDgFragment fragment = SelectCategoriesDgFragment.newInstance(mUserInfo);
+        fragment.setInitPageInfoList(mSelectedCategories);
+        fragment.setOnCategorySelectedListener(new OnCategorySelectedListener() {
+            @Override
+            public void onCategorySelected(List<CategoriesPageInfo> pageInfos) {
+                mSelectedCategories = pageInfos;
+                StringBuilder categoriesSb = new StringBuilder();
+                for (CategoriesPageInfo categoriesPageInfo: pageInfos) {
+                    categoriesSb.append( categoriesPageInfo.getSelectedName())
+                            .append('-');
+                }
+                categoriesSb.deleteCharAt( categoriesSb.length() - 1);
+                mCategoriesTv.setText( categoriesSb.toString());
+            }
+        });
         fragment.show(getSupportFragmentManager(), "selectCategories");
     }
 

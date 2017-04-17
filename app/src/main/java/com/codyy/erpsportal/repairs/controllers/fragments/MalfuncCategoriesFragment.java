@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.RxBus;
 import com.codyy.erpsportal.repairs.controllers.adapters.MalfuncCategoryRvAdapter;
+import com.codyy.erpsportal.repairs.models.entities.CategoriesPageInfo;
 import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class MalfuncCategoriesFragment extends Fragment {
 
     private MalfuncCategoryRvAdapter mRvAdapter;
 
+    private CategoriesPageInfo mCategoriesPageInfo;
+
     public MalfuncCategoriesFragment() {
     }
 
@@ -37,15 +40,10 @@ public class MalfuncCategoriesFragment extends Fragment {
         mRvAdapter.setListener(new OnItemClickListener() {
             @Override
             public void onItemClick(MalfuncCategory item, int position) {
+                mCategoriesPageInfo.setSelected(position);
                 RxBus.getInstance().send(item);
             }
         });
-        if (getArguments() != null) {
-            MalfuncCategory[] categories = (MalfuncCategory[]) getArguments().getParcelableArray("list");
-            if (categories != null) {
-                setCategoryArr(categories);
-            }
-        }
     }
 
     @Override
@@ -56,16 +54,27 @@ public class MalfuncCategoriesFragment extends Fragment {
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter( mRvAdapter);
+        setInfo(mCategoriesPageInfo);
         return view;
     }
 
-    public void setCategoryArr(@NonNull MalfuncCategory[] categoryArr) {
-        setCategoryList(new ArrayList<>(Arrays.asList(categoryArr)));
+    public void setInfo(CategoriesPageInfo categoriesPageInfo) {
+        if (mRvAdapter != null && categoriesPageInfo != null) {
+            mRvAdapter.setCategoryList(new ArrayList<>(Arrays.asList(categoriesPageInfo.getCategories())));
+            mRvAdapter.setSelectedPosition(categoriesPageInfo.getSelected());
+            mRvAdapter.notifyDataSetChanged();
+        }
+        mCategoriesPageInfo = categoriesPageInfo;
     }
 
     public void setCategoryList(@NonNull List<MalfuncCategory> categoryList) {
         mRvAdapter.setCategoryList(categoryList);
+        mRvAdapter.setSelectedPosition(-1);
         mRvAdapter.notifyDataSetChanged();
+    }
+
+    public CategoriesPageInfo getCategoriesPageInfo() {
+        return mCategoriesPageInfo;
     }
 
     private void setListener(OnItemClickListener onItemClickListener) {

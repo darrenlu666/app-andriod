@@ -30,11 +30,11 @@ import java.util.List;
  */
 public class InquiriesAdapter extends RecyclerView.Adapter {
 
-    private final static int TYPE_INQUIRY = 1;
+    private final static int TYPE_INQUIRY = 0;
 
-    private final static int TYPE_REPLY = 2;
+    private final static int TYPE_REPLY = 1;
 
-    private final static int TYPE_LAST = 0;
+    private final static int TYPE_LAST = -1;
 
     protected List<InquiryItem> mList;
 

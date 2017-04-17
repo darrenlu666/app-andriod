@@ -26,4 +26,6 @@ public class Extra {
     public final static String EXTRA_DATA = "com.codyy.erpsportal.EXTRA_DATA";
 
     public final static String TITLE = "com.codyy.erpsportal.TITLE";
+
+    public final static String ID = "com.codyy.erpsportal.ID";
 }

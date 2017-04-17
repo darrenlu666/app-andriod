@@ -1,15 +1,16 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.codyy.erpsportal.repairs.controllers.fragments.RepairDetailsFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="?android:listDivider"
         android:orientation="vertical"
-        android:showDividers="middle|end" >
+        android:showDividers="middle|end">
 
         <LinearLayout
             style="@style/RepairDetailItem"
@@ -59,53 +60,66 @@
                 android:layout_toEndOf="@id/tv_lb_description"
                 android:layout_toRightOf="@id/tv_lb_description"
                 tools:text="声音太小听不到？声音太小听不到？声音太小听不到？声音太小听不到？" />
-            
+
             <LinearLayout
                 android:id="@+id/ll_photos_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/et_desc"
-                android:layout_alignStart="@id/et_desc"
                 android:layout_alignLeft="@id/et_desc"
+                android:layout_alignStart="@id/et_desc"
+                android:layout_below="@id/et_desc"
                 android:layout_marginTop="10dp"
                 android:divider="@drawable/dv_v_dp5"
+                android:orientation="horizontal"
                 android:showDividers="middle"
-                android:weightSum="3"
-                android:orientation="horizontal">
+                android:weightSum="3">
 
                 <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
                     android:id="@+id/dv_icon1"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     app:aspectRatio="1"
                     app:aspectRatioEnabled="true"
                     app:dominantMeasurement="width"
-                    app:placeholderImage="@drawable/icon_default_video"/>
+                    app:placeholderImage="@drawable/icon_default_video" />
 
                 <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
                     android:id="@+id/dv_icon2"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     app:aspectRatio="1"
                     app:aspectRatioEnabled="true"
                     app:dominantMeasurement="width"
-                    app:placeholderImage="@drawable/icon_default_video"/>
+                    app:placeholderImage="@drawable/icon_default_video" />
 
                 <com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1">
+
+                    <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
+                        android:id="@+id/dv_icon3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        app:aspectRatio="1"
+                        app:aspectRatioEnabled="true"
+                        app:dominantMeasurement="width"
+                        app:placeholderImage="@drawable/icon_default_video" />
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_images_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:shadowDy="1"
-                        android:shadowDx="1"
+                        android:gravity="center"
                         android:shadowColor="#444444"
+                        android:shadowDx="1"
+                        android:shadowDy="1"
                         android:shadowRadius="1.5"
-                        android:text="共6张"/>
+                        android:text="共6张" />
                 </com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout>
             </LinearLayout>
         </RelativeLayout>

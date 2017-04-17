@@ -1,5 +1,7 @@
 package com.codyy.erpsportal.repairs.models.entities;
 
+import java.util.List;
+
 /**
  * 问题追踪项
  * Created by gujiajia on 2017/3/25.
@@ -7,59 +9,61 @@ package com.codyy.erpsportal.repairs.models.entities;
 
 public class InquiryItem {
 
-    private long time;
+    private long createTime;
 
-    private String handlerName;
+    private String answererName;
 
-    private String content;
+    private String appendDescription;
 
     /**
      * 图片，追问时才有
      */
-    private String[] images;
+    private List<ImageBean> imgs;
 
-    /**
-     * true 为回复，false 为追问
-     */
-    private boolean isReply;
+    private String appendType;
 
-    public long getTime() {
-        return time;
+    public long getCreateTime() {
+        return createTime;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 
-    public String getHandlerName() {
-        return handlerName;
+    public String getAnswererName() {
+        return answererName;
     }
 
-    public void setHandlerName(String handlerName) {
-        this.handlerName = handlerName;
+    public void setAnswererName(String answererName) {
+        this.answererName = answererName;
     }
 
-    public String getContent() {
-        return content;
+    public String getAppendDescription() {
+        return appendDescription;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setAppendDescription(String appendDescription) {
+        this.appendDescription = appendDescription;
     }
 
-    public String[] getImages() {
-        return images;
+    public List<ImageBean> getImgs() {
+        return imgs;
     }
 
-    public void setImages(String[] images) {
-        this.images = images;
+    public void setImgs(List<ImageBean> imgs) {
+        this.imgs = imgs;
+    }
+
+    public String getAppendType() {
+        return appendType;
+    }
+
+    public void setAppendType(String appendType) {
+        this.appendType = appendType;
     }
 
     public boolean isReply() {
-        return isReply;
+        return !"ASK".equals(appendType);
     }
 
-    public void setReply(boolean reply) {
-        isReply = reply;
-    }
 }

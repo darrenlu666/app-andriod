@@ -15,26 +15,36 @@ import android.view.ViewGroup.LayoutParams;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.RxBus;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.controllers.adapters.CategoriesTabsAdapter;
+import com.codyy.erpsportal.repairs.models.entities.CategoriesPageInfo;
 import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
+ * 故障类别选择
  * Created by gujiajia on 2017/3/28.
  */
 
@@ -51,15 +61,44 @@ public class SelectCategoriesDgFragment extends DialogFragment {
     private CategoriesTabsAdapter mTabsAdapter;
 
     private WebApi mWebApi;
-    private Disposable mDisposable;
+
+    private CompositeDisposable mDisposables;
+
+    private UserInfo mUserInfo;
+
+    private OnCategorySelectedListener mOnCategorySelectedListener;
+
+    /**
+     * 默认数据，上次筛选分类已经选好的，打开了重新定位到这边
+     */
+    private List<CategoriesPageInfo> mInitPageInfoList;
+
+    public static SelectCategoriesDgFragment newInstance(UserInfo userInfo) {
+        SelectCategoriesDgFragment selectCategoriesDgFragment = new SelectCategoriesDgFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(Extra.USER_INFO, userInfo);
+        selectCategoriesDgFragment.setArguments(bundle);
+        return selectCategoriesDgFragment;
+    }
 
     public SelectCategoriesDgFragment() {
         super();
+        mDisposables = new CompositeDisposable();
+    }
+
+    public void setInitPageInfoList(List<CategoriesPageInfo> initPageInfoList) {
+        if (initPageInfoList != null) {
+            mInitPageInfoList = new ArrayList<>(initPageInfoList.size());
+            for (CategoriesPageInfo pageInfo : initPageInfoList) {
+                mInitPageInfoList.add(new CategoriesPageInfo(pageInfo));
+            }
+        }
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mUserInfo = getArguments().getParcelable(Extra.USER_INFO);
         mWebApi = RsGenerator.create(WebApi.class);
         setStyle(STYLE_NO_FRAME, R.style.BottomDialog);
     }
@@ -72,6 +111,7 @@ public class SelectCategoriesDgFragment extends DialogFragment {
         mTabLayout.setupWithViewPager(mViewPager);
         mTabsAdapter = new CategoriesTabsAdapter(getActivity(), getChildFragmentManager(), mViewPager);
         mViewPager.setAdapter(mTabsAdapter);
+        mViewPager.setOffscreenPageLimit(3);
         getDialog().setCanceledOnTouchOutside(true);
         return view;
     }
@@ -89,7 +129,17 @@ public class SelectCategoriesDgFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mWebApi.post4Json(URLConfig.GET_MALFUNC_CATEGORIES)
+        observeCategorySelecting();
+        if (mInitPageInfoList != null && mInitPageInfoList.size() > 0) {
+            mTabsAdapter.addTabs(mInitPageInfoList);
+            setNewTabMargin();
+            mViewPager.setCurrentItem(mTabsAdapter.getCount() - 1);
+            return;
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("uuid", mUserInfo.getUuid());
+        Disposable disposable = mWebApi.post4Json(URLConfig.GET_MALFUNC_CATEGORIES, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JSONObject>() {
@@ -97,10 +147,8 @@ public class SelectCategoriesDgFragment extends DialogFragment {
                     public void accept(JSONObject jsonObject) throws Exception {
                         if ("success".equals(jsonObject.optString("result"))) {
                             MalfuncCategory[] categories = new Gson()
-                                    .fromJson(jsonObject.optJSONArray("list").toString(), MalfuncCategory[].class);
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelableArray("list", categories);
-                            mTabsAdapter.addTab("请选择", MalfuncCategoriesFragment.class, bundle);
+                                    .fromJson(jsonObject.optString("data"), MalfuncCategory[].class);
+                            mTabsAdapter.addTab(new CategoriesPageInfo(categories));
                             setNewTabMargin();
                         }
                     }
@@ -110,17 +158,22 @@ public class SelectCategoriesDgFragment extends DialogFragment {
                         Cog.e(TAG, "throwable=", throwable.getMessage());
                     }
                 });
+        mDisposables.add(disposable);
+    }
 
-        mDisposable = RxBus.getInstance().toObservable(MalfuncCategory.class)
+    /**
+     * 观察分类被选中
+     */
+    private void observeCategorySelecting() {
+        Disposable disposable1 = RxBus.getInstance().toObservable(MalfuncCategory.class)
                 .subscribe(new Consumer<MalfuncCategory>() {
                     @Override
                     public void accept(MalfuncCategory malfuncCategory) throws Exception {
                         Cog.d(TAG, "receive onItemClick=", malfuncCategory);
                         int tabPosition = mTabLayout.getSelectedTabPosition();
-                        Tab tab = mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition());
+                        Tab tab = mTabLayout.getTabAt(tabPosition);
                         if (tab != null) {
                             tab.setText(malfuncCategory.getName());
-                            mTabsAdapter.setTitle(tabPosition, malfuncCategory.getName());
                         }
                         if (tabPosition < 2) {
                             tryToAddTab(malfuncCategory);
@@ -133,6 +186,7 @@ public class SelectCategoriesDgFragment extends DialogFragment {
                         throwable.printStackTrace();
                     }
                 });
+        mDisposables.add(disposable1);
     }
 
     /**
@@ -147,8 +201,15 @@ public class SelectCategoriesDgFragment extends DialogFragment {
         }
     }
 
+    /**
+     * 抓取分类的子分类，有的话加载标签
+     * @param malfuncCategory 当前故障分类
+     */
     private void tryToAddTab(MalfuncCategory malfuncCategory) {
-        mWebApi.post4Json(URLConfig.GET_MALFUNC_CATEGORIES)
+        Map<String, String> params = new HashMap<>();
+        params.put("uuid", mUserInfo.getUuid());
+        params.put("id", malfuncCategory.getId());
+        mWebApi.post4Json(URLConfig.GET_MALFUNC_CATEGORIES, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JSONObject>() {
@@ -156,19 +217,32 @@ public class SelectCategoriesDgFragment extends DialogFragment {
                     public void accept(JSONObject jsonObject) throws Exception {
                         if ("success".equals(jsonObject.optString("result"))) {
                             MalfuncCategory[] categories = new Gson()
-                                    .fromJson(jsonObject.optJSONArray("list").toString(), MalfuncCategory[].class);
-                            Bundle bundle = new Bundle();
-                            bundle.putParcelableArray("list", categories);
-                            mTabsAdapter.remove(mViewPager.getCurrentItem() + 2);
-                            MalfuncCategoriesFragment mcf = (MalfuncCategoriesFragment) mTabsAdapter
-                                    .getFragmentAt(mViewPager.getCurrentItem() + 1);
-                            if (mcf == null) {
-                                mTabsAdapter.addTab("请选择", MalfuncCategoriesFragment.class, bundle);
+                                    .fromJson(jsonObject.optString("data"), MalfuncCategory[].class);
+                            int nextPosition = mViewPager.getCurrentItem() + 1;
+                            if (categories == null || categories.length == 0) {
+                                mTabsAdapter.remove(nextPosition);
+                                notifySelected();
+                                setNewTabMargin();
+                                dismiss();
                             } else {
-                                mcf.setCategoryArr(categories);
+                                mTabsAdapter.remove(nextPosition + 1);
+                                if (nextPosition <= mTabsAdapter.getCount() - 1) {//有下一页
+                                    //获取下一页
+                                    MalfuncCategoriesFragment mcf = (MalfuncCategoriesFragment) mTabsAdapter
+                                            .getFragmentAt(nextPosition);
+                                    CategoriesPageInfo categoriesPageInfo = new CategoriesPageInfo(categories);
+                                    mcf.setInfo(categoriesPageInfo);
+                                    mTabsAdapter.update(nextPosition, categoriesPageInfo);
+                                    Tab tab = mTabLayout.getTabAt(nextPosition);
+                                    if (tab != null) {
+                                        tab.setText("未选择");
+                                    }
+                                } else {
+                                    mTabsAdapter.addTab(new CategoriesPageInfo(categories));
+                                }
+                                mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+                                setNewTabMargin();
                             }
-                            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
-                            setNewTabMargin();
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -178,6 +252,23 @@ public class SelectCategoriesDgFragment extends DialogFragment {
                         throwable.printStackTrace();
                     }
                 });
+    }
+
+    public void setOnCategorySelectedListener(OnCategorySelectedListener  listener) {
+        mOnCategorySelectedListener = listener;
+    }
+
+    private void notifySelected() {
+        if (mOnCategorySelectedListener != null) {
+            List<CategoriesPageInfo> pageInfos = new ArrayList<>(mTabsAdapter.getCount());
+            for (int i = 0; i < mTabsAdapter.getCount(); i++) {
+                MalfuncCategoriesFragment mcf = (MalfuncCategoriesFragment) mTabsAdapter
+                        .getFragmentAt(i);
+                CategoriesPageInfo pageInfo = mcf.getCategoriesPageInfo();
+                pageInfos.add(mcf.getCategoriesPageInfo());
+            }
+            mOnCategorySelectedListener.onCategorySelected(pageInfos);
+        }
     }
 
     @OnClick(R.id.iv_close)
@@ -194,6 +285,11 @@ public class SelectCategoriesDgFragment extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mDisposable.dispose();
+        mDisposables.clear();
     }
+
+    public interface OnCategorySelectedListener{
+        void onCategorySelected(List<CategoriesPageInfo> pageInfos);
+    }
+
 }

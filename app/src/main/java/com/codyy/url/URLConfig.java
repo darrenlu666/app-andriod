@@ -2824,7 +2824,7 @@ public class URLConfig {
      * tvProgramDetailId	节目id	string
      * uuid		string
      */
-    @UrlSuffix("/mobile/tvprogram/detail.do")
+    @UrlSuffix("mobile/tvprogram/detail.do")
     public static String GET_SCHOOL_TV_PROGRAM_DETAIL;
 
     /**
@@ -2848,13 +2848,13 @@ public class URLConfig {
     @UrlSuffix("mobile/malfunction/getSchoolClassRoomList.do")
     public static String GET_CLASSROOMS;
 
-    @UrlSuffix("mobile/malguidefunction/getSearchMalPageList.do")
+    @UrlSuffix("mobile/malfunction/getSubCatalogListById.do")
     public static String SEARCH_MALFUNC;
 
-    @UrlSuffix("mobile/repairs/getRepairDetails.do")
+    @UrlSuffix("mobile/malfunction/getMalDetail.do")
     public static String GET_REPAIR_DETAILS;
 
-    @UrlSuffix("mobile/repairs/getRepairTracking.do")
+    @UrlSuffix("mobile/malfunction/getAppendList.do")
     public static String GET_REPAIR_TRACKING;
 
     /**

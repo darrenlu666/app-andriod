@@ -26,7 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * 问题详情
+ * 常见问题详情
  */
 public class MalfunctionDetailsActivity extends AppCompatActivity {
 
