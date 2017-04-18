@@ -15,6 +15,7 @@
         android:layout_height="@dimen/poe_head_pic_size_large"
         app:placeholderImage="@drawable/default_group_icon"
         android:padding="5dp"
+        android:layout_centerVertical="true"
         />
 
     <TextView
@@ -24,32 +25,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/sdv_pic"
-        android:layout_alignTop="@id/sdv_pic"
-        android:layout_marginTop="@dimen/poe_top_bottom_text_addition_padding_size"
+        android:layout_marginTop="@dimen/poe_title_margin_top"
         tools:text="圈组名称"
         />
-    <TextView
-        android:id="@+id/tv_create_time_desc"
-        style="@style/txt_group_txt_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/sdv_pic"
-        android:layout_marginBottom="@dimen/poe_top_bottom_text_addition_padding_size"
-        android:layout_marginRight="10dp"
-        android:layout_alignBottom="@id/sdv_pic"
-        android:text="@string/time_start"
-        />
-    <TextView
-        android:id="@+id/tv_create_time"
-        style="@style/txt_group_txt_desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/tv_create_time_desc"
-        android:layout_marginBottom="@dimen/poe_top_bottom_text_addition_padding_size"
-        android:layout_marginRight="10dp"
-        android:layout_alignBottom="@id/sdv_pic"
-        tools:text="2016-06-30 11:41"
-        />
+
     <TextView
         android:id="@+id/tv_teacher_desc"
         style="@style/txt_group_txt_desc"
@@ -57,8 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/sdv_pic"
         android:layout_below="@id/tv_title"
-        android:layout_above="@id/tv_create_time_desc"
-        android:gravity="bottom"
         android:layout_marginTop="@dimen/poe_title_margin_top"
         android:layout_marginBottom="@dimen/poe_desc_margin_bottom"
         android:text="主讲教师"
@@ -71,7 +48,6 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/tv_teacher_desc"
         android:layout_below="@id/tv_title"
-        android:layout_above="@id/tv_create_time_desc"
         android:gravity="bottom"
         android:layout_marginTop="@dimen/poe_title_margin_top"
         android:layout_marginBottom="@dimen/poe_desc_margin_bottom"
@@ -104,5 +80,28 @@
         android:gravity="bottom"
         android:text="主讲教师"
         android:maxLines="1"
+        />
+    <TextView
+        android:id="@+id/tv_create_time_desc"
+        style="@style/txt_group_txt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_below="@id/tv_teacher_desc"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="@dimen/poe_title_margin_top"
+        android:layout_marginBottom="@dimen/poe_title_margin_top"
+        android:text="@string/time_start"
+        />
+    <TextView
+        android:id="@+id/tv_create_time"
+        style="@style/txt_group_txt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tv_create_time_desc"
+        android:layout_below="@id/tv_teacher_desc"
+        android:layout_marginTop="@dimen/poe_title_margin_top"
+        android:layout_marginRight="10dp"
+        tools:text="2016-06-30 11:41"
         />
 </RelativeLayout>
