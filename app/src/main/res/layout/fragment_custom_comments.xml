@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <com.codyy.erpsportal.commons.widgets.RefreshLayout
@@ -7,13 +8,78 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/compose"
-        app:appBarLayoutId="@id/app_bar_layout">
-        <com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView
-            android:id="@+id/recycler_view"
+        app:appBarLayoutId="@id/app_bar_layout"
+        >
+        <RelativeLayout
+            android:id="@+id/rlt_layout_comment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="40dp"
-            />
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/tv_all_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="全部评论"
+                android:textColor="@color/md_grey_500"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/tv_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@id/tv_all_comment"
+                android:textColor="@color/md_grey_500"
+                android:textSize="17sp"
+                tools:text="（22）" />
+
+            <TextView
+                android:id="@+id/tv_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="9.8分"
+                android:textColor="@color/md_grey_500"
+                android:textSize="17sp"
+                android:visibility="gone" />
+
+            <RatingBar
+                android:id="@+id/rb_star"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_name"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@id/tv_score"
+                android:numStars="5"
+                android:progressDrawable="@drawable/ratingbar_drawable"
+                android:rating="4"
+                android:stepSize="0.5"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@id/tv_comment_count"
+                android:layout_marginTop="5dp"
+                android:background="@color/divide_color" />
+
+            <com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/divider"
+                android:layout_marginBottom="40dp"
+                />
+        </RelativeLayout>
     </com.codyy.erpsportal.commons.widgets.RefreshLayout>
     <com.codyy.erpsportal.commons.widgets.EmptyView
         android:id="@+id/empty_view"

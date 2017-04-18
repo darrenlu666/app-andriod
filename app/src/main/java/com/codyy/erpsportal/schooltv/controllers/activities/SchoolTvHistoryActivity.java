@@ -151,6 +151,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
 
                 mFilterType = TYPE_ORDER_TIME;
                 mOrderType = mTimeUdp.isUp()?ORDER_DESC:ORDER_ASC;
+                changeTabClear();
                 refresh();
                 break;
             case R.id.name_order_udb:
@@ -160,6 +161,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
 
                 mFilterType = TYPE_ORDER_NAME;
                 mOrderType = mNameUdp.isUp()?ORDER_DESC:ORDER_ASC;
+                changeTabClear();
                 refresh();
                 break;
             case R.id.count_order_udb:
@@ -169,6 +171,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
 
                 mFilterType = TYPE_ORDER_CLICK_COUNT;
                 mOrderType = mCountUdp.isUp()?ORDER_DESC:ORDER_ASC;
+                changeTabClear();
                 refresh();
                 break;
         }

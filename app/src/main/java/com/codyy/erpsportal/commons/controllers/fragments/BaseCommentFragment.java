@@ -85,7 +85,7 @@ public abstract class BaseCommentFragment<T extends BaseComment> extends BaseHtt
 
     @Override
     public int obtainLayoutId() {
-        return R.layout.fragment_custom_comments;
+        return R.layout.fragment_base_comments;
     }
 
     @Override

@@ -40,11 +40,13 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         mTotalItemCount = mLinearLayoutManager.getItemCount();
         mFirstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
 
+
+        if (mPreviousTotal <= 0) {
+            mPreviousTotal = mTotalItemCount;
+        }
         //判断加载完成了...
-        if (mLoading) {
-            if (mPreviousTotal <= 0) {
-                mPreviousTotal = mTotalItemCount;
-            } else if (mTotalItemCount > mPreviousTotal) {
+//        if (mLoading) {
+             if (mTotalItemCount > mPreviousTotal) {
                 Cog.i(TAG, "mTotalItemCount > mPreviousTotal set loading false !");
                 Cog.i(TAG, "mVisibleItemCount: " + mVisibleItemCount + " mTotalItemCount: " + mTotalItemCount + " mFirstVisibleItem: " + mFirstVisibleItem);
                 mLoading = false;
@@ -57,9 +59,8 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
                 mLoading = false;
                 mPreviousTotal = mTotalItemCount;
             }
-        }
-        //totalItemCount > visibleItemCount 超过一个页面才有加载更多
-        //(mFirstVisibleItem + mVisibleThreshold)>(mTotalItemCount - mVisibleItemCount) 离底部最后一个时触发.
+//        }
+        Cog.i(TAG, "mPreviousTotal: " + mPreviousTotal + "mVisibleItemCount: " + mVisibleItemCount + " mTotalItemCount: " + mTotalItemCount + " mFirstVisibleItem: " + mFirstVisibleItem + " mLoading :" + mLoading);
         if (!mLoading && mTotalItemCount > mVisibleItemCount && (mFirstVisibleItem + mVisibleThreshold) > (mTotalItemCount - mVisibleItemCount)) {
             // End has been reached
             Cog.i(TAG, "mLoading state : " + mLoading);
@@ -99,6 +100,23 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     public void setLoading(boolean loading) {
         mLoading = loading;
     }
+
+    /**
+     * 初始化
+     */
+    public void initState(){
+        Cog.i(TAG," initState ~~!!!!!!!!!!!!!!!!!");
+        mLoading = false;
+        mCurrentPage = 1;
+        mPreviousTotal = mTotalItemCount = 0;
+    }
+    public  void loadMoreFailed(){
+        Cog.i(TAG," loadMoreFailed ~~!!!!!!!!!!!!!!!!!");
+        if(mCurrentPage > 1){
+            mCurrentPage -- ;
+        }
+        setLoading(false);
+    };
 
     public abstract void onLoadMore(int current_page);
 }

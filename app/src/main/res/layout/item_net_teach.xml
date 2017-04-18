@@ -75,7 +75,7 @@
         android:gravity="bottom"
         android:layout_marginTop="@dimen/poe_title_margin_top"
         android:layout_marginBottom="@dimen/poe_desc_margin_bottom"
-        tools:text="王明轩"
+        tools:text="王明轩_王明轩_王明轩_"
         android:maxLines="1"
         />
     <TextView

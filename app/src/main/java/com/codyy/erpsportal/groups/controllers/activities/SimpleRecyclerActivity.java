@@ -2,6 +2,7 @@ package com.codyy.erpsportal.groups.controllers.activities;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.nfc.Tag;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -174,6 +175,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
         getSimpleRecyclerDelegate().parseData(response,isRefreshing);
         mAdapter.setData(mDataList);
         //load more ...
+        Cog.i(TAG," data size : "+mDataList.size()+" total: "+getSimpleRecyclerDelegate().getTotal());
         if(mDataList.size() <  getSimpleRecyclerDelegate().getTotal()){
             mAdapter.setRefreshing(true);
             mAdapter.setHasMoreData(true);
@@ -195,6 +197,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
     public void onFailure(VolleyError error) throws Exception {
         if(null == mRecyclerView || null == mRefreshLayout) return;
         mRecyclerView.setRefreshing(false);
+//        mAdapter.setHasMoreData(false);
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
@@ -217,6 +220,16 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
         mRecyclerView.setRefreshing(true);
         mAdapter.setHasMoreData(false);
         requestData(true);
+    }
+
+    /**
+     * 多个recyclerView状态切换，init page index .
+     */
+    public void changeTabClear(){
+        mDataList.clear();
+        mAdapter.setRefreshing(false);
+        mAdapter.setHasMoreData(false);
+        setCurrentPageIndex(1);
     }
 
     public void initData(){
