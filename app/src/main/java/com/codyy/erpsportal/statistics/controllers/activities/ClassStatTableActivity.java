@@ -29,6 +29,7 @@ import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment.O
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
 import com.codyy.erpsportal.statistics.models.entities.CourseProfile;
 import com.codyy.erpsportal.statistics.models.entities.CourseProfilesResult;
+import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterCarrier;
 import com.codyy.erpsportal.statistics.models.entities.StatRow;
 import com.codyy.erpsportal.statistics.models.entities.StatTableModel;
@@ -248,7 +249,7 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
             } else {
                 params.put("trimesterId", "");
             }
-            if (statFilterCarrier.getFilterBy() == CoursesProfilesFilterActivity.BY_SPECIFIC_DATE) {
+            if (statFilterCarrier.getFilterBy() == StatFilterBy.BY_SPECIFIC_DATE) {
                 params.put("isCustomized", "Y");
             } else {
                 params.put("isCustomized", "N");

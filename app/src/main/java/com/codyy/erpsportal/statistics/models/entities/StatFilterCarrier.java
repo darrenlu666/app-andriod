@@ -2,8 +2,6 @@ package com.codyy.erpsportal.statistics.models.entities;
 
 import android.os.Parcel;
 
-import com.codyy.erpsportal.statistics.controllers.activities.CoursesProfilesFilterActivity.FilterBy;
-
 /**
  * 过滤数据实体
  * Created by gujiajia on 2016/8/14.
@@ -35,7 +33,7 @@ public class StatFilterCarrier implements android.os.Parcelable {
      */
     private String subjectId;
 
-    @FilterBy
+    @StatFilterBy
     public int getFilterBy() {
         return filterBy;
     }

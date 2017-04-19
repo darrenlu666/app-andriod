@@ -25,6 +25,7 @@ import com.codyy.erpsportal.commons.widgets.CenterLongTextView;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment.OnRowClickListener;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
+import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterCarrier;
 import com.codyy.erpsportal.statistics.models.entities.StatRow;
 import com.codyy.erpsportal.statistics.models.entities.StatTableModel;
@@ -129,6 +130,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
             mStatFilterCarrier.setEndDate(
                     localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
             mStatFilterCarrier.setSubjectId("-1");
+            mStatFilterCarrier.setFilterBy(StatFilterBy.BY_WEEK);
         }
         loadData( mStatFilterCarrier);
     }

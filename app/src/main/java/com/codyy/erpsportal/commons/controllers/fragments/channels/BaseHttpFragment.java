@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.commons.controllers.fragments.channels;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,7 @@ import butterknife.ButterKnife;
  * 1.ButterKnife包裹基础类型
  * 2.对数据请求进行了过程回调封装，增加易读性
  * 3.对View进行缓存
+ * 4. 默认分页加载数据，如需关闭{setPageListEnable(false);}
  * Created by poe on 16-1-8.
  */
 public abstract class BaseHttpFragment extends Fragment {
@@ -51,6 +53,8 @@ public abstract class BaseHttpFragment extends Fragment {
     public UserInfo mUserInfo;
     private int mCurrentPageIndex = 1;
     private  EndlessRecyclerOnScrollListener mEndlessRecyclerOnScrollListener;
+    private boolean mPageListEnable = true;//默认打开加载更多开关
+    private Handler mRequestHandler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,6 +173,10 @@ public abstract class BaseHttpFragment extends Fragment {
     public void requestData(String url, HashMap<String, String> params,final boolean isRefreshing, final BaseHttpActivity.IRequest requestListener) {
         if (!NetworkUtils.isConnected()) {
             ToastUtil.showToast(getString(R.string.net_error));
+            if (null != requestListener) {
+                requestListener.onRequestFailure(new VolleyError(getString(R.string.net_error)));
+            }
+            notifyEndlessLoadMoreFailed(isRefreshing);
             return;
         }
 
@@ -177,8 +185,7 @@ public abstract class BaseHttpFragment extends Fragment {
         if(isRefreshing){
             params.put("start",0+"");
             params.put("end",(sPageCount-1)+"");
-            //取消loadMore的状态
-            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(true);
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.initState();
         }
         mSender.sendRequest(new RequestSender.RequestData(url, params, new Response.Listener<JSONObject>() {
 
@@ -202,9 +209,30 @@ public abstract class BaseHttpFragment extends Fragment {
                 }
                 ToastUtil.showToast(getString(R.string.net_connect_error));
                 LogUtils.log(error);
+                notifyEndlessLoadMoreFailed(isRefreshing);
             }
         }, TAG));
     }
+
+    private void notifyEndlessLoadMoreFailed(boolean isRefreshing) {
+        if(!isRefreshing && mPageListEnable){
+            if(mCurrentPageIndex>1)  mCurrentPageIndex--;
+            //结束加载状态
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.loadMoreFailed();
+        }
+    }
+
+    public void setPageListEnable(boolean loadMoreEnable) {
+        this.mPageListEnable = loadMoreEnable;
+    }
+
+    private boolean mBooleanTAG = false;
+    private Runnable mRequestRunnable = new Runnable() {
+        @Override
+        public void run() {
+            requestData(mBooleanTAG);
+        }
+    };
 
     /**
      * 设置自动加载更多 默认不会自动加载更多...
@@ -219,20 +247,11 @@ public abstract class BaseHttpFragment extends Fragment {
                     Cog.d(TAG, "current page index :" + current_page);
                     //更新下拉刷新...
                     if (current_page != mCurrentPageIndex) {
+                        Cog.d(TAG, "Load more > > > current page index :" + current_page);
                         mCurrentPageIndex = current_page;
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //加载view停留1s ，防止太快闪现!
-                                SystemClock.sleep(500);
-                                getActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        requestData(isRefreshing);
-                                    }
-                                });
-                            }
-                        }).start();
+                        mBooleanTAG = isRefreshing;
+                        mRequestHandler.removeCallbacks(mRequestRunnable);
+                        mRequestHandler.postDelayed(mRequestRunnable,500L);
                     }
                 }
             };

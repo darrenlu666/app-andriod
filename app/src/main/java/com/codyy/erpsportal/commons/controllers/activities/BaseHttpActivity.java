@@ -1,6 +1,8 @@
 package com.codyy.erpsportal.commons.controllers.activities;
 
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
@@ -55,6 +57,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
     private int mCurrentPageIndex = 1 ;//当前默认页面
     private  EndlessRecyclerOnScrollListener mEndlessRecyclerOnScrollListener;
     private boolean mPageListEnable = true;//默认打开加载更多开关
+    private Handler mRequestHandler = new Handler();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,6 +158,8 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
         if(!NetworkUtils.isConnected()){
             ToastUtil.showToast(getString(R.string.net_error));
             requestListener.onRequestFailure(new VolleyError(getString(R.string.net_error)));
+            //如果分页加载失败，则页码回归-1
+            notifyEndlessLoadMoreFailed(isRefreshing);
             return;
         }
         if(null == params){
@@ -162,14 +167,15 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
             if(null != requestListener){
                 requestListener.onRequestFailure(new VolleyError(getString(R.string.null_param_error)));
             }
+            //如果分页加载失败，则页码回归-1
+            notifyEndlessLoadMoreFailed(isRefreshing);
             return;
         }
         /** 过滤刷新过程中数据暂时未清楚造成的start不准确**/
         if(isRefreshing && mPageListEnable){
             params.put("start",0+"");
             params.put("end",(sPageCount-1)+"");
-            //取消loadMore的状态
-            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.setLoading(true);
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.initState();
         }
 
         mSender.sendRequest(new RequestSender.RequestData(url, params, new Response.Listener<JSONObject>() {
@@ -193,8 +199,19 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
                 }
                 ToastUtil.showToast(getString(R.string.net_connect_error));
                 LogUtils.log(error);
+
+                //如果分页加载失败，则页码回归-1
+                notifyEndlessLoadMoreFailed(isRefreshing);
             }
         },TAG));
+    }
+
+    private void notifyEndlessLoadMoreFailed(boolean isRefreshing) {
+        if(!isRefreshing && mPageListEnable){
+            if(mCurrentPageIndex>1)  mCurrentPageIndex--;
+            //结束加载状态
+            if(null != mEndlessRecyclerOnScrollListener) mEndlessRecyclerOnScrollListener.loadMoreFailed();
+        }
     }
 
     /**
@@ -254,20 +271,11 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
                     Cog.d(TAG, "current page index :" + current_page);
                     //更新下拉刷新...
                     if (current_page != mCurrentPageIndex && mPageListEnable) {
+                        Cog.d(TAG, " load More! :" + current_page);
                         mCurrentPageIndex = current_page;
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //加载view停留1s ，防止太快闪现!
-                                SystemClock.sleep(500);
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        requestData(isRefreshing);
-                                    }
-                                });
-                            }
-                        }).start();
+                        mBooleanTAG = isRefreshing;
+                        mRequestHandler.removeCallbacks(mRequestRunnable);
+                        mRequestHandler.postDelayed(mRequestRunnable,500L);
                     }
                 }
             };
@@ -275,6 +283,13 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
         recyclerView.addOnScrollListener(mEndlessRecyclerOnScrollListener);
     }
 
+    private boolean mBooleanTAG = false;
+    private Runnable mRequestRunnable = new Runnable() {
+        @Override
+        public void run() {
+            requestData(mBooleanTAG);
+        }
+    };
     /**
      * 拟物动画
      * add by eachann
@@ -302,6 +317,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
      * 加载数据完成,没有更多数据阻止多发送一次网络请求.
      */
     public void notifyLoadCompleted(){
+        Cog.i(TAG,"~~~~~~~~~~~~~~~~~~~~~~notifyLoadCompleted ~~~~~~~~~~~~~~~~~~~~~~~~~~");
         if(null != mEndlessRecyclerOnScrollListener)
             mEndlessRecyclerOnScrollListener.setLoading(true);
     }
@@ -354,6 +370,18 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * 获取当前页面index .
+     * @return
+     */
+    public int getCurrentPageIndex(){
+        return mCurrentPageIndex;
+    }
+
+
+    public void setCurrentPageIndex(int index){
+        mCurrentPageIndex = index;
+    }
     /**
      * 网络请求回调
      */

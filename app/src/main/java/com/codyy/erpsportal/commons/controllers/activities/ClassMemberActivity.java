@@ -204,8 +204,14 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
             //set the drop down icon .
             setIconDown();
         }
-        //向下箭头
-        arrowDownMember();
+        if(UserInfo.USER_TYPE_PARENT.equals(mUserType)||UserInfo.USER_TYPE_STUDENT.equals(mUserType)){
+            mTextView.setVisibility(View.GONE);
+        }else{
+            //向下箭头
+            mTextView.setVisibility(View.VISIBLE);
+            arrowDownMember();
+        }
+
         mClasses = new ArrayList<>();
         mUserStudents = new ArrayList<>();
         mUserStudentAll = new ArrayList<>();

@@ -213,6 +213,14 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
                     if(mSoftInputOpenListener!=null){
                         mSoftInputOpenListener.close();
                     }
+                    if(mTotal == 0) {
+                        mEmptyTv.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mEmptyTv.setVisibility(View.VISIBLE);
+                            }
+                        },200L);
+                    }
                 }
             }
         });
@@ -232,6 +240,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
                 mEmojiIb.setClickable(true);
             }
         }, 200);
+        mEmptyTv.setVisibility(View.GONE);
     }
 
     private void initCommentTextFilter() {

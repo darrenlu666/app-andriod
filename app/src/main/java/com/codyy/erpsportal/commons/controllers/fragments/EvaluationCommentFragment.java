@@ -74,10 +74,10 @@ public class EvaluationCommentFragment extends BaseRefreshFragment<Comment> {
 
     @Override
     public void loadData() {
-        if (mDatas == null || mDatas.size() <= 0) {
+//        if (mDatas == null || mDatas.size() <= 0) {
             mRefreshRecycleView.setRefreshing(true);
             httpConnect(getURL(), getParam(STATE_ON_DOWN_REFRESH), STATE_ON_DOWN_REFRESH);
-        }
+//        }
     }
 
     @NonNull
