@@ -3,11 +3,13 @@ package com.codyy.erpsportal.commons.controllers.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.StringDef;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
@@ -32,8 +34,8 @@ import com.codyy.erpsportal.commons.controllers.fragments.filters.BaseFilterFrag
 import com.codyy.erpsportal.commons.controllers.fragments.filters.NetTeachFilterFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingCommonRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.Jumpable;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -46,19 +48,33 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.components.FilterButton;
 import com.codyy.url.URLConfig;
+import com.facebook.binaryresource.BinaryResource;
+import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.cache.disk.FileCache;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.AbstractDataSource;
+import com.facebook.datasource.BaseDataSubscriber;
+import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.imagepipeline.request.ImageRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -138,6 +154,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_tour_new);
         ButterKnife.bind(this);
+        mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.main_color));
         RvLoader.Builder<TourClassroom, ClassroomViewHolder, Status> controllerBuilder = new Builder<>();
         mLoader = controllerBuilder
                 .setActivity(this)
@@ -420,12 +437,44 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
                 mScopeTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             }
             mScopeTv.setText(classroom.getGradeName() + "/" + classroom.getSubjectName());
-//            Uri avaURI = Uri.parse(classroom.getCaptureUrl().replace("china.codyy.com", "10.5.223.59"));
             Uri avaURI = Uri.parse(classroom.getCaptureUrl());
-            Fresco.getImagePipeline().evictFromMemoryCache(avaURI);
-            Fresco.getImagePipelineFactory().getMainDiskStorageCache().remove(new SimpleCacheKey(avaURI.toString()));
-            Fresco.getImagePipelineFactory().getSmallImageDiskStorageCache().remove(new SimpleCacheKey(avaURI.toString()));
+            //如果依然是原来的图片链接，切换时要保持老图片
+            if (classroom.getCaptureUrl().equals(itemView.getTag())) {
+                Fresco.getImagePipeline().evictFromMemoryCache(avaURI);
+                FileCache fileCache = Fresco.getImagePipelineFactory().getMainFileCache();
+                CacheKey cacheKey = new SimpleCacheKey(avaURI.toString());
+                BinaryResource binaryResource = fileCache.getResource(cacheKey);
+                Drawable drawable = null;
+                if (binaryResource != null) {
+                    try {
+                        drawable = Drawable.createFromResourceStream(mContext.getResources(), null,
+                                binaryResource.openStream(), "src");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                fileCache.remove(cacheKey);
+                if (drawable != null) {
+                    GenericDraweeHierarchyBuilder builder =
+                            new GenericDraweeHierarchyBuilder(mContext.getResources());
+                    mThumbIv.setHierarchy(builder
+                            .setFadeDuration(0)
+                            .setPlaceholderImage(drawable)
+                            .setPlaceholderImageScaleType(ScaleType.CENTER_CROP)
+                            .build());
+                }
+            } else {
+                GenericDraweeHierarchyBuilder builder =
+                        new GenericDraweeHierarchyBuilder(mContext.getResources());
+                mThumbIv.setHierarchy(builder
+                        .setFadeDuration(0)
+                        .setPlaceholderImage(R.drawable.ic_default_video_play_bg)
+                        .setPlaceholderImageScaleType(ScaleType.CENTER_CROP)
+                        .build());
+            }
+
             mThumbIv.setImageURI(avaURI);
+            itemView.setTag(classroom.getCaptureUrl());
             mRelativeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -446,12 +495,81 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     }
 
     public static class Status {
+        public Status() {
+            this.sourceSupplier = new MyDataSourceSupplier();
+        }
         boolean isParent;
         boolean showThumb;
+        MyDataSourceSupplier sourceSupplier;
     }
 
     @Target(ElementType.PARAMETER)
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({TYPE_SPECIAL_DELIVERY_CLASSROOM, TYPE_SCHOOL_NET})
     @interface TourType {}
+
+    static class MyDataSourceSupplier implements Supplier<DataSource<CloseableReference<CloseableImage>>> {
+
+        private Uri mCurrentUri;
+        private MyDataSource mCurrentDataSource;
+
+        public void setUri(Uri uri) {
+            mCurrentUri = uri;
+            if (mCurrentDataSource != null) {
+                mCurrentDataSource.setUri(mCurrentUri);
+            }
+        }
+
+        @Override
+        public DataSource<CloseableReference<CloseableImage>> get() {
+            mCurrentDataSource = new MyDataSource();
+            mCurrentDataSource.setUri(mCurrentUri);
+            return mCurrentDataSource;
+        }
+
+        private class MyDataSource extends AbstractDataSource<CloseableReference<CloseableImage>> {
+            private DataSource mUnderlyingDataSource;
+
+            @Override
+            protected void closeResult(CloseableReference<CloseableImage> result) {
+                CloseableReference.closeSafely(result);
+            }
+
+            @Override
+            public CloseableReference<CloseableImage> getResult() {
+                return CloseableReference.cloneOrNull(super.getResult());
+            }
+
+
+            @Override
+            public boolean close() {
+                if (mUnderlyingDataSource != null) {
+                    mUnderlyingDataSource.close();
+                    mUnderlyingDataSource = null;
+                }
+                return super.close();
+            }
+
+            public void setUri(Uri uri) {
+                if (mUnderlyingDataSource != null) {
+                    mUnderlyingDataSource.close();
+                    mUnderlyingDataSource = null;
+                }
+                if (uri != null && !isClosed()) {
+                    mUnderlyingDataSource = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(uri), null);
+                    mUnderlyingDataSource.subscribe(new BaseDataSubscriber<CloseableReference<CloseableImage>>() {
+                        @Override
+                        protected void onNewResultImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
+                            MyDataSource.super.setResult(dataSource.getResult(), false);
+                        }
+
+                        @Override
+                        protected void onFailureImpl(DataSource dataSource) {
+
+                        }
+                    }, Executors.newCachedThreadPool());
+                }
+            }
+        }
+    }
 }
