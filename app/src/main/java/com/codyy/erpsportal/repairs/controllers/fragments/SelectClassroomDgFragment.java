@@ -70,12 +70,23 @@ public class SelectClassroomDgFragment extends DialogFragment {
 
     private List<ClassroomSelectItem> mClassroomSelectItems;
 
+    private ClassroomSelectItem mSelectedClassroom;
+
+    /**
+     * 选中监听器
+     */
+    private OnClassroomSelectedListener mListener;
+
     public static SelectClassroomDgFragment newInstance(UserInfo userInfo) {
         SelectClassroomDgFragment selectClassroomDgFragment = new SelectClassroomDgFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(Extra.USER_INFO, userInfo);
         selectClassroomDgFragment.setArguments(bundle);
         return selectClassroomDgFragment;
+    }
+
+    public void setClassroomSelectedListener(OnClassroomSelectedListener listener) {
+        mListener = listener;
     }
 
     @Override
@@ -97,7 +108,8 @@ public class SelectClassroomDgFragment extends DialogFragment {
         mRvAdapter.setListener(new OnItemClickListener() {
             @Override
             public void onItemClick(ClassroomSelectItem item, int position) {
-
+                if (mListener != null) mListener.onClassroomSelected(item);
+                dismiss();
             }
         });
         getDialog().setCanceledOnTouchOutside(true);
@@ -131,6 +143,11 @@ public class SelectClassroomDgFragment extends DialogFragment {
                             mClassroomSelectItems = new Gson().fromJson(
                                     jsonObject.optString("data"), type);
                             mRvAdapter.setClassroomSelectItems(mClassroomSelectItems);
+                            if (mSelectedClassroom != null) {
+                                int index = mRvAdapter.setSelectedItem( mSelectedClassroom);
+                                if (index != -1)
+                                    mListRv.scrollToPosition(index);
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -150,5 +167,13 @@ public class SelectClassroomDgFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    public void setSelected(ClassroomSelectItem selectedClassroom) {
+        mSelectedClassroom = selectedClassroom;
+    }
+
+    public interface OnClassroomSelectedListener {
+        void onClassroomSelected(ClassroomSelectItem item);
     }
 }

@@ -46,6 +46,13 @@ public class CategoriesPageInfo implements Parcelable {
         return categories[selected].getName();
     }
 
+    public MalfuncCategory getSelectedCategory() {
+        if (selected < 0 || selected >= categories.length) {
+            return null;
+        }
+        return  categories[selected];
+    }
+
     @Override
     public int describeContents() {
         return 0;

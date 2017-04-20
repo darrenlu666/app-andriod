@@ -40,9 +40,9 @@ public class RepairImageAdapter extends Adapter {
 
     private final static int TYPE_IMAGE = 1;
 
-    public static final int REQUEST_CODE_ADD_IMAGES = 11;
+    public static final int RC_ADD_IMAGES = 11;
 
-    public static final int REQUEST_PREVIEW = 12;
+    public static final int RC_PREVIEW = 12;
 
     private static final String EXTRA_DATA = ToolbarActivity.class.getPackage() + ".EXTRA_DATA";
 
@@ -57,7 +57,7 @@ public class RepairImageAdapter extends Adapter {
             Intent intent = new Intent(activity, MMSelectorActivity.class);
             intent.putExtra("EXTRA_TYPE", "IMAGE");
             intent.putExtra("EXTRA_SIZE", count);
-            activity.startActivityForResult(intent, REQUEST_CODE_ADD_IMAGES);
+            activity.startActivityForResult(intent, RC_ADD_IMAGES);
             UIUtils.addEnterAnim(activity);
         }
     };
@@ -120,7 +120,7 @@ public class RepairImageAdapter extends Adapter {
         intent.putParcelableArrayListExtra( EXTRA_DATA, imageDetails);
         intent.putExtra( PreviewImageActivity.EXTRA_SHOW_NUMBER, true);
         intent.putExtra( PreviewImageActivity.EXTRA_POSITION, position);
-        activity.startActivityForResult(intent, REQUEST_PREVIEW);
+        activity.startActivityForResult(intent, RC_PREVIEW);
     }
 
     @Override
@@ -146,6 +146,10 @@ public class RepairImageAdapter extends Adapter {
 
     public void addImage(UploadingImage image) {
         mItems.add(image);
+    }
+
+    public List<UploadingImage> getItems() {
+        return mItems;
     }
 
     /**

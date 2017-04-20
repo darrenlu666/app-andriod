@@ -91,11 +91,18 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
         this.mEmptyView = view;
     }
 
+    /**
+     * 设置刷新布局
+     * @param refreshLayout 刷新布局
+     */
     public void setRefreshLayout(SwipeRefreshLayout refreshLayout) {
         this.mRefreshLayout = refreshLayout;
         this.mRefreshLayout.setOnRefreshListener(this);
     }
 
+    /**
+     * 通知数据更新
+     */
     public void notifyInfoChanged() {
         mAdapter.notifyDataSetChanged();
     }
@@ -103,7 +110,7 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
     /**
      * 创建适配器
      *
-     * @return
+     * @return 适配器
      */
     protected InquiriesAdapter newRecyclerAdapter() {
         return new InquiriesAdapter(mRecyclerView, this);
@@ -179,14 +186,24 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
         }
     }
 
+    /**
+     * 显示分隔线
+     */
     public void showDivider() {
         mRecyclerView.addItemDecoration(mItemDecoration);
     }
 
+    /**
+     * 隐藏分隔线
+     */
     public void hideDivider() {
         mRecyclerView.removeItemDecoration(mItemDecoration);
     }
 
+    /**
+     * 设置子项点击监听器
+     * @param onItemClickListener 监听器
+     */
     public void setOnItemClickListener(OnItemClickListener<InquiryItem> onItemClickListener) {
         mAdapter.setOnItemClickListener(onItemClickListener);
     }
@@ -201,8 +218,8 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
     /**
      * 处理请求响应
      *
-     * @param response
-     * @param isRefreshing
+     * @param response 响应数据
+     * @param isRefreshing 刷新
      */
     private void handleNormalResponse(JSONObject response, boolean isRefreshing) {
         mAdapter.setLoading(false);
@@ -249,8 +266,8 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
     /**
      * 检查请求是否成功，默认检查result字段值是否为success
      *
-     * @param response
-     * @return
+     * @param response 响应数据
+     * @return true 成功
      */
     protected boolean checkSuccessful(JSONObject response) {
         return "success".equals(response.optString("result"));
@@ -259,9 +276,9 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
     /**
      * 检查是否有更多，默认方式是比较total字段与当前项数
      *
-     * @param response
+     * @param response 响应数据
      * @param itemCount 已有item数量
-     * @return
+     * @return true 还有更多
      */
     protected boolean checkHasMore(JSONObject response, int itemCount) {
         return response.optInt("total") <= itemCount;
@@ -304,7 +321,7 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
     /**
      * 获取请求地址
      *
-     * @return
+     * @return 请求地址
      */
     protected String getUrl() {
         if (mListExtractor == null) return null;
@@ -336,8 +353,8 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
     /**
      * 更新请求参数,如果传入参数中有对应的的值则设置新值，反之则清除参数。
      *
-     * @param params
-     * @param key
+     * @param params 参数表
+     * @param key 键值
      * @see #updateParamsBaseOnMap(Map, String, String)
      */
     public void updateParamsBaseOnMap(Map<String, String> params, String key) {

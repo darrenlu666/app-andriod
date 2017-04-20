@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,21 +16,33 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.Regexes;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFragment;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFragment.OnCategorySelectedListener;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectClassroomDgFragment;
+import com.codyy.erpsportal.repairs.controllers.fragments.SelectClassroomDgFragment.OnClassroomSelectedListener;
 import com.codyy.erpsportal.repairs.models.entities.CategoriesPageInfo;
+import com.codyy.erpsportal.repairs.models.entities.ClassroomSelectItem;
+import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
 import com.codyy.erpsportal.repairs.utils.UploadUtil;
 import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,8 +55,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.codyy.erpsportal.R.id.ll_classroom;
-import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.REQUEST_CODE_ADD_IMAGES;
-import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.REQUEST_PREVIEW;
+import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.RC_ADD_IMAGES;
+import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.RC_PREVIEW;
 
 /**
  * 报修
@@ -51,6 +64,8 @@ import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapt
 public class ReportRepairActivity extends AppCompatActivity {
 
     private static final String TAG = "ReportRepairActivity";
+
+    private static final int RC_SCAN_CLASSROOM_SERIAL = 3;
 
     private static final int MAX_IMAGES = 10;
 
@@ -98,6 +113,13 @@ public class ReportRepairActivity extends AppCompatActivity {
      */
     private List<CategoriesPageInfo> mSelectedCategories;
 
+    /**
+     * 已选择的教室
+     */
+    private ClassroomSelectItem mSelectedClassroom;
+
+    private RequestSender mSender;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +133,7 @@ public class ReportRepairActivity extends AppCompatActivity {
      * 初始化属性
      */
     private void initAttributes() {
+        mSender = new RequestSender(this);
         mDisposables = new CompositeDisposable();
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
     }
@@ -120,21 +143,37 @@ public class ReportRepairActivity extends AppCompatActivity {
         mImagesRv.setAdapter(mAdapter);
         mImagesRv.addItemDecoration(new ImageItemDecoration(UIUtils.dip2px(this, 5), 4));
         mImagesRv.setLayoutManager(new GridLayoutManager(this, 4));
+        if ( mUserInfo.isTeacher()) {
+            mReporterEt.setText( mUserInfo.getRealName());
+            if (!TextUtils.isEmpty( mUserInfo.getContactPhone())) {
+                mPhoneEt.setText( mUserInfo.getContactPhone());
+            }
+        }
+        mReporterEt.clearFocus();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE_ADD_IMAGES) {
+            if (requestCode == RC_ADD_IMAGES) {
                 List<UploadingImage> newAddedImages = mAdapter.processAddImagesResultData(data);
                 uploadImages( newAddedImages);
-            } else if (requestCode == REQUEST_PREVIEW) {
+            } else if (requestCode == RC_PREVIEW) {
                 mAdapter.processDeleteImagesResultData(data);
+            } else if (requestCode == RC_SCAN_CLASSROOM_SERIAL) {
+                ClassroomSelectItem classroomSelectItem = data.getParcelableExtra(ScanSerialActivity.EXTRA_CLASSROOM);
+                if (classroomSelectItem != null) {
+                    classroomSelected(classroomSelectItem);
+                }
             }
         }
     }
 
+    /**
+     * 图片上传
+     * @param imageList 图片列表
+     */
     private void uploadImages(List<UploadingImage> imageList) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
@@ -178,7 +217,23 @@ public class ReportRepairActivity extends AppCompatActivity {
     @OnClick(R.id.ll_classroom)
     public void onClassroomClick() {
         SelectClassroomDgFragment fragment = SelectClassroomDgFragment.newInstance(mUserInfo);
+        if (mSelectedClassroom != null) fragment.setSelected(mSelectedClassroom);
+        fragment.setClassroomSelectedListener(new OnClassroomSelectedListener() {
+            @Override
+            public void onClassroomSelected(ClassroomSelectItem item) {
+                classroomSelected(item);
+            }
+        });
         fragment.show(getSupportFragmentManager(), "selectClassroom");
+    }
+
+    /**
+     * 选中某教室
+     * @param classroom 某教室
+     */
+    private void classroomSelected(ClassroomSelectItem classroom) {
+        mSelectedClassroom = classroom;
+        mClassroomTv.setText(mSelectedClassroom.getRoomName());
     }
 
     @OnClick(R.id.ll_malfunction_categories)
@@ -203,7 +258,87 @@ public class ReportRepairActivity extends AppCompatActivity {
 
     @OnClick(R.id.iv_scan_serial)
     public void onScanSerialClick() {
-        ScanSerialActivity.start(this);
+        ScanSerialActivity.start(this, mUserInfo, RC_SCAN_CLASSROOM_SERIAL);
+    }
+
+    @OnClick(R.id.btn_commit)
+    public void onCommitClick() {
+        Map<String, String> params = new HashMap<>();
+        params.put("uuid", mUserInfo.getUuid());
+        //设置参数：教室
+        if (mSelectedClassroom == null) {
+            ToastUtil.showToast(this, "请选择教室");
+            return;
+        }
+        params.put("clsClassroomId", mSelectedClassroom.getClsClassroomId());
+
+        //设置参数：故障类别
+        if (mSelectedCategories == null || mSelectedCategories.size() == 0) {
+            ToastUtil.showToast(this, "请选择故障类别");
+            return;
+        }
+        int i = 1;
+        for (CategoriesPageInfo pageInfo: mSelectedCategories) {
+            MalfuncCategory malfuncCategory = pageInfo.getSelectedCategory();
+            params.put("malCatalogId" + i, malfuncCategory.getId());
+            i++;
+        }
+
+        //设置参数：报修人
+        String reportName = mReporterEt.getText().toString();
+        if (TextUtils.isEmpty(reportName)) {
+            ToastUtil.showToast(this, "请选择报修人");
+            return;
+        } else if (reportName.length() < 2 || reportName.length() > 20) {
+            ToastUtil.showToast(this, "报修人名字长度需要是2到20个字");
+            return;
+        }
+        params.put("reporter", reportName);
+
+        //设置参数：联系电话
+        String contactPhone = mPhoneEt.getText().toString();
+        if (TextUtils.isEmpty(contactPhone) || !contactPhone.matches(Regexes.PHONE_REGEX)) {
+            ToastUtil.showToast(this, "请输入正确的电话号码。");
+            return;
+        }
+        params.put("reporterContact", contactPhone);
+
+        //设置参数：故障描述
+        String description = mDescEt.getText().toString();
+        if (TextUtils.isEmpty(description)) {
+            ToastUtil.showToast(this, "请输入故障描述。");
+        }
+        params.put("malDescription", description);
+
+        //添加上传的图片
+        List<UploadingImage> images = mAdapter.getItems();
+        if (images != null && images.size() > 0) {
+            int availableCount = 0;//可用图片计数，去掉没id（没上传成功或正在上传）的
+            StringBuilder sb = new StringBuilder();
+            for (UploadingImage image: images) {
+                if (!TextUtils.isEmpty( image.getId())) {
+                    availableCount++;
+                    sb.append(image.getId())
+                            .append(',');
+                }
+            }
+            if (availableCount > 0) {
+                sb.deleteCharAt(sb.length() - 1);
+                params.put("addimgs", sb.toString());
+            }
+        }
+
+        mSender.sendRequest(new RequestData(URLConfig.REPORT_MAL, params, new Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Cog.d(TAG, "onCommitClick response:", response);
+            }
+        }, new ErrorListener() {
+            @Override
+            public void onErrorResponse(Throwable error) {
+                Cog.d(TAG, "onCommitClick error:", error);
+            }
+        }));
     }
 
     @Override

@@ -59,44 +59,29 @@
             android:id="@+id/fbl_images_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             app:showDivider="middle"
             app:dividerDrawable="@drawable/dv_vh_dp8"
             app:flexWrap="wrap">
 
-            <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:layout_width="72dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 app:layout_flexGrow="1"
-                app:aspectRatioEnabled="true"
-                app:aspectRatio="1"
-                app:dominantMeasurement="width"
+                app:viewAspectRatio="1"
                 app:placeholderImage="@drawable/icon_default_video"
                 app:layout_wrapBefore="true"/>
 
-            <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:layout_width="72dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 app:layout_flexGrow="1"
-                app:aspectRatioEnabled="true"
-                app:aspectRatio="1"
-                app:dominantMeasurement="width"
+                app:viewAspectRatio="1"
                 app:placeholderImage="@drawable/icon_default_video"/>
 
-            <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:layout_width="72dp"
-                android:layout_height="0dp"
-                app:aspectRatioEnabled="true"
-                app:aspectRatio="1"
-                app:dominantMeasurement="width"
-                app:placeholderImage="@drawable/icon_default_video"/>
-
-            <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
-                android:layout_width="72dp"
-                android:layout_height="0dp"
-                app:aspectRatioEnabled="true"
-                app:aspectRatio="1"
-                app:dominantMeasurement="width"
+                android:layout_height="wrap_content"
+                app:viewAspectRatio="1"
                 app:placeholderImage="@drawable/icon_default_video"/>
 
         </com.google.android.flexbox.FlexboxLayout>

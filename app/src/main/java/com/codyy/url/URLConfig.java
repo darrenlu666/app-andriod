@@ -2872,14 +2872,29 @@ public class URLConfig {
     @UrlSuffix("mobile/malguidefunction/getMalByCatalogPageList.do")
     public static String GET_MALFUNCTIONS_BY_CATALOG;
 
+    /**
+     * 获取最热常见问题
+     */
     @UrlSuffix("mobile/malguidefunction/getHotMalList.do")
     public static String GET_HOT_MALFUNCTIONS;
 
+    /**
+     * 获取最新常见问题
+     */
     @UrlSuffix("mobile/malguidefunction/getNewestMalList.do")
     public static String GET_LATEST_MALFUNCTIONS;
 
+    /**
+     * 获取常见问题详情
+     */
     @UrlSuffix("mobile/malguidefunction/getMalDetailById.do")
     public static String GET_MALFUNCTION_DETAILS;
+
+    /**
+     * 报修
+     */
+    @UrlSuffix("mobile/malfunction/addMalDetail.do")
+    public static String REPORT_MAL;
 
     static {
         UrlBuilder.updateUrls();

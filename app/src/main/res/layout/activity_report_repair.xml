@@ -10,7 +10,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
         android:divider="?android:listDivider"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:showDividers="middle">
 
@@ -77,7 +79,6 @@
                 android:contentDescription="@null"
                 android:src="@drawable/arrow" />
 
-            <requestFocus/>
         </LinearLayout>
 
         <LinearLayout
@@ -152,6 +153,7 @@
                 android:background="@color/transparent"
                 android:hint="输入联系电话"
                 android:inputType="phone"
+                android:maxLength="20"
                 android:textColor="#19ab20" />
         </LinearLayout>
 
@@ -188,73 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/et_desc"
-                android:layout_marginTop="5dp"/>
-
-            <!--<LinearLayout
-                android:id="@+id/ll_photos_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignLeft="@id/et_desc"
-                android:layout_alignStart="@id/et_desc"
-                android:layout_below="@id/et_desc"
-                android:layout_marginTop="5dp"
-                android:divider="@drawable/dv_v_dp5"
-                android:orientation="horizontal"
-                android:showDividers="middle"
-                android:weightSum="4">
-
-                <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
-                    android:id="@+id/dv_icon1"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:aspectRatio="1"
-                    app:aspectRatioEnabled="true"
-                    app:dominantMeasurement="width"
-                    app:placeholderImage="@drawable/icon_default_video" />
-
-                <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
-                    android:id="@+id/dv_icon2"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:aspectRatio="1"
-                    app:aspectRatioEnabled="true"
-                    app:dominantMeasurement="width"
-                    app:placeholderImage="@drawable/icon_default_video" />
-
-                <com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:shadowColor="#444444"
-                        android:shadowDx="1"
-                        android:shadowDy="1"
-                        android:shadowRadius="1.5"
-                        android:text="共6张" />
-                </com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout>
-
-                <com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:shadowColor="#444444"
-                        android:shadowDx="1"
-                        android:shadowDy="1"
-                        android:shadowRadius="1.5"
-                        android:text="共6张" />
-                </com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout>
-            </LinearLayout>-->
+                android:layout_marginTop="5dp" />
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>

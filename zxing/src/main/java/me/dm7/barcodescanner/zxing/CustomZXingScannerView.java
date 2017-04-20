@@ -5,11 +5,15 @@ import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Layout.Alignment;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -89,6 +93,11 @@ public class CustomZXingScannerView extends BarcodeScannerView {
         protected Paint mFinderMaskPaint;
         protected Paint mCornerBorderPaint;
         protected Paint mBorderPaint;
+
+        private String mPromptStr;
+        protected TextPaint mPromptPaint;
+        private float mTextStartY;
+
         protected int mBorderLineLength;
         protected boolean mSquareViewFinder;
         protected boolean isLaserNeeded;
@@ -130,6 +139,14 @@ public class CustomZXingScannerView extends BarcodeScannerView {
             mBorderPaint.setColor(Color.WHITE);
             mBorderPaint.setStyle(Paint.Style.STROKE);
             mBorderPaint.setStrokeWidth(mQuarterStrokeWidth);
+
+            mPromptStr = "将二维码放入框内，即可自动扫描";
+            mPromptPaint = new TextPaint();
+            mPromptPaint.setColor(Color.WHITE);
+            mPromptPaint.setTextSize(getResources().getDisplayMetrics().density * 16);
+            mTextStartY = getResources().getDisplayMetrics().density * 16;
+            FontMetricsInt fontMetricsInt = mPromptPaint.getFontMetricsInt();
+            mTextStartY = mTextStartY + fontMetricsInt.descent - fontMetricsInt.ascent;
             setSquareViewFinder(true);//设置为正方形
         }
 
@@ -178,10 +195,20 @@ public class CustomZXingScannerView extends BarcodeScannerView {
             if (this.getFramingRect() != null) {
                 this.drawViewFinderMask(canvas);
                 this.drawViewFinderBorder(canvas);
+                drawPromptText(canvas);
                 if (isLaserNeeded) {
                     this.drawLaser(canvas);
                 }
             }
+        }
+
+        private void drawPromptText(Canvas canvas) {
+            StaticLayout staticLayout = new StaticLayout(mPromptStr, mPromptPaint, canvas.getWidth(),
+                    Alignment.ALIGN_CENTER, 1f, 0f, false);
+            canvas.save();
+            canvas.translate(0, mTextStartY + mFramingRect.bottom);
+            staticLayout.draw(canvas);
+            canvas.restore();
         }
 
         public void drawViewFinderMask(Canvas canvas) {
@@ -287,10 +314,10 @@ public class CustomZXingScannerView extends BarcodeScannerView {
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
+//        Log.d(TAG, "onPreviewFrame mResultHandler=" + mResultHandler);
         if (mResultHandler == null) {
             return;
         }
-
         try {
             Camera.Parameters parameters = camera.getParameters();
             Camera.Size size = parameters.getPreviewSize();
@@ -317,11 +344,11 @@ public class CustomZXingScannerView extends BarcodeScannerView {
                 try {
                     rawResult = mMultiFormatReader.decodeWithState(bitmap);
                 } catch (ReaderException re) {
-                    // continue
+//                    re.printStackTrace();
                 } catch (NullPointerException npe) {
-                    // This is terrible
+                    npe.printStackTrace();
                 } catch (ArrayIndexOutOfBoundsException aoe) {
-
+                    aoe.printStackTrace();
                 } finally {
                     mMultiFormatReader.reset();
                 }
@@ -330,25 +357,19 @@ public class CustomZXingScannerView extends BarcodeScannerView {
             final Result finalRawResult = rawResult;
 
             if (finalRawResult != null) {
+//                Log.e(TAG, "onPreviewFrame finalRawResultText=" + finalRawResult.getText());
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        // Stopping the preview can take a little long.
-                        // So we want to set result handler to null to discard subsequent calls to
-                        // onPreviewFrame.
-                        ResultHandler tmpResultHandler = mResultHandler;
-                        mResultHandler = null;
-
-                        stopCameraPreview();
-                        if (tmpResultHandler != null) {
-                            tmpResultHandler.handleResult(finalRawResult);
+                        if (mResultHandler != null) {
+                            mResultHandler.handleResult(finalRawResult);
                         }
                     }
                 });
-            } else {
-                camera.setOneShotPreviewCallback(this);
             }
+//            Log.e(TAG, "onPreviewFrame setOneShotPreviewCallback");
+            camera.setOneShotPreviewCallback(this);
         } catch (RuntimeException e) {
             // TODO: Terrible hack. It is possible that this method is invoked after camera is released.
             Log.e(TAG, e.toString(), e);

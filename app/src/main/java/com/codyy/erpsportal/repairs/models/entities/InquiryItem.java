@@ -18,7 +18,7 @@ public class InquiryItem {
     /**
      * 图片，追问时才有
      */
-    private List<ImageBean> imgs;
+    private List<String> imgspath;
 
     private String appendType;
 
@@ -46,14 +46,6 @@ public class InquiryItem {
         this.appendDescription = appendDescription;
     }
 
-    public List<ImageBean> getImgs() {
-        return imgs;
-    }
-
-    public void setImgs(List<ImageBean> imgs) {
-        this.imgs = imgs;
-    }
-
     public String getAppendType() {
         return appendType;
     }
@@ -66,4 +58,11 @@ public class InquiryItem {
         return !"ASK".equals(appendType);
     }
 
+    public List<String> getImgspath() {
+        return imgspath;
+    }
+
+    public void setImgspath(List<String> imgspath) {
+        this.imgspath = imgspath;
+    }
 }

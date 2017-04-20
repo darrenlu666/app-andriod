@@ -752,7 +752,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".repairs.controllers.activities.ReportRepairActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".repairs.controllers.activities.MakeDetailedInquiryActivity"
             android:screenOrientation="portrait" />

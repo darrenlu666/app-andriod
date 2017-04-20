@@ -22,8 +22,6 @@ public class RepairDetails {
 
     private String malDescription;
 
-    private List<ImageBean> imgs;
-
     private String malCatalogName1;
 
     private String malCatalogName2;
@@ -39,6 +37,8 @@ public class RepairDetails {
     private String status;
 
     private String repairman;
+
+    private List<String> imagesPath;
 
     public String getMalCode() {
         return malCode;
@@ -70,14 +70,6 @@ public class RepairDetails {
 
     public void setMalDescription(String malDescription) {
         this.malDescription = malDescription;
-    }
-
-    public List<ImageBean> getImgs() {
-        return imgs;
-    }
-
-    public void setImgs(List<ImageBean> imgs) {
-        this.imgs = imgs;
     }
 
     public String getCategories() {
@@ -148,6 +140,14 @@ public class RepairDetails {
 
     public void setRepairman(String repairman) {
         this.repairman = repairman;
+    }
+
+    public List<String> getImagesPath() {
+        return imagesPath;
+    }
+
+    public void setImagesPath(List<String> imagesPath) {
+        this.imagesPath = imagesPath;
     }
 
     public @StringRes int statusStr() {

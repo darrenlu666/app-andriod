@@ -74,6 +74,16 @@ public class ClassroomsSelectingRvAdapter extends RecyclerView.Adapter<Classroom
         mPosition = position;
     }
 
+    /**
+     * 设置选中项
+     * @param item 项
+     * @return 数据项的index，-1为不在列表中
+     */
+    public int setSelectedItem(ClassroomSelectItem item) {
+        mPosition = mClassroomSelectItems == null? -1: mClassroomSelectItems.indexOf(item);
+        return mPosition;
+    }
+
     @Override
     public int getItemCount() {
         return mClassroomSelectItems == null? 0: mClassroomSelectItems.size();

@@ -18,6 +18,8 @@ public class LoadingDialog extends DialogFragment {
 
     private OnCancelListener mOnCancelListener;
 
+    private boolean mCancelable;
+
     public static LoadingDialog newInstance(@StringRes int resId) {
         LoadingDialog instance = new LoadingDialog();
         Bundle bundle = new Bundle();
@@ -42,8 +44,8 @@ public class LoadingDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean cancelable = getArguments() != null && getArguments().getBoolean("cancelable", false);
-        setCancelable(cancelable);
+        mCancelable = getArguments() != null && getArguments().getBoolean("cancelable", false);
+        setCancelable(mCancelable);
     }
 
     @NonNull

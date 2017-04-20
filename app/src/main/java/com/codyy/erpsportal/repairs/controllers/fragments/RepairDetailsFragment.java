@@ -20,7 +20,6 @@ import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView;
-import com.codyy.erpsportal.repairs.models.entities.ImageBean;
 import com.codyy.erpsportal.repairs.models.entities.RepairDetails;
 import com.codyy.erpsportal.repairs.models.entities.StatusItem;
 import com.codyy.url.URLConfig;
@@ -146,10 +145,10 @@ public class RepairDetailsFragment extends Fragment {
                                 mHandlerTv.setText(repairDetails.getRepairman());
                             }
 
-                            List<ImageBean> images = repairDetails.getImgs();
+                            List<String> images = repairDetails.getImagesPath();
                             if (images != null && images.size() > 0) {
                                 mPhotosContainerLl.setVisibility(View.VISIBLE);
-                                if (images.size() > 3) {
+                                if (images.size() > 3) {//图片超过三张，要显示共n张
                                     mImagesCountTv.setText("共" + images.size() + "张");
                                     mImagesCountTv.setVisibility(View.VISIBLE);
                                 } else {
@@ -160,7 +159,7 @@ public class RepairDetailsFragment extends Fragment {
                                     if (i < images.size()) {
                                         dv.setVisibility(View.VISIBLE);
                                         ImageFetcher.getInstance(getContext()).fetchSmall(dv,
-                                                images.get(i).getImgPath());
+                                                images.get(i));
                                     } else {
                                         dv.setVisibility(View.INVISIBLE);
                                     }
@@ -171,11 +170,12 @@ public class RepairDetailsFragment extends Fragment {
                         }
                     }
                 }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(Throwable error) {
-                Cog.e(TAG, "load repairDetails error=", error.getMessage());
-            }
-        }));
+                    @Override
+                    public void onErrorResponse(Throwable error) {
+                        Cog.e(TAG, "load repairDetails error=", error.getMessage());
+                    }
+                }
+        ));
     }
 
     @Override

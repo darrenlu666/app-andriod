@@ -126,22 +126,22 @@ android {
     productFlavors {
         codyyTest {
             applicationId "com.codyy.erpsportal.ct"
-            buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85\"")
+            buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85/\"")
         }
 
         train {
             applicationId "com.codyy.erpsportal.tr"
-            buildConfigField("String", "API_HOST", "\"http://mobile.needu.cn\"")
+            buildConfigField("String", "API_HOST", "\"http://mobile.needu.cn/\"")
         }
 
         web {
             applicationId "com.codyy.erpsportal.web"
-            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile\"")
+            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile/\"")
         }
 
         web8081 {
             applicationId "com.codyy.erpsportal.web"
-            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8081/mobile\"")
+            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8081/mobile/\"")
         }
     }
 
