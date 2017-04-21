@@ -439,7 +439,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
             mScopeTv.setText(classroom.getGradeName() + "/" + classroom.getSubjectName());
             Uri avaURI = Uri.parse(classroom.getCaptureUrl());
             //如果依然是原来的图片链接，切换时要保持老图片
-            if (classroom.getCaptureUrl().equals(itemView.getTag())) {
+            if (itemView.getTag() != null && classroom.getCaptureUrl().equals(itemView.getTag())) {
                 Fresco.getImagePipeline().evictFromMemoryCache(avaURI);
                 FileCache fileCache = Fresco.getImagePipelineFactory().getMainFileCache();
                 CacheKey cacheKey = new SimpleCacheKey(avaURI.toString());
@@ -467,7 +467,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
                 GenericDraweeHierarchyBuilder builder =
                         new GenericDraweeHierarchyBuilder(mContext.getResources());
                 mThumbIv.setHierarchy(builder
-                        .setFadeDuration(0)
+                        .setFadeDuration(200)
                         .setPlaceholderImage(R.drawable.ic_default_video_play_bg)
                         .setPlaceholderImageScaleType(ScaleType.CENTER_CROP)
                         .build());
