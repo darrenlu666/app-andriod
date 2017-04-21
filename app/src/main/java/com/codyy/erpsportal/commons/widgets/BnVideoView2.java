@@ -16,6 +16,7 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 import com.codyy.bennu.sdk.BNMediaPlayer;
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
+import com.codyy.bennu.sdk.impl.BNPlayerImpl;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.Cog;
 
@@ -377,6 +378,7 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
         if (null != mOnSurfaceChangeListener) {
             mOnSurfaceChangeListener.surfaceChanged(holder);
         }
+
     }
 
     @Override
@@ -387,6 +389,16 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
         if (null != mOnSurfaceChangeListener) {
             mOnSurfaceChangeListener.surfaceDestroyed(holder);
         }
+        final BNMediaPlayer localPlayer= mPlayer;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(null != localPlayer ){
+                    Log.i(TAG," watch dog close the last player instance !!! wang ! wang ！ wang!~~~!!!~~~!");
+                    localPlayer.stop();
+                }
+            }
+        },100L);
     }
     private void initListener(){
         if(null != mPlayer){
