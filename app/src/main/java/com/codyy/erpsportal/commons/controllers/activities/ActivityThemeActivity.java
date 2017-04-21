@@ -490,12 +490,17 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams lparam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             mFrameLayout.setLayoutParams(lparam);
+            mComposeView.setVisibility(View.GONE);
         } else {
             int height = UIUtils.dip2px(this, 220);
-            LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
+            RelativeLayout.LayoutParams lparam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
             mFrameLayout.setLayoutParams(lparam);
+            if(mViewPager.getCurrentItem()!= 0 ){
+                if (mType != EVALUATION_LESSON)
+                mComposeView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
