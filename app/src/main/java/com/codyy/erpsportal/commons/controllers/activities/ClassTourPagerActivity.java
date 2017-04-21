@@ -224,7 +224,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
         int current = mViewPager.getCurrentItem();
         final BnVideoLayout2 videoLayout = mClassroomPagerAdapter.getBnVideoLayout(current);
         final TourClassroom classroom = mClassroomList.get(current);
-        if (!TextUtils.isEmpty(classroom.getVideoUrl())) {
+        if (!TextUtils.isEmpty(classroom.getVideoUrl())&& null != videoLayout) {
             playVideo(videoLayout, classroom.getVideoUrl());
         }
     }
@@ -465,9 +465,9 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
 //                    videoLayout.play(BnVideoView2.BN_PLAY_TYPE_1);
 
                     //延迟2s执行视频恢复等待 stop销毁动作结束
-                    new Handler().postDelayed(new Runnable() {
+                  /*  new Handler().postDelayed(new Runnable() {
                         @Override
-                        public void run() {
+                        public void run() {*/
                             if (mIsPlayable) {
                                 Cog.d(TAG, "startPlay mUrl=" + classroom.getVideoUrl());
                                 if (TextUtils.isEmpty(classroom.getVideoUrl())) {
@@ -479,8 +479,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                 videoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
                                 videoLayout.setTimeOut(15);
                             }
-                        }
-                    }, 2 * 1000);
+                     /*   }
+                    }, 2 * 1000);*/
                 }
 
                 @Override

@@ -633,9 +633,9 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
             mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
         }
     }
-
+    WiFiBroadCastUtils mWiFiBroadCastUtils;
     private void registerWiFiListener() {
-        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
+        mWiFiBroadCastUtils = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {
@@ -679,5 +679,6 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
     }
 }

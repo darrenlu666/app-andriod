@@ -110,6 +110,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     private String mRequestUrl;
     private RequestSender mRequestSender;
     private int mPeopleCount = 0;
+    private WiFiBroadCastUtils mWifiUtil ;
     private Handler mHandler =new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -677,7 +678,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     }
 
     private void registerWiFiListener() {
-        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
+        mWifiUtil = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {
@@ -725,5 +726,6 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     protected void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacks(mHeartJump);
+        if(null != mWifiUtil)mWifiUtil.destroy();
     }
 }
