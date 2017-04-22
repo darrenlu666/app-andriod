@@ -170,8 +170,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
         //区域账号无法报修，且没有常见问题，需隐藏报修按钮与标题栏上的常见问题按钮
         if (mUserInfo.isArea()) {
             mReportFab.setVisibility(View.GONE);
-            // TODO: 2017/4/10
-//            mCommonMalfuncBtn.setVisibility(View.GONE);
+            mCommonMalfuncBtn.setVisibility(View.GONE);
         }
 
         //创建状态筛选项列表
@@ -236,7 +235,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                     @Override
                     public void onItemClick(int position, RepairRecord item) {
                         Cog.d(TAG, "onItemClick position=", position);
-                        RepairDetailsActivity.start(SchoolRepairsActivity.this, mUserInfo, item.getMalDetailId());
+                        RepairDetailsActivity.start(SchoolRepairsActivity.this, mUserInfo, item.getMalDetailId(), item.getSkey());
                     }
                 })
                 .build();
@@ -270,6 +269,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                         Type type = new TypeToken<List<ClassroomFilterItem>>(){}.getType();
                         List<ClassroomFilterItem> classroomList = new Gson()
                                 .fromJson(response.optJSONArray("data").toString(), type);
+                        //在列表开头添加一个“全部”项
                         classroomList.add(0, new ClassroomFilterItem(null, "", ""));
                         mClassroomAdapter.setItemList(classroomList);
                         if (mFilterListFl.getVisibility() == View.VISIBLE

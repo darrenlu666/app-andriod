@@ -24,6 +24,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="10dp">
             <EditText
                 android:id="@+id/et_desc"
@@ -32,13 +33,20 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_rectangle_rim"
                 android:gravity="top"
-                android:hint="请输入..."
+                android:hint="输入故障描述"
                 android:inputType="textMultiLine"
                 android:padding="10dp"
                 android:textColor="#444444"
                 android:textSize="16dp"
                 android:maxLength="1000"
                 tools:text="声音太小听不到？声音太小听不发动机发动机覅的到？声音太小听不到？声音太小听不到？" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/et_desc"
+                android:layout_marginTop="5dp" />
         </LinearLayout>
     </ScrollView>
 

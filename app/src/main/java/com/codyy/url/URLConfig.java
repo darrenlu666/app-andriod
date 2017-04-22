@@ -2869,6 +2869,9 @@ public class URLConfig {
     @UrlSuffix("mobile/malguidefunction/getCatalogList.do")
     public static String GET_MAL_GUIDE_CATALOGS;
 
+    /**
+     * 根据类型获取常见问题
+     */
     @UrlSuffix("mobile/malguidefunction/getMalByCatalogPageList.do")
     public static String GET_MALFUNCTIONS_BY_CATALOG;
 
@@ -2895,6 +2898,12 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/malfunction/addMalDetail.do")
     public static String REPORT_MAL;
+
+    /**
+     * 追问
+     */
+    @UrlSuffix("mobile/malfunction/addAppend.do")
+    public static String MAKE_DETAILED_INQUIRY;
 
     static {
         UrlBuilder.updateUrls();

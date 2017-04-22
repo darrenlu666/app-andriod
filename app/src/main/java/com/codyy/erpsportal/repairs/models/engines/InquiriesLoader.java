@@ -83,10 +83,18 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
         mAdapter = newRecyclerAdapter();
     }
 
+    /**
+     * 设置回收器组件
+     * @param recyclerView 回收器组件
+     */
     public void setRecyclerView(RecyclerView recyclerView) {
         this.mRecyclerView = recyclerView;
     }
 
+    /**
+     * 设置空组件
+     * @param view 空组件
+     */
     public void setEmptyView(View view) {
         this.mEmptyView = view;
     }
@@ -408,8 +416,7 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
     }
 
     /**
-     * 列表数据加载器
-
+     * 构建器
      */
     public static class Builder {
 

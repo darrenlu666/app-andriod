@@ -22,6 +22,10 @@ public class RsGenerator {
     private static Retrofit sRetrofit;
 
     static {
+        createNewRetrofit();
+    }
+
+    public static void createNewRetrofit() {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(Level.BODY);
 

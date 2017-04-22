@@ -32,6 +32,8 @@ public class RepairDetailsActivity extends AppCompatActivity {
 
     private final static String EXTRA_REPAIR_ID = "com.codyy.erpsportal.EXTRA_REPAIR_ID";
 
+    private final static String EXTRA_SKEY = "com.codyy.erpsportal.EXTRA_SKEY";
+
     @Bind(R.id.titleBar)
     TitleBar mTitleBar;
 
@@ -45,6 +47,8 @@ public class RepairDetailsActivity extends AppCompatActivity {
 
     private String mReportId;
 
+    private String mSkey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +61,7 @@ public class RepairDetailsActivity extends AppCompatActivity {
     private void initAttributes() {
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
         mReportId = getIntent().getStringExtra(EXTRA_REPAIR_ID);
+        mSkey = getIntent().getStringExtra(EXTRA_SKEY);
     }
 
     private void initComponents() {
@@ -66,11 +71,15 @@ public class RepairDetailsActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString(Extra.ID, mReportId);
         bundle.putParcelable(Extra.USER_INFO, mUserInfo);
+        bundle.putString(RepairTrackingFragment.ARG_SKEY, mSkey);
         tabsAdapter.addTab("报修信息", RepairDetailsFragment.class, bundle);
         tabsAdapter.addTab("问题追踪", RepairTrackingFragment.class, bundle);
         addDividerBetweenTabs();
     }
 
+    /**
+     * 添加tab间的分隔线
+     */
     private void addDividerBetweenTabs() {
         View tabsRoot = mTabLayout.getChildAt(0);
         if (tabsRoot instanceof LinearLayout) {
@@ -83,10 +92,12 @@ public class RepairDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public static void start(Context context, UserInfo userInfo, String repairId){
+    public static void start(Context context, UserInfo userInfo,
+                             String repairId, String skey){
         Intent intent = new Intent(context, RepairDetailsActivity.class);
         intent.putExtra(Extra.USER_INFO, userInfo);
         intent.putExtra(EXTRA_REPAIR_ID, repairId);
+        intent.putExtra(EXTRA_SKEY, skey);
         context.startActivity(intent);
     }
 }

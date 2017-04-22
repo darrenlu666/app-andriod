@@ -47,12 +47,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.codyy.erpsportal.R.id.ll_classroom;
 import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.RC_ADD_IMAGES;
@@ -177,41 +172,16 @@ public class ReportRepairActivity extends AppCompatActivity {
     private void uploadImages(List<UploadingImage> imageList) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
-        Observable.fromIterable(imageList)
-                .observeOn(Schedulers.io())
-                .doOnNext(new Consumer<UploadingImage>() {
-                    @Override
-                    public void accept(UploadingImage uploadingImage) throws Exception {
-                        Cog.d(TAG, "doOnNext accept imageDetail=", uploadingImage.getPath());
-                        String result = UploadUtil.upload(uploadingImage, uploadUrl);
-                        JSONObject jsonObject = new JSONObject(result);
-                        uploadingImage.setId( jsonObject.optString("realname"));
-                        uploadingImage.setName( jsonObject.optString("message"));
-                        Cog.d(TAG, "doOnNext upload result=", result);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(Disposable disposable) throws Exception {
-                        Cog.d(TAG, "doOnSubscribe d=", disposable);
-                        mDisposables.add(disposable);
-                    }
-                })
-                .subscribe(new Consumer<UploadingImage>() {
-                    @Override
-                    public void accept(UploadingImage image) throws Exception {
-                        Cog.d(TAG, "onNext value=", image.getPath());
-                        image.setStatus(UploadingImage.STATUS_FINISHED);
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Cog.d(TAG, "onError e=", throwable);
-                        throwable.printStackTrace();
-                    }
-                });
+        UploadUtil.uploadImages(uploadUrl, imageList, new UploadUtil.OnEachUploadedCompleteListener(){
+
+            @Override
+            public void onEachUploadComplete(UploadingImage image) {
+                int index = mAdapter.indexOfItem(image);
+                if (index != -1) {
+                    mAdapter.notifyItemChanged(index);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.ll_classroom)
@@ -270,7 +240,7 @@ public class ReportRepairActivity extends AppCompatActivity {
             ToastUtil.showToast(this, "请选择教室");
             return;
         }
-        params.put("clsClassroomId", mSelectedClassroom.getClsClassroomId());
+        params.put("skey", mSelectedClassroom.getSkey());
 
         //设置参数：故障类别
         if (mSelectedCategories == null || mSelectedCategories.size() == 0) {
@@ -332,11 +302,17 @@ public class ReportRepairActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "onCommitClick response:", response);
+                if ("success".equals(response.optString("result"))) {
+                    finish();
+                } else {
+                    ToastUtil.showToast(ReportRepairActivity.this, "报修失败");
+                }
             }
         }, new ErrorListener() {
             @Override
             public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onCommitClick error:", error);
+                ToastUtil.showToast(ReportRepairActivity.this, "咦！出错了");
             }
         }));
     }

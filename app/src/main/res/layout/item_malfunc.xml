@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
     android:padding="16dp">
 
     <TextView
@@ -24,8 +25,8 @@
         android:layout_marginRight="24dp"
         android:layout_toLeftOf="@id/tv_hits"
         android:layout_toStartOf="@id/tv_hits"
-        android:maxLines="2"
         android:ellipsize="end"
+        android:maxLines="2"
         tools:text="如何查看在线课堂开课率等数据" />
 
 </RelativeLayout>

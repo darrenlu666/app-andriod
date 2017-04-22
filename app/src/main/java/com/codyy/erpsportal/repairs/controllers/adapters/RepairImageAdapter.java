@@ -197,6 +197,10 @@ public class RepairImageAdapter extends Adapter {
         }
     }
 
+    public int indexOfItem(UploadingImage image) {
+        return mItems.indexOf(image);
+    }
+
     /**
      * 添加图片点击监听器
      */

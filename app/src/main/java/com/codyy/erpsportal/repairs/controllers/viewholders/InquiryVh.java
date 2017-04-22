@@ -1,15 +1,20 @@
 package com.codyy.erpsportal.repairs.controllers.viewholders;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
+import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.utils.ContextUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
+import com.codyy.erpsportal.resource.controllers.activities.PicturesActivity;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -52,18 +57,41 @@ public class InquiryVh extends BindingRvHolder<InquiryItem> {
         hierarchyBuilder.setPlaceholderImage(R.drawable.default_subject, ScaleType.CENTER_CROP)
                 .setFailureImage(R.drawable.audio_upload_failure, ScaleType.CENTER_INSIDE);
 
-        List<String> images = inquiryItem.getImgspath();
-        if (images != null) {
-            for (int i = 0; i < images.size(); i++) {
-                SimpleDraweeView draweeView = new SimpleDraweeView(itemView.getContext(), hierarchyBuilder.build());
-                FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(
-                        UIUtils.dip2px(mContext, 72),
-                        LayoutParams.WRAP_CONTENT);
-                if (i % 3 == 0) {
-                    layoutParams.wrapBefore = true;
-                }
-                mImagesContainerFbl.addView(draweeView, layoutParams);
+        final List<String> images = inquiryItem.getImgspath();
+        if (images != null && images.size() > 0) {
+            int existCount = mImagesContainerFbl.getChildCount();
+            int needCount = images.size();
+            if (existCount > needCount) {
+                mImagesContainerFbl.removeViews( needCount, existCount - needCount);
             }
+
+            for (int i = 0; i < needCount; i++) {
+                SimpleDraweeView draweeView;
+                if (i < existCount) {//已存在的DraweeView
+                    draweeView = (SimpleDraweeView) mImagesContainerFbl.getChildAt(i);
+                } else {draweeView = new SimpleDraweeView(itemView.getContext(), hierarchyBuilder.build());
+                    draweeView.setAspectRatio(1f);
+                    FlexboxLayout.LayoutParams layoutParams = new FlexboxLayout.LayoutParams(
+                            UIUtils.dip2px(mContext, 72),
+                            LayoutParams.WRAP_CONTENT);
+                    if (i % 3 == 0) {
+                        layoutParams.wrapBefore = true;
+                    }
+                    mImagesContainerFbl.addView(draweeView, layoutParams);
+                }
+                ImageFetcher.getInstance(mContext).fetchSmall(draweeView, images.get(i));
+                final int index = i;
+                draweeView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Activity activity = ContextUtils.getActivity(mContext);
+                        PicturesActivity.start(activity, images, index);
+                    }
+                });
+            }
+            mImagesContainerFbl.setVisibility(View.VISIBLE);
+        } else {
+            mImagesContainerFbl.setVisibility(View.GONE);
         }
     }
 }

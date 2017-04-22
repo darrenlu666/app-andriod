@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView;
 import com.codyy.erpsportal.repairs.models.entities.RepairDetails;
 import com.codyy.erpsportal.repairs.models.entities.StatusItem;
+import com.codyy.erpsportal.resource.controllers.activities.PicturesActivity;
 import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.DraweeView;
 import com.google.gson.Gson;
@@ -145,7 +147,7 @@ public class RepairDetailsFragment extends Fragment {
                                 mHandlerTv.setText(repairDetails.getRepairman());
                             }
 
-                            List<String> images = repairDetails.getImagesPath();
+                            final List<String> images = repairDetails.getImgsPath();
                             if (images != null && images.size() > 0) {
                                 mPhotosContainerLl.setVisibility(View.VISIBLE);
                                 if (images.size() > 3) {//图片超过三张，要显示共n张
@@ -163,6 +165,13 @@ public class RepairDetailsFragment extends Fragment {
                                     } else {
                                         dv.setVisibility(View.INVISIBLE);
                                     }
+                                    final int position = i;
+                                    dv.setOnClickListener(new OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            PicturesActivity.start(getActivity(), images, position);
+                                        }
+                                    });
                                 }
                             } else {
                                 mPhotosContainerLl.setVisibility(View.GONE);

@@ -4,6 +4,7 @@ package com.codyy.erpsportal.repairs.controllers.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -39,6 +40,13 @@ import butterknife.OnClick;
  */
 public class RepairTrackingFragment extends Fragment implements InquiriesLoader.ListExtractor<InquiryItem>{
 
+    public final static String TAG = "RepairTrackingFragment";
+
+    public final static String ARG_SKEY = "com.codyy.erpsportal.ARG_SKEY";
+
+    /**
+     * 追问按钮
+     */
     @Bind(R.id.btn_make_inquiry)
     Button mMakeInquiryBtn;
 
@@ -54,11 +62,16 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
     @Bind(R.id.fl_list_container)
     FrameLayout mListContainerFl;
 
+    /**
+     * 追问数据加载器
+     */
     private InquiriesLoader mInquiriesLoader;
 
     private UserInfo mUserInfo;
 
     private String mRepairId;
+
+    private String mSkey;
 
     public RepairTrackingFragment() {
     }
@@ -69,6 +82,7 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
         if (getArguments() != null) {
             mUserInfo = getArguments().getParcelable(Extra.USER_INFO);
             mRepairId = getArguments().getString(Extra.ID);
+            mSkey = getArguments().getString(ARG_SKEY);
         }
     }
 
@@ -77,6 +91,7 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_repair_tracking, container, false);
         ButterKnife.bind(this, view);
+        mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.main_color));
         InquiriesLoader.Builder builder = new Builder();
         mInquiriesLoader = builder.setFragment(this)
                 .setRefreshLayout(mRefreshLayout)
@@ -103,12 +118,12 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
         super.onActivityCreated(savedInstanceState);
         mInquiriesLoader.addParam("malDetailId", mRepairId);
         mInquiriesLoader.addParam("uuid", mUserInfo.getUuid());
-        mInquiriesLoader.loadData(false);
+        mInquiriesLoader.loadData(true);
     }
 
     @OnClick(R.id.btn_make_inquiry)
     public void onMakeInquiryClick() {
-        MakeDetailedInquiryActivity.start(getContext());
+        MakeDetailedInquiryActivity.start(getContext(), mUserInfo, mRepairId, mSkey);
     }
 
     @Override

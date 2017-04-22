@@ -1,6 +1,9 @@
 package com.codyy.erpsportal.repairs.utils;
 
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
+
+import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -10,7 +13,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.UUID;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 上传工具
@@ -18,7 +28,10 @@ import java.util.UUID;
  */
 
 public class UploadUtil {
-    public static String upload(UploadingImage image, String urlStr) {
+
+    private final static String TAG = "UploadUtil";
+
+    public static String doUpload(UploadingImage image, String urlStr) {
         String result = null;
         String BOUNDARY = UUID.randomUUID().toString(); // 边界标识 随机生成
         String PREFIX = "--", LINE_END = "\r\n";
@@ -88,5 +101,42 @@ public class UploadUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static Disposable uploadImages(final String uploadUrl, List<UploadingImage> imageList, final OnEachUploadedCompleteListener listener) {
+        return Observable.fromIterable(imageList)
+                .observeOn(Schedulers.io())
+                .doOnNext(new Consumer<UploadingImage>() {
+                    @Override
+                    public void accept(UploadingImage uploadingImage) throws Exception {
+                        Cog.d(TAG, "doOnNext accept imageDetail=", uploadingImage.getPath());
+                        String result = UploadUtil.doUpload(uploadingImage, uploadUrl);
+                        JSONObject jsonObject = new JSONObject(result);
+                        uploadingImage.setId( jsonObject.optString("message"));
+                        uploadingImage.setName( jsonObject.optString("realname"));
+                        Cog.d(TAG, "doOnNext upload result=", result);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<UploadingImage>() {
+                    @Override
+                    public void accept(UploadingImage image) throws Exception {
+                        Cog.d(TAG, "onNext value=", image.getPath());
+                        image.setStatus(UploadingImage.STATUS_FINISHED);
+                        if (listener != null) {
+                            listener.onEachUploadComplete(image);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Cog.d(TAG, "onError e=", throwable);
+                        throwable.printStackTrace();
+                    }
+                });
+    }
+
+    public interface OnEachUploadedCompleteListener {
+        void onEachUploadComplete(UploadingImage image);
     }
 }

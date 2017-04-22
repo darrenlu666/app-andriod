@@ -328,7 +328,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
     /**
      * 获取请求地址
      *
-     * @return
+     * @return 请求地址
      */
     protected String getUrl() {
         if (mListExtractor == null) return null;

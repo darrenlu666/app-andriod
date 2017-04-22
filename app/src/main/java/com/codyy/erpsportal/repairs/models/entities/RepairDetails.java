@@ -38,7 +38,7 @@ public class RepairDetails {
 
     private String repairman;
 
-    private List<String> imagesPath;
+    private List<String> imgsPath;
 
     public String getMalCode() {
         return malCode;
@@ -142,12 +142,12 @@ public class RepairDetails {
         this.repairman = repairman;
     }
 
-    public List<String> getImagesPath() {
-        return imagesPath;
+    public List<String> getImgsPath() {
+        return imgsPath;
     }
 
-    public void setImagesPath(List<String> imagesPath) {
-        this.imagesPath = imagesPath;
+    public void setImgsPath(List<String> imgsPath) {
+        this.imgsPath = imgsPath;
     }
 
     public @StringRes int statusStr() {
