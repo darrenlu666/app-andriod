@@ -68,10 +68,16 @@ public class URLConfig {
     public static String URL_MAP;
 
     /**
-     * 天津
+     * 天津数据
      */
     @UrlSuffix("/map/getDataByAreaId.do")
     public static String PANEL_DATA;
+
+    /**
+     * 费县数据
+     */
+    @UrlSuffix("/map/getFXData.do")
+    public static String GET_FX_DATA;
 
     /**
      * 登录

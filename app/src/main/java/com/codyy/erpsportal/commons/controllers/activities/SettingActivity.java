@@ -19,8 +19,10 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ConfirmDownloadDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.exception.LogUtils;
+import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
+import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
@@ -192,6 +194,10 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
     private void clearLoginInfo() {
         UserInfoDao.delete(this);
         UserInfoKeeper.getInstance().clearUserInfo();
+        //清空应用缓存
+        AppConfig.instance().destroy();
+        //清空缓存数据.
+        SharedPreferenceUtil.clearLoginData();
     }
 
     /**
@@ -264,7 +270,7 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
         }
         mCheckUpdateDialog.show(getSupportFragmentManager(), "check_update");
         final long startTime = System.currentTimeMillis();
-        requestData(URLConfig.VERSION, null,false, new IRequest() {
+        requestData(URLConfig.VERSION, new HashMap<String, String>(),false, new IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 Cog.d(TAG, "+fetchLatestVersion response:" + response);

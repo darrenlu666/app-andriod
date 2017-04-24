@@ -295,28 +295,39 @@ public class DateUtil {
         return df2.format(c.getTime());
     }
 
-    public static List<WeekDay> getCurrentWeek(String format){
+    /**
+     * 根据传入的年月日 2017-03-17 返回最近的一周数据
+     * @param dateTime ex: 2017-03-17
+     * @param format  ex: yyyy-MM-dd
+     * @return List<WeekDay>
+     */
+    public static List<WeekDay> getCurrentWeek(String dateTime ,String format){
         List<WeekDay> wList =new ArrayList<>();
-        SimpleDateFormat df2 = new SimpleDateFormat(format);
-        //周天
-        Calendar c = Calendar.getInstance();
-        int day_of_week = c.get(Calendar.DAY_OF_WEEK) - 1;
-        if (day_of_week == 0)
-            day_of_week = 7;
+        try {
+            Date newDate = new SimpleDateFormat(YEAR_MONTH_DAY).parse(dateTime);
+            SimpleDateFormat df2 = new SimpleDateFormat(format);
+            Calendar c = Calendar.getInstance();
+            c.setTime(newDate);
+            int day_of_week = c.get(Calendar.DAY_OF_WEEK) - 1;
+            if (day_of_week == 0)
+                day_of_week = 7;
 
-        for(int i=0;i<7;i++){
-            WeekDay wd = new WeekDay();
-            if(i==0){
-                //switch to monday. //周一
-                c.add(Calendar.DATE, -day_of_week + 1);
-            }else{
-                c.add(Calendar.DATE, 1);
+            for(int i=0;i<7;i++){
+                WeekDay wd = new WeekDay();
+                if(i==0){
+                    //switch to monday. //周一
+                    c.add(Calendar.DATE, -day_of_week + 1);
+                }else{
+                    c.add(Calendar.DATE, 1);
+                }
+                wd.setWeekDate(df2.format(c.getTime()));
+                SimpleDateFormat df = new SimpleDateFormat("MM-dd");
+                wd.setShortWeekDate(df.format(c.getTime()));
+                wd.setWeekDay(WEEK[i]);
+                wList.add(wd);
             }
-            wd.setWeekDate(df2.format(c.getTime()));
-            SimpleDateFormat df = new SimpleDateFormat("MM-dd");
-            wd.setShortWeekDate(df.format(c.getTime()));
-            wd.setWeekDay(WEEK[i]);
-            wList.add(wd);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return wList;
     }

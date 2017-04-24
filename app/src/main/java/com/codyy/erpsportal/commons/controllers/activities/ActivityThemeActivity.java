@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,6 +18,10 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.widgets.BlogComposeView;
+import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.HorizontalListViewAdapter2;
 import com.codyy.erpsportal.commons.controllers.fragments.CustomCommentFragment;
@@ -163,7 +168,12 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
         mComposeView = (BlogComposeView) findViewById(R.id.compose);
         mDownBtn.setOnClickListener(mDownListener);
         mVideoControl = (BNVideoControlView) findViewById(R.id.videoControl);
-        mVideoControl.bindVideoView(mVideoView, getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
 
             @Override
@@ -482,12 +492,17 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams lparam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             mFrameLayout.setLayoutParams(lparam);
+            mComposeView.setVisibility(View.GONE);
         } else {
             int height = UIUtils.dip2px(this, 220);
-            LinearLayout.LayoutParams lparam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
+            RelativeLayout.LayoutParams lparam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
             mFrameLayout.setLayoutParams(lparam);
+            if(mViewPager.getCurrentItem()!= 0 ){
+                if (mType != EVALUATION_LESSON)
+                mComposeView.setVisibility(View.VISIBLE);
+            }
         }
     }
 

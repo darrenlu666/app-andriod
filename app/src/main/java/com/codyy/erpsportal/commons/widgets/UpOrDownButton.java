@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,6 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 
 /**
  * 用于列表顶部的升序降序控件
@@ -87,13 +91,13 @@ public class UpOrDownButton extends RelativeLayout implements View.OnClickListen
     public void setChecked() {
         Drawable icon;
         if (isUp) {
-            icon = getResources().getDrawable(R.drawable.img_up);
+            icon = ContextCompat.getDrawable(mTextView.getContext(),R.drawable.ic_green_arrow_up);
             isUp = false;
         } else {
-            icon = getResources().getDrawable(R.drawable.img_down);
+            icon = ContextCompat.getDrawable(mTextView.getContext(),R.drawable.ic_green_arrow_down);
             isUp = true;
         }
-        mTextView.setTextColor(getResources().getColor(R.color.main_green));
+        mTextView.setTextColor(UiMainUtils.getColor(R.color.main_green));
         mTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null);
     }
 
@@ -114,8 +118,8 @@ public class UpOrDownButton extends RelativeLayout implements View.OnClickListen
      * 还原为最初控件的样子
      */
     public void setInitView() {
-        Drawable icon = getResources().getDrawable(R.drawable.img_down);
-        mTextView.setTextColor(getResources().getColor(R.color.gray));
+        Drawable icon = ContextCompat.getDrawable(mTextView.getContext(),R.drawable.ic_grey_arrow_down);//getResources().getDrawable(R.drawable.img_down);
+        mTextView.setTextColor(UiMainUtils.getColor(R.color.gray));
         isUp = false;
         mTextView.setCompoundDrawablesWithIntrinsicBounds(null, null, icon, null);
     }

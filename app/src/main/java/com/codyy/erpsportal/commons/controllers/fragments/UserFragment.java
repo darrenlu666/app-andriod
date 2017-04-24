@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -26,6 +27,8 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.classroom.models.ClassRoomContants;
+import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.CacheResourceActivity;
@@ -211,6 +214,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
                         //if first get the result . set default first student as the selected student by parent .
                         if (mUserInfo.getSelectedChild() == null) {
                             mUserInfo.setSelectedChild(mStudentParse.getChildren().get(0));
+                            SharedPreferenceUtil.putString(ClassRoomContants.SHARE_PREFERENCE_STUDENT_ID, mStudentParse.getChildren().get(0).getStudentId());
                         }
                         mStudents = mStudentParse.getChildren();
                         setClassName();

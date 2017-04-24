@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -37,6 +38,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.AppointmentInfo.ReceiveListBean;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.ClassTourInfo.DetailBean;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.ClassTourInfo.DetailBean.ReceiveTeacherListBean;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -67,7 +69,7 @@ import java.util.Map;
  * <p>
  * 多个视频播放、主辅课堂页面
  */
-public class ClassTourPagerActivity extends FragmentActivity {
+public class ClassTourPagerActivity extends FragmentActivity implements IFragmentMangerInterface{
 
     private String TAG = "ClassTourPagerActivity";
 
@@ -221,7 +223,7 @@ public class ClassTourPagerActivity extends FragmentActivity {
         int current = mViewPager.getCurrentItem();
         final BnVideoLayout2 videoLayout = mClassroomPagerAdapter.getBnVideoLayout(current);
         final TourClassroom classroom = mClassroomList.get(current);
-        if (!TextUtils.isEmpty(classroom.getVideoUrl())) {
+        if (!TextUtils.isEmpty(classroom.getVideoUrl())&& null != videoLayout) {
             playVideo(videoLayout, classroom.getVideoUrl());
         }
     }
@@ -414,6 +416,11 @@ public class ClassTourPagerActivity extends FragmentActivity {
         UIUtils.addEnterAnim(activity);
     }
 
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
+    }
+
 
     private class ClassroomsPagerAdapter extends PagerAdapter {
 
@@ -457,9 +464,9 @@ public class ClassTourPagerActivity extends FragmentActivity {
 //                    videoLayout.play(BnVideoView2.BN_PLAY_TYPE_1);
 
                     //延迟2s执行视频恢复等待 stop销毁动作结束
-                    new Handler().postDelayed(new Runnable() {
+                  /*  new Handler().postDelayed(new Runnable() {
                         @Override
-                        public void run() {
+                        public void run() {*/
                             if (mIsPlayable) {
                                 Cog.d(TAG, "startPlay mUrl=" + classroom.getVideoUrl());
                                 if (TextUtils.isEmpty(classroom.getVideoUrl())) {
@@ -471,8 +478,8 @@ public class ClassTourPagerActivity extends FragmentActivity {
                                 videoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
                                 videoLayout.setTimeOut(15);
                             }
-                        }
-                    }, 2 * 1000);
+                     /*   }
+                    }, 2 * 1000);*/
                 }
 
                 @Override

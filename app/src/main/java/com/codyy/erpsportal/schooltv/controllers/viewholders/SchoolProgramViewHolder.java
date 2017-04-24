@@ -38,25 +38,25 @@ public class SchoolProgramViewHolder extends BaseRecyclerViewHolder<SchoolProgra
     @Override
     public void setData(int position, SchoolProgram data) throws Throwable {
         if(null != mSdv){
-            ImageFetcher.getInstance(mSchoolNameTv.getContext()).fetchSmall(mSdv,data.getThumbPath());
+            ImageFetcher.getInstance(mSchoolNameTv.getContext()).fetchSmall(mSdv,data.getThumbPath(),false);
         }
         mSchoolNameTv.setText(data.getProgramName());
-        mClassTv.setText(DateUtil.getDateStr(data.getStartTime(),DateUtil.HH_MM)+"-"+DateUtil.getDateStr(data.getEndTime(),DateUtil.HH_MM));
+        mClassTv.setText(DateUtil.getDateStr(data.getStartTime(),DateUtil.HH_MM)+"--"+DateUtil.getDateStr(data.getEndTime(),DateUtil.HH_MM));
         //set the state .
         switch (data.getStatus()){
             case SchoolProgram.STATUS_INIT://未开始
-                mStatusTv.setText("未开始");
+//                mStatusTv.setText("未开始");
                 mStatusTv.setBackgroundResource(R.drawable.ic_tag_init_red);
                 break;
             case SchoolProgram.STATUS_ON://进行中
-                mStatusTv.setText("进行中");
+//                mStatusTv.setText("进行中");
                 mStatusTv.setBackgroundResource(R.drawable.ic_tag_on_yellow);
                 break;
             case SchoolProgram.STATUS_END://已结束
-                mStatusTv.setText("已结束");
+//                mStatusTv.setText("已结束");
                 mStatusTv.setBackgroundResource(R.drawable.ic_tag_end_green);
                 break;
         }
-
+        mStatusTv.setText(data.getStatusStr());
     }
 }

@@ -18,7 +18,7 @@ public class MainResClassroom {
     /**
      * 名校网络课堂
      */
-    public final static String TYPE_LIVE = "liveAppointment ";
+    public final static String TYPE_LIVE = "liveAppointment";
 
     private String id;
     private String type;

@@ -3,6 +3,7 @@ package com.codyy.erpsportal.commons.controllers.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -12,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.Classroom;
@@ -49,7 +51,7 @@ import io.reactivex.schedulers.Schedulers;
  * 直播详细、视频播放页面
  * Created by caixingming on 2015/4/24.
  */
-public class LiveVideoPlayActivity extends AppCompatActivity {
+public class LiveVideoPlayActivity extends AppCompatActivity implements IFragmentMangerInterface{
 
     private String TAG = LiveVideoPlayActivity.class.getSimpleName();
     public static final int PLAY_STYLE_LIVE = 0x001;//从专递课堂跳转
@@ -162,7 +164,7 @@ public class LiveVideoPlayActivity extends AppCompatActivity {
     }
 
     private void registerWiFiListener() {
-        wfb = new WiFiBroadCastUtils(this, getSupportFragmentManager(),new WiFiBroadCastUtils.PlayStateListener() {
+        wfb = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {
@@ -335,4 +337,8 @@ public class LiveVideoPlayActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
+    }
 }

@@ -135,7 +135,6 @@ public class ClassroomVideoFragment extends Fragment {
         if (isVisible() && getUserVisibleHint()) {
             check3GWifi();
         }
-
     }
 
     @Override

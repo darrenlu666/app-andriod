@@ -205,7 +205,7 @@ public class OnlineTeachActivity extends BaseHttpActivity {
         setFilterListener(new ConfirmTextFilterListener(mDrawerLayout) {
             @Override
             protected void doFilterConfirmed() {
-                OnlineTeachActivity.this.doFilterConfirmed();
+                doFilterConfirm();
             }
         });
     }
@@ -238,7 +238,7 @@ public class OnlineTeachActivity extends BaseHttpActivity {
         ft.commitAllowingStateLoss();
     }
 
-    private void doFilterConfirmed() {
+    private void doFilterConfirm() {
         Cog.i(TAG," doFilterConfirmed ~");
         Bundle bd = mFilterFragment.getFilterData();
         if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())&&mTabLayout.getSelectedTabPosition()>0){

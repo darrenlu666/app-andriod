@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.ChannelFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.ChannelFragment.TitleBarRiseListener;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
@@ -45,9 +46,9 @@ import io.reactivex.schedulers.Schedulers;
  * 天津课堂模板
  * Created by gujiajia on 2016/7/19.
  */
-public class MapFragment extends Fragment{
+public class TianJinFragment extends Fragment implements TitleBarRiseListener{
 
-    private final static String TAG = "MapFragment";
+    private final static String TAG = "TianJinFragment";
 
     private View mRootView;
 
@@ -86,7 +87,7 @@ public class MapFragment extends Fragment{
         super.onCreate(savedInstanceState);
         mHandler = new Handler();
         ChannelFragment channelFragment = (ChannelFragment) getParentFragment();
-        channelFragment.setMapFragment(this);
+        channelFragment.setTitleRiseListener(this);
         ConfigBus.register(mOnModuleConfigListener);
     }
 
@@ -94,7 +95,7 @@ public class MapFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.fragment_map, container, false);
+            mRootView = inflater.inflate(R.layout.fragment_tian_jin, container, false);
             ButterKnife.bind(this, mRootView);
             initWebView();
         } else {
@@ -109,7 +110,8 @@ public class MapFragment extends Fragment{
      */
     private int mVerticalOffset;
 
-    public void notifyParentRise(int verticalOffset) {
+    @Override
+    public void notifyRise(int verticalOffset) {
         mVerticalOffset = verticalOffset;
         mPanelTitleTv.setTranslationY(-verticalOffset);
         mDataPanelGl.setTranslationY(-verticalOffset);

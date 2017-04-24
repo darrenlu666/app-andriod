@@ -15,13 +15,10 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.Cog;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -139,13 +136,21 @@ public class MyDialog extends DialogFragment {
         }
     }
 
+    /**
+     * 显示fragmentDialog
+     * @param fragmentManager
+     * @param TAG
+     */
     public void showAllowStateLoss(FragmentManager fragmentManager , String TAG){
+        Cog.i(this.TAG , "showAllowStateLoss () ~~"+TAG);
         if (fragmentManager == null) return;
         FragmentTransaction ft = fragmentManager.beginTransaction() ;
         if (ft == null) return;
         ft.add(this ,TAG);
         ft.commitAllowingStateLoss();
     }
+
+
 
     @Override
     public void onDismiss(DialogInterface dialog) {

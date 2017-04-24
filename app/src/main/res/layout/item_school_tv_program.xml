@@ -9,7 +9,6 @@
     android:clickable="true"
     android:orientation="vertical"
     android:paddingBottom="20dp"
-    android:paddingLeft="16dp"
     android:paddingTop="20dp">
 
     <TextView
@@ -18,9 +17,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="5dp"
+        android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/division_line"
         android:maxLines="1"
-        tools:text="舒城县王烈桥中心王烈桥中心小学dfaadfasdfa" />
+        android:ellipsize="end"
+        tools:text="舒城县王烈桥中心王烈桥中心小学dfaadfasdfa舒城县王烈桥中心王烈桥中心小学dfaadfasdfa" />
     <TextView
         android:id="@+id/status_tv"
         android:layout_width="wrap_content"
@@ -40,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/school_name_tv"
         android:layout_alignBottom="@id/status_tv"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="5dp"
         android:layout_toLeftOf="@+id/status_tv"

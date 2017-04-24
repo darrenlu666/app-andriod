@@ -2,6 +2,7 @@ package com.codyy.erpsportal.groups.controllers.activities;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.nfc.Tag;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +36,7 @@ import butterknife.Bind;
  * 3. 拥有自由切换filter功能
  * 4. 可实现下拉刷新
  * 5. 能够自动加载更多
+ * 6. 是否拥有加载更多可以关闭/打开控制.
  * Created by poe on 3/6/17.
  */
 public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends BaseHttpActivity {
@@ -121,7 +123,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
         mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
             @Override
             public void onMoreData() {
-                requestData(false);
+                    requestData(false);
             }
         });
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<T>() {
@@ -173,11 +175,13 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
         getSimpleRecyclerDelegate().parseData(response,isRefreshing);
         mAdapter.setData(mDataList);
         //load more ...
+        Cog.i(TAG," data size : "+mDataList.size()+" total: "+getSimpleRecyclerDelegate().getTotal());
         if(mDataList.size() <  getSimpleRecyclerDelegate().getTotal()){
             mAdapter.setRefreshing(true);
             mAdapter.setHasMoreData(true);
         }else{
             mAdapter.setHasMoreData(false);
+            notifyLoadCompleted();
         }
         mAdapter.notifyDataSetChanged();
 
@@ -193,6 +197,7 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
     public void onFailure(Throwable error) throws Exception {
         if(null == mRecyclerView || null == mRefreshLayout) return;
         mRecyclerView.setRefreshing(false);
+//        mAdapter.setHasMoreData(false);
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
@@ -217,8 +222,22 @@ public abstract class SimpleRecyclerActivity<T extends BaseTitleItemBar> extends
         requestData(true);
     }
 
+    /**
+     * 多个recyclerView状态切换，init page index .
+     */
+    public void changeTabClear(){
+        mDataList.clear();
+        mAdapter.setRefreshing(false);
+        mAdapter.setHasMoreData(false);
+        setCurrentPageIndex(1);
+    }
+
     public void initData(){
         if(null != mRefreshLayout) mRefreshLayout.setRefreshing(true);
         requestData(true);
+    }
+
+    public void setEmptyText(int tips,int color){
+        if(null != mEmptyView) mEmptyView.setText(tips,color);
     }
 }

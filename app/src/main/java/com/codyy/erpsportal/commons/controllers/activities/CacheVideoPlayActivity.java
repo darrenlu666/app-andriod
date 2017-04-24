@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.StringUtils;
@@ -60,7 +62,12 @@ public class CacheVideoPlayActivity extends AppCompatActivity implements BnVideo
         String title = getIntent().getStringExtra(EXTRA_TITLE);
 
         mTitleTextView.setText(StringUtils.filterNullString(title));
-        mVideoControl.bindVideoView(mVideoView,getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setExpandable(true);
         mVideoControl.setOnCompleteListener(this);
         mVideoControl.setOnErrorListener(new BnVideoView2.OnBNErrorListener() {

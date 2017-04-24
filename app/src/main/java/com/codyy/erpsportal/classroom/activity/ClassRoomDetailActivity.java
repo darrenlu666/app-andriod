@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -39,6 +40,7 @@ import com.codyy.erpsportal.classroom.fragment.ClassRoomCommentFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -67,7 +69,7 @@ import butterknife.ButterKnife;
  * 专递课堂 直录播课堂的 直播 录播详情界面Activity
  * Created by ldh on 2016/6/29.
  */
-public class ClassRoomDetailActivity extends AppCompatActivity implements View.OnClickListener, ClassRoomCommentFragment.SoftInputOpenListener {
+public class ClassRoomDetailActivity extends AppCompatActivity implements View.OnClickListener, ClassRoomCommentFragment.SoftInputOpenListener ,IFragmentMangerInterface {
     private static final String TAG = ClassRoomDetailActivity.class.getSimpleName();
     @Bind(R.id.tab_layout)TabLayout mTabLayout;
     @Bind(R.id.view_pager)  ViewPager mViewPager;
@@ -138,6 +140,8 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     private String mStatus;//进行中 or 未开始
     private String mSubject ;//传递的自定义学科字段
     private String mRequestUrl;
+    private RequestSender mRequestSender;
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -177,6 +181,9 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
      * 分别为实时直播和往期录播加载不同的view
      */
     private void initViews() {
+        if(isFinishing()){
+            return;
+        }
         mFlRecordVideo = (FrameLayout) findViewById(R.id.fl_record_video);
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
             initLiveVideo();
@@ -203,14 +210,14 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         mAutoHide = new AutoHideUtils(mVideoTitleLl);
         mVideoLayout = (BnVideoLayout2) findViewById(R.id.bnVideoViewOfLiveVideoLayout);
         mVideoLayout.setVolume(100);
-        mVideoLayout.setOnTouchListener(new View.OnTouchListener() {
+        mVideoLayout.getVideoView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mAutoHide.showControl();
                 return false;
             }
         });
-        mVideoLayout.setOnTipsTouchListener(new View.OnClickListener() {
+        mVideoLayout.setTextClickListener(new BnVideoLayout2.ITextClickListener() {
             @Override
             public void onClick(View v) {
                 mAutoHide.showControl();
@@ -219,11 +226,13 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         mVideoLayout.setOnSurfaceChangeListener(new BnVideoView2.OnSurfaceChangeListener() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                mSurfaceDestroyed = false;
                 check3GWifi();
             }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
+                mSurfaceDestroyed = true;
                 if (null != mVideoLayout)
                     mVideoLayout.stop();
             }
@@ -246,7 +255,12 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     private void initRecordVideo() {
         BnVideoView2 mVideoView = (BnVideoView2) findViewById(R.id.video_view);
         mVideoControl = (BNVideoControlView) findViewById(R.id.videoControl);
-        mVideoControl.bindVideoView(mVideoView, getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
             @Override
             public void show() {
@@ -306,6 +320,26 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     }
 
     /**
+     * 是否继续播放标记位 ： default : false 可以继续播放直播  true: 视图已经销毁，阻止继续播放{@link #mPlayLiveRunnable}
+     */
+    private boolean mSurfaceDestroyed = false;
+    /**
+     * 开始播放视频
+     * 因为网络检测的延迟此处播放应当在应用onDestroy时候被释放
+     */
+    private Runnable mPlayLiveRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //view 销毁后立刻退出
+            if (mSurfaceDestroyed) return;
+            if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
+                mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+                mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
+            }
+        }
+    };
+
+    /**
      * 播放指定的视频资源
      *
      * @param url 点播视频的资源地址
@@ -340,8 +374,8 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         mTitleTv = (TextView) findViewById(R.id.tv_school_name);
         mTitleTv.setVisibility(View.INVISIBLE);
 
-        RequestSender requestSender = new RequestSender(this);
-        requestSender.sendRequest(new RequestSender.RequestData(mRequestUrl,
+        mRequestSender = new RequestSender(this);
+        mRequestSender.sendRequest(new RequestSender.RequestData(mRequestUrl,
                 mParams, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -365,10 +399,13 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                     handleRequestFailure();
                 }
             }
-        }));
+        },TAG));
     }
 
     private void addViewPager() {
+        if(isFinishing()){
+            return;
+        }
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.main_green));
         mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -406,6 +443,11 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
             }
         });
 
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 
     private int getColorResource(@ColorRes int colorId) {
@@ -515,6 +557,9 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
      * 当请求数据返回error时，做如下处理
      */
     private void handleRequestFailure() {
+        if(isFinishing()){
+            return;
+        }
         if (mVideoFailureTv == null)
             mVideoFailureTv = (TextView) findViewById(R.id.tv_un_start_tip);
         mVideoFailureTv.setVisibility(View.VISIBLE);
@@ -613,20 +658,25 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
 
             @Override
             public void onContinue() {
-                startPlay();
+//                startPlay();
+                mHandler.removeCallbacks(mPlayLiveRunnable);
+                //如果视图销毁了 ， 停止播放 .
+                if (!mSurfaceDestroyed) {
+                    mHandler.post(mPlayLiveRunnable);
+                }
             }
         });
     }
 
-    private void startPlay() {
+   /* private void startPlay() {
         if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
             mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
             mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
         }
-    }
-
+    }*/
+    WiFiBroadCastUtils mWiFiBroadCastUtils;
     private void registerWiFiListener() {
-        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, getSupportFragmentManager(), new WiFiBroadCastUtils.PlayStateListener() {
+        mWiFiBroadCastUtils = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {
@@ -670,5 +720,8 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
+        if(null != mRequestSender) mRequestSender.stop(TAG);
+        mHandler.removeCallbacks(mPlayLiveRunnable);
     }
 }

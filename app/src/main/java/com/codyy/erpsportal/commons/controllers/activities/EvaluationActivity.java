@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationCommentFragment;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
 import com.codyy.erpsportal.commons.models.entities.Comment;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -66,7 +68,7 @@ import butterknife.ButterKnife;
  * 进入评课议课
  * Created by kmdai on 2015/4/21.
  */
-public class EvaluationActivity extends AppCompatActivity implements View.OnClickListener {
+public class EvaluationActivity extends AppCompatActivity implements View.OnClickListener ,IFragmentMangerInterface{
 
     public final static int RATE_TRUE = 0x001;
     /**
@@ -265,7 +267,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         if (mAssessmentDetails.getVideoIds().size() > 0) {
             videoIndex = 0;
             mVideoControlView.setVisibility(View.GONE);
-            mVideoControlView.bindVideoView(mBnVideoView, getSupportFragmentManager());
+            mVideoControlView.bindVideoView(mBnVideoView, this);
             mVideoControlView.setVideoPath(mAssessmentDetails.getVideoIds().get(videoIndex).getFilePath(), BnVideoView2.BN_URL_TYPE_RTMP_HISTORY, false);
             mVideoControlView.setDisplayListener(new BNVideoControlView.DisplayListener() {
                 @Override
@@ -678,7 +680,12 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
     //注册Wi-Fi类
     private void registerWiFiListener() {
 
-        mWiFiBroadCastUtils = new WiFiBroadCastUtils(this, getSupportFragmentManager(), new WiFiBroadCastUtils.PlayStateListener() {
+        mWiFiBroadCastUtils = new WiFiBroadCastUtils(new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        }, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 mBnVideoView.play(BnVideoView2.BN_PLAY_DEFAULT);
@@ -738,6 +745,11 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         }
     };
     private int videoIndex = 0;
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
+    }
 
     class DownLoadAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -828,7 +840,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
             public void run() {
                 if (mBnVideoView != null && !mBnVideoView.isPlaying()) {
                     if (!mBnVideoView.isUrlEmpty()) {
-                        mBnVideoView.playNow();
+                        mBnVideoView.play(mBnVideoView.getPlayType());
                     }
                 }
             }

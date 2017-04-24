@@ -92,7 +92,7 @@ public class AppConfig {
             R.drawable.ic_fun_resource,//优课资源 16
             R.drawable.ic_fun_analysis,//统计 17
             R.drawable.ic_fun_net_teach,//网络授课 18
-            R.drawable.ic_fun_live_record_lesson,//校园电视台 19
+            R.drawable.ic_fun_school_tv,//校园电视台 19
             R.drawable.ic_fun_repair,//报修
     };
     /**
@@ -188,7 +188,7 @@ public class AppConfig {
                 AppInfo.CATEGORY_SINGLE_MODEL));
 
         //1.2实时直播，标题没有配置项
-        list1.add(new AppInfo(R.drawable.ic_child_live_lesson, MENUS[0], Titles.sWorkspaceSpeclassLive,
+        list1.add(new AppInfo(R.drawable.ic_child_live_reocrd, MENUS[0], Titles.sWorkspaceSpeclassLive,
                 AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
                 new Jumpable() {
                     @Override
@@ -371,25 +371,29 @@ public class AppConfig {
 
         //4 校园电视台
         //4.1 节目表
-        schoolBroadList.add(new AppInfo(R.drawable.ic_child_area_schedule, MENUS[19], Titles.sWorkspaceTvProgramProgramList,
+        AppInfo app_program_tv = new AppInfo(R.drawable.ic_child_school_program_schedule, MENUS[19], Titles.sWorkspaceTvProgramProgramList,
                 AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
-                new Jumpable() {
+                /*new Jumpable() {
                     @Override
                     public void jump(Context context) {
                         SchoolTvProgramListActivity.start((Activity) context,UserInfoKeeper.getInstance().getUserInfo());
                     }
-                },
-                AppInfo.CATEGORY_SINGLE_MODEL));
+                }*/null,
+                AppInfo.CATEGORY_SINGLE_MODEL);
+        app_program_tv.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_CHILD);
+        schoolBroadList.add(app_program_tv);
         //4.2 往期视频
-        schoolBroadList.add(new AppInfo(R.drawable.ic_child_live_lesson, MENUS[19], Titles.sWorkspaceTvProgramReplay,
+        AppInfo app_program_history = new AppInfo(R.drawable.ic_child_school_history_video, MENUS[19], Titles.sWorkspaceTvProgramReplay,
                 AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT),
-                new Jumpable() {
+                /*new Jumpable() {
                     @Override
                     public void jump(Context context) {
                         SchoolTvHistoryActivity.start((Activity) context,UserInfoKeeper.getInstance().getUserInfo());
                     }
-                },
-                AppInfo.CATEGORY_SINGLE_MODEL));
+                }*/null,
+                AppInfo.CATEGORY_SINGLE_MODEL);
+        app_program_history.setBaseViewHoldType(ApplicationViewHold.ITEM_TYPE_CHILD);
+        schoolBroadList.add(app_program_history);
 
         mChildItem.put(MENUS[0], list1);
         mChildItem.put(MENUS[1], list2);
@@ -453,13 +457,13 @@ public class AppConfig {
         //网络授课
         mPriorityCollection.put(MENUS[18], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT));
         //校园电视台
-        mPriorityCollection.put(MENUS[19], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT));
+        mPriorityCollection.put(MENUS[19], AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT));
         //权限
         mPriorityCollection.put(MENUS[20], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER));
 
         /** 二级应用列表-统计**/
         //统计－课堂统计/** 二级应用列表-统计**/
-        //统计－课堂统计
+        //统计－课堂统计A
         mPriorityCollection.put("front.workspace.count.class.area",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
         mPriorityCollection.put("front.workspace.count.class.school",AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
         //统计－资源统计
@@ -785,5 +789,14 @@ public class AppConfig {
             }
         }
         return result;
+    }
+
+    /**
+     * 清空缓存
+     */
+    public void destroy(){
+        mChildItem.clear();
+        MENU_ICON.clear();
+        sAppInstance = null;
     }
 }

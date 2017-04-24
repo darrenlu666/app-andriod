@@ -3,7 +3,6 @@ package com.codyy.erpsportal.statistics.controllers.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.text.TextUtils;
@@ -19,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
@@ -75,18 +75,10 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
 
     public final static int REQUEST_CODE = 1;
 
-    public final static int BY_WEEK = 1;
-
-    public final static int BY_MONTH = 2;
-
-    public final static int BY_SPECIFIC_DATE = 3;
-
-    public final static int BY_TERM = 4;
-
     /**
      * 按什么筛选
      */
-    @FilterBy
+    @StatFilterBy
     private int mFilterBy;
 
     @Bind(R.id.tv_title)
@@ -253,44 +245,44 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         } else {//二次筛选，原来筛选参数
             setFilterBy(mFilterCarrier.getFilterBy());
             switch(mFilterBy) {
-                case BY_WEEK:
+                case StatFilterBy.BY_WEEK:
                     mWeekDate = LocalDate.parse(mFilterCarrier.getStartDate());
                     mWeekBeginTv.setText(mFilterCarrier.getStartDate());
                     mWeekEndTv.setText(mFilterCarrier.getEndDate());
                     break;
-                case BY_MONTH:
+                case StatFilterBy.BY_MONTH:
                     mMonthDate = LocalDate.parse(mFilterCarrier.getStartDate());
                     mMonthBeginTv.setText(mFilterCarrier.getStartDate());
                     mMonthEndTv.setText(mFilterCarrier.getEndDate());
                     break;
-                case BY_SPECIFIC_DATE:
+                case StatFilterBy.BY_SPECIFIC_DATE:
                     mSpecificDateBeginBtn.setText(mFilterCarrier.getStartDate());
                     mSpecificDateEndBtn.setText(mFilterCarrier.getEndDate());
                     break;
-                case BY_TERM:
+                case StatFilterBy.BY_TERM:
                     break;
             }
         }
     }
 
     private void setFilterByTerm() {
-        mFilterBy = BY_TERM;
+        mFilterBy = StatFilterBy.BY_TERM;
         mByTermRb.setChecked(true);
     }
 
     private void setFilterBy(int filterBy) {
         mFilterBy = filterBy;
         switch(mFilterBy) {
-            case BY_WEEK:
+            case StatFilterBy.BY_WEEK:
                 mByWeekRb.setChecked(true);
                 break;
-            case BY_MONTH:
+            case StatFilterBy.BY_MONTH:
                 mByMonthRb.setChecked(true);
                 break;
-            case BY_SPECIFIC_DATE:
+            case StatFilterBy.BY_SPECIFIC_DATE:
                 mBySpecificDateRb.setChecked(true);
                 break;
-            case BY_TERM:
+            case StatFilterBy.BY_TERM:
                 mByTermRb.setChecked(true);
                 break;
         }
@@ -445,6 +437,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         mSubjectsOl.addView(subjectCb);
         mSubjectCbList.add(subjectCb);
         subjectCb.setOnClickListener(mOnSubjectClickListener);
+        //如果已经筛选过，选中原来选中的学科
         if (mFilterCarrier != null && mFilterCarrier.getSubjectId() != null) {
             if (mFilterCarrier.getSubjectId().equals(subjectEntity.getId())) {
                 subjectCb.setChecked(true);
@@ -599,12 +592,12 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     }
 
     private void setFilterByWeek() {
-        mFilterBy = BY_WEEK;
+        mFilterBy = StatFilterBy.BY_WEEK;
         mByWeekRb.setChecked(true);
     }
 
     private void setFilterByMonth() {
-        mFilterBy = BY_MONTH;
+        mFilterBy = StatFilterBy.BY_MONTH;
         mByMonthRb.setChecked(true);
     }
 
@@ -625,7 +618,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     };
 
     private void setFilterBySpecificDate() {
-        mFilterBy = BY_SPECIFIC_DATE;
+        mFilterBy = StatFilterBy.BY_SPECIFIC_DATE;
         mBySpecificDateRb.setChecked(true);
     }
 
@@ -669,16 +662,16 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     public void onRadioButtonClick(View view) {
         switch (view.getId()) {
             case R.id.rb_by_week:
-                mFilterBy = BY_WEEK;
+                mFilterBy = StatFilterBy.BY_WEEK;
                 break;
             case R.id.rb_by_month:
-                mFilterBy = BY_MONTH;
+                mFilterBy = StatFilterBy.BY_MONTH;
                 break;
             case R.id.rb_by_specific_date:
-                mFilterBy = BY_SPECIFIC_DATE;
+                mFilterBy = StatFilterBy.BY_SPECIFIC_DATE;
                 break;
             case R.id.rb_by_term:
-                mFilterBy = BY_TERM;
+                mFilterBy = StatFilterBy.BY_TERM;
                 break;
         }
     }
@@ -736,19 +729,12 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         return statFilterCarrier;
     }
 
-    @IntDef({BY_WEEK, BY_MONTH, BY_SPECIFIC_DATE, BY_TERM})
-    public @interface FilterBy{}
-
     /**
      * 学科统计筛选
      * @param activity
      * @param userInfo
      * @param title
      */
-    public static void startSubjectFilter(Activity activity, UserInfo userInfo, String title) {
-        startSubjectFilter(activity, userInfo, title, null);
-    }
-
     public static void startSubjectFilter(Activity activity, UserInfo userInfo, String title,
                                           StatFilterCarrier statFilterCarrier) {
         Intent intent = new Intent(activity, CoursesProfilesFilterActivity.class);
@@ -763,10 +749,6 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }
         activity.startActivityForResult(intent, REQUEST_CODE);
         activity.overridePendingTransition(R.anim.slide_up_to_show, R.anim.layout_hide);
-    }
-
-    public static void startProfileFilter(Activity activity, UserInfo userInfo, String title) {
-        startProfileFilter(activity, userInfo, title, null);
     }
 
     /**

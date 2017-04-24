@@ -10,9 +10,8 @@
                 android:clickable="true"
                 android:orientation="horizontal"
                 android:paddingTop="20dp"
-    android:paddingBottom="20dp"
-    android:paddingLeft="16dp"
-    >
+                android:paddingBottom="20dp"
+                >
     <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/sdv"
         android:layout_width="match_parent"
@@ -23,6 +22,7 @@
         app:dominantMeasurement="width"
         app:placeholderImage="@drawable/icon_default_video"
         android:layout_weight="2"
+        android:layout_marginLeft="16dp"
         />
     <RelativeLayout
         android:layout_width="match_parent"
@@ -37,7 +37,9 @@
             android:layout_marginRight="5dp"
             android:maxLines="1"
             style="@style/ListItemTitle"
-            tools:text="舒城县王烈桥中心王烈桥中心小学dfaadfasdfa"/>
+            tools:text="舒城县王烈桥中心王烈桥中心小学dfaadfasdfa"
+            android:ellipsize="end"
+            />
 
         <TextView
             android:id="@+id/status_tv"

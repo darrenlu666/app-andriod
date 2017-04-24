@@ -24,6 +24,7 @@ import com.codyy.erpsportal.commons.widgets.CenterLongTextView;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment.OnRowClickListener;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
+import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterCarrier;
 import com.codyy.erpsportal.statistics.models.entities.StatRow;
 import com.codyy.erpsportal.statistics.models.entities.StatTableModel;
@@ -115,14 +116,20 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
         });
     }
 
+    /**
+     * 默认数据加载
+     */
     private void loadData() {
         LocalDate localDate = LocalDate.now();
         if (mStatFilterCarrier == null) {
             mStatFilterCarrier = new StatFilterCarrier();
+            //默认筛选本周
             mStatFilterCarrier.setStartDate(
                     localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
             mStatFilterCarrier.setEndDate(
                     localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
+            mStatFilterCarrier.setSubjectId("-1");
+            mStatFilterCarrier.setFilterBy(StatFilterBy.BY_WEEK);
         }
         loadData( mStatFilterCarrier);
     }
@@ -228,7 +235,8 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
                         , numberFormat.format(statEntity.getDownRate()) + "%"
                 ));
             }
-            if (mStatEntities != null && mStatEntities.get(0) != null
+            if (mStatEntities != null && mStatEntities.size() > 0
+                    && mStatEntities.get(0) != null
                     && mStatEntities.get(0).getAreaType().equals("school")) {//如果是学校第一列显示5个字
                 statTableModel.setEms(5);
             }

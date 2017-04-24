@@ -3,6 +3,7 @@ package com.codyy.erpsportal.classroom.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.models.Titles;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -192,11 +194,16 @@ public class ClassDetailFragment extends Fragment {
     }
 
     private String getTimeMinite(String time) {
-        int timeInt = Integer.parseInt(time);
-        if (timeInt >= 60 * 1000) {
-            return timeInt / 1000 / 60 + "分" + timeInt / 1000 % 60 + "秒";
-        } else {
-            return timeInt / 1000 + "秒";
+        try {
+            long timeInt = Long.valueOf(time);
+            if (timeInt >= 60 * 1000) {
+                return timeInt / 1000 / 60 + "分" + timeInt / 1000 % 60 + "秒";
+            } else {
+                return timeInt / 1000 + "秒";
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return time;
         }
     }
 

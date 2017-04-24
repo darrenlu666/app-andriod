@@ -10,6 +10,7 @@ public class Constants {
     public static final String EXTRA_SCHOOL_ID = "com.codyy.erpsportal.schoolId";
     public static final String PREPARATIONID = "preparationId";
     public static final String TYPE_LESSON = "type_lesson";
+    public static final String USER_INFO_SCHOOL_ID = "user.school.id";
     /**
      * 集体备课
      */

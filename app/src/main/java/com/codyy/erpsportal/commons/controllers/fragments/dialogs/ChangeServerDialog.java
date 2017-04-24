@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.fragments.dialogs;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.dao.ServerAddressDao;
 import com.codyy.url.URLConfig;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -133,13 +135,25 @@ public class ChangeServerDialog extends DialogFragment {
      */
     private void saveServerAddress() {
         Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                ServerAddressDao.saveServerAddress(getContext().getApplicationContext(),
+        executor.execute(new BaseUrlSaveTask(getContext().getApplicationContext()));
+    }
+
+    private static class BaseUrlSaveTask implements Runnable{
+
+        private WeakReference<Context> mContextWeakRef;
+
+        private BaseUrlSaveTask(Context context){
+            mContextWeakRef = new WeakReference<>(context);
+        }
+
+        @Override
+        public void run() {
+            Context context = mContextWeakRef.get();
+            if (context != null) {
+                ServerAddressDao.saveServerAddress(context,
                         URLConfig.BASE);
             }
-        });
+        }
     }
 
     public interface ServerChangedListener{

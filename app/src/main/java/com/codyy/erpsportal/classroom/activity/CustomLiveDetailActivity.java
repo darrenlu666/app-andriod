@@ -40,6 +40,7 @@ import com.codyy.erpsportal.classroom.fragment.PeopleTreeFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -69,71 +70,102 @@ import butterknife.ButterKnife;
  * 专递课堂 -直播
  * Created by ldh on 2016/6/29.
  */
-public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener ,PeopleTreeFragment.ISyncCount{
+public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener, PeopleTreeFragment.ISyncCount, IFragmentMangerInterface {
     private static final String TAG = CustomLiveDetailActivity.class.getSimpleName();
     private static final int MSG_UPDATE_WATCH_COUNT = 0x001;//update the count of people mount sea .
-    private static final int MAX_COUNT = 10*10000;
-    private static final int UPDATE_TIME_DELAY = 30*1000;//更新观看人数.
-    @Bind(R.id.tab_layout)TabLayout mTabLayout;
-    @Bind(R.id.view_pager)  ViewPager mViewPager;
+    private static final int MAX_COUNT = 10 * 10000;
+    private static final int UPDATE_TIME_DELAY = 30 * 1000;//更新观看人数.
+    @Bind(R.id.tab_layout)
+    TabLayout mTabLayout;
+    @Bind(R.id.view_pager)
+    ViewPager mViewPager;
     RelativeLayout mRlVideoList;
     TextView mTitleTv;
     private UserInfo mUserInfo;//当前用户信息
-    /**     * 往期录播布局     */
+    /**
+     * 往期录播布局
+     */
     private FrameLayout mFlRecordVideo;
-    /**     * 标题栏     */
+    /**
+     * 标题栏
+     */
     private RelativeLayout mVideoTitleLl;
-    /**     * 显示隐藏类    */
+    /**
+     * 显示隐藏类
+     */
     private AutoHideUtils mAutoHide;
-    /**     * 顶部包括返回按钮和学校名称的条     */
+    /**
+     * 顶部包括返回按钮和学校名称的条
+     */
     private LinearLayout mTopLine;
-    /**     * 实时直播播放器     */
+    /**
+     * 实时直播播放器
+     */
     private BnVideoLayout2 mVideoLayout;
-    /**     * 往期录播播放器的控制器     */
+    /**
+     * 往期录播播放器的控制器
+     */
     private BNVideoControlView mVideoControl;
-    /**     * 实时直播未开始的提示     */
+    /**
+     * 实时直播未开始的提示
+     */
     private TextView mVideoFailureTv;
-    /**     * 当前播放的视频片段index     */
+    /**
+     * 横竖平按钮
+     **/
+    private ImageView mIvFullScreen;
+    /**
+     * 当前播放的视频片段index
+     */
     private int mCurrentPlayIndex;
-    /**     * 视频列表适配器     */
+    /**
+     * 视频列表适配器
+     */
     private ListAdapter mVideoListAdapter;
-    /**     * 实时直播详情实体类     */
+    /**
+     * 实时直播详情实体类
+     */
     private ClassRoomDetail mClassRoomDetail;
-    /**     * 往期录播详情实体类     */
+    /**
+     * 往期录播详情实体类
+     */
     private RecordRoomDetail mRecordRoomDetail;
-    /**     * 是否是横屏     */
+    /**
+     * 是否是横屏
+     */
     private boolean mIsExpanable;
     private String mScheduleDetailId;//课程id
     private String mFrom;//专递课堂/直录播课堂
     private String mStatus;//进行中 or 未开始
-    private String mSubject ;//传递的自定义学科字段
+    private String mSubject;//传递的自定义学科字段
     private String mRequestUrl;
     private RequestSender mRequestSender;
     private int mPeopleCount = 0;
-    private Handler mHandler =new Handler(){
+    private WiFiBroadCastUtils mWifiUtil;
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
-            switch (msg.what){
-                case  MSG_UPDATE_WATCH_COUNT:
+            switch (msg.what) {
+                case MSG_UPDATE_WATCH_COUNT:
                     try {
                         int count = (int) msg.obj;
-                        Cog.i(TAG,"update success now count : "+count);
-                        if(count <=0 ) count=1;
+                        Cog.i(TAG, "update success now count : " + count);
+                        if (count <= 0) count = 1;
                         mPeopleCount = count;
                         View tabView = mTabLayout.getTabAt(2).getCustomView();
                         TextView tv = (TextView) tabView.findViewById(R.id.tv_tab_item);
                         if (count < MAX_COUNT) {
                             tv.setText(count + "人观看");
-                        } else if(count%10000 == 0){
-                            tv.setText(count/10000 + "万人观看");
-                        }else if(count%10000 > 0){
-                            tv.setText(count/10000 + "万+人观看");
+                        } else if (count % 10000 == 0) {
+                            tv.setText(count / 10000 + "万人观看");
+                        } else if (count % 10000 > 0) {
+                            tv.setText(count / 10000 + "万+人观看");
                         }
-                    }catch(ClassCastException e){
+                    } catch (ClassCastException e) {
                         e.printStackTrace();
-                        Cog.e(TAG,e == null?"cast error !":e.getMessage());
+                        Cog.e(TAG, e == null ? "cast error !" : e.getMessage());
                     }
                     break;
             }
@@ -154,9 +186,9 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mStatus = getIntent().getExtras().getString(ClassRoomContants.EXTRA_LIVE_STATUS);
         mSubject = getIntent().getExtras().getString(ClassRoomContants.EXTRA_LIVE_SUBJECT);
         mUserInfo = getIntent().getParcelableExtra(Constants.USER_INFO);
-        if(null == mUserInfo) mUserInfo = UserInfoKeeper.obtainUserInfo();
+        if (null == mUserInfo) mUserInfo = UserInfoKeeper.obtainUserInfo();
         initViewStub();
-        handleData();
+        requestData();
         //禁止锁屏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
@@ -177,38 +209,49 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     private Runnable mHeartJump = new Runnable() {
         @Override
         public void run() {
-            HashMap<String,String> params = new HashMap<>();
-            params.put("clsScheduleDetailId",mScheduleDetailId);
-            params.put("uuid",mUserInfo.getUuid());
+            HashMap<String, String> params = new HashMap<>();
+            params.put("clsScheduleDetailId", mScheduleDetailId);
+            params.put("uuid", mUserInfo.getUuid());
             mRequestSender.sendRequest(new RequestSender.RequestData(URLConfig.GET_CUSTOMER_LIVING_WATCH_COUNT, params, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject jsonObject) {
-                    if("success".equals(jsonObject.optString("result"))){
+                    if ("success".equals(jsonObject.optString("result"))) {
                         int count = jsonObject.optInt("count");
                         //send message to update count number .
-                        mHandler.sendMessage(mHandler.obtainMessage(MSG_UPDATE_WATCH_COUNT,count));
+                        mHandler.sendMessage(mHandler.obtainMessage(MSG_UPDATE_WATCH_COUNT, count));
                     }
 
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(Throwable volleyError) {
-                    Cog.e(TAG,volleyError == null ? "error":volleyError.getMessage());
+                    Cog.e(TAG, (volleyError == null || volleyError.getMessage() == null) ? "error" : volleyError.getMessage());
                 }
             }));
 
             mHandler.postDelayed(mHeartJump, UPDATE_TIME_DELAY);
         }
     };
+
     /**
      * 分别为实时直播和往期录播加载不同的view
+     * invoked after  {@link #requestData()}
      */
     private void initViews() {
+        if (isFinishing()) {
+            return;
+        }
         mFlRecordVideo = (FrameLayout) findViewById(R.id.fl_record_video);
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
             initLiveVideo();
             if ("INIT".equals(mStatus)) {
+                mIvFullScreen.setVisibility(View.GONE);
                 handleRequestFailure();
+            } else {
+                check3GWifi();
+                registerWiFiListener();
+                mAutoHide.showControl();
+                mIvFullScreen.setVisibility(View.VISIBLE);
             }
         } else {
             initRecordVideo();
@@ -226,18 +269,20 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
      * 初始化直播视频的相关东西
      */
     private void initLiveVideo() {
+        if (isFinishing()) {
+            return;
+        }
         mVideoTitleLl = (RelativeLayout) findViewById(R.id.rl_video_title);
-        mAutoHide = new AutoHideUtils(mVideoTitleLl);
         mVideoLayout = (BnVideoLayout2) findViewById(R.id.bnVideoViewOfLiveVideoLayout);
         mVideoLayout.setVolume(100);
-        mVideoLayout.setOnTouchListener(new View.OnTouchListener() {
+        mVideoLayout.getVideoView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mAutoHide.showControl();
-                return false;
+                if (null != mAutoHide) mAutoHide.showControl();
+                return true;
             }
         });
-        mVideoLayout.setOnTipsTouchListener(new View.OnClickListener() {
+        mVideoLayout.setTextClickListener(new BnVideoLayout2.ITextClickListener() {
             @Override
             public void onClick(View v) {
                 mAutoHide.showControl();
@@ -246,11 +291,17 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mVideoLayout.setOnSurfaceChangeListener(new BnVideoView2.OnSurfaceChangeListener() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
+                Cog.i(TAG, " surfaceCreated ~");
+                mSurfaceDestroyed = false;
                 check3GWifi();
             }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
+                Cog.i(TAG, " surfaceDestroyed ~");
+                mSurfaceDestroyed = true;
+                //如果已经在了，立刻清除
+                mHandler.removeCallbacks(mPlayLiveRunnable);
                 if (null != mVideoLayout)
                     mVideoLayout.stop();
             }
@@ -260,11 +311,10 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
 
             }
         });
-        mAutoHide.showControl();
-        check3GWifi();
-        registerWiFiListener();
-        ImageView mIvFullScreen = (ImageView) findViewById(R.id.iv_full_screen);
+
+        mIvFullScreen = (ImageView) findViewById(R.id.iv_full_screen);
         mIvFullScreen.setOnClickListener(this);
+        mAutoHide = new AutoHideUtils(mIvFullScreen);
     }
 
     /**
@@ -273,7 +323,12 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     private void initRecordVideo() {
         BnVideoView2 mVideoView = (BnVideoView2) findViewById(R.id.video_view);
         mVideoControl = (BNVideoControlView) findViewById(R.id.videoControl);
-        mVideoControl.bindVideoView(mVideoView, getSupportFragmentManager());
+        mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
+            @Override
+            public FragmentManager getNewFragmentManager() {
+                return getSupportFragmentManager();
+            }
+        });
         mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
             @Override
             public void show() {
@@ -297,7 +352,6 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
                 }
             }
         });
-
     }
 
     /**
@@ -341,7 +395,10 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mVideoControl.setVideoPath(url, BnVideoView2.BN_URL_TYPE_HTTP, false);
     }
 
-    private void handleData() {
+    /**
+     *
+     */
+    private void requestData() {
         if (TextUtils.isEmpty(mFrom)) return;
         Map<String, String> mParams = new HashMap<>();
         mParams.put("uuid", UserInfoKeeper.obtainUserInfo().getUuid());
@@ -392,12 +449,15 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
                     handleRequestFailure();
                 }
             }
-        }));
+        }, TAG));
     }
 
     private void addViewPager() {
+        if (isFinishing()) {
+            return;
+        }
         mTabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.main_green));
-        mTabLayout.setSelectedTabIndicatorHeight((int)(getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
+        mTabLayout.setSelectedTabIndicatorHeight((int) (getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         List<Fragment> mFragmentList = new ArrayList<>();
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
@@ -415,10 +475,10 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
         //v5.3.3 共xxx人观看
         mTabLayout.addTab(mTabLayout.newTab().setText("0人观看"));
-        mFragmentList.add(PeopleTreeFragment.newInstance(mUserInfo,mScheduleDetailId));
+        mFragmentList.add(PeopleTreeFragment.newInstance(mUserInfo, mScheduleDetailId));
 
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
-                mFragmentList, new String[]{getString(R.string.class_detail),getString(R.string.newest_comment)});
+                mFragmentList, new String[]{getString(R.string.class_detail), getString(R.string.newest_comment)});
         mViewPager.setAdapter(mViewPagerAdapter);
         //tips : if you do not set this attr , default only one fragment will be obtained when go to background .
         mViewPager.setOffscreenPageLimit(2);
@@ -438,9 +498,10 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
 
             }
         });
-
+        Cog.i(TAG, "init heart jump!");
         //start pooling .
-         mHandler.post(mHeartJump);
+        mHandler.removeCallbacks(mHeartJump);
+        mHandler.post(mHeartJump);
     }
 
     public void onClick(View view) {
@@ -505,22 +566,22 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         }
     }
 
-    public static void startActivity(Context context,UserInfo userInfo, String scheduleDetailId, String from,String subject) {
+    public static void startActivity(Context context, UserInfo userInfo, String scheduleDetailId, String from, String subject) {
         Intent intent = new Intent(context, CustomLiveDetailActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID, scheduleDetailId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
-        intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT,subject);
-        intent.putExtra(Constants.USER_INFO,userInfo);
+        intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT, subject);
+        intent.putExtra(Constants.USER_INFO, userInfo);
         context.startActivity(intent);
     }
 
-    public static void startActivity(Context context,UserInfo userInfo, String scheduleDetailId, String from, String status,String subject) {
+    public static void startActivity(Context context, UserInfo userInfo, String scheduleDetailId, String from, String status, String subject) {
         Intent intent = new Intent(context, CustomLiveDetailActivity.class);
         intent.putExtra(ClassRoomContants.EXTRA_SCHEDULE_DETAIL_ID, scheduleDetailId);
         intent.putExtra(ClassRoomContants.FROM_WHERE_MODEL, from);
         intent.putExtra(ClassRoomContants.EXTRA_LIVE_STATUS, status);
-        intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT,subject);
-        intent.putExtra(Constants.USER_INFO,userInfo);
+        intent.putExtra(ClassRoomContants.EXTRA_LIVE_SUBJECT, subject);
+        intent.putExtra(Constants.USER_INFO, userInfo);
         context.startActivity(intent);
     }
 
@@ -546,16 +607,34 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
      * 当请求数据返回error时，做如下处理
      */
     private void handleRequestFailure() {
-        if (mVideoFailureTv == null)
+        if (isFinishing()) {
+            return;
+        }
+        if (mVideoFailureTv == null) {
             mVideoFailureTv = (TextView) findViewById(R.id.tv_un_start_tip);
+            mVideoFailureTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // do nothing .
+                    if (null != mAutoHide) mAutoHide.showControl();
+                }
+            });
+        }
         mVideoFailureTv.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void sync(int currentCount) {
-        if(mPeopleCount < currentCount){
+        Cog.i(TAG, "sync heart jump!");
+        if (mPeopleCount < currentCount) {
+            mHandler.removeCallbacks(mHeartJump);
             mHandler.post(mHeartJump);
         }
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -639,23 +718,45 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
 
             @Override
             public void onContinue() {
-                startPlay();
+                mHandler.removeCallbacks(mPlayLiveRunnable);
+                //如果视图销毁了 ， 停止播放 .
+                if (!mSurfaceDestroyed) {
+                    mHandler.post(mPlayLiveRunnable);
+                }
             }
         });
     }
 
-    private void startPlay() {
-        if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
-            mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
-            mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
+    /**
+     * 是否继续播放标记位 ： default : false 可以继续播放直播  true: 视图已经销毁，阻止继续播放{@link #mPlayLiveRunnable}
+     */
+    private boolean mSurfaceDestroyed = false;
+    /**
+     * 开始播放视频
+     * 因为网络检测的延迟此处播放应当在应用onDestroy时候被释放
+     */
+    private Runnable mPlayLiveRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //view 销毁后立刻退出
+            if (mSurfaceDestroyed) return;
+            if (isFinishing()) return;
+            if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
+                mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+                mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
+            }
         }
-    }
+    };
+
 
     private void registerWiFiListener() {
-        WiFiBroadCastUtils wfb = new WiFiBroadCastUtils(this, getSupportFragmentManager(), new WiFiBroadCastUtils.PlayStateListener() {
+        mWifiUtil = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
                 if (!mVideoLayout.isPlaying()) {
+                    if (TextUtils.isEmpty(mVideoLayout.getVideoView().getUrl())) {
+                        mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+                    }
                     mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
                 }
             }
@@ -696,6 +797,12 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //stop net request .
+        if (null != mRequestSender) mRequestSender.stop(TAG);
+        if (null != mWifiUtil) mWifiUtil.destroy();
+        mHandler.removeCallbacks(mPlayLiveRunnable);
         mHandler.removeCallbacks(mHeartJump);
+        mVideoLayout = null;
     }
+
 }

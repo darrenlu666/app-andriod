@@ -1,31 +1,31 @@
 package com.codyy.erpsportal.classroom.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-
+import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
+import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
+import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.Watcher;
 import com.codyy.erpsportal.classroom.models.WatcherParse;
 import com.codyy.erpsportal.classroom.viewholder.PeopleTreeViewHolder;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.groups.controllers.activities.BlogPostDetailActivity;
+import com.codyy.erpsportal.commons.widgets.dialogs.ProgressDialog4Children;
+import com.codyy.erpsportal.commons.widgets.dialogs.SimpleLoadingDialog;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
-
 import org.json.JSONObject;
-
 import java.util.HashMap;
 
 /**
@@ -37,9 +37,10 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
     private static final String ARG_CLASS_ID = "class.id";
 
     private String mClassId;//class id .
+    private String mStudentId;
     private String mUpdateTime;//the last one request return updateTime .
     private ISyncCount mSyncInterface;
-    private boolean mHasMore = true;
+    private int mTotal ;
 
     public static PeopleTreeFragment newInstance(UserInfo userInfo, String scheduleDetailId) {
         Bundle args = new Bundle();
@@ -54,6 +55,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSyncInterface = (CustomLiveDetailActivity) getActivity();
+        mStudentId = EApplication.getPreferences().getString(ClassRoomContants.SHARE_PREFERENCE_STUDENT_ID,"");
         if(null != getArguments()){
             mClassId  = getArguments().getString(ARG_CLASS_ID);
         }
@@ -63,7 +65,24 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
     public void onViewLoadCompleted() {
         super.onViewLoadCompleted();
         //to get the people datasoiurce .
-        initData();
+        if(UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())&& TextUtils.isEmpty(mStudentId)){
+            ProgressDialog4Children dialog = ProgressDialog4Children.newInstance(mUserInfo, new SimpleLoadingDialog.IResult() {
+                @Override
+                public void onSuccess(String studentId) {
+                    Cog.i(TAG," progress dialog get result studentId : "+studentId);
+                    mStudentId = studentId;
+                    initData();
+                }
+
+                @Override
+                public void onFailure(Throwable error) {
+                    Cog.i(TAG,"get parent children failed： "+error==null?"":error.getMessage());
+                }
+            });
+            dialog.showAllowStateLoss(getFragmentManager(),TAG);
+        }else{
+            initData();
+        }
     }
 
     @Override
@@ -80,8 +99,8 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                 if(null != mClassId) param.put("clsScheduleDetailId",mClassId);
                 if(null != mUserInfo){
                     param.put("uuid",mUserInfo.getUuid());
-                    if(mUserInfo.isParent() && mUserInfo.getSelectedChild()!=null){
-                        param.put("studentId",mUserInfo.getSelectedChild().getStudentId());
+                    if(mUserInfo.isParent() && !TextUtils.isEmpty(mStudentId)){
+                        param.put("studentId",mStudentId);
                     }
                 }
                 param.put("count",String.valueOf(sPageCount));
@@ -94,21 +113,19 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                 WatcherParse parse = new Gson().fromJson(response.toString(),WatcherParse.class);
                 if(null != parse){
                     //do something .
+                    if(isRefreshing && parse.getTotal()>0) mTotal = parse.getTotal();
                     if (parse.getData() != null && parse.getData().size() > 0) {
                         //has more
-                        if(isRefreshing) mHasMore = true;
                         for (Watcher group : parse.getData()) {
                             group.setBaseViewHoldType(0);
                             mDataList.add(group);
                         }
 
                         if(null != mSyncInterface&&isRefreshing) mSyncInterface.sync(parse.getTotal());
-                    }else{// load more end !
-                        mHasMore = false;
                     }
                     // record the newest update time .(tips : order updateTime desc .)
                     if(mDataList!= null && mDataList.size()>0){
-                        mUpdateTime = mDataList.get(0).getUpdateTime();
+                        mUpdateTime = mDataList.get(mDataList.size()-1).getUpdateTime();
                     }
                 }
             }
@@ -154,7 +171,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
 
             @Override
             public int getTotal() {
-                return mDataList.size()+(mHasMore?1:0);
+                return mTotal;
             }
         };
     }
