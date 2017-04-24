@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.LoginActivity;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
@@ -186,18 +185,6 @@ public class RequestSender {
                 });
         mCompositeDisposable.add(disposable);
         return true;
-    }
-
-
-
-    /**
-     * 添加一般的请求，无需验证登陆的
-     *
-     * @param request 请求
-     * @param <T>     所请求数据类型
-     */
-    public <T> void add(Request<T> request) {
-//        mRequestQueue.add(request);
     }
 
     private void clearLoginData() {

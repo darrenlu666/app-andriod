@@ -164,7 +164,6 @@ dependencies {
     compile project(':codyymedialibrary')
     compile project(':url-builder-annotations')
     apt project(':url-builder-compiler')
-    compile 'com.mcxiaoke.volley:library:1.0.19'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'joda-time:joda-time:2.9.4'
     compile 'de.greenrobot:eventbus:2.4.0'

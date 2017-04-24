@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.BaseRefreshFragment;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;

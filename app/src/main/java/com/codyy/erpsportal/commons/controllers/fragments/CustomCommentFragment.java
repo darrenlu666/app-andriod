@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;

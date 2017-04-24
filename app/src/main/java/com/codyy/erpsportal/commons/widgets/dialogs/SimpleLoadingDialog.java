@@ -15,7 +15,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -55,31 +54,37 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
 
     /**
      * 获取数据的API.
+     *
      * @return api
      */
     public abstract String obtainAPI();
+
     /**
      * 参数拼接
+     *
      * @return 数据请求parmas
      */
-    public abstract HashMap<String,String> getParam();
+    public abstract HashMap<String, String> getParam();
 
     /**
      * 数据请求返回结果
+     *
      * @param response 数据请求成功返回
      */
     public abstract void onSuccess(JSONObject response) throws Exception;
+
     /**
      * 数据请求错误
+     *
      * @param error 数据请求失败
      */
-    public abstract void onFailure(Throwable error)throws Exception;
+    public abstract void onFailure(Throwable error) throws Exception;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_FRAME, R.style.input_dialog);
-        if(null != getDialog()){
+        if (null != getDialog()) {
 //            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             Window window = getDialog().getWindow();
             WindowManager.LayoutParams lp = window.getAttributes();
@@ -87,22 +92,24 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
             lp.width = UIUtils.dip2px(getContext(), 100);
             lp.height = UIUtils.dip2px(getContext(), 100);
             window.setAttributes(lp);
-            window.setBackgroundDrawable(ContextCompat.getDrawable(getContext(),R.color.transparent));
+            window.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.color.transparent));
         }
 
         if (null != getArguments()) {
             mUserInfo = getArguments().getParcelable(Constants.USER_INFO);
-            if(null == mUserInfo){
+            if (null == mUserInfo) {
                 mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
             }
         }
         mSender = new RequestSender(this);
         init();
     }
+
     /**
      * 初始化before视图加载
      */
-    public abstract  void init();
+    public abstract void init();
+
     /**
      * 显示fragmentDialog
      *
@@ -116,7 +123,7 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
         if (ft == null) return;
         ft.add(this, TAG);
         ft.commitAllowingStateLoss();
-        if(null != mAnimationDrawable) mAnimationDrawable.start();
+        if (null != mAnimationDrawable) mAnimationDrawable.start();
     }
 
 
@@ -124,7 +131,7 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
     public void onDismiss(DialogInterface dialog) {
         Cog.i(TAG, "onDismiss () ~~");
         super.onDismiss(dialog);
-        if(null != mAnimationDrawable) mAnimationDrawable.stop();
+        if (null != mAnimationDrawable) mAnimationDrawable.stop();
         stopRequest();
     }
 
@@ -161,8 +168,8 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
     /**
      * 请求数据
      */
-    public void requestData(){
-        requestData(obtainAPI(), getParam(),false, new BaseHttpActivity.IRequest() {
+    public void requestData() {
+        requestData(obtainAPI(), getParam(), false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 try {
@@ -177,7 +184,7 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
             public void onRequestFailure(Throwable error) {
                 try {
                     onFailure(error);
-                    if(null != mResultInterface) mResultInterface.onFailure(error);
+                    if (null != mResultInterface) mResultInterface.onFailure(error);
                 } catch (Exception e) {
                     e.printStackTrace();
                     LogUtils.log(e);
@@ -188,21 +195,22 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
 
     /**
      * 请求GET网络请求 .
-     * @param url request url .
-     * @param params request params .
+     *
+     * @param url             request url .
+     * @param params          request params .
      * @param requestListener request listener .
      */
-    public void requestData(String url , HashMap<String ,String> params , final boolean isRefreshing, final BaseHttpActivity.IRequest requestListener){
+    public void requestData(String url, HashMap<String, String> params, final boolean isRefreshing, final BaseHttpActivity.IRequest requestListener) {
 
-        if(!NetworkUtils.isConnected()){
+        if (!NetworkUtils.isConnected()) {
             ToastUtil.showToast(getString(R.string.net_error));
-            requestListener.onRequestFailure(new VolleyError(getString(R.string.net_error)));
+            requestListener.onRequestFailure(new Exception(getString(R.string.net_error)));
             return;
         }
-        if(null == params){
-            Cog.e(TAG,getString(R.string.null_param_error));
-            if(null != requestListener){
-                requestListener.onRequestFailure(new VolleyError(getString(R.string.null_param_error)));
+        if (null == params) {
+            Cog.e(TAG, getString(R.string.null_param_error));
+            if (null != requestListener) {
+                requestListener.onRequestFailure(new Exception(getString(R.string.null_param_error)));
             }
             return;
         }
@@ -211,9 +219,9 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
 
             @Override
             public void onResponse(JSONObject response) {
-                if(null != requestListener){
+                if (null != requestListener) {
                     try {
-                        requestListener.onRequestSuccess(response,isRefreshing);
+                        requestListener.onRequestSuccess(response, isRefreshing);
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -224,21 +232,21 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(Throwable error) {
-                if(null != requestListener){
+                if (null != requestListener) {
                     requestListener.onRequestFailure(error);
                 }
                 ToastUtil.showToast(getString(R.string.net_connect_error));
                 LogUtils.log(error);
             }
-        },TAG));
+        }, TAG));
     }
 
     /**
      * 退出应用时调用
      */
-    private void stopRequest(){
-        Cog.i(TAG,"stopREquest() ~");
-        if(null != mSender)
+    private void stopRequest() {
+        Cog.i(TAG, "stopREquest() ~");
+        if (null != mSender)
             mSender.stop(TAG);
     }
 
@@ -250,7 +258,8 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
         void onSuccess(String result);
 
         /**
-         *  请求出错.
+         * 请求出错.
+         *
          * @param error
          */
         void onFailure(Throwable error);
