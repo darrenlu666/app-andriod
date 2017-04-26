@@ -102,7 +102,10 @@ public class SchoolRepairListFragment extends LoadMoreFragment<RepairSchool,Repa
     }
 
     @Override
-    public void onFilterConfirmed(Map<String, String> params) { }
+    public void onFilterConfirmed(Map<String, String> params) {
+        updateParamsBaseOnMap(params, "baseAreaId");
+        loadData(true);
+    }
 
     @LayoutId(R.layout.item_repair_school)
     public static class RepairSchoolVh extends BindingRvHolder<RepairSchool>{

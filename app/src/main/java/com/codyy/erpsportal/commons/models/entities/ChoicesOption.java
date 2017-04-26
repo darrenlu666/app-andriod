@@ -5,6 +5,7 @@ import android.os.Parcel;
 import java.util.List;
 
 /**
+ * 选项
  * Created by gujiajia on 2016/3/7.
  */
 public class ChoicesOption extends FilterItem {

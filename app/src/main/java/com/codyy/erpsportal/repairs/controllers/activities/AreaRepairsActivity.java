@@ -3,10 +3,13 @@ package com.codyy.erpsportal.repairs.controllers.activities;
 import android.os.Bundle;
 
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
+import com.codyy.erpsportal.commons.models.entities.AreaFilterItem;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.repairs.controllers.fragments.AreaFilterFragment;
 import com.codyy.erpsportal.repairs.controllers.fragments.SchoolRepairListFragment;
+import com.codyy.erpsportal.repairs.utils.AreasFetcher;
+import com.codyy.erpsportal.repairs.utils.AreasFetcher.OnAreasFetchedListener;
 
 /**
  * 地区报修，显示有报修记录的学校列表
@@ -25,6 +28,19 @@ public class AreaRepairsActivity extends TabsWithFilterActivity {
     protected void onInitData() {
         super.onInitData();
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
+        if (mUserInfo.isArea()) {
+            AreasFetcher areasFetcher = new AreasFetcher();
+            areasFetcher.setOnAreasFetchedListener(new OnAreasFetchedListener() {
+                @Override
+                public void onNoAreaFetched(AreaFilterItem areaFilterItem) { }
+
+                @Override
+                public void onAreasFetched(AreaFilterItem areaFilterItem) {
+                    addFilterFragment(0, AreaFilterFragment.newInstance(areaFilterItem));
+                }
+            });
+            areasFetcher.fetchAreaFilterItem(mUserInfo.getBaseAreaId());
+        }
     }
 
     @Override
@@ -35,7 +51,5 @@ public class AreaRepairsActivity extends TabsWithFilterActivity {
     }
 
     @Override
-    protected void addFilterFragments() {
-        addFilterFragment(0 , AreaFilterFragment.newInstance(mUserInfo));
-    }
+    protected void addFilterFragments() { }
 }

@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.codyy.erpsportal.commons.controllers.fragments.BaseFilterFragment;
+import com.codyy.erpsportal.commons.models.entities.AreaFilterItem;
 import com.codyy.erpsportal.commons.models.entities.FilterItem;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
 
 import java.util.List;
 
@@ -31,8 +31,12 @@ public class AreaFilterFragment extends BaseFilterFragment {
         return fragment;
     }
 
-    public static BaseFilterFragment newInstance(UserInfo userInfo) {
-        return newInstance(userInfo.getBaseAreaId());
+    public static AreaFilterFragment newInstance(AreaFilterItem areaFilterItem) {
+        AreaFilterFragment filterFragment = new AreaFilterFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ARG_INIT, areaFilterItem);
+        filterFragment.setArguments(bundle);
+        return filterFragment;
     }
 
     @Override

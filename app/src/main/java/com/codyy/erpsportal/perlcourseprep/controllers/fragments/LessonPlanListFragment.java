@@ -86,9 +86,9 @@ public class LessonPlanListFragment extends LoadMoreFragment<LessonPlan, LessonP
     protected void addParams(Map<String, String> params) {
         if (mUserInfo != null) {
             params.put("uuid", mUserInfo.getUuid());
-            if (mUserInfo.isSchool()) {
+            if (mUserInfo.isSchool() && !params.containsKey("schoolId")) {
                 params.put("schoolId", mUserInfo.getSchoolId());
-            } else if (mUserInfo.isArea()) {
+            } else if (mUserInfo.isArea() && !params.containsKey("baseAreaId")) {
                 params.put("baseAreaId", mUserInfo.getBaseAreaId());
             }
         }
@@ -112,7 +112,6 @@ public class LessonPlanListFragment extends LoadMoreFragment<LessonPlan, LessonP
             updateParamsBaseOnMap(params, "baseAreaId");
             updateParamsBaseOnMap(params, "classLevelId", "classlevelId");
             updateParamsBaseOnMap(params, "subjectId");
-//            addMapToParam(params);
             loadData(true);
         }
     }

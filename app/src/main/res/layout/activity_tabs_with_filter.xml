@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:orientation="vertical">
 
-    <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/toolbar_layout" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -18,8 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+            <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/white"
@@ -30,13 +29,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16dp"
-                    app:tabPadding="2dp"
-                    app:isAverageTabs="true"/>
+                    app:isAverageTabs="true"
+                    app:tabPadding="2dp" />
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/pager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
             </LinearLayout>
 
@@ -44,7 +43,7 @@
                 android:id="@+id/fl_filter"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"/>
+                android:layout_gravity="end" />
         </android.support.v4.widget.DrawerLayout>
 
         <RelativeLayout
@@ -65,7 +64,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/full_screen_close"/>
+                android:src="@drawable/full_screen_close" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -73,7 +72,7 @@
                 android:gravity="center"
                 android:text="@string/exam_full_screen_do_tip"
                 android:textColor="@color/white"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
         </RelativeLayout>
 
     </FrameLayout>
