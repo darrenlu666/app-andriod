@@ -405,6 +405,8 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
         List<FilterItem> items = new ArrayList<>();
         if (mInitFilterItem != null) { //有初始地区筛选数据，无需请求，直接天骄
             items.add(mInitFilterItem);
+            mOptionsLv.setItemChecked(0 ,true);
+            updateChoices(mInitFilterItem, mInitFilterItem.getChoices());
         } else if (mAreaId != null) {
             AreaFilterItem areaFilterItem = fetchAreaFilterItem(mAreaId, 0);
             if (mAreaPreDisplay) {

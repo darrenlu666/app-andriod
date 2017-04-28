@@ -23,6 +23,7 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
 import com.codyy.erpsportal.repairs.utils.UploadUtil;
+import com.codyy.erpsportal.repairs.utils.UploadUtil.OnUploadCompleteListener;
 import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
 import com.codyy.url.URLConfig;
 
@@ -108,7 +109,7 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
     private void uploadImages(List<UploadingImage> newAddedImages) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
-        UploadUtil.uploadImages(uploadUrl, newAddedImages, new UploadUtil.OnEachUploadedCompleteListener(){
+        UploadUtil.uploadImages(uploadUrl, newAddedImages, new OnUploadCompleteListener(){
 
             @Override
             public void onEachUploadComplete(UploadingImage image) {

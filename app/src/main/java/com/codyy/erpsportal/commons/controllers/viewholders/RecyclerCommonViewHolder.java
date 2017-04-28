@@ -5,9 +5,11 @@ import android.view.View;
 import java.util.List;
 
 /**
+ * 项中某些元素由公共数据INFO控制状态
  * Created by gujiajia on 2016/7/13.
  */
 public abstract class RecyclerCommonViewHolder<T> extends RecyclerViewHolder<T> {
+
     public RecyclerCommonViewHolder(View itemView) {
         super(itemView);
     }

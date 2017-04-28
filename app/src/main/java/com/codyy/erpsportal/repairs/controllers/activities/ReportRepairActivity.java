@@ -34,6 +34,7 @@ import com.codyy.erpsportal.repairs.models.entities.ClassroomSelectItem;
 import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
 import com.codyy.erpsportal.repairs.utils.UploadUtil;
+import com.codyy.erpsportal.repairs.utils.UploadUtil.OnUploadCompleteListener;
 import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
 import com.codyy.url.URLConfig;
 
@@ -172,7 +173,7 @@ public class ReportRepairActivity extends AppCompatActivity {
     private void uploadImages(List<UploadingImage> imageList) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
-        Disposable disposable = UploadUtil.uploadImages(uploadUrl, imageList, new UploadUtil.OnEachUploadedCompleteListener(){
+        Disposable disposable = UploadUtil.uploadImages(uploadUrl, imageList, new OnUploadCompleteListener(){
 
             @Override
             public void onEachUploadComplete(UploadingImage image) {
