@@ -32,7 +32,9 @@ public class AreaRepairsActivity extends TabsWithFilterActivity {
             AreasFetcher areasFetcher = new AreasFetcher();
             areasFetcher.setOnAreasFetchedListener(new OnAreasFetchedListener() {
                 @Override
-                public void onNoAreaFetched(AreaFilterItem areaFilterItem) { }
+                public void onNoAreaFetched(AreaFilterItem areaFilterItem) {
+
+                }
 
                 @Override
                 public void onAreasFetched(AreaFilterItem areaFilterItem) {

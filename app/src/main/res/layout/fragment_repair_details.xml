@@ -73,7 +73,8 @@
                 android:orientation="horizontal"
                 android:showDividers="middle"
                 android:visibility="gone"
-                android:weightSum="3">
+                android:weightSum="3"
+                tools:visibility="visible">
 
                 <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
                     android:id="@+id/dv_icon1"
@@ -83,7 +84,7 @@
                     app:aspectRatio="1"
                     app:aspectRatioEnabled="true"
                     app:dominantMeasurement="width"
-                    app:placeholderImage="@drawable/icon_default_video" />
+                    app:placeholderImage="@drawable/placeholder_repair" />
 
                 <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
                     android:id="@+id/dv_icon2"
@@ -93,7 +94,7 @@
                     app:aspectRatio="1"
                     app:aspectRatioEnabled="true"
                     app:dominantMeasurement="width"
-                    app:placeholderImage="@drawable/icon_default_video" />
+                    app:placeholderImage="@drawable/placeholder_repair" />
 
                 <com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout
                     android:layout_width="0dp"
@@ -108,7 +109,7 @@
                         app:aspectRatio="1"
                         app:aspectRatioEnabled="true"
                         app:dominantMeasurement="width"
-                        app:placeholderImage="@drawable/icon_default_video" />
+                        app:placeholderImage="@drawable/placeholder_repair" />
 
                     <TextView
                         android:id="@+id/tv_images_count"
@@ -121,7 +122,8 @@
                         android:shadowDy="1"
                         android:shadowRadius="1.5"
                         android:text="共6张"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+                        android:background="#66000000"/>
                 </com.codyy.erpsportal.commons.widgets.AspectRatioFrameLayout>
             </LinearLayout>
         </RelativeLayout>

@@ -87,7 +87,8 @@ public class AreasFetcher {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable error) throws Exception {
-                        Cog.d(TAG, "initOptionItems error=", error);
+                        Cog.d(TAG, "fetchAreaFilterItem error=", error);
+                        error.printStackTrace();
                     }
                 });
         return areaFilterItem;

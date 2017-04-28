@@ -36,6 +36,11 @@
                 android:textSize="18dp"
                 tools:text="监管平台不能看到监管统计报修信息跟踪模块" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/divide_color"/>
+
             <WebView
                 android:id="@+id/wv_content"
                 android:layout_width="match_parent"

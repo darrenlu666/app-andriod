@@ -35,6 +35,7 @@ public class AreaFilterFragment extends BaseFilterFragment {
         AreaFilterFragment filterFragment = new AreaFilterFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARG_INIT, areaFilterItem);
+        bundle.putBoolean(ARG_PRE_DISPLAY_AREA, false);
         filterFragment.setArguments(bundle);
         return filterFragment;
     }

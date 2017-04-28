@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/upload_progress_animation"
             android:contentDescription="@null"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerInside" />
     </LinearLayout>
 
     <ImageView

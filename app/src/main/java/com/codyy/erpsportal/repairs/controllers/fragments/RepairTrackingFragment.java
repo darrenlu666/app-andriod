@@ -1,6 +1,8 @@
 package com.codyy.erpsportal.repairs.controllers.fragments;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -43,6 +45,8 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
     public final static String TAG = "RepairTrackingFragment";
 
     public final static String ARG_SKEY = "com.codyy.erpsportal.ARG_SKEY";
+
+    private final static int RC_MAKE_DETAILED_INQUIRY = 110;
 
     /**
      * 追问按钮
@@ -91,6 +95,9 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_repair_tracking, container, false);
         ButterKnife.bind(this, view);
+        if (mUserInfo.isArea()) {
+            mMakeInquiryBtn.setVisibility(View.GONE);
+        }
         mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.main_color));
         InquiriesLoader.Builder builder = new Builder();
         mInquiriesLoader = builder.setFragment(this)
@@ -123,7 +130,15 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
 
     @OnClick(R.id.btn_make_inquiry)
     public void onMakeInquiryClick() {
-        MakeDetailedInquiryActivity.start(getContext(), mUserInfo, mRepairId, mSkey);
+        MakeDetailedInquiryActivity.start(this, RC_MAKE_DETAILED_INQUIRY, mUserInfo, mRepairId, mSkey);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_MAKE_DETAILED_INQUIRY && resultCode == Activity.RESULT_OK) {
+            mInquiriesLoader.loadData(true);
+        }
     }
 
     @Override

@@ -1,9 +1,8 @@
 package com.codyy.erpsportal.repairs.controllers.activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -160,6 +159,7 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Cog.d(TAG, "onCommitClick response=", response);
                         if ("success".equals( response.optString("result"))) {
+                            setResult(RESULT_OK);
                             finish();
                         }
                     }
@@ -167,18 +167,17 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(Throwable error) {
                         Cog.d(TAG, "onErrorResponse error=", error);
+                        ToastUtil.showToast(MakeDetailedInquiryActivity.this, "出错了，请重试");
                     }
                 }));
     }
 
-    public static void start(Context context, UserInfo userInfo, String repairId,  String skey) {
-        Intent intent = new Intent(context, MakeDetailedInquiryActivity.class);
+    public static void start(Fragment fragment, int rcMakeDetailedInquiry, UserInfo userInfo, String repairId, String skey) {
+        Intent intent = new Intent(fragment.getActivity(), MakeDetailedInquiryActivity.class);
         intent.putExtra(Extra.USER_INFO, userInfo);
         intent.putExtra(EXTRA_SKEY, skey);
         intent.putExtra(Extra.ID, repairId);
-        context.startActivity(intent);
-        if (context instanceof Activity) {
-            UIUtils.addEnterAnim((Activity) context);
-        }
+        fragment.startActivityForResult(intent,rcMakeDetailedInquiry);
+        UIUtils.addEnterAnim(fragment.getActivity());
     }
 }

@@ -153,8 +153,7 @@
                 android:background="@color/transparent"
                 android:hint="输入联系电话"
                 android:inputType="phone"
-                android:maxLength="20"
-                android:textColor="#19ab20" />
+                android:maxLength="20" />
         </LinearLayout>
 
         <RelativeLayout

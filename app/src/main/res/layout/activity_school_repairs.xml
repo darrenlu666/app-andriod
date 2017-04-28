@@ -15,7 +15,7 @@
             android:id="@+id/title_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="繁昌县第一实验中心小学">
+            android:text="故障报修">
 
             <Button
                 android:id="@+id/btn_common_malfunction"
@@ -61,6 +61,13 @@
                     android:text="报修教室（全部）"
                     android:textColor="@color/sl_repair_btn_filter"
                     android:textSize="18dp" />
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_classroom_filter"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@drawable/ic_pop_slope"-->
+                    <!--android:contentDescription="@null"/>-->
             </FrameLayout>
 
             <View

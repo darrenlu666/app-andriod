@@ -57,6 +57,7 @@
                 android:minWidth="0dp"
                 android:padding="8dp"
                 android:textColorHint="#cacaca"
+                android:textColor="@color/white"
                 android:textSize="16dp"
                 android:maxLength="50"/>
 

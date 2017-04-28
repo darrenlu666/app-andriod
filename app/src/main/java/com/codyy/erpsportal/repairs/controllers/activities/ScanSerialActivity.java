@@ -3,9 +3,12 @@ package com.codyy.erpsportal.repairs.controllers.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.view.ViewGroup;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
@@ -14,7 +17,7 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.models.engines.RepairApi;
 import com.codyy.erpsportal.repairs.models.entities.ClassroomSelectItem;
 import com.google.gson.Gson;
@@ -50,9 +53,9 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_serial);
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
-        ViewGroup contentFrame = (ViewGroup) findViewById(R.id.fl_content);
-        mZBarScannerView = new CustomZXingScannerView(this);
-        contentFrame.addView(mZBarScannerView);
+//        ViewGroup contentFrame = (ViewGroup) findViewById(R.id.fl_content);
+        mZBarScannerView = (CustomZXingScannerView) findViewById(R.id.fl_content);
+//        contentFrame.addView(mZBarScannerView);
     }
 
     @Override
@@ -75,7 +78,7 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
         // Do something with the result here
         Cog.d(TAG, "handleResult rawResult=",rawResult.getText()); // Prints scan results
         Cog.d(TAG, "handleResult barcodeFormat=",rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-        Toast.makeText(ScanSerialActivity.this, rawResult.getText(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(ScanSerialActivity.this, rawResult.getText(), Toast.LENGTH_SHORT).show();
 
         if (rawResult.getText().equals(mSearchingSerial)) {
             return;
@@ -107,7 +110,7 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
                         if ("success".equals(jsonObject.optString("result"))) {
                             String dataStr = jsonObject.optString("data");
                             if (TextUtils.isEmpty(dataStr)) {
-                                ToastUtil.showToast(ScanSerialActivity.this, "发现此教室编码非您本校教室编码，如有问题请联系管理员");
+                                showCustomToast("发现此教室编码非您本校教室编码\n如有问题请联系管理员");
                             } else {
                                 ClassroomSelectItem classroomSelectItem = new Gson()
                                         .fromJson(dataStr, ClassroomSelectItem.class);
@@ -148,6 +151,25 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
         if (mDisposable != null) {
             mDisposable.dispose();
         }
+    }
+
+    /**
+     * 弹出一个白底的toast
+     */
+    private void showCustomToast(String msg){
+        TextView textView = new TextView(this);
+        textView.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        int padding = UIUtils.dip2px(this, 16);
+        textView.setPadding(padding, padding, padding, padding);
+        textView.setGravity(Gravity.CENTER);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 17);
+        textView.setTextColor(0xff444444);
+        textView.setText(msg);
+        Toast toast=new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+        toast.setView(textView);
+        toast.show();
     }
 
     public static void start(Activity activity, UserInfo userInfo, int requestCode) {

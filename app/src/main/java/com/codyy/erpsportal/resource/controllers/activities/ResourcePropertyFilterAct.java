@@ -386,7 +386,7 @@ public class ResourcePropertyFilterAct extends AppCompatActivity implements OnCh
                 if (childCategoryItem == null) {
                     childCategoryItem = new FilterItem("", "subCategoryId", URLConfig.SON_CATEGORIES);
                     childCategoryItem.setChoice(mNoLimitChoice);
-                    mOptionsAdapter.addData(childCategoryItem);
+                    mOptionsAdapter.addItem(childCategoryItem);
                 } else {
                     childCategoryItem.setChoice(mNoLimitChoice);
                 }

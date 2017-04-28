@@ -1,7 +1,6 @@
 package com.codyy.erpsportal.repairs.controllers.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +47,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 import static com.codyy.erpsportal.R.id.ll_classroom;
 import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.RC_ADD_IMAGES;
@@ -138,7 +138,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         mImagesRv.setAdapter(mAdapter);
         mImagesRv.addItemDecoration(new ImageItemDecoration(UIUtils.dip2px(this, 5), 4));
         mImagesRv.setLayoutManager(new GridLayoutManager(this, 4));
-        if ( mUserInfo.isTeacher()) {
+        if ( mUserInfo.isTeacher() || mUserInfo.isSchool()) {
             mReporterEt.setText( mUserInfo.getRealName());
             if (!TextUtils.isEmpty( mUserInfo.getContactPhone())) {
                 mPhoneEt.setText( mUserInfo.getContactPhone());
@@ -172,7 +172,7 @@ public class ReportRepairActivity extends AppCompatActivity {
     private void uploadImages(List<UploadingImage> imageList) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
-        UploadUtil.uploadImages(uploadUrl, imageList, new UploadUtil.OnEachUploadedCompleteListener(){
+        Disposable disposable = UploadUtil.uploadImages(uploadUrl, imageList, new UploadUtil.OnEachUploadedCompleteListener(){
 
             @Override
             public void onEachUploadComplete(UploadingImage image) {
@@ -182,6 +182,7 @@ public class ReportRepairActivity extends AppCompatActivity {
                 }
             }
         });
+        mDisposables.add(disposable);
     }
 
     @OnClick(R.id.ll_classroom)
@@ -203,7 +204,8 @@ public class ReportRepairActivity extends AppCompatActivity {
      */
     private void classroomSelected(ClassroomSelectItem classroom) {
         mSelectedClassroom = classroom;
-        mClassroomTv.setText(mSelectedClassroom.getRoomName());
+        mClassroomTv.setText(getString(R.string.classroom_role_format,
+                mSelectedClassroom.getSkey(), mSelectedClassroom.getRoomName()));
     }
 
     @OnClick(R.id.ll_malfunction_categories)
@@ -277,6 +279,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         String description = mDescEt.getText().toString();
         if (TextUtils.isEmpty(description)) {
             ToastUtil.showToast(this, "请输入故障描述。");
+            return;
         }
         params.put("malDescription", description);
 
@@ -303,6 +306,7 @@ public class ReportRepairActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "onCommitClick response:", response);
                 if ("success".equals(response.optString("result"))) {
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     ToastUtil.showToast(ReportRepairActivity.this, "报修失败");
@@ -325,12 +329,10 @@ public class ReportRepairActivity extends AppCompatActivity {
         ButterKnife.unbind(this);
     }
 
-    public static void start(Context context, UserInfo userInfo) {
+    public static void start(Activity context, UserInfo userInfo, int rcReport) {
         Intent intent = new Intent(context, ReportRepairActivity.class);
         intent.putExtra(Extra.USER_INFO, userInfo);
-        context.startActivity(intent);
-        if (context instanceof Activity) {
-            UIUtils.addEnterAnim((Activity) context);
-        }
+        context.startActivityForResult(intent, rcReport);
+        UIUtils.addEnterAnim( context);
     }
 }

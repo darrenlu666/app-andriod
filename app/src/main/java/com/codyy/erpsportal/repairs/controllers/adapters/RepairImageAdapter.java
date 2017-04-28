@@ -181,8 +181,8 @@ public class RepairImageAdapter extends Adapter {
         for (ImageDetail imageDetail: imageDetails) {
             UploadingImage uploadingImage = new UploadingImage();
             uploadingImage.setPath( imageDetail.getPicUrl());
-            uploadingImage.setStatus( UploadingImage.STATUS_UPLOADING);
-            mItems.add( uploadingImage);
+            uploadingImage.setStatus( UploadingImage.STATUS_FINISHED);
+            uploadingImages.add( uploadingImage);
         }
         mItems = uploadingImages;
         notifyDataSetChanged();

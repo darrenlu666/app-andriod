@@ -68,6 +68,8 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
 
     private final static String TAG = "SchoolRepairsActivity";
 
+    private final static int RC_REPORT = 1023;
+
     @Bind(R.id.title_bar)
     TitleBar mTitleBar;
 
@@ -195,6 +197,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                 }
                 mLoader.loadData(true);
                 mFilterListFl.setVisibility(View.GONE);
+                mStatusFilterTv.setChecked(false);
             }
         });
         mClassroomAdapter = new CheckedTextAdapter();
@@ -211,6 +214,8 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                 }
                 mLoader.loadData(true);
                 mFilterListFl.setVisibility(View.GONE);
+                mClassroomFilterTv.setChecked(false);
+
             }
         });
         mFilterListRv.setAdapter(mStatusAdapter);
@@ -286,6 +291,14 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
         CommonMalfunctionsActivity.start(this, mUserInfo);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_REPORT && resultCode == RESULT_OK) {
+            mLoader.loadData(true);
+        }
+    }
+
     /**
      * 教室筛选按钮点击事件
      * @param view 组件
@@ -338,7 +351,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
 
     @OnClick(R.id.fab_report)
     public void onReportClick() {
-        ReportRepairActivity.start(this, mUserInfo);
+        ReportRepairActivity.start(this, mUserInfo, RC_REPORT);
     }
 
     @Override

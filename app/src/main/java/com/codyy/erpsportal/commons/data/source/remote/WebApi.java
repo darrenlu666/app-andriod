@@ -22,14 +22,14 @@ import retrofit2.http.Url;
  */
 
 public interface WebApi {
-    @POST("/newLogin.do")
+    @POST("newLogin.do")
     Observable<Login> doLogin(
             @Query("width") int width,
             @Query("height") int height,
             @Query("userName") String username,
             @Query("pwmd5") String passwordMd5);
 
-    @GET("/index/getHomePageInitInfo.do")
+    @GET("index/getHomePageInitInfo.do")
     Observable<JSONObject> getHomePageInitInfo(
             @Query("schoolId") String schoolId,
             @Query("baseAreaId") String baseAreaId);

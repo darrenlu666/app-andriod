@@ -59,7 +59,17 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
 
     public static final String ARG_AREA_ID = "ARG_AREA_ID";
 
+    /**
+     * 初始化数据参数
+     */
     public static final String ARG_INIT = "ARG_INIT";
+
+    /**
+     * 加载过程预显示下层选择项
+     */
+    public static final String ARG_PRE_DISPLAY_AREA = "ARG_PRE_DISPLAY_AREA";
+
+    public static final String ARG_NEED_SCHOOL = "ARG_SCHOOL";
 
     /**
      * 右侧筛选项目内容列表
@@ -92,13 +102,18 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
      */
     private String mAreaId;
 
+    /**
+     * 首级地区筛选数据由创建时传入
+     */
     private AreaFilterItem mInitFilterItem;
 
+    private boolean mAreaPreDisplay = true;
+
     /**
-     *
+     * 创建方法
      * @param areaInfo 获取学科与年级参数
      * @param areaId 地区筛选根级，无需地区筛选的传null
-     * @return
+     * @return 筛选碎片
      */
     public static BaseFilterFragment newInstance(AreaInfo areaInfo, String areaId) {
         BaseFilterFragment fragment = new BaseFilterFragment();
@@ -141,6 +156,7 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
             mAreaInfo = getArguments().getParcelable(ARG_AREA_INFO);
             mAreaId = getArguments().getString(ARG_AREA_ID);
             mInitFilterItem = getArguments().getParcelable(ARG_INIT);
+            mAreaPreDisplay = getArguments().getBoolean(ARG_PRE_DISPLAY_AREA, true);
         }
     }
 
@@ -236,31 +252,43 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
                     Choice choice = mChoiceAdapter.getItem(position);
                     int currentPosition = mOptionsLv.getCheckedItemPosition();
                     FilterItem filterItem = mOptionsAdapter.getItem(currentPosition);
-                    boolean hasChanged = filterItem.setChoice(choice);
+                    boolean hasChoiceChanged = filterItem.setChoice(choice);
                     int nextPosition = currentPosition + 1;
 
                     if (filterItem instanceof AreaFilterItem) {
                         AreaFilterItem areaFilterItem = (AreaFilterItem) filterItem;
-                        if (hasChanged) {//如果地区选择有变化，要先清除所有下级地区或学校选项
+                        if (hasChoiceChanged) {//如果地区选择有变化，要先清除所有下级地区或学校选项
                             FilterItem nextFilterItem = mOptionsAdapter.getItem(nextPosition);
                             while (nextFilterItem instanceof AreaFilterItem) {
                                 mOptionsAdapter.removeItem(nextPosition);
                                 if (nextPosition >= mOptionsAdapter.getCount()) break;
                                 nextFilterItem = mOptionsAdapter.getItem(nextPosition);
                             }
+
+                            //是否延迟刷列表数
+                            boolean pendingRefresh = false;
+                            //是否有新加项
                             boolean newAdded = false;
                             if (!choice.isAll() && !areaFilterItem.isSchool()) {
                                 AreaFilterItem newAreaFilterItem;
                                 if (choice instanceof DirectSchoolsChoice) {//直属校被点
                                     if (onDirectSchoolClick()) return;
                                     newAreaFilterItem = fetchSchools(choice.getId());
+                                    mOptionsAdapter.addItem(nextPosition, newAreaFilterItem);
+                                    newAdded = true;
                                 } else {
-                                    newAreaFilterItem = fetchAreaFilterItem(choice.getId());
+                                    newAreaFilterItem = fetchAreaFilterItem(choice.getId(), nextPosition);
+                                    if (mAreaPreDisplay) {//预先显示选择项空框
+                                        mOptionsAdapter.addItem(nextPosition, newAreaFilterItem);
+                                        newAdded = true;
+                                    } else {
+                                        pendingRefresh = true;
+                                    }
                                 }
-                                mOptionsAdapter.addItem(nextPosition, newAreaFilterItem);
-                                newAdded = true;
                             }
-                            mOptionsAdapter.notifyDataSetChanged();
+                            if (!pendingRefresh) {
+                                mOptionsAdapter.notifyDataSetChanged();
+                            }
                             if (newAdded) {//如果有新加项，切到新项
                                 mOptionsLv.performItemClick(null, nextPosition, 0);
                             }
@@ -268,7 +296,7 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
                         return;
                     }
 
-                    if (hasChanged) {
+                    if (hasChoiceChanged) {
                         clearInfluencingItems(filterItem);
                     }
                     mOptionsAdapter.notifyDataSetChanged();
@@ -375,11 +403,13 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
      */
     protected void initOptionItems() {
         List<FilterItem> items = new ArrayList<>();
-        if (mInitFilterItem != null) {
+        if (mInitFilterItem != null) { //有初始地区筛选数据，无需请求，直接天骄
             items.add(mInitFilterItem);
         } else if (mAreaId != null) {
-            AreaFilterItem areaFilterItem = fetchAreaFilterItem(mAreaId);
-            items.add(areaFilterItem);
+            AreaFilterItem areaFilterItem = fetchAreaFilterItem(mAreaId, 0);
+            if (mAreaPreDisplay) {
+                items.add(areaFilterItem);
+            }
         }
 
         appendExtraOptions(items);
@@ -419,26 +449,30 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
     /**
      * 抓取下级地区
      * @param areaId 当前地区id
+     * @param nextPosition
      * @return 地区筛选项
      */
     @NonNull
-    private AreaFilterItem fetchAreaFilterItem(final String areaId) {
+    private AreaFilterItem fetchAreaFilterItem(final String areaId, final int nextPosition) {
         AreasFetcher areasFetcher = new AreasFetcher();
         areasFetcher.setOnAreasFetchedListener(new OnAreasFetchedListener() {
             @Override
             public void onNoAreaFetched(AreaFilterItem areaFilterItem) {
                 if (onLowestAreaClick()) {
-                    int index = mOptionsAdapter.indexOf(areaFilterItem);
-                    mOptionsAdapter.removeItem(index);
-                    mOptionsAdapter.notifyDataSetChanged();
-                    int prevIndex = index - 1;
-                    if (prevIndex >=0 && prevIndex < mOptionsAdapter.getCount()) {
-                        FilterItem item = mOptionsAdapter.getItem(prevIndex);
-                        if (item instanceof  ChoicesOption) {
-                            updateChoices(item, ((ChoicesOption) item).getChoices());
-                            mOptionsLv.setItemChecked(prevIndex, true);
+                    if (mAreaPreDisplay) {
+                        //下-级预显示的项删除，并回滚回上一级选中一下
+                        int index = mOptionsAdapter.indexOf(areaFilterItem);
+                        mOptionsAdapter.removeItem(index);
+                        int prevIndex = index - 1;
+                        if (prevIndex >= 0 && prevIndex < mOptionsAdapter.getCount()) {
+                            FilterItem item = mOptionsAdapter.getItem(prevIndex);
+                            if (item instanceof ChoicesOption) {
+                                updateChoices(item, ((ChoicesOption) item).getChoices());
+                                mOptionsLv.setItemChecked(prevIndex, true);
+                            }
                         }
                     }
+                    mOptionsAdapter.notifyDataSetChanged();
                     return;
                 }
                 fetchSchools(areaFilterItem, areaId);
@@ -446,7 +480,12 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
 
             @Override
             public void onAreasFetched(AreaFilterItem areaFilterItem) {
+                if ( !mAreaPreDisplay) {
+                    mOptionsAdapter.addItem(nextPosition, areaFilterItem);
+                }
+
                 mOptionsAdapter.notifyDataSetChanged();
+                mOptionsLv.setItemChecked(nextPosition, true);
                 tryUpdateChoices(areaFilterItem);
             }
         });

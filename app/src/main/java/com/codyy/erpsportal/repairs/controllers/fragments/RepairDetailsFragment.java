@@ -2,8 +2,15 @@ package com.codyy.erpsportal.repairs.controllers.fragments;
 
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -118,8 +125,8 @@ public class RepairDetailsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Map<String, String> params = new HashMap<>();
-        params.put("malDetailId", mRepairId);
         params.put("uuid", mUserInfo.getUuid());
+        params.put("malDetailId", mRepairId);
         mRequestSender.sendRequest(new RequestData(URLConfig.GET_REPAIR_DETAILS, params,
                 new Listener<JSONObject>() {
 
@@ -137,6 +144,8 @@ public class RepairDetailsFragment extends Fragment {
                             mCategoriesTv.setText(repairDetails.getCategories());
                             mReporterTv.setText(repairDetails.getReporter());
                             mPhoneTv.setText(repairDetails.getReporterContact());
+                            Linkify.addLinks(mPhoneTv, Linkify.PHONE_NUMBERS);
+                            stripUnderlines( mPhoneTv);
                             mRepairTimeTv.setText(DateTimeFormat.forPattern("YYYY-MM-dd HH:mm")
                                     .print(repairDetails.getCreateTime()));
                             mStatusTv.setText(repairDetails.statusStr());
@@ -187,9 +196,58 @@ public class RepairDetailsFragment extends Fragment {
         ));
     }
 
+    private void stripUnderlines(TextView textView) {
+        Spannable s = new SpannableString(textView.getText());
+        URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
+        for (URLSpan span: spans) {
+            int start = s.getSpanStart(span);
+            int end = s.getSpanEnd(span);
+            s.removeSpan(span);
+            span = new URLSpanNoUnderline(span.getURL());
+            s.setSpan(span, start, end, 0);
+        }
+        textView.setText(s);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    private static class URLSpanNoUnderline extends URLSpan {
+        public URLSpanNoUnderline(String url) {
+            super(url);
+        }
+
+        @Override public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) { }
+
+        protected URLSpanNoUnderline(Parcel in) {
+            super(in);
+        }
+
+        public static final Creator<URLSpanNoUnderline> CREATOR = new Creator<URLSpanNoUnderline>() {
+            @Override
+            public URLSpanNoUnderline createFromParcel(Parcel source) {
+                return new URLSpanNoUnderline(source);
+            }
+
+            @Override
+            public URLSpanNoUnderline[] newArray(int size) {
+                return new URLSpanNoUnderline[size];
+            }
+        };
     }
 }

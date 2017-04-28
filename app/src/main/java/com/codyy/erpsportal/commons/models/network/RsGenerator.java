@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.models.network;
 
+import com.codyy.erpsportal.BuildConfig;
 import com.codyy.url.URLConfig;
 
 import java.util.concurrent.TimeUnit;
@@ -26,11 +27,14 @@ public class RsGenerator {
     }
 
     public static void createNewRetrofit() {
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(Level.BODY);
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {//debug模式下添加http请求日志
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(Level.BODY);
+            clientBuilder.addInterceptor(httpLoggingInterceptor);
+        }
 
-        OkHttpClient httpClient = new OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
+        OkHttpClient okHttpClient = clientBuilder
                 .connectTimeout(30L, TimeUnit.SECONDS)
                 .readTimeout(1L, TimeUnit.MINUTES)
                 .writeTimeout(1L, TimeUnit.MINUTES)
@@ -42,7 +46,7 @@ public class RsGenerator {
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(JsonConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient)
+                .client(okHttpClient)
                 .build();
     }
 

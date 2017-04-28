@@ -346,13 +346,19 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
     }
 
     /**
-     * 添加请求参数，也可使用 {@link #addParam(String, String)}加参数,这个用来覆盖，不是用来调用了
+     * 添加请求参数，也可使用 {@link #addParam(String, String)}加参数
      *
      * @param params 请求参数，加入这个map的参数会用来作为http请求参数
      */
     protected void addParams(Map<String, String> params) {
+        mParams.putAll(params);
     }
 
+    /**
+     * 添加请求参数
+     * @param key 键
+     * @param value 值
+     */
     public void addParam(String key, String value) {
         mParams.put(key, value);
     }

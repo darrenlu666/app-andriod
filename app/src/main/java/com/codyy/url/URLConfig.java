@@ -2854,7 +2854,7 @@ public class URLConfig {
     @UrlSuffix("mobile/malfunction/getSchoolClassRoomList.do")
     public static String GET_CLASSROOMS;
 
-    @UrlSuffix("mobile/malfunction/getSubCatalogListById.do")
+    @UrlSuffix("mobile/malguidefunction/getSearchMalPageList.do")
     public static String SEARCH_MALFUNC;
 
     @UrlSuffix("mobile/malfunction/getMalDetail.do")

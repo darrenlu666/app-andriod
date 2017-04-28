@@ -177,6 +177,9 @@ public class SelectCategoriesDgFragment extends DialogFragment {
                         }
                         if (tabPosition < 2) {
                             tryToAddTab(malfuncCategory);
+                        } else {
+                            notifySelected();
+                            dismiss();
                         }
                     }
                 }, new Consumer<Throwable>() {

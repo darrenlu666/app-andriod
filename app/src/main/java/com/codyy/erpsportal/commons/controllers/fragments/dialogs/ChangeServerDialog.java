@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.dao.ServerAddressDao;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.url.URLConfig;
 
 import java.lang.ref.WeakReference;
@@ -112,6 +113,7 @@ public class ChangeServerDialog extends DialogFragment {
                     }
                     if (!URLConfig.BASE.equals(newBaseUrl)) {
                         URLConfig.updateUrls(newBaseUrl);
+                        RsGenerator.createNewRetrofit();
                         saveBaseUrl();
                     }
                 }
