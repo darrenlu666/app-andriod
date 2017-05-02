@@ -69,5 +69,6 @@
         android:layout_below="@id/tv_lb_reporter"
         android:layout_marginTop="8dp"
         android:lines="1"
+        android:ellipsize="end"
         tools:text="如何进行自主开课啊" />
 </RelativeLayout>

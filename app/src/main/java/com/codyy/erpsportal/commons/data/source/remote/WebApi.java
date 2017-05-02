@@ -13,6 +13,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
 
@@ -54,6 +55,9 @@ public interface WebApi {
     @POST
     @FormUrlEncoded
     Observable<String> post4Str(@Url String url, @FieldMap Map<String, String> params);
+
+    @GET
+    Observable<JSONObject> getJson(@Url String url, @QueryMap Map<String, String> params);
 
     @GET
     Observable<JSONObject> getJson(@Url String url);

@@ -21,9 +21,9 @@ import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter;
+import com.codyy.erpsportal.repairs.models.engines.PhotosUploader;
+import com.codyy.erpsportal.repairs.models.engines.PhotosUploader.UploadListener;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
-import com.codyy.erpsportal.repairs.utils.UploadUtil;
-import com.codyy.erpsportal.repairs.utils.UploadUtil.OnUploadCompleteListener;
 import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
 import com.codyy.url.URLConfig;
 
@@ -70,6 +70,8 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
 
     private RequestSender mSender;
 
+    private PhotosUploader mPhotosUploader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,20 +111,35 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
     private void uploadImages(List<UploadingImage> newAddedImages) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
-        UploadUtil.uploadImages(uploadUrl, newAddedImages, new OnUploadCompleteListener(){
+        mPhotosUploader = new PhotosUploader(uploadUrl, newAddedImages, new UploadListener() {
+            @Override
+            public void onStart() {
+//                mCommitBtn.setEnabled(false);
+            }
 
             @Override
-            public void onEachUploadComplete(UploadingImage image) {
+            public void onEachComplete(UploadingImage image) {
                 int index = mAdapter.indexOfItem(image);
                 if (index != -1) {
                     mAdapter.notifyItemChanged(index);
                 }
             }
+
+            @Override
+            public void onFinish() {
+                mAdapter.notifyDataSetChanged();
+//                mCommitBtn.setEnabled(true);
+            }
         });
+        mPhotosUploader.start();
     }
 
     @OnClick(R.id.btn_commit)
     public void onCommitClick() {
+        if (mPhotosUploader != null && mPhotosUploader.mIsUploading) {
+            ToastUtil.showToast(this, "图片上传中，请稍等...");
+            return;
+        }
         Map<String, String> params = new HashMap<>();
         String desc = mDescEt.getText().toString();
         if (TextUtils.isEmpty(desc)) {
@@ -171,6 +188,13 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
                         ToastUtil.showToast(MakeDetailedInquiryActivity.this, "出错了，请重试");
                     }
                 }));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPhotosUploader != null) mPhotosUploader.stop();
+        mAdapter.cancelAll();
     }
 
     public static void start(Fragment fragment, int rcMakeDetailedInquiry, UserInfo userInfo, String repairId, String skey) {

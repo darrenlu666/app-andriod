@@ -178,7 +178,7 @@ public class RepairDetailsFragment extends Fragment {
                                     dv.setOnClickListener(new OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            PicturesActivity.start(getActivity(), images, position);
+                                            PicturesActivity.start(getActivity(), images, position, true);
                                         }
                                     });
                                 }

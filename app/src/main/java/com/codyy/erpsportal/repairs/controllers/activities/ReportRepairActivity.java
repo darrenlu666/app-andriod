@@ -29,12 +29,12 @@ import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFrag
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFragment.OnCategorySelectedListener;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectClassroomDgFragment;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectClassroomDgFragment.OnClassroomSelectedListener;
+import com.codyy.erpsportal.repairs.models.engines.PhotosUploader;
+import com.codyy.erpsportal.repairs.models.engines.PhotosUploader.UploadListener;
 import com.codyy.erpsportal.repairs.models.entities.CategoriesPageInfo;
 import com.codyy.erpsportal.repairs.models.entities.ClassroomSelectItem;
 import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
-import com.codyy.erpsportal.repairs.utils.UploadUtil;
-import com.codyy.erpsportal.repairs.utils.UploadUtil.OnUploadCompleteListener;
 import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
 import com.codyy.url.URLConfig;
 
@@ -48,7 +48,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 import static com.codyy.erpsportal.R.id.ll_classroom;
 import static com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter.RC_ADD_IMAGES;
@@ -116,6 +115,8 @@ public class ReportRepairActivity extends AppCompatActivity {
 
     private RequestSender mSender;
 
+    private PhotosUploader mPhotosUploader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,17 +174,28 @@ public class ReportRepairActivity extends AppCompatActivity {
     private void uploadImages(List<UploadingImage> imageList) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
-        Disposable disposable = UploadUtil.uploadImages(uploadUrl, imageList, new OnUploadCompleteListener(){
+
+        mPhotosUploader = new PhotosUploader(uploadUrl, imageList, new UploadListener() {
+            @Override
+            public void onStart() {
+//                mCommitBtn.setEnabled(false);
+            }
 
             @Override
-            public void onEachUploadComplete(UploadingImage image) {
+            public void onEachComplete(UploadingImage image) {
                 int index = mAdapter.indexOfItem(image);
                 if (index != -1) {
                     mAdapter.notifyItemChanged(index);
                 }
             }
+
+            @Override
+            public void onFinish() {
+                mAdapter.notifyDataSetChanged();
+//                mCommitBtn.setEnabled(true);
+            }
         });
-        mDisposables.add(disposable);
+        mPhotosUploader.start();
     }
 
     @OnClick(R.id.ll_classroom)
@@ -236,6 +248,10 @@ public class ReportRepairActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_commit)
     public void onCommitClick() {
+        if (mPhotosUploader != null && mPhotosUploader.mIsUploading) {
+            ToastUtil.showToast(this, "图片上传中，请稍等...");
+            return;
+        }
         Map<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         //设置参数：教室
@@ -327,6 +343,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         super.onDestroy();
         mDisposables.dispose();
         mAdapter.cancelAll();
+        if (mPhotosUploader != null) mPhotosUploader.stop();
         ButterKnife.unbind(this);
     }
 

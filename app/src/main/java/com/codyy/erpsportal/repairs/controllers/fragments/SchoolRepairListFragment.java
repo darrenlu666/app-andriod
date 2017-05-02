@@ -137,6 +137,7 @@ public class SchoolRepairListFragment extends Fragment implements OnFilterObserv
                 })
                 .setInfo(mShowAreaPrefixFlag)
                 .build();
+        mRefreshLayout.setColorSchemeColors(ContextCompat.getColor(getContext(), R.color.main_color));
         mRvLoader.showDivider();
         return view;
     }

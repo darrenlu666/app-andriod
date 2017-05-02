@@ -85,7 +85,7 @@ public class InquiryVh extends BindingRvHolder<InquiryItem> {
                     @Override
                     public void onClick(View v) {
                         Activity activity = ContextUtils.getActivity(mContext);
-                        PicturesActivity.start(activity, images, index);
+                        PicturesActivity.start(activity, images, index, true);
                     }
                 });
             }

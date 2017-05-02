@@ -140,7 +140,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
 
         final long startTime = SystemClock.currentThreadTimeMillis();
         Cog.d(TAG, "loadData:", getUrl(), mParams);
-        boolean sent = mRequestSender.sendRequest(new RequestData(getUrl(), mParams,
+        boolean sent = mRequestSender.sendGetRequest(new RequestData(getUrl(), mParams,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(final JSONObject response) {
