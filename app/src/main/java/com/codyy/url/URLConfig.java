@@ -443,7 +443,7 @@ public class URLConfig {
      * 专递课堂
      * 课堂巡视
      */
-    @UrlSuffix("/mobile/monitor/classroom/getClassWatch.do")
+    @UrlSuffix("mobile/monitor/classroom/getClassWatch.do")
     public static String SPECIAL_MONITOR_CLASSROOM;
 
     /**

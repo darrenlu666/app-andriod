@@ -188,7 +188,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
             @Override
             public <E extends RepairFilterItem> void onItemClick(E item, int position) {
                 if (position == 0) {
-                    mStatusFilterTv.setText("处理状态（全部）");
+                    mStatusFilterTv.setText("处理状态(全部)");
                     //选择全部时请求报修数据列表时无需状态参数，删除status参数
                     mLoader.removeParam("status");
                 } else {
@@ -205,7 +205,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
             @Override
             public <E extends RepairFilterItem> void onItemClick(E item, int position) {
                 if (position == 0) {
-                    mClassroomFilterTv.setText("报修教室（全部）");
+                    mClassroomFilterTv.setText("报修教室(全部)");
                     //选择全部时，清除班级id参数
                     mLoader.removeParam("classroomId");
                 } else {
