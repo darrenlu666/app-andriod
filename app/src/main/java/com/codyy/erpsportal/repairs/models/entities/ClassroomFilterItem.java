@@ -57,7 +57,7 @@ public class ClassroomFilterItem implements RepairFilterItem {
         if (clsClassroomId == null) {
             return "全部";
         } else {
-            return skey + "(" + roomName + ")";
+            return skey + " (" + roomName + ")";
         }
     }
 }

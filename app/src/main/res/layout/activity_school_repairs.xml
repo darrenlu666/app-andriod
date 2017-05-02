@@ -54,7 +54,7 @@
                 android:drawableRight="@drawable/ic_pop_slope"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="报修教室（全部）"
+                android:text="@string/report_repair_classroom_all"
                 android:textColor="@color/sl_repair_btn_filter"
                 android:textSize="18dp" />
 
@@ -88,7 +88,7 @@
                 android:drawableEnd="@drawable/ic_pop_slope"
                 android:drawableRight="@drawable/ic_pop_slope"
                 android:lines="1"
-                android:text="处理状态（全部）"
+                android:text="@string/handle_status_all"
                 android:textColor="@color/sl_repair_btn_filter"
                 android:textSize="18dp" />
         </FrameLayout>
