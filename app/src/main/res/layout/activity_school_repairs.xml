@@ -139,16 +139,12 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <FrameLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_filter_list"
                 android:layout_width="match_parent"
-                android:layout_height="262dp">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_filter_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white" />
-            </FrameLayout>
+                android:layout_height="262dp"
+                android:background="@color/white" />
         </FrameLayout>
+
     </FrameLayout>
 </LinearLayout>
