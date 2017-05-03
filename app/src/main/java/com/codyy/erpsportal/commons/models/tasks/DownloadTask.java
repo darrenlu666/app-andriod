@@ -58,7 +58,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             Cog.d(TAG, "cacheDir=" + directory);
         }
         try {
-            URL url = new URL(encode(urlStr));
+            URL url = new URL(urlStr);
             Cog.d(TAG, "url=", url, ", fileName=", filePath,", bytes=", startPos);
 
             connection = (HttpURLConnection) url.openConnection();
@@ -102,6 +102,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             }
         } catch (Exception e) {
             Cog.e(TAG, e.toString());
+            e.printStackTrace();
             return null;
         } finally {
             try {

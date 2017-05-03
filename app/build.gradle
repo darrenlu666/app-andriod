@@ -138,11 +138,6 @@ android {
             applicationId "com.codyy.erpsportal.web"
             buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile/\"")
         }
-
-        web8081 {
-            applicationId "com.codyy.erpsportal.web"
-            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8081/mobile/\"")
-        }
     }
 
     dataBinding {
