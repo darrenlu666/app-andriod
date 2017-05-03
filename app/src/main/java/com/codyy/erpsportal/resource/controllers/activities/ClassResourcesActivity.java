@@ -310,7 +310,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
                     @Override
                     public void onAudioPlaying(String audioId) {
                         Cog.d(TAG, "onAudioPlaying audioId=", audioId);
-                        CountIncreaser.increaseViewCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), audioId);
+                        CountIncreaser.increaseViewCount(mRequestSender, mUserInfo.getUuid(), audioId);
                     }
                 })
                 .build();
@@ -467,7 +467,6 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
         final long startTime = SystemClock.currentThreadTimeMillis();
         Cog.d(TAG, "loadData:", getUrl(), params);
         if (refresh) {
-            mRequestSender.stop(mRequestTag);
             mRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -552,7 +551,12 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
      */
     private void handleNormalResponse(JSONObject response, boolean isRefreshing) {
         mAdapter.setLoading(false);
-        mRefreshLayout.setRefreshing(false);
+        mRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mRefreshLayout.setRefreshing(false);
+            }
+        });
         if (checkSuccessful(response)) {
             List list = getList(response);
             updateItemDecoration();

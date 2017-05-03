@@ -341,7 +341,7 @@ public class ResourcesNewActivity extends AppCompatActivity{
                     @Override
                     public void onAudioPlaying(String audioId) {
                         Cog.d(TAG, "onAudioPlaying audioId=", audioId);
-                        CountIncreaser.increaseViewCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), audioId);
+                        CountIncreaser.increaseViewCount(mRequestSender, mUserInfo.getUuid(), audioId);
                     }
                 })
                 .build();

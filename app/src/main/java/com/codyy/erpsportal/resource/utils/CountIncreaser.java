@@ -24,7 +24,7 @@ public class CountIncreaser {
     /**
      * 增加下载次数
      */
-    public static void increaseDownloadCount(RequestSender requestSender, Object requestTag,
+    public static void increaseDownloadCount(RequestSender requestSender,
                                              String uuid, String resourceId) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
@@ -39,13 +39,13 @@ public class CountIncreaser {
             public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "increaseDownloadCount error=", error);
             }
-        }, requestTag));
+        }));
     }
 
     /**
      * 增加查看次数
      */
-    public static void increaseViewCount(RequestSender requestSender, Object requestTag,
+    public static void increaseViewCount(RequestSender requestSender,
                                          String uuid, String resourceId) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
@@ -61,6 +61,6 @@ public class CountIncreaser {
             public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "increaseViewCount error=", error);
             }
-        }, requestTag));
+        }));
     }
 }

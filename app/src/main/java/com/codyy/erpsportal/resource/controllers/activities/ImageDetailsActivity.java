@@ -274,7 +274,7 @@ public class ImageDetailsActivity extends FragmentActivity {
                 ToastUtil.showToast(EApplication.instance(), R.string.image_cached_already);
                 return;
             }
-            CountIncreaser.increaseDownloadCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), mResourceId);
+            CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
             final String fileName = mResourceDetails.getId() + suffix;
             ImagePipeline imagePipeline = Fresco.getImagePipeline();
             boolean inMemoryCache = imagePipeline.isInBitmapMemoryCache(mImageUri);

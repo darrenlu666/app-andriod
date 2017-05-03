@@ -139,7 +139,7 @@ public class VideoDetailsActivity extends FragmentActivity {
             public void onPlaying() {
                 Cog.d(TAG, "onPlaying");
                 if (firstTime) {
-                    CountIncreaser.increaseViewCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), mResourceId);
+                    CountIncreaser.increaseViewCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
                     firstTime = false;
                 }
             }
@@ -152,7 +152,7 @@ public class VideoDetailsActivity extends FragmentActivity {
                 if (mResourceDetails == null) return;//详情没有加载就不下载
                 if (VideoDownloadUtils.downloadVideo(mResourceDetails, mResourceDetails.getAttachPath(),
                         mUserInfo.getBaseUserId())) {
-                    CountIncreaser.increaseDownloadCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), mResourceId);
+                    CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
                 }
             }
         });
