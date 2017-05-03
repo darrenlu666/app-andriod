@@ -2675,14 +2675,14 @@ public class URLConfig {
      * ldh add
      * 布置作业
      */
-    @UrlSuffix("/mobile/homework/arrangeWork.do")
+    @UrlSuffix("mobile/homework/arrangeWork.do")
     public static String ARRANGE_WORK;
 
     /**
      * ldh add
      * 获取评语
      */
-    @UrlSuffix("/mobile/homework/getCommentTemp.do")
+    @UrlSuffix("mobile/homework/getCommentTemp.do")
     public static String GET_COMMENT_TEMP;
 
     /**

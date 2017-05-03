@@ -82,8 +82,10 @@ public class RequestSender {
         requestData.setStartTime();
 
         Cog.d(TAG, "sendRequest:", requestData.toString());
-        Disposable disposable =  observeRequest(mWebApi.post4Json(requestData.getUrl(),
-                requestData.getParam()), requestData);
+        Observable<JSONObject> observable = requestData.getParam() != null?
+                mWebApi.post4Json(requestData.getUrl(), requestData.getParam()):
+                mWebApi.post4Json(requestData.getUrl());
+        Disposable disposable =  observeRequest(observable, requestData);
         mCompositeDisposable.add( disposable);
         return true;
     }
@@ -102,7 +104,7 @@ public class RequestSender {
         requestData.addSendCount();
         requestData.setStartTime();
 
-        String url = requestData.mUrl + requestData.getParams();
+        String url = requestData.mUrl + (requestData.getParams() == null? "": requestData.getParams());
         Cog.d(TAG, "sendGetRequest:" + url);
         Disposable disposable = observeRequest(mWebApi.getJson(url), requestData);
         mCompositeDisposable.add(disposable);
