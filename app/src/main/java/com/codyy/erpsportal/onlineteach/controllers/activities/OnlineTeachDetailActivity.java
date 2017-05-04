@@ -133,6 +133,7 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
         mActiveNameTv.setText(mNetTeachDetail.getData().getMeetingTitle());
         mActiveMagValueTv.setText(mNetTeachDetail.getData().getMeetingDescription());
         mLaunchTv.setText(mNetTeachDetail.getData().getCreateRealName());
+        mRbStar.setMax(100);//#bug fix: 11579 Android5.3.3补充版本-网络首页详情页，评分显示不正确 70分显示5颗星
         mRbStar.setProgress(mNetTeachDetail.getData().getIntRatingAverage());
         mGradeNameTv.setText(mNetTeachDetail.getData().getBaseClasslevelName());
         mSubjectNameTv.setText(mNetTeachDetail.getData().getBaseSubjectName());
