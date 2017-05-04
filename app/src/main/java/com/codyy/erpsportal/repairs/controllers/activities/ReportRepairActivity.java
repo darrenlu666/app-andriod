@@ -256,7 +256,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         params.put("uuid", mUserInfo.getUuid());
         //设置参数：教室
         if (mSelectedClassroom == null) {
-            ToastUtil.showToast(this, "请选择教室");
+            ToastUtil.showToast(this, "请选择报修教室");
             return;
         }
         params.put("skey", mSelectedClassroom.getSkey());
