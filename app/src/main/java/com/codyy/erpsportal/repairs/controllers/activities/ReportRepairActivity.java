@@ -276,7 +276,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         //设置参数：报修人
         String reportName = mReporterEt.getText().toString();
         if (TextUtils.isEmpty(reportName)) {
-            ToastUtil.showToast(this, "请选择报修人");
+            ToastUtil.showToast(this, "请输入报修人名字");
             return;
         } else if (reportName.length() < 2 || reportName.length() > 20) {
             ToastUtil.showToast(this, "报修人名字长度需要是2到20个字");
