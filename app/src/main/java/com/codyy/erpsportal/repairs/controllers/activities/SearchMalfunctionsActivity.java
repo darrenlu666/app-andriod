@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -96,6 +97,8 @@ public class SearchMalfunctionsActivity extends AppCompatActivity implements Lis
                     } else {
                         mLoader.clearData();
                     }
+                    InputMethodManager imManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    imManager.hideSoftInputFromWindow(mSearchEt.getWindowToken(), 0);
                     return true;
                 }
                 return false;
