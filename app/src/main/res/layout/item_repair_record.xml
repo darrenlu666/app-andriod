@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:textStyle="bold"
         android:layout_marginTop="2dp"
+        android:textStyle="bold"
         tools:text="待处理" />
 
     <TextView
@@ -27,6 +27,7 @@
         android:layout_marginRight="8dp"
         android:layout_toLeftOf="@id/tv_status"
         android:layout_toStartOf="@id/tv_status"
+        android:ellipsize="end"
         android:lines="1"
         tools:text="教室编号（教室名称）" />
 
@@ -68,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_lb_reporter"
         android:layout_marginTop="8dp"
-        android:lines="1"
         android:ellipsize="end"
+        android:lines="1"
         tools:text="如何进行自主开课啊" />
 </RelativeLayout>
