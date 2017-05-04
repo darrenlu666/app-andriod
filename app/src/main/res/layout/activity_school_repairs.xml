@@ -44,26 +44,33 @@
             android:layout_weight="1"
             android:padding="12dp">
 
-            <CheckedTextView
-                android:id="@+id/tv_classroom_filter"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:drawableEnd="@drawable/ic_pop_slope"
-                android:drawableRight="@drawable/ic_pop_slope"
-                android:ellipsize="end"
-                android:lines="1"
-                android:text="@string/report_repair_classroom_all"
-                android:textColor="@color/sl_repair_btn_filter"
-                android:textSize="18dp" />
+                android:orientation="horizontal">
 
-            <!--<ImageView-->
-            <!--android:id="@+id/iv_classroom_filter"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_pop_slope"-->
-            <!--android:contentDescription="@null"/>-->
+                <CheckedTextView
+                    android:id="@+id/tv_classroom_filter"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:text="@string/report_repair_classroom_all"
+                    android:textColor="@color/sl_repair_btn_filter"
+                    android:textSize="18dp" />
+
+                <com.codyy.erpsportal.repairs.widgets.CheckedImageView
+                    android:id="@+id/iv_classroom_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_pop_slope" />
+            </LinearLayout>
         </FrameLayout>
 
         <View
@@ -79,18 +86,31 @@
             android:layout_weight="1"
             android:padding="12dp">
 
-            <CheckedTextView
-                android:id="@+id/tv_status_filter"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:drawableEnd="@drawable/ic_pop_slope"
-                android:drawableRight="@drawable/ic_pop_slope"
-                android:lines="1"
-                android:text="@string/handle_status_all"
-                android:textColor="@color/sl_repair_btn_filter"
-                android:textSize="18dp" />
+                android:orientation="horizontal">
+
+                <CheckedTextView
+                    android:id="@+id/tv_status_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:lines="1"
+                    android:text="@string/handle_status_all"
+                    android:textColor="@color/sl_repair_btn_filter"
+                    android:textSize="18dp" />
+
+                <com.codyy.erpsportal.repairs.widgets.CheckedImageView
+                    android:id="@+id/iv_status_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_pop_slope" />
+            </LinearLayout>
         </FrameLayout>
     </LinearLayout>
 
