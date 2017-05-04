@@ -27,6 +27,7 @@ import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
 import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.RxBus;
 import com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView;
 import com.codyy.erpsportal.repairs.models.entities.RepairDetails;
 import com.codyy.erpsportal.repairs.models.entities.StatusItem;
@@ -185,6 +186,7 @@ public class RepairDetailsFragment extends Fragment {
                             } else {
                                 mPhotosContainerLl.setVisibility(View.GONE);
                             }
+                            RxBus.getInstance().send(repairDetails);
                         }
                     }
                 }, new ErrorListener() {
