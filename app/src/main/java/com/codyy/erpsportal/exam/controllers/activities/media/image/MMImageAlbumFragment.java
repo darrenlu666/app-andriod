@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -233,13 +234,18 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
             ArrayList<MMImageBean> list = new ArrayList<>();
             ContentResolver cr = getContext().getContentResolver();
             // 扫描照片
-            String str[] = {MediaStore.Images.Media._ID,
-                    MediaStore.Images.Media.DISPLAY_NAME,
-                    MediaStore.Images.Media.DATA};
+            String projection[] = {Media._ID,
+                    Media.DISPLAY_NAME,
+                    Media.DATA,
+                    Media.MIME_TYPE
+            };
             Cursor imageCursor = cr.query(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, str,
-                    MediaStore.Images.Media.SIZE + "<? and " + MediaStore.Images.Media.SIZE + ">0 and " + MediaStore.Images.Media.DISPLAY_NAME + " like '%.jpg'  or '%.jpeg' or '%.bmp' or '%.png'",
-                    new String[]{"5242881"}, MediaStore.Images.Media.DATE_ADDED + " ASC");
+                    Media.EXTERNAL_CONTENT_URI, projection,
+                    Media.SIZE + "<? and " + Media.SIZE + ">0 and ("
+                            + Media.MIME_TYPE + "='image/jpeg' or "
+                            + Media.MIME_TYPE + "='image/png' or "
+                            + Media.MIME_TYPE + "='image/bmp')",
+                    new String[]{"5242881"}, Media.DATE_ADDED + " ASC");
             try {
                 if (imageCursor != null && imageCursor.getCount() > 0) {
 
