@@ -177,9 +177,7 @@ public class ReportRepairActivity extends AppCompatActivity {
 
         mPhotosUploader = new PhotosUploader(uploadUrl, imageList, new UploadListener() {
             @Override
-            public void onStart() {
-//                mCommitBtn.setEnabled(false);
-            }
+            public void onStart() {}
 
             @Override
             public void onEachComplete(UploadingImage image) {
@@ -192,7 +190,6 @@ public class ReportRepairActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 mAdapter.notifyDataSetChanged();
-//                mCommitBtn.setEnabled(true);
             }
         });
         mPhotosUploader.start();
@@ -274,7 +271,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         }
 
         //设置参数：报修人
-        String reportName = mReporterEt.getText().toString();
+        String reportName = mReporterEt.getText().toString().trim();
         if (TextUtils.isEmpty(reportName)) {
             ToastUtil.showToast(this, "请输入报修人名字");
             return;
@@ -285,7 +282,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         params.put("reporter", reportName);
 
         //设置参数：联系电话
-        String contactPhone = mPhoneEt.getText().toString();
+        String contactPhone = mPhoneEt.getText().toString().trim();
         if (TextUtils.isEmpty(contactPhone) || !contactPhone.matches(Regexes.PHONE_REGEX)) {
             ToastUtil.showToast(this, "请输入正确的电话号码。");
             return;
@@ -293,7 +290,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         params.put("reporterContact", contactPhone);
 
         //设置参数：故障描述
-        String description = mDescEt.getText().toString();
+        String description = mDescEt.getText().toString().trim();
         if (TextUtils.isEmpty(description)) {
             ToastUtil.showToast(this, "请输入故障描述。");
             return;
