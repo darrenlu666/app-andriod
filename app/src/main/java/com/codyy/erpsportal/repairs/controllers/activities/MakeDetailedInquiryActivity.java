@@ -140,7 +140,7 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
         Map<String, String> params = new HashMap<>();
         String desc = mDescEt.getText().toString().trim();
         if (TextUtils.isEmpty(desc)) {
-            ToastUtil.showToast(this, "请输入故障描述。");
+            ToastUtil.showToast(this, "追问内容不可为空");
             return;
         }
         params.put("appendDescription", desc);

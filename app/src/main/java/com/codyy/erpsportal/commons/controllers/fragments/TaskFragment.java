@@ -1085,7 +1085,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                     String resourceType = data.getExtras().getString(MMVideoAlbumFragment.EXTRA_TYPE);
                     mImageBeans = new ArrayList<>();
                     for (MMImageBean imageBean : mImageList) {
-                        if (imageBean.isSeleted()) {
+                        if (imageBean.isSelected()) {
                             mImageBeans.add(imageBean);
                         }
                     }

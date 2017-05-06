@@ -32,6 +32,7 @@ import com.codyy.media.image.CaptureImageActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 图片可上传8张，每张最大5M，格式支持JPG，PNG，JPEG，BMP等格式
@@ -48,11 +49,11 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
     public static final String TYPE_IMAGE = "TYPE_IMAGE";
     private static final String ARG_SIZE = "ARG_SIZE";
     private final static int WHAT = 0;
-    private ArrayList<MMImageBean> mImageList = new ArrayList<>();
+    private List<MMImageBean> mImageList = new ArrayList<>();
+    private List<Integer> mSelectedIndex = new ArrayList<>();
     private TextView mTvPreview;
     private Button mConfirm;
     private MMImageGridAdapter mImageGridAdapter;
-    private int mPreviewCount;
     /**
      * 需要几张图
      */
@@ -82,11 +83,25 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
         switch (requestCode) {
             case REQUEST_CODE_PREVIEW:
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    Intent intent = new Intent();
-                    intent.putParcelableArrayListExtra(EXTRA_DATA, data.getParcelableArrayListExtra(EXTRA_DATA));
-                    intent.putExtra(EXTRA_TYPE, TYPE_IMAGE);
-                    getActivity().setResult(Activity.RESULT_OK, intent);
-                    getActivity().finish();
+                    boolean confirmed = data.getBooleanExtra(MMPreviewImageActivity.EXTRA_CONFIRM, false);
+                    if (confirmed) {
+                        Intent intent = new Intent();
+                        intent.putParcelableArrayListExtra(EXTRA_DATA, data.getParcelableArrayListExtra(EXTRA_DATA));
+                        intent.putExtra(EXTRA_TYPE, TYPE_IMAGE);
+                        getActivity().setResult(Activity.RESULT_OK, intent);
+                        getActivity().finish();
+                    } else {
+                        ArrayList<MMImageBean> imageBeans = data.getParcelableArrayListExtra(EXTRA_DATA);
+                        for (MMImageBean imageBean: imageBeans) {
+                            if (!imageBean.isSelected()) {//取消选择的
+                                Integer index = mImageList.indexOf(imageBean);
+                                mSelectedIndex.remove(index);
+                                mImageList.get(index).setSelected(false);
+                            }
+                        }
+                        mImageGridAdapter.notifyDataSetChanged();
+                        uploadButtonState();
+                    }
                 }
                 break;
             case REQUEST_CODE_CAPTURE:
@@ -104,9 +119,9 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
         } // switch
     }
 
-    private void setOnPreviewCountChangeListener() {
-        if (mPreviewCount > 0) {
-            mConfirm.setText(getString(R.string.exam_image_upload, mPreviewCount));
+    private void uploadButtonState() {
+        if (mSelectedIndex.size() > 0) {
+            mConfirm.setText(getString(R.string.exam_image_upload, mSelectedIndex.size()));
             mTvPreview.setEnabled(true);
             mConfirm.setEnabled(true);
         } else {
@@ -136,23 +151,23 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
                 if (position != 0) {
                     RelativeLayout relativeLayout = (RelativeLayout) v;
                     if (relativeLayout.getChildAt(0) instanceof ImageView) {
-                        if (values.isSeleted()) {
-                            values.setSeleted(false);
-                            --mPreviewCount;
+                        if (values.isSelected()) {
+                            values.setSelected(false);
+                            mSelectedIndex.remove(position);
                             relativeLayout.setBackgroundResource(R.color.transparent);
                             ((ImageView) relativeLayout.getChildAt(0)).setImageResource(R.drawable.ic_exam_select_n);
                         } else {
-                            if (mPreviewCount == (mNeedImageCount)) {
+                            if (mSelectedIndex.size() == mNeedImageCount) {
                                 Snackbar.make(v, getString(R.string.exam_image_max_count, (mNeedImageCount)), Snackbar.LENGTH_SHORT).show();
                                 return;
                             }
-                            values.setSeleted(true);
+                            values.setSelected(true);
                             relativeLayout.setBackgroundResource(R.color.image_selected_color);
                             ((ImageView) relativeLayout.getChildAt(0)).setImageResource(R.drawable.ic_exam_select_p);
-                            ++mPreviewCount;
+                            mSelectedIndex.add(position);
                         }
                     }
-                    setOnPreviewCountChangeListener();
+                    uploadButtonState();
                 }
 
             }
@@ -171,18 +186,14 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
             }
 
             @Override
-            public void OnLongClickListener(View parentV, View v, Integer position, MMImageBean values) {
-
-            }
+            public void OnLongClickListener(View parentV, View v, Integer position, MMImageBean values) { }
         });
         mConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<MMImageBean> imageBeans = new ArrayList<>();
-                for (MMImageBean imageBean : mImageList) {
-                    if (imageBean.isSeleted()) {
-                        imageBeans.add(imageBean);
-                    }
+                for (Integer index: mSelectedIndex) {
+                    imageBeans.add( mImageList.get(index));
                 }
                 Intent intent = new Intent();
                 intent.putParcelableArrayListExtra(EXTRA_DATA, imageBeans);
@@ -195,10 +206,8 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
             @Override
             public void onClick(View v) {
                 ArrayList<MMImageBean> imageBeans = new ArrayList<>();
-                for (MMImageBean imageBean : mImageList) {
-                    if (imageBean.isSeleted()) {
-                        imageBeans.add(imageBean);
-                    }
+                for (Integer index: mSelectedIndex) {
+                    imageBeans.add( mImageList.get(index));
                 }
                 Intent intent = new Intent(getActivity(), MMPreviewImageActivity.class);
                 intent.putParcelableArrayListExtra(EXTRA_DATA, imageBeans);
