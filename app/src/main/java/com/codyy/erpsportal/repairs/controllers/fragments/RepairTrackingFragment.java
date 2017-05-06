@@ -81,6 +81,7 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
     private String mRepairId;
 
     private String mSkey;
+
     private Disposable mDisposable;
 
     public RepairTrackingFragment() {
@@ -112,9 +113,7 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
                 .setEmptyView(mEmptyTv)
                 .setOnItemClickListener(new OnItemClickListener<InquiryItem>() {
                     @Override
-                    public void onItemClick(int position, InquiryItem item) {
-
-                    }
+                    public void onItemClick(int position, InquiryItem item) { }
                 })
                 .build();
         return view;
