@@ -194,15 +194,12 @@ public class BaseCommentsAdapter extends Adapter<ViewHolder> {
      */
     public void addReplies(RethinkComment rethinkComment, List<RethinkReply> newReplies) {
         int index = mCommentBaseList.indexOf(rethinkComment);
-
         int originalCount = rethinkComment.getCurrentCount();
         rethinkComment.addReplies(newReplies);
-//            notifyItemChanged(index+originalCount);
         int start = index + originalCount + 1;
         Cog.d(TAG, "addReplies index=", index, "originalCount", originalCount);
         mCommentBaseList.addAll(start, newReplies);
-        notifyItemRangeInserted(start, newReplies.size());
-        notifyItemChanged(index + rethinkComment.getCurrentCount() + 1);
+        notifyItemRangeInserted(start, newReplies.size() + 1);
     }
 
     public Object getItem(int position) {
