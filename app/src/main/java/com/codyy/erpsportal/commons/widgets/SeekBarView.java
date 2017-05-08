@@ -179,26 +179,7 @@ public class SeekBarView extends View implements Handler.Callback {
                     moveStartX = (int) event.getX();
                     moveStartY = (int) event.getY();
                     break;
-                case MotionEvent.ACTION_UP:
-                    isMove = false;
-//                    if (event.getX() + radius <= endX && event.getX() - radius >= startX) {
-//                        rectF.set(event.getX() - radius, rectF.top, event.getX() + radius, rectF.bottom);
-//
-//                    } else if (event.getX() + radius > endX) {
-//                        rectF.set(endX - radius * 2, rectF.top, endX, rectF.bottom);
-//                    } else if (event.getX() + radius < startX) {
-//                        rectF.set(startX, rectF.top, startX + radius * 2, rectF.bottom);
-//                    }
-                    if (isTouchIn) {
-                        calculateScore();
-                        invalidate();
-                        if (onSeekListener != null) {
-                            onSeekListener.getScore(score);
-                        }
-                        isTouchIn = false;
-                    }
-//                    getParent().requestDisallowInterceptTouchEvent(false);
-                    break;
+
                 case MotionEvent.ACTION_MOVE:
                     if (isTouchIn) {
                         calculateScore();
@@ -210,14 +191,20 @@ public class SeekBarView extends View implements Handler.Callback {
                     }
                     break;
                 case MotionEvent.ACTION_CANCEL:
-//                    if (onSeekListener != null) {
-//                        onSeekListener.getScore(score);
-//                    }
-//                    moveEndX = (int) event.getX();
-//                    moveEndY = (int) event.getY();
-//                    moveBar(moveEndX - moveStartX);
-//                    moveStartX = moveEndX;
-//                    moveStartY = moveEndY;
+                case MotionEvent.ACTION_UP:
+                    isMove = false;
+                    if (endX - rectF.right <= 10) {
+                        rectF.right = endX;
+                        rectF.left = rectF.right - radius * 2;
+
+                    }
+                    calculateScore();
+                    invalidate();
+                    if (onSeekListener != null) {
+                        onSeekListener.getScore(score);
+                    }
+                    isTouchIn = false;
+//                    getParent().requestDisallowInterceptTouchEvent(false);
                     break;
             }
         }
@@ -234,7 +221,7 @@ public class SeekBarView extends View implements Handler.Callback {
         endY = startY = mHeight / 2;
         endX = mWidth - (int) (den * marginLeft + 0.5);
         float a = barWidth - 2 * radius;
-        horizontalAV = a / (max + 1);
+        horizontalAV = a / max;
         float f = score * horizontalAV + startX;
         rectF = new RectF(f, startY - radius, f + 2 * radius, startY + radius);
         StaticLayout staticLayout1 = new StaticLayout(String.valueOf((int) max), textPaint1, textw, Layout.Alignment.ALIGN_NORMAL, 1.0F, 0, false);
@@ -254,7 +241,7 @@ public class SeekBarView extends View implements Handler.Callback {
         if (max != 0) {
             this.max = max;
             float a = barWidth - 2 * radius;
-            horizontalAV = a / (max + 1);
+            horizontalAV = a / max;
             invalidate();
         }
     }
@@ -262,7 +249,7 @@ public class SeekBarView extends View implements Handler.Callback {
     public void setScore(int score) {
         if (score <= max && score >= 0) {
             this.score = score;
-            float a = (score + 1) * horizontalAV + startX;
+            float a = score * horizontalAV + startX;
             if (rectF == null) {
                 rectF = new RectF(a, startY - radius, a + 2 * radius, startY + radius);
             } else {
