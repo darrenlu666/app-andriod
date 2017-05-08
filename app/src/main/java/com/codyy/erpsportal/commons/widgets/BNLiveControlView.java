@@ -32,9 +32,11 @@ import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.WeakHandler;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2.OnSurfaceChangeListener;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -44,12 +46,12 @@ import butterknife.ButterKnife;
  * <p/>
  * home按键后自动seek回原来的位置播放
  */
-public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurfaceChangeListener,IFragmentMangerInterface {
+public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSurfaceChangeListener, IFragmentMangerInterface {
     private String TAG = "BNLiveControlView";
     /**
      * 通知隐藏
      */
-    private static final int MSG_NOTIFY_HIDE_VIEW = 100 ;
+    private static final int MSG_NOTIFY_HIDE_VIEW = 100;
     /**
      * 设置标题
      */
@@ -63,12 +65,14 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
      */
     private static final int MSG_HIDE_VIEW = 103;
 
-    @Bind(R.id.imgExpandOfVideoControl)ImageButton btnExpand;
-    @Bind(R.id.tv_first_line)TextView mTitleText;
+    @Bind(R.id.imgExpandOfVideoControl)
+    ImageButton btnExpand;
+    @Bind(R.id.tv_first_line)
+    TextView mTitleText;
     /**
      * 一秒单位
      */
-    private static final int SECOND = 1000 ;
+    private static final int SECOND = 1000;
     /**
      * 自动隐藏的事件间隔
      */
@@ -76,7 +80,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     private BnVideoLayout2 mVideoView = null;
     private String urlPath;
     private DisplayListener mDisplayListener;
-    private ExpandListener  mExpandListener;
+    private ExpandListener mExpandListener;
     private BnVideoView2.OnBNErrorListener mOnErrorListener;
     private BnVideoView2.OnBNDurationChangeListener mOnDurationChangeListener;
     private BnVideoView2.OnBNBufferUpdateListener mOnBufferUpdateListener;
@@ -94,43 +98,13 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     /**
      * 尝试重连的次数 < 2
      */
-    private int mRetryCount = 0 ;
+    private int mRetryCount = 0;
     /**
      * 最大时间间隔 第一次 ：10 第二次：20 ...40 ..... 60 * 1000
      */
-    public static final long MAX_WAIT_TIME = 60*SECOND;
+    public static final long MAX_WAIT_TIME = 60 * SECOND;
 
-    private ScreenBroadcastReceiver mScreenReceiver;
-    //注册屏幕锁屏监听
-    private void registerScreenReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
-        getContext().registerReceiver(mScreenReceiver, filter);
-    }
-    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
-        @Override
-        public void onScreenOn() {
-            Log.i(TAG,"onScreenOn() ");
-        }
-        @Override
-        public void onScreenOff() {
-            Log.i(TAG,"onScreenOff() ");
-            //  08/05/17 停止直播（主持人/发言人）
-            stop();
-        }
 
-        @Override
-        public void onUserPresent() {
-            Log.i(TAG,"onScreenOn() # onUserPresent");
-            // TODO: 08/05/17 如何恢复播放 .
-            if(!TextUtils.isEmpty(urlPath)){
-                start(true);
-            }
-        }
-    };
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
@@ -141,7 +115,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
                 start(true);
             }
         }
-        if(null != mOnSurfaceChangeListener){
+        if (null != mOnSurfaceChangeListener) {
             mOnSurfaceChangeListener.surfaceCreated(holder);
         }
     }
@@ -149,7 +123,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     @Override
     public void surfaceChanged(SurfaceHolder holder) {
         Cog.e(TAG, "surfaceChanged~");
-        if(null != mVideoView){
+        if (null != mVideoView) {
 //            mVideoView.setReceiveVideo(true);
         }
     }
@@ -160,12 +134,11 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
         mVideoView.stop();
         mVideoView.close();
 //        mVideoView.setReceiveVideo(false);
-        mRetryCount = 0 ;
+        mRetryCount = 0;
         if (null != mOnSurfaceChangeListener) {
             mOnSurfaceChangeListener.surfaceDestroyed(holder);
         }
     }
-
 
 
     public BNLiveControlView(Context context) {
@@ -191,7 +164,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
 
     private void init(final Context context) {
         LayoutInflater.from(context).inflate(R.layout.video_control_live_layout, this, true);
-        HandlerThread hideThread = new HandlerThread("hide"+TAG);
+        HandlerThread hideThread = new HandlerThread("hide" + TAG);
         hideThread.start();
         mHandlerHide = new Handler(hideThread.getLooper()) {
             @Override
@@ -201,6 +174,25 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
             }
         };
         registerScreenReceiver();
+    }
+
+    private ScreenBroadCastUtils mScreenBroadCastUtils;
+    private void registerScreenReceiver() {
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+            @Override
+            public void onScreenOn() {
+                Log.i(TAG,"onScreenOn()");
+                if (!TextUtils.isEmpty(urlPath)) {
+                    start(true);
+                }
+            }
+
+            @Override
+            public void onScreenLock() {
+                Log.i(TAG,"onScreenLock()");
+                stop();
+            }
+        });
     }
 
     public void setIsExpanding(boolean isExpanding) {
@@ -218,11 +210,12 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
 
     /**
      * 绑定播放的组件 /设置 编解码格式和演讲者
+     *
      * @param view
      * @param title
-     * @param encodeType    0:hardware encode  1:software encode .
+     * @param encodeType 0:hardware encode  1:software encode .
      */
-    public void bindVideoView(BnVideoLayout2 view ,String title ,int encodeType) {
+    public void bindVideoView(BnVideoLayout2 view, String title, int encodeType) {
 
         if (view == null) {
             throw new NullPointerException("VideoView is NULL~!!");
@@ -234,22 +227,22 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
         mVideoView.setOnErrorListener(new BnVideoView2.OnBNErrorListener() {
             @Override
             public void onError(int errorCode, String errorMsg) {
-                if(0 == errorCode && mRetryCount <30){
-                    Cog.e(TAG , "error 0 : 当前网络异常，尝试重连 "+mRetryCount+" : "+urlPath);
-                    if(mVideoView.isPlaying()){
+                if (0 == errorCode && mRetryCount < 30) {
+                    Cog.e(TAG, "error 0 : 当前网络异常，尝试重连 " + mRetryCount + " : " + urlPath);
+                    if (mVideoView.isPlaying()) {
                         mVideoView.stop();
                     }
                     start(true);
-                    mRetryCount ++ ;
+                    mRetryCount++;
                 }
 
-                if( 1 == errorCode ){//不支持硬解　
-                    Cog.e(TAG,"部支持硬解，尝试软解！！！");
+                if (1 == errorCode) {//不支持硬解　
+                    Cog.e(TAG, "部支持硬解，尝试软解！！！");
                     start(false);
                 }
 
-                if(null != mOnErrorListener){
-                    mOnErrorListener.onError(errorCode , errorMsg);
+                if (null != mOnErrorListener) {
+                    mOnErrorListener.onError(errorCode, errorMsg);
                 }
             }
         });
@@ -261,7 +254,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
                 // 点击显示，再次点击消失 .
                 if (getVisibility() == View.GONE) {
                     showControl();
-                }else{
+                } else {
                     hideControl();
                 }
 
@@ -294,14 +287,14 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
      *
      * @param path
      */
-    public void setVideoPath(String path , final BNAudioMixer mixer) {
+    public void setVideoPath(String path, final BNAudioMixer mixer) {
         Cog.d("url", "check it : " + path);
         this.urlPath = path;
-        mAudioMixer  = mixer ;
+        mAudioMixer = mixer;
         Check3GUtil.instance().CheckNetType(this, new Check3GUtil.OnWifiListener() {
             @Override
             public void onNetError() {
-                ToastUtil.showToast(EApplication.instance() , "网络异常！");
+                ToastUtil.showToast(EApplication.instance(), "网络异常！");
             }
 
             @Override
@@ -311,8 +304,8 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
         });
     }
 
-    public void stop(){
-        if(null!=mVideoView &&  mVideoView.isPlaying()){
+    public void stop() {
+        if (null != mVideoView && mVideoView.isPlaying()) {
             mVideoView.stop();
             mRetryCount = 0;
         }
@@ -322,21 +315,21 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
      * 开始播放
      */
     public void start(boolean isHardWare) {
-        if (!TextUtils.isEmpty(urlPath)&&null != mVideoView) {
+        if (!TextUtils.isEmpty(urlPath) && null != mVideoView) {
             mVideoView.setUrl(urlPath, BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
             mVideoView.setVolume(100);
-            if(isHardWare){
+            if (isHardWare) {
                 mVideoView.setEncodeType(BnVideoView2.BN_ENCODE_HARDWARE);
-            }else{
+            } else {
                 mVideoView.setEncodeType(BnVideoView2.BN_ENCODE_SOFTWARE);
             }
             mVideoView.play(BnVideoView2.BN_PLAY_WITH_CHAT);
             //take effect after play init which tested by poe .
             mVideoView.setTimeOut(15);
-            if(mAudioMixer != null){
+            if (mAudioMixer != null) {
                 mVideoView.setAudioMixer(mAudioMixer);
-            }else{
-                Log.w(TAG,"mAudioMixer == null");
+            } else {
+                Log.w(TAG, "mAudioMixer == null");
             }
         }
 
@@ -346,8 +339,8 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     }
 
     public void startResume() {
-        if(!TextUtils.isEmpty(urlPath)){
-            if(mVideoView.isPlaying()){
+        if (!TextUtils.isEmpty(urlPath)) {
+            if (mVideoView.isPlaying()) {
                 mVideoView.setReceiveVideo(true);
             }
         }
@@ -364,36 +357,21 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
             @Override
             public void onClick(View v) {
                 touchControl();
-                Activity activity = (Activity) getContext();
-                /*if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                    isExpanding =   true;
-                    if(null != mExpandListener){
-                        mExpandListener.expand();
-                    }
-                } else if (activity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                    isExpanding =   false ;
-                    if(null != mExpandListener){
-                        mExpandListener.collapse();
-                    }
-                }*/
-
                 int screenHeight = getResources().getDisplayMetrics().heightPixels;
 
-                if (getHeight() < screenHeight/2) {
-                    isExpanding =   true;
-                    if(null != mExpandListener){
+                if (getHeight() < screenHeight / 2) {
+                    isExpanding = true;
+                    if (null != mExpandListener) {
                         mExpandListener.expand();
                     }
                 } else {
-                    isExpanding =   false ;
-                    if(null != mExpandListener){
+                    isExpanding = false;
+                    if (null != mExpandListener) {
                         mExpandListener.collapse();
                     }
                 }
             }
         });
-
-//        showControl();
     }
 
 
@@ -402,12 +380,12 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     public void touchControl() {
         Cog.e(TAG, " touchControl()~");
         mHandlerHide.removeMessages(MSG_NOTIFY_HIDE_VIEW);
-        mHandlerHide.sendEmptyMessageDelayed(MSG_NOTIFY_HIDE_VIEW,HIDE_PERIOD);
+        mHandlerHide.sendEmptyMessageDelayed(MSG_NOTIFY_HIDE_VIEW, HIDE_PERIOD);
     }
 
     @Override
     public void destroyView() {
-        if(null != mVideoView){
+        if (null != mVideoView) {
             mVideoView.stop();
             mVideoView.close();
         }
@@ -443,7 +421,9 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(null != mScreenReceiver) getContext().unregisterReceiver(mScreenReceiver);
+        if (null != mScreenBroadCastUtils) {
+            mScreenBroadCastUtils.destroy();
+        }
     }
 
 
@@ -456,11 +436,11 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     }
 
     public void setOnDurationChangeListener(BnVideoView2.OnBNDurationChangeListener durationChangeListener) {
-        this.mOnDurationChangeListener = durationChangeListener ;
+        this.mOnDurationChangeListener = durationChangeListener;
     }
 
     public void setOnBufferUpdateListener(BnVideoView2.OnBNBufferUpdateListener bufferUpdateListener) {
-        this.mOnBufferUpdateListener = bufferUpdateListener ;
+        this.mOnBufferUpdateListener = bufferUpdateListener;
     }
 
     public void setOnCompleteListener(BnVideoView2.OnBNCompleteListener completeListener) {
@@ -476,13 +456,13 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     }
 
 
-    private void hideView(){
+    private void hideView() {
         if (!isOnTouch) {
             hideControl();
         }
     }
 
-    private void setTitle(String title){
+    private void setTitle(String title) {
         if (getVisibility() == View.VISIBLE) {
             mTitleText.setText(title);
         }
@@ -512,7 +492,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     /**
      * 横竖屏监听
      */
-    public interface ExpandListener{
+    public interface ExpandListener {
         /**
          * 点击了 Expand 图标
          */
@@ -524,7 +504,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
         void collapse();
     }
 
-    private static class BNLiveHandler extends WeakHandler<BNLiveControlView>{
+    private static class BNLiveHandler extends WeakHandler<BNLiveControlView> {
 
         public BNLiveHandler(BNLiveControlView owner) {
             super(owner);
@@ -533,7 +513,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(getOwner()== null) return;
+            if (getOwner() == null) return;
             Bundle bd = (Bundle) msg.obj;
             switch (msg.what) {
                 case MSG_SET_TITLE://set the title

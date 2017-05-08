@@ -2,6 +2,7 @@ package com.codyy.erpsportal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.multidex.MultiDexApplication;
@@ -10,8 +11,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import com.codyy.bennu.framework.BNAVFramework;
 import com.codyy.erpsportal.commons.exception.CrashHandler;
 import com.codyy.erpsportal.commons.models.entities.configs.ConfigurationManager;
+import com.codyy.erpsportal.commons.receivers.ScreenLockChangeReceiver;
 import com.codyy.erpsportal.commons.services.Engine;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.url.URLConfig;
 import com.codyy.widgets.imagepipeline.ImagePipelineConfigFactory;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -32,6 +35,17 @@ public class EApplication extends MultiDexApplication {
         mApp = this;
         init();
         initUrlConfigBase();
+        registerScreenBroadCast();
+    }
+    private ScreenLockChangeReceiver mScreenReceiver ;
+    private void registerScreenBroadCast() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+
+        mScreenReceiver = new ScreenLockChangeReceiver();
+        registerReceiver(mScreenReceiver,filter);
     }
 
     public static EApplication instance() {
