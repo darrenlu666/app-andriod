@@ -3,6 +3,8 @@ package com.codyy.erpsportal.commons.widgets;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -28,6 +30,7 @@ import com.codyy.bennu.sdk.BNMediaPlayer;
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +44,7 @@ import butterknife.ButterKnife;
  * Created by poe on 2016/7/11.
  */
 public class BNMultipleLiveControlView extends RelativeLayout implements AutoHide,Handler.Callback ,SurfaceHolder.Callback{
-    private String TAG = "BNMultipleLiveControlView";
+    private String TAG = "MultipleLiveControlView";
     /**通知隐藏*/
     private static final int MSG_NOTIFY_HIDE_VIEW = 100 ;
     /**设置标题*/
@@ -235,6 +238,7 @@ public class BNMultipleLiveControlView extends RelativeLayout implements AutoHid
                 mHandler.sendEmptyMessage(MSG_HIDE_VIEW);
             }
         };
+        registerScreenReceiver();
     }
 
     @Override
@@ -472,6 +476,7 @@ public class BNMultipleLiveControlView extends RelativeLayout implements AutoHid
     @Override
     protected void onDetachedFromWindow() {
         Cog.i(TAG , " onDetachedFromWindow() ~");
+        if(null != mScreenReceiver) getContext().unregisterReceiver(mScreenReceiver);
         super.onDetachedFromWindow();
     }
 
@@ -509,6 +514,36 @@ public class BNMultipleLiveControlView extends RelativeLayout implements AutoHid
         }
         return false;
     }
+
+    private ScreenBroadcastReceiver mScreenReceiver;
+    //注册屏幕锁屏监听
+    private void registerScreenReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
+        getContext().registerReceiver(mScreenReceiver, filter);
+    }
+    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
+        @Override
+        public void onScreenOn() {
+            Log.i(TAG,"onScreenOn() ");
+        }
+        @Override
+        public void onScreenOff() {
+            Log.i(TAG,"onScreenOff() ");
+            //  08/05/17 停止直播（主持人/发言人）
+            stop();
+        }
+
+        @Override
+        public void onUserPresent() {
+            Log.i(TAG,"onScreenOn() # onUserPresent");
+            // TODO: 08/05/17 如何恢复播放 .
+            startResume();
+        }
+    };
 
     /**
      * 监听本控件的隐藏状态
