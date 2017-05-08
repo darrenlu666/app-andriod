@@ -5,16 +5,16 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.codyy.erpsportal.EApplication;
+import com.codyy.erpsportal.commons.models.dao.CacheDao;
+import com.codyy.erpsportal.commons.models.dao.DownloadDao;
+import com.codyy.erpsportal.commons.models.entities.download.BreakPointInfo;
+import com.codyy.erpsportal.commons.models.entities.download.Transfer;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
 import com.codyy.erpsportal.commons.utils.FileUtils;
 import com.codyy.erpsportal.commons.utils.SystemUtils;
 import com.codyy.erpsportal.commons.utils.TransferManager;
 import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.models.dao.CacheDao;
-import com.codyy.erpsportal.commons.models.dao.DownloadDao;
-import com.codyy.erpsportal.commons.models.entities.download.BreakPointInfo;
-import com.codyy.erpsportal.commons.models.entities.download.Transfer;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +22,6 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HttpLargeDownload implements Transfer {
     private static final String TAG = "HttpLargeDownload";
@@ -52,11 +50,6 @@ public class HttpLargeDownload implements Transfer {
     private File savePath;
 
     /**
-     * 线程数
-     */
-    private int threadCount;
-
-    /**
      * 所要下载的文件的大小
      */
     private int fileSize;
@@ -75,7 +68,9 @@ public class HttpLargeDownload implements Transfer {
     /**
      * 存放下载信息类的集合
      */
-    private List<BreakPointInfo> infos;
+//    private List<BreakPointInfo> infos;
+
+    private BreakPointInfo mBreakPointInfo;
 
     public int state;
 
@@ -92,16 +87,14 @@ public class HttpLargeDownload implements Transfer {
     /**
      * @param dirPath     download url
      * @param fileName    name
-     * @param threadCount
      * @param context
      */
-    public HttpLargeDownload(List<HttpLargeDownload> largeDownloads, String url, String fileName,
-                             String dirPath, int threadCount, Context context, String userId, String resId) {
+    public HttpLargeDownload(String url, String fileName,
+                             String dirPath, Context context, String userId, String resId) {
         this.url = url;
         this.dirPath = dirPath;
         this.fileName = fileName;
         this.savePath = new File(dirPath, fileName + Constants.CACHING_SUFFIX);
-        this.threadCount = threadCount;
         this.context = context;
         this.userId = userId;
         this.resId = resId;
@@ -214,33 +207,29 @@ public class HttpLargeDownload implements Transfer {
                 return false;
             }
             FileUtils.deleteSdData(context);
-            int range = fileSize / threadCount;
-            infos = new ArrayList<>(threadCount);
+            int range = fileSize;
 
-            for (int i = 0; i <= threadCount - 1; i++) {
-                BreakPointInfo info = new BreakPointInfo(userId, resId, i, i * range, (i + 1) * range - 1, 0, fileSize, url, System.currentTimeMillis());
-                infos.add(info);
-            }
+            mBreakPointInfo = new BreakPointInfo(userId, resId, 0, 0, range - 1, 0, fileSize, url, System.currentTimeMillis());
 
             if (fileSize <= 0) {
                 return false;
             }
 
             // 第一次保存
-            DownloadDao.instance(context).saveDownloadInfos(infos);
+            DownloadDao.instance(context).saveDownloadInfo(mBreakPointInfo);
             // 创建保存记录的信息
             return true;
         } else {
             Cog.d(TAG, "checkCanDownload::not the first time");
             //检查sd卡的空间是否足够
             FileUtils.deleteSdData(context);
-            infos = DownloadDao.instance(context).getDownloadInfos(userId, resId);
+            mBreakPointInfo = DownloadDao.instance(context).getDownloadInfo(userId, resId);
 
             int size = 0;
             int completeSize = 0;
-            for (BreakPointInfo info : infos) {
-                completeSize += info.getCompleteSize();
-                size += info.getEndPos() - info.getStartPos() + 1;
+            if (mBreakPointInfo != null) {
+                completeSize = mBreakPointInfo.getCompleteSize();
+                size = mBreakPointInfo.getEndPos() - mBreakPointInfo.getStartPos() + 1;
             }
 
             if (size <= 0) {
@@ -253,7 +242,7 @@ public class HttpLargeDownload implements Transfer {
 
             //下载超过100%的异常处理
             if (completeSize > size) {
-                infos = null;
+                mBreakPointInfo = null;
                 //删除记录
                 DownloadDao.instance(context).delete(userId, resId);
                 //删除fc文件
@@ -298,11 +287,8 @@ public class HttpLargeDownload implements Transfer {
             SystemClock.sleep(delay * 1000);
             if (checkCanDownload()) {
                 isOngoing = true;
-                for (BreakPointInfo info : infos) {
-                    Cog.d(TAG, "info:" + info.toString());
-                    // 断点下载各个信息
-                    saveNew(url, 6000, HttpLargeDownload.this, info, new DownloadListener(retry));
-                }
+                Cog.d(TAG, "info:" + mBreakPointInfo.toString());
+                saveNew(url, 6000, HttpLargeDownload.this, mBreakPointInfo, new DownloadListener(retry));
             } else {
                 error(null);
             }
@@ -326,9 +312,10 @@ public class HttpLargeDownload implements Transfer {
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Accept", "image/gif, image/jpeg, image/pjpeg, image/pjpeg, application/x-shockwave-flash, application/xaml+xml, application/vnd.ms-xpsdocument, application/x-ms-xbap, application/x-ms-application, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*");
             urlConnection.setRequestProperty("Accept-Language", "zh-CN");
+            urlConnection.setRequestProperty("Accept-Encoding", "identity");
             urlConnection.setRequestProperty("Referer", downloadUrl.toString());
             urlConnection.setRequestProperty("Charset", "UTF-8");
-            String range = "bytes=" + (info.getStartPos() + info.getCompleteSize()) + "-" + info.getEndPos();
+            String range = "bytes=" + (info.getStartPos() + info.getCompleteSize()) + "-" /*+ info.getEndPos()*/;
             Cog.d(TAG, "saveNew: range:", range);
             urlConnection.setRequestProperty("Range", range);//设置获取实体数据的范围
             urlConnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; .NET CLR 1.1.4322; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729)");
@@ -493,7 +480,7 @@ public class HttpLargeDownload implements Transfer {
 
     private void cleanup() {
         try {
-            if (DownloadDao.instance(context).getDownloadInfos(userId, resId).size() == 0) {
+            if (DownloadDao.instance(context).getDownloadInfo(userId, resId) == null) {
                 savePath.delete();
             }
         } catch (Throwable tr) {

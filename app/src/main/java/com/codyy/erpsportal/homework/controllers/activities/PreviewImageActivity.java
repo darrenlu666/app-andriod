@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ConfirmTextDialog;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ConfirmTextDialog.OnConfirmListener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.exam.controllers.activities.media.image.HackyViewPager;
 import com.codyy.erpsportal.exam.controllers.activities.media.image.ZoomableDraweeView;
@@ -119,10 +121,17 @@ public class PreviewImageActivity extends ToolbarActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeItem(mHackyViewPager.getCurrentItem());
-                if (mShowNumber) {
-                    updateTitleNumber(mHackyViewPager.getCurrentItem());
-                }
+                ConfirmTextDialog confirmTextDialog = ConfirmTextDialog.newInstance("您确定删除该张照片？");
+                confirmTextDialog.setOnConfirmListener(new OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        removeItem(mHackyViewPager.getCurrentItem());
+                        if (mShowNumber) {
+                            updateTitleNumber(mHackyViewPager.getCurrentItem());
+                        }
+                    }
+                });
+                confirmTextDialog.show(getSupportFragmentManager(), "confirmDelete");
             }
         });
         return super.onCreateOptionsMenu(menu);
