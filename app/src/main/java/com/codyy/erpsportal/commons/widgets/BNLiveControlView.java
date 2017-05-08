@@ -3,6 +3,8 @@ package com.codyy.erpsportal.commons.widgets;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
@@ -97,6 +100,38 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
      */
     public static final long MAX_WAIT_TIME = 60*SECOND;
 
+    private ScreenBroadcastReceiver mScreenReceiver;
+    //注册屏幕锁屏监听
+    private void registerScreenReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
+        getContext().registerReceiver(mScreenReceiver, filter);
+    }
+    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
+        @Override
+        public void onScreenOn() {
+            Log.i(TAG,"onScreenOn() ");
+        }
+        @Override
+        public void onScreenOff() {
+            Log.i(TAG,"onScreenOff() ");
+            //  08/05/17 停止直播（主持人/发言人）
+            stop();
+        }
+
+        @Override
+        public void onUserPresent() {
+            Log.i(TAG,"onScreenOn() # onUserPresent");
+            // TODO: 08/05/17 如何恢复播放 .
+            if(!TextUtils.isEmpty(urlPath)){
+                start(true);
+            }
+        }
+    };
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         Cog.e(TAG, "surfaceCreated");
@@ -165,6 +200,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
                 mHandler.sendEmptyMessage(MSG_HIDE_VIEW);
             }
         };
+        registerScreenReceiver();
     }
 
     public void setIsExpanding(boolean isExpanding) {
@@ -407,6 +443,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide,OnSurf
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        if(null != mScreenReceiver) getContext().unregisterReceiver(mScreenReceiver);
     }
 
 

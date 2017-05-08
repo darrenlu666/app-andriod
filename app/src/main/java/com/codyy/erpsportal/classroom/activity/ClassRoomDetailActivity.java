@@ -3,6 +3,7 @@ package com.codyy.erpsportal.classroom.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -45,6 +47,7 @@ import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -658,7 +661,6 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
 
             @Override
             public void onContinue() {
-//                startPlay();
                 mHandler.removeCallbacks(mPlayLiveRunnable);
                 //如果视图销毁了 ， 停止播放 .
                 if (!mSurfaceDestroyed) {
@@ -668,29 +670,64 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         });
     }
 
-   /* private void startPlay() {
-        if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
-            mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
-            mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-        }
-    }*/
     WiFiBroadCastUtils mWiFiBroadCastUtils;
     private void registerWiFiListener() {
         mWiFiBroadCastUtils = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
-                if (!mVideoLayout.isPlaying()) {
-                    mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-                }
+               startLivePlay();
             }
 
             @Override
             public void stop() {
-                if (mVideoLayout.isPlaying()) {
-                    mVideoLayout.stop();
-                }
+                stopLivePlay();
             }
         });
+    }
+
+    private ScreenBroadcastReceiver mScreenReceiver;
+    //注册屏幕锁屏监听
+    private void registerScreenReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
+        registerReceiver(mScreenReceiver, filter);
+    }
+
+    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
+        @Override
+        public void onScreenOn() {
+            Log.i(TAG,"onScreenOn() ");
+        }
+        @Override
+        public void onScreenOff() {
+            Log.i(TAG,"onScreenOff() ");
+            //  08/05/17 停止直播（主持人/发言人）
+            stopLivePlay();
+        }
+
+        @Override
+        public void onUserPresent() {
+            Log.i(TAG,"onScreenOn() # onUserPresent");
+            startLivePlay();
+        }
+    };
+
+    private void stopLivePlay() {
+        if (mVideoLayout.isPlaying()) {
+            mVideoLayout.stop();
+        }
+    }
+
+    private void startLivePlay() {
+        if (!mVideoLayout.isPlaying()) {
+            if (TextUtils.isEmpty(mVideoLayout.getVideoView().getUrl())) {
+                mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+            }
+            mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
+        }
     }
 
     @Override

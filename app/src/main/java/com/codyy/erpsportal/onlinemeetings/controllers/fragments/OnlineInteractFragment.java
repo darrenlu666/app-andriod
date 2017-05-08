@@ -3,9 +3,11 @@ package com.codyy.erpsportal.onlinemeetings.controllers.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import com.codyy.erpsportal.Constants;
@@ -305,10 +307,11 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
     private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
         @Override
         public void onScreenOn() {
-
+            Log.i(TAG,"onScreenOn() ");
         }
         @Override
         public void onScreenOff() {
+            Log.i(TAG,"onScreenOff() ");
             isScreenLocked  =   true ;
         }
 
