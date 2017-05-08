@@ -7,7 +7,6 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -107,10 +106,10 @@ public class ConfirmDownloadDialog extends DialogFragment {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setDescription("新版本下载中…");
         request.setTitle(getResources().getString(R.string.app_name));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            request.allowScanningByMediaScanner();
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        }
+
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "ErpsPortal.apk");
         DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
         long id = manager.enqueue(request);
