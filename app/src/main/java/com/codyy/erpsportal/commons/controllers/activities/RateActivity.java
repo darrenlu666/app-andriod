@@ -112,6 +112,7 @@ public class RateActivity extends Activity implements Handler.Callback, OnClickL
         public void onClick(View v) {
             switch (dialogClick) {
                 case EXIT:
+                    dialogUtil.cancel();
                     finish();
                     overridePendingTransition(R.anim.layout_show, R.anim.slidemenu_hide);
                     break;

@@ -3,6 +3,7 @@ package com.codyy.erpsportal.classroom.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -45,6 +47,7 @@ import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -172,6 +175,35 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         }
     };
 
+    private ScreenBroadcastReceiver mScreenReceiver;
+    //注册屏幕锁屏监听
+    private void registerScreenReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
+        registerReceiver(mScreenReceiver, filter);
+    }
+    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
+        @Override
+        public void onScreenOn() {
+            Log.i(TAG,"onScreenOn() ");
+        }
+        @Override
+        public void onScreenOff() {
+            Log.i(TAG,"onScreenOff() ");
+            //  08/05/17 停止直播（主持人/发言人）
+            stopLivePlay();
+        }
+
+        @Override
+        public void onUserPresent() {
+            Log.i(TAG,"onScreenOn() # onUserPresent");
+            startLivePlay();
+        }
+    };
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,6 +282,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
             } else {
                 check3GWifi();
                 registerWiFiListener();
+                registerScreenReceiver();
                 mAutoHide.showControl();
                 mIvFullScreen.setVisibility(View.VISIBLE);
             }
@@ -741,10 +774,11 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
             //view 销毁后立刻退出
             if (mSurfaceDestroyed) return;
             if (isFinishing()) return;
-            if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
+            /*if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
                 mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
                 mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-            }
+            }*/
+            startLivePlay();
         }
     };
 
@@ -753,21 +787,29 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         mWifiUtil = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
-                if (!mVideoLayout.isPlaying()) {
-                    if (TextUtils.isEmpty(mVideoLayout.getVideoView().getUrl())) {
-                        mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
-                    }
-                    mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-                }
+                startLivePlay();
             }
 
             @Override
             public void stop() {
-                if (mVideoLayout.isPlaying()) {
-                    mVideoLayout.stop();
-                }
+                stopLivePlay();
             }
         });
+    }
+
+    private void stopLivePlay() {
+        if (mVideoLayout.isPlaying()) {
+            mVideoLayout.stop();
+        }
+    }
+
+    private void startLivePlay() {
+        if (!mVideoLayout.isPlaying()) {
+            if (TextUtils.isEmpty(mVideoLayout.getVideoView().getUrl())) {
+                mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+            }
+            mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
+        }
     }
 
     @Override
@@ -800,6 +842,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         //stop net request .
         if (null != mRequestSender) mRequestSender.stop(TAG);
         if (null != mWifiUtil) mWifiUtil.destroy();
+        if(null != mScreenReceiver) unregisterReceiver(mScreenReceiver);
         mHandler.removeCallbacks(mPlayLiveRunnable);
         mHandler.removeCallbacks(mHeartJump);
         mVideoLayout = null;
