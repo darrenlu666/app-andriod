@@ -2,6 +2,8 @@ package com.codyy.erpsportal.onlinemeetings.controllers.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Build;
@@ -27,6 +29,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.commons.models.entities.MeetingAction;
 import com.codyy.erpsportal.commons.models.entities.SpeakerEntity;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;

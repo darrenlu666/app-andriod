@@ -32,6 +32,8 @@ import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -239,6 +241,22 @@ public class BNMultipleLiveControlView extends RelativeLayout implements AutoHid
             }
         };
         registerScreenReceiver();
+    }
+    private ScreenBroadCastUtils mScreenBroadCastUtils;
+    private void registerScreenReceiver() {
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+            @Override
+            public void onScreenOn() {
+                Log.i(TAG,"onScreenOn()");
+                startResume();
+            }
+
+            @Override
+            public void onScreenLock() {
+                Log.i(TAG,"onScreenLock()");
+                stop();
+            }
+        });
     }
 
     @Override
@@ -476,8 +494,10 @@ public class BNMultipleLiveControlView extends RelativeLayout implements AutoHid
     @Override
     protected void onDetachedFromWindow() {
         Cog.i(TAG , " onDetachedFromWindow() ~");
-        if(null != mScreenReceiver) getContext().unregisterReceiver(mScreenReceiver);
         super.onDetachedFromWindow();
+        if(null != mScreenBroadCastUtils){
+            mScreenBroadCastUtils.destroy();
+        }
     }
 
 
@@ -514,36 +534,6 @@ public class BNMultipleLiveControlView extends RelativeLayout implements AutoHid
         }
         return false;
     }
-
-    private ScreenBroadcastReceiver mScreenReceiver;
-    //注册屏幕锁屏监听
-    private void registerScreenReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
-        getContext().registerReceiver(mScreenReceiver, filter);
-    }
-    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
-        @Override
-        public void onScreenOn() {
-            Log.i(TAG,"onScreenOn() ");
-        }
-        @Override
-        public void onScreenOff() {
-            Log.i(TAG,"onScreenOff() ");
-            //  08/05/17 停止直播（主持人/发言人）
-            stop();
-        }
-
-        @Override
-        public void onUserPresent() {
-            Log.i(TAG,"onScreenOn() # onUserPresent");
-            // TODO: 08/05/17 如何恢复播放 .
-            startResume();
-        }
-    };
 
     /**
      * 监听本控件的隐藏状态

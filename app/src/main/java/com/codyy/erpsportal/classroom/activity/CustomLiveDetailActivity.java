@@ -51,6 +51,7 @@ import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
@@ -175,34 +176,22 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         }
     };
 
-    private ScreenBroadcastReceiver mScreenReceiver;
-    //注册屏幕锁屏监听
+    private ScreenBroadCastUtils mScreenBroadCastUtils;
     private void registerScreenReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
-        registerReceiver(mScreenReceiver, filter);
-    }
-    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
-        @Override
-        public void onScreenOn() {
-            Log.i(TAG,"onScreenOn() ");
-        }
-        @Override
-        public void onScreenOff() {
-            Log.i(TAG,"onScreenOff() ");
-            //  08/05/17 停止直播（主持人/发言人）
-            stopLivePlay();
-        }
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+            @Override
+            public void onScreenOn() {
+                Log.i(TAG,"onScreenOn()");
+                startLivePlay();
+            }
 
-        @Override
-        public void onUserPresent() {
-            Log.i(TAG,"onScreenOn() # onUserPresent");
-            startLivePlay();
-        }
-    };
+            @Override
+            public void onScreenLock() {
+                Log.i(TAG,"onScreenLock()");
+                stopLivePlay();
+            }
+        });
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -842,7 +831,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         //stop net request .
         if (null != mRequestSender) mRequestSender.stop(TAG);
         if (null != mWifiUtil) mWifiUtil.destroy();
-        if(null != mScreenReceiver) unregisterReceiver(mScreenReceiver);
+        if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy();
         mHandler.removeCallbacks(mPlayLiveRunnable);
         mHandler.removeCallbacks(mHeartJump);
         mVideoLayout = null;

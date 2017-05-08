@@ -50,6 +50,7 @@ import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
@@ -248,6 +249,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         mAutoHide.showControl();
         check3GWifi();
         registerWiFiListener();
+        registerScreenReceiver();
         ImageView mIvFullScreen = (ImageView) findViewById(R.id.iv_full_screen);
         mIvFullScreen.setOnClickListener(this);
     }
@@ -685,35 +687,22 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         });
     }
 
-    private ScreenBroadcastReceiver mScreenReceiver;
-    //注册屏幕锁屏监听
+    private ScreenBroadCastUtils mScreenBroadCastUtils;
     private void registerScreenReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
-        registerReceiver(mScreenReceiver, filter);
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+            @Override
+            public void onScreenOn() {
+                Log.i(TAG,"onScreenOn()");
+                startLivePlay();
+            }
+
+            @Override
+            public void onScreenLock() {
+                Log.i(TAG,"onScreenLock()");
+                stopLivePlay();
+            }
+        });
     }
-
-    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
-        @Override
-        public void onScreenOn() {
-            Log.i(TAG,"onScreenOn() ");
-        }
-        @Override
-        public void onScreenOff() {
-            Log.i(TAG,"onScreenOff() ");
-            //  08/05/17 停止直播（主持人/发言人）
-            stopLivePlay();
-        }
-
-        @Override
-        public void onUserPresent() {
-            Log.i(TAG,"onScreenOn() # onUserPresent");
-            startLivePlay();
-        }
-    };
 
     private void stopLivePlay() {
         if (mVideoLayout.isPlaying()) {
@@ -758,6 +747,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     protected void onDestroy() {
         super.onDestroy();
         if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
+        if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy();
         if(null != mRequestSender) mRequestSender.stop(TAG);
         mHandler.removeCallbacks(mPlayLiveRunnable);
     }
