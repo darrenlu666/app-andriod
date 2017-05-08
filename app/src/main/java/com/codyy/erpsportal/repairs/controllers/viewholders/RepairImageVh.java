@@ -47,10 +47,12 @@ public class RepairImageVh extends BindingRvHolder<UploadingImage> {
                 ad.start();
                 mCoverLl.setVisibility(View.VISIBLE);
                 mFailedIv.setVisibility(View.GONE);
+                break;
             case UploadingImage.STATUS_ERROR:
                 ad.stop();
                 mCoverLl.setVisibility(View.INVISIBLE);
                 mFailedIv.setVisibility(View.VISIBLE);
+                break;
             default:
                 ad.stop();
                 mCoverLl.setVisibility(View.INVISIBLE);

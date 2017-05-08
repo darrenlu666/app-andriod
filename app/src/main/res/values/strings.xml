@@ -619,7 +619,7 @@
     <!--<string name="courses_proportion_main_invited">%1$s-主讲教室（受邀）</string>-->
     <!--<string name="courses_proportion_receiving">%1$s-接收教室</string>-->
 
-    <string name="classroom_role_format">%1$s(%2$s)</string>
+    <string name="classroom_role_format">%1$s (%2$s)</string>
 
     <string name="title_activity_courses_proportion_table">CoursesProportionTableActivity</string>
     <string name="scope_week">按周统计</string>
@@ -797,4 +797,6 @@
     <string name="make_a_detailed_inquiry">追问</string>
     <string name="title_activity_scan_serial">ScanSerialActivity</string>
     <string name="please_select">请选择</string>
+    <string name="report_repair_classroom_all">报修教室 (全部)</string>
+    <string name="handle_status_all">处理状态 (全部)</string>
 </resources>

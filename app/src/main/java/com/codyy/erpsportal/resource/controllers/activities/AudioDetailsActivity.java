@@ -239,7 +239,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
         @Override
         public void onPrepared(MediaPlayer mp) {
             Cog.d(TAG, "onPrepared sessionId=", mp.getAudioSessionId());
-            CountIncreaser.increaseViewCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), mResourceId);
+            CountIncreaser.increaseViewCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
             mp.start();
             mIsAudioPlaying = true;
             updatePlayPauseIb();
@@ -421,7 +421,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
         if (VideoDownloadUtils.downloadAudio(mResourceDetails
                 , mResourceDetails.getAttachPath()
                 , mUserInfo.getBaseUserId())) {
-            CountIncreaser.increaseDownloadCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), mResourceId);
+            CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
         }
     }
 

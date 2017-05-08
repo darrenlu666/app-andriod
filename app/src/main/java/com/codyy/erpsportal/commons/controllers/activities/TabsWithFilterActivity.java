@@ -139,8 +139,9 @@ public abstract class TabsWithFilterActivity extends ToolbarActivity implements 
                 invalidateOptionsMenu();
             }
         });
+        //默认锁定关闭筛选抽屉
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         addFilterFragments();
-        addFirstFilterFragment();
     }
 
     /**
@@ -169,15 +170,9 @@ public abstract class TabsWithFilterActivity extends ToolbarActivity implements 
         } else {
             throw new IllegalArgumentException("你的Fragment必须实现FilterParamProvider过滤参数提供者来提供过滤参数。");
         }
-    }
 
-    /**
-     * 刚进入初始化第0页对应的过滤Fragment
-     */
-    private void addFirstFilterFragment() {
-        Fragment fragment = mFilterFragments.get(0);
-        if (fragment != null) {
-            replaceFilterFragment(fragment);
+        if (index == mPager.getCurrentItem()) {
+            updateDrawerAndFilterBtn(index);
         }
     }
 
@@ -259,7 +254,8 @@ public abstract class TabsWithFilterActivity extends ToolbarActivity implements 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mDrawerLayout.getDrawerLockMode(GravityCompat.END) == DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {//当前fragment无筛选时,隐藏右上角筛选
+        if (mDrawerLayout.getDrawerLockMode(GravityCompat.END)
+                == DrawerLayout.LOCK_MODE_LOCKED_CLOSED) {//当前fragment无筛选时,隐藏右上角筛选
             menu.getItem(FIRST_MENU_ITEM_POSITION).setVisible(false);
             return true;
         } else {
@@ -324,21 +320,29 @@ public abstract class TabsWithFilterActivity extends ToolbarActivity implements 
 
     @Override
     public void onPageSelected(int position) {
-        Fragment filterFragment = mFilterFragments.get(position);
-        if (filterFragment != null) {
-            replaceFilterFragment(filterFragment);
-            if (mDrawerLayout.getDrawerLockMode(Gravity.RIGHT) != DrawerLayout.LOCK_MODE_UNLOCKED) {
-                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                invalidateOptionsMenu();
-            }
-        } else {
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            invalidateOptionsMenu();
-        }
+        updateDrawerAndFilterBtn(position);
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    /**
+     * 更新抽屉与过滤按钮
+     * @param position 位置
+     */
+    private void updateDrawerAndFilterBtn(int position) {
+        Fragment filterFragment = mFilterFragments.get(position);
+        if (filterFragment != null) {
+            replaceFilterFragment(filterFragment);
+            if (mDrawerLayout.getDrawerLockMode(Gravity.END) != DrawerLayout.LOCK_MODE_UNLOCKED) {
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                invalidateOptionsMenu();
+            }
+        } else {//当前页没有筛选，关闭侧滑并锁死
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            invalidateOptionsMenu();
+        }
     }
 
     /**

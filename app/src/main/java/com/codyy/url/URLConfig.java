@@ -443,7 +443,7 @@ public class URLConfig {
      * 专递课堂
      * 课堂巡视
      */
-    @UrlSuffix("/mobile/monitor/classroom/getClassWatch.do")
+    @UrlSuffix("mobile/monitor/classroom/getClassWatch.do")
     public static String SPECIAL_MONITOR_CLASSROOM;
 
     /**
@@ -2675,14 +2675,14 @@ public class URLConfig {
      * ldh add
      * 布置作业
      */
-    @UrlSuffix("/mobile/homework/arrangeWork.do")
+    @UrlSuffix("mobile/homework/arrangeWork.do")
     public static String ARRANGE_WORK;
 
     /**
      * ldh add
      * 获取评语
      */
-    @UrlSuffix("/mobile/homework/getCommentTemp.do")
+    @UrlSuffix("mobile/homework/getCommentTemp.do")
     public static String GET_COMMENT_TEMP;
 
     /**
@@ -2854,7 +2854,7 @@ public class URLConfig {
     @UrlSuffix("mobile/malfunction/getSchoolClassRoomList.do")
     public static String GET_CLASSROOMS;
 
-    @UrlSuffix("mobile/malfunction/getSubCatalogListById.do")
+    @UrlSuffix("mobile/malguidefunction/getSearchMalPageList.do")
     public static String SEARCH_MALFUNC;
 
     @UrlSuffix("mobile/malfunction/getMalDetail.do")

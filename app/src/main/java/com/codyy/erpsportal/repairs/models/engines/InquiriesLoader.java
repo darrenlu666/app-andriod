@@ -149,29 +149,29 @@ public class InquiriesLoader implements OnRefreshListener, OnLoadMoreListener {
             });
         }
         mRequestSender.sendRequest(new RequestData(getUrl(), mParams,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(final JSONObject response) {
-                            Cog.d(TAG, "onResponse:" + response);
-                            delayResponding(startTime, new ResponseCallable() {
-                                @Override
-                                public void handle() {
-                                    handleNormalResponse(response, refresh);
-                                }
-                            });
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(final Throwable error) {
-                            Cog.e(TAG, "onErrorResponse:" + error);
-                            delayResponding(startTime, new ResponseCallable() {
-                                @Override
-                                public void handle() {
-                                    handleErrorResponse(error, refresh);
-                                }
-                            });
-                        }
-                    }));
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(final JSONObject response) {
+                        Cog.d(TAG, "onResponse:" + response);
+                        delayResponding(startTime, new ResponseCallable() {
+                            @Override
+                            public void handle() {
+                                handleNormalResponse(response, refresh);
+                            }
+                        });
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(final Throwable error) {
+                        Cog.e(TAG, "onErrorResponse:" + error);
+                        delayResponding(startTime, new ResponseCallable() {
+                            @Override
+                            public void handle() {
+                                handleErrorResponse(error, refresh);
+                            }
+                        });
+                    }
+                }));
     }
 
     /**

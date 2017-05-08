@@ -96,7 +96,7 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
 
     @Nullable
     @Override
-    final public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public final View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_data_recycle, container, false);
             mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.recycler_view);

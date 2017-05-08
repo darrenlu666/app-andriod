@@ -40,18 +40,18 @@ public class ToastUtil {
      * @param text
      */
     public static void showToast(Context context, String text) {
-        showToast(context, text, Toast.LENGTH_SHORT);
+        showToast(context.getApplicationContext(), text, Toast.LENGTH_SHORT);
     }
 
     public static void showToast(Context context, @StringRes int stringId) {
-        showToast(context, context.getString(stringId));
+        showToast(context.getApplicationContext(), context.getString(stringId));
     }
 
     public static void showToast(Context context, String text, int duration) {
         if (context == null) return;
         if (toast == null) {
             toast = new Toast(context.getApplicationContext());
-            View view = LayoutInflater.from(context).inflate(R.layout.toast_layout, null);
+            View view = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.toast_layout, null);
             TextView textView = (TextView) view.findViewById(R.id.toast_text);
             textView.setText(text);
             toast.setGravity(Gravity.CENTER, 0, 0);

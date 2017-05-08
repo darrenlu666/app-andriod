@@ -1,7 +1,6 @@
 package com.codyy.erpsportal.repairs.controllers.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,11 +29,12 @@ import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFrag
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectCategoriesDgFragment.OnCategorySelectedListener;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectClassroomDgFragment;
 import com.codyy.erpsportal.repairs.controllers.fragments.SelectClassroomDgFragment.OnClassroomSelectedListener;
+import com.codyy.erpsportal.repairs.models.engines.PhotosUploader;
+import com.codyy.erpsportal.repairs.models.engines.PhotosUploader.UploadListener;
 import com.codyy.erpsportal.repairs.models.entities.CategoriesPageInfo;
 import com.codyy.erpsportal.repairs.models.entities.ClassroomSelectItem;
 import com.codyy.erpsportal.repairs.models.entities.MalfuncCategory;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
-import com.codyy.erpsportal.repairs.utils.UploadUtil;
 import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
 import com.codyy.url.URLConfig;
 
@@ -115,6 +115,8 @@ public class ReportRepairActivity extends AppCompatActivity {
 
     private RequestSender mSender;
 
+    private PhotosUploader mPhotosUploader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +140,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         mImagesRv.setAdapter(mAdapter);
         mImagesRv.addItemDecoration(new ImageItemDecoration(UIUtils.dip2px(this, 5), 4));
         mImagesRv.setLayoutManager(new GridLayoutManager(this, 4));
-        if ( mUserInfo.isTeacher()) {
+        if ( mUserInfo.isTeacher() || mUserInfo.isSchool()) {
             mReporterEt.setText( mUserInfo.getRealName());
             if (!TextUtils.isEmpty( mUserInfo.getContactPhone())) {
                 mPhoneEt.setText( mUserInfo.getContactPhone());
@@ -172,16 +174,25 @@ public class ReportRepairActivity extends AppCompatActivity {
     private void uploadImages(List<UploadingImage> imageList) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
-        UploadUtil.uploadImages(uploadUrl, imageList, new UploadUtil.OnEachUploadedCompleteListener(){
+
+        mPhotosUploader = new PhotosUploader(uploadUrl, imageList, new UploadListener() {
+            @Override
+            public void onStart() {}
 
             @Override
-            public void onEachUploadComplete(UploadingImage image) {
+            public void onEachComplete(UploadingImage image) {
                 int index = mAdapter.indexOfItem(image);
                 if (index != -1) {
                     mAdapter.notifyItemChanged(index);
                 }
             }
+
+            @Override
+            public void onFinish() {
+                mAdapter.notifyDataSetChanged();
+            }
         });
+        mPhotosUploader.start();
     }
 
     @OnClick(R.id.ll_classroom)
@@ -203,7 +214,8 @@ public class ReportRepairActivity extends AppCompatActivity {
      */
     private void classroomSelected(ClassroomSelectItem classroom) {
         mSelectedClassroom = classroom;
-        mClassroomTv.setText(mSelectedClassroom.getRoomName());
+        mClassroomTv.setText(getString(R.string.classroom_role_format,
+                mSelectedClassroom.getSkey(), mSelectedClassroom.getRoomName()));
     }
 
     @OnClick(R.id.ll_malfunction_categories)
@@ -233,11 +245,15 @@ public class ReportRepairActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_commit)
     public void onCommitClick() {
+        if (mPhotosUploader != null && mPhotosUploader.mIsUploading) {
+            ToastUtil.showToast(this, "图片上传中，请稍等...");
+            return;
+        }
         Map<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         //设置参数：教室
         if (mSelectedClassroom == null) {
-            ToastUtil.showToast(this, "请选择教室");
+            ToastUtil.showToast(this, "请选择报修教室");
             return;
         }
         params.put("skey", mSelectedClassroom.getSkey());
@@ -255,9 +271,9 @@ public class ReportRepairActivity extends AppCompatActivity {
         }
 
         //设置参数：报修人
-        String reportName = mReporterEt.getText().toString();
+        String reportName = mReporterEt.getText().toString().trim();
         if (TextUtils.isEmpty(reportName)) {
-            ToastUtil.showToast(this, "请选择报修人");
+            ToastUtil.showToast(this, "请输入报修人名字");
             return;
         } else if (reportName.length() < 2 || reportName.length() > 20) {
             ToastUtil.showToast(this, "报修人名字长度需要是2到20个字");
@@ -266,7 +282,7 @@ public class ReportRepairActivity extends AppCompatActivity {
         params.put("reporter", reportName);
 
         //设置参数：联系电话
-        String contactPhone = mPhoneEt.getText().toString();
+        String contactPhone = mPhoneEt.getText().toString().trim();
         if (TextUtils.isEmpty(contactPhone) || !contactPhone.matches(Regexes.PHONE_REGEX)) {
             ToastUtil.showToast(this, "请输入正确的电话号码。");
             return;
@@ -274,9 +290,10 @@ public class ReportRepairActivity extends AppCompatActivity {
         params.put("reporterContact", contactPhone);
 
         //设置参数：故障描述
-        String description = mDescEt.getText().toString();
+        String description = mDescEt.getText().toString().trim();
         if (TextUtils.isEmpty(description)) {
             ToastUtil.showToast(this, "请输入故障描述。");
+            return;
         }
         params.put("malDescription", description);
 
@@ -303,6 +320,7 @@ public class ReportRepairActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "onCommitClick response:", response);
                 if ("success".equals(response.optString("result"))) {
+                    setResult(RESULT_OK);
                     finish();
                 } else {
                     ToastUtil.showToast(ReportRepairActivity.this, "报修失败");
@@ -322,15 +340,14 @@ public class ReportRepairActivity extends AppCompatActivity {
         super.onDestroy();
         mDisposables.dispose();
         mAdapter.cancelAll();
+        if (mPhotosUploader != null) mPhotosUploader.stop();
         ButterKnife.unbind(this);
     }
 
-    public static void start(Context context, UserInfo userInfo) {
+    public static void start(Activity context, UserInfo userInfo, int rcReport) {
         Intent intent = new Intent(context, ReportRepairActivity.class);
         intent.putExtra(Extra.USER_INFO, userInfo);
-        context.startActivity(intent);
-        if (context instanceof Activity) {
-            UIUtils.addEnterAnim((Activity) context);
-        }
+        context.startActivityForResult(intent, rcReport);
+        UIUtils.addEnterAnim( context);
     }
 }

@@ -104,10 +104,9 @@ public class ObjectsAdapter<T, VH extends AbsViewHolder<T>> extends BaseAdapter 
         } else {
             setData( data);
         }
-
     }
 
-    public void addData(T item) {
+    public void addItem(T item) {
         if (mData != null) {
             mData.add(item);
         } else {
@@ -129,6 +128,11 @@ public class ObjectsAdapter<T, VH extends AbsViewHolder<T>> extends BaseAdapter 
         if (mData != null) {
             mData.remove(position);
         }
+    }
+
+    public int indexOf(T item) {
+        if (mData == null) return -1;
+        return mData.indexOf(item);
     }
 
     public boolean removeItem(T item) {

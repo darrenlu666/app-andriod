@@ -87,8 +87,8 @@ public class CustomZXingScannerView extends BarcodeScannerView {
         private int mDefaultLaserColor;
         private int mDefaultMaskColor;
         private int mDefaultBorderColor;
-        private int mDefaultBorderStrokeWidth;
-        private int mDefaultBorderLineLength;
+        private float mDefaultBorderStrokeWidth;
+        private float mDefaultBorderLineLength;
         protected Paint mLaserPaint;
         protected Paint mFinderMaskPaint;
         protected Paint mCornerBorderPaint;
@@ -98,11 +98,11 @@ public class CustomZXingScannerView extends BarcodeScannerView {
         protected TextPaint mPromptPaint;
         private float mTextStartY;
 
-        protected int mBorderLineLength;
+        protected float mCornerBorderLength;
         protected boolean mSquareViewFinder;
         protected boolean isLaserNeeded;
-        private float mHalfStrokeWidth;
-        private float mQuarterStrokeWidth;
+        private float mCornerStrokeWidth;
+        private float mBorderStrokeWidth;
 
         public CustomViewFinderView(Context context) {
             super(context);
@@ -118,11 +118,11 @@ public class CustomZXingScannerView extends BarcodeScannerView {
             this.mDefaultLaserColor = this.getResources().getColor(me.dm7.barcodescanner.core.R.color.viewfinder_laser);
             this.mDefaultMaskColor = this.getResources().getColor(me.dm7.barcodescanner.core.R.color.viewfinder_mask);
             this.mDefaultBorderColor = this.getResources().getColor(me.dm7.barcodescanner.core.R.color.viewfinder_border);
-            this.mDefaultBorderStrokeWidth = this.getResources().getDimensionPixelSize(R.dimen.border_width);
-            this.mDefaultBorderLineLength = this.getResources().getDimensionPixelSize(R.dimen.border_length);
+            this.mDefaultBorderStrokeWidth = this.getResources().getDimension(R.dimen.border_width);
+            this.mDefaultBorderLineLength = this.getResources().getDimension(R.dimen.border_length);
 
-            mHalfStrokeWidth = mDefaultBorderStrokeWidth / 2f;
-            mQuarterStrokeWidth = mDefaultBorderStrokeWidth / 6f;
+            mCornerStrokeWidth = mDefaultBorderStrokeWidth / 2f;
+            mBorderStrokeWidth = mDefaultBorderStrokeWidth / 6f;
 
             this.mLaserPaint = new Paint();
             this.mLaserPaint.setColor(this.mDefaultLaserColor);
@@ -133,12 +133,12 @@ public class CustomZXingScannerView extends BarcodeScannerView {
             this.mCornerBorderPaint.setColor(this.mDefaultBorderColor);
             this.mCornerBorderPaint.setStyle(Paint.Style.STROKE);
             this.mCornerBorderPaint.setStrokeWidth( mDefaultBorderStrokeWidth);
-            this.mBorderLineLength = this.mDefaultBorderLineLength;
+            this.mCornerBorderLength = this.mDefaultBorderLineLength;
 
             mBorderPaint = new Paint();
             mBorderPaint.setColor(Color.WHITE);
             mBorderPaint.setStyle(Paint.Style.STROKE);
-            mBorderPaint.setStrokeWidth(mQuarterStrokeWidth);
+            mBorderPaint.setStrokeWidth(mBorderStrokeWidth);
 
             mPromptStr = "将二维码放入框内，即可自动扫描";
             mPromptPaint = new TextPaint();
@@ -166,8 +166,8 @@ public class CustomZXingScannerView extends BarcodeScannerView {
             this.mCornerBorderPaint.setStrokeWidth((float) borderStrokeWidth);
         }
 
-        public void setBorderLineLength(int borderLineLength) {
-            this.mBorderLineLength = borderLineLength;
+        public void setCornerBorderLength(int cornerBorderLength) {
+            this.mCornerBorderLength = cornerBorderLength;
         }
 
         public boolean isLaserNeeded() {
@@ -215,30 +215,55 @@ public class CustomZXingScannerView extends BarcodeScannerView {
             int width = canvas.getWidth();
             int height = canvas.getHeight();
             Rect framingRect = this.getFramingRect();
-            canvas.drawRect(0.0F, 0.0F, (float) width, (float) framingRect.top, this.mFinderMaskPaint);
-            canvas.drawRect(0.0F, (float) framingRect.top, (float) framingRect.left, (float) (framingRect.bottom + 1), this.mFinderMaskPaint);
-            canvas.drawRect((float) (framingRect.right + 1), (float) framingRect.top, (float) width, (float) (framingRect.bottom + 1), this.mFinderMaskPaint);
-            canvas.drawRect(0.0F, (float) (framingRect.bottom + 1), (float) width, (float) height, this.mFinderMaskPaint);
+            canvas.drawRect(0f, 0f, width, framingRect.top, this.mFinderMaskPaint);
+            canvas.drawRect(0f, framingRect.top, framingRect.left, framingRect.bottom + 1, this.mFinderMaskPaint);
+            canvas.drawRect(framingRect.right + 1, framingRect.top, width, framingRect.bottom + 1, this.mFinderMaskPaint);
+            canvas.drawRect(0f, framingRect.bottom + 1, width, height, this.mFinderMaskPaint);
         }
 
         public void drawViewFinderBorder(Canvas canvas) {
             Rect framingRect = getFramingRect();
-            canvas.drawLine(framingRect.left - 1, framingRect.top - 1 - mHalfStrokeWidth, framingRect.left - 1, framingRect.top - 1 + mBorderLineLength, mCornerBorderPaint);
-            canvas.drawLine(framingRect.left - 1, framingRect.top - 1, framingRect.left - 1 + mBorderLineLength, framingRect.top - 1, mCornerBorderPaint);
-            canvas.drawLine(framingRect.left - 1, framingRect.bottom + 1 + mHalfStrokeWidth, framingRect.left - 1, framingRect.bottom + 1 - mBorderLineLength, mCornerBorderPaint);
-            canvas.drawLine(framingRect.left - 1, framingRect.bottom + 1, framingRect.left - 1 + mBorderLineLength, framingRect.bottom + 1, mCornerBorderPaint);
-            canvas.drawLine(framingRect.right + 1, framingRect.top - 1 - mHalfStrokeWidth, framingRect.right + 1, framingRect.top - 1 + mBorderLineLength, mCornerBorderPaint);
-            canvas.drawLine(framingRect.right + 1, framingRect.top - 1, framingRect.right + 1 - mBorderLineLength, framingRect.top - 1, mCornerBorderPaint);
-            canvas.drawLine(framingRect.right + 1, framingRect.bottom + 1 + mHalfStrokeWidth, framingRect.right + 1, framingRect.bottom + 1 - mBorderLineLength, mCornerBorderPaint);
-            canvas.drawLine(framingRect.right + 1, framingRect.bottom + 1, framingRect.right + 1 - mBorderLineLength, framingRect.bottom + 1, mCornerBorderPaint);
-            canvas.drawLine( framingRect.left - 1 + mBorderLineLength, framingRect.top - 1 - mQuarterStrokeWidth,
-                    framingRect.right + 1 - mBorderLineLength, framingRect.top - 1 - mQuarterStrokeWidth, mBorderPaint);
-            canvas.drawLine( framingRect.left - 1 - mQuarterStrokeWidth, framingRect.top - 1 + mBorderLineLength,
-                    framingRect.left - 1 - mQuarterStrokeWidth, framingRect.bottom + 1 - mBorderLineLength, mBorderPaint);
-            canvas.drawLine( framingRect.right + 1 + mQuarterStrokeWidth, framingRect.top - 1 + mBorderLineLength,
-                    framingRect.right + 1 + mQuarterStrokeWidth, framingRect.bottom - 1 - mBorderLineLength, mBorderPaint);
-            canvas.drawLine( framingRect.left - 1 + mBorderLineLength, framingRect.bottom + 1 + mQuarterStrokeWidth,
-                    framingRect.right + 1 - mBorderLineLength, framingRect.bottom + 1 + mQuarterStrokeWidth, mBorderPaint);
+            float halfStrokeWidth = mBorderStrokeWidth / 2;
+            float halfCornerStrokeWidth = mCornerStrokeWidth / 2;
+            //画上下边
+            canvas.drawLine( framingRect.left + mCornerBorderLength, framingRect.top + halfStrokeWidth,
+                    framingRect.right - mCornerBorderLength, framingRect.top + halfStrokeWidth, mBorderPaint);
+            canvas.drawLine( framingRect.left + mCornerBorderLength, framingRect.bottom + halfStrokeWidth,
+                    framingRect.right - mCornerBorderLength, framingRect.bottom + halfStrokeWidth, mBorderPaint);
+            //画上边两端
+            float topCornerBorderY = framingRect.top + 2f + halfCornerStrokeWidth;
+            canvas.drawLine( framingRect.left, topCornerBorderY,
+                    framingRect.left + mCornerBorderLength, topCornerBorderY, mCornerBorderPaint);
+            canvas.drawLine( framingRect.right - mCornerBorderLength, topCornerBorderY,
+                    framingRect.right, topCornerBorderY, mCornerBorderPaint);
+
+            //画下边两端
+            float bottomCornerBorderY = framingRect.bottom - 2f - halfCornerStrokeWidth;
+            canvas.drawLine( framingRect.left, bottomCornerBorderY,
+                    framingRect.left + mCornerBorderLength, bottomCornerBorderY, mCornerBorderPaint);
+            canvas.drawLine( framingRect.right - mCornerBorderLength, bottomCornerBorderY,
+                    framingRect.right, bottomCornerBorderY, mCornerBorderPaint);
+
+            //画左右边
+            canvas.drawLine( framingRect.left + halfStrokeWidth, framingRect.top + mCornerBorderLength,
+                    framingRect.left + halfStrokeWidth, framingRect.bottom - mCornerBorderLength, mBorderPaint);
+            canvas.drawLine( framingRect.right - halfStrokeWidth, framingRect.top + mCornerBorderLength,
+                    framingRect.right - halfStrokeWidth, framingRect.bottom - mCornerBorderLength, mBorderPaint);
+
+            //画左边两端
+            float leftCornerBorderX = framingRect.left + 4f + halfCornerStrokeWidth;
+            canvas.drawLine( leftCornerBorderX, framingRect.top + mCornerStrokeWidth,
+                    leftCornerBorderX, framingRect.top + mCornerBorderLength, mCornerBorderPaint);
+            canvas.drawLine( leftCornerBorderX, framingRect.bottom - mCornerStrokeWidth,
+                    leftCornerBorderX, framingRect.bottom - mCornerBorderLength, mCornerBorderPaint);
+
+            //画右边两端
+            float rightCornerBorderX = framingRect.right - 5f - halfCornerStrokeWidth;
+            canvas.drawLine( rightCornerBorderX, framingRect.top + mCornerStrokeWidth,
+                    rightCornerBorderX, framingRect.top + mCornerBorderLength, mCornerBorderPaint);
+            canvas.drawLine( rightCornerBorderX, framingRect.bottom - mCornerStrokeWidth,
+                    rightCornerBorderX, framingRect.bottom - mCornerBorderLength, mCornerBorderPaint);
+
         }
 
         public void drawLaser(Canvas canvas) {

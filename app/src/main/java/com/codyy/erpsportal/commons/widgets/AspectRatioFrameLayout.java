@@ -79,7 +79,8 @@ public class AspectRatioFrameLayout extends FrameLayout {
                 throw new IllegalStateException("Unknown measurement with ID " + dominantMeasurement);
         }
 
-        setMeasuredDimension(newWidth, newHeight);
+        super.onMeasure(MeasureSpec.makeMeasureSpec(newWidth, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(newHeight, MeasureSpec.EXACTLY));
     }
 
     /** Get the aspect ratio for this image view. */

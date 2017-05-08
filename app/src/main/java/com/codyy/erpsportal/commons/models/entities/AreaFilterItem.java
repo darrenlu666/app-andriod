@@ -7,6 +7,7 @@ import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import org.json.JSONObject;
 
 /**
+ * 地区选择项
  * Created by gujiajia on 2016/3/7.
  */
 public class AreaFilterItem extends ChoicesOption {

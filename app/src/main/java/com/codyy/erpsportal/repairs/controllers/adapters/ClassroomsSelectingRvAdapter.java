@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.repairs.controllers.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,8 +104,10 @@ public class ClassroomsSelectingRvAdapter extends RecyclerView.Adapter<Classroom
         }
 
         public void setDataToView(ClassroomSelectItem item, boolean isSelected) {
+            Context context = itemView.getContext();
             mCategoryNameTv.setChecked(isSelected);
-            mCategoryNameTv.setText(item.getRoomName());
+            mCategoryNameTv.setText(context.getString(R.string.classroom_role_format,
+                    item.getSkey(), item.getRoomName()));
             if (isSelected) {
                 mSelectedMarkIv.setVisibility(View.VISIBLE);
             } else {

@@ -1,9 +1,8 @@
 package com.codyy.erpsportal.repairs.controllers.activities;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,8 +21,9 @@ import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.controllers.adapters.RepairImageAdapter;
+import com.codyy.erpsportal.repairs.models.engines.PhotosUploader;
+import com.codyy.erpsportal.repairs.models.engines.PhotosUploader.UploadListener;
 import com.codyy.erpsportal.repairs.models.entities.UploadingImage;
-import com.codyy.erpsportal.repairs.utils.UploadUtil;
 import com.codyy.erpsportal.repairs.widgets.ImageItemDecoration;
 import com.codyy.url.URLConfig;
 
@@ -70,6 +70,8 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
 
     private RequestSender mSender;
 
+    private PhotosUploader mPhotosUploader;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,24 +111,36 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
     private void uploadImages(List<UploadingImage> newAddedImages) {
         final String uploadUrl = mUserInfo.getServerAddress() + "/res/" + mUserInfo.getAreaCode()
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
-        UploadUtil.uploadImages(uploadUrl, newAddedImages, new UploadUtil.OnEachUploadedCompleteListener(){
+        mPhotosUploader = new PhotosUploader(uploadUrl, newAddedImages, new UploadListener() {
+            @Override
+            public void onStart() { }
 
             @Override
-            public void onEachUploadComplete(UploadingImage image) {
+            public void onEachComplete(UploadingImage image) {
                 int index = mAdapter.indexOfItem(image);
                 if (index != -1) {
                     mAdapter.notifyItemChanged(index);
                 }
             }
+
+            @Override
+            public void onFinish() {
+                mAdapter.notifyDataSetChanged();
+            }
         });
+        mPhotosUploader.start();
     }
 
     @OnClick(R.id.btn_commit)
     public void onCommitClick() {
+        if (mPhotosUploader != null && mPhotosUploader.mIsUploading) {
+            ToastUtil.showToast(this, "图片上传中，请稍等...");
+            return;
+        }
         Map<String, String> params = new HashMap<>();
-        String desc = mDescEt.getText().toString();
+        String desc = mDescEt.getText().toString().trim();
         if (TextUtils.isEmpty(desc)) {
-            ToastUtil.showToast(this, "请输入故障描述。");
+            ToastUtil.showToast(this, "追问内容不可为空");
             return;
         }
         params.put("appendDescription", desc);
@@ -160,6 +174,7 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         Cog.d(TAG, "onCommitClick response=", response);
                         if ("success".equals( response.optString("result"))) {
+                            setResult(RESULT_OK);
                             finish();
                         }
                     }
@@ -167,18 +182,24 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(Throwable error) {
                         Cog.d(TAG, "onErrorResponse error=", error);
+                        ToastUtil.showToast(MakeDetailedInquiryActivity.this, "出错了，请重试");
                     }
                 }));
     }
 
-    public static void start(Context context, UserInfo userInfo, String repairId,  String skey) {
-        Intent intent = new Intent(context, MakeDetailedInquiryActivity.class);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPhotosUploader != null) mPhotosUploader.stop();
+        mAdapter.cancelAll();
+    }
+
+    public static void start(Fragment fragment, int rcMakeDetailedInquiry, UserInfo userInfo, String repairId, String skey) {
+        Intent intent = new Intent(fragment.getActivity(), MakeDetailedInquiryActivity.class);
         intent.putExtra(Extra.USER_INFO, userInfo);
         intent.putExtra(EXTRA_SKEY, skey);
         intent.putExtra(Extra.ID, repairId);
-        context.startActivity(intent);
-        if (context instanceof Activity) {
-            UIUtils.addEnterAnim((Activity) context);
-        }
+        fragment.startActivityForResult(intent,rcMakeDetailedInquiry);
+        UIUtils.addEnterAnim(fragment.getActivity());
     }
 }

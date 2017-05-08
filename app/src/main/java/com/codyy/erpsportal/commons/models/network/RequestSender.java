@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -69,7 +70,7 @@ public class RequestSender {
     /**
      * 发送一般请求
      *
-     * @param requestData
+     * @param requestData 请求数据
      */
     public boolean sendRequest(final RequestData requestData) {
         if (!NetworkUtils.isConnected()) {
@@ -79,10 +80,39 @@ public class RequestSender {
 
         requestData.addSendCount();
         requestData.setStartTime();
-        Cog.d(TAG, "sendRequest:", requestData.toString());
 
-        Disposable disposable =  mWebApi.post4Json(requestData.getUrl(), requestData.getParam())
-                .subscribeOn(Schedulers.io())
+        Cog.d(TAG, "sendRequest:", requestData.toString());
+        Observable<JSONObject> observable = requestData.getParam() != null?
+                mWebApi.post4Json(requestData.getUrl(), requestData.getParam()):
+                mWebApi.post4Json(requestData.getUrl());
+        Disposable disposable =  observeRequest(observable, requestData);
+        mCompositeDisposable.add( disposable);
+        return true;
+    }
+
+    /**
+     * 发送一般GET请求
+     *
+     * @param requestData 请求数据
+     */
+    public boolean sendGetRequest(final RequestData requestData) {
+        if (!NetworkUtils.isConnected()) {
+            UIUtils.toast(R.string.please_connect_internet, Toast.LENGTH_SHORT);
+            return false;
+        }
+
+        requestData.addSendCount();
+        requestData.setStartTime();
+
+        String url = requestData.mUrl + (requestData.getParams() == null? "": requestData.getParams());
+        Cog.d(TAG, "sendGetRequest:" + url);
+        Disposable disposable = observeRequest(mWebApi.getJson(url), requestData);
+        mCompositeDisposable.add(disposable);
+        return true;
+    }
+
+    private Disposable observeRequest(Observable<JSONObject> observable, final RequestData requestData) {
+        return observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JSONObject>() {
                     @Override
@@ -122,69 +152,6 @@ public class RequestSender {
                         requestData.getErrorListener().onErrorResponse(throwable);
                     }
                 });
-        mCompositeDisposable.add( disposable);
-        return true;
-    }
-
-    /**
-     * 发送一般GET请求
-     *
-     * @param requestData
-     */
-    public boolean sendGetRequest(final RequestData requestData) {
-        if (!NetworkUtils.isConnected()) {
-            UIUtils.toast(R.string.please_connect_internet, Toast.LENGTH_SHORT);
-            return false;
-        }
-
-        requestData.addSendCount();
-        requestData.setStartTime();
-
-        String url = requestData.mUrl + requestData.getParams();
-        Cog.d(TAG, "sendRequest:" + url);
-        Disposable disposable = mWebApi.getJson(requestData.mUrl)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<JSONObject>() {
-                    @Override
-                    public void accept(final JSONObject response) throws Exception {
-                        Cog.d(TAG, "+onResponse:" + response);
-                        String result = response.optString("result");
-                        if ("forbidden".equals(result)) {//登录超时
-                            if (requestData.getSendCount() > 1) {//已经尝试登录失败
-                                UIUtils.toast(R.string.login_invalid, Toast.LENGTH_SHORT);
-                                clearLoginData();
-                                gotoLoginActivity();
-                            } else {
-                                sendLoginRequest(requestData, true);
-                            }
-                        } else {
-                            if (requestData.isToShowLoading()) {
-                                long spendTime = System.currentTimeMillis() - requestData.getStartTime();
-                                if (spendTime > 500) {
-                                    requestData.getListener().onResponse(response);
-                                } else {
-                                    mHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            requestData.getListener().onResponse(response);
-                                        }
-                                    }, 500 - spendTime);
-                                }
-                            } else {
-                                requestData.getListener().onResponse(response);
-                            }
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Cog.e(TAG, "+onErrorResponse:" + throwable);
-                        requestData.getErrorListener().onErrorResponse(throwable);
-                    }
-                });
-        mCompositeDisposable.add(disposable);
-        return true;
     }
 
     private void clearLoginData() {

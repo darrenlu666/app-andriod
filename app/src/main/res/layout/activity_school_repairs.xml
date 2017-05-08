@@ -1,147 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.codyy.erpsportal.repairs.controllers.activities.SchoolRepairsActivity">
 
-    <LinearLayout
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:id="@+id/title_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:text="故障报修">
 
-        <com.codyy.erpsportal.commons.widgets.TitleBar
-            android:id="@+id/title_bar"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_common_malfunction"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="繁昌县第一实验中心小学">
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/bg_filter_rectangle_green"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="8dp"
+            android:text="@string/common_malfunction"
+            android:textColor="@color/white" />
+    </com.codyy.erpsportal.commons.widgets.TitleBar>
 
-            <Button
-                android:id="@+id/btn_common_malfunction"
+    <LinearLayout
+        android:id="@+id/ll_filters_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_filter_bar"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/fl_classroom_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="12dp">
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@drawable/bg_filter_rectangle_green"
-                android:minHeight="0dp"
-                android:minWidth="0dp"
-                android:padding="8dp"
-                android:text="@string/common_malfunction"
-                android:textColor="@color/white" />
-        </com.codyy.erpsportal.commons.widgets.TitleBar>
-
-        <LinearLayout
-            android:id="@+id/ll_filters_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_filter_bar"
-            android:orientation="horizontal">
-
-            <FrameLayout
-                android:id="@+id/fl_classroom_filter"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="12dp">
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
                 <CheckedTextView
                     android:id="@+id/tv_classroom_filter"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:drawableEnd="@drawable/ic_pop_slope"
-                    android:drawableRight="@drawable/ic_pop_slope"
-                    android:lines="1"
                     android:ellipsize="end"
-                    android:text="报修教室（全部）"
+                    android:lines="1"
+                    android:text="@string/report_repair_classroom_all"
                     android:textColor="@color/sl_repair_btn_filter"
                     android:textSize="18dp" />
-            </FrameLayout>
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:background="#ffaaaaaa" />
+                <com.codyy.erpsportal.repairs.widgets.CheckedImageView
+                    android:id="@+id/iv_classroom_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_pop_slope" />
+            </LinearLayout>
+        </FrameLayout>
 
-            <FrameLayout
-                android:id="@+id/fl_status_filter"
-                android:layout_width="0dp"
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="#ffaaaaaa" />
+
+        <FrameLayout
+            android:id="@+id/fl_status_filter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="12dp">
+                android:layout_gravity="center"
+                android:orientation="horizontal">
 
                 <CheckedTextView
                     android:id="@+id/tv_status_filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:drawableEnd="@drawable/ic_pop_slope"
-                    android:drawableRight="@drawable/ic_pop_slope"
                     android:lines="1"
-                    android:text="处理状态（全部）"
+                    android:text="@string/handle_status_all"
                     android:textColor="@color/sl_repair_btn_filter"
                     android:textSize="18dp" />
-            </FrameLayout>
-        </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/fl_list_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:orientation="vertical">
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/refresh_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </android.support.v4.widget.SwipeRefreshLayout>
-
-            <TextView
-                android:id="@+id/tv_empty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/no_data_for_now"
-                android:textSize="@dimen/empty_text"
-                android:visibility="gone" />
-
-            <FrameLayout
-                android:id="@+id/fl_filter_list_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#44000000"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_filter_list"
-                    android:layout_width="match_parent"
+                <com.codyy.erpsportal.repairs.widgets.CheckedImageView
+                    android:id="@+id/iv_status_filter"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="200dp"
-                    android:background="@color/white" />
-            </FrameLayout>
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:src="@drawable/ic_pop_slope" />
+            </LinearLayout>
         </FrameLayout>
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:contentDescription="@null"
-        android:src="@drawable/ib_report_repair" />
-</android.support.design.widget.CoordinatorLayout>
+    <FrameLayout
+        android:id="@+id/fl_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/no_data_for_now"
+            android:textSize="@dimen/empty_text"
+            android:visibility="gone" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:contentDescription="@null"
+            android:src="@drawable/ib_report_repair"
+            app:elevation="0dp" />
+
+        <FrameLayout
+            android:id="@+id/fl_filter_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#44000000"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_filter_list"
+                android:layout_width="match_parent"
+                android:layout_height="262dp"
+                android:background="@color/white" />
+        </FrameLayout>
+
+    </FrameLayout>
+</LinearLayout>

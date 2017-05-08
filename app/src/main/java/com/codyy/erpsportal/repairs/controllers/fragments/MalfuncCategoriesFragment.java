@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.RxBus;
 import com.codyy.erpsportal.repairs.controllers.adapters.MalfuncCategoryRvAdapter;
 import com.codyy.erpsportal.repairs.models.entities.CategoriesPageInfo;
@@ -25,6 +26,8 @@ import java.util.List;
  * 故障类别选择
  */
 public class MalfuncCategoriesFragment extends Fragment {
+
+    private final static String TAG = "MalfuncCategoriesFragment";
 
     private MalfuncCategoryRvAdapter mRvAdapter;
 
@@ -40,6 +43,7 @@ public class MalfuncCategoriesFragment extends Fragment {
         mRvAdapter.setListener(new OnItemClickListener() {
             @Override
             public void onItemClick(MalfuncCategory item, int position) {
+                Cog.d(TAG, "onItemClick category:", item.getName());
                 mCategoriesPageInfo.setSelected(position);
                 RxBus.getInstance().send(item);
             }

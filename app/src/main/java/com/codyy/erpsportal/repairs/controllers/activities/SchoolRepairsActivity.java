@@ -40,6 +40,7 @@ import com.codyy.erpsportal.repairs.models.entities.ClassroomFilterItem;
 import com.codyy.erpsportal.repairs.models.entities.RepairFilterItem;
 import com.codyy.erpsportal.repairs.models.entities.RepairRecord;
 import com.codyy.erpsportal.repairs.models.entities.StatusItem;
+import com.codyy.erpsportal.repairs.widgets.CheckedImageView;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -68,6 +69,8 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
 
     private final static String TAG = "SchoolRepairsActivity";
 
+    private final static int RC_REPORT = 1023;
+
     @Bind(R.id.title_bar)
     TitleBar mTitleBar;
 
@@ -92,17 +95,23 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
     @Bind(R.id.tv_empty)
     TextView mEmptyTv;
 
+    @Bind(R.id.fl_classroom_filter)
+    FrameLayout mClassroomFilterFl;
+
     @Bind(R.id.tv_classroom_filter)
     CheckedTextView mClassroomFilterTv;
 
-    @Bind(R.id.fl_classroom_filter)
-    FrameLayout mClassroomFilterFl;
+    @Bind(R.id.iv_classroom_filter)
+    CheckedImageView mClassroomFilterIv;
+
+    @Bind(R.id.fl_status_filter)
+    FrameLayout mStatusFilterFl;
 
     @Bind(R.id.tv_status_filter)
     CheckedTextView mStatusFilterTv;
 
-    @Bind(R.id.fl_status_filter)
-    FrameLayout mStatusFilterFl;
+    @Bind(R.id.iv_status_filter)
+    CheckedImageView mStatusFilterIv;
 
     @Bind(R.id.fab_report)
     FloatingActionButton mReportFab;
@@ -186,7 +195,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
             @Override
             public <E extends RepairFilterItem> void onItemClick(E item, int position) {
                 if (position == 0) {
-                    mStatusFilterTv.setText("处理状态（全部）");
+                    mStatusFilterTv.setText(R.string.handle_status_all);
                     //选择全部时请求报修数据列表时无需状态参数，删除status参数
                     mLoader.removeParam("status");
                 } else {
@@ -195,6 +204,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                 }
                 mLoader.loadData(true);
                 mFilterListFl.setVisibility(View.GONE);
+                setStatusFilterChecked(false);
             }
         });
         mClassroomAdapter = new CheckedTextAdapter();
@@ -202,7 +212,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
             @Override
             public <E extends RepairFilterItem> void onItemClick(E item, int position) {
                 if (position == 0) {
-                    mClassroomFilterTv.setText("报修教室（全部）");
+                    mClassroomFilterTv.setText(R.string.report_repair_classroom_all);
                     //选择全部时，清除班级id参数
                     mLoader.removeParam("classroomId");
                 } else {
@@ -211,6 +221,8 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                 }
                 mLoader.loadData(true);
                 mFilterListFl.setVisibility(View.GONE);
+                setClassroomFilterChecked(false);
+
             }
         });
         mFilterListRv.setAdapter(mStatusAdapter);
@@ -266,7 +278,8 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "load classrooms response=", response);
-                        Type type = new TypeToken<List<ClassroomFilterItem>>(){}.getType();
+                        Type type = new TypeToken<List<ClassroomFilterItem>>() {
+                        }.getType();
                         List<ClassroomFilterItem> classroomList = new Gson()
                                 .fromJson(response.optJSONArray("data").toString(), type);
                         //在列表开头添加一个“全部”项
@@ -286,21 +299,30 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
         CommonMalfunctionsActivity.start(this, mUserInfo);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_REPORT && resultCode == RESULT_OK) {
+            mLoader.loadData(true);
+        }
+    }
+
     /**
      * 教室筛选按钮点击事件
+     *
      * @param view 组件
      */
     @OnClick(R.id.fl_classroom_filter)
     public void onClassroomFilterClick(View view) {
-        mStatusFilterTv.setChecked(false);//清除状态筛选按钮选中状态
+        setStatusFilterChecked(false);//清除状态筛选按钮选中状态
         if (mFilterListFl.getVisibility() == View.VISIBLE
                 && mClassroomFilterTv.isChecked()) {//教室筛选已弹出，则隐藏教室筛选
             mFilterListFl.setVisibility(View.GONE);
-            mClassroomFilterTv.setChecked(false);
-        } else if (mFilterListFl.getVisibility() == View.VISIBLE){//弹出的是状态筛选，则把筛选列表数据切换为教室列表
+            setClassroomFilterChecked(false);
+        } else if (mFilterListFl.getVisibility() == View.VISIBLE) {//弹出的是状态筛选，则把筛选列表数据切换为教室列表
             mFilterListRv.setAdapter(mClassroomAdapter);
             mFilterListRv.scrollToPosition(mClassroomAdapter.getSelectedPosition());
-            mClassroomFilterTv.setChecked(true);
+            setClassroomFilterChecked(true);
         } else {//筛选没有弹出，弹出教室筛选
             //如果筛选列表数据不是教室列表，设置为教室列表数据
             if (mFilterListRv.getAdapter() != mClassroomAdapter) {
@@ -309,36 +331,47 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
                 mFilterListRv.scrollToPosition(mClassroomAdapter.getSelectedPosition());
             }
             mFilterListFl.setVisibility(View.VISIBLE);
-            mClassroomFilterTv.setChecked(true);
+            setClassroomFilterChecked(true);
         }
+    }
+
+    private void setClassroomFilterChecked(boolean checked) {
+        mClassroomFilterTv.setChecked(checked);
+        mClassroomFilterIv.setChecked(checked);
+    }
+
+    private void setStatusFilterChecked(boolean checked) {
+        mStatusFilterTv.setChecked(checked);
+        mStatusFilterIv.setChecked(checked);
     }
 
     /**
      * 状态筛选按钮点击事件
+     *
      * @param view 组件
      */
     @OnClick(R.id.fl_status_filter)
     public void onStatusFilterClick(View view) {
-        mClassroomFilterTv.setChecked(false);//清除教室筛选按钮选中状态
+        setStatusFilterChecked(false);//清除教室筛选按钮选中状态
         if (mFilterListFl.getVisibility() == View.VISIBLE
                 && mStatusFilterTv.isChecked()) {
             mFilterListFl.setVisibility(View.GONE);
-            mStatusFilterTv.setChecked(false);
-        } else if (mFilterListFl.getVisibility() == View.VISIBLE){
+            setStatusFilterChecked(false);
+        } else if (mFilterListFl.getVisibility() == View.VISIBLE) {
             mFilterListRv.setAdapter(mStatusAdapter);
-            mStatusFilterTv.setChecked(true);
+            setStatusFilterChecked(true);
         } else {
             if (mFilterListRv.getAdapter() != mStatusAdapter) {
                 mFilterListRv.setAdapter(mStatusAdapter);
             }
             mFilterListFl.setVisibility(View.VISIBLE);
-            mStatusFilterTv.setChecked(true);
+            setStatusFilterChecked(true);
         }
     }
 
     @OnClick(R.id.fab_report)
     public void onReportClick() {
-        ReportRepairActivity.start(this, mUserInfo);
+        ReportRepairActivity.start(this, mUserInfo, RC_REPORT);
     }
 
     @Override
@@ -350,7 +383,8 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
     public List<RepairRecord> extractList(JSONObject response) {
         Gson gson = new Gson();
         return gson.fromJson(response.optJSONArray("data").toString(),
-                new TypeToken<List<RepairRecord>>() {}.getType());
+                new TypeToken<List<RepairRecord>>() {
+                }.getType());
     }
 
     @Override

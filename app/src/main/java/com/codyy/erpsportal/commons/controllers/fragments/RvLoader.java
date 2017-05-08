@@ -140,15 +140,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
 
         final long startTime = SystemClock.currentThreadTimeMillis();
         Cog.d(TAG, "loadData:", getUrl(), mParams);
-        if (refresh) {
-            mRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    mRefreshLayout.setRefreshing(true);
-                }
-            });
-        }
-        mRequestSender.sendRequest(new RequestData(getUrl(), mParams,
+        boolean sent = mRequestSender.sendGetRequest(new RequestData(getUrl(), mParams,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(final JSONObject response) {
@@ -173,6 +165,14 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
                         });
                     }
                 }));
+        if (sent && refresh) {
+            mRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.setRefreshing(true);
+                }
+            });
+        }
     }
 
     /**
@@ -216,10 +216,10 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
     }
 
     /**
-     * 响应回调
+     * 释放，请求停止
      */
-    interface ResponseCallable {
-        void handle();
+    public void release() {
+        mRequestSender.stop();
     }
 
     /**
@@ -306,6 +306,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
      * @param refresh 是否是刷新
      */
     private void handleErrorResponse(Throwable error, boolean refresh) {
+        error.printStackTrace();
         if (!refresh) {
             mAdapter.removeItem(mAdapter.getItemCount() - 1);
             mAdapter.notifyItemRemoved(mAdapter.getItemCount());
@@ -346,13 +347,19 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
     }
 
     /**
-     * 添加请求参数，也可使用 {@link #addParam(String, String)}加参数,这个用来覆盖，不是用来调用了
+     * 添加请求参数，也可使用 {@link #addParam(String, String)}加参数
      *
      * @param params 请求参数，加入这个map的参数会用来作为http请求参数
      */
     protected void addParams(Map<String, String> params) {
+        mParams.putAll(params);
     }
 
+    /**
+     * 添加请求参数
+     * @param key 键
+     * @param value 值
+     */
     public void addParam(String key, String value) {
         mParams.put(key, value);
     }
@@ -389,6 +396,27 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
 
     public void addMapToParam(Map<String, String> newParams) {
         mParams.putAll(newParams);
+    }
+
+    /**
+     * 响应回调
+     */
+    public interface ResponseCallable {
+        void handle();
+    }
+
+    public static class ResponseProxy implements ResponseCallable {
+
+        ResponseCallable mProxiable;
+
+        public ResponseProxy(ResponseCallable callable) {
+            mProxiable = callable;
+        }
+
+        @Override
+        public void handle() {
+            mProxiable.handle();
+        }
     }
 
     /**

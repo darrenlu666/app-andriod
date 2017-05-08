@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.repairs.controllers.viewholders;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
@@ -41,16 +42,23 @@ public class RepairRecordVh extends BindingRvHolder<RepairRecord> {
 
     @Override
     public void setDataToView(RepairRecord repairRecord) {
-        mClassroomTv.setText(repairRecord.getClassRoomName());
+        Context context = itemView.getContext();
+        mClassroomTv.setText(context.getString(R.string.classroom_role_format,
+                repairRecord.getSkey(),
+                repairRecord.getClassRoomName()));
         mReporterTv.setText(repairRecord.getReporter());
         if (StatusItem.STATUS_NEW.equals(repairRecord.getStatus())) {
             mStatusTv.setText(R.string.status_await_handle);
+            mStatusTv.setTextColor(0xffe86153);
         } else if (StatusItem.STATUS_PROGRESS.equals(repairRecord.getStatus())) {
             mStatusTv.setText(R.string.status_handling);
+            mStatusTv.setTextColor(0xfffd9b01);
         } else if (StatusItem.STATUS_DONE.equals(repairRecord.getStatus())) {
             mStatusTv.setText(R.string.status_handled);
+            mStatusTv.setTextColor(0xff19ab20);
         } else {
             mStatusTv.setText(R.string.status_accepted);
+            mStatusTv.setTextColor(0xff999999);
         }
         mReportTimeTv.setText(DateTimeFormat
                 .forPattern("yyyy-MM-dd HH:mm")

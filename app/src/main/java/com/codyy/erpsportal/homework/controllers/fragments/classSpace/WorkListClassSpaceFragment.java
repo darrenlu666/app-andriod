@@ -201,7 +201,7 @@ public class WorkListClassSpaceFragment extends LoadMoreFragment<WorkListTeacher
                                 @Override
                                 public void rightClick(MyDialog myDialog) {
                                     WebApi webApi = RsGenerator.create(WebApi.class);
-                                    webApi.post4Json(URLConfig.ARRANGE_WORK + "?uuid=" + UserInfoKeeper.obtainUserInfo().getUuid() + "&workId = " + data.getWorkId())
+                                    webApi.post4Json(URLConfig.ARRANGE_WORK + "?uuid=" + UserInfoKeeper.obtainUserInfo().getUuid() + "&workId=" + data.getWorkId())
                                             .subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(new Consumer<JSONObject>() {

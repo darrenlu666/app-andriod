@@ -54,7 +54,7 @@ public class InquiryVh extends BindingRvHolder<InquiryItem> {
         mTimeTv.setText(DateTimeFormat.forPattern("YYYY-MM-dd HH:mm").print(inquiryItem.getCreateTime()));
         mContentTv.setText(inquiryItem.getAppendDescription());
         GenericDraweeHierarchyBuilder hierarchyBuilder = new GenericDraweeHierarchyBuilder(mContext.getResources());
-        hierarchyBuilder.setPlaceholderImage(R.drawable.default_subject, ScaleType.CENTER_CROP)
+        hierarchyBuilder.setPlaceholderImage(R.drawable.placeholder_repair, ScaleType.FIT_CENTER)
                 .setFailureImage(R.drawable.audio_upload_failure, ScaleType.CENTER_INSIDE);
 
         final List<String> images = inquiryItem.getImgspath();
@@ -85,7 +85,7 @@ public class InquiryVh extends BindingRvHolder<InquiryItem> {
                     @Override
                     public void onClick(View v) {
                         Activity activity = ContextUtils.getActivity(mContext);
-                        PicturesActivity.start(activity, images, index);
+                        PicturesActivity.start(activity, images, index, true, true);
                     }
                 });
             }

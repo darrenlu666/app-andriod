@@ -103,7 +103,7 @@ public class UploadUtil {
         return result;
     }
 
-    public static Disposable uploadImages(final String uploadUrl, List<UploadingImage> imageList, final OnEachUploadedCompleteListener listener) {
+    public static Disposable uploadImages(final String uploadUrl, List<UploadingImage> imageList, final OnUploadCompleteListener listener) {
         return Observable.fromIterable(imageList)
                 .observeOn(Schedulers.io())
                 .doOnNext(new Consumer<UploadingImage>() {
@@ -136,7 +136,7 @@ public class UploadUtil {
                 });
     }
 
-    public interface OnEachUploadedCompleteListener {
+    public interface OnUploadCompleteListener {
         void onEachUploadComplete(UploadingImage image);
     }
 }
