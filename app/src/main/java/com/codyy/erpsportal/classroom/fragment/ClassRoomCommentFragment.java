@@ -558,7 +558,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
                 if ("success".equals(response.optString("result")) && mCommentsRv != null) {
                     JSONArray repliesJa = response.optJSONArray("secondList");
                     rethinkComment.setTotalReplyCount(response.optInt("secondTotal"));
-                    if (repliesJa.length() > 0) {
+                    if (repliesJa != null && repliesJa.length() > 0) {
                         List<RethinkReply> replies = new ArrayList<>(repliesJa.length());
                         for (int j = 0; j < repliesJa.length(); j++) {
                             JSONObject replyJsonObj = repliesJa.optJSONObject(j);

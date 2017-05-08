@@ -58,7 +58,7 @@
                 android:ellipsize="end"
                 android:minWidth="80dp"
                 android:singleLine="true"
-                android:text='@{Titles.sMasterRoom+":"+item.masterCount}'
+                android:text='@{Titles.sMasterRoom+"："+item.masterCount}'
                 android:textColor="@color/list_item_body"
                 android:textSize="@dimen/list_item_body"
                 tools:text="主讲教室:53" />
@@ -70,7 +70,7 @@
                 android:ellipsize="end"
                 android:minWidth="80dp"
                 android:singleLine="true"
-                android:text='@{Titles.sReceiveRoom+":"+item.reciveCount}'
+                android:text='@{Titles.sReceiveRoom+"："+item.reciveCount}'
                 android:textColor="@color/list_item_body"
                 android:textSize="@dimen/list_item_body"
                 tools:text="接收教室:52" />

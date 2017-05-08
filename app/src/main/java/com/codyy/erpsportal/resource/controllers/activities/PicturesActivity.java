@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -12,28 +11,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.UriUtils;
+import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.ViewPagerFixed;
 import com.codyy.erpsportal.commons.widgets.photodrawee.OnViewTapListener;
 import com.codyy.erpsportal.commons.widgets.photodrawee.PhotoDrawee;
-import com.facebook.binaryresource.BinaryResource;
-import com.facebook.cache.common.CacheKey;
-import com.facebook.cache.common.SimpleCacheKey;
-import com.facebook.cache.disk.FileCache;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
-import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +44,12 @@ public class PicturesActivity extends AppCompatActivity {
 
     private final static String EXTRA_SMALL_FIRST = "EXTRA_SMALL_FIRST";
 
+    private final static String EXTRA_WHITE_WITH_TITLE = "EXTRA_WHITE_WITH_TITLE";
+
+    private LinearLayout mContentLl;
+
+    private TitleBar mTitleBar;
+
     private ViewPagerFixed mViewPager;
 
     private int mPosition;
@@ -65,6 +64,11 @@ public class PicturesActivity extends AppCompatActivity {
 
     private boolean mSmallFirst;
 
+    /**
+     * 白背景有标题风格
+     */
+    private boolean mWhiteWithTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,7 @@ public class PicturesActivity extends AppCompatActivity {
         mPictures = getIntent().getStringArrayListExtra(EXTRA_PICTURE_LIST);
         mPosition = getIntent().getIntExtra(EXTRA_POSITION, 0);
         mSmallFirst = getIntent().getBooleanExtra(EXTRA_SMALL_FIRST, false);
+        mWhiteWithTitle = getIntent().getBooleanExtra(EXTRA_WHITE_WITH_TITLE, false);
         acquireGalleryAreaSize();
     }
 
@@ -91,10 +96,16 @@ public class PicturesActivity extends AppCompatActivity {
     }
 
     private void findViews() {
+        mContentLl = (LinearLayout) findViewById(R.id.ll_content);
+        mTitleBar = (TitleBar) findViewById(R.id.tb_title);
         mViewPager = (ViewPagerFixed) findViewById(R.id.vp_subject_material);
     }
 
     private void initViews() {
+        if (mWhiteWithTitle) {
+            mTitleBar.setVisibility(View.VISIBLE);
+            mContentLl.setBackgroundColor(0xffffffff);
+        }
         mAdapter = new ImagePagerAdapter(mPictures);
         mAdapter.setOnPageClickListener(new OnPageClickListener() {
             @Override
@@ -108,14 +119,16 @@ public class PicturesActivity extends AppCompatActivity {
     }
 
     public static void start(Activity activity, List<String> list, int position) {
-        start(activity, list, position, false);
+        start(activity, list, position, false, false);
     }
 
-    public static void start(Activity activity, List<String> list, int position, boolean smallFirst) {
+    public static void start(Activity activity, List<String> list, int position,
+                             boolean smallFirst, boolean whiteWithTitle) {
         Intent intent = new Intent(activity, PicturesActivity.class);
         intent.putExtra(EXTRA_PICTURE_LIST, (ArrayList<String>)list);
         intent.putExtra(EXTRA_POSITION, position);
         intent.putExtra(EXTRA_SMALL_FIRST, smallFirst);
+        intent.putExtra(EXTRA_WHITE_WITH_TITLE, whiteWithTitle);
         activity.startActivity(intent);
         activity.overridePendingTransition(0, 0);
     }
@@ -153,41 +166,21 @@ public class PicturesActivity extends AppCompatActivity {
         @Override
         public Object instantiateItem(ViewGroup container,final int position) {
             final PhotoDrawee photoDrawee = new PhotoDrawee(PicturesActivity.this);
-            if (mSmallFirst) {
-                FileCache fileCache = Fresco.getImagePipelineFactory().getMainFileCache();
-                String url = UriUtils.buildSmallImageUrl(mPictures.get(position));
-                CacheKey cacheKey = new SimpleCacheKey(url);
-                BinaryResource binaryResource = fileCache.getResource(cacheKey);
-                Drawable drawable = null;
-                if (binaryResource != null) {
-                    try {
-                        drawable = Drawable.createFromResourceStream(container.getResources(), null,
-                                binaryResource.openStream(), "src");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (drawable != null) {
-                    GenericDraweeHierarchyBuilder builder =
-                            new GenericDraweeHierarchyBuilder(getResources());
-                    GenericDraweeHierarchy hierarchy = builder
-                            .setPlaceholderImage(drawable)
-                            .setFadeDuration(0)
-                            .setPlaceholderImageScaleType(ScaleType.FIT_CENTER)
-                            .setActualImageScaleType(ScaleType.FIT_CENTER)
-                            .build();
-                    photoDrawee.setHierarchy(hierarchy);
-                }
-            }
-
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPictures.get(position)))
                     .setResizeOptions(new ResizeOptions(mGalleryWidth, mGalleryHeight))
                     .build();
-            PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
-            controller.setImageRequest(request);
-            controller.setAutoPlayAnimations(true);
-            controller.setOldController(photoDrawee.getController());
-            controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder();
+            if (mSmallFirst) {
+                String url = UriUtils.buildSmallImageUrl(mPictures.get(position));
+                ImageRequest requestForSmall = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
+                        .setResizeOptions(new ResizeOptions(mGalleryWidth, mGalleryHeight))
+                        .build();
+                controllerBuilder.setLowResImageRequest(requestForSmall);
+            }
+            controllerBuilder.setImageRequest(request);
+            controllerBuilder.setAutoPlayAnimations(true);
+            controllerBuilder.setOldController(photoDrawee.getController());
+            controllerBuilder.setControllerListener(new BaseControllerListener<ImageInfo>() {
                 @Override
                 public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                     super.onFinalImageSet(id, imageInfo, animatable);
@@ -197,7 +190,7 @@ public class PicturesActivity extends AppCompatActivity {
                     photoDrawee.update(imageInfo.getWidth(), imageInfo.getHeight());
                 }
             });
-            photoDrawee.setController(controller.build());
+            photoDrawee.setController(controllerBuilder.build());
             container.addView(photoDrawee);
             if (mOnPageClickListener != null) {
                 photoDrawee.setOnViewTapListener(new OnViewTapListener() {

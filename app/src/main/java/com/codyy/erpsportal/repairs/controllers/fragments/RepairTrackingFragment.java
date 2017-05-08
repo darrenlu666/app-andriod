@@ -19,11 +19,14 @@ import android.widget.TextView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.RxBus;
 import com.codyy.erpsportal.repairs.controllers.activities.MakeDetailedInquiryActivity;
 import com.codyy.erpsportal.repairs.controllers.adapters.InquiriesAdapter.OnItemClickListener;
 import com.codyy.erpsportal.repairs.models.engines.InquiriesLoader;
 import com.codyy.erpsportal.repairs.models.engines.InquiriesLoader.Builder;
 import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
+import com.codyy.erpsportal.repairs.models.entities.RepairDetails;
+import com.codyy.erpsportal.repairs.models.entities.StatusItem;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,6 +39,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
  * 问题追踪碎片
@@ -77,6 +82,8 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
 
     private String mSkey;
 
+    private Disposable mDisposable;
+
     public RepairTrackingFragment() {
     }
 
@@ -106,9 +113,7 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
                 .setEmptyView(mEmptyTv)
                 .setOnItemClickListener(new OnItemClickListener<InquiryItem>() {
                     @Override
-                    public void onItemClick(int position, InquiryItem item) {
-
-                    }
+                    public void onItemClick(int position, InquiryItem item) { }
                 })
                 .build();
         return view;
@@ -126,6 +131,17 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
         mInquiriesLoader.addParam("malDetailId", mRepairId);
         mInquiriesLoader.addParam("uuid", mUserInfo.getUuid());
         mInquiriesLoader.loadData(true);
+        mDisposable = RxBus.getInstance().register(RepairDetails.class, new Consumer<RepairDetails>() {
+            @Override
+            public void accept(RepairDetails repairDetails) throws Exception {
+                if (StatusItem.STATUS_DONE.equals(repairDetails.getStatus()) ||
+                        StatusItem.STATUS_VERIFIED.equals(repairDetails.getStatus())) {
+                    mMakeInquiryBtn.setVisibility(View.GONE);
+                } else {
+                    mMakeInquiryBtn.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     @OnClick(R.id.btn_make_inquiry)
@@ -139,6 +155,12 @@ public class RepairTrackingFragment extends Fragment implements InquiriesLoader.
         if (requestCode == RC_MAKE_DETAILED_INQUIRY && resultCode == Activity.RESULT_OK) {
             mInquiriesLoader.loadData(true);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDisposable.dispose();
     }
 
     @Override

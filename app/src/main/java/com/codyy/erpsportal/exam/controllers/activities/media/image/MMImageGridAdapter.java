@@ -54,7 +54,7 @@ public class MMImageGridAdapter extends MMBaseRecyclerViewAdapter<MMImageBean> {
             } else {
                 ((NormalRecyclerViewHolder) viewHolder).layerView.setVisibility(View.VISIBLE);
                 ((NormalRecyclerViewHolder) viewHolder).imgQueue.setController(getDraweeController(viewHolder, list.get(position).getThumbnails()));
-                if (list.get(position).isSeleted()) {
+                if (list.get(position).isSelected()) {
                     ((NormalRecyclerViewHolder) viewHolder).imgQueueMultiSelected.setImageResource(R.drawable.ic_exam_select_p);
                     ((NormalRecyclerViewHolder) viewHolder).layerView.setBackgroundResource(R.color.image_selected_color);
                 } else {

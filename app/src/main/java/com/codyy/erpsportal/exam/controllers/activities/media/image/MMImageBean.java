@@ -10,12 +10,12 @@ import android.os.Parcelable;
 public class MMImageBean implements Parcelable {
 
     private String path = null;
-    private boolean isSeleted = false;
+    private boolean isSelected = false;
     private String thumbnails = null;
 
     public MMImageBean(String path, boolean selected, String thumbnails) {
         this.path = path;
-        this.isSeleted = selected;
+        this.isSelected = selected;
         this.thumbnails = thumbnails;
     }
 
@@ -37,17 +37,17 @@ public class MMImageBean implements Parcelable {
     }
 
     /**
-     * @return the isSeleted
+     * @return the isSelected
      */
-    public boolean isSeleted() {
-        return isSeleted;
+    public boolean isSelected() {
+        return isSelected;
     }
 
     /**
-     * @param isSeleted the isSeleted to set
+     * @param isSeleted the isSelected to set
      */
-    public void setSeleted(boolean isSeleted) {
-        this.isSeleted = isSeleted;
+    public void setSelected(boolean isSeleted) {
+        this.isSelected = isSeleted;
     }
 
     public String getThumbnails() {
@@ -66,13 +66,28 @@ public class MMImageBean implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.path);
-        dest.writeByte(isSeleted ? (byte) 1 : (byte) 0);
+        dest.writeByte(isSelected ? (byte) 1 : (byte) 0);
         dest.writeString(this.thumbnails);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj instanceof MMImageBean) {
+            MMImageBean imageBean = (MMImageBean) obj;
+            if (path == null) {
+                if (imageBean.getPath() == null)
+                    return true;
+            } else if (path.equals(imageBean.getPath())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected MMImageBean(Parcel in) {
         this.path = in.readString();
-        this.isSeleted = in.readByte() != 0;
+        this.isSelected = in.readByte() != 0;
         this.thumbnails = in.readString();
     }
 
@@ -89,7 +104,7 @@ public class MMImageBean implements Parcelable {
     @Override
     public String toString() {
         return "MMImageBean{" +
-                "isSeleted=" + isSeleted +
+                "isSelected=" + isSelected +
                 ", path='" + path + '\'' +
                 ", thumbnails='" + thumbnails + '\'' +
                 '}';

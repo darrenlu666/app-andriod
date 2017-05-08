@@ -113,9 +113,7 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
                 + "/imageUpload.do?validateCode=" + mUserInfo.getValidateCode() + "&sizeLimit=5";
         mPhotosUploader = new PhotosUploader(uploadUrl, newAddedImages, new UploadListener() {
             @Override
-            public void onStart() {
-//                mCommitBtn.setEnabled(false);
-            }
+            public void onStart() { }
 
             @Override
             public void onEachComplete(UploadingImage image) {
@@ -128,7 +126,6 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 mAdapter.notifyDataSetChanged();
-//                mCommitBtn.setEnabled(true);
             }
         });
         mPhotosUploader.start();
@@ -141,9 +138,9 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
             return;
         }
         Map<String, String> params = new HashMap<>();
-        String desc = mDescEt.getText().toString();
+        String desc = mDescEt.getText().toString().trim();
         if (TextUtils.isEmpty(desc)) {
-            ToastUtil.showToast(this, "请输入故障描述。");
+            ToastUtil.showToast(this, "追问内容不可为空");
             return;
         }
         params.put("appendDescription", desc);

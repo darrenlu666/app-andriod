@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null"
-                android:hint="常见问题"
+                android:hint="搜索问题"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:lines="1"

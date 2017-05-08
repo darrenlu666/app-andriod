@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:textStyle="bold"
         android:layout_marginTop="2dp"
+        android:textStyle="bold"
         tools:text="待处理" />
 
     <TextView
@@ -27,6 +27,7 @@
         android:layout_marginRight="8dp"
         android:layout_toLeftOf="@id/tv_status"
         android:layout_toStartOf="@id/tv_status"
+        android:ellipsize="end"
         android:lines="1"
         tools:text="教室编号（教室名称）" />
 
@@ -40,18 +41,6 @@
         android:text="@string/repair_reporter" />
 
     <TextView
-        android:id="@+id/tv_reporter"
-        style="@style/ListItemBody"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tv_lb_reporter"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_toEndOf="@id/tv_lb_reporter"
-        android:layout_toRightOf="@id/tv_lb_reporter"
-        tools:text="姓名" />
-
-    <TextView
         android:id="@+id/tv_report_time"
         style="@style/ListItemBody"
         android:layout_width="wrap_content"
@@ -62,13 +51,32 @@
         tools:text="2015-04-13 08:30" />
 
     <TextView
+        android:id="@+id/tv_reporter"
+        style="@style/ListItemBody"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_lb_reporter"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@id/tv_lb_reporter"
+        android:layout_toLeftOf="@id/tv_report_time"
+        android:layout_toRightOf="@id/tv_lb_reporter"
+        android:layout_toStartOf="@id/tv_report_time"
+        android:ellipsize="end"
+        android:lines="1"
+        android:maxEms="8"
+        tools:text="姓名ffffffaaaaaa" />
+
+    <TextView
         android:id="@+id/tv_content"
         style="@style/ListItemLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_lb_reporter"
         android:layout_marginTop="8dp"
-        android:lines="1"
         android:ellipsize="end"
+        android:lines="1"
         tools:text="如何进行自主开课啊" />
 </RelativeLayout>
