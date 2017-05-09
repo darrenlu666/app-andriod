@@ -19,6 +19,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,7 @@ import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLess
 import com.codyy.erpsportal.commons.controllers.activities.ListenDetailsActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.commons.models.entities.LoginOut;
@@ -95,7 +97,13 @@ import de.greenrobot.event.EventBus;
  * 正在进行的视频会议（可通过 参与/加入 进入此页面）
  * Created by poe on 15-8-3.
  */
-public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWidget.OnTabClickListener, BaseRecyclerAdapter.OnItemClickListener, IMeeting, ContactsFragment.QueryAllOnLineUser ,Handler.Callback{
+public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWidget.OnTabClickListener,
+        BaseRecyclerAdapter.OnItemClickListener
+        , IMeeting
+        , ContactsFragment.QueryAllOnLineUser
+        , Handler.Callback
+        , IFragmentMangerInterface
+        , OnlineGroupChatFragment.onSoftKeyListener{
     private final static String TAG = OnlineMeetingActivity.class.getSimpleName();
     /**     * jump to video meeting pager .    */
     private static final int MSG_JUMP_TO_VIDEO_MEETING = 0 ;
@@ -964,6 +972,21 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         EventBus.getDefault().post(meetingShow);
     }
 
+    @Override
+    public void onKeyOpen() {
+//        mTabHost.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onKeyClose() {
+//        mTabHost.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
+    }
+
     public interface ILoader {
         /**
          * 成功获取所有在线的用户
@@ -1267,7 +1290,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         ExitMeetingPre();
         Intent intent = new Intent();
         intent.putExtra(TipProgressFragment.ARG_TIP_STATUS_TYPE,actionType);
-        //setResult(VideoMeetingDetailActivity.RESPONSE_ONLINE_MEETING_CODE,intent);
         setResult(mRequestFrom,intent);
         OnlineMeetingActivity.this.finish();
         UIUtils.addExitTranAnim(OnlineMeetingActivity.this);
@@ -1337,14 +1359,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         }
 
     }
-
-
-
-   /* private void dismissProgressBar() {
-        Cog.i(TAG,"dismissProgressBar() ....");
-        notifyAllLoader();
-    }*/
-
 
     private BroadcastReceiver mNoticeBroadCast = new BroadcastReceiver() {
 
@@ -1428,10 +1442,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 }
             },false,true);
 
-        } /*else {
-                mAdapter.addData(findSingleMessageFromWho(msg));
-            }*/
-            /*mNotifyUtils.onNewMsg(msg);//铃声通知消息到了
-            refreshUIWithNewMessage();//刷新界面*/
+        }
     }
 }

@@ -256,6 +256,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/FullscreenTheme" />
         <activity
             android:name=".groups.controllers.activities.MoreBlogPostsActivity"

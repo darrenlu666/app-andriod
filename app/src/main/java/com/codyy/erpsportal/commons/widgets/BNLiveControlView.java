@@ -1,17 +1,12 @@
 package com.codyy.erpsportal.commons.widgets;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -24,19 +19,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
-import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.WeakHandler;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2.OnSurfaceChangeListener;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -45,8 +37,9 @@ import butterknife.ButterKnife;
  * Created by caixingming on 2015/7/9.
  * <p/>
  * home按键后自动seek回原来的位置播放
+ * # the Host Activity Must implements the interface {@link IFragmentMangerInterface}
  */
-public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSurfaceChangeListener, IFragmentMangerInterface {
+public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSurfaceChangeListener{
     private String TAG = "BNLiveControlView";
     /**
      * 通知隐藏
@@ -104,6 +97,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSur
      */
     public static final long MAX_WAIT_TIME = 60 * SECOND;
 
+    private IFragmentMangerInterface mIFragmentManagerInterface;
 
 
     @Override
@@ -174,6 +168,11 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSur
             }
         };
         registerScreenReceiver();
+        if(context instanceof IFragmentMangerInterface){
+            mIFragmentManagerInterface = (IFragmentMangerInterface) context;
+        }else{
+            throw new RuntimeException("you should implements IFragmentManagerInterface");
+        }
     }
 
     private ScreenBroadCastUtils mScreenBroadCastUtils;
@@ -291,7 +290,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSur
         Cog.d("url", "check it : " + path);
         this.urlPath = path;
         mAudioMixer = mixer;
-        Check3GUtil.instance().CheckNetType(this, new Check3GUtil.OnWifiListener() {
+        Check3GUtil.instance().CheckNetType(mIFragmentManagerInterface, new Check3GUtil.OnWifiListener() {
             @Override
             public void onNetError() {
                 ToastUtil.showToast(EApplication.instance(), "网络异常！");
@@ -466,11 +465,6 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSur
         if (getVisibility() == View.VISIBLE) {
             mTitleText.setText(title);
         }
-    }
-
-    @Override
-    public FragmentManager getNewFragmentManager() {
-        return getNewFragmentManager();
     }
 
     /**
