@@ -13,10 +13,10 @@
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        tools:text="3423"
+        tools:text="3423sdfsdfsadf"
         android:textColor="@color/white"
         android:textSize="12sp"
-        android:maxLines="2"
+        android:maxLines="1"
         android:ellipsize="end"
         android:button="@drawable/check_box_remote"
         />
