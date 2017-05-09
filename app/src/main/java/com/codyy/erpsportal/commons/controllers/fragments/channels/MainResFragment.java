@@ -1,9 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.fragments.channels;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Handler.Callback;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -33,7 +30,7 @@ import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.engine.GroupViewStuffer;
-import com.codyy.erpsportal.commons.models.engine.InfoTitleTextFactory;
+import com.codyy.erpsportal.commons.models.engine.InfosSwitcher;
 import com.codyy.erpsportal.commons.models.engine.ItemFillerUtil;
 import com.codyy.erpsportal.commons.models.engine.LiveClassroomViewStuffer;
 import com.codyy.erpsportal.commons.models.engine.ViewStuffer;
@@ -53,8 +50,6 @@ import com.codyy.erpsportal.commons.widgets.infinitepager.HolderCreator;
 import com.codyy.erpsportal.commons.widgets.infinitepager.SlidePagerAdapter;
 import com.codyy.erpsportal.commons.widgets.infinitepager.SlidePagerHolder;
 import com.codyy.erpsportal.commons.widgets.infinitepager.SlideView;
-import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
-import com.codyy.erpsportal.info.utils.Info;
 import com.codyy.erpsportal.resource.controllers.viewholders.VideoItemViewHolder;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.url.URLConfig;
@@ -71,7 +66,6 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -87,11 +81,6 @@ public class MainResFragment extends Fragment {
     private final static String TAG = "MainResFragment";
 
     public final static String ARG_NO_LIVE = "ARG_NO_LIVE";
-
-    /**
-     * 资讯切换消息，用于定时翻上面的资讯
-     */
-    private final static int MSG_SWITCH = 0x47;
 
     private View mRootView;
 
@@ -148,12 +137,7 @@ public class MainResFragment extends Fragment {
 
     private CompositeDisposable mCompositeDisposable;
 
-    /**
-     * 资讯数据json数组
-     */
-    private JSONArray mInfoArray;
-
-    private Handler mHandler;
+    private InfosSwitcher mInfosSwitcher;
 
     private LayoutInflater mInflater;
 
@@ -167,11 +151,6 @@ public class MainResFragment extends Fragment {
      */
     private boolean mNoLive;
 
-    /**
-     * 当期滚动资讯位置
-     */
-    private int mInfoCurrentPos;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,7 +163,6 @@ public class MainResFragment extends Fragment {
         mInflater = LayoutInflater.from(getActivity());
         mWebApi = RsGenerator.create(WebApi.class);
         mCompositeDisposable = new CompositeDisposable();
-        mHandler = new Handler(mCallback);
         if (getArguments() != null) {
             mNoLive = getArguments().getBoolean(ARG_NO_LIVE);
         }
@@ -204,7 +182,8 @@ public class MainResFragment extends Fragment {
                 }
             });
             mRefreshLayout.setColorSchemeResources(R.color.main_color);
-            mInfoTitleTs.setFactory(new InfoTitleTextFactory(getActivity()));
+
+            mInfosSwitcher = new InfosSwitcher(this, mInfoTitleTs);
         }
     }
 
@@ -225,9 +204,7 @@ public class MainResFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mInfoArray != null && mInfoArray.length() > 1) {
-            startSwitch();
-        }
+        mInfosSwitcher.resume();
     }
 
     /**
@@ -306,12 +283,13 @@ public class MainResFragment extends Fragment {
                         Cog.d(TAG, "loadInfoSlides response=", response);
                         minusLoadingCount();
                         if ("success".equals(response.optString("result"))) {
-                            mInfoArray = response.optJSONArray("data");
-                            if (mInfoArray == null || mInfoArray.length() == 0) {
+                            JSONArray infoArray = response.optJSONArray("data");
+                            if (infoArray == null || infoArray.length() == 0) {
                                 mInfoSheetRl.setVisibility(View.GONE);
                             } else {
                                 mInfoSheetRl.setVisibility(View.VISIBLE);
-                                startSwitch();
+                                mInfosSwitcher.setInfoArray(infoArray);
+                                mInfosSwitcher.startSwitch();
                             }
                         }
                     }
@@ -465,30 +443,6 @@ public class MainResFragment extends Fragment {
                     }
                 });
         mCompositeDisposable.add( disposable);
-    }
-
-    /**
-     * 开始切换标题
-     */
-    private void startSwitch() {
-        if (mInfoArray == null || mInfoArray.length() < 2) {
-            mHandler.removeMessages(MSG_SWITCH);
-            return;
-        }
-        mInfoCurrentPos = 0;
-        showInfo();
-        switchInfo();
-    }
-
-    /**
-     * 开始切换资讯
-     */
-    private void switchInfo() {
-        mHandler.removeMessages(MSG_SWITCH);
-        Message message = Message.obtain();
-        message.what = MSG_SWITCH;
-        message.arg1 = mInfoCurrentPos;
-        mHandler.sendMessageDelayed(message, 3000);
     }
 
     /**
@@ -681,66 +635,10 @@ public class MainResFragment extends Fragment {
         });
     }
 
-    private Callback mCallback = new Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            mInfoCurrentPos = msg.arg1;
-            if (msg.what == MSG_SWITCH) {
-                if (isDetached()) {//如果未附上Activity，直接返回不显示资讯
-                    mHandler.removeMessages(MSG_SWITCH);
-                    return true;
-                }
-
-                showInfo();
-                switchInfo();
-                return true;
-            }
-            return false;
-        }
-    };
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mHandler.removeMessages(MSG_SWITCH);
-    }
-
-    /**
-     * 显示咨询
-     */
-    private void showInfo() {
-        String infoType = mInfoArray.optJSONObject(mInfoCurrentPos).optString("infoType");
-        String infoTypeName;
-        switch (infoType) {
-            case Info.TYPE_NEWS:
-                infoTypeName = Titles.sPagetitleIndexCompositeNew;
-                break;
-            case Info.TYPE_ANNOUNCEMENT:
-                infoTypeName = Titles.sPagetitleIndexCompositeAnnouncement;
-                break;
-            default: // if (infoType.equals(Info.TYPE_NOTICE))
-                infoTypeName = Titles.sPagetitleIndexCompositeNotice;
-                break;
-        }
-        String infoTitleStr = mInfoArray.optJSONObject(mInfoCurrentPos).optString("title");
-        String infoStr = String.format("(%s) %s", infoTypeName, infoTitleStr);
-        mInfoTitleTs.setText(infoStr);
-        mInfoCurrentPos++;
-        if (mInfoCurrentPos >= mInfoArray.length())
-            mInfoCurrentPos = mInfoCurrentPos % mInfoArray.length();
-    }
-
-    @OnClick(R.id.ts_info)
-    public void onInfoClick() {
-//        ToastUtil.showToast(getActivity(), "被点了");
-        if (mInfoArray != null && mInfoArray.length() != 0 && mInfoCurrentPos < mInfoArray.length()) {
-            int position = mInfoCurrentPos - 1;
-            if (position < 0) position = mInfoArray.length() - 1;
-            JSONObject infoObj = mInfoArray.optJSONObject(position);
-            if (infoObj != null) {
-                InfoDetailActivity.startFromChannel(getActivity(), infoObj.optString("informationId"));
-            }
-        }
+        mInfosSwitcher.release();
     }
 
     private OnModuleConfigListener mOnModuleConfigListener = new OnModuleConfigListener() {
