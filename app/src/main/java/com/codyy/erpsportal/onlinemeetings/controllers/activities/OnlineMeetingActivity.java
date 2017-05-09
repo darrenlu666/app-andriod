@@ -57,6 +57,7 @@ import com.codyy.erpsportal.commons.services.BackService;
 import com.codyy.erpsportal.commons.services.IMeeting;
 import com.codyy.erpsportal.commons.services.OnlineMeetingService;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
@@ -546,6 +547,10 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     getChatService().hideView();
                 }
             }
+            //隐藏键盘
+            if(index != 1){
+                DeviceUtils.hideSoftKeyboard(mView);
+            }
         } else {
             long now        =   System.currentTimeMillis();
             if(mStartPrompt>0){
@@ -877,6 +882,9 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
      * 推出会议 并执行数据解绑 ！
      */
     private void ExitMeetingPre() {
+        if(null != mTabHost && mTabHost.getCurrentTab() == 0 &&null != mChatService){
+            getChatService().hideView();
+        }
         if (null != mIMeetingService) {
             try {
                 mIMeetingService.loginOut();
@@ -1291,9 +1299,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         Intent intent = new Intent();
         intent.putExtra(TipProgressFragment.ARG_TIP_STATUS_TYPE,actionType);
         setResult(mRequestFrom,intent);
-        if(mTabHost.getCurrentTab()==0 &&null != mChatService){
-            getChatService().hideView();
-        }
         OnlineMeetingActivity.this.finish();
         UIUtils.addExitTranAnim(OnlineMeetingActivity.this);
     }
