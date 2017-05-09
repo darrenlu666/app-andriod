@@ -220,6 +220,15 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                 mChooseSpeakerTextView.setVisibility(View.VISIBLE);
                 mPartnerBNLiveControlView.setVisibility(View.GONE);
                 mPartnerSurfaceView.setVisibility(View.GONE);
+
+                //UI视图操作
+                getParentActivity().collapse();
+                //开始转屏时执行动画
+                UiOnlineMeetingAnimationUtils.restoreVideoView(mMainBnVideoView, mPartnerSurfaceView, mMainBNLiveControlView, mPartnerBNLiveControlView,mPartnerLinearLayout,mMyVideoRlt,mPartnerRlt);
+                restoreBottom();
+                if(null != getChatService() && OnlineMeetingActivity.mShowMyViewState){
+                    getChatService().showView();
+                }
             }
         });
 
@@ -242,7 +251,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                 //开始转屏时执行动画
                 UiOnlineMeetingAnimationUtils.restoreVideoView(mMainBnVideoView, mPartnerSurfaceView, mMainBNLiveControlView, mPartnerBNLiveControlView,mPartnerLinearLayout,mMyVideoRlt,mPartnerRlt);
                 restoreBottom();
-                // TODO: 16-7-12 判断是否之前打开过...
+                //16-7-12 判断是否之前打开过...
                 if(null != getChatService() && OnlineMeetingActivity.mShowMyViewState){
                     getChatService().showView();
                 }
