@@ -13,8 +13,8 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.PopupWindowUtils;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.PopupWindowUtils;
 
 /**
  * 筛选弹出控制
@@ -61,7 +61,11 @@ public class FilterTypeMenuController {
         } else {
             Rect frame = new Rect();
             mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-            mPopupWindow.showAtLocation(mActivity.getWindow().getDecorView(), Gravity.END |Gravity.TOP, 0, mTitleBar.getBottom() + frame.top);
+            mPopupWindow.showAtLocation(mActivity.getWindow().getDecorView(),
+                    Gravity.NO_GRAVITY,
+                    frame.right,
+                    mTitleBar.getBottom() + frame.top);
+//            PopupWindowCompat.showAsDropDown(mPopupWindow, mTitleBar, 0, 0, );
             mPopupWindow.update();
             PopupWindowUtils.dimBehind(mPopupWindow);
         }

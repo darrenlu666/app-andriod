@@ -335,16 +335,6 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
         }
     }
 
-    private void setClassroomFilterChecked(boolean checked) {
-        mClassroomFilterTv.setChecked(checked);
-        mClassroomFilterIv.setChecked(checked);
-    }
-
-    private void setStatusFilterChecked(boolean checked) {
-        mStatusFilterTv.setChecked(checked);
-        mStatusFilterIv.setChecked(checked);
-    }
-
     /**
      * 状态筛选按钮点击事件
      *
@@ -352,7 +342,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
      */
     @OnClick(R.id.fl_status_filter)
     public void onStatusFilterClick(View view) {
-        setStatusFilterChecked(false);//清除教室筛选按钮选中状态
+        setClassroomFilterChecked(false);//清除教室筛选按钮选中状态
         if (mFilterListFl.getVisibility() == View.VISIBLE
                 && mStatusFilterTv.isChecked()) {
             mFilterListFl.setVisibility(View.GONE);
@@ -367,6 +357,16 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
             mFilterListFl.setVisibility(View.VISIBLE);
             setStatusFilterChecked(true);
         }
+    }
+
+    private void setClassroomFilterChecked(boolean checked) {
+        mClassroomFilterTv.setChecked(checked);
+        mClassroomFilterIv.setChecked(checked);
+    }
+
+    private void setStatusFilterChecked(boolean checked) {
+        mStatusFilterTv.setChecked(checked);
+        mStatusFilterIv.setChecked(checked);
     }
 
     @OnClick(R.id.fab_report)
