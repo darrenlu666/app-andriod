@@ -1291,6 +1291,9 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         Intent intent = new Intent();
         intent.putExtra(TipProgressFragment.ARG_TIP_STATUS_TYPE,actionType);
         setResult(mRequestFrom,intent);
+        if(mTabHost.getCurrentTab()==0 &&null != mChatService){
+            getChatService().hideView();
+        }
         OnlineMeetingActivity.this.finish();
         UIUtils.addExitTranAnim(OnlineMeetingActivity.this);
     }
