@@ -38,7 +38,6 @@ import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.CommentUtils;
 import com.codyy.erpsportal.commons.utils.HtmlUtils;
-import com.codyy.erpsportal.commons.widgets.BnMediaPlayLayout;
 import com.codyy.erpsportal.groups.controllers.viewholders.BlogCommentChildViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentMoreViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.BlogCommentViewHolder;
@@ -116,7 +115,6 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     @Bind(R.id.scroll_view)ScrollView mScrollView;
     @Bind(R.id.fl_content)FrameLayout mFrameLayout ;
     @Bind(R.id.tv_category)TextView mCategoryTextView;
-    @Bind(R.id.bn_media_view)BnMediaPlayLayout mBnMediaPlayLayout;//视频播放组件
     @Bind(R.id.rb_star)RatingBar mRatingBar;//评分
     @Bind(R.id.tv_score)TextView mScoreTextView;
     @Bind(R.id.refresh_layout)    RefreshLayout mRefreshLayout;

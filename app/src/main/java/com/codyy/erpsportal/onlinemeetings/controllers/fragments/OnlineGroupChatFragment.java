@@ -18,6 +18,7 @@ import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
+import com.codyy.erpsportal.commons.widgets.BlogComposeView;
 import com.codyy.erpsportal.commons.widgets.ComposeView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
@@ -36,10 +37,15 @@ import de.greenrobot.event.EventBus;
  * 视频会议－群聊
  * Created by poe on 16-10-11.
  */
-public class OnlineGroupChatFragment extends OnlineFragmentBase implements ComposeView.OnComposeOperationDelegate {
+public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogComposeView.OnComposeOperationDelegate {
     public static final String TAG = "OnlineGroupFragment";
-    @Bind(R.id.compose_view)    ComposeView  mInputView;
-    @Bind(R.id.recycler_view)   SimpleRecyclerView mRecyclerView;
+
+    @Bind(R.id.compose_view)
+    BlogComposeView mInputView;
+
+    @Bind(R.id.recycler_view)
+    SimpleRecyclerView mRecyclerView;
+
     private IMeeting mIMeeting;//发送消息的回调接口
     /**
      * 群聊－发送
@@ -53,11 +59,13 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements Compo
     private BaseRecyclerAdapter<ChatMessage,OnlineChatReceiverViewHolder> mAdapter ;
     private List<ChatMessage> mData = new ArrayList<>();//本地数据缓存
     private String mToUserId ;//视频会议id
+    private onSoftKeyListener mSoftListener;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mIMeeting = (IMeeting) activity;
+        mSoftListener = (onSoftKeyListener) activity;
     }
 
     @Override
@@ -118,6 +126,30 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements Compo
     @Override
     public void onSendText(String text) {
         sendTextMessage(text);
+    }
+
+    @Override
+    public void onSoftWareKeyOpen() {
+        //打开软件盘，隐藏底部导航栏.
+        if(null != mSoftListener) mSoftListener.onKeyOpen();
+    }
+
+    @Override
+    public void onSoftWareKeyClose() {
+        //关闭软件盘,展示底部导航栏
+        if(null != mSoftListener) mSoftListener.onKeyClose();
+    }
+
+    @Override
+    public void onEmojiPanOpen() {
+        // TODO: 08/05/17 打开表情输入框.
+        if(null != mSoftListener) mSoftListener.onKeyOpen();
+    }
+
+    @Override
+    public void onEmojiPanClose() {
+        // TODO: 08/05/17 关闭表情输入框.
+        if(null != mSoftListener) mSoftListener.onKeyClose();
     }
 
     /**
@@ -259,5 +291,17 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements Compo
             }*/
             /*mNotifyUtils.onNewMsg(msg);//铃声通知消息到了
             refreshUIWithNewMessage();//刷新界面*/
+    }
+
+    public interface onSoftKeyListener{
+        /**
+         * 打开软件盘
+         */
+        void onKeyOpen();
+
+        /**
+         * 关闭软件盘
+         */
+        void onKeyClose();
     }
 }

@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
  * 自带状态设置!
  * created by poe 2016/06/14.
  */
-public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.OnPlayingListener, BnVideoView2.OnBNErrorListener , Handler.Callback,IFragmentMangerInterface {
+public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.OnPlayingListener, BnVideoView2.OnBNErrorListener , Handler.Callback {
     private static final String TAG = BnMediaPlayLayout.class.getSimpleName();
     public static final int MEDIA_TYPE_VIDEO = 0x001;//视频点播
     public static final int MEDIA_TYPE_AUDIO = 0x002;//普通音频文件播放
@@ -85,15 +85,16 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
 
     public BnMediaPlayLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(attrs);
+        init(context,attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public BnMediaPlayLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init(context,attrs);
     }
 
-    private void init(AttributeSet attrs){
+    private void init(Context context ,AttributeSet attrs){
         View rootView = LayoutInflater.from(getContext()).inflate(obtainLayoutId(), this, true);
         ButterKnife.bind(rootView);
         if (!this.isInEditMode()) {
@@ -108,6 +109,11 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
                     BnMediaPlayLayout.this.stop();
                 }
             });
+        }
+        if(context instanceof IFragmentMangerInterface){
+            mFragmentManagerInterface = (IFragmentMangerInterface) context;
+        }else {
+            throw new RuntimeException("BnMediaPlayLayout context has not implements IFragmentMangerInterface !!");
         }
     }
 
@@ -163,7 +169,7 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
                     resume();
                     mVideoView.seekTo(mDestPos);
                 } else {
-                    Check3GUtil.instance().CheckNetType(BnMediaPlayLayout.this, new Check3GUtil.OnWifiListener() {
+                    Check3GUtil.instance().CheckNetType(mFragmentManagerInterface, new Check3GUtil.OnWifiListener() {
                         @Override
                         public void onNetError() {
                         }
@@ -192,7 +198,7 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
                                 resume();
                             }
                         } else {
-                            Check3GUtil.instance().CheckNetType(BnMediaPlayLayout.this, new Check3GUtil.OnWifiListener() {
+                            Check3GUtil.instance().CheckNetType(mFragmentManagerInterface, new Check3GUtil.OnWifiListener() {
                                 @Override
                                 public void onNetError() {
                                 }
@@ -415,7 +421,7 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
                     if (mIsLocal) {
                         start();
                     } else {
-                        Check3GUtil.instance().CheckNetType(BnMediaPlayLayout.this, new Check3GUtil.OnWifiListener() {
+                        Check3GUtil.instance().CheckNetType(mFragmentManagerInterface, new Check3GUtil.OnWifiListener() {
                             @Override
                             public void onContinue() {
                                 start();
@@ -481,7 +487,7 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
         }
 
         if (!isLocal) {
-            Check3GUtil.instance().CheckNetType(BnMediaPlayLayout.this, new Check3GUtil.OnWifiListener() {
+            Check3GUtil.instance().CheckNetType(mFragmentManagerInterface, new Check3GUtil.OnWifiListener() {
                 @Override
                 public void onNetError() {
                 }
@@ -640,10 +646,5 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
         if (null != mVideoView) {
             mVideoView = null;
         }
-    }
-
-    @Override
-    public FragmentManager getNewFragmentManager() {
-        return mFragmentManagerInterface.getNewFragmentManager();
     }
 }
