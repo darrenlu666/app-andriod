@@ -27,12 +27,11 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.common.EmotionInputDetector;
 import com.codyy.erpsportal.commons.controllers.adapters.HorizontalListViewAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.GroupCollectiveVideoDetailFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.DeleteCommentDialog;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.MoreRelies;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
@@ -121,12 +120,14 @@ public class ActivityThemeVideoActivity extends FragmentActivity implements BnVi
     private View.OnClickListener mDownListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            VideoDetails videoDetails = videoDetailsList.get(mCurIndex);
-            ResourceDetails resourceDetails = new ResourceDetails();
-            resourceDetails.setId(videoDetails.getMeetVideoId());
-            resourceDetails.setResourceName(videoDetails.getVideoName());
-            resourceDetails.setThumbPath(videoDetails.getThumbPath());
-            VideoDownloadUtils.downloadVideo(resourceDetails, videoDetails.getFilePath(), mUserInfo.getBaseUserId());
+            if (mCurIndex >=0 && mCurIndex < videoDetailsList.size()) {
+                VideoDetails videoDetails = videoDetailsList.get(mCurIndex);
+                ResourceDetails resourceDetails = new ResourceDetails();
+                resourceDetails.setId(videoDetails.getMeetVideoId());
+                resourceDetails.setResourceName(videoDetails.getVideoName());
+                resourceDetails.setThumbPath(videoDetails.getThumbPath());
+                VideoDownloadUtils.downloadVideo(resourceDetails, videoDetails.getFilePath(), mUserInfo.getBaseUserId());
+            }
         }
     };
 
