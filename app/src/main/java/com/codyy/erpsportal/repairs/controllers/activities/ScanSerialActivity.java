@@ -53,9 +53,7 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_serial);
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
-//        ViewGroup contentFrame = (ViewGroup) findViewById(R.id.fl_content);
         mZBarScannerView = (CustomZXingScannerView) findViewById(R.id.fl_content);
-//        contentFrame.addView(mZBarScannerView);
     }
 
     @Override
@@ -78,7 +76,6 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
         // Do something with the result here
         Cog.d(TAG, "handleResult rawResult=",rawResult.getText()); // Prints scan results
         Cog.d(TAG, "handleResult barcodeFormat=",rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-//        Toast.makeText(ScanSerialActivity.this, rawResult.getText(), Toast.LENGTH_SHORT).show();
 
         if (rawResult.getText().equals(mSearchingSerial)) {
             return;
@@ -114,10 +111,14 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
                             } else {
                                 ClassroomSelectItem classroomSelectItem = new Gson()
                                         .fromJson(dataStr, ClassroomSelectItem.class);
-                                Intent intent = new Intent();
-                                intent.putExtra(EXTRA_CLASSROOM, classroomSelectItem);
-                                setResult(RESULT_OK, intent);
-                                finish();
+                                if (classroomSelectItem != null && !TextUtils.isEmpty(classroomSelectItem.getClsClassroomId())) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra(EXTRA_CLASSROOM, classroomSelectItem);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                } else {
+                                    showCustomToast("发现此教室编码非您本校教室编码\n如有问题请联系管理员");
+                                }
                             }
                         }
                     }
