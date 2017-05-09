@@ -12,6 +12,7 @@ import com.codyy.erpsportal.R;
 
 /**
  * 固定比例的FrameLayout
+ * 1:1宽度主宰，设置aspectRatioEnabled=true就ok了
  * Created by gujiajia on 2017/3/24.
  */
 

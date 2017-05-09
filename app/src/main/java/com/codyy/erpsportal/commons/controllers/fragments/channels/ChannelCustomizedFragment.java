@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
@@ -30,7 +28,6 @@ import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingParse;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
@@ -105,16 +102,16 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
             mData.clear();
             if(null != dataList){
                 if(dataList.size() ==0){
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleNetclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 }else{
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleNetclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
                     for(LivingClass lc : dataList){
                         lc.setBaseViewHoldType(LivingClassViewHolder.ITEM_TYPE_LIVING);
                         mData.add(lc);
                     }
                 }
             }else{
-                mData.add(new BaseTitleItemBar(Titles.sPagetitleNetclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
         }
         mAdapter.setData(mData);

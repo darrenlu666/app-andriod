@@ -141,10 +141,18 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
         mConfirm.setText(getString(R.string.exam_image_upload_n));
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
         mRecyclerView.setLayoutManager(gridLayoutManager);
+
+        //计算图片组件宽度
+        int gapPadding = UIUtils.dip2px(getActivity(), 1f);
+        int screenSize = getContext().getResources().getDisplayMetrics().widthPixels;
+        int imageWidth = screenSize / SPAN_COUNT - gapPadding;
+
         mImageGridAdapter = new MMImageGridAdapter(new ArrayList<MMImageBean>(), getActivity());
+        mImageGridAdapter.setImageWidth(imageWidth);
         mRecyclerView.setAdapter(mImageGridAdapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new SpacesItemDecoration(UIUtils.dip2px(getActivity(), 1f)));
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(gapPadding));
+
         mImageGridAdapter.setOnInViewClickListener(R.id.v_selected_frame, new MMBaseRecyclerViewAdapter.onInternalClickListener<MMImageBean>() {
             @Override
             public void OnClickListener(View parentV, View v, Integer position, MMImageBean values) {
@@ -257,11 +265,12 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
                     new String[]{"5242881"}, Media.DATE_ADDED + " ASC");
             try {
                 if (imageCursor != null && imageCursor.getCount() > 0) {
-
                     while (imageCursor.moveToNext()) {
                         MMImageBean bean;
-                        Cursor thumbCursor = cr.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Images.Thumbnails.IMAGE_ID,
-                                MediaStore.Images.Thumbnails.DATA}, MediaStore.Images.Thumbnails.IMAGE_ID + "=" + imageCursor.getString(0), null, null);
+                        Cursor thumbCursor = cr.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
+                                new String[]{MediaStore.Images.Thumbnails.IMAGE_ID,
+                                             MediaStore.Images.Thumbnails.DATA},
+                                MediaStore.Images.Thumbnails.IMAGE_ID + "=" + imageCursor.getString(0), null, null);
                         try {
                             if (thumbCursor != null && thumbCursor.getCount() > 0 && thumbCursor.moveToFirst()) {
                                 do {
