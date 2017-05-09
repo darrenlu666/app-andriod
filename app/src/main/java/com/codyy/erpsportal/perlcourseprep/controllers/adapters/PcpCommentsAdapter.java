@@ -205,7 +205,7 @@ public class PcpCommentsAdapter extends Adapter<RecyclerViewHolder> {
         int start = index + originalCount + 1;
         Cog.d(TAG, "addReplies index=", index, "originalCount", originalCount);
         mCommentBaseList.addAll(start, newReplies);
-        notifyItemRangeInserted(start, newReplies.size() + 1);
+        notifyItemRangeChanged(start, newReplies.size() + 1);
     }
 
     public Object getItem(int position) {
