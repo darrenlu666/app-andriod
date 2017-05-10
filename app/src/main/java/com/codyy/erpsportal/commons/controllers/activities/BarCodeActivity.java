@@ -16,13 +16,9 @@ import com.codyy.erpsportal.commons.controllers.adapters.RecyclingPagerAdapter;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.viewpagerindicator.CirclePageIndicator;
-
 import org.json.JSONObject;
-
 import java.util.HashMap;
-
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
