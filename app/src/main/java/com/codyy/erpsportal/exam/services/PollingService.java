@@ -9,21 +9,20 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.artifex.mupdfdemo.AsyncTask;
 import com.codyy.MediaFileUtils;
 import com.codyy.erpsportal.EApplication;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.exam.utils.PollingUtils;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.TaskAnswerDao;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.StringUtils;
+import com.codyy.erpsportal.exam.utils.PollingUtils;
 import com.codyy.erpsportal.homework.models.entities.task.AnswerTimeLog;
 import com.codyy.erpsportal.homework.models.entities.task.TaskAnswer;
 import com.codyy.erpsportal.homework.models.entities.task.TaskPicInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.StringUtils;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -154,7 +153,7 @@ public class PollingService extends Service {
                         }
                     }, new Response.ErrorListener() {
                         @Override
-                        public void onErrorResponse(VolleyError error) {
+                        public void onErrorResponse(Throwable error) {
 
                         }
                     }));

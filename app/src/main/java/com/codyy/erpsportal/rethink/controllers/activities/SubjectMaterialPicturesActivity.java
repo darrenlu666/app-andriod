@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.rethink.controllers.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
@@ -103,7 +104,7 @@ public class SubjectMaterialPicturesActivity extends AppCompatActivity {
             @Override
             public void onPageScrollStateChanged(int state) {}
         });
-        mAdapter = new ImagePagerAdapter( mPictures);
+        mAdapter = new ImagePagerAdapter(this, mPictures, mGalleryWidth, mGalleryHeight);
         mViewPager.setAdapter( mAdapter);
         mTitleTv.setText( mPictures.get( mPosition).getName());
         setCountTv(getString(R.string.fraction_line, mPosition + 1, mPictures.size()));
@@ -130,12 +131,22 @@ public class SubjectMaterialPicturesActivity extends AppCompatActivity {
         UIUtils.addEnterAnim( activity);
     }
 
-    class ImagePagerAdapter extends PagerAdapter {
+    private static class ImagePagerAdapter extends PagerAdapter {
+
+        private Context mContext;
+
+        private int mGalleryHeight;
+
+        private int mGalleryWidth;
 
         private List<SubjectMaterialPicture> mPictures;
 
-        ImagePagerAdapter(List<SubjectMaterialPicture> pictures) {
-            this.mPictures = pictures;
+        ImagePagerAdapter(Context context, List<SubjectMaterialPicture> pictures,
+                int width, int height) {
+            mContext = context;
+            mPictures = pictures;
+            mGalleryWidth = width;
+            mGalleryHeight = height;
         }
 
         @Override
@@ -150,7 +161,7 @@ public class SubjectMaterialPicturesActivity extends AppCompatActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            final PhotoDrawee photoDrawee = new PhotoDrawee(SubjectMaterialPicturesActivity.this);
+            final PhotoDrawee photoDrawee = new PhotoDrawee(mContext);
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPictures.get(position).getUrl()))
                     .setResizeOptions(new ResizeOptions(mGalleryWidth, mGalleryHeight))
                     .build();

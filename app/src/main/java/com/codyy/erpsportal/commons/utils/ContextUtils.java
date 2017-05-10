@@ -12,8 +12,12 @@ import android.view.View;
 
 public class ContextUtils {
 
-    public Activity getActivity(View view) {
+    public static Activity getActivity(View view) {
         Context context = view.getContext();
+        return getActivity(context);
+    }
+
+    public static Activity getActivity(Context context) {
         while (context instanceof ContextWrapper) {
             if (context instanceof Activity) {
                 return (Activity)context;

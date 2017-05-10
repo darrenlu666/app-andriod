@@ -16,14 +16,16 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.info.controllers.activities.MoreInformationActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
+import com.codyy.erpsportal.commons.models.ConfigBus;
+import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
+import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.widgets.NoScrollListView;
 import com.codyy.erpsportal.commons.widgets.TitleItemBar;
@@ -34,14 +36,9 @@ import com.codyy.erpsportal.commons.widgets.infinitepager.SlidePagerHolder;
 import com.codyy.erpsportal.commons.widgets.infinitepager.SlideView;
 import com.codyy.erpsportal.commons.widgets.infinitepager.SlideView.OnPageClickListener;
 import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
+import com.codyy.erpsportal.info.controllers.activities.MoreInformationActivity;
 import com.codyy.erpsportal.info.utils.Info;
-import com.codyy.erpsportal.commons.models.ConfigBus;
-import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
-import com.codyy.erpsportal.commons.models.ImageFetcher;
-import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONArray;
@@ -54,6 +51,11 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 资讯频道页
@@ -138,9 +140,9 @@ public class InfoIntroFragment extends Fragment {
      */
     private ObjectsAdapter<Info, InfoContentViewHolder> mAnnouncementAdapter;
 
-    private RequestQueue mRequestQueue;
+    private WebApi mWebApi;
 
-    private final Object mRequestTag = new Object();
+    private CompositeDisposable mCompositeDisposable;
 
     /**
      * 正在加载中的任务个数
@@ -180,7 +182,8 @@ public class InfoIntroFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRequestQueue = RequestManager.getRequestQueue();
+        mWebApi = RsGenerator.create(WebApi.class);
+        mCompositeDisposable = new CompositeDisposable();
         initViews();
         ConfigBus.register(mOnModuleConfigListener);
     }
@@ -239,7 +242,7 @@ public class InfoIntroFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mRequestQueue.cancelAll(mRequestTag);
+        mCompositeDisposable.dispose();
     }
 
     @Override
@@ -317,10 +320,12 @@ public class InfoIntroFragment extends Fragment {
     private void loadNewsItemData(String url, Map<String, String> params, final int position) {
         Cog.d(TAG, "loadNewsItemData url=", url, params);
         mOnLoadingCount++;
-        mRequestQueue.add(new NormalPostRequest(url, params, mRequestTag,
-                new Response.Listener<JSONObject>() {
+        Disposable disposable = mWebApi.post4Json(url, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void accept(JSONObject response) throws Exception {
                         minusLoadingCount();
                         Cog.d(TAG, "loadNewsItemData response=", response);
                         if ("success".equals(response.optString("result"))) {
@@ -349,13 +354,14 @@ public class InfoIntroFragment extends Fragment {
                             showErrorMsgWhenLoadInfo(position);
                         }
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                showErrorMsgWhenLoadInfo(position);
-                minusLoadingCount();
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        showErrorMsgWhenLoadInfo(position);
+                        minusLoadingCount();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -384,10 +390,12 @@ public class InfoIntroFragment extends Fragment {
         putAreaIdAndSchoolId(params);
         mOnLoadingCount++;
         Cog.d(TAG, "loadSlideNews", URLConfig.HOME_NEWS_SLIDE, params);
-        mRequestQueue.add(new NormalPostRequest(URLConfig.HOME_NEWS_SLIDE, params, mRequestTag,
-                new Response.Listener<JSONObject>() {
+        Disposable disposable = mWebApi.post4Json(URLConfig.HOME_NEWS_SLIDE, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadSlideNews response = " + response);
                         minusLoadingCount();
                         mInfoSlideLoaded = true;
@@ -424,14 +432,15 @@ public class InfoIntroFragment extends Fragment {
                             Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
-                minusLoadingCount();
-                increaseNewsEmptyCount();
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
+                        minusLoadingCount();
+                        increaseNewsEmptyCount();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     private OnMoreClickListener mOnMoreClickListener = new OnMoreClickListener() {

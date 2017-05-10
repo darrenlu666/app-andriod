@@ -23,13 +23,8 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.SearchAdapter;
-import com.codyy.erpsportal.commons.utils.DialogUtil;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -42,6 +37,10 @@ import com.codyy.erpsportal.commons.models.entities.SearchResource;
 import com.codyy.erpsportal.commons.models.entities.SearchVideo;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.DialogUtil;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -381,7 +380,7 @@ public class SearchInputActivity extends Activity implements SearchAdapter.OnHis
                 }
             }, new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(Throwable error) {
                     if (mRefreshLayout.isRefreshing()) {
                         mRefreshLayout.setRefreshing(false);
                     }

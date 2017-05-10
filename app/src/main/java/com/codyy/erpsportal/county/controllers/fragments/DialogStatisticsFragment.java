@@ -16,10 +16,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
+import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.RefreshRecycleView;
@@ -28,10 +31,6 @@ import com.codyy.erpsportal.county.controllers.models.entities.ActualClassItem;
 import com.codyy.erpsportal.county.controllers.models.entities.CountyListItemDetail;
 import com.codyy.erpsportal.county.controllers.models.entities.StatisticsItem;
 import com.codyy.erpsportal.databinding.DialogSemesterStatisticsBinding;
-import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
@@ -369,7 +368,7 @@ public class DialogStatisticsFragment extends AppCompatDialogFragment {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 if (getDialog() == null || !getDialog().isShowing()) {
                     return;
                 }

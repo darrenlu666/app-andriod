@@ -108,6 +108,11 @@ public abstract class ToolbarActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
     @LayoutRes
     protected abstract int getLayoutView();
 
@@ -118,6 +123,7 @@ public abstract class ToolbarActivity extends AppCompatActivity {
      * add by kmdai
      */
     protected void onBack() {
+
     }
 
     /**

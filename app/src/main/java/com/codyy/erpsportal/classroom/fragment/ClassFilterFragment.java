@@ -11,19 +11,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity.FilterParamsProvider;
 import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.Choice;
 import com.codyy.erpsportal.commons.models.entities.FilterItem;
-import com.codyy.erpsportal.commons.models.network.JsonArrayPostRequest;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 
@@ -36,6 +32,10 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 测试、作业模块-筛选过滤
@@ -110,12 +110,11 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                     final FilterItem item = mOptionsAdapter.getItem(position);
-                    RequestQueue requestQueue = RequestManager.getRequestQueue();
+                    WebApi webApi = RsGenerator.create(WebApi.class);
                     Map<String, String> params = new HashMap<>();
-//                    mLastOptionPos = position;
-                    Response.ErrorListener errorListener = new Response.ErrorListener() {
+                    Consumer<Throwable> errorConsumer = new Consumer<Throwable>() {
                         @Override
-                        public void onErrorResponse(VolleyError error) {
+                        public void accept(Throwable error) throws Exception {
                             Cog.d(TAG, "onErrorResponse error:" + error);
                             unCheckItem(position);
                             UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
@@ -275,13 +274,16 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                                 handleJsonItems(stuSelfStateArray, item);
                                 break;
                             default:
-                                requestQueue.add(new JsonArrayPostRequest(item.getUrl(), params, new Response.Listener<JSONArray>() {
-                                    @Override
-                                    public void onResponse(JSONArray response) {
-                                        Cog.d(TAG, "onResponse JSONArray response:" + response);
-                                        handleJsonItems(response, item);
-                                    }
-                                }, errorListener));
+                                webApi.post4Ja(item.getUrl(), params)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Consumer<JSONArray>() {
+                                            @Override
+                                            public void accept(JSONArray response) throws Exception {
+                                                Cog.d(TAG, "onResponse JSONArray response:" + response);
+                                                handleJsonItems(response, item);
+                                            }
+                                        }, errorConsumer);
                                 break;
                         }
                     } else {
@@ -337,15 +339,18 @@ public class ClassFilterFragment extends Fragment implements FilterParamsProvide
                             //params.put("baseSubjectId", mOptionsAdapter.getItem(1).getChoice() == null ? "" : (mOptionsAdapter.getItem(1).getChoice().getId() == null ? "" : mOptionsAdapter.getItem(1).getChoice().getId()));
                             params.put("uuid", mUuid);
                         }
-                        requestQueue.add(new NormalPostRequest(item.getUrl(), params, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Cog.d(TAG, "onResponse JSONObject response:" + response);
-                                if ("success".equals(response.optString("result"))) {
-                                    handleJsonItems(response.optJSONArray("list"), item);
-                                }
-                            }
-                        }, errorListener));
+                        webApi.post4Json(item.getUrl(), params)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Consumer<JSONObject>() {
+                                    @Override
+                                    public void accept(JSONObject response) throws Exception {
+                                        Cog.d(TAG, "onResponse JSONObject response:" + response);
+                                        if ("success".equals(response.optString("result"))) {
+                                            handleJsonItems(response.optJSONArray("list"), item);
+                                        }
+                                    }
+                                }, errorConsumer);
                     }
                     mLastOptionPos = position;
                 }

@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.SoftKeyboardStateHelper;
@@ -150,7 +150,7 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mEmptyView) return;
         if (mGroupSpace == null) {
             mEmptyView.setVisibility(View.VISIBLE);
@@ -419,7 +419,7 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 LogUtils.log(error);
             }
         });
@@ -471,7 +471,7 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 LogUtils.log(error);
             }
         });
@@ -523,7 +523,7 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
                 }
             }
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 LogUtils.log(error);
             }
         });

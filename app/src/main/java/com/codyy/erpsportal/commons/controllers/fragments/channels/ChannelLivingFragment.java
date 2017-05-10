@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.url.URLConfig;
@@ -123,7 +123,7 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mRecyclerView ) return;
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
@@ -290,7 +290,7 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 onFailure(error);
             }
         });

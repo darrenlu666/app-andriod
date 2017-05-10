@@ -29,13 +29,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationCommentFragment;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
+import com.codyy.erpsportal.commons.models.entities.Comment;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.entities.evaluation.EvaluationVideo;
+import com.codyy.erpsportal.commons.models.entities.evaluation.EvaluationVideoParse;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
@@ -45,13 +49,8 @@ import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
-import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
-import com.codyy.erpsportal.commons.models.entities.Comment;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.entities.evaluation.EvaluationVideo;
-import com.codyy.erpsportal.commons.models.entities.evaluation.EvaluationVideoParse;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -544,7 +543,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(EvaluationActivity.this, getResources().getString(R.string.net_error));
             }
         }, this.toString()));

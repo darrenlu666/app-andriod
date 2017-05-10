@@ -15,10 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.SelectLeftAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.SelectRightAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.SingleAdapter;
@@ -26,8 +23,10 @@ import com.codyy.erpsportal.commons.models.entities.AreaBase;
 import com.codyy.erpsportal.commons.models.entities.SchoolInfo;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -521,7 +520,7 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
         }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 rightListview.setEnabled(true);
                 leftListview.setEnabled(true);
                 Toast.makeText(mContext, mContext.getResources().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
@@ -744,7 +743,7 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
         }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 leftAreaBases.clear();
                 mSelectLeftAdapter.notifyDataSetChanged();
             }

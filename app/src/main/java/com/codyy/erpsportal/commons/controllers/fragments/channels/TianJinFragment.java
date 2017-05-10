@@ -17,19 +17,15 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.ChannelFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.ChannelFragment.TitleBarRiseListener;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.mainpage.TianJinCoursesProfile;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.url.URLConfig;
@@ -42,6 +38,9 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 天津课堂模板
@@ -179,32 +178,33 @@ public class TianJinFragment extends Fragment implements TitleBarRiseListener{
         if (mMapView != null) {
             mMapView.loadUrl(URLConfig.URL_MAP);
         }
-
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
+        WebApi webApi = RsGenerator.create(WebApi.class);
         Map<String, String> params = new HashMap<>();
         params.put("baseAreaId",areaId);
-        requestQueue.add(new NormalPostRequest(
-                URLConfig.PANEL_DATA, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadHomePageCount:" + response);
-                if ("success".equals(response.optString("result"))) {
-                    Gson gson = new Gson();
-                    TianJinCoursesProfile coursesProfile = gson.fromJson(response.toString(),
-                            TianJinCoursesProfile.class);
-                    if (mSchoolCountTv == null) return;
-                    mSchoolCountTv.setText(coursesProfile.getSchoolCount() + "");
-                    mClassroomCountTv.setText(coursesProfile.getClassroomCount() + "");
-                    mStudentCountTv.setText(coursesProfile.getStudentCount() + "");
-                    mTeacherCountTv.setText(coursesProfile.getTeacherCount() + "");
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "onErrorResponse:" + error);
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-            }
-        }).setRetryPolicy(new DefaultRetryPolicy(10000, 1, 1.0f)));
+        webApi.post4Json(URLConfig.PANEL_DATA, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadHomePageCount:" + response);
+                        if ("success".equals(response.optString("result"))) {
+                            Gson gson = new Gson();
+                            TianJinCoursesProfile coursesProfile = gson.fromJson(response.toString(),
+                                    TianJinCoursesProfile.class);
+                            if (mSchoolCountTv == null) return;
+                            mSchoolCountTv.setText(coursesProfile.getSchoolCount() + "");
+                            mClassroomCountTv.setText(coursesProfile.getClassroomCount() + "");
+                            mStudentCountTv.setText(coursesProfile.getStudentCount() + "");
+                            mTeacherCountTv.setText(coursesProfile.getTeacherCount() + "");
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "onErrorResponse:" + error);
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                    }
+                });
     }
 }

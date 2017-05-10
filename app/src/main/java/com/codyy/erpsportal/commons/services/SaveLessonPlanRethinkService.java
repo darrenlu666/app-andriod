@@ -6,20 +6,20 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 更改个人备课反思
@@ -69,28 +69,30 @@ public class SaveLessonPlanRethinkService extends IntentService {
      *
      */
     private void commitLessonPlanRethink(String uuid,final String lessonPlanId,final String content) {
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
+        WebApi webApi = RsGenerator.create(WebApi.class);
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
         params.put("lessonPlanId", lessonPlanId);
         params.put("rethink", content);
-        requestQueue.add(new NormalPostRequest(URLConfig.UPDATE_LESSON_PLAN_RETHINK, params,
-            new Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Cog.d(TAG, "commitLessonPlanRethink response=", response);
-                    if ("success".equals(response.optString("result"))){
-                        Toast.makeText(SaveLessonPlanRethinkService.this, response.optString("message"),Toast.LENGTH_SHORT).show();
-                        broadcast(lessonPlanId, content);
+        webApi.post4Json(URLConfig.UPDATE_LESSON_PLAN_RETHINK, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "commitLessonPlanRethink response=", response);
+                        if ("success".equals(response.optString("result"))){
+                            Toast.makeText(SaveLessonPlanRethinkService.this, response.optString("message"),Toast.LENGTH_SHORT).show();
+                            broadcast(lessonPlanId, content);
+                        }
                     }
-                }
-            }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.e(TAG, "commitLessonPlanRethink error=", error);
-                Toast.makeText(SaveLessonPlanRethinkService.this, R.string.save_rethink_failed,Toast.LENGTH_SHORT).show();
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.e(TAG, "commitLessonPlanRethink error=", error);
+                        Toast.makeText(SaveLessonPlanRethinkService.this, R.string.save_rethink_failed,Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void broadcast(String lessonPlanId,String content) {

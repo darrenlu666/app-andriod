@@ -20,22 +20,21 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.ItemIndexListRecyBaseAdapter;
-import com.codyy.erpsportal.exam.controllers.fragments.dialogs.TimePickerDialog;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.exam.models.entities.TreeItem;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.exam.controllers.fragments.dialogs.TimePickerDialog;
+import com.codyy.erpsportal.exam.models.entities.TreeItem;
 import com.codyy.erpsportal.statistics.widgets.OrderLayout;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -428,7 +427,7 @@ public class SchoolArrangeActivity extends ToolbarActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast("网络错误");
             }
         }));

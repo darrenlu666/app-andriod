@@ -9,25 +9,28 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.models.entities.EmumIndex;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationsFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.ParticipateSchoolViewHolder;
+import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
+import com.codyy.erpsportal.commons.models.entities.EmumIndex;
+import com.codyy.erpsportal.commons.models.entities.SchoolTeacher;
 import com.codyy.erpsportal.commons.utils.DateUtil;
+import com.codyy.erpsportal.commons.utils.DialogUtil;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.FixedRecyclerView;
-import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
-import com.codyy.erpsportal.commons.models.entities.SchoolTeacher;
-import com.codyy.erpsportal.commons.utils.DialogUtil;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONObject;
+
 import java.util.HashMap;
+
 import butterknife.Bind;
 
 /**
@@ -98,7 +101,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
 
     }
 
@@ -281,7 +284,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
 
             }
         });

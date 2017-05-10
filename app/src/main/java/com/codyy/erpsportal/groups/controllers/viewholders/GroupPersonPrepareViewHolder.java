@@ -20,7 +20,7 @@ public class GroupPersonPrepareViewHolder extends BaseRecyclerViewHolder<GroupPe
 
     @Bind(R.id.sdv_pic)SimpleDraweeView mSimpleDraweeView;
     @Bind(R.id.tv_name)TextView mTitleTextView;
-    @Bind(R.id.tv_desc)TextView mDescTextView;
+    @Bind(R.id.et_desc)TextView mDescTextView;
     @Bind(R.id.rb_star)    RatingBar mRbStar;
 
     public GroupPersonPrepareViewHolder(View itemView) {

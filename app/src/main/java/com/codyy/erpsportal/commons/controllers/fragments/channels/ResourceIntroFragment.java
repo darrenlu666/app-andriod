@@ -12,24 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.ResourceIntroAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.ResourceIntroAdapter.GridItem;
 import com.codyy.erpsportal.commons.controllers.adapters.ResourceIntroAdapter.TopItem;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.url.URLConfig;
 
@@ -39,6 +34,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 优课资源频道页
@@ -57,9 +58,9 @@ public class ResourceIntroFragment extends Fragment{
 
     private ResourceIntroAdapter mAdapter;
 
-    private final Object mRequestTag = new Object();
+    private WebApi mWebApi;
 
-    private RequestQueue mRequestQueue;
+    private CompositeDisposable mCompositeDisposable;
 
     private int mOnLoadingCount;
 
@@ -68,7 +69,8 @@ public class ResourceIntroFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRequestQueue = RequestManager.getRequestQueue();
+        mWebApi = RsGenerator.create(WebApi.class);
+        mCompositeDisposable = new CompositeDisposable();
         initViews();
         ConfigBus.register(mOnModuleConfigListener);
     }
@@ -123,7 +125,7 @@ public class ResourceIntroFragment extends Fragment{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mRequestQueue.cancelAll(mRequestTag);
+        mCompositeDisposable.dispose();
     }
 
     private void initEmptyView() {
@@ -153,10 +155,12 @@ public class ResourceIntroFragment extends Fragment{
         if (!TextUtils.isEmpty(schoolId)) params.put("schoolId", schoolId);
         mOnLoadingCount++;
         Cog.d(TAG, "loadSlides url=" + URLConfig.SLIDE_RESOURCES + params);
-        mRequestQueue.add(new NormalPostRequest(URLConfig.SLIDE_RESOURCES, params,mRequestTag,
-                new Listener<JSONObject>() {
+        Disposable disposable = mWebApi.post4Json(URLConfig.SLIDE_RESOURCES, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadSlides response=", response);
                         minusLoadingCount();
                         if ("success".equals(response.optString("result"))) {
@@ -184,14 +188,15 @@ public class ResourceIntroFragment extends Fragment{
                         }
                         onLoadingFinish();
                     }
-                }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
-                minusLoadingCount();
-                onLoadingFinish();
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
+                        minusLoadingCount();
+                        onLoadingFinish();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     private void minusLoadingCount() {
@@ -230,53 +235,57 @@ public class ResourceIntroFragment extends Fragment{
 //        final long start = System.currentTimeMillis();
         Cog.d(TAG, "@loadData url=" + URLConfig.RESOURCE_INTRO + map);
         mOnLoadingCount++;
-        mRequestQueue.add(new NormalPostRequest(URLConfig.RESOURCE_INTRO, map, mRequestTag,new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "onResponse response=" + response);
-                mRefreshLayout.setRefreshing(false);
-                String result = response.optString("result");
-                if ("success".equals(result)) {
-                    JSONArray channelResourceList = response.optJSONArray("semesterResList");
-                    if (mAdapter.getItemCount() > 0) {//已经有数据了，清除老数据
-                        GridItem firstItem = mAdapter.getItemAt(0);
-                        if (firstItem != null && firstItem instanceof TopItem) {//有幻灯片，首数据幻灯片不清
-                            mAdapter.removeItems(1);
-                        } else {
-                            mAdapter.clearItems();
-                        }
-                    }
-                    for (int i = 0; i < channelResourceList.length(); i++) {
-                        JSONObject semesterResource = channelResourceList.optJSONObject(i);
-                        String semesterName = semesterResource.optString("semesterName");
-                        String semesterId = semesterResource.optString("baseSemesterId");
-                        mAdapter.addItem( new ResourceIntroAdapter.TitleItem(semesterName, semesterId));
-                        if ( !semesterResource.isNull("resListViewList")) {
-                            List<Resource> resources = mSemesterResParser.parseArray(semesterResource.optJSONArray("resListViewList"));
-                            if (resources != null && resources.size() > 0) {
-                                for (Resource resource : resources) {
-                                    mAdapter.addItem(new ResourceIntroAdapter.ResourceItem( resource));
+        Disposable disposable = mWebApi.post4Json(URLConfig.RESOURCE_INTRO, map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "onResponse response=" + response);
+                        mRefreshLayout.setRefreshing(false);
+                        String result = response.optString("result");
+                        if ("success".equals(result)) {
+                            JSONArray channelResourceList = response.optJSONArray("semesterResList");
+                            if (mAdapter.getItemCount() > 0) {//已经有数据了，清除老数据
+                                GridItem firstItem = mAdapter.getItemAt(0);
+                                if (firstItem != null && firstItem instanceof TopItem) {//有幻灯片，首数据幻灯片不清
+                                    mAdapter.removeItems(1);
+                                } else {
+                                    mAdapter.clearItems();
                                 }
-                            } else {
-                                mAdapter.addItem(new ResourceIntroAdapter.EmptyItem());
                             }
-                        } else {
-                            mAdapter.addItem(new ResourceIntroAdapter.EmptyItem());
+                            for (int i = 0; i < channelResourceList.length(); i++) {
+                                JSONObject semesterResource = channelResourceList.optJSONObject(i);
+                                String semesterName = semesterResource.optString("semesterName");
+                                String semesterId = semesterResource.optString("baseSemesterId");
+                                mAdapter.addItem( new ResourceIntroAdapter.TitleItem(semesterName, semesterId));
+                                if ( !semesterResource.isNull("resListViewList")) {
+                                    List<Resource> resources = mSemesterResParser.parseArray(semesterResource.optJSONArray("resListViewList"));
+                                    if (resources != null && resources.size() > 0) {
+                                        for (Resource resource : resources) {
+                                            mAdapter.addItem(new ResourceIntroAdapter.ResourceItem( resource));
+                                        }
+                                    } else {
+                                        mAdapter.addItem(new ResourceIntroAdapter.EmptyItem());
+                                    }
+                                } else {
+                                    mAdapter.addItem(new ResourceIntroAdapter.EmptyItem());
+                                }
+                            }
+                            mAdapter.notifyDataSetChanged();
                         }
+                        minusLoadingCount();
+                        onLoadingFinish();
                     }
-                    mAdapter.notifyDataSetChanged();
-                }
-                minusLoadingCount();
-                onLoadingFinish();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "onErrorResponse error=" + error);
-                minusLoadingCount();
-                onLoadingFinish();
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "onErrorResponse error=" + error);
+                        minusLoadingCount();
+                        onLoadingFinish();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     private JsonParser<Resource> mSemesterResParser = new JsonParser<Resource>() {

@@ -22,11 +22,13 @@ public class RecyclerCommonAdapter<T, VH extends RecyclerViewHolder<T>, INFO> ex
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (holder instanceof RecyclerCommonViewHolder) {
-            RecyclerCommonViewHolder viewHolder = (RecyclerCommonViewHolder) holder;
+            RecyclerCommonViewHolder<T> viewHolder = (RecyclerCommonViewHolder<T>) holder;
             viewHolder.setDataToView(mList, position, mInfo);
+            addItemClickListener(holder);
         } else if (holder instanceof RecyclerViewHolder){
-            RecyclerViewHolder viewHolder = (RecyclerViewHolder) holder;
+            RecyclerViewHolder<T> viewHolder = (RecyclerViewHolder<T>) holder;
             viewHolder.setDataToView(mList, position);
+            addItemClickListener(holder);
         } else {
             LastItemHolder itemHolder = (LastItemHolder) holder;
             itemHolder.setDataToView(mLoadMoreEnabled);

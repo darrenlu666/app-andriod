@@ -13,6 +13,7 @@ import android.view.animation.DecelerateInterpolator;
 import com.codyy.erpsportal.commons.utils.Cog;
 
 /**
+ * 放大缩小动画
  * Created by gujiajia on 2016/7/20.
  */
 public class ZoomOutAnimator {

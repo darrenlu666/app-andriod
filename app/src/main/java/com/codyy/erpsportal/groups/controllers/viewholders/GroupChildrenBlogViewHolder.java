@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 public class GroupChildrenBlogViewHolder extends BaseRecyclerViewHolder<BlogPost> {
     @Bind(R.id.sdv_pic)SimpleDraweeView mSimpleDraweeView;
     @Bind(R.id.tv_name)TextView mTitleTextView;
-    @Bind(R.id.tv_desc)TextView mDescTextView;
+    @Bind(R.id.et_desc)TextView mDescTextView;
     @Bind(R.id.tv_creator)TextView mCreatorTextView;
     @Bind(R.id.tv_create_time)TextView mCrateTimeTv;
 

@@ -1,9 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.fragments.channels;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Handler.Callback;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -19,30 +16,17 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.widgets.RefreshLayout;
-import com.codyy.erpsportal.commons.widgets.infinitepager.HolderCreator;
-import com.codyy.erpsportal.commons.widgets.infinitepager.SlidePagerAdapter;
-import com.codyy.erpsportal.commons.widgets.infinitepager.SlidePagerHolder;
-import com.codyy.erpsportal.commons.widgets.infinitepager.SlideView;
-import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
-import com.codyy.erpsportal.info.utils.Info;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.engine.BlogPostViewStuffer;
-import com.codyy.erpsportal.commons.models.engine.InfoTitleTextFactory;
+import com.codyy.erpsportal.commons.models.engine.InfosSwitcher;
 import com.codyy.erpsportal.commons.models.engine.ItemFillerUtil;
 import com.codyy.erpsportal.commons.models.engine.LiveClassroomViewStuffer;
 import com.codyy.erpsportal.commons.models.entities.MainPageConfig;
@@ -51,10 +35,17 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainBlogPost;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
 import com.codyy.erpsportal.commons.models.listeners.MainLiveClickListener;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.erpsportal.commons.widgets.infinitepager.HolderCreator;
+import com.codyy.erpsportal.commons.widgets.infinitepager.SlidePagerAdapter;
+import com.codyy.erpsportal.commons.widgets.infinitepager.SlidePagerHolder;
+import com.codyy.erpsportal.commons.widgets.infinitepager.SlideView;
+import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
 import com.codyy.erpsportal.resource.models.entities.Resource;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -69,20 +60,19 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 首页（综合）
  * Created by gujiajia on 2016/7/18.
  */
-public class MainCompositeFragment extends Fragment implements OnModuleConfigListener, Callback, OnRefreshListener {
+public class MainCompositeFragment extends Fragment implements OnModuleConfigListener, OnRefreshListener {
 
     private final static String TAG = "MainCompositeFragment";
-
-    /**
-     * 资讯切换消息，用于定时翻上面的资讯
-     */
-    private final static int MSG_SWITCH = 0x47;
 
     private View mRootView;
 
@@ -143,16 +133,11 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
     @Bind(R.id.tv_teacher_empty)
     TextView mNoTeacherTv;
 
-    private RequestQueue mRequestQueue;
+    private WebApi mWebApi;
 
-    private Object mRequestTag = new Object();
+    private CompositeDisposable mCompositeDisposable;
 
-    /**
-     * 资讯数据json数组
-     */
-    private JSONArray mInfoArray;
-
-    private Handler mHandler;
+    private InfosSwitcher mInfosSwitcher;
 
     private LayoutInflater mInflater;
 
@@ -165,8 +150,8 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mInflater = LayoutInflater.from(getActivity());
-        mRequestQueue = RequestManager.getRequestQueue();
-        mHandler = new Handler(this);
+        mWebApi = RsGenerator.create(WebApi.class);
+        mCompositeDisposable = new CompositeDisposable();
 
         initViews();
         ConfigBus.register(this);
@@ -180,14 +165,14 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
             mRefreshLayout.setOnRefreshListener(this);
             mRefreshLayout.setColorSchemeResources(R.color.main_color);
 
-            mInfoTitleTs.setFactory(new InfoTitleTextFactory(getActivity()));
+            mInfosSwitcher = new InfosSwitcher(this, mInfoTitleTs);
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mRequestQueue.cancelAll(mRequestTag);
+        mCompositeDisposable.dispose();
         ConfigBus.unregister(this);
     }
 
@@ -200,9 +185,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
     @Override
     public void onResume() {
         super.onResume();
-        if (mInfoArray != null && mInfoArray.length() > 1) {
-            startSwitch();
-        }
+        mInfosSwitcher.resume();
     }
 
     /**
@@ -215,10 +198,12 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("size", "4");
         mOnLoadingCount++;
         Cog.d(TAG, "loadSlideNews url=", URLConfig.HOME_NEWS_SLIDE, params);
-        mRequestQueue.add(new NormalPostRequest(URLConfig.HOME_NEWS_SLIDE, params, mRequestTag,
-                new Response.Listener<JSONObject>() {
+        Disposable disposable = mWebApi.post4Json(URLConfig.HOME_NEWS_SLIDE, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadSlideNews response = " + response);
                         minusLoadingCount();
                         if ("success".equals(response.optString("result"))) {
@@ -245,13 +230,14 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                             Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
-                minusLoadingCount();
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
+                        minusLoadingCount();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -313,24 +299,33 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("baseAreaId", areaId);
         mOnLoadingCount++;
         Cog.d(TAG, "loadInfoSwitches url=", URLConfig.GET_MIXINFORMATION, params);
-        mRequestQueue.add(new NormalPostRequest(URLConfig.GET_MIXINFORMATION, params, mRequestTag,
-                new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadInfoSwitches response=", response);
-                minusLoadingCount();
-                if ("success".equals(response.optString("result"))) {
-                    mInfoArray = response.optJSONArray("data");
-                    startSwitch();
-                }
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
-                minusLoadingCount();
-            }
-        }));
+        Disposable disposable = mWebApi.post4Json(URLConfig.GET_MIXINFORMATION, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadInfoSwitches response=", response);
+                        minusLoadingCount();
+                        if ("success".equals(response.optString("result"))) {
+                            JSONArray infoArray = response.optJSONArray("data");
+                            if (infoArray == null || infoArray.length() == 0) {
+                                mInfoSheetRl.setVisibility(View.GONE);
+                            } else {
+                                mInfoSheetRl.setVisibility(View.VISIBLE);
+                                mInfosSwitcher.setInfoArray(infoArray);
+                                mInfosSwitcher.startSwitch();
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
+                        minusLoadingCount();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -348,36 +343,38 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("size", "4");
         mOnLoadingCount++;
         Cog.d(TAG, "Url:", URLConfig.GET_RECOMMEND_RESOURCE, params);
-        mRequestQueue.add(new NormalPostRequest(URLConfig.GET_RECOMMEND_RESOURCE, params, mRequestTag,
-                new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadMainResources response=", response);
-                minusLoadingCount();
-                if ("success".equals(response.optString("result"))) {
-                    JSONArray resourcesJa = response.optJSONArray("data");
-                    List<Resource> resources = mResourcesParser.parseArray(resourcesJa);
-                    if (resources == null || resources.size() == 0) {
-                        mResourcesGl.removeAllViews();
-                    } else {
-                        mResourcesGl.removeAllViews();
-                        addResources(resources);
-                        if (resources.size() % 2 != 0) {
-                            View gridSpace = new View(getActivity());
-                            mResourcesGl.addView(gridSpace, createGridItemLp());
+        Disposable disposable = mWebApi.post4Json(URLConfig.GET_RECOMMEND_RESOURCE, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadMainResources response=", response);
+                        minusLoadingCount();
+                        if ("success".equals(response.optString("result"))) {
+                            JSONArray resourcesJa = response.optJSONArray("data");
+                            List<Resource> resources = mResourcesParser.parseArray(resourcesJa);
+                            if (resources == null || resources.size() == 0) {
+                                mResourcesGl.removeAllViews();
+                            } else {
+                                mResourcesGl.removeAllViews();
+                                addResources(resources);
+                                if (resources.size() % 2 != 0) {
+                                    View gridSpace = new View(getActivity());
+                                    mResourcesGl.addView(gridSpace, createGridItemLp());
+                                }
+                            }
                         }
+                        updateNoResourceTv();
                     }
-
-                }
-                updateNoResourceTv();
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
-                minusLoadingCount();
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
+                        minusLoadingCount();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     private void updateNoResourceTv() {
@@ -440,30 +437,33 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("baseAreaId", areaId);
         params.put("size", "3");
         mOnLoadingCount++;
-        mRequestQueue.add(new NormalPostRequest(URLConfig.MAIN_LIVE_CLASSROOM, params, mRequestTag,
-                new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadLiveClass response=", response);
-                minusLoadingCount();
-                if ("success".equals(response.optString("result"))) {
-                    List<MainResClassroom> classroomList = MainResClassroom.PARSER
-                            .parseArray(response.optJSONArray("data"));
-                    ItemFillerUtil.addItems(mContainerLl,
-                            mLiveClassroomBar,
-                            mNoClassroomTv,
-                            classroomList,
-                            new LiveClassroomViewStuffer(getActivity(), new MainLiveClickListener(
-                                    MainCompositeFragment.this,UserInfoKeeper.obtainUserInfo())));
-                }
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
-                minusLoadingCount();
-            }
-        }));
+        Disposable disposable = mWebApi.post4Json(URLConfig.MAIN_LIVE_CLASSROOM, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadLiveClass response=", response);
+                        minusLoadingCount();
+                        if ("success".equals(response.optString("result"))) {
+                            List<MainResClassroom> classroomList = MainResClassroom.PARSER
+                                    .parseArray(response.optJSONArray("data"));
+                            ItemFillerUtil.addItems(mContainerLl,
+                                    mLiveClassroomBar,
+                                    mNoClassroomTv,
+                                    classroomList,
+                                    new LiveClassroomViewStuffer(getActivity(), new MainLiveClickListener(
+                                            MainCompositeFragment.this,UserInfoKeeper.obtainUserInfo())));
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
+                        minusLoadingCount();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -481,42 +481,45 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("size", "3");
         mOnLoadingCount++;
         Cog.d(TAG, "loadBlog url:", URLConfig.MAIN_BLOG, params);
-        mRequestQueue.add(new NormalPostRequest(URLConfig.MAIN_BLOG, params, mRequestTag
-                , new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadBlog response=", response);
-                minusLoadingCount();
-                if ("success".equals(response.optString("result"))) {
-                    JSONArray groupJa = response.optJSONArray("data");
-                    if (groupJa != null) {
-                        Gson gson = new Gson();
-                        List<MainBlogPost> blogPosts = gson.fromJson(groupJa.toString(),
-                                new TypeToken<List<MainBlogPost>>() {
-                                }.getType());
-                        ItemFillerUtil.addItems(mContainerLl,
-                                mBlogBar, mNoBlogTv,
-                                blogPosts, new BlogPostViewStuffer(getActivity()));
+        Disposable disposable = mWebApi.post4Json(URLConfig.MAIN_BLOG, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadBlog response=", response);
+                        minusLoadingCount();
+                        if ("success".equals(response.optString("result"))) {
+                            JSONArray groupJa = response.optJSONArray("data");
+                            if (groupJa != null) {
+                                Gson gson = new Gson();
+                                List<MainBlogPost> blogPosts = gson.fromJson(groupJa.toString(),
+                                        new TypeToken<List<MainBlogPost>>() {
+                                        }.getType());
+                                ItemFillerUtil.addItems(mContainerLl,
+                                        mBlogBar, mNoBlogTv,
+                                        blogPosts, new BlogPostViewStuffer(getActivity()));
+                            }
+                        } else {
+                            if (mContainerLl.indexOfChild(mNoBlogTv)
+                                    - mContainerLl.indexOfChild(mBlogBar) == 1) {
+                                mNoBlogTv.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
-                } else {
-                    if (mContainerLl.indexOfChild(mNoBlogTv)
-                            - mContainerLl.indexOfChild(mBlogBar) == 1) {
-                        mNoBlogTv.setVisibility(View.VISIBLE);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
+                        minusLoadingCount();
+                        tryToShowBlogEmptyView();
+                        if (mContainerLl.indexOfChild(mNoBlogTv)
+                                - mContainerLl.indexOfChild(mBlogBar) == 1) {
+                            mNoBlogTv.setVisibility(View.VISIBLE);
+                        }
                     }
-                }
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
-                minusLoadingCount();
-                tryToShowBlogEmptyView();
-                if (mContainerLl.indexOfChild(mNoBlogTv)
-                        - mContainerLl.indexOfChild(mBlogBar) == 1) {
-                    mNoBlogTv.setVisibility(View.VISIBLE);
-                }
-            }
-        }));
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -527,30 +530,6 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                 - mContainerLl.indexOfChild(mBlogBar) == 1) {
             mNoBlogTv.setVisibility(View.VISIBLE);
         }
-    }
-
-    /**
-     * 开始切换标题
-     */
-    private void startSwitch() {
-        if (mInfoArray == null || mInfoArray.length() < 2) {
-            mHandler.removeMessages(MSG_SWITCH);
-            return;
-        }
-        mInfoCurrentPos = 0;
-        showInfo();
-        switchInfo();
-    }
-
-    /**
-     * 开始切换资讯
-     */
-    private void switchInfo() {
-        mHandler.removeMessages(MSG_SWITCH);
-        Message message = Message.obtain();
-        message.what = MSG_SWITCH;
-        message.arg1 = mInfoCurrentPos;
-        mHandler.sendMessageDelayed(message, 3000);
     }
 
     @Override
@@ -622,39 +601,43 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("type", "composite");
         mOnLoadingCount++;
         Cog.d(TAG, "loadTeacherRecommended url=", URLConfig.MAIN_TEACHER_RECOMMENDED, params);
-        mRequestQueue.add(new NormalPostRequest(URLConfig.MAIN_TEACHER_RECOMMENDED, params, new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadTeacherRecommended response=", response);
-                minusLoadingCount();
-                if ("success".equals(response.optString("result"))) {
-                    JSONArray teacherRecommendedArray = response.optJSONArray("data");
-                    if (teacherRecommendedArray == null || teacherRecommendedArray.length() == 0) {
-                        mTeachersGl.setVisibility(View.GONE);
-                        mNoTeacherTv.setVisibility(View.VISIBLE);
-                        return;
-                    } else {
-                        mTeachersGl.setVisibility(View.VISIBLE);
-                        mNoTeacherTv.setVisibility(View.GONE);
+        Disposable disposable = mWebApi.post4Json(URLConfig.MAIN_TEACHER_RECOMMENDED, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadTeacherRecommended response=", response);
+                        minusLoadingCount();
+                        if ("success".equals(response.optString("result"))) {
+                            JSONArray teacherRecommendedArray = response.optJSONArray("data");
+                            if (teacherRecommendedArray == null || teacherRecommendedArray.length() == 0) {
+                                mTeachersGl.setVisibility(View.GONE);
+                                mNoTeacherTv.setVisibility(View.VISIBLE);
+                                return;
+                            } else {
+                                mTeachersGl.setVisibility(View.VISIBLE);
+                                mNoTeacherTv.setVisibility(View.GONE);
+                            }
+                            mTeachersGl.removeAllViews();
+                            for (int i = 0; i < teacherRecommendedArray.length(); i++) {
+                                JSONObject teacherObj = teacherRecommendedArray.optJSONObject(i);
+                                addTeacher(teacherObj);
+                            }
+                            if (teacherRecommendedArray.length() % 2 > 0) {
+                                View view = new View(getActivity());
+                                mTeachersGl.addView(view, createGridItemLp());
+                            }
+                        }
                     }
-                    mTeachersGl.removeAllViews();
-                    for (int i = 0; i < teacherRecommendedArray.length(); i++) {
-                        JSONObject teacherObj = teacherRecommendedArray.optJSONObject(i);
-                        addTeacher(teacherObj);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
+                        minusLoadingCount();
                     }
-                    if (teacherRecommendedArray.length() % 2 > 0) {
-                        View view = new View(getActivity());
-                        mTeachersGl.addView(view, createGridItemLp());
-                    }
-                }
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
-                minusLoadingCount();
-            }
-        }));
+                });
+        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -725,68 +708,10 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         return layoutParams;
     }
 
-    /**
-     * 当期滚动咨询位置
-     */
-    private int mInfoCurrentPos;
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        mInfoCurrentPos = msg.arg1;
-        if (msg.what == MSG_SWITCH) {
-            if (isDetached()) {//如果未附上Activity，直接返回不显示资讯
-                mHandler.removeMessages(MSG_SWITCH);
-                return true;
-            }
-
-            showInfo();
-            switchInfo();
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mHandler.removeMessages(MSG_SWITCH);
-    }
-
-    /**
-     * 显示咨询
-     */
-    private void showInfo() {
-        String infoType = mInfoArray.optJSONObject(mInfoCurrentPos).optString("infoType");
-        String infoTypeName;
-        switch (infoType) {
-            case Info.TYPE_NEWS:
-                infoTypeName = Titles.sPagetitleIndexCompositeNew;
-                break;
-            case Info.TYPE_ANNOUNCEMENT:
-                infoTypeName = Titles.sPagetitleIndexCompositeAnnouncement;
-                break;
-            default: // if (infoType.equals(Info.TYPE_NOTICE))
-                infoTypeName = Titles.sPagetitleIndexCompositeNotice;
-                break;
-        }
-        String infoTitleStr = mInfoArray.optJSONObject(mInfoCurrentPos).optString("title");
-        String infoStr = String.format("(%s) %s", infoTypeName, infoTitleStr);
-        mInfoTitleTs.setText(infoStr);
-        mInfoCurrentPos++;
-        if (mInfoCurrentPos >= mInfoArray.length())
-            mInfoCurrentPos = mInfoCurrentPos % mInfoArray.length();
-    }
-
-    @OnClick(R.id.ts_info)
-    public void onInfoClick() {
-        if (mInfoArray != null && mInfoArray.length() != 0 && mInfoCurrentPos < mInfoArray.length()) {
-            int position = mInfoCurrentPos - 1;
-            if (position < 0) position = mInfoArray.length() - 1;
-            JSONObject infoObj = mInfoArray.optJSONObject(position);
-            if (infoObj != null) {
-                InfoDetailActivity.startFromChannel(getActivity(), infoObj.optString("informationId"));
-            }
-        }
+        mInfosSwitcher.release();
     }
 
     @Override

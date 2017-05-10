@@ -3,6 +3,8 @@ package com.codyy.erpsportal.commons.widgets;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -28,7 +30,10 @@ import com.codyy.bennu.sdk.BNMediaPlayer;
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +46,7 @@ import butterknife.ButterKnife;
  * Created by poe on 2016/7/11.
  */
 public class BNMultipleLiveControlView extends RelativeLayout implements AutoHide,Handler.Callback ,SurfaceHolder.Callback{
-    private String TAG = "BNMultipleLiveControlView";
+    private String TAG = "MultipleLiveControlView";
     /**通知隐藏*/
     private static final int MSG_NOTIFY_HIDE_VIEW = 100 ;
     /**设置标题*/
@@ -235,6 +240,23 @@ public class BNMultipleLiveControlView extends RelativeLayout implements AutoHid
                 mHandler.sendEmptyMessage(MSG_HIDE_VIEW);
             }
         };
+        registerScreenReceiver();
+    }
+    private ScreenBroadCastUtils mScreenBroadCastUtils;
+    private void registerScreenReceiver() {
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+            @Override
+            public void onScreenOn() {
+                Log.i(TAG,"onScreenOn()");
+                startResume();
+            }
+
+            @Override
+            public void onScreenLock() {
+                Log.i(TAG,"onScreenLock()");
+                stop();
+            }
+        });
     }
 
     @Override
@@ -473,6 +495,9 @@ public class BNMultipleLiveControlView extends RelativeLayout implements AutoHid
     protected void onDetachedFromWindow() {
         Cog.i(TAG , " onDetachedFromWindow() ~");
         super.onDetachedFromWindow();
+        if(null != mScreenBroadCastUtils){
+            mScreenBroadCastUtils.destroy();
+        }
     }
 
 

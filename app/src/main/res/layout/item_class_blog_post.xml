@@ -62,7 +62,7 @@
         </LinearLayout>
     </LinearLayout>
     <TextView
-        android:id="@+id/tv_desc"
+        android:id="@+id/et_desc"
         tools:text="blog detail descblog detail desc blog detail desc blog detail desc blog detail desc blog detail desc blog detail desc blog detail  blog detail desc blog detail desc blog detail  "
         style="@style/txt_group_content"
         android:layout_width="match_parent"

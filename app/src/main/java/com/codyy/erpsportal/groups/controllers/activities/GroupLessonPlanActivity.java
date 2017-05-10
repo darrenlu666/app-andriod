@@ -32,26 +32,25 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
+import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.models.parsers.JsonParser;
+import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.TitleItemBar;
-import com.codyy.erpsportal.commons.models.ImageFetcher;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.erpsportal.commons.models.parsers.JsonParser;
-import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepContentActivity;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.joda.time.format.DateTimeFormat;
@@ -244,7 +243,7 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "loadData error=" + error);
                 hideRefreshing();
                 updateEmptyView();
@@ -296,7 +295,7 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "loadData error=" + error);
                 doFinishLoading(isRefreshing);
                 if (!isRefreshing) {
@@ -699,7 +698,7 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
             context = view.getContext();
             dvIcon = (SimpleDraweeView) view.findViewById(R.id.dv_icon);
             nameTv = (TextView) view.findViewById(R.id.tv_name);
-            descTv = (TextView) view.findViewById(R.id.tv_desc);
+            descTv = (TextView) view.findViewById(R.id.et_desc);
         }
 
         @Override

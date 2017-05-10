@@ -8,18 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.SendMsgDialog;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.perlcourseprep.controllers.fragments.LessonPlanCommentsNewFragment;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -124,7 +123,7 @@ public class LessonPlanCommentsActivity extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "sendComment error:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
                 mLoadingDialog.dismiss();

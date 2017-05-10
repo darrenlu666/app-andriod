@@ -34,7 +34,7 @@ public class BlogPostViewStuffer implements ViewStuffer<MainBlogPost>{
     public void onStuffView(View view,final MainBlogPost item) {
         SimpleDraweeView iconDv = (SimpleDraweeView) view.findViewById(R.id.sdv_pic);
         TextView titleTv = (TextView) view.findViewById(R.id.tv_name);
-        TextView contentTv = (TextView) view.findViewById(R.id.tv_desc);
+        TextView contentTv = (TextView) view.findViewById(R.id.et_desc);
         ImageFetcher.getInstance(view).fetchSmall(iconDv, item.getHeadPic());
         titleTv.setText( item.getBlogTitle());
         contentTv.setText( item.getBlogTextContent());

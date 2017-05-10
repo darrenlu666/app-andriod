@@ -13,21 +13,20 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
-import com.codyy.erpsportal.exam.controllers.viewholders.SelectableHeaderHolder;
-import com.codyy.erpsportal.exam.controllers.viewholders.SelectableItemHolder;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.exam.models.entities.TreeItem;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.exam.controllers.viewholders.SelectableHeaderHolder;
+import com.codyy.erpsportal.exam.controllers.viewholders.SelectableItemHolder;
+import com.codyy.erpsportal.exam.models.entities.TreeItem;
 import com.codyy.media.node.model.TreeNode;
 import com.codyy.media.node.view.AndroidTreeView;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,7 +84,7 @@ public class SchoolArrangeTreeActivity extends ToolbarActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(getString(R.string.refresh_state_loade_error));
             }
         }));

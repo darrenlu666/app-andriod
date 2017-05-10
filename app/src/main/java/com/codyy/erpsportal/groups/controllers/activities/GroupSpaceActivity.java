@@ -25,29 +25,35 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.GroupCollectiveActivityDetail;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
-import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepContentActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
+import com.codyy.erpsportal.commons.controllers.fragments.filters.CategoryFilterFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.filters.SimpleListFilterFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
-import com.codyy.erpsportal.commons.exception.LogUtils;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.CategoryFilterFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.SimpleListFilterFragment;
+import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.erpsportal.commons.models.entities.blog.GroupBlogPost;
+import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
+import com.codyy.erpsportal.commons.models.entities.my.MyBaseTitle;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.SoftKeyboardStateHelper;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.groups.controllers.viewholders.GroupAnnounceViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.GroupBlogViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.GroupCollectionPrepareViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.GroupPersonPrepareViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.GroupSpaceViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
-import com.codyy.erpsportal.commons.models.entities.blog.GroupBlogPost;
-import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
 import com.codyy.erpsportal.groups.models.entities.GroupPersonPrepare;
 import com.codyy.erpsportal.groups.models.entities.GroupPrepareLesson;
 import com.codyy.erpsportal.groups.models.entities.GroupResource;
@@ -58,17 +64,9 @@ import com.codyy.erpsportal.groups.models.entities.ModuleParse;
 import com.codyy.erpsportal.groups.models.entities.ModulePersonPrepare;
 import com.codyy.erpsportal.groups.models.entities.ModulePrepareLesson;
 import com.codyy.erpsportal.groups.models.entities.ModuleResource;
-import com.codyy.erpsportal.commons.models.entities.my.MyBaseTitle;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.SoftKeyboardStateHelper;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepContentActivity;
 import com.codyy.erpsportal.weibo.controllers.activities.WeiBoActivity;
-import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -295,7 +293,7 @@ public class GroupSpaceActivity extends BaseHttpActivity implements BaseRecycler
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if (null == mRecyclerView || null == mRefreshLayout) return;
         mRecyclerView.setEnabled(true);
         if (mRefreshLayout.isRefreshing()) {
@@ -581,13 +579,9 @@ public class GroupSpaceActivity extends BaseHttpActivity implements BaseRecycler
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
-                String errorMsg = error.getMessage();
-                if (TextUtils.isEmpty(errorMsg)) {
-                    errorMsg = error.networkResponse.statusCode + " :ServerError ！";
-                }
-                ToastUtil.showToast(errorMsg);
-                LogUtils.log(error);
+            public void onRequestFailure(Throwable error) {
+                Cog.e(TAG, "onRequestFailure error=", error);
+                ToastUtil.showToast(getString(R.string.net_connect_error));
             }
         });
     }

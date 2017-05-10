@@ -10,8 +10,6 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
@@ -19,6 +17,7 @@ import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.widgets.SlidingTabLayout;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
@@ -204,7 +203,7 @@ public class InfoDeleteActivity extends AppCompatActivity{
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mLoadingDialog.dismiss();
                 mAdapter.notifyDataSetChanged();
                 Toast.makeText(InfoDeleteActivity.this, R.string.net_error, Toast.LENGTH_SHORT).show();

@@ -34,9 +34,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.AppointmentInfo.ReceiveListBean;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity.ClassTourInfo.DetailBean;
@@ -46,6 +43,8 @@ import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.models.parsers.ClassTourClassroomNewParser;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -291,7 +290,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
 //                UiUtils.toast(LiveVideoListPlayActivity.this, R.string.net_error, Toast.LENGTH_SHORT);
                 mClassroomList.clear();
@@ -389,7 +388,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
             }
         }, mRequestTag));

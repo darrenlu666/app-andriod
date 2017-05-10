@@ -21,7 +21,7 @@ public class GroupBlogViewHolder extends BaseRecyclerViewHolder<GroupBlogPost> {
 
     @Bind(R.id.sdv_pic)SimpleDraweeView mSimpleDraweeView;
     @Bind(R.id.tv_name)TextView mTitleTextView;
-    @Bind(R.id.tv_desc)TextView mDescTextView;
+    @Bind(R.id.et_desc)TextView mDescTextView;
     @Bind(R.id.tv_teacher_name)TextView mNameTextView;
 
     public GroupBlogViewHolder(View itemView ) {

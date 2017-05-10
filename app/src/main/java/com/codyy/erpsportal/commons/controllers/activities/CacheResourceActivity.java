@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
+
 import com.codyy.bennu.framework.BNAVFramework;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.CacheResourceAdapter;
@@ -310,7 +310,7 @@ public class CacheResourceActivity extends BaseHttpActivity implements Handler.C
     public void onSuccess(JSONObject response,boolean isRefreshing) { }
 
     @Override
-    public void onFailure(VolleyError error) { }
+    public void onFailure(Throwable error) { }
 
     public void onBack(View view){
         this.finish();

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/divider_horizontal_line"
+    android:orientation="vertical"
+    android:showDividers="middle">
+    <RadioButton
+        android:id="@+id/rb_status_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/StatusText"
+        android:text="@string/all" />
+
+    <RadioButton
+        android:id="@+id/rb_status_await_handle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/StatusText"
+        android:text="@string/status_await_handle"/>
+
+    <RadioButton
+        android:id="@+id/rb_status_handling"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/StatusText"
+        android:text="@string/status_handling"/>
+
+    <RadioButton
+        android:id="@+id/rb_status_handled"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/StatusText"
+        android:text="@string/status_handled"/>
+
+    <RadioButton
+        android:id="@+id/rb_status_accepted"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/StatusText"
+        android:text="@string/status_accepted"/>
+</RadioGroup>

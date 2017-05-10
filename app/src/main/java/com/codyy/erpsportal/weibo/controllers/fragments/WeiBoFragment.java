@@ -9,22 +9,21 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.BaseRefreshFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.WeiBoPopuDialog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.weibo.controllers.activities.WeiBoActivity;
 import com.codyy.erpsportal.weibo.controllers.activities.WeiBoNewActivity;
 import com.codyy.erpsportal.weibo.controllers.activities.WeiBoPrivateMessageActivity;
 import com.codyy.erpsportal.weibo.controllers.activities.WeiBoTurnActivity;
 import com.codyy.erpsportal.weibo.controllers.adapters.WeiBoAdapter;
 import com.codyy.erpsportal.weibo.models.entities.WeiBoListInfo;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -229,7 +228,7 @@ public class WeiBoFragment extends BaseRefreshFragment<WeiBoListInfo> implements
     }
 
     @Override
-    protected void onRequestError(VolleyError error, int msg) {
+    protected void onRequestError(Throwable error, int msg) {
         switch (msg) {
             case AGREE_WEIBO:
             case UNAGREE_WEIBO:
@@ -425,7 +424,7 @@ public class WeiBoFragment extends BaseRefreshFragment<WeiBoListInfo> implements
                     }
                 }, new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(Throwable error) {
 
                     }
                 }, mHashTag));

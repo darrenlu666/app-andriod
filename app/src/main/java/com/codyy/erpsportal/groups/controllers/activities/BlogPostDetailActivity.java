@@ -24,7 +24,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
@@ -38,7 +38,6 @@ import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.CommentUtils;
 import com.codyy.erpsportal.commons.utils.HtmlUtils;
-import com.codyy.erpsportal.commons.widgets.BnMediaPlayLayout;
 import com.codyy.erpsportal.groups.controllers.viewholders.BlogCommentChildViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentMoreViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.BlogCommentViewHolder;
@@ -116,7 +115,6 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     @Bind(R.id.scroll_view)ScrollView mScrollView;
     @Bind(R.id.fl_content)FrameLayout mFrameLayout ;
     @Bind(R.id.tv_category)TextView mCategoryTextView;
-    @Bind(R.id.bn_media_view)BnMediaPlayLayout mBnMediaPlayLayout;//视频播放组件
     @Bind(R.id.rb_star)RatingBar mRatingBar;//评分
     @Bind(R.id.tv_score)TextView mScoreTextView;
     @Bind(R.id.refresh_layout)    RefreshLayout mRefreshLayout;
@@ -208,7 +206,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mAllCommentCountTv ) return;
         ToastUtil.showToast(error.getMessage());
         LogUtils.log(error);
@@ -504,7 +502,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
@@ -539,7 +537,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
 
             }
         });
@@ -591,7 +589,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("评论失败！");
             }
         });
@@ -653,7 +651,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("评论失败！");
             }
         });
@@ -698,7 +696,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 ToastUtil.showToast("删除失败！");
             }
         });

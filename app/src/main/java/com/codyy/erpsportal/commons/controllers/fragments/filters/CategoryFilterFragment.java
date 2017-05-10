@@ -8,7 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
@@ -160,7 +160,7 @@ public  class CategoryFilterFragment extends BaseHttpFragment {
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         //do nothing ...
     }
 

@@ -22,40 +22,43 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.groups.controllers.viewholders.ClassMemberViewHolder;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.UserClassAdapter;
-import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
-import com.codyy.erpsportal.groups.controllers.viewholders.ClassMemberSelectViewHolder;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 import com.codyy.erpsportal.commons.models.entities.UserClassBase;
 import com.codyy.erpsportal.commons.models.entities.UserClassGroups;
 import com.codyy.erpsportal.commons.models.entities.UserClassStudent;
 import com.codyy.erpsportal.commons.models.entities.UserClassTeacher;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 import com.codyy.erpsportal.commons.models.entities.my.TeacherClassParse;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.erpsportal.groups.controllers.viewholders.ClassMemberSelectViewHolder;
+import com.codyy.erpsportal.groups.controllers.viewholders.ClassMemberViewHolder;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 
@@ -172,7 +175,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
 
     }
 
@@ -447,7 +450,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError response) {
+            public void onErrorResponse(Throwable response) {
                 mDialogUtil.cancel();
             }
         }));

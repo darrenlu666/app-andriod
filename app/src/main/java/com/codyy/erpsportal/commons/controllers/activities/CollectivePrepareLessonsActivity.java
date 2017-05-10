@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
@@ -88,7 +88,7 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
 
     }
 

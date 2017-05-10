@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -227,7 +227,7 @@ public class GroupMemberActivity extends BaseHttpActivity {
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mRecyclerView ) return;
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {
@@ -274,7 +274,7 @@ public class GroupMemberActivity extends BaseHttpActivity {
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
             }
         });
 

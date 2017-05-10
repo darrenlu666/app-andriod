@@ -21,19 +21,18 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 import com.codyy.erpsportal.commons.models.entities.TimeTableContent;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 import com.codyy.erpsportal.commons.models.entities.my.TeacherClassParse;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -333,7 +332,7 @@ public class UserTimeTableActivity extends Activity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 switch (msg) {
                     case GET_TIMETABLE:
                         Snackbar.make(mTimeTableView, "获取课程表失败！", Snackbar.LENGTH_SHORT).show();

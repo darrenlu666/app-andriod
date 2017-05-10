@@ -6,9 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
+import com.codyy.erpsportal.homework.models.entities.task.AnswerTimeLog;
 import com.codyy.erpsportal.homework.models.entities.task.TaskAnswer;
 import com.codyy.erpsportal.homework.models.entities.task.TaskPicInfo;
-import com.codyy.erpsportal.homework.models.entities.task.AnswerTimeLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -346,6 +346,26 @@ public class TaskAnswerDao {
         } else {
             mDatabase.delete(TASK_ITEM_PIC_TABLE, ANSWER_STUDENT_ID + " = ? and " + ANSWER_TASK_ID + " = ? and " + ANSWER_TASK_ITEM_TYPE + " = ? and " + ANSWER_RESOURCE_LOCAL_PATH + " = ? ",
                     new String[]{studentId, taskId, taskItemType, message});
+        }
+        mDatabase.close();
+    }
+
+    /**
+     * 学生、某个作业/测试、某个题的多个图片信息
+     * @param studentId
+     * @param taskId
+     * @param taskItemId
+     * @param taskItemType
+     * @param paths 多个图片路径，以“,”分隔
+     */
+    public void deletePicInfos(String studentId, String taskId, String taskItemId, String taskItemType, String paths) {
+        mDatabase = mDbHelper.getWritableDatabase();
+        if (!taskItemType.equals(TaskFragment.TYPE_TEXT)) {
+            mDatabase.delete(TASK_ITEM_PIC_TABLE, ANSWER_STUDENT_ID + " = ? and " + ANSWER_TASK_ID + " = ? and " + ANSWER_TASK_ITEM_ID + " = ? and " + ANSWER_TASK_ITEM_TYPE + " = ? and " + ANSWER_RESOURCE_LOCAL_PATH + " in(" + paths + ") ",
+                    new String[]{studentId, taskId, taskItemId, taskItemType});
+        } else {
+            mDatabase.delete(TASK_ITEM_PIC_TABLE, ANSWER_STUDENT_ID + " = ? and " + ANSWER_TASK_ID + " = ? and " + ANSWER_TASK_ITEM_TYPE + " = ? and " + ANSWER_RESOURCE_LOCAL_PATH + " in(" + paths + ")",
+                    new String[]{studentId, taskId, taskItemType});
         }
         mDatabase.close();
     }

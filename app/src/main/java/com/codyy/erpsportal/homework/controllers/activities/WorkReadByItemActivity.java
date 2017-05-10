@@ -38,15 +38,20 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.ScreenUtils;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
 import com.codyy.erpsportal.commons.controllers.activities.TaskReadByItemActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.dao.TaskReadDao;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.services.WeiBoMediaService;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.HtmlUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.WebViewUtils;
 import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
 import com.codyy.erpsportal.exam.utils.MediaCheck;
 import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragment;
@@ -57,15 +62,9 @@ import com.codyy.erpsportal.homework.utils.WorkUtils;
 import com.codyy.erpsportal.homework.widgets.AudioBar;
 import com.codyy.erpsportal.homework.widgets.PressBar;
 import com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.dao.TaskReadDao;
 import com.codyy.erpsportal.perlcourseprep.models.entities.SubjectMaterialPicture;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.services.WeiBoMediaService;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.WebViewUtils;
+import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONObject;
@@ -426,7 +425,7 @@ public class WorkReadByItemActivity extends TaskReadByItemActivity implements Vi
                     }
                 }, new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(Throwable error) {
                         Log.e(TAG, "数据获取失败！");
                     }
                 }));
@@ -472,7 +471,7 @@ public class WorkReadByItemActivity extends TaskReadByItemActivity implements Vi
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Log.e(TAG, "数据获取失败！");
             }
         }));
@@ -769,7 +768,7 @@ public class WorkReadByItemActivity extends TaskReadByItemActivity implements Vi
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Log.e(TAG, "数据获取失败！");
             }
         }));

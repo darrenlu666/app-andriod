@@ -17,21 +17,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.models.parsers.JsonParser;
+import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsingListener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.erpsportal.commons.models.parsers.JsonParser;
-import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsingListener;
 import com.codyy.erpsportal.statistics.controllers.fragments.dialogs.DayPickerDialog;
 import com.codyy.erpsportal.statistics.controllers.fragments.dialogs.DayPickerDialog.OnClickTimePicker;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
@@ -39,6 +37,7 @@ import com.codyy.erpsportal.statistics.models.entities.BaseEntity;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterCarrier;
 import com.codyy.erpsportal.statistics.models.entities.TermEntity;
 import com.codyy.erpsportal.statistics.widgets.OrderLayout;
+import com.codyy.url.URLConfig;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -355,7 +354,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "loadTerms error=", error);
                 ToastUtil.showToast(CoursesProfilesFilterActivity.this, "获取学期失败！");
             }
@@ -422,7 +421,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "loadSubjects error=", error);
                 ToastUtil.showToast(CoursesProfilesFilterActivity.this, "获取学科失败！");
             }

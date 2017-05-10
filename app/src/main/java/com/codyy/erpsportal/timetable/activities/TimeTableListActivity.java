@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.commons.controllers.activities.FilterBaseActivity;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.timetable.fragments.TimetableListFragment;
@@ -37,7 +37,7 @@ public class TimeTableListActivity extends FilterBaseActivity {
     }
 
     @Override
-    protected void onError(VolleyError error, int msg) {
+    protected void onError(Throwable error, int msg) {
 
     }
 

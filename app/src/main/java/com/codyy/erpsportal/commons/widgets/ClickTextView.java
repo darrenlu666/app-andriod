@@ -3,6 +3,7 @@ package com.codyy.erpsportal.commons.widgets;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -20,7 +21,7 @@ import com.codyy.erpsportal.commons.utils.InputUtils;
 /**
  * Created by kmdai on 16-1-13.
  */
-public class ClickTextView extends TextView {
+public class ClickTextView extends AppCompatTextView {
     private Context mContext;
     private OnClick mOnClick;
 

@@ -13,26 +13,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.RemoteDirectorActivity;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.DateUtil;
-import com.codyy.erpsportal.commons.utils.StringUtils;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.widgets.AvatarView;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.ClassRoomItem;
 import com.codyy.erpsportal.commons.models.entities.RemoteDirectorConfig;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DateUtil;
+import com.codyy.erpsportal.commons.utils.StringUtils;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONObject;
@@ -221,7 +219,7 @@ public class RemoteDirectorNewFragment extends LoadMoreFragment<ClassRoomItem, R
         }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
+            public void onErrorResponse(Throwable volleyError) {
                 dismissDialog();
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
             }

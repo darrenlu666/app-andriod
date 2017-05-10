@@ -126,22 +126,17 @@ android {
     productFlavors {
         codyyTest {
             applicationId "com.codyy.erpsportal.ct"
-            buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85\"")
+            buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85/\"")
         }
 
         train {
             applicationId "com.codyy.erpsportal.tr"
-            buildConfigField("String", "API_HOST", "\"http://mobile.needu.cn\"")
+            buildConfigField("String", "API_HOST", "\"http://mobile.needu.cn/\"")
         }
 
         web {
             applicationId "com.codyy.erpsportal.web"
-            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile\"")
-        }
-
-        web8081 {
-            applicationId "com.codyy.erpsportal.web"
-            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8081/mobile\"")
+            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile/\"")
         }
     }
 
@@ -156,21 +151,30 @@ dependencies {
     compile "com.android.support:cardview-v7:${SUPPORT_VERSION}"
     compile "com.android.support:recyclerview-v7:${SUPPORT_VERSION}"
     compile "com.android.support:gridlayout-v7:${SUPPORT_VERSION}"
-    compile 'com.mcxiaoke.volley:library:1.0.19'
-    compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'joda-time:joda-time:2.9.4'
-    compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.nineoldandroids:library:2.4.0'
     compile project(':library-viewpager-indicator')
     compile project(':albumlibrary')
-    compile 'com.android.support:multidex:1.0.1'
     compile project(':CalendarListviewLibrary')
     compile project(':bennu')
     compile project(':mupdf')
     compile project(':codyymedialibrary')
     compile project(':url-builder-annotations')
-    compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.1'
-    compile 'cn.aigestudio.datepicker:DatePicker:2.2.0'
     apt project(':url-builder-compiler')
+    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'joda-time:joda-time:2.9.4'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.1'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    compile 'com.squareup.retrofit2:converter-scalars:2.2.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
+    compile 'cn.aigestudio.datepicker:DatePicker:2.2.0'
+    compile 'com.google.android:flexbox:0.2.5'
+//    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile project(path: ':zxing')
 }

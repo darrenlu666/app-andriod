@@ -1,9 +1,9 @@
 package com.codyy.url;
 
 import com.codyy.erpsportal.BuildConfig;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.urlbuilder.UrlBuilder;
 import com.codyy.erpsportal.urlbuilder.annotations.UrlSuffix;
-import com.codyy.erpsportal.commons.utils.Cog;
 
 /**
  * Created by kmdai on 2015/4/13.
@@ -24,13 +24,13 @@ public class URLConfig {
 
     public static String BASE = BuildConfig.API_HOST;
 
-    @UrlSuffix("/images/")
+    @UrlSuffix("images/")
     public static String IMAGE_URL;
 
     /**
      * 获取应用模块
      */
-    @UrlSuffix("/mobile/workspace/getUseList.do")
+    @UrlSuffix("mobile/workspace/getUseList.do")
     public static String URL_GET_APPS;
 
     /**
@@ -38,115 +38,115 @@ public class URLConfig {
      * studentId
      * uuid
      */
-    @UrlSuffix("/myHome/mobile/getAppOfChildren.do")
+    @UrlSuffix("myHome/mobile/getAppOfChildren.do")
     public static String URL_GET_CHILD_APPS;
     /**
      * 上传图片
      */
-    @UrlSuffix("/mobile/changeHeadPic.do")
+    @UrlSuffix("mobile/changeHeadPic.do")
     public static String UPLOAD_IMAGE;
 
     /**
      * 获取默认地区码
      */
-    @UrlSuffix("/map/getDefaultAreaCode.do")
+    @UrlSuffix("map/getDefaultAreaCode.do")
     public static String URL_DEFAULT_AREA_CODE;
 
-    @UrlSuffix("/index/getHomePageInitInfo.do")
+    @UrlSuffix("index/getHomePageInitInfo.do")
     public static String CONFIG;
 
     /**
      * 获取地区数据
      */
-    @UrlSuffix("/index/getHomePageCount.do")
+    @UrlSuffix("index/getHomePageCount.do")
     public static String URL_HOME_PAGE_COUNT;
 
     /**
      * 天津首页地图
      */
-    @UrlSuffix("/map/mapTJPage.html")
+    @UrlSuffix("map/mapTJPage.html")
     public static String URL_MAP;
 
     /**
      * 天津数据
      */
-    @UrlSuffix("/map/getDataByAreaId.do")
+    @UrlSuffix("map/getDataByAreaId.do")
     public static String PANEL_DATA;
 
     /**
      * 费县数据
      */
-    @UrlSuffix("/map/getFXData.do")
+    @UrlSuffix("map/getFXData.do")
     public static String GET_FX_DATA;
 
     /**
      * 登录
      */
-    @UrlSuffix("/newLogin.do")
+    @UrlSuffix("newLogin.do")
     public static String LOGIN;
 
-    @UrlSuffix("/loginWithToken.do")
+    @UrlSuffix("loginWithToken.do")
     public static String LOGIN_WITH_TOKEN;
 
     /**
      * 获取登录token
      */
-    @UrlSuffix("/generateLoginToken.do")
+    @UrlSuffix("generateLoginToken.do")
     public static String LOGIN_TOKEN;
 
     /**
      * 获取验证码图片
      */
-    @UrlSuffix("/getVerifyCodeImage.do")
+    @UrlSuffix("getVerifyCodeImage.do")
     public static String VERIFY_CODE_IMAGE;
 
-    @UrlSuffix("/mobile/complete/completeUserInfo.do")
+    @UrlSuffix("mobile/complete/completeUserInfo.do")
     public static String COMPLETE_USER_INFO;
 
     /**
      * 获得课表
      */
-    @UrlSuffix("/mobile/schedule/getSchoolInfoPageList.do")
+    @UrlSuffix("mobile/schedule/getSchoolInfoPageList.do")
     public static String TIMETABLE_URL;
     /**
      * 获取基本信息
      */
-    @UrlSuffix("/mobile/schedule/getBaseSchoolScheduleInfo.do")
+    @UrlSuffix("mobile/schedule/getBaseSchoolScheduleInfo.do")
     public static String GET_BASESCHEDULEINFO;
     /**
      * 专递课堂-课程表-获取主讲教室
      */
-    @UrlSuffix("/mobile/schedule/getMasterClassroomScheduleDetail.do")
+    @UrlSuffix("mobile/schedule/getMasterClassroomScheduleDetail.do")
     public static String GET_MASTERCLASSROOM_DETAIL;
     /**
      * 专递课堂-课程表-获取接收教室
      */
-    @UrlSuffix("/mobile/schedule/getReceiveClassroomScheduleDetail.do")
+    @UrlSuffix("mobile/schedule/getReceiveClassroomScheduleDetail.do")
     public static String GET_RECEIVECLASSROOM_DETAIL;
     /**
      * 专递课堂-课程表-获取老师课表详情
      */
-    @UrlSuffix("/mobile/schedule/getTeacherScheduleDetail.do")
+    @UrlSuffix("mobile/schedule/getTeacherScheduleDetail.do")
     public static String GET_TEACHER_SCHEDULE;
 
     /**
      * 课表详情
      */
-    @UrlSuffix("/mobile/schedule/getScheduleDetail.do")
+    @UrlSuffix("mobile/schedule/getScheduleDetail.do")
     public static String TIMETABLE_DETAILS;
 
     /**
      * 获得地区
      * areaId
      */
-    @UrlSuffix("/bArea/getNextAreasAndLevelByParentId.do")
+    @UrlSuffix("bArea/getNextAreasAndLevelByParentId.do")
     public static String GET_AREA;
     /**
      * 获取学校
      * areaId	String	筛选时选择的区域id
      * semesterId	String	筛选时选择的学段id(可以为空)
      */
-    @UrlSuffix("/bSchool/getSchoolByAreaId.do")
+    @UrlSuffix("bSchool/getSchoolByAreaId.do")
     public static String GET_DIRECT_SCHOOL;
 
     /**
@@ -155,275 +155,249 @@ public class URLConfig {
      * areaId 区域ID和学校ID有且只有一个有值
      * schoolId 区域ID和学校ID有且只有一个有值
      */
-    @UrlSuffix("/bSemester/getSemestersById.do")
+    @UrlSuffix("bSemester/getSemestersById.do")
     public static String GET_SEMESTER_LIST;
     /**
      * 获取接收教室
      */
-    @UrlSuffix("/mobile/schedule/getScheduleDetailInfo.do")
+    @UrlSuffix("mobile/schedule/getScheduleDetailInfo.do")
     public static String GET_MASTER_CLASS;
 
     /**
      * 获取评课详情
      */
-    @UrlSuffix("/mobile/eva/getEvaluationDetail.do")
+    @UrlSuffix("mobile/eva/getEvaluationDetail.do")
     public static String GET_EVALUATIONDETAIL;
 
     /**
      * 获得发起评课
      */
-    @UrlSuffix("/mobile/eva/getSponsorEvaluations.do")
+    @UrlSuffix("mobile/eva/getSponsorEvaluations.do")
     public static String GET_SPONSOR_EVALUATION;
     /**
      * 获取管辖区的评课
      */
-    @UrlSuffix("/mobile/eva/getAreaEvaluations.do")
+    @UrlSuffix("mobile/eva/getAreaEvaluations.do")
     public static String GET_AREA_EVALUALUATIONS;
 
     /**
      * 获取受邀的评课
      */
-    @UrlSuffix("/mobile/eva/getInvitedEvaluations.do")
+    @UrlSuffix("mobile/eva/getInvitedEvaluations.do")
     public static String GET_INVITED_EVALUALUATIONS;
     /**
      * 获取我的评课议【我发起的 我受邀的 教师发起的 本校主讲的我发起的 我参与的 我主讲的】
      */
-    @UrlSuffix("/mobile/eva/getInvitedEvaluations.do")
+    @UrlSuffix("mobile/eva/getInvitedEvaluations.do")
     public static String GET_ALL_EVALUATIONS;// = "http://10.5.52.14:8080/mockjs/5/mobile/eva/getSponsorEvaluations.do?";
 
     /**
      * 本校教师的评课
      */
-    @UrlSuffix("/mobile/eva/getSchoolTeacherEvas.do")
+    @UrlSuffix("mobile/eva/getSchoolTeacherEvas.do")
     public static String GET_SCHOOLTEACHER_EVALUALUATIONS;
 
     /**
      * 本校主讲的
      */
-    @UrlSuffix("/mobile/eva/getSchoolTeacherMasterEvas.do")
+    @UrlSuffix("mobile/eva/getSchoolTeacherMasterEvas.do")
     public static String GET_SCHOOL_MASTER_EVALUALUATION;
 
     /**
      * 我主讲的评课
      */
-    @UrlSuffix("/mobile/eva/getMasterEvas.do")
+    @UrlSuffix("mobile/eva/getMasterEvas.do")
     public static String GET_MASTER_EVALUALUATIONS;
 
     /**
      * 参与的评课
      */
-    @UrlSuffix("/mobile/eva/getAttendEvas.do")
+    @UrlSuffix("mobile/eva/getAttendEvas.do")
     public static String GET_ATTEND_EVALUALUATIONS;
 
     /**
      * 获取评论
      */
-    @UrlSuffix("/mobile/eva/getEvaComments.do")
+    @UrlSuffix("mobile/eva/getEvaComments.do")
     public static String GET_COMMENT;
-
-    /**
-     * 模拟获取评课议课评论接口 .
-     * uuid             用户uuid
-     * evaluationId     评课id
-     * start            开始位置
-     * end              结束的位置
-     */
-    public static String GET_EVALUATION_COMMENT_LIST = "http://10.5.52.14:8080/mockjs/5/mobile/eva/getEvaComments.do?";
-
-    /**
-     * 获取评课议课二级评论列表 .
-     */
-    public static String GET_EVALUATION_REPLY_COMMENT_LIST = "http://10.5.52.14:8080/mockjs/5/mobile/eva/getEvaComments.do?";
 
     /**
      * 打分
      */
-    @UrlSuffix("/mobile/eva/getEvaStandardDetails.do")
+    @UrlSuffix("mobile/eva/getEvaStandardDetails.do")
     public static String GET_EVASTANDARDDeETAILS;
 
     /**
      * 发表评论
      */
-    @UrlSuffix("/mobile/eva/sendEvaComment.do")
+    @UrlSuffix("mobile/eva/sendEvaComment.do")
     public static String SEND_COMMENT;
     /**
      * 拒绝评课
      */
-    @UrlSuffix("/mobile/eva/rejectEvaluation.do")
+    @UrlSuffix("mobile/eva/rejectEvaluation.do")
     public static String REJECT_EVLUATION;
 
     /**
      * 星星打分
      */
-    @UrlSuffix("/mobile/eva/updateStarScore.do")
+    @UrlSuffix("mobile/eva/updateStarScore.do")
     public static String UPDATE_START;
 
     /**
      * 提交打分
      */
-    @UrlSuffix("/mobile/eva/updateStandardScore.do")
+    @UrlSuffix("mobile/eva/updateStandardScore.do")
     public static String UPDATE_STANDARD_SCORE;
 
     /**
      * 获取下级推荐的文档
      */
-    @UrlSuffix("/mobile/res/doc/docRecommendList.do")
+    @UrlSuffix("mobile/res/doc/docRecommendList.do")
     public static String DOC_SUBORDINATE;
 
     /**
      * 获取我的文档
      */
-    @UrlSuffix("/mobile/res/doc/docResList.do")
+    @UrlSuffix("mobile/res/doc/docResList.do")
     public static String DOC;
 
     /**
      * 课堂统计-开课概况统计（区域及学校数据）
      */
-    @UrlSuffix("/mobile/statisticsAnaly/statisticsData.do")
+    @UrlSuffix("mobile/statisticsAnaly/statisticsData.do")
     public static String COURSES_PROFILE_STAT;
 
     /**
      * 课堂统计-筛选条件-区域、学校下学期获取
      */
-    @UrlSuffix("/mobile/statisticsAnaly/getTrimesters.do")
+    @UrlSuffix("mobile/statisticsAnaly/getTrimesters.do")
     public static String GET_TERMS;
 
     /**
      * 课堂统计-筛选条件-区域、学校下学科获取
      */
-    @UrlSuffix("/mobile/statisticsAnaly/getSubject.do")
+    @UrlSuffix("mobile/statisticsAnaly/getSubject.do")
     public static String GET_SUBJECTS;
 
     /**
      * 开课比统计获取基础数据
      */
-    @UrlSuffix("/mobile/statisticsAnaly/getClassRatioBaseInfo.do")
+    @UrlSuffix("mobile/statisticsAnaly/getClassRatioBaseInfo.do")
     public static String COURSES_PROPORTION_STAT_BASE;
 
     /**
      * 开课比按月统计
      */
-    @UrlSuffix("/mobile/statisticsAnaly/getMonthStatisticData.do")
+    @UrlSuffix("mobile/statisticsAnaly/getMonthStatisticData.do")
     public static String COURSES_PROPORTION_STAT_MONTH;
 
     /**
      * 开课比按学期统计
      */
-    @UrlSuffix("/mobile/statisticsAnaly/getTrimesterStatisticData.do")
+    @UrlSuffix("mobile/statisticsAnaly/getTrimesterStatisticData.do")
     public static String COURSES_PROPORTION_STAT_TERM;
 
-    @UrlSuffix("/mobile/statisticsAnaly/subject/org.do")
+    @UrlSuffix("mobile/statisticsAnaly/subject/org.do")
     public static String SUBJECT_STAT_AREA;
 
-    @UrlSuffix("/mobile/statisticsAnaly/subject/school.do")
+    @UrlSuffix("mobile/statisticsAnaly/subject/school.do")
     public static String SUBJECT_STAT_SCHOOL;
 
     /**
      * 资源统计 学校
      */
     //?uuid=2b58483a0ad34d699467eee6731f14d4&schoolId=1
-    @UrlSuffix("/mobile/statistic/resource/school.do")
+    @UrlSuffix("mobile/statistic/resource/school.do")
     public static String STATISTIC_RESOURCE;
 
     /**
      * 资源统计 机构
      */
     //?uuid=2b58483a0ad34d699467eee6731f14d4&baseAreaId=1
-    @UrlSuffix("/mobile/statistic/resource/org.do")
+    @UrlSuffix("mobile/statistic/resource/org.do")
     public static String STATISTIC_RESOURCE_ORG;
 
     /**
      * 活动统计 学校
      */
     //?uuid=2b58483a0ad34d699467eee6731f14d4&schoolId=2525234
-    @UrlSuffix("/mobile/statistic/evaluation/school.do")
+    @UrlSuffix("mobile/statistic/evaluation/school.do")
     public static String STATISTIC_ACTIVITY;
 
     /**
      * 活动统计 机构
      */
     //?uuid=2b58483a0ad34d699467eee6731f14d4&baseAreaId=2525234
-    @UrlSuffix("/mobile/statistic/evaluation/org.do")
+    @UrlSuffix("mobile/statistic/evaluation/org.do")
     public static String STATISTIC_ACTIVITY_ORG;
 
     /**
      * 资源统计 学校
      */
     //?uuid=2b58483a0ad34d699467eee6731f14d4&schoolId=dvgsdbvsd
-    @UrlSuffix("/mobile/statistic/schedule/school.do")
+    @UrlSuffix("mobile/statistic/schedule/school.do")
     public static String STATISTIC_CLASS;
 
     /**
      * 资源统计 机构
      */
     //?uuid=2b58483a0ad34d699467eee6731f14d4&statType=252525&baseAreaId=25252
-    @UrlSuffix("/mobile/statistic/schedule/org.do")
+    @UrlSuffix("mobile/statistic/schedule/org.do")
     public static String STATISTIC_CLASS_ORG;
-
-    /**
-     * 视频资源
-     */
-    @UrlSuffix("/res/getVideoResourceView.do")
-    public static String VIDEO;
-
-    /**
-     * 文档资源pdf下载地址
-     */
-    @UrlSuffix("/mobile/res/viewDocResource.do")
-    public static String VIEW_PDF;
 
     /**
      * 资源详情
      */
-    @UrlSuffix("/mobile/resource/getResDetailById.do")
+    @UrlSuffix("mobile/resource/getResDetailById.do")
     public static String RESOURCE_DETAILS;
 
     /**
      * 音频与视频播放数量自增
      */
-    @UrlSuffix("/mobile/resource/addResViewCnt.do")
+    @UrlSuffix("mobile/resource/addResViewCnt.do")
     public static String INCREASE_VIEW_COUNT;
 
     /**
      * 下载数量自增
      */
-    @UrlSuffix("/mobile/resource/addResDownloadCnt.do")
+    @UrlSuffix("mobile/resource/addResDownloadCnt.do")
     public static String INCREASE_DOWNLOAD_COUNT;
 
     /**
      * 资源列表
      */
-    @UrlSuffix("/mobile/res/video/getResources.do")
+    @UrlSuffix("mobile/res/video/getResources.do")
     public static String RESOURCE_LIST;
 
     /**
      * 新530资源列表
      */
-    @UrlSuffix("/mobile/resource/getResourcePageList.do")
+    @UrlSuffix("mobile/resource/getResourcePageList.do")
     public static String RESOURCE_NEW_LIST;
 
     /**
      * 更多资源
      */
-    @UrlSuffix("/home/resource/getHomeResourcePageList.do")
+    @UrlSuffix("home/resource/getHomeResourcePageList.do")
     public static String MORE_RESOURCE;
 
-    @UrlSuffix("/mobile/resource/getParenrSpaceResourcePageList.do")
+    @UrlSuffix("mobile/resource/getParenrSpaceResourcePageList.do")
     public static String RESOURCE_LIST_PARENT;
 
-    @UrlSuffix("/mobile/resource/getClsSpaceResourcePageList.do")
+    @UrlSuffix("mobile/resource/getClsSpaceResourcePageList.do")
     public static String RESOURCE_CLASS;
 
     /**
      * 获取资源评论
      */
-    @UrlSuffix("/mobile/resource/getResCommentPageList.do")
+    @UrlSuffix("mobile/resource/getResCommentPageList.do")
     public static String RESOURCE_COMMENTS;
 
     /**
      * 获取资源二级评论
      */
-    @UrlSuffix("/mobile/resource/getbResSuCommentPageList.do")
+    @UrlSuffix("mobile/resource/getbResSuCommentPageList.do")
     public static String RESOURCE_RELIES;
 
     /**
@@ -443,7 +417,7 @@ public class URLConfig {
      * 专递课堂
      * 课堂巡视
      */
-    @UrlSuffix("/mobile/monitor/classroom/getClassWatch.do")
+    @UrlSuffix("mobile/monitor/classroom/getClassWatch.do")
     public static String SPECIAL_MONITOR_CLASSROOM;
 
     /**
@@ -2675,14 +2649,14 @@ public class URLConfig {
      * ldh add
      * 布置作业
      */
-    @UrlSuffix("/mobile/homework/arrangeWork.do")
+    @UrlSuffix("mobile/homework/arrangeWork.do")
     public static String ARRANGE_WORK;
 
     /**
      * ldh add
      * 获取评语
      */
-    @UrlSuffix("/mobile/homework/getCommentTemp.do")
+    @UrlSuffix("mobile/homework/getCommentTemp.do")
     public static String GET_COMMENT_TEMP;
 
     /**
@@ -2823,14 +2797,16 @@ public class URLConfig {
      */
     @UrlSuffix("/mobile/tvprogram/liveList.do")
     public static String GET_SCHOOL_TV_PROGRAM_LIST;
+
     /**
      * 校园电视台-节目单
      * schoolId	学校id	string
      * tvProgramDetailId	节目id	string
      * uuid		string
      */
-    @UrlSuffix("/mobile/tvprogram/detail.do")
+    @UrlSuffix("mobile/tvprogram/detail.do")
     public static String GET_SCHOOL_TV_PROGRAM_DETAIL;
+
     /**
      * 校园电视台-往期视频
      * end		number
@@ -2843,7 +2819,71 @@ public class URLConfig {
     @UrlSuffix("/mobile/tvProgram/getPastProgramList.do")
     public static String GET_SCHOOL_TV_HISTORY_LIST;
 
+    @UrlSuffix("mobile/malfunction/getMalFunctionDetailPageList.do")
+    public static String GET_REPAIRS_SCHOOLS;
 
+    @UrlSuffix("mobile/malfunction/getSchoolMalDetailPageList.do")
+    public static String GET_REPAIR_RECORDS;
+
+    @UrlSuffix("mobile/malfunction/getSchoolClassRoomList.do")
+    public static String GET_CLASSROOMS;
+
+    @UrlSuffix("mobile/malguidefunction/getSearchMalPageList.do")
+    public static String SEARCH_MALFUNC;
+
+    @UrlSuffix("mobile/malfunction/getMalDetail.do")
+    public static String GET_REPAIR_DETAILS;
+
+    @UrlSuffix("mobile/malfunction/getAppendList.do")
+    public static String GET_REPAIR_TRACKING;
+
+    /**
+     * 故障类型分类
+     */
+    @UrlSuffix("mobile/malfunction/getSubCatalogListById.do")
+    public static String GET_MALFUNC_CATEGORIES;
+
+    /**
+     * 获取常见问题分类
+     */
+    @UrlSuffix("mobile/malguidefunction/getCatalogList.do")
+    public static String GET_MAL_GUIDE_CATALOGS;
+
+    /**
+     * 根据类型获取常见问题
+     */
+    @UrlSuffix("mobile/malguidefunction/getMalByCatalogPageList.do")
+    public static String GET_MALFUNCTIONS_BY_CATALOG;
+
+    /**
+     * 获取最热常见问题
+     */
+    @UrlSuffix("mobile/malguidefunction/getHotMalList.do")
+    public static String GET_HOT_MALFUNCTIONS;
+
+    /**
+     * 获取最新常见问题
+     */
+    @UrlSuffix("mobile/malguidefunction/getNewestMalList.do")
+    public static String GET_LATEST_MALFUNCTIONS;
+
+    /**
+     * 获取常见问题详情
+     */
+    @UrlSuffix("mobile/malguidefunction/getMalDetailById.do")
+    public static String GET_MALFUNCTION_DETAILS;
+
+    /**
+     * 报修
+     */
+    @UrlSuffix("mobile/malfunction/addMalDetail.do")
+    public static String REPORT_MAL;
+
+    /**
+     * 追问
+     */
+    @UrlSuffix("mobile/malfunction/addAppend.do")
+    public static String MAKE_DETAILED_INQUIRY;
 
     static {
         UrlBuilder.updateUrls();
@@ -2852,21 +2892,6 @@ public class URLConfig {
     public static void updateUrls(String newBase) {
         BASE = newBase;
         long start = System.currentTimeMillis();
-        start = System.currentTimeMillis();
-//        for (Field field: URLConfig.class.getFields()) {
-//            Annotation[] annotations = field.getDeclaredAnnotations();
-//            if (annotations.length < 1) {
-//                continue;
-//            }
-//            if (annotations[0] instanceof UrlSuffix) {
-//                UrlSuffix urlSuffix = (UrlSuffix) annotations[0];
-//                try {
-//                    field.set(null, BASE + urlSuffix.value());
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
         UrlBuilder.updateUrls();
         Cog.d(TAG, "updateUrls spend=", System.currentTimeMillis() - start);
     }

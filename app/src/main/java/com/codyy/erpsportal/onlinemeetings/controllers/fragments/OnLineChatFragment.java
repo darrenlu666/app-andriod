@@ -15,6 +15,7 @@ import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.widgets.CodyyViewPager;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.dao.ChatDataHelper;
@@ -124,7 +125,6 @@ public class OnLineChatFragment extends OnlineFragmentBase implements OnLineChat
             mMsgBGABadgeTextView = (BGABadgeTextView) rt2.findViewById(R.id.tab_text);
         }
 
-
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -132,6 +132,7 @@ public class OnLineChatFragment extends OnlineFragmentBase implements OnLineChat
                     mGroupChatBGABadgeTextView.showTextBadge("0");
                     mGroupChatBGABadgeTextView.hiddenBadge();
                 } else if (position == 1) {
+                    DeviceUtils.hideSoftKeyboard(mViewPager);
                     if (!isObserver) {
                         mSingleChatBGABadgeTextView.showTextBadge("0");
                         mSingleChatBGABadgeTextView.hiddenBadge();
@@ -140,6 +141,7 @@ public class OnLineChatFragment extends OnlineFragmentBase implements OnLineChat
                         mMsgBGABadgeTextView.hiddenBadge();
                     }
                 } else {
+                    DeviceUtils.hideSoftKeyboard(mViewPager);
                     mMsgBGABadgeTextView.showTextBadge("0");
                     mMsgBGABadgeTextView.hiddenBadge();
                 }

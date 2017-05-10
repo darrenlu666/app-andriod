@@ -10,21 +10,20 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.ItemIndexListRecyBaseAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
-import com.codyy.erpsportal.exam.controllers.fragments.school.ItemIndexBaseFragment;
-import com.codyy.erpsportal.exam.controllers.fragments.school.OverallStatisticsFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.exam.models.entities.ExamItemInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.CharUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.exam.controllers.fragments.school.ItemIndexBaseFragment;
+import com.codyy.erpsportal.exam.controllers.fragments.school.OverallStatisticsFragment;
+import com.codyy.erpsportal.exam.models.entities.ExamItemInfo;
 import com.codyy.erpsportal.exam.widgets.AnalysisProgress;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,7 +79,7 @@ public class TopicStatisticFragment extends ItemIndexBaseFragment {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Log.e(TAG, "数据获取失败！");
             }
         }));

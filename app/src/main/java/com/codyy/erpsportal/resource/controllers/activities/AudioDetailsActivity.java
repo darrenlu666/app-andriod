@@ -29,17 +29,16 @@ import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.resource.controllers.adapters.TabsAdapter;
 import com.codyy.erpsportal.resource.controllers.fragments.ResCommentsFragment;
 import com.codyy.erpsportal.resource.controllers.fragments.ResourceDetailsFragment;
@@ -240,7 +239,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
         @Override
         public void onPrepared(MediaPlayer mp) {
             Cog.d(TAG, "onPrepared sessionId=", mp.getAudioSessionId());
-            CountIncreaser.increaseViewCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), mResourceId);
+            CountIncreaser.increaseViewCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
             mp.start();
             mIsAudioPlaying = true;
             updatePlayPauseIb();
@@ -422,7 +421,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
         if (VideoDownloadUtils.downloadAudio(mResourceDetails
                 , mResourceDetails.getAttachPath()
                 , mUserInfo.getBaseUserId())) {
-            CountIncreaser.increaseDownloadCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), mResourceId);
+            CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
         }
     }
 
@@ -562,7 +561,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
             }

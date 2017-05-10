@@ -8,25 +8,29 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.StandardAdapter;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
 import com.codyy.erpsportal.commons.models.entities.StandardDetails;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.widgets.ListviewTouch;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 根据打分标准标准打分
@@ -51,7 +55,8 @@ public class RateActivity extends Activity implements Handler.Callback, OnClickL
     private final static int EXIT = 0x001;
     private final static int RATE = 0x002;
 
-    private RequestQueue requestQueue;
+    private WebApi mWebApi;
+
     private Handler mHandler;
     private AssessmentDetails assessmentDetails;
     private UserInfo userInfo;
@@ -80,7 +85,7 @@ public class RateActivity extends Activity implements Handler.Callback, OnClickL
         dialogUtil = new DialogUtil(this, left, right);
         mStandardDetailsList = new ArrayList<>();
         mHandler = new Handler(this);
-        requestQueue = RequestManager.getRequestQueue();
+        mWebApi = RsGenerator.create(WebApi.class);
         option = (TextView) findViewById(R.id.rate_text_all);
         point = (TextView) findViewById(R.id.rate_text_point);
         mListView = (ListviewTouch) findViewById(R.id.rate_layout_listview);
@@ -107,6 +112,7 @@ public class RateActivity extends Activity implements Handler.Callback, OnClickL
         public void onClick(View v) {
             switch (dialogClick) {
                 case EXIT:
+                    dialogUtil.cancel();
                     finish();
                     overridePendingTransition(R.anim.layout_show, R.anim.slidemenu_hide);
                     break;
@@ -124,36 +130,39 @@ public class RateActivity extends Activity implements Handler.Callback, OnClickL
      * @param msg
      */
     private void httpConnect(String url, Map<String, String> data, final int msg) {
-        requestQueue.add(new NormalPostRequest(url, data, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                switch (msg) {
-                    case GET_EVASTANDARD:
-                        StandardDetails.getStandardDetails(response, mStandardDetailsList);
-                        if (mStandardDetailsList.size() != 0) {
-                            option.setText("请根据下面" + mStandardDetailsList.size() + "个具体项进行打分");
-                            point.setText("满分:" + mStandardDetailsList.get(0).getTotalScore() + " 我的打分：" + getMyScore());
-                            mStandardAdapter.notifyDataSetChanged();
-                        } else {
-                            ToastUtil.showToast(RateActivity.this, "没有数据");
+        mWebApi.post4Json(url, data)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        switch (msg) {
+                            case GET_EVASTANDARD:
+                                StandardDetails.getStandardDetails(response, mStandardDetailsList);
+                                if (mStandardDetailsList.size() != 0) {
+                                    option.setText("请根据下面" + mStandardDetailsList.size() + "个具体项进行打分");
+                                    point.setText("满分:" + mStandardDetailsList.get(0).getTotalScore() + " 我的打分：" + getMyScore());
+                                    mStandardAdapter.notifyDataSetChanged();
+                                } else {
+                                    ToastUtil.showToast(RateActivity.this, "没有数据");
+                                }
+                                break;
+                            case UPDATE_STANDARD_SCORE:
+                                if ("success".equals(response.optString("result"))) {
+                                    ToastUtil.showToast(RateActivity.this, "打分成功");
+                                    setResult(EvaluationActivity.RATE_TRUE);
+                                    finish();
+                                    overridePendingTransition(R.anim.layout_show, R.anim.slidemenu_hide);
+                                }
+                                break;
                         }
-                        break;
-                    case UPDATE_STANDARD_SCORE:
-                        if ("success".equals(response.optString("result"))) {
-                            ToastUtil.showToast(RateActivity.this, "打分成功");
-                            setResult(EvaluationActivity.RATE_TRUE);
-                            finish();
-                            overridePendingTransition(R.anim.layout_show, R.anim.slidemenu_hide);
-                        }
-                        break;
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                ToastUtil.showToast(RateActivity.this, getResources().getString(R.string.net_error));
-            }
-        }));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        ToastUtil.showToast(RateActivity.this, getResources().getString(R.string.net_error));
+                    }
+                });
     }
 
     @Override

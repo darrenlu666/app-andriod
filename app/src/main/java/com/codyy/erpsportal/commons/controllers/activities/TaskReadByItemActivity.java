@@ -14,11 +14,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.TabsAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.dao.TaskReadDao;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.homework.controllers.fragments.AddOverallCommentFragment;
 import com.codyy.erpsportal.homework.controllers.fragments.WorkItemIndexDialog;
 import com.codyy.erpsportal.homework.models.entities.ItemInfoClass;
@@ -27,10 +30,6 @@ import com.codyy.erpsportal.homework.widgets.AudioBar;
 import com.codyy.erpsportal.homework.widgets.PressBar;
 import com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView;
 import com.codyy.erpsportal.homework.widgets.WorkAnswerMediaPlayer;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.dao.TaskReadDao;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.utils.Cog;
 
 import org.json.JSONObject;
 
@@ -301,7 +300,7 @@ public abstract class TaskReadByItemActivity extends ToolbarActivity implements 
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 //Cog.e(TAG, error.getMessage());
             }
         }));

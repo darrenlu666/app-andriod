@@ -19,6 +19,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -33,18 +34,36 @@ import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.IMeetingService;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsDetailActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ListenDetailsActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.groups.utils.SnackToastUtils;
-import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
+import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.CoCoAction;
+import com.codyy.erpsportal.commons.models.entities.LoginOut;
+import com.codyy.erpsportal.commons.models.entities.LoopPatrol;
+import com.codyy.erpsportal.commons.models.entities.MeetingAction;
+import com.codyy.erpsportal.commons.models.entities.MeetingConfig;
+import com.codyy.erpsportal.commons.models.entities.MeetingShow;
 import com.codyy.erpsportal.commons.models.entities.SystemMessage;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.services.BackService;
+import com.codyy.erpsportal.commons.services.IMeeting;
+import com.codyy.erpsportal.commons.services.OnlineMeetingService;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
+import com.codyy.erpsportal.commons.utils.PullXmlUtils;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.codyy.erpsportal.commons.widgets.MyDialog;
+import com.codyy.erpsportal.commons.widgets.MyTabWidget;
+import com.codyy.erpsportal.groups.utils.SnackToastUtils;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.ContactsFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.OnLineChatFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.OnlineDocumentsFragment;
@@ -53,37 +72,24 @@ import com.codyy.erpsportal.onlinemeetings.controllers.fragments.OnlineInteractF
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.OnlineInteractVideoFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.OnlinePriorityFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.OnlineUserOnlineFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineMeetingTabViewHolder;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.CoCoAction;
+import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
 import com.codyy.erpsportal.onlinemeetings.models.entities.DMSEntity;
 import com.codyy.erpsportal.onlinemeetings.models.entities.DeskShare;
 import com.codyy.erpsportal.onlinemeetings.models.entities.DocumentDetailEntity;
-import com.codyy.erpsportal.commons.models.entities.LoginOut;
-import com.codyy.erpsportal.commons.models.entities.LoopPatrol;
-import com.codyy.erpsportal.commons.models.entities.MeetingAction;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
-import com.codyy.erpsportal.commons.models.entities.MeetingConfig;
-import com.codyy.erpsportal.commons.models.entities.MeetingShow;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.TabInfo;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoShare;
-import com.codyy.erpsportal.commons.services.BackService;
-import com.codyy.erpsportal.commons.services.IMeeting;
-import com.codyy.erpsportal.commons.services.OnlineMeetingService;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
-import com.codyy.erpsportal.commons.widgets.MyDialog;
-import com.codyy.erpsportal.commons.widgets.MyTabWidget;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
@@ -92,7 +98,13 @@ import de.greenrobot.event.EventBus;
  * 正在进行的视频会议（可通过 参与/加入 进入此页面）
  * Created by poe on 15-8-3.
  */
-public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWidget.OnTabClickListener, BaseRecyclerAdapter.OnItemClickListener, IMeeting, ContactsFragment.QueryAllOnLineUser ,Handler.Callback{
+public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWidget.OnTabClickListener,
+        BaseRecyclerAdapter.OnItemClickListener
+        , IMeeting
+        , ContactsFragment.QueryAllOnLineUser
+        , Handler.Callback
+        , IFragmentMangerInterface
+        , OnlineGroupChatFragment.onSoftKeyListener{
     private final static String TAG = OnlineMeetingActivity.class.getSimpleName();
     /**     * jump to video meeting pager .    */
     private static final int MSG_JUMP_TO_VIDEO_MEETING = 0 ;
@@ -427,7 +439,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     }
 
                     @Override
-                    public void onError(VolleyError error) {
+                    public void onError(Throwable error) {
                         Snackbar.make(mTitleTextView, getResources().getString(R.string.net_error), Snackbar.LENGTH_SHORT).show();
                     }
                 });
@@ -534,6 +546,10 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 if(null != getChatService()){
                     getChatService().hideView();
                 }
+            }
+            //隐藏键盘
+            if(index != 1){
+                DeviceUtils.hideSoftKeyboard(mView);
             }
         } else {
             long now        =   System.currentTimeMillis();
@@ -866,6 +882,9 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
      * 推出会议 并执行数据解绑 ！
      */
     private void ExitMeetingPre() {
+        if(null != mTabHost && mTabHost.getCurrentTab() == 0 &&null != mChatService){
+            getChatService().hideView();
+        }
         if (null != mIMeetingService) {
             try {
                 mIMeetingService.loginOut();
@@ -959,6 +978,21 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         MeetingShow meetingShow = new MeetingShow(documentDetailEntity.getDocName(), documentDetailEntity.getDocId(), "1", 0, 0,documentDetailEntity.getDocPath());
         meetingShow.setShowDelete(true);
         EventBus.getDefault().post(meetingShow);
+    }
+
+    @Override
+    public void onKeyOpen() {
+//        mTabHost.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onKeyClose() {
+//        mTabHost.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
     }
 
     public interface ILoader {
@@ -1156,7 +1190,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     }
 
                     @Override
-                    public void onError(VolleyError error) {
+                    public void onError(Throwable error) {
                         Snackbar.make(mTitleTextView, getResources().getString(R.string.net_error), Snackbar.LENGTH_SHORT).show();
                     }
                 });
@@ -1192,7 +1226,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     }
 
                     @Override
-                    public void onError(VolleyError error) {
+                    public void onError(Throwable error) {
                         Snackbar.make(mTitleTextView, getResources().getString(R.string.net_error), Snackbar.LENGTH_SHORT).show();
                     }
                 });
@@ -1264,7 +1298,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         ExitMeetingPre();
         Intent intent = new Intent();
         intent.putExtra(TipProgressFragment.ARG_TIP_STATUS_TYPE,actionType);
-        //setResult(VideoMeetingDetailActivity.RESPONSE_ONLINE_MEETING_CODE,intent);
         setResult(mRequestFrom,intent);
         OnlineMeetingActivity.this.finish();
         UIUtils.addExitTranAnim(OnlineMeetingActivity.this);
@@ -1334,14 +1367,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         }
 
     }
-
-
-
-   /* private void dismissProgressBar() {
-        Cog.i(TAG,"dismissProgressBar() ....");
-        notifyAllLoader();
-    }*/
-
 
     private BroadcastReceiver mNoticeBroadCast = new BroadcastReceiver() {
 
@@ -1425,10 +1450,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 }
             },false,true);
 
-        } /*else {
-                mAdapter.addData(findSingleMessageFromWho(msg));
-            }*/
-            /*mNotifyUtils.onNewMsg(msg);//铃声通知消息到了
-            refreshUIWithNewMessage();//刷新界面*/
+        }
     }
 }

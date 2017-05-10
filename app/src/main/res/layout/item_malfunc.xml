@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tv_hits"
+        style="@style/ListItemBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        tools:text="14" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/ListItemBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_toLeftOf="@id/tv_hits"
+        android:layout_toStartOf="@id/tv_hits"
+        android:ellipsize="end"
+        android:maxLines="2"
+        tools:text="如何查看在线课堂开课率等数据" />
+
+</RelativeLayout>

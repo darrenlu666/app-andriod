@@ -45,6 +45,13 @@ public  class TabsAdapter extends FragmentPagerAdapter{
         notifyDataSetChanged();
     }
 
+    public void remove(int start) {
+        while (mTabs.size() > start) {
+            mTabs.remove(mTabs.size() - 1);
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public CharSequence getPageTitle(int position) {
         return mTabs.get(position).title;

@@ -30,13 +30,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.DeleteCommentDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.DeleteCommentDialog.OnOkClickListener;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.MoreRelies;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.models.presenters.IFragmentManagerProvider;
+import com.codyy.erpsportal.commons.models.presenters.SendingDialogPresenter;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.InputUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
@@ -44,13 +49,6 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WebViewUtils;
 import com.codyy.erpsportal.commons.widgets.EmojiView;
 import com.codyy.erpsportal.commons.widgets.TouchyWebView;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.MoreRelies;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.erpsportal.commons.models.presenters.IFragmentManagerProvider;
-import com.codyy.erpsportal.commons.models.presenters.SendingDialogPresenter;
 import com.codyy.erpsportal.rethink.controllers.adapters.RethinkCommentsAdapter;
 import com.codyy.erpsportal.rethink.models.entities.CommentListHeader;
 import com.codyy.erpsportal.rethink.models.entities.DeleteCommentEvent;
@@ -60,6 +58,7 @@ import com.codyy.erpsportal.rethink.models.entities.RethinkComment;
 import com.codyy.erpsportal.rethink.models.entities.RethinkCommentBase;
 import com.codyy.erpsportal.rethink.models.entities.RethinkDetails;
 import com.codyy.erpsportal.rethink.models.entities.RethinkReply;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -280,7 +279,7 @@ public class RethinkDetailsActivity extends AppCompatActivity implements IFragme
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "fetchRethinkDetails error=", error);
                 UIUtils.toast(RethinkDetailsActivity.this, "获取教学反思详情失败，请检查网络。", Toast.LENGTH_SHORT);
             }
@@ -428,7 +427,7 @@ public class RethinkDetailsActivity extends AppCompatActivity implements IFragme
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "getRethinkComments error", error);
                 stopRefreshing();
                 UIUtils.toast(RethinkDetailsActivity.this, "获取教学反思评论失败，请检查网络。", Toast.LENGTH_SHORT);
@@ -669,7 +668,7 @@ public class RethinkDetailsActivity extends AppCompatActivity implements IFragme
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onMoreReplyClick error=", error);
                 UIUtils.toast(RethinkDetailsActivity.this, "获取更多回复失败！",Toast.LENGTH_SHORT);
             }
@@ -702,7 +701,7 @@ public class RethinkDetailsActivity extends AppCompatActivity implements IFragme
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onRecommendClick error=", error);
                 if (!mRethinkDetails.isRecommended()) {
                     UIUtils.toast(RethinkDetailsActivity.this, getString(R.string.recommend_failed), Toast.LENGTH_SHORT);
@@ -785,7 +784,7 @@ public class RethinkDetailsActivity extends AppCompatActivity implements IFragme
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "publishComment error:", error);
                 mSendingDialogPresenter.dismiss();
                 UIUtils.toast( RethinkDetailsActivity.this, "评论教学反思失败。请检查网络。", Toast.LENGTH_SHORT);
@@ -956,7 +955,7 @@ public class RethinkDetailsActivity extends AppCompatActivity implements IFragme
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "delete comment error=", error);
             }
         }));

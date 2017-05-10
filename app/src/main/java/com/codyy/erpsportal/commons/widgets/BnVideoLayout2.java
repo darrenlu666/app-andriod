@@ -3,11 +3,14 @@ package com.codyy.erpsportal.commons.widgets;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codyy.bennu.sdk.BNMediaPlayer;
@@ -124,6 +127,9 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                 public void run() {
                     mHintTv.setText(R.string.txt_video_meeting_no_input_stream_retry);
                     mHintTv.setVisibility(VISIBLE);
+                    //## bug:11544 Android-专递课堂，名校网络课堂-出现断网时-页面异常
+                    //##横竖屏幕之后会引起INVISIBLE的view没哟及时计算尺寸导致露出背景视频颜色色
+                    setLandScape();
                 }
             });
         } else if (errorCode == -1) {//不支持硬解，改为软解
@@ -134,6 +140,9 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                 public void run() {
                     mHintTv.setText(R.string.txt_video_meeting_no_input_stream_retry);
                     mHintTv.setVisibility(VISIBLE);
+                    //## bug:11544 Android-专递课堂，名校网络课堂-出现断网时-页面异常
+                    //##横竖屏幕之后会引起INVISIBLE的view没哟及时计算尺寸导致露出背景视频颜色色
+                    setLandScape();
                 }
             });
         }
@@ -270,6 +279,17 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
 
     public void setOnSurfaceChangeListener(BnVideoView2.OnSurfaceChangeListener surfaceChangeListener) {
         mBnVideoView.setOnSurfaceChangeListener(surfaceChangeListener);
+    }
+
+    private void setLandScape(){
+        Log.i(TAG," setLandScape () ~");
+        mHintTv.post(new Runnable() {
+            @Override
+            public void run() {
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+                mHintTv.setLayoutParams(params);
+            }
+        });
     }
 
     public interface ITextClickListener {

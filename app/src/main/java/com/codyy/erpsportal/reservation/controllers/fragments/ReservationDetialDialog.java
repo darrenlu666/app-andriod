@@ -14,15 +14,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.databinding.DialogReservationPopuBinding;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.databinding.DialogReservationPopuBinding;
 import com.codyy.erpsportal.reservation.models.entities.ReservationDetial;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -169,7 +168,7 @@ public class ReservationDetialDialog extends AppCompatDialogFragment {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(getContext(), "获取数据失败！");
             }
         }, mHashTag));

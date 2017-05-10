@@ -13,20 +13,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.Extra;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.statistics.controllers.fragments.MonthlyStatFragment;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment.OnRowClickListener;
@@ -38,6 +36,7 @@ import com.codyy.erpsportal.statistics.models.entities.StatTableModel;
 import com.codyy.erpsportal.statistics.models.entities.TermEntity;
 import com.codyy.erpsportal.statistics.models.entities.TermlyPropInfoResult;
 import com.codyy.erpsportal.statistics.models.entities.TermlyPropItem;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -276,7 +275,7 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onError error=", error);
             }
         }, mRequestTag));
@@ -370,7 +369,7 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
                 },
                 new ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(Throwable error) {
                         Cog.d(TAG, "loadTermsStat error=", error);
                         mLoadingDialog.dismiss();
                     }

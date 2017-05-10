@@ -8,7 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
@@ -136,7 +136,7 @@ public class ChannelBlogPostFragment extends BaseHttpFragment implements ConfigB
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mRecyclerView ) return;
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);

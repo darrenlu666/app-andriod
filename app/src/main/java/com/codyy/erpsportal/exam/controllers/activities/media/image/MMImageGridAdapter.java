@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 public class MMImageGridAdapter extends MMBaseRecyclerViewAdapter<MMImageBean> {
     private int mPosition = -1;
+    private int mImageWidth;
 
     public MMImageGridAdapter(List<MMImageBean> list, Context context) {
         super(list, context);
@@ -53,35 +55,46 @@ public class MMImageGridAdapter extends MMBaseRecyclerViewAdapter<MMImageBean> {
                 ((NormalRecyclerViewHolder) viewHolder).imgQueue.setImageURI(Uri.parse("res://com.codyy.erpsportal/" + R.drawable.ic_exam_camera));
             } else {
                 ((NormalRecyclerViewHolder) viewHolder).layerView.setVisibility(View.VISIBLE);
-                ((NormalRecyclerViewHolder) viewHolder).imgQueue.setController(getDraweeController(viewHolder, list.get(position).getThumbnails()));
-                if (list.get(position).isSeleted()) {
+                ((NormalRecyclerViewHolder) viewHolder).imgQueue.setController(getDraweeController(viewHolder, list.get(position)));
+                if (list.get(position).isSelected()) {
                     ((NormalRecyclerViewHolder) viewHolder).imgQueueMultiSelected.setImageResource(R.drawable.ic_exam_select_p);
                     ((NormalRecyclerViewHolder) viewHolder).layerView.setBackgroundResource(R.color.image_selected_color);
                 } else {
                     ((NormalRecyclerViewHolder) viewHolder).imgQueueMultiSelected.setImageResource(R.drawable.ic_exam_select_n);
                     ((NormalRecyclerViewHolder) viewHolder).layerView.setBackgroundResource(R.color.transparent);
                 }
-
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
-    private DraweeController getDraweeController(RecyclerView.ViewHolder viewHolder, String path) {
-        ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource(Uri.parse("file://" + path));
-        imageRequestBuilder.setResizeOptions(new ResizeOptions(
-                ((NormalRecyclerViewHolder) viewHolder).imgQueue.getLayoutParams().width,
-                ((NormalRecyclerViewHolder) viewHolder).imgQueue.getLayoutParams().height));
-        ImageRequest imageRequest = imageRequestBuilder.setLocalThumbnailPreviewsEnabled(true).build();
-        return Fresco.newDraweeControllerBuilder()
-                .setImageRequest(imageRequest)
+    private DraweeController getDraweeController(RecyclerView.ViewHolder viewHolder, MMImageBean imageBean) {
+        ImageRequest thumbnailsRequest = ImageRequestBuilder
+                .newBuilderWithSource(Uri.parse("file://" + imageBean.getThumbnails()))
+                .setResizeOptions(new ResizeOptions(mImageWidth, mImageWidth))
+                .build();
+        PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder();
+        if (!imageBean.getPath().equals(imageBean.getThumbnails())) {
+            ImageRequest[] imageRequests = new ImageRequest[2];
+            imageRequests[0] = thumbnailsRequest;
+            imageRequests[1] = ImageRequestBuilder
+                    .newBuilderWithSource(Uri.parse("file://" + imageBean.getPath()))
+                    .setResizeOptions(new ResizeOptions(mImageWidth, mImageWidth))
+                    .build();
+            controllerBuilder.setFirstAvailableImageRequests( imageRequests);
+        } else {
+            controllerBuilder.setImageRequest(thumbnailsRequest);
+        }
+
+        return controllerBuilder
                 .setOldController(((NormalRecyclerViewHolder) viewHolder).imgQueue.getController())
                 .setAutoPlayAnimations(true)
                 .build();
+    }
+
+    public void setImageWidth(int imageWidth) {
+        mImageWidth = imageWidth;
     }
 
     public static class NormalRecyclerViewHolder extends RecyclerView.ViewHolder {
