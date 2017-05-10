@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
@@ -158,7 +157,7 @@ public class SchoolProgramDetail extends BaseHttpActivity {
     }
 
     @Override
-    public void onFailure(VolleyError error) throws Exception {
+    public void onFailure(Throwable error) throws Exception {
         if (null == mProgramDetail) {
             mEmptyView.setVisibility(View.VISIBLE);
             mEmptyView.setLoading(false);

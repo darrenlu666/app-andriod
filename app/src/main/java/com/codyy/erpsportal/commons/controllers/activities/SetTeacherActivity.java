@@ -13,17 +13,16 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
 import com.codyy.erpsportal.commons.models.entities.TeacherInfo;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -197,7 +196,7 @@ public class SetTeacherActivity extends Activity {
         }, new Response.ErrorListener() {
 
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mDialogUtil.cancle();
                 ToastUtil.showToast(SetTeacherActivity.this, getResources().getString(R.string.net_error));
             }

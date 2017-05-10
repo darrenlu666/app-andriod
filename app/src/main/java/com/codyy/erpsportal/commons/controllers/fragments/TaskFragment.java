@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -50,9 +51,17 @@ import android.widget.Toast;
 
 import com.codyy.ScreenUtils;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.dao.TaskAnswerDao;
+import com.codyy.erpsportal.commons.models.dao.TaskReadDao;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.HtmlUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.WebViewUtils;
+import com.codyy.erpsportal.commons.widgets.MyRadioGroup;
 import com.codyy.erpsportal.exam.controllers.activities.media.MMSelectorActivity;
 import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
 import com.codyy.erpsportal.exam.controllers.activities.media.audio.MMAudioAlbumFragment;
@@ -62,14 +71,16 @@ import com.codyy.erpsportal.exam.controllers.activities.media.video.MMVideoAlbum
 import com.codyy.erpsportal.exam.models.entities.QuestionInfo;
 import com.codyy.erpsportal.exam.utils.MediaCheck;
 import com.codyy.erpsportal.exam.widgets.richtext.RichText;
-import com.codyy.erpsportal.homework.interfaces.AudioRecordClickListener;
 import com.codyy.erpsportal.homework.controllers.activities.PreviewImageActivity;
 import com.codyy.erpsportal.homework.controllers.activities.VideoViewActivity;
 import com.codyy.erpsportal.homework.controllers.fragments.AddOverallCommentFragment;
 import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragment;
+import com.codyy.erpsportal.homework.interfaces.AudioRecordClickListener;
 import com.codyy.erpsportal.homework.models.entities.ItemInfoClass;
 import com.codyy.erpsportal.homework.models.entities.student.ImageDetail;
 import com.codyy.erpsportal.homework.models.entities.student.StudentAnswersByPerson;
+import com.codyy.erpsportal.homework.models.entities.task.TaskAnswer;
+import com.codyy.erpsportal.homework.models.entities.task.TaskPicInfo;
 import com.codyy.erpsportal.homework.utils.WorkUtils;
 import com.codyy.erpsportal.homework.widgets.AudioBar;
 import com.codyy.erpsportal.homework.widgets.DialogUtils;
@@ -77,18 +88,8 @@ import com.codyy.erpsportal.homework.widgets.MySubmitDialog;
 import com.codyy.erpsportal.homework.widgets.ProgressCircle;
 import com.codyy.erpsportal.homework.widgets.UploadAsyncTask;
 import com.codyy.erpsportal.homework.widgets.WorkAnswerMediaPlayer;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.dao.TaskAnswerDao;
-import com.codyy.erpsportal.commons.models.dao.TaskReadDao;
 import com.codyy.erpsportal.perlcourseprep.models.entities.SubjectMaterialPicture;
-import com.codyy.erpsportal.homework.models.entities.task.TaskAnswer;
-import com.codyy.erpsportal.homework.models.entities.task.TaskPicInfo;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.WebViewUtils;
-import com.codyy.erpsportal.commons.widgets.MyRadioGroup;
+import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONException;
@@ -101,11 +102,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.codyy.erpsportal.homework.controllers.activities.PreviewImageActivity.EXTRA_DELETING;
+
 /**
  * 习题碎片
  * Created by eachann on 2015/12/30.
  */
 public class TaskFragment extends Fragment implements View.OnClickListener {
+
     private static final String TAG = TaskFragment.class.getSimpleName();
     /**
      * 单选题
@@ -237,6 +241,13 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
      */
     public static final String TYPE_VIDEO = "type_video";
 
+    /**
+     * 最多上传8张图
+     */
+    private static final int IMAGE_MAX_COUNT = 8;
+
+    private final static int REQUEST_PREVIEW = 7;
+
     protected View mRootView;
     protected LinearLayout mLinearLayout;//习题界面最外层布局
     private static int mSpaceing;
@@ -328,19 +339,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             @Override
             public void OnClickListener(View parentV, View v, Integer position, ImageDetail values) {
                 Intent intent = new Intent(getActivity(), PreviewImageActivity.class);
-                PreviewImageActivity.setOnDeleteListener(new PreviewImageActivity.OnDeleteSuccess() {
-                    @Override
-                    public void onPreviewResult(ArrayList<ImageDetail> result, String deleteUrl) {
-                        if (result.size() > 0)
-                            addImageLayout(result);
-                        else
-                            deleteImageLayout();
-
-                        mTaskAnswerDao.deleteOnePicInfo(mStudentId, mTaskId, mTaskItemId, mTaskItemType, deleteUrl);
-                    }
-                });
                 intent.putParcelableArrayListExtra(EXTRA_DATA, mSelectedImageUrlList);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_PREVIEW);
             }
 
             @Override
@@ -985,14 +985,10 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             editText.setTag(i);
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
                 @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
+                public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
                 @Override
                 public void afterTextChanged(Editable s) {
@@ -1043,7 +1039,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MMSelectorActivity.class);
                 intent.putExtra("EXTRA_TYPE", "IMAGE");
-                startActivityForResult(intent, REQUEST_CODE);
+                intent.putExtra("EXTRA_SIZE", IMAGE_MAX_COUNT);
+                startActivityForResult(intent, REQUEST_SELECT_IMAGES);
                 UIUtils.addEnterAnim(getActivity());
             }
         });
@@ -1053,7 +1050,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MMSelectorActivity.class);
                 intent.putExtra("EXTRA_TYPE", "AUDIO");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivityForResult(intent, REQUEST_SELECT_IMAGES);
                 UIUtils.addEnterAnim(getActivity());
             }
         });
@@ -1063,7 +1060,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MMSelectorActivity.class);
                 intent.putExtra("EXTRA_TYPE", "VIDEO");
-                startActivityForResult(intent, REQUEST_CODE);
+                startActivityForResult(intent, REQUEST_SELECT_IMAGES);
                 UIUtils.addEnterAnim(getActivity());
             }
         });
@@ -1081,14 +1078,14 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_CODE:
-                if (resultCode == getActivity().RESULT_OK && data != null) {
+            case REQUEST_SELECT_IMAGES:
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     pullToDown();
                     ArrayList<MMImageBean> mImageList = data.getParcelableArrayListExtra(EXTRA_DATA);
                     String resourceType = data.getExtras().getString(MMVideoAlbumFragment.EXTRA_TYPE);
                     mImageBeans = new ArrayList<>();
                     for (MMImageBean imageBean : mImageList) {
-                        if (imageBean.isSeleted()) {
+                        if (imageBean.isSelected()) {
                             mImageBeans.add(imageBean);
                         }
                     }
@@ -1116,6 +1113,22 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
 
                 }
                 break;
+
+            case REQUEST_PREVIEW:
+                if (resultCode == Activity.RESULT_OK) {
+                    List<ImageDetail> images = data.getParcelableArrayListExtra(EXTRA_DATA);
+                    if (images.size() > 0)
+                        addImageLayout(images);
+                    else
+                        deleteImageLayout();
+                    List<ImageDetail> deletedImagePaths = data.getParcelableArrayListExtra(EXTRA_DELETING);
+                    StringBuilder sb = new StringBuilder();
+                    for (ImageDetail imageDetail: deletedImagePaths) {
+                        sb.append("'").append(imageDetail.getPicUrl()).append("',");
+                    }
+                    sb.deleteCharAt(sb.length() - 1);
+                    mTaskAnswerDao.deletePicInfos(mStudentId, mTaskId, mTaskItemId, mTaskItemType, sb.toString());
+                }
         }
     }
 
@@ -1397,7 +1410,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     }
 
     private ArrayList<ImageDetail> mSelectedImageUrlList = new ArrayList<>();//选择图片上传成功后返回的message集合
-    private static final int REQUEST_CODE = 1 << 4;
+
+    private static final int REQUEST_SELECT_IMAGES = 1 << 4;
 
     /**
      * 增加底部占位view
@@ -2181,11 +2195,11 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
                 List<TaskPicInfo> picInfoList = mTaskAnswerDao.queryPicInfo(mStudentId, mTaskId, mTaskItemId, mTaskItemType);
-                if (picInfoList.size() < 8) {
+                if (picInfoList.size() < IMAGE_MAX_COUNT) {
                     Intent intent = new Intent(getActivity(), MMSelectorActivity.class);
                     intent.putExtra("EXTRA_TYPE", "IMAGE");
-                    intent.putExtra("EXTRA_SIZE", picInfoList.size());
-                    startActivityForResult(intent, REQUEST_CODE);
+                    intent.putExtra("EXTRA_SIZE", IMAGE_MAX_COUNT - picInfoList.size());
+                    startActivityForResult(intent, REQUEST_SELECT_IMAGES);
                     UIUtils.addEnterAnim(getActivity());
                 } else {
                     ToastUtil.showToast(getActivity(), getString(R.string.tips_have_eight_pics));
@@ -2207,7 +2221,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                 if (!isInsertAudio) {
                     Intent intent = new Intent(getActivity(), MMSelectorActivity.class);
                     intent.putExtra("EXTRA_TYPE", "AUDIO");
-                    startActivityForResult(intent, REQUEST_CODE);
+                    startActivityForResult(intent, REQUEST_SELECT_IMAGES);
                     UIUtils.addEnterAnim(getActivity());
                 } else {
                     ToastUtil.showToast(getActivity(), getString(R.string.work_answer_have_video));
@@ -2229,7 +2243,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                 if (!isInsertVideo) {
                     Intent intent = new Intent(getActivity(), MMSelectorActivity.class);
                     intent.putExtra("EXTRA_TYPE", "VIDEO");
-                    startActivityForResult(intent, REQUEST_CODE);
+                    startActivityForResult(intent, REQUEST_SELECT_IMAGES);
                     UIUtils.addEnterAnim(getActivity());
                 } else {
                     ToastUtil.showToast(getActivity(), getString(R.string.work_answer_have_audio));

@@ -13,18 +13,18 @@ import android.support.v7.widget.RecyclerView.ItemDecoration;
 import android.view.View;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnItemClickListener;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnLoadMoreListener;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerCommonAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 
 import org.json.JSONObject;
 
@@ -140,29 +140,22 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
 
         final long startTime = SystemClock.currentThreadTimeMillis();
         Cog.d(TAG, "loadData:", getUrl(), mParams);
-        if (refresh) {
-            mRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    mRefreshLayout.setRefreshing(true);
-                }
-            });
-        }
-        mRequestSender.sendRequest(new RequestData(getUrl(), mParams,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(final JSONObject response) {
-                                Cog.d(TAG, "onResponse:" + response);
-                                delayResponding(startTime, new ResponseCallable() {
-                                    @Override
-                                    public void handle() {
-                                        handleNormalResponse(response, refresh);
-                                    }
-                                });
-                            }
-                        }, new Response.ErrorListener() {
+        boolean sent = mRequestSender.sendGetRequest(new RequestData(getUrl(), mParams,
+                new Response.Listener<JSONObject>() {
                     @Override
-                    public void onErrorResponse(final VolleyError error) {
+                    public void onResponse(final JSONObject response) {
+                        Cog.d(TAG, "onResponse:" + response);
+                        delayResponding(startTime, new ResponseCallable() {
+                            @Override
+                            public void handle() {
+                                handleNormalResponse(response, refresh);
+                            }
+                        });
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(final Throwable error) {
                         Cog.e(TAG, "onErrorResponse:" + error);
                         delayResponding(startTime, new ResponseCallable() {
                             @Override
@@ -171,9 +164,15 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
                             }
                         });
                     }
+                }));
+        if (sent && refresh) {
+            mRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.setRefreshing(true);
                 }
-                )
-        );
+            });
+        }
     }
 
     /**
@@ -204,11 +203,23 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
         mRecyclerView.removeItemDecoration(mItemDecoration);
     }
 
+    public void setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
+        mAdapter.setOnItemClickListener(onItemClickListener);
+    }
+
     /**
-     * 响应回调
+     * 清除数据
      */
-    interface ResponseCallable {
-        void handle();
+    public void clearData() {
+        mAdapter.clear();
+        mEmptyView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 释放，请求停止
+     */
+    public void release() {
+        mRequestSender.stop();
     }
 
     /**
@@ -291,11 +302,11 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
 
     /**
      * 处理错误响应
-     *
-     * @param error   错误信息
+     *  @param error   错误信息
      * @param refresh 是否是刷新
      */
-    private void handleErrorResponse(VolleyError error, boolean refresh) {
+    private void handleErrorResponse(Throwable error, boolean refresh) {
+        error.printStackTrace();
         if (!refresh) {
             mAdapter.removeItem(mAdapter.getItemCount() - 1);
             mAdapter.notifyItemRemoved(mAdapter.getItemCount());
@@ -318,7 +329,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
     /**
      * 获取请求地址
      *
-     * @return
+     * @return 请求地址
      */
     protected String getUrl() {
         if (mListExtractor == null) return null;
@@ -336,13 +347,19 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
     }
 
     /**
-     * 添加请求参数，也可使用 {@link #addParam(String, String)}加参数,这个用来覆盖，不是用来调用了
+     * 添加请求参数，也可使用 {@link #addParam(String, String)}加参数
      *
      * @param params 请求参数，加入这个map的参数会用来作为http请求参数
      */
     protected void addParams(Map<String, String> params) {
+        mParams.putAll(params);
     }
 
+    /**
+     * 添加请求参数
+     * @param key 键
+     * @param value 值
+     */
     public void addParam(String key, String value) {
         mParams.put(key, value);
     }
@@ -382,6 +399,27 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
     }
 
     /**
+     * 响应回调
+     */
+    public interface ResponseCallable {
+        void handle();
+    }
+
+    public static class ResponseProxy implements ResponseCallable {
+
+        ResponseCallable mProxiable;
+
+        public ResponseProxy(ResponseCallable callable) {
+            mProxiable = callable;
+        }
+
+        @Override
+        public void handle() {
+            mProxiable.handle();
+        }
+    }
+
+    /**
      * 列表抽取器，从响应数据中获取实体对象列表
      *
      * @param <O>  实体类
@@ -411,7 +449,13 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
         ViewHolderCreator<VH> newViewHolderCreator();
     }
 
-    public static class Builder<TT, VHH extends RecyclerViewHolder<TT>, INFOO> {
+    /**
+     * 列表数据加载器
+     * @param <TT> 实体
+     * @param <VHH> 实体组持器
+     * @param <InfoT> 公用信息类
+     */
+    public static class Builder<TT, VHH extends RecyclerViewHolder<TT>, InfoT> {
 
         private RecyclerView mRecyclerView;
 
@@ -423,40 +467,47 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
 
         private Fragment mFragment;
 
-        private INFOO mInfo;
+        private InfoT mInfo;
 
-        public Builder<TT, VHH, INFOO> setRecyclerView(RecyclerView recyclerView) {
+        private OnItemClickListener<TT> mOnItemClickListener;
+
+        public Builder<TT, VHH, InfoT> setRecyclerView(RecyclerView recyclerView) {
             mRecyclerView = recyclerView;
             return this;
         }
 
-        public Builder<TT, VHH, INFOO> setEmptyView(View emptyView) {
+        public Builder<TT, VHH, InfoT> setEmptyView(View emptyView) {
             mEmptyView = emptyView;
             return this;
         }
 
-        public Builder<TT, VHH, INFOO> setRefreshLayout(SwipeRefreshLayout refreshLayout) {
+        public Builder<TT, VHH, InfoT> setRefreshLayout(SwipeRefreshLayout refreshLayout) {
             mRefreshLayout = refreshLayout;
             return this;
         }
 
-        public Builder<TT, VHH, INFOO> setActivity(Activity activity) {
+        public Builder<TT, VHH, InfoT> setActivity(Activity activity) {
             mActivity = activity;
             return this;
         }
 
-        public Builder<TT, VHH, INFOO> setFragment(Fragment fragment) {
+        public Builder<TT, VHH, InfoT> setFragment(Fragment fragment) {
             mFragment = fragment;
             return this;
         }
 
-        public Builder<TT, VHH, INFOO> setInfo(INFOO info) {
+        public Builder<TT, VHH, InfoT> setInfo(InfoT info) {
             mInfo = info;
             return this;
         }
 
-        public RvLoader<TT, VHH, INFOO> build() {
-            RvLoader<TT, VHH, INFOO> instance = new RvLoader<TT, VHH, INFOO>();
+        public Builder<TT, VHH, InfoT> setOnItemClickListener(OnItemClickListener<TT> onItemClickListener) {
+            mOnItemClickListener = onItemClickListener;
+            return this;
+        }
+
+        public RvLoader<TT, VHH, InfoT> build() {
+            RvLoader<TT, VHH, InfoT> instance = new RvLoader<>();
             if (mRefreshLayout == null) throw new RuntimeException("No SwipeRefreshLayout passed");
             instance.setRefreshLayout(mRefreshLayout);
             if (mRecyclerView == null) throw new RuntimeException("No RecyclerView passed");
@@ -470,8 +521,11 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
             } else {
                 throw new RuntimeException("No activity or fragment passed");
             }
-            if (mInfo == null) throw new RuntimeException("Please set info!");
+//            if (mInfo == null) throw new RuntimeException("Please set info!");
             instance.setInfo(mInfo);
+            if (mOnItemClickListener != null) {
+                instance.setOnItemClickListener(mOnItemClickListener);
+            }
             return instance;
         }
 

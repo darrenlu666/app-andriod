@@ -8,7 +8,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationsFragment;
@@ -88,7 +87,7 @@ public class AssessmentClassActivity extends BaseHttpActivity {
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
     }
 
     /**

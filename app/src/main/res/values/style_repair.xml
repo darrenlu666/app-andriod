@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="StatusText">
+        <item name="android:button">@null</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/sl_tv_stat_table_item</item>
+        <item name="android:background">?selectableItemBackground</item>
+    </style>
+
+    <style name="FilterItemText">
+        <item name="android:padding">16dp</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">@color/sl_tv_stat_table_item</item>
+        <item name="android:background">?selectableItemBackground</item>
+    </style>
+
+    <style name="MalfunctionCategoryL1Tv">
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">#444444</item>
+    </style>
+
+    <style name="MalfunctionCategoryL2Tv">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textColor">#999999</item>
+    </style>
+
+    <style name="RepairDetailItem">
+        <item name="android:divider">@drawable/dv_v_repair_detail</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:showDividers">middle</item>
+    </style>
+
+    <style name="RepairDetailsLb">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">end</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="RepairDetailsContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#444444</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="TextAppearanceTab">
+        <item name="android:textSize">16dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textColor">#444444</item>
+    </style>
+
+    <style name="BottomDialog" parent="@android:style/Theme.Light.Panel">
+        <item name="android:windowAnimationStyle">@style/BottomDialogAnimation</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="BottomDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up_to_show</item>
+        <item name="android:windowExitAnimation">@anim/slide_down_to_hide</item>
+    </style>
+
+    <style name="CategoryTabText" parent="@style/TextAppearance.AppCompat.Large" >
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+</resources>

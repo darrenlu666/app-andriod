@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -38,7 +39,11 @@ import butterknife.Bind;
  * @author lijian
  */
 public class MMPreviewImageActivity extends ToolbarActivity {
+
     private static final String TAG = MMPreviewImageActivity.class.getSimpleName();
+
+    public static final String EXTRA_CONFIRM = "com.codyy.erpsportal.EXTRA_CONFIRM";
+
     private ArrayList<MMImageBean> mImageBeans;
     private int mPosition;
     @Bind(R.id.toolbar)
@@ -61,7 +66,7 @@ public class MMPreviewImageActivity extends ToolbarActivity {
             public void run() {
                 if (mImageBeans.size() > 0) {
                     mHackyViewPager.setAdapter(new HackyPagerAdapter(mImageBeans, MMPreviewImageActivity.this));
-                    mConfirmButton.setText(getString(R.string.exam_image_upload, mImageBeans.size()));
+                    mConfirmButton.setText( getString(R.string.exam_image_upload, mImageBeans.size()));
                 }
             }
         });
@@ -70,15 +75,14 @@ public class MMPreviewImageActivity extends ToolbarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.putParcelableArrayListExtra(EXTRA_DATA, mImageBeans);
+                intent.putExtra(EXTRA_CONFIRM, true);
                 setResult(RESULT_OK, intent);
                 finish();
             }
         });
         mViewPagerChangeListener = new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
             public void onPageSelected(int position) {
@@ -87,16 +91,14 @@ public class MMPreviewImageActivity extends ToolbarActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) { }
         };
         mHackyViewPager.addOnPageChangeListener(mViewPagerChangeListener);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mImageBeans.get(mPosition).isSeleted()) {
+        if (mImageBeans.get(mPosition).isSelected()) {
             mCheck.setIcon(R.drawable.ic_exam_select_p);
         } else {
             mCheck.setIcon(R.drawable.ic_exam_select_n);
@@ -106,21 +108,37 @@ public class MMPreviewImageActivity extends ToolbarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mImageBeans.get(mPosition).isSeleted()) {
-            mImageBeans.get(mPosition).setSeleted(false);
+        if (super.onOptionsItemSelected(item)) {
+            return true;
         } else {
-            mImageBeans.get(mPosition).setSeleted(true);
-        }
-        invalidateOptionsMenu();
-        ArrayList<MMImageBean> imageBeans = new ArrayList<>();
-        for (MMImageBean imageBean : mImageBeans) {
-            if (imageBean.isSeleted()) {
-                imageBeans.add(imageBean);
+            if (mImageBeans.get(mPosition).isSelected()) {
+                mImageBeans.get(mPosition).setSelected(false);
+            } else {
+                mImageBeans.get(mPosition).setSelected(true);
             }
+            invalidateOptionsMenu();
+            ArrayList<MMImageBean> imageBeans = new ArrayList<>();
+            for (MMImageBean imageBean : mImageBeans) {
+                if (imageBean.isSelected()) {
+                    imageBeans.add(imageBean);
+                }
+            }
+            mConfirmButton.setText(getString(R.string.exam_image_upload, imageBeans.size()));
+            return true;
         }
-        mConfirmButton.setText(getString(R.string.exam_image_upload, imageBeans.size()));
-        return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onBack() {
+        super.onBack();
+        Cog.d(TAG, "onBack");
+        Intent intent = new Intent();
+        intent.putParcelableArrayListExtra(EXTRA_DATA, mImageBeans);
+        intent.putExtra(EXTRA_CONFIRM, false);
+        setResult(RESULT_OK, intent);
+    }
+
+
 
     private MenuItem mCheck;
 
@@ -162,7 +180,6 @@ public class MMPreviewImageActivity extends ToolbarActivity {
 
             photoView.setController(ctrl);
             photoView.setHierarchy(hierarchy);
-//            photoView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             photoView.setLayoutParams(photoViewLayoutParams);
             relativeLayout.addView(photoView);
             return relativeLayout;
@@ -177,9 +194,7 @@ public class MMPreviewImageActivity extends ToolbarActivity {
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
-
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

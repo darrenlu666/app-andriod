@@ -27,21 +27,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.entities.Classroom;
 import com.codyy.erpsportal.commons.models.entities.Classroom.VideoUrlCallback;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.NormalGetRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.parsers.ClassTourClassroomParser;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
@@ -49,6 +44,7 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,6 +53,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 直播详细、视频播放页面
@@ -99,14 +99,11 @@ public class LiveVideoListPlayActivity extends FragmentActivity implements IFrag
 
     public static boolean mIsPlayable = false;
 
-    private RequestQueue mRequestQueue;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.layout_bnvideo_viewpager);
-        mRequestQueue = RequestManager.getRequestQueue();
         mParser = new ClassTourClassroomParser();
         init();
         //禁止锁屏
@@ -171,7 +168,7 @@ public class LiveVideoListPlayActivity extends FragmentActivity implements IFrag
             return;
         }
         if (classroom.isMain()) {//如果是主课堂还是原来的方式
-            classroom.fetchMainVideoUrl(mRequestQueue, new VideoUrlCallback() {
+            classroom.fetchMainVideoUrl(new VideoUrlCallback() {
                 @Override
                 public void onUrlFetched(String url) {
                     videoLayout.setUrl(url,BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
@@ -184,24 +181,27 @@ public class LiveVideoListPlayActivity extends FragmentActivity implements IFrag
             });
         } else {//
             if ("DMC".equals(classroom.getStreamingServerType())) {
-                NormalGetRequest request = new NormalGetRequest(classroom.getDmsServerHost() + "?method=play&stream=class_" + classroom.getClassRoomId() + "_u_" + classroom.getId(), new Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Cog.d(TAG, "fetchMainVideoUrl response=", response);
-                        String result = response.optString("result");
-                        String videoUrl = result + "/class_" + mParser.mMainClassroomId + "_u_" + classroom.getId() + "_" + classroom.getClassRoomId();
-                        Cog.d(TAG, "dmc type videoUrl=", videoUrl);
-                        classroom.setVideoUrl(videoUrl);
-                        playVideo(videoLayout, videoUrl);
-                    }
-                }, new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Cog.d(TAG, "fetchMainVideoUrl error=", error);
-                        videoLayout.onError(-2,null != error ?error.getMessage():TAG);
-                    }
-                });
-                mRequestQueue.add(request);
+                WebApi webApi = RsGenerator.create(WebApi.class);
+                webApi.getJson(classroom.getDmsServerHost() + "?method=play&stream=class_" + classroom.getClassRoomId() + "_u_" + classroom.getId())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<JSONObject>() {
+                            @Override
+                            public void accept(JSONObject response) throws Exception {
+                                Cog.d(TAG, "fetchMainVideoUrl response=", response);
+                                String result = response.optString("result");
+                                String videoUrl = result + "/class_" + mParser.mMainClassroomId + "_u_" + classroom.getId() + "_" + classroom.getClassRoomId();
+                                Cog.d(TAG, "dmc type videoUrl=", videoUrl);
+                                classroom.setVideoUrl(videoUrl);
+                                playVideo(videoLayout, videoUrl);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable error) throws Exception {
+                                Cog.d(TAG, "fetchMainVideoUrl error=", error);
+                                videoLayout.onError(-2,null != error ?error.getMessage():TAG);
+                            }
+                        });
             } else {
                 String videoUrl = classroom.getPmsServerHost() + "/class_" + mParser.mMainClassroomId + "_u_" + classroom.getId() + "_" + classroom.getClassRoomId();
                 Cog.d(TAG, "pms type videoUrl=", videoUrl);
@@ -275,7 +275,7 @@ public class LiveVideoListPlayActivity extends FragmentActivity implements IFrag
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
 //                UiUtils.toast(LiveVideoListPlayActivity.this, R.string.net_error, Toast.LENGTH_SHORT);
                 mClassroomList.clear();

@@ -619,7 +619,7 @@
     <!--<string name="courses_proportion_main_invited">%1$s-主讲教室（受邀）</string>-->
     <!--<string name="courses_proportion_receiving">%1$s-接收教室</string>-->
 
-    <string name="classroom_role_format">%1$s（%2$s）</string>
+    <string name="classroom_role_format">%1$s (%2$s)</string>
 
     <string name="title_activity_courses_proportion_table">CoursesProportionTableActivity</string>
     <string name="scope_week">按周统计</string>
@@ -783,4 +783,20 @@
     <string name="tv_order_name">按名称</string>
     <string name="tv_order_count">按点击量</string>
 
+    <string name="malfunction_count">问题总数 %1$d</string>
+    <string name="handled_count">已处理问题数 %1$d</string>
+    <string name="common_malfunction">常见问题</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="repair_reporter">报修人</string>
+    <string name="repair_report_time_s">报修时间 %1$s</string>
+    <string name="status_await_handle">待处理</string>
+    <string name="status_handling">处理中</string>
+    <string name="status_handled">已处理</string>
+    <string name="status_accepted">已验收</string>
+    <string name="send">发送</string>
+    <string name="make_a_detailed_inquiry">追问</string>
+    <string name="title_activity_scan_serial">ScanSerialActivity</string>
+    <string name="please_select">请选择</string>
+    <string name="report_repair_classroom_all">报修教室 (全部)</string>
+    <string name="handle_status_all">处理状态 (全部)</string>
 </resources>

@@ -14,32 +14,31 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TaskActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
-import com.codyy.erpsportal.homework.interfaces.AudioRecordClickListener;
-import com.codyy.erpsportal.homework.controllers.fragments.AddOverallCommentFragment;
-import com.codyy.erpsportal.homework.controllers.fragments.GetOverallCommentFragment;
-import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragment;
-import com.codyy.erpsportal.homework.controllers.fragments.WorkItemIndexDialog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.TaskAnswerDao;
 import com.codyy.erpsportal.commons.models.dao.TaskReadDao;
-import com.codyy.erpsportal.homework.models.entities.task.TaskAnswer;
-import com.codyy.erpsportal.homework.models.entities.task.TaskPicInfo;
-import com.codyy.erpsportal.homework.models.entities.ItemInfoClass;
-import com.codyy.erpsportal.homework.models.entities.student.StudentAnswersByPerson;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.homework.controllers.fragments.AddOverallCommentFragment;
+import com.codyy.erpsportal.homework.controllers.fragments.GetOverallCommentFragment;
+import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragment;
+import com.codyy.erpsportal.homework.controllers.fragments.WorkItemIndexDialog;
+import com.codyy.erpsportal.homework.interfaces.AudioRecordClickListener;
+import com.codyy.erpsportal.homework.models.entities.ItemInfoClass;
+import com.codyy.erpsportal.homework.models.entities.student.StudentAnswersByPerson;
+import com.codyy.erpsportal.homework.models.entities.task.TaskAnswer;
+import com.codyy.erpsportal.homework.models.entities.task.TaskPicInfo;
 import com.codyy.erpsportal.homework.utils.WorkUtils;
 import com.codyy.erpsportal.homework.widgets.MySubmitDialog;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -536,7 +535,7 @@ public class WorkItemDetailActivity extends TaskActivity implements View.OnClick
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(WorkItemDetailActivity.this, getResources().getString(R.string.work_answer_submit_failure));
             }
         }));
@@ -659,7 +658,7 @@ public class WorkItemDetailActivity extends TaskActivity implements View.OnClick
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 if (mProgressDialog != null) {
                     mProgressDialog.cancel();
                 }
@@ -857,7 +856,7 @@ public class WorkItemDetailActivity extends TaskActivity implements View.OnClick
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Log.e(TAG, "数据获取失败！");
             }
         }));

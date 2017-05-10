@@ -22,14 +22,12 @@ import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.utils.DateUtils;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.CalendarScrollView;
@@ -557,7 +555,7 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 if (isFinishing()) {
                     return;
                 }

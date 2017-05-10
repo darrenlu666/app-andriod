@@ -14,18 +14,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
-import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.Choice;
-import com.codyy.erpsportal.exam.models.entities.TreeItem;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
+import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
+import com.codyy.erpsportal.exam.models.entities.TreeItem;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -123,7 +122,7 @@ public class TeacherArrangeListActivity extends ToolbarActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
 
             }
         }));

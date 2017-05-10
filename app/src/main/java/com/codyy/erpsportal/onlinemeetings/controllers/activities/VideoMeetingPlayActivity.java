@@ -17,7 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
@@ -126,7 +126,7 @@ public  class VideoMeetingPlayActivity extends BaseHttpActivity implements BnVid
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         Cog.e(TAG, "onErrorResponse:" + error);
         UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
     }

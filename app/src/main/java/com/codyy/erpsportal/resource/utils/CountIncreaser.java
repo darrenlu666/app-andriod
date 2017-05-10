@@ -1,12 +1,12 @@
 package com.codyy.erpsportal.resource.utils;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.utils.Cog;
+
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -24,7 +24,7 @@ public class CountIncreaser {
     /**
      * 增加下载次数
      */
-    public static void increaseDownloadCount(RequestSender requestSender, Object requestTag,
+    public static void increaseDownloadCount(RequestSender requestSender,
                                              String uuid, String resourceId) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
@@ -36,16 +36,16 @@ public class CountIncreaser {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "increaseDownloadCount error=", error);
             }
-        }, requestTag));
+        }));
     }
 
     /**
      * 增加查看次数
      */
-    public static void increaseViewCount(RequestSender requestSender, Object requestTag,
+    public static void increaseViewCount(RequestSender requestSender,
                                          String uuid, String resourceId) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", uuid);
@@ -58,9 +58,9 @@ public class CountIncreaser {
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "increaseViewCount error=", error);
             }
-        }, requestTag));
+        }));
     }
 }

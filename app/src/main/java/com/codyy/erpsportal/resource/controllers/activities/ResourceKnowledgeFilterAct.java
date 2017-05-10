@@ -14,25 +14,21 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
-import com.codyy.erpsportal.resource.controllers.fragments.ChoiceDialog;
-import com.codyy.erpsportal.resource.controllers.fragments.ChoiceDialog.OnChosenListener;
 import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
+import com.codyy.erpsportal.commons.models.entities.Choice;
+import com.codyy.erpsportal.commons.models.entities.FilterItem;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
-import com.codyy.erpsportal.commons.models.entities.Choice;
-import com.codyy.erpsportal.commons.models.entities.FilterItem;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.resource.controllers.fragments.ChoiceDialog;
+import com.codyy.erpsportal.resource.controllers.fragments.ChoiceDialog.OnChosenListener;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -45,6 +41,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 属性筛选
@@ -137,7 +136,7 @@ public class ResourceKnowledgeFilterAct extends AppCompatActivity implements OnC
     @OnItemClick(R.id.list_view)
     public void onItemClick(final int position) {
         FilterItem item = mOptionsAdapter.getItem(position);
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
+        WebApi webApi = RsGenerator.create(WebApi.class);
         Map<String, String> params = new HashMap<>();
         boolean noLimit = false;
         switch (item.getParamName()) {
@@ -188,28 +187,31 @@ public class ResourceKnowledgeFilterAct extends AppCompatActivity implements OnC
         }
         final boolean needShowNoLimit = noLimit;
         Cog.d(TAG, "url=" + item.getUrl() + params);
-        requestQueue.add(new NormalPostRequest(item.getUrl(), params, new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "onResponse response:" + response);
-                if ("success".equals(response.optString("result"))) {
-                    List<Choice> choices = new Choice.BaseChoiceParser()
-                            .parseArray(response.optJSONArray("list"));
-                    if (choices == null) {
-                        choices = new ArrayList<>(1);
+        webApi.post4Json(item.getUrl(), params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "onResponse response:" + response);
+                        if ("success".equals(response.optString("result"))) {
+                            List<Choice> choices = new Choice.BaseChoiceParser()
+                                    .parseArray(response.optJSONArray("list"));
+                            if (choices == null) {
+                                choices = new ArrayList<>(1);
+                            }
+                            choices.add(0, needShowNoLimit ? mNoLimitChoice : mAllChoice);
+                            showDialog(choices);
+                        }
                     }
-                    choices.add(0, needShowNoLimit? mNoLimitChoice: mAllChoice);
-                    showDialog(choices);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "onErrorResponse error:" + error);
-                uncheckItem(position);
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "onErrorResponse error:" + error);
+                        uncheckItem(position);
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                    }
+                });
     }
 
     /**

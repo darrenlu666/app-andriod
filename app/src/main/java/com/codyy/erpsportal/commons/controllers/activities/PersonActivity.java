@@ -24,7 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
@@ -158,7 +158,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mEmptyView ) return;
         if(null != mNativeUserInfo){
             mEmptyView.setVisibility(View.GONE);
@@ -327,7 +327,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
 
             }
         });
@@ -362,7 +362,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
 
             }
         });

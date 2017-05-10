@@ -72,7 +72,7 @@ public abstract class UploadAsyncTask extends AsyncTask<String, Integer, String>
                  */
                 sb.append("Content-Disposition: form-data; name=\"uploadfile\"; filename=\""
                         + file.getName() + "\"" + LINE_END);
-                sb.append("Content-Type: application/octet-stream; charset=" + "utf-8" + LINE_END);
+                sb.append("Content-Type: application/octet-stream; charset=utf-8" + LINE_END);
                 sb.append(LINE_END);
                 dos.write(sb.toString().getBytes());
                 InputStream is = new FileInputStream(file);

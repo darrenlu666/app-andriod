@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterGradeSubject;
@@ -259,7 +259,7 @@ public class CollectivePrepareLessonsNewActivity extends BaseHttpActivity implem
 
 
     @Override
-    public void onFailure(VolleyError error) throws Exception {
+    public void onFailure(Throwable error) throws Exception {
         if(null == mRecyclerView || null == mRefreshLayout) return;
         mRecyclerView.setRefreshing(false);
         if (mRefreshLayout.isRefreshing()) {

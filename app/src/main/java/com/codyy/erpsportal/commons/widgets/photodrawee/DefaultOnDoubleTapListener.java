@@ -9,13 +9,14 @@ import com.facebook.drawee.view.DraweeView;
 
 public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapListener {
 
-    private Attacher mAttacher;
+    protected Attacher mAttacher;
 
     public DefaultOnDoubleTapListener(Attacher attacher) {
         setPhotoDraweeViewAttacher(attacher);
     }
 
-    @Override public boolean onSingleTapConfirmed(MotionEvent e) {
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
 
         if (mAttacher == null) {
             return false;
@@ -47,7 +48,8 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         return false;
     }
 
-    @Override public boolean onDoubleTap(MotionEvent event) {
+    @Override
+    public boolean onDoubleTap(MotionEvent event) {
         if (mAttacher == null) {
             return false;
         }
@@ -57,6 +59,7 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
             float x = event.getX();
             float y = event.getY();
 
+            // min, mid, max
             if (scale < mAttacher.getMediumScale()) {
                 mAttacher.setScale(mAttacher.getMediumScale(), x, y, true);
             } else if (scale >= mAttacher.getMediumScale() && scale < mAttacher.getMaximumScale()) {
@@ -70,7 +73,8 @@ public class DefaultOnDoubleTapListener implements GestureDetector.OnDoubleTapLi
         return true;
     }
 
-    @Override public boolean onDoubleTapEvent(MotionEvent event) {
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent event) {
         return false;
     }
 

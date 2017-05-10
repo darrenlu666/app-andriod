@@ -17,8 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.artifex.mupdfdemo.FilePicker;
 import com.artifex.mupdfdemo.Hit;
 import com.artifex.mupdfdemo.MuPDFCore;
@@ -29,17 +27,18 @@ import com.artifex.mupdfdemo.OutlineActivityData;
 import com.artifex.mupdfdemo.ReaderView;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.Constants;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.resource.models.entities.Document;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.Constants;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -157,7 +156,7 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
             }

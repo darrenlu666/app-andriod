@@ -53,11 +53,11 @@ public class AspectRatioDraweeView extends SimpleDraweeView {
     }
 
     private void initAttributes(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AspectRatioDraweeView);
-        aspectRatio = a.getFloat(R.styleable.AspectRatioDraweeView_aspectRatio, DEFAULT_ASPECT_RATIO);
-        aspectRatioEnabled = a.getBoolean(R.styleable.AspectRatioDraweeView_aspectRatioEnabled,
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AspectRatioComponent);
+        aspectRatio = a.getFloat(R.styleable.AspectRatioComponent_aspectRatio, DEFAULT_ASPECT_RATIO);
+        aspectRatioEnabled = a.getBoolean(R.styleable.AspectRatioComponent_aspectRatioEnabled,
                 DEFAULT_ASPECT_RATIO_ENABLED);
-        dominantMeasurement = a.getInt(R.styleable.AspectRatioDraweeView_dominantMeasurement,
+        dominantMeasurement = a.getInt(R.styleable.AspectRatioComponent_dominantMeasurement,
                 DEFAULT_DOMINANT_MEASUREMENT);
         a.recycle();
     }

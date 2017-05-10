@@ -39,8 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class TransferManager {
     private static final String TAG = "TransferManager";
 
-    private static final int THREAD_COUNT = 1; // 线程数量
-
     private final List<HttpLargeDownload> mDownloads; // 下载集合
 
     private final Map<String, HttpDownloadListener> mListenerMap;
@@ -206,9 +204,8 @@ public final class TransferManager {
                                            String filename, String userId, String resId) {
         String cacheDirPath = SystemUtils.getCachePath();
         if (cacheDirPath == null) return null;
-        HttpLargeDownload downloader = new HttpLargeDownload(mDownloads, url, filename
-                , cacheDirPath + File.separator + userId
-                , THREAD_COUNT, context, userId, resId);
+        HttpLargeDownload downloader = new HttpLargeDownload(url, filename
+                , cacheDirPath + File.separator + userId, context, userId, resId);
         downloader.start();
         addDownload(downloader);
         return downloader;

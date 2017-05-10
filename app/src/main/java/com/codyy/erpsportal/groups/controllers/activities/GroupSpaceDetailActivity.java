@@ -7,7 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.groups.models.entities.Group;
@@ -64,7 +64,7 @@ public class GroupSpaceDetailActivity extends BaseHttpActivity implements Serial
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
 
     }
 

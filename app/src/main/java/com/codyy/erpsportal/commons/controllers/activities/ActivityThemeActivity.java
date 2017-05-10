@@ -16,8 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
@@ -28,18 +26,6 @@ import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.HorizontalListViewAdapter2;
 import com.codyy.erpsportal.commons.controllers.fragments.CustomCommentFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.DeliveryClassDetailFragment;
-import com.codyy.erpsportal.onlinemeetings.controllers.fragments.VideoIntroductionFragment;
-import com.codyy.erpsportal.commons.services.FileDownloadService;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.DateUtil;
-import com.codyy.erpsportal.commons.utils.SystemUtils;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
-import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
-import com.codyy.erpsportal.commons.widgets.BnVideoView2;
-import com.codyy.erpsportal.commons.widgets.HorizontalListView;
-import com.codyy.erpsportal.commons.widgets.SlidingTabLayout;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.DeliveryClassDetail;
 import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
@@ -47,7 +33,23 @@ import com.codyy.erpsportal.commons.models.entities.MeetDetail;
 import com.codyy.erpsportal.commons.models.entities.ThemeVideo;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.services.FileDownloadService;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DateUtil;
+import com.codyy.erpsportal.commons.utils.SystemUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
+import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
+import com.codyy.erpsportal.commons.widgets.BlogComposeView;
+import com.codyy.erpsportal.commons.widgets.BnVideoView2;
+import com.codyy.erpsportal.commons.widgets.HorizontalListView;
+import com.codyy.erpsportal.commons.widgets.SlidingTabLayout;
+import com.codyy.erpsportal.onlinemeetings.controllers.fragments.VideoIntroductionFragment;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -343,7 +345,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(ActivityThemeActivity.this, getString(R.string.net_error));
             }
         }, mReqTag));

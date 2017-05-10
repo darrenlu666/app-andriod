@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.codyy.erpsportal.commons.models.entities.download.BreakPointInfo;
 import com.codyy.erpsportal.commons.utils.Cog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DownloadDao {
@@ -92,10 +91,31 @@ public class DownloadDao {
 	}
 
 	/**
+	 * 保存 下载的具体信息
+	 */
+	public synchronized void saveDownloadInfo(BreakPointInfo info) {
+		SQLiteDatabase database = getConnection();
+		try {
+			String sql = "insert into download_info(userId, res_id,thread_id, start_pos, end_pos, compelete_size, total_size, update_time, url) " +
+					"values (?,?,?,?,?,?,?,?,?)";
+			Object[] bindArgs = { info.getUserId(), info.getResId(),info.getThreadId(),
+					info.getStartPos(), info.getEndPos(),
+					info.getCompleteSize(), info.getTotal(), info.getUpdateTime(), info.getUrl() };
+			database.execSQL(sql, bindArgs);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != database) {
+				database.close();
+			}
+		}
+	}
+
+	/**
 	 * 得到下载具体信息
 	 */
-	public synchronized List<BreakPointInfo> getDownloadInfos(String userId, String resId) {
-		List<BreakPointInfo> list = new ArrayList<>();
+	public synchronized BreakPointInfo getDownloadInfo(String userId, String resId) {
+		BreakPointInfo breakPointInfo = new BreakPointInfo();
 		SQLiteDatabase database = getConnection();
 		Cursor cursor = null;
 		try {
@@ -103,8 +123,8 @@ public class DownloadDao {
                     "FROM download_info " +
                     "WHERE userId=? AND res_id=?";
 			cursor = database.rawQuery(sql, new String[] { userId, resId });
-			while (cursor.moveToNext()) {
-                BreakPointInfo info = new BreakPointInfo(
+			if (cursor.moveToFirst()) {
+				breakPointInfo = new BreakPointInfo(
                         cursor.getString(cursor.getColumnIndex("userId")),
                         cursor.getString(cursor.getColumnIndex("res_id")),
                         cursor.getInt(cursor.getColumnIndex("thread_id")),
@@ -114,7 +134,6 @@ public class DownloadDao {
                         cursor.getInt(cursor.getColumnIndex("total_size")),
                         cursor.getString(cursor.getColumnIndex("url")),
                         cursor.getLong(cursor.getColumnIndex("update_time")));
-				list.add(info);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,7 +145,7 @@ public class DownloadDao {
 				cursor.close();
 			}
 		}
-		return list;
+		return breakPointInfo;
 	}
 
 	public synchronized int getTotalDownload(String userId, String resId){

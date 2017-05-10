@@ -4,10 +4,9 @@ import android.graphics.drawable.Animatable;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
-import com.codyy.erpsportal.EApplication;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.blog.BlogPost;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UriUtils;
@@ -32,7 +31,7 @@ public class ChannelBlogViewHolder extends BaseRecyclerViewHolder<BlogPost> {
 
     @Bind(R.id.sdv_pic)SimpleDraweeView mSimpleDraweeView;
     @Bind(R.id.tv_name)TextView mTitleTextView;
-    @Bind(R.id.tv_desc)TextView mDescTextView;
+    @Bind(R.id.et_desc)TextView mDescTextView;
 
     public ChannelBlogViewHolder(View itemView) {
         super(itemView);

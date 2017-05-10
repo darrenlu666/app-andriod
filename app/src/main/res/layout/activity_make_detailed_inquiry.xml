@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.codyy.erpsportal.repairs.controllers.activities.MakeDetailedInquiryActivity">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/make_a_detailed_inquiry">
+        <Button
+            android:id="@+id/btn_commit"
+            style="@style/TextButtonInLeftOfTitleBar"
+            android:text="@string/send" />
+    </com.codyy.erpsportal.commons.widgets.TitleBar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+            <EditText
+                android:id="@+id/et_desc"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_rectangle_rim"
+                android:gravity="top"
+                android:hint="请输入..."
+                android:inputType="textMultiLine"
+                android:padding="10dp"
+                android:textColor="#444444"
+                android:textSize="16dp"
+                android:maxLength="1000"
+                tools:text="声音太小听不到？声音太小听不发动机发动机覅的到？声音太小听不到？声音太小听不到？" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

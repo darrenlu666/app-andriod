@@ -27,11 +27,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
+import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.entities.FilterItem;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.models.parsers.JsonParser;
+import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -40,13 +45,6 @@ import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout;
 import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelSlideListener;
 import com.codyy.erpsportal.commons.widgets.slidinguppanel.ResSlidingUpPanelLayout.PanelState;
-import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.entities.FilterItem;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.erpsportal.commons.models.parsers.JsonParser;
-import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnItemClickListener;
 import com.codyy.erpsportal.resource.controllers.adapters.ResourcesAdapter.OnLoadMoreListener;
@@ -63,6 +61,7 @@ import com.codyy.erpsportal.resource.models.entities.Video;
 import com.codyy.erpsportal.resource.utils.CountIncreaser;
 import com.codyy.erpsportal.resource.widgets.AudioControlBar;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -311,7 +310,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
                     @Override
                     public void onAudioPlaying(String audioId) {
                         Cog.d(TAG, "onAudioPlaying audioId=", audioId);
-                        CountIncreaser.increaseViewCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), audioId);
+                        CountIncreaser.increaseViewCount(mRequestSender, mUserInfo.getUuid(), audioId);
                     }
                 })
                 .build();
@@ -468,7 +467,6 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
         final long startTime = SystemClock.currentThreadTimeMillis();
         Cog.d(TAG, "loadData:", getUrl(), params);
         if (refresh) {
-            mRequestSender.stop(mRequestTag);
             mRefreshLayout.post(new Runnable() {
                 @Override
                 public void run() {
@@ -490,7 +488,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
                     }
                 }, new ErrorListener() {
                     @Override
-                    public void onErrorResponse(final VolleyError error) {
+                    public void onErrorResponse(final Throwable error) {
                         Cog.e(TAG, "onErrorResponse:" + error);
                         delayResponding(startTime, new ResponseCallable() {
                             @Override
@@ -553,7 +551,12 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
      */
     private void handleNormalResponse(JSONObject response, boolean isRefreshing) {
         mAdapter.setLoading(false);
-        mRefreshLayout.setRefreshing(false);
+        mRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mRefreshLayout.setRefreshing(false);
+            }
+        });
         if (checkSuccessful(response)) {
             List list = getList(response);
             updateItemDecoration();

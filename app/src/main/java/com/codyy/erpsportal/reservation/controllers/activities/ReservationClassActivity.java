@@ -3,7 +3,6 @@ package com.codyy.erpsportal.reservation.controllers.activities;
 
 import android.os.Bundle;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.commons.controllers.activities.FilterBaseActivity;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.reservation.controllers.fragments.ReservationClassFragment;
@@ -35,7 +34,7 @@ public class ReservationClassActivity extends FilterBaseActivity {
     }
 
     @Override
-    protected void onError(VolleyError error, int msg) {
+    protected void onError(Throwable error, int msg) {
 
     }
 }

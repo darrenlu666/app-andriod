@@ -21,17 +21,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog.ServerChangedListener;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.tasks.SavePasswordTask;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.CryptoUtils;
@@ -50,6 +47,10 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 登陆界面
@@ -129,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
      * 加载登录token
      */
     private void loadLoginToken() {
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
+        WebApi webApi = RsGenerator.create(WebApi.class);
         Map<String, String> params = new HashMap<>();
         params.put("securityCode", CryptoUtils.generateSecurityCode());
         if (!TextUtils.isEmpty(mLoginToken)) {
@@ -137,45 +138,48 @@ public class LoginActivity extends AppCompatActivity {
         }
         Cog.d(TAG, "loadLoginToken url=", URLConfig.LOGIN_TOKEN, params);
         mIsFetchingToken = true;
-        requestQueue.add(new NormalPostRequest(URLConfig.LOGIN_TOKEN, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadLoginToken response:" + response);
-                mIsFetchingToken = false;
-                if ("success".equals(response.optString("result"))) {
-                    mLoginToken = response.optString("token");
-                    if (!showVerifyCodeDueToResponse(response)) {
-                        if (mPendingRequest != null)
-                            sendPendingLoginRequest();
-                    } else {
+        webApi.post4Json(URLConfig.LOGIN_TOKEN, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "loadLoginToken response:" + response);
+                        mIsFetchingToken = false;
+                        if ("success".equals(response.optString("result"))) {
+                            mLoginToken = response.optString("token");
+                            if (!showVerifyCodeDueToResponse(response)) {
+                                if (mPendingRequest != null)
+                                    sendPendingLoginRequest();
+                            } else {
+                                if (mPendingRequest != null) {
+                                    ToastUtil.showToast(LoginActivity.this, "需要输入验证码！");
+                                    mPendingRequest = null;
+                                    mLoadingDialog.cancel();
+                                }
+                            }
+                            saveToken();
+                        } else {
+                            if (mPendingRequest != null) {
+                                UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
+                                mPendingRequest = null;
+                                mLoadingDialog.cancel();
+                            }
+                            mLoginToken = null;
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.e(TAG, "loadLoginToken error:" + error);
+                        mIsFetchingToken = false;
                         if (mPendingRequest != null) {
-                            ToastUtil.showToast(LoginActivity.this, "需要输入验证码！");
+                            UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
                             mPendingRequest = null;
                             mLoadingDialog.cancel();
                         }
                     }
-                    saveToken();
-                } else {
-                    if (mPendingRequest != null) {
-                        UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
-                        mPendingRequest = null;
-                        mLoadingDialog.cancel();
-                    }
-                    mLoginToken = null;
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.e(TAG, "loadLoginToken error:" + error);
-                mIsFetchingToken = false;
-                if (mPendingRequest != null) {
-                    UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
-                    mPendingRequest = null;
-                    mLoadingDialog.cancel();
-                }
-            }
-        }));
+                });
     }
 
     /**
@@ -405,64 +409,67 @@ public class LoginActivity extends AppCompatActivity {
         params.put("userName", username);
         final String passwordMd5 = StringUtils.md5StringFor(password);
         params.put("pwmd5", passwordMd5);
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
+        WebApi webApi = RsGenerator.create(WebApi.class);
         Cog.d(TAG, URLConfig.LOGIN_WITH_TOKEN, params);
-        requestQueue.add(new NormalPostRequest(URLConfig.LOGIN_WITH_TOKEN, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "onLoginClick response:" + response);
-                String result = response.optString("result");
-                if ("success".equals(result)) {
-                    mLoadingDialog.cancel();
-                    new SavePasswordTask(LoginActivity.this).execute(username, passwordMd5);
-                    UIUtils.toast(R.string.login_successfully, Toast.LENGTH_SHORT);
-                    UserInfo userInfo = UserInfo.parseJson(response);
-                    UserInfoKeeper.getInstance().setUserInfo(userInfo);
-                    executeSaveUserInfo(userInfo);
-                    clearToken();
-                    doSaveLoginInfo(username, password);
-                    if (response.optBoolean("firstLogin")) {
-                        gotoCompleteProfile(userInfo);
-                    } else {
-                        gotoMain(userInfo);
+        webApi.post4Json(URLConfig.LOGIN_WITH_TOKEN, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "onLoginClick response:" + response);
+                        String result = response.optString("result");
+                        if ("success".equals(result)) {
+                            mLoadingDialog.cancel();
+                            new SavePasswordTask(LoginActivity.this).execute(username, passwordMd5);
+                            UIUtils.toast(R.string.login_successfully, Toast.LENGTH_SHORT);
+                            UserInfo userInfo = UserInfo.parseJson(response);
+                            UserInfoKeeper.getInstance().setUserInfo(userInfo);
+                            executeSaveUserInfo(userInfo);
+                            clearToken();
+                            doSaveLoginInfo(username, password);
+                            if (response.optBoolean("firstLogin")) {
+                                gotoCompleteProfile(userInfo);
+                            } else {
+                                gotoMain(userInfo);
+                            }
+                        } else if ("error".equals(result)) {
+                            int errorCode = response.optInt("errorCode");
+                            if (errorCode != 5) {//5.token过期时需获取验证码
+                                mLoadingDialog.cancel();
+                            }
+                            //1.用户名或密码错 2.验证码错误3.验证码过期5.token过期
+                            switch (errorCode) {
+                                case 1:
+                                    UIUtils.toast(R.string.username_or_pw_wrong, Toast.LENGTH_SHORT);
+                                    showVerifyCodeDueToResponse(response);
+                                    break;
+                                case 2://2.验证码错误
+                                    UIUtils.toast(R.string.wrong_verify_code, Toast.LENGTH_SHORT);
+                                    refreshVerifyCode();
+                                    break;
+                                case 3://3.验证码过期
+                                    UIUtils.toast(R.string.wrong_verify_code, Toast.LENGTH_SHORT);
+                                    refreshVerifyCode();
+                                    break;
+                                case 5://5.token过期
+                                    pendToLogin(username, password, params);
+                                    loadLoginToken();
+                                    break;
+                                case 6://6.账号被锁定
+                                    UIUtils.toast(R.string.user_locked, Toast.LENGTH_SHORT);
+                                    break;
+                            }
+                        }
                     }
-                } else if ("error".equals(result)) {
-                    int errorCode = response.optInt("errorCode");
-                    if (errorCode != 5) {//5.token过期时需获取验证码
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.e(TAG, "onLoginClick error:" + error);
                         mLoadingDialog.cancel();
+                        UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
                     }
-                    //1.用户名或密码错 2.验证码错误3.验证码过期5.token过期
-                    switch (errorCode) {
-                        case 1:
-                            UIUtils.toast(R.string.username_or_pw_wrong, Toast.LENGTH_SHORT);
-                            showVerifyCodeDueToResponse(response);
-                            break;
-                        case 2://2.验证码错误
-                            UIUtils.toast(R.string.wrong_verify_code, Toast.LENGTH_SHORT);
-                            refreshVerifyCode();
-                            break;
-                        case 3://3.验证码过期
-                            UIUtils.toast(R.string.wrong_verify_code, Toast.LENGTH_SHORT);
-                            refreshVerifyCode();
-                            break;
-                        case 5://5.token过期
-                            pendToLogin(username, password, params);
-                            loadLoginToken();
-                            break;
-                        case 6://6.账号被锁定
-                            UIUtils.toast(R.string.user_locked, Toast.LENGTH_SHORT);
-                            break;
-                    }
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.e(TAG, "onLoginClick error:" + error);
-                mLoadingDialog.cancel();
-                UIUtils.toast(R.string.net_connect_error, Toast.LENGTH_SHORT);
-            }
-        }));
+                });
     }
 
     /**

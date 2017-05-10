@@ -10,32 +10,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.groups.controllers.viewholders.FilterChoiceViewHolder;
-import com.codyy.erpsportal.groups.controllers.viewholders.FilterConditionViewHolder;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.filter.AreaItem;
 import com.codyy.erpsportal.commons.models.entities.filter.AreaList;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.erpsportal.groups.controllers.viewholders.FilterChoiceViewHolder;
+import com.codyy.erpsportal.groups.controllers.viewholders.FilterConditionViewHolder;
+import com.codyy.url.URLConfig;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  *  公共的筛选接口
@@ -574,55 +578,57 @@ public abstract class BaseFilterFragment extends Fragment implements GroupFilter
     public void loadData(final FilterEntity filterEntity, final int flag, final int parseType) {
         Cog.e(TAG, "Filter Fragment loadData()" + " flag:" + flag + " parseType:" + parseType);
         Cog.i(TAG,"loadData:id 【"+filterEntity.getId()+"】 : 【"+filterEntity.getLevelName() +filterEntity.getName()+"】"+" cacheID 【"+ filterEntity.getCacheId()+"】");
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
+        WebApi webApi = RsGenerator.create(WebApi.class);
         //请求中禁止点击事件
         mChoiceRecyclerView.setEnabled(false);
         Cog.e(TAG, "loadData:url=" + filterEntity.getUrl() + "?" + filterEntity.getParams());
-        requestQueue.add(new NormalPostRequest(filterEntity.getUrl(), filterEntity.getParams(), new Response.Listener<JSONObject>() {
+        webApi.post4Json(filterEntity.getUrl(), filterEntity.getParams())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "onResponse response:" + response);
+                        try {
+                            //根据item的value来初始化左侧列表
+                            if (flag == INIT) {
+                                mAreaList = AreaList.parse(response, parseType, STR_ALL);
+                            } else {
+                                mAreaList = AreaList.parse(response, parseType, mData.get(mRightClickPosition).getLevelName());//java.lang.IndexOutOfBoundsException
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d("123456789xxxtempAreaId", "onResponse response:" + response);
-                try {
-                    //根据item的value来初始化左侧列表
-                    if (flag == INIT) {
-                        mAreaList = AreaList.parse(response, parseType, STR_ALL);
-                    } else {
-                        mAreaList = AreaList.parse(response, parseType, mData.get(mRightClickPosition).getLevelName());//java.lang.IndexOutOfBoundsException
+                        if (mAreaList == null) {
+                            UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                            //刷新左侧数据
+                            if (flag == CLICK_RIGHT) {
+                                mAreaList = new AreaList();
+                                refreshRight(filterEntity);
+                            }
+                            return;
+                        } else {
+                            if (flag == INIT) {
+                                refreshOrigin(filterEntity);
+                            } else if (flag == CLICK_LEFT) {
+                                refreshLeft(filterEntity);
+                            } else {
+                                refreshRight(filterEntity);
+                            }
+                        }
+                        if (null != mChoiceRecyclerView)
+                            mChoiceRecyclerView.setEnabled(true);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                if (mAreaList == null) {
-                    UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-                    //刷新左侧数据
-                    if(flag == CLICK_RIGHT){
-                        mAreaList = new AreaList();
-                        refreshRight(filterEntity);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "onErrorResponse error:" + error);
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                        if(null != mChoiceRecyclerView)
+                        mChoiceRecyclerView.setEnabled(true);
                     }
-                    return;
-                } else {
-                    if (flag == INIT) {
-                        refreshOrigin(filterEntity);
-                    } else if (flag == CLICK_LEFT) {
-                        refreshLeft(filterEntity);
-                    } else {
-                        refreshRight(filterEntity);
-                    }
-                }
-                if(null != mChoiceRecyclerView)
-                mChoiceRecyclerView.setEnabled(true);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "onErrorResponse error:" + error);
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-                if(null != mChoiceRecyclerView)
-                mChoiceRecyclerView.setEnabled(true);
-            }
-        }));
+                });
     }
 
     /**

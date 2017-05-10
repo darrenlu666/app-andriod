@@ -23,21 +23,20 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerBaseAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewBaseHolder;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.exam.controllers.activities.teacher.TeacherDoReadActivity;
 import com.codyy.erpsportal.exam.controllers.activities.teacher.TeacherDoReadByTopicActivity;
 import com.codyy.erpsportal.homework.models.entities.ClassEntity;
 import com.codyy.erpsportal.homework.models.entities.student.StudentPersonalInfo;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONObject;
@@ -185,7 +184,7 @@ public class StudentReadActivity extends ToolbarActivity implements View.OnClick
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
 
             }
         }));
@@ -214,7 +213,7 @@ public class StudentReadActivity extends ToolbarActivity implements View.OnClick
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mTipTv.setVisibility(View.VISIBLE);
             }
         }));

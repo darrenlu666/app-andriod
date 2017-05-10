@@ -9,13 +9,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.Regexes;
@@ -130,7 +129,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 },
                 new ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error) {
+                    public void onErrorResponse(Throwable error) {
                         Cog.d(TAG, "onSubmitClick error=", error);
                         ToastUtil.showToast(CompleteProfileActivity.this, R.string.net_error);
                     }

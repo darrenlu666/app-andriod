@@ -11,9 +11,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Handler.Callback;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -45,13 +42,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.HttpVideoPlayerActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.Courseware;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.models.tasks.DownloadTask;
+import com.codyy.erpsportal.commons.models.tasks.DownloadTask.DownloadListener;
 import com.codyy.erpsportal.commons.services.SaveLessonPlanRethinkService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
@@ -63,18 +65,13 @@ import com.codyy.erpsportal.commons.utils.WebViewUtils;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.WrapLinearLayoutManager;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.entities.Courseware;
 import com.codyy.erpsportal.perlcourseprep.models.entities.LessonPlanDetails;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.erpsportal.commons.models.tasks.DownloadTask;
-import com.codyy.erpsportal.commons.models.tasks.DownloadTask.DownloadListener;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +84,7 @@ import butterknife.OnClick;
  * 个人备课详情
  * Created by gujiajia on 2016/1/19.
  */
-public class PersonalLesPrepContentActivity extends AppCompatActivity implements Callback {
+public class PersonalLesPrepContentActivity extends AppCompatActivity{
 
     private final static String TAG = "PersonalLesPrepContentActivity";
 
@@ -135,8 +132,6 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
 
     private RequestSender mRequestSender;
 
-    private Handler mHandler;
-
     private BroadcastReceiver mRethinkUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -153,7 +148,6 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_les_prep_content);
         ButterKnife.bind(this);
-        mHandler = new Handler(this);
         initPopWindow();
 
         mLessonPlanId = getIntent().getStringExtra(EXTRA_LESSON_PLAN_ID);
@@ -180,7 +174,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onErrorResponse error:", error);
             }
         }, mRequestTag));
@@ -236,7 +230,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
                 }
             });
             if (getExternalCacheDir() != null) {
-                mPath = getExternalCacheDir().getAbsolutePath() + Constants.FOLDED_LESSON_PLAN + mLessonPlanId;
+                mPath = buildLessonPlanDocPath();
                 Cog.d(TAG, "updateViews mPath=", mPath);
                 File file = new File(mPath);
                 if (file.exists()) {
@@ -264,6 +258,13 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
             mCoursewareAdapter.setCoursewareList(mCoursewareList);
             mCoursewareAdapter.notifyDataSetChanged();
         }
+    }
+
+    @NonNull
+    private String buildLessonPlanDocPath() {
+        String suffix = acquireSuffix( mLessonPlanDetails.getLessonPlanPath());
+        return getExternalCacheDir().getAbsolutePath() + Constants.FOLDED_LESSON_PLAN
+                + mLessonPlanId + (TextUtils.isEmpty(suffix)? "": suffix);
     }
 
     @Override
@@ -347,7 +348,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
         sb.append("/res/view/attachementDownload/")
                 .append(mUserInfo.getValidateCode())
                 .append(".html?attachementName=")
-                .append(mLessonPlanDetails.getLessonPlanPath())
+                .append(URLEncoder.encode(mLessonPlanDetails.getLessonPlanPath()))
                 .append("&showName=")
                 .append(mLessonPlanDetails.getLessonPlanName());
         return sb.toString();
@@ -369,7 +370,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
                 .append(courseware.getServerResourceId())
                 .append(".html?")
                 .append("showName=")
-                .append(courseware.getName());
+                .append(URLEncoder.encode(courseware.getName()));
         return sb.toString();
     }
 
@@ -399,14 +400,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
             }
         });
         Cog.d(TAG, "downloadDocument docUrl=", resUrl);
-        task.execute(resUrl, getExternalCacheDir().getAbsolutePath() + Constants.FOLDED_LESSON_PLAN + mLessonPlanId);
-    }
-
-    @Override
-    public boolean handleMessage(Message msg) {
-        switch (msg.what) {
-        }
-        return false;
+        task.execute(resUrl, buildLessonPlanDocPath());
     }
 
     /**
@@ -430,12 +424,12 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
             return;
         }
         String fileName = courseware.getName();
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex == -1) {
+        String suffix = acquireSuffix(fileName);
+        if (TextUtils.isEmpty(suffix)) {
             Toast.makeText(this, "无法获取课件文件类型！", Toast.LENGTH_SHORT).show();
             return;
         }
-        String suffix = fileName.substring(dotIndex);
+
         final String path = getExternalCacheDir().getAbsolutePath() + Constants.FOLDED_COURSEWARE + mLessonPlanId + suffix;
         if (courseware.getProgress() < 0) {
             String url = buildCoursewareDownloadUrl(courseware);
@@ -447,6 +441,20 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
         } else if (courseware.getProgress() >= 0 && courseware.getProgress() < 100) {//正在下载中
             pauseOrResumeDownload(courseware, path, position);
         }
+    }
+
+    /**
+     * 获取文件后缀
+     * @param fileName 文件名
+     * @return 文件后缀，无后缀返回""
+     */
+    private String acquireSuffix(String fileName) {
+        if (TextUtils.isEmpty(fileName)) return null;
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) {
+            return "";
+        }
+        return fileName.substring(dotIndex);
     }
 
     private void openVideoCourseware(Courseware courseware) {
@@ -521,12 +529,10 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
         }
         String coursewareDownloadUrl = buildCoursewareDownloadUrl(courseware);
         DownloadTask task = new DownloadTask(getApplicationContext(), new DownloadListener() {
-            private DownloadTask mDownloadTask;
 
             @Override
             public void onFinishDownload(String result) {
                 mTaskSparseArray.remove(position);
-                mDownloadTask = null;
                 if (result == null)
                     UIUtils.toast(PersonalLesPrepContentActivity.this, "下载失败", Toast.LENGTH_SHORT);
                 else {
@@ -538,7 +544,6 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity implements
 
             @Override
             public void onStartDownload(DownloadTask task) {
-                mDownloadTask = task;
                 mTaskSparseArray.put(position, task);
             }
 

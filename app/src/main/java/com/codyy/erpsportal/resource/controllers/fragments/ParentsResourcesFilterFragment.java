@@ -15,28 +15,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity.FilterParamsProvider;
 import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.Extra;
-import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.entities.AreaFilterItem;
 import com.codyy.erpsportal.commons.models.entities.Choice;
 import com.codyy.erpsportal.commons.models.entities.ChoicesOption;
 import com.codyy.erpsportal.commons.models.entities.DirectSchoolsChoice;
 import com.codyy.erpsportal.commons.models.entities.FilterItem;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.JsonArrayPostRequest;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,6 +41,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 过滤
@@ -117,7 +116,7 @@ public class ParentsResourcesFilterFragment extends Fragment implements FilterPa
                         updateChoices(choicesOption, choicesOption.getChoices());
                         return;
                     }
-                    RequestQueue requestQueue = RequestManager.getRequestQueue();
+                    WebApi webApi = RsGenerator.create(WebApi.class);
                     Map<String, String> params = new HashMap<>();
                     List<Pair<FilterItem, String>> preconditions = item.getPreconditions();
                     if (preconditions != null && preconditions.size() > 0) {
@@ -138,9 +137,9 @@ public class ParentsResourcesFilterFragment extends Fragment implements FilterPa
                     }
 
                     mLastOptionPos = position;
-                    ErrorListener errorListener = new ErrorListener() {
+                    Consumer<Throwable> errorConsumer = new Consumer<Throwable>() {
                         @Override
-                        public void onErrorResponse(VolleyError error) {
+                        public void accept(Throwable error) throws Exception {
                             Cog.d(TAG, "onErrorResponse error:" + error);
                             uncheckItem(position);
                             UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
@@ -148,23 +147,29 @@ public class ParentsResourcesFilterFragment extends Fragment implements FilterPa
                     };
                     Cog.d(TAG, "sendRequest=", item.getUrl(), params);
                     if (item.getResponseType() == FilterItem.ARRAY) {
-                        requestQueue.add(new JsonArrayPostRequest(item.getUrl(), params, new Listener<JSONArray>() {
-                            @Override
-                            public void onResponse(JSONArray response) {
-                                Cog.d(TAG, "onResponse JSONArray response:" + response);
-                                handleJsonItems(response, item);
-                            }
-                        }, errorListener));
+                        webApi.post4Ja(item.getUrl(), params)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Consumer<JSONArray>() {
+                                    @Override
+                                    public void accept(JSONArray response) throws Exception {
+                                        Cog.d(TAG, "onResponse JSONArray response:" + response);
+                                        handleJsonItems(response, item);
+                                    }
+                                }, errorConsumer);
                     } else {
-                        requestQueue.add(new NormalPostRequest(item.getUrl(), params, new Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Cog.d(TAG, "onResponse JSONObject response:" + response);
-                                if ("success".equals(response.optString("result"))) {
-                                    handleJsonItems(response.optJSONArray("list"), item);
-                                }
-                            }
-                        }, errorListener));
+                        webApi.post4Json(item.getUrl(), params)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Consumer<JSONObject>() {
+                                    @Override
+                                    public void accept(JSONObject response) throws Exception {
+                                        Cog.d(TAG, "onResponse JSONObject response:" + response);
+                                        if ("success".equals(response.optString("result"))) {
+                                            handleJsonItems(response.optJSONArray("list"), item);
+                                        }
+                                    }
+                                }, errorConsumer);
                     }
 
                 }
@@ -331,44 +336,46 @@ public class ParentsResourcesFilterFragment extends Fragment implements FilterPa
         areaFilterItem.setUrl(URLConfig.GET_AREA);
         params.put("uuid", mUserInfo.getUuid());
         params.put("areaId", areaId);
-        RequestQueue requestQueue = RequestManager.getRequestQueue();
-        requestQueue.add(new NormalPostRequest(areaFilterItem.getUrl(), params, new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "fetchAreaFilterItem response=", response);
-                if ("success".equals(response.optString("result"))) {
-                    String levelName = response.optString("levelName");
-                    areaFilterItem.setTypeName(levelName);
-                    boolean hasDirect = "Y".equals(response.optString("hasDirect"));
-                    JSONArray jsonArray = response.optJSONArray("areas");
-                    if (jsonArray.length() == 0) {
-                        fetchSchools(areaFilterItem, params);
-                        return;
-                    }
-                    final List<Choice> choiceList = new ArrayList<>(1 + jsonArray.length() + (hasDirect?1:0));
-                    choiceList.add(0, new Choice(Choice.ALL, "全部"));
-                    AreaFilterItem.AREA_CHOICE_PARSER.parseArray(jsonArray, new OnParsedListener<Choice>() {
-                        @Override
-                        public void handleParsedObj(Choice obj) {
-                            choiceList.add(obj);
+        WebApi webApi = RsGenerator.create(WebApi.class);
+        webApi.post4Json(areaFilterItem.getUrl(), params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "fetchAreaFilterItem response=", response);
+                        if ("success".equals(response.optString("result"))) {
+                            String levelName = response.optString("levelName");
+                            areaFilterItem.setTypeName(levelName);
+                            boolean hasDirect = "Y".equals(response.optString("hasDirect"));
+                            JSONArray jsonArray = response.optJSONArray("areas");
+                            if (jsonArray.length() == 0) {
+                                fetchSchools(areaFilterItem, params);
+                                return;
+                            }
+                            final List<Choice> choiceList = new ArrayList<>(1 + jsonArray.length() + (hasDirect?1:0));
+                            choiceList.add(0, new Choice(Choice.ALL, "全部"));
+                            AreaFilterItem.AREA_CHOICE_PARSER.parseArray(jsonArray, new OnParsedListener<Choice>() {
+                                @Override
+                                public void handleParsedObj(Choice obj) {
+                                    choiceList.add(obj);
+                                }
+                            });
+                            if (hasDirect) {
+                                choiceList.add(new DirectSchoolsChoice(areaId, "直属校"));
+                            }
+                            areaFilterItem.setParamName("baseAreaId");
+                            areaFilterItem.setChoices(choiceList);
+                            mOptionsAdapter.notifyDataSetChanged();
+                            tryUpdateChoices(areaFilterItem);
                         }
-                    });
-                    if (hasDirect) {
-                        choiceList.add(new DirectSchoolsChoice(areaId, "直属校"));
                     }
-                    areaFilterItem.setParamName("baseAreaId");
-                    areaFilterItem.setChoices(choiceList);
-                    mOptionsAdapter.notifyDataSetChanged();
-                    tryUpdateChoices(areaFilterItem);
-                }
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "initOptionItems error=", error);
-
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "initOptionItems error=", error);
+                    }
+                });
         return areaFilterItem;
     }
 
@@ -383,35 +390,38 @@ public class ParentsResourcesFilterFragment extends Fragment implements FilterPa
     }
 
     private void fetchSchools(final AreaFilterItem areaFilterItem, Map<String, String> params){
-        final RequestQueue requestQueue = RequestManager.getRequestQueue();
-        requestQueue.add(new NormalPostRequest(URLConfig.GET_DIRECT_SCHOOL, params, new Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "fetchSchools response=", response);
-                if ("success".equals(response.optString("result"))) {
-                    JSONArray jsonArray = response.optJSONArray("schools");
-                    final List<Choice> choiceList = new ArrayList<>(1 + jsonArray.length());
-                    choiceList.add(0, new Choice(Choice.ALL, "全部"));
-                    AreaFilterItem.SCHOOL_CHOICE_PARSER.parseArray(jsonArray, new OnParsedListener<Choice>() {
-                        @Override
-                        public void handleParsedObj(Choice obj) {
-                            choiceList.add(obj);
+        WebApi webApi = RsGenerator.create(WebApi.class);
+        webApi.post4Json(URLConfig.GET_DIRECT_SCHOOL, params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "fetchSchools response=", response);
+                        if ("success".equals(response.optString("result"))) {
+                            JSONArray jsonArray = response.optJSONArray("schools");
+                            final List<Choice> choiceList = new ArrayList<>(1 + jsonArray.length());
+                            choiceList.add(0, new Choice(Choice.ALL, "全部"));
+                            AreaFilterItem.SCHOOL_CHOICE_PARSER.parseArray(jsonArray, new OnParsedListener<Choice>() {
+                                @Override
+                                public void handleParsedObj(Choice obj) {
+                                    choiceList.add(obj);
+                                }
+                            });
+                            areaFilterItem.setTypeName("校");
+                            areaFilterItem.setParamName("schoolId");
+                            areaFilterItem.setSchool(true);
+                            areaFilterItem.setChoices(choiceList);
+                            mOptionsAdapter.notifyDataSetChanged();
+                            tryUpdateChoices(areaFilterItem);
                         }
-                    });
-                    areaFilterItem.setTypeName("校");
-                    areaFilterItem.setParamName("schoolId");
-                    areaFilterItem.setSchool(true);
-                    areaFilterItem.setChoices(choiceList);
-                    mOptionsAdapter.notifyDataSetChanged();
-                    tryUpdateChoices(areaFilterItem);
-                }
-            }
-        }, new ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "fetchSchools error=", error);
-            }
-        }));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "fetchSchools error=", error);
+                    }
+                });
     }
 
     private void tryUpdateChoices(AreaFilterItem areaFilterItem) {

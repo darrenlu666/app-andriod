@@ -2,11 +2,20 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="#aa000000"
     tools:context=".resource.controllers.activities.PicturesActivity">
+
+    <com.codyy.erpsportal.commons.widgets.TitleBar
+        android:id="@+id/tb_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="图片查看"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <com.codyy.erpsportal.commons.widgets.ViewPagerFixed
         android:id="@+id/vp_subject_material"

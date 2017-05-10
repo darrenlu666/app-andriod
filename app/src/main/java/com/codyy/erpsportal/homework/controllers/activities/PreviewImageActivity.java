@@ -1,13 +1,13 @@
 package com.codyy.erpsportal.homework.controllers.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ConfirmTextDialog;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ConfirmTextDialog.OnConfirmListener;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.exam.controllers.activities.media.image.HackyViewPager;
 import com.codyy.erpsportal.exam.controllers.activities.media.image.ZoomableDraweeView;
 import com.codyy.erpsportal.homework.models.entities.student.ImageDetail;
@@ -37,52 +40,75 @@ import butterknife.Bind;
  * Created by ldh on 2016/4/7.
  */
 public class PreviewImageActivity extends ToolbarActivity {
-    private static final String TAG = PreviewImageActivity.class.getSimpleName();
+
+    private final static String TAG = PreviewImageActivity.class.getSimpleName();
+
+    public final static String EXTRA_DELETING = "com.codyy.erpsportal.EXTRA_DELETING";
+
+    public final static String EXTRA_POSITION = "com.codyy.erpsportal.EXTRA_POSITION";
+
+    public final static String EXTRA_SHOW_NUMBER = "com.codyy.erpsportal.EXTRA_SHOW_NUMBER";
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+
     @Bind(R.id.toolbar_title)
-    TextView mTitle;
+    TextView mTitleTv;
+
     @Bind(R.id.view_pager)
     HackyViewPager mHackyViewPager;
 
     private HackyPagerAdapter mHackyPagerAdapter;
+
     private ArrayList<ImageDetail> mImageBeans;
+
+    private ArrayList<ImageDetail> mDeletingImages;
+
+    /**
+     * 初始位置
+     */
     private int mPosition;
+
+    /**
+     * 标题栏显示（第几张/总数）
+     */
+    private boolean mShowNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTitle.setText(getString(R.string.exam_image_preview));
+        mShowNumber = getIntent().getBooleanExtra(EXTRA_SHOW_NUMBER, false);
+        mPosition = getIntent().getIntExtra(EXTRA_POSITION, 0);
         mImageBeans = getIntent().getParcelableArrayListExtra(EXTRA_DATA);
-        Log.e(TAG, mImageBeans.toString());
+        if (mShowNumber) {
+            updateTitleNumber(mPosition);
+        } else {
+            mTitleTv.setText(getString(R.string.exam_image_preview));
+        }
+        Cog.d(TAG, mImageBeans.toString());
         new Handler().post(new Runnable() {
             @Override
             public void run() {
                 if (mImageBeans.size() > 0) {
                     mHackyPagerAdapter = new HackyPagerAdapter(PreviewImageActivity.this);
                     mHackyViewPager.setAdapter(mHackyPagerAdapter);
+                    mHackyViewPager.setCurrentItem(mPosition, false);
                 }
             }
         });
-        mViewPagerChangeListener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
+        mHackyViewPager.addOnPageChangeListener(new SimpleOnPageChangeListener(){
             @Override
             public void onPageSelected(int position) {
-                mPosition = position;
-                invalidateOptionsMenu();
+                if (mShowNumber) {
+                    updateTitleNumber(position);
+                }
             }
+        });
+        mDeletingImages = new ArrayList<>();
+    }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        };
-        mHackyViewPager.addOnPageChangeListener(mViewPagerChangeListener);
+    private void updateTitleNumber(int position) {
+        mTitleTv.setText((position + 1) + "/" + mImageBeans.size());
     }
 
     @Override
@@ -95,39 +121,52 @@ public class PreviewImageActivity extends ToolbarActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mHackyPagerAdapter.remove(mPosition);
+                ConfirmTextDialog confirmTextDialog = ConfirmTextDialog.newInstance("您确定删除该张照片？");
+                confirmTextDialog.setOnConfirmListener(new OnConfirmListener() {
+                    @Override
+                    public void onConfirm() {
+                        removeItem(mHackyViewPager.getCurrentItem());
+                        if (mShowNumber) {
+                            updateTitleNumber(mHackyViewPager.getCurrentItem());
+                        }
+                    }
+                });
+                confirmTextDialog.show(getSupportFragmentManager(), "confirmDelete");
             }
         });
         return super.onCreateOptionsMenu(menu);
     }
 
-    public interface OnDeleteSuccess {
-        void onPreviewResult(ArrayList<ImageDetail> result, String deleteUrl);
+    public void removeItem(int position) {
+        if (mImageBeans.size() > 0) {
+            ImageDetail deletingImage = mImageBeans.remove(position);
+            mDeletingImages.add(deletingImage);
+            mHackyPagerAdapter.notifyDataSetChanged();
+            if (mImageBeans.size() == 0) {
+                finish();
+            }
+        }
     }
 
-    private static OnDeleteSuccess mOnDeleteSuccess;
-
-    public static void setOnDeleteListener(OnDeleteSuccess listener) {
-        mOnDeleteSuccess = listener;
+    @Override
+    public void finish() {
+        if (mDeletingImages.size() == 0) {//什么都没删
+            setResult(RESULT_CANCELED);
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra(EXTRA_DATA, mImageBeans);
+            intent.putExtra(EXTRA_DELETING, mDeletingImages);
+            setResult(RESULT_OK, intent);
+        }
+        super.finish();
     }
 
-    class HackyPagerAdapter extends PagerAdapter {
+    private class HackyPagerAdapter extends PagerAdapter {
+
         Context mContext;
 
         HackyPagerAdapter(Context activity) {
             this.mContext = activity;
-        }
-
-        public void remove(int position) {
-            if (mImageBeans.size() > 0) {
-                String deleteUrl = mImageBeans.get(position).getPicUrl();
-                mImageBeans.remove(position);
-                notifyDataSetChanged();
-                mOnDeleteSuccess.onPreviewResult(mImageBeans, deleteUrl);
-                if (mImageBeans.size() == 0) {
-                    finish();
-                }
-            }
         }
 
         @Override
@@ -139,7 +178,6 @@ public class PreviewImageActivity extends ToolbarActivity {
         public int getCount() {
             return mImageBeans.size();
         }
-
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
@@ -192,11 +230,4 @@ public class PreviewImageActivity extends ToolbarActivity {
         super.initToolbar(mToolbar);
     }
 
-    private ViewPager.OnPageChangeListener mViewPagerChangeListener;
-
-    @Override
-    protected void onDestroy() {
-        mHackyViewPager.removeOnPageChangeListener(mViewPagerChangeListener);
-        super.onDestroy();
-    }
 }

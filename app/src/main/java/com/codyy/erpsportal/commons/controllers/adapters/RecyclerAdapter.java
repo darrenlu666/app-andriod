@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -48,6 +49,8 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
     private ViewHolderCreator<VH> mViewHolderCreator;
 
     private RecyclerView mRecyclerView;
+
+    protected OnItemClickListener<T> mOnItemClickListener;
 
     public RecyclerAdapter(RecyclerView recyclerView, OnLoadMoreListener onLoadMoreListener, ViewHolderCreator<VH> viewHolderCreator) {
         mRecyclerView = recyclerView;
@@ -169,13 +172,32 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         if (holder instanceof RecyclerViewHolder) {
             VH viewHolder = (VH) holder;
             viewHolder.setDataToView(mList, position);
+            addItemClickListener(holder);
         } else {
             LastItemHolder itemHolder = (LastItemHolder) holder;
             itemHolder.setDataToView(mLoadMoreEnabled);
+        }
+    }
+
+    /**
+     * 添加项点击事件
+     * @param holder 组持者
+     */
+    protected void addItemClickListener(final ViewHolder holder) {
+        if (mOnItemClickListener != null) {//如果有项点击回调，添加项点击事件来回调
+            holder.itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = holder.getAdapterPosition();
+                    if (mOnItemClickListener != null) {
+                        mOnItemClickListener.onItemClick(position, mList.get(position));
+                    }
+                }
+            });
         }
     }
 
@@ -207,6 +229,20 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
 
     public boolean isEmpty() {
         return getItemCount() == 0;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener<T> onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
+    /**
+     * 清除数据
+     */
+    public void clear() {
+        if (mList != null) {
+            mList.clear();
+        }
+        notifyDataSetChanged();
     }
 
     /**
@@ -241,5 +277,9 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
 
     public interface OnLoadMoreListener {
         void onLoadMore();
+    }
+
+    public interface OnItemClickListener<DataT>{
+        void onItemClick(int position, DataT item);
     }
 }

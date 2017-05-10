@@ -8,7 +8,7 @@ import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import org.json.JSONObject;
 
 /**
- * 学科素材名称
+ * 学科素材图片
  * Created by gujiajia on 2016/1/22.
  */
 public class SubjectMaterialPicture implements Parcelable {

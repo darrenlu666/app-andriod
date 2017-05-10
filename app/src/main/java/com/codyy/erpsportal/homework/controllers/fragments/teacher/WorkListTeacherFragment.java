@@ -11,24 +11,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
-import com.codyy.erpsportal.homework.controllers.activities.WorkItemDetailActivity;
-import com.codyy.erpsportal.homework.controllers.activities.WorkStatisticDetailActivity;
-import com.codyy.erpsportal.homework.controllers.activities.WorkStuReadActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
-import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.homework.models.entities.teacher.WorkListTeacherClass;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.homework.utils.WorkUtils;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
+import com.codyy.erpsportal.homework.controllers.activities.WorkItemDetailActivity;
+import com.codyy.erpsportal.homework.controllers.activities.WorkStatisticDetailActivity;
+import com.codyy.erpsportal.homework.controllers.activities.WorkStuReadActivity;
+import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragment;
+import com.codyy.erpsportal.homework.models.entities.teacher.WorkListTeacherClass;
+import com.codyy.erpsportal.homework.utils.WorkUtils;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONObject;
@@ -252,7 +251,7 @@ public class WorkListTeacherFragment extends LoadMoreFragment<WorkListTeacherCla
                                         }
                                     }, new Response.ErrorListener() {
                                         @Override
-                                        public void onErrorResponse(VolleyError error) {
+                                        public void onErrorResponse(Throwable error) {
                                             ToastUtil.showToast(mContext, mContext.getResources().getString(R.string.arrange_work_failure));
                                         }
                                     }));

@@ -35,6 +35,7 @@ import com.codyy.erpsportal.info.controllers.activities.InfoDeleteActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.VideoMeetingActivity;
 import com.codyy.erpsportal.onlineteach.controllers.activities.OnlineTeachActivity;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepActivity;
+import com.codyy.erpsportal.repairs.models.engines.RepairEntranceRoute;
 import com.codyy.erpsportal.reservation.controllers.activities.ReservationClassActivity;
 import com.codyy.erpsportal.reservation.controllers.activities.ReservationClassDetailActivity;
 import com.codyy.erpsportal.resource.controllers.activities.ResourcesNewActivity;
@@ -92,6 +93,7 @@ public class AppConfig {
             R.drawable.ic_fun_analysis,//统计 17
             R.drawable.ic_fun_net_teach,//网络授课 18
             R.drawable.ic_fun_school_tv,//校园电视台 19
+            R.drawable.ic_fun_repair,//报修
     };
     /**
      * 二级菜单icon .
@@ -119,6 +121,7 @@ public class AppConfig {
             "statistic.id",//统计 17
             "netteach.id",//网络授课 18
             "tvProgram.id",//校园电视台 19
+            "repairs.id",//报修 20
     };
 
     private HashMap<String, List<AppPriority>> mPriorityCollection = new HashMap<>();
@@ -455,6 +458,8 @@ public class AppConfig {
         mPriorityCollection.put(MENUS[18], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT));
         //校园电视台
         mPriorityCollection.put(MENUS[19], AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT));
+        //权限
+        mPriorityCollection.put(MENUS[20], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER));
 
         /** 二级应用列表-统计**/
         //统计－课堂统计/** 二级应用列表-统计**/
@@ -743,6 +748,15 @@ public class AppConfig {
                     break;
                 case 18://网络授课
                     jumpable = new DirectJumper(OnlineTeachActivity.class);
+                    break;
+                case 20://报修
+                    jumpable = new Jumpable() {
+                        @Override
+                        public void jump(Context context) {
+                            UserInfo userInfo = UserInfoKeeper.getInstance().getUserInfo();
+                            RepairEntranceRoute.start(context, userInfo);
+                        }
+                    };
                     break;
             }
             ai.setJumpable(jumpable);

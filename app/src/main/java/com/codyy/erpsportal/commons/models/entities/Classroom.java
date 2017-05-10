@@ -4,14 +4,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-import com.codyy.erpsportal.commons.models.network.NormalGetRequest;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 
 import org.json.JSONObject;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 课堂巡视的课堂
@@ -71,30 +72,32 @@ public class Classroom implements Parcelable {
         return videoUrl;
     }
 
-    public void fetchMainVideoUrl(RequestQueue requestQueue, final VideoUrlCallback videoUrlCallback) {
+    public void fetchMainVideoUrl(final VideoUrlCallback videoUrlCallback) {
         if (videoUrlCallback == null) return;
         if (!TextUtils.isEmpty(videoUrl)) {
             videoUrlCallback.onUrlFetched(videoUrl);
         } else {
             if ("DMC".equals(streamingServerType)) {
-                NormalGetRequest request = new NormalGetRequest(dmsServerHost + "?method=play&stream=class_" + classRoomId + "_u_" + id, new Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Cog.d(TAG, "fetchMainVideoUrl response=", response);
-                        String result = response.optString("result");
-                        videoUrl = result + "/class_" + classRoomId + "_u_" + id + "__main";
-                        Cog.d(TAG, "dmc type videoUrl=", videoUrl);
-                        videoUrlCallback.onUrlFetched( videoUrl);
-                    }
-                }, new ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Cog.d(TAG, "fetchMainVideoUrl error=", error);
-                        videoUrlCallback.onError();
-                    }
-                });
-                request.setTag(id);
-                requestQueue.add(request);
+                WebApi webApi = RsGenerator.create(WebApi.class);
+                webApi.getJson(dmsServerHost + "?method=play&stream=class_" + classRoomId + "_u_" + id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<JSONObject>() {
+                            @Override
+                            public void accept(JSONObject response) throws Exception {
+                                Cog.d(TAG, "fetchMainVideoUrl response=", response);
+                                String result = response.optString("result");
+                                videoUrl = result + "/class_" + classRoomId + "_u_" + id + "__main";
+                                Cog.d(TAG, "dmc type videoUrl=", videoUrl);
+                                videoUrlCallback.onUrlFetched( videoUrl);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable error) throws Exception {
+                                Cog.d(TAG, "fetchMainVideoUrl error=", error);
+                                videoUrlCallback.onError();
+                            }
+                        });
             } else {
                 videoUrl = pmsServerHost + "/class_" + classRoomId + "_u_" + id + "__main";
                 Cog.d(TAG, "pms type videoUrl=", videoUrl);

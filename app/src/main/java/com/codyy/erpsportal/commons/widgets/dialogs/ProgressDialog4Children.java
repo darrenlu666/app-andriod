@@ -2,9 +2,7 @@ package com.codyy.erpsportal.commons.widgets.dialogs;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.ProgressBar;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
@@ -13,7 +11,9 @@ import com.codyy.erpsportal.commons.models.personal.Student;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
 import com.codyy.url.URLConfig;
+
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -78,7 +78,7 @@ public class ProgressDialog4Children extends SimpleLoadingDialog {
     }
 
     @Override
-    public void onFailure(VolleyError error) throws Exception {
+    public void onFailure(Throwable error) throws Exception {
         if(null == error) return;
         this.dismissAllowingStateLoss();
         //do some thing .

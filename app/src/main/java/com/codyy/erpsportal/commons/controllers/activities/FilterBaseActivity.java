@@ -10,13 +10,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterFragment;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.AreaBase;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.widgets.components.FilterButton;
 
 import org.json.JSONObject;
@@ -127,7 +126,7 @@ public abstract class FilterBaseActivity extends AppCompatActivity {
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
 
             }
         }, mHashTag));
@@ -143,7 +142,7 @@ public abstract class FilterBaseActivity extends AppCompatActivity {
 
     protected abstract void onGetResult(JSONObject object, int msg);
 
-    protected abstract void onError(VolleyError error, int msg);
+    protected abstract void onError(Throwable error, int msg);
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

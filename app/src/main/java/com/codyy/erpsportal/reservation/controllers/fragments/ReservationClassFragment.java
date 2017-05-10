@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.android.volley.VolleyError;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.BaseRefreshFragment;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.reservation.controllers.adapter.ReservationClassAdapter;
 import com.codyy.erpsportal.reservation.models.entities.ReservationClassItem;
+import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -83,7 +82,7 @@ public class ReservationClassFragment extends BaseRefreshFragment<ReservationCla
     }
 
     @Override
-    protected void onRequestError(VolleyError error, int msg) {
+    protected void onRequestError(Throwable error, int msg) {
         super.onRequestError(error, msg);
     }
 

@@ -358,7 +358,7 @@ public class WorkItemDetailFragment extends TaskFragment {
                         } else if (mItemInfoClass.getItemAnalysisResourceId().contains(TYPE_AUDIO_STRING)) {//加载音频
                             addServiceItemAudioBar(mItemInfoClass.getItemAnalysisResourceId());
                         }
-                        addKnowledgePoints(mItemInfoClass.getKnowledgePoint());
+                        //addKnowledgePoints(mItemInfoClass.getKnowledgePoint());
                         addDifficultyFactor(mItemInfoClass.getDifficulty(), true);
                     }
                     if (isShowCommentLayout(mTaskStatus)) {//是否显示点评框

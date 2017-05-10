@@ -13,16 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.ObjectsAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.AbsViewHolder;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.entities.Choice;
 import com.codyy.erpsportal.commons.models.entities.FilterItem;
-import com.codyy.erpsportal.commons.models.network.NormalPostRequest;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -43,6 +40,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 属性筛选
@@ -90,14 +90,15 @@ public class ResourcePropertyFilterAct extends AppCompatActivity implements OnCh
     private ObjectsAdapter<FilterItem, ResourceFilterItemViewHolder> mOptionsAdapter;
 
     private ChoiceDialog mChoiceDialog;
-    private RequestQueue mRequestQueue;
+
+    private WebApi mWebApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resource_property_filter);
         ButterKnife.bind(this);
-        mRequestQueue = RequestManager.getRequestQueue();
+        mWebApi = RsGenerator.create(WebApi.class);
         mOptionsAdapter = new ObjectsAdapter<>(
                 this, ResourceFilterItemViewHolder.class);
         mOptionsLv.setAdapter(mOptionsAdapter);
@@ -262,36 +263,39 @@ public class ResourcePropertyFilterAct extends AppCompatActivity implements OnCh
                 break;
         }
         Cog.d(TAG, "url=" + item.getUrl() + params);
-        mRequestQueue.add(new NormalPostRequest(item.getUrl(), params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "onResponse response:" + response);
-                if ("success".equals(response.optString("result"))) {
-                    List<Choice> choices = new Choice.BaseChoiceParser()
-                            .parseArray(response.optJSONArray("list"));
-                    if (choices == null) {
-                        choices = new ArrayList<>(1);
-                    }
-                    if (paramName.equals("subCategoryId")) {
-                        choices.add(0, mNoLimitChoice);
-                    } else {
-                        choices.add(0, mAllChoice);
-                    }
+        mWebApi.post4Json(item.getUrl(), params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "onResponse response:" + response);
+                        if ("success".equals(response.optString("result"))) {
+                            List<Choice> choices = new Choice.BaseChoiceParser()
+                                    .parseArray(response.optJSONArray("list"));
+                            if (choices == null) {
+                                choices = new ArrayList<>(1);
+                            }
+                            if (paramName.equals("subCategoryId")) {
+                                choices.add(0, mNoLimitChoice);
+                            } else {
+                                choices.add(0, mAllChoice);
+                            }
 
-                    showDialog(choices);
-                } else {
-                    uncheckItem(position);
-                    UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "onErrorResponse error:" + error);
-                uncheckItem(position);
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-            }
-        }));
+                            showDialog(choices);
+                        } else {
+                            uncheckItem(position);
+                            UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "onErrorResponse error:" + error);
+                        uncheckItem(position);
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                    }
+                });
     }
 
     private Map<String,FilterItem> obtainFilterItems(String... paramName) {
@@ -382,7 +386,7 @@ public class ResourcePropertyFilterAct extends AppCompatActivity implements OnCh
                 if (childCategoryItem == null) {
                     childCategoryItem = new FilterItem("", "subCategoryId", URLConfig.SON_CATEGORIES);
                     childCategoryItem.setChoice(mNoLimitChoice);
-                    mOptionsAdapter.addData(childCategoryItem);
+                    mOptionsAdapter.addItem(childCategoryItem);
                 } else {
                     childCategoryItem.setChoice(mNoLimitChoice);
                 }
@@ -441,37 +445,40 @@ public class ResourcePropertyFilterAct extends AppCompatActivity implements OnCh
         params.put("pClasslevelId", classLevel.getPlaceId());
         params.put("pSubjectId", subject.getPlaceId());
         Cog.d(TAG, "autoFetchVersion ", mVersionFilterItem.getUrl(), params);
-        mRequestQueue.add(new NormalPostRequest(mVersionFilterItem.getUrl(), params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Cog.d(TAG, "onResponse response:" + response);
-                if ("success".equals(response.optString("result"))) {
-                    List<Choice> choices = new Choice.BaseChoiceParser()
-                            .parseArray(response.optJSONArray("list"));
-                    if (choices == null || choices.size() == 0) {
-                        mVersionFilterItem.setChoice(mAllChoice);
-                        hideVersionFilterItem();
-                    } else if (choices.size() == 1) {
-                        mVersionFilterItem.setChoice(choices.get(0));
-                        hideVersionFilterItem();
-                    } else {
-                        choices.add(0, mAllChoice);
-                        mTempChoices = choices;
-                        //大于一个版本时得显示版本选项
-                        showVersionFilterItem();
+        mWebApi.post4Json(mVersionFilterItem.getUrl(), params)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "onResponse response:" + response);
+                        if ("success".equals(response.optString("result"))) {
+                            List<Choice> choices = new Choice.BaseChoiceParser()
+                                    .parseArray(response.optJSONArray("list"));
+                            if (choices == null || choices.size() == 0) {
+                                mVersionFilterItem.setChoice(mAllChoice);
+                                hideVersionFilterItem();
+                            } else if (choices.size() == 1) {
+                                mVersionFilterItem.setChoice(choices.get(0));
+                                hideVersionFilterItem();
+                            } else {
+                                choices.add(0, mAllChoice);
+                                mTempChoices = choices;
+                                //大于一个版本时得显示版本选项
+                                showVersionFilterItem();
+                            }
+                            //showDialog(choices);
+                        } else {
+                            UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                        }
                     }
-                    //showDialog(choices);
-                } else {
-                    UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Cog.d(TAG, "onErrorResponse error:" + error);
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-            }
-        }));
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable error) throws Exception {
+                        Cog.d(TAG, "onErrorResponse error:" + error);
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                    }
+                });
     }
 
     private void hideVersionFilterItem() {

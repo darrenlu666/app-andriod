@@ -8,14 +8,13 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -90,7 +89,7 @@ public class ResetPasswordActivity extends FragmentActivity {
                     }
                 }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Toast.makeText(ResetPasswordActivity.this, "网络请求出错!", Toast.LENGTH_SHORT).show();
             }
         }));

@@ -2,6 +2,8 @@ package com.codyy.erpsportal.onlinemeetings.controllers.fragments;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Build;
@@ -20,31 +22,35 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.volley.VolleyError;
+
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
-import com.codyy.erpsportal.commons.widgets.BNMultipleLiveControlView;
-import com.codyy.erpsportal.groups.utils.SnackToastUtils;
-import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
-import com.codyy.erpsportal.onlinemeetings.models.entities.DMSEntity;
 import com.codyy.erpsportal.commons.models.entities.MeetingAction;
-import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
-import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.commons.models.entities.SpeakerEntity;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.PullXmlUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingAnimationUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.BNLiveControlView;
+import com.codyy.erpsportal.commons.widgets.BNMultipleLiveControlView;
 import com.codyy.erpsportal.commons.widgets.BnChatVideoView;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
+import com.codyy.erpsportal.groups.utils.SnackToastUtils;
+import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
+import com.codyy.erpsportal.onlinemeetings.models.entities.DMSEntity;
+import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
@@ -139,6 +145,8 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
         mAudioControlImageView.setEnabled(false);
         mVideoControlImageView.setEnabled(false);
 
+
+
         Cog.i(" viewLoadCompleted() ~ ");
         mMainStream = UiOnlineMeetingUtils.getStream(mMeetingBase, mMeetingBase.getBaseDMS().getDmsMainSpeakID())+"_mobile";
         mPublishStream = UiOnlineMeetingUtils.getStream(mMeetingBase, mUserInfo.getBaseUserId());
@@ -158,6 +166,14 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
         }
         //打开发言人视频（默认打开自己的视频）
         tryOpenSecondView();
+        //隐藏发言人的控件
+        hidePartnerControlViewUI();
+    }
+
+    private void hidePartnerControlViewUI() {
+        mChooseSpeakerTextView.setVisibility(View.VISIBLE);
+        mPartnerBNLiveControlView.setVisibility(View.GONE);
+        mPartnerSurfaceView.setVisibility(View.GONE);
     }
 
     /**
@@ -165,7 +181,6 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
      */
     private void initBNVideoListener() {
         Cog.i(TAG ,"setSpeakerName()");
-
         mMainBNLiveControlView.setOnPlayingListener(new BnVideoView2.OnPlayingListener() {
             @Override
             public void onPlaying() {
@@ -212,9 +227,15 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
             @Override
             public void close() {
                 //关闭后UI操作
-                mChooseSpeakerTextView.setVisibility(View.VISIBLE);
-                mPartnerBNLiveControlView.setVisibility(View.GONE);
-                mPartnerSurfaceView.setVisibility(View.GONE);
+                hidePartnerControlViewUI();
+                //UI视图操作
+                getParentActivity().collapse();
+                //开始转屏时执行动画
+                UiOnlineMeetingAnimationUtils.restoreVideoView(mMainBnVideoView, mPartnerSurfaceView, mMainBNLiveControlView, mPartnerBNLiveControlView,mPartnerLinearLayout,mMyVideoRlt,mPartnerRlt);
+                restoreBottom();
+                if(null != getChatService() && OnlineMeetingActivity.mShowMyViewState){
+                    getChatService().showView();
+                }
             }
         });
 
@@ -237,7 +258,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                 //开始转屏时执行动画
                 UiOnlineMeetingAnimationUtils.restoreVideoView(mMainBnVideoView, mPartnerSurfaceView, mMainBNLiveControlView, mPartnerBNLiveControlView,mPartnerLinearLayout,mMyVideoRlt,mPartnerRlt);
                 restoreBottom();
-                // TODO: 16-7-12 判断是否之前打开过...
+                //16-7-12 判断是否之前打开过...
                 if(null != getChatService() && OnlineMeetingActivity.mShowMyViewState){
                     getChatService().showView();
                 }
@@ -331,7 +352,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
             }
 
             @Override
-            public void onError(VolleyError error) {
+            public void onError(Throwable error) {
                 Snackbar.make(mMainBnVideoView, getResources().getString(R.string.net_error), Snackbar.LENGTH_SHORT).show();
             }
         });
@@ -404,6 +425,11 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
      */
     private void openCamera() {
         Cog.i(TAG , " open Camera start ..."+getChatService());
+        //check the net connected state . if no net return back .
+        if(!NetworkUtils.isConnected()){
+            ToastUtil.showSnake(getString(R.string.net_error),mOpenMyVideoTextView);
+            return;
+        }
         if(null != getChatService()){
             if(getHostTabIndex()==0 && getTabIndex() == 0){
                 //定位初始化的y坐标
@@ -654,6 +680,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
         Cog.i(TAG,"choose speaker success ~" +speaker.getName());
         // 计算发言人的位置 打开视频视图
         mPartnerSurfaceView.setVisibility(View.VISIBLE);
+        mPartnerBNLiveControlView.setVisibility(View.VISIBLE);
         mChooseSpeakerTextView.setVisibility(View.GONE);
         startPartner(speaker , true);
     }

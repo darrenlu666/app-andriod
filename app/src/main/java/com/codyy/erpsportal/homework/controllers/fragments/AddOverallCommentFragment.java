@@ -22,25 +22,24 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
-import com.codyy.erpsportal.homework.implementclass.AudioRecorder;
-import com.codyy.erpsportal.homework.interfaces.AudioRecordClickListener;
-import com.codyy.erpsportal.homework.utils.WorkUtils;
-import com.codyy.erpsportal.homework.widgets.AudioBar;
-import com.codyy.erpsportal.homework.widgets.PressBar;
-import com.codyy.erpsportal.homework.widgets.WorkAnswerMediaPlayer;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.TaskReadDao;
-import com.codyy.erpsportal.homework.models.entities.teacher.Comment;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.exam.widgets.wheelview.LoopView;
 import com.codyy.erpsportal.exam.widgets.wheelview.OnItemSelectedListener;
+import com.codyy.erpsportal.homework.implementclass.AudioRecorder;
+import com.codyy.erpsportal.homework.interfaces.AudioRecordClickListener;
+import com.codyy.erpsportal.homework.models.entities.teacher.Comment;
+import com.codyy.erpsportal.homework.utils.WorkUtils;
+import com.codyy.erpsportal.homework.widgets.AudioBar;
+import com.codyy.erpsportal.homework.widgets.PressBar;
+import com.codyy.erpsportal.homework.widgets.WorkAnswerMediaPlayer;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -195,7 +194,7 @@ public class AddOverallCommentFragment extends Fragment implements View.OnClickL
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Log.e(TAG, "数据获取失败！");
             }
         }));

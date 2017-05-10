@@ -3,7 +3,6 @@ package com.codyy.erpsportal.classroom.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.classroom.fragment.AreaRecordListFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
@@ -49,7 +48,7 @@ public class ClassRecordedFilterActivity extends FilterBaseActivity {
     }
 
     @Override
-    protected void onError(VolleyError error, int msg) {
+    protected void onError(Throwable error, int msg) {
 
     }
 }

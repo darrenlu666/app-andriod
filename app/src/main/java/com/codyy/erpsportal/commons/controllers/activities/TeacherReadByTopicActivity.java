@@ -16,15 +16,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.TabsAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.homework.widgets.MyViewPager;
 import com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONObject;
@@ -170,7 +169,7 @@ public abstract class TeacherReadByTopicActivity extends ToolbarActivity impleme
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mLoadingDialog.dismiss();
                 finish();
                 ToastUtil.showToast(getApplicationContext(), getString(R.string.refresh_state_loade_error));

@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ConfirmDownloadDialog;
@@ -145,7 +145,7 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         Cog.e(TAG, "onFailure!");
         mHandler.sendEmptyMessage(MSG_LOGIN_OUT_END);
         LogUtils.log(error);
@@ -296,7 +296,7 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 Cog.d(TAG, "+fetchLatestVersion error:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
                 dismissCheckUpdateDialog();

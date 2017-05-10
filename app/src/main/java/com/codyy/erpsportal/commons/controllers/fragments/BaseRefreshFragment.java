@@ -10,13 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
 import com.codyy.erpsportal.commons.models.entities.RefreshEntity;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.widgets.RefreshRecycleView;
 
 import org.json.JSONObject;
@@ -164,7 +162,7 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 if (isRemoving()) {
                     return;
                 }
@@ -237,7 +235,7 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
     }
 
 
-    protected void onRequestError(VolleyError error, int msg) {
+    protected void onRequestError(Throwable error, int msg) {
 
     }
 

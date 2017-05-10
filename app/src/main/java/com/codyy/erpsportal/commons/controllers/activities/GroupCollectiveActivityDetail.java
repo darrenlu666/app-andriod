@@ -8,21 +8,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
+import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
@@ -100,7 +99,7 @@ public class GroupCollectiveActivityDetail extends ToolbarActivity implements Vi
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 mLoadingDialog.dismiss();
             }
         }, mHashTag));

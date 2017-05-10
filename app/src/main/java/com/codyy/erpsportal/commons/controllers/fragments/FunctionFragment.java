@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -165,7 +165,7 @@ public class FunctionFragment extends BaseHttpFragment {
     }
 
     @Override
-    public void onFailure(VolleyError error) {
+    public void onFailure(Throwable error) {
         if(null == mRecyclerView ) return;
         if(mEmptyView.isLoading()){
             mEmptyView.setLoading(false);
@@ -487,7 +487,7 @@ public class FunctionFragment extends BaseHttpFragment {
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 if(null == mRecyclerView ) return;
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
@@ -528,7 +528,7 @@ public class FunctionFragment extends BaseHttpFragment {
             }
 
             @Override
-            public void onRequestFailure(VolleyError error) {
+            public void onRequestFailure(Throwable error) {
                 if(null == mRecyclerView ) return;
                 mRecyclerView.setEnabled(true);
                 LogUtils.log(error);

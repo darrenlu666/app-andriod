@@ -77,8 +77,10 @@
 
     <dimen name="sp16">16sp</dimen>
     <dimen name="dp8">8dp</dimen>
+    <dimen name="dp16">16dp</dimen>
 
     <dimen name="net_teach_launch_limit">150dp</dimen>
     <dimen name="tab_layout_select_indicator_height">2dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 </resources>

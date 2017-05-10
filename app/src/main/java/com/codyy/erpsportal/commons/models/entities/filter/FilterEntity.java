@@ -35,7 +35,7 @@ public class FilterEntity {
     private int level;//等级 暂时分 省/市/县/直属校/学校/年纪/学科
     private String levelName ;
     private String url ;
-    private HashMap params ;
+    private HashMap<String, String> params ;
     private FilterEntity parent ;//父类节点
     private List<FilterEntity> children; //孩子节点集合 1 to N .
     private boolean isCheck;//是否选中
@@ -229,14 +229,14 @@ public class FilterEntity {
         this.url = url;
     }
 
-    public HashMap getParams() {
+    public HashMap<String, String> getParams() {
 //        if(null == params &&  getLevel() > 0 ){
             init();
 //        }
         return params;
     }
 
-    public void setParams(HashMap params) {
+    public void setParams(HashMap<String, String> params) {
         this.params = params;
     }
 

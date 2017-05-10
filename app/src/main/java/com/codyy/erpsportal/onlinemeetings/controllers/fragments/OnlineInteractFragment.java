@@ -3,13 +3,17 @@ package com.codyy.erpsportal.onlinemeetings.controllers.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.groups.controllers.adapters.OnlineMeetingInteractAdapter;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
@@ -45,7 +49,7 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
      */
     private String mNewShowModel ;
     private boolean isScreenLocked = false;
-    private ScreenBroadcastReceiver mScreenReceiver;
+    private ScreenBroadCastUtils mScreenBroadCastUtils;
     private boolean mIsPaused = false;//是否暂停，用于演示文档判断
 
     @Override
@@ -64,20 +68,27 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
 
     //注册屏幕锁屏监听
     private void registerScreenReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        mScreenReceiver = new ScreenBroadcastReceiver(mScreenStateListener);
-        getActivity().registerReceiver(mScreenReceiver, filter);
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+            @Override
+            public void onScreenOn() {
+                Log.i(TAG,"onScreenOn() ");
+                isScreenLocked  =   false ;
+            }
+
+            @Override
+            public void onScreenLock() {
+                Log.i(TAG,"onScreenOff() ");
+                isScreenLocked  =   true ;
+            }
+        });
     }
 
     /**
      * unregister .
      */
     private void unRegisterScreenReceiver(){
-        if(mScreenReceiver != null){
-            getActivity().unregisterReceiver(mScreenReceiver);
+        if(mScreenBroadCastUtils != null){
+            mScreenBroadCastUtils.destroy();
         }
     }
 
@@ -301,20 +312,4 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
             }
         }
     }
-
-    private ScreenBroadcastReceiver.ScreenStateListener mScreenStateListener = new ScreenBroadcastReceiver.ScreenStateListener() {
-        @Override
-        public void onScreenOn() {
-
-        }
-        @Override
-        public void onScreenOff() {
-            isScreenLocked  =   true ;
-        }
-
-        @Override
-        public void onUserPresent() {
-            isScreenLocked = false;
-        }
-    };
 }

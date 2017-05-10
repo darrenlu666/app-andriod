@@ -30,26 +30,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.models.entities.CountHeader;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.DeleteCommentDialog;
+import com.codyy.erpsportal.commons.models.entities.CountHeader;
+import com.codyy.erpsportal.commons.models.entities.MoreRelies;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
+import com.codyy.erpsportal.commons.models.presenters.IFragmentManagerProvider;
+import com.codyy.erpsportal.commons.models.presenters.SendingDialogPresenter;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.InputUtils;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.EmojiView;
-import com.codyy.erpsportal.commons.models.entities.MoreRelies;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
-import com.codyy.erpsportal.commons.models.presenters.IFragmentManagerProvider;
-import com.codyy.erpsportal.commons.models.presenters.SendingDialogPresenter;
 import com.codyy.erpsportal.rethink.controllers.adapters.BaseCommentsAdapter;
 import com.codyy.erpsportal.rethink.models.entities.DeleteCommentEvent;
 import com.codyy.erpsportal.rethink.models.entities.DeleteReplyEvent;
@@ -57,6 +55,7 @@ import com.codyy.erpsportal.rethink.models.entities.MoreCommentsEvent;
 import com.codyy.erpsportal.rethink.models.entities.RethinkComment;
 import com.codyy.erpsportal.rethink.models.entities.RethinkCommentBase;
 import com.codyy.erpsportal.rethink.models.entities.RethinkReply;
+import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -409,7 +408,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "getComments error", error);
                 mIsLoadingMore = false;
                 stopRefreshing();
@@ -462,7 +461,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "publishComment error:", error);
                 mSendingDialogPresenter.dismiss();
                 UIUtils.toast(getContext(), "评论失败。请检查网络。", Toast.LENGTH_SHORT);
@@ -501,7 +500,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "delete comment error=", error);
             }
         }));
@@ -559,7 +558,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
                 if ("success".equals(response.optString("result")) && mCommentsRv != null) {
                     JSONArray repliesJa = response.optJSONArray("secondList");
                     rethinkComment.setTotalReplyCount(response.optInt("secondTotal"));
-                    if (repliesJa.length() > 0) {
+                    if (repliesJa != null && repliesJa.length() > 0) {
                         List<RethinkReply> replies = new ArrayList<>(repliesJa.length());
                         for (int j = 0; j < repliesJa.length(); j++) {
                             JSONObject replyJsonObj = repliesJa.optJSONObject(j);
@@ -572,7 +571,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
             }
         }, new ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onMoreReplyClick error=", error);
                 mIsLoadingMore = false;
                 UIUtils.toast(getContext(), "获取更多回复失败！", Toast.LENGTH_SHORT);

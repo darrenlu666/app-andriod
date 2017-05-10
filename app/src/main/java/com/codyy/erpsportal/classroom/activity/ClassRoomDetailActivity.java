@@ -3,9 +3,9 @@ package com.codyy.erpsportal.classroom.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.ColorRes;
@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -33,8 +34,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.fragment.ClassDetailFragment;
@@ -46,8 +46,11 @@ import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
@@ -55,11 +58,14 @@ import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.erpsportal.exam.controllers.activities.media.adapters.MMBaseRecyclerViewAdapter;
 import com.codyy.url.URLConfig;
+
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -243,6 +249,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         mAutoHide.showControl();
         check3GWifi();
         registerWiFiListener();
+        registerScreenReceiver();
         ImageView mIvFullScreen = (ImageView) findViewById(R.id.iv_full_screen);
         mIvFullScreen.setOnClickListener(this);
     }
@@ -392,7 +399,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(Throwable error) {
                 if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
                     handleRequestFailure();
                 }
@@ -656,7 +663,6 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
 
             @Override
             public void onContinue() {
-//                startPlay();
                 mHandler.removeCallbacks(mPlayLiveRunnable);
                 //如果视图销毁了 ， 停止播放 .
                 if (!mSurfaceDestroyed) {
@@ -666,29 +672,51 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         });
     }
 
-   /* private void startPlay() {
-        if (!mClassRoomDetail.getMainUrl().equals("") && !mVideoLayout.isPlaying()) {
-            mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
-            mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-        }
-    }*/
     WiFiBroadCastUtils mWiFiBroadCastUtils;
     private void registerWiFiListener() {
         mWiFiBroadCastUtils = new WiFiBroadCastUtils(this, new WiFiBroadCastUtils.PlayStateListener() {
             @Override
             public void play() {
-                if (!mVideoLayout.isPlaying()) {
-                    mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-                }
+               startLivePlay();
             }
 
             @Override
             public void stop() {
-                if (mVideoLayout.isPlaying()) {
-                    mVideoLayout.stop();
-                }
+                stopLivePlay();
             }
         });
+    }
+
+    private ScreenBroadCastUtils mScreenBroadCastUtils;
+    private void registerScreenReceiver() {
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+            @Override
+            public void onScreenOn() {
+                Log.i(TAG,"onScreenOn()");
+                startLivePlay();
+            }
+
+            @Override
+            public void onScreenLock() {
+                Log.i(TAG,"onScreenLock()");
+                stopLivePlay();
+            }
+        });
+    }
+
+    private void stopLivePlay() {
+        if (mVideoLayout.isPlaying()) {
+            mVideoLayout.stop();
+        }
+    }
+
+    private void startLivePlay() {
+        if (!mVideoLayout.isPlaying()) {
+            if (TextUtils.isEmpty(mVideoLayout.getVideoView().getUrl())) {
+                mVideoLayout.setUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+            }
+            mVideoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
+        }
     }
 
     @Override
@@ -719,6 +747,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     protected void onDestroy() {
         super.onDestroy();
         if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
+        if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy();
         if(null != mRequestSender) mRequestSender.stop(TAG);
         mHandler.removeCallbacks(mPlayLiveRunnable);
     }

@@ -12,31 +12,32 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
+import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
+import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.data.source.remote.WebApi;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
+import com.codyy.erpsportal.commons.widgets.MyDialog;
 import com.codyy.erpsportal.homework.controllers.activities.WorkClassStatisticDetailActivity;
 import com.codyy.erpsportal.homework.controllers.activities.WorkItemDetailActivity;
 import com.codyy.erpsportal.homework.controllers.activities.WorkListsClassSpaceActivity;
-import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragment;
-import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.homework.models.entities.teacher.WorkListTeacherClass;
-import com.codyy.erpsportal.commons.models.network.RequestManager;
 import com.codyy.erpsportal.homework.utils.WorkUtils;
-import com.codyy.erpsportal.commons.widgets.MyDialog;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class WorkListClassSpaceFragment extends LoadMoreFragment<WorkListTeacherClass, WorkListClassSpaceFragment.ClassSpaceViewHolder> implements TabsWithFilterActivity.OnFilterObserver {
 
@@ -199,23 +200,25 @@ public class WorkListClassSpaceFragment extends LoadMoreFragment<WorkListTeacher
                                 }
                                 @Override
                                 public void rightClick(MyDialog myDialog) {
-                                    RequestQueue requestQueue = RequestManager.getRequestQueue();
-                                    requestQueue.add(new JsonObjectRequest(URLConfig.ARRANGE_WORK + "?uuid=" + UserInfoKeeper.obtainUserInfo().getUuid() + "&workId = " + data.getWorkId(),
-                                            new Response.Listener<JSONObject>() {
+                                    WebApi webApi = RsGenerator.create(WebApi.class);
+                                    webApi.post4Json(URLConfig.ARRANGE_WORK + "?uuid=" + UserInfoKeeper.obtainUserInfo().getUuid() + "&workId=" + data.getWorkId())
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(new Consumer<JSONObject>() {
                                                 @Override
-                                                public void onResponse(JSONObject response) {
+                                                public void accept(JSONObject response) throws Exception {
                                                     if ("success".equals(response.optString("result"))) {
                                                         Toast.makeText(mContext, mContext.getResources().getString(R.string.arrange_work_success), Toast.LENGTH_SHORT).show();
                                                     } else {
                                                         Toast.makeText(mContext, mContext.getResources().getString(R.string.arrange_work_failure), Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
-                                            }, new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            Toast.makeText(mContext, mContext.getResources().getString(R.string.arrange_work_failure), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }));
+                                            }, new Consumer<Throwable>() {
+                                                @Override
+                                                public void accept(Throwable throwable) throws Exception {
+                                                    Toast.makeText(mContext, mContext.getResources().getString(R.string.arrange_work_failure), Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
                                     mArrangeDialog.dismiss();
                                 }
 

@@ -2,6 +2,7 @@ package com.codyy.erpsportal.resource.controllers.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,8 +10,12 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.LinearLayout;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.UriUtils;
+import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.ViewPagerFixed;
 import com.codyy.erpsportal.commons.widgets.photodrawee.OnViewTapListener;
 import com.codyy.erpsportal.commons.widgets.photodrawee.PhotoDrawee;
@@ -37,6 +42,14 @@ public class PicturesActivity extends AppCompatActivity {
 
     private final static String EXTRA_POSITION = "EXTRA_POSITION";
 
+    private final static String EXTRA_SMALL_FIRST = "EXTRA_SMALL_FIRST";
+
+    private final static String EXTRA_WHITE_WITH_TITLE = "EXTRA_WHITE_WITH_TITLE";
+
+    private LinearLayout mContentLl;
+
+    private TitleBar mTitleBar;
+
     private ViewPagerFixed mViewPager;
 
     private int mPosition;
@@ -48,6 +61,13 @@ public class PicturesActivity extends AppCompatActivity {
     private int mGalleryWidth;
 
     private ImagePagerAdapter mAdapter;
+
+    private boolean mSmallFirst;
+
+    /**
+     * 白背景有标题风格
+     */
+    private boolean mWhiteWithTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,19 +81,31 @@ public class PicturesActivity extends AppCompatActivity {
     private void initAttributes() {
         mPictures = getIntent().getStringArrayListExtra(EXTRA_PICTURE_LIST);
         mPosition = getIntent().getIntExtra(EXTRA_POSITION, 0);
+        mSmallFirst = getIntent().getBooleanExtra(EXTRA_SMALL_FIRST, false);
+        mWhiteWithTitle = getIntent().getBooleanExtra(EXTRA_WHITE_WITH_TITLE, false);
         acquireGalleryAreaSize();
     }
 
     private void acquireGalleryAreaSize() {
-        mGalleryHeight = getResources().getDisplayMetrics().heightPixels;
+        Rect rectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        int statusBarHeight = rectangle.top;
+        mGalleryHeight = getResources().getDisplayMetrics().heightPixels - statusBarHeight;
         mGalleryWidth = getResources().getDisplayMetrics().widthPixels;
     }
 
     private void findViews() {
+        mContentLl = (LinearLayout) findViewById(R.id.ll_content);
+        mTitleBar = (TitleBar) findViewById(R.id.tb_title);
         mViewPager = (ViewPagerFixed) findViewById(R.id.vp_subject_material);
     }
 
     private void initViews() {
+        if (mWhiteWithTitle) {
+            mTitleBar.setVisibility(View.VISIBLE);
+            mContentLl.setBackgroundColor(0xffffffff);
+        }
         mAdapter = new ImagePagerAdapter(mPictures);
         mAdapter.setOnPageClickListener(new OnPageClickListener() {
             @Override
@@ -87,9 +119,16 @@ public class PicturesActivity extends AppCompatActivity {
     }
 
     public static void start(Activity activity, List<String> list, int position) {
+        start(activity, list, position, false, false);
+    }
+
+    public static void start(Activity activity, List<String> list, int position,
+                             boolean smallFirst, boolean whiteWithTitle) {
         Intent intent = new Intent(activity, PicturesActivity.class);
         intent.putExtra(EXTRA_PICTURE_LIST, (ArrayList<String>)list);
         intent.putExtra(EXTRA_POSITION, position);
+        intent.putExtra(EXTRA_SMALL_FIRST, smallFirst);
+        intent.putExtra(EXTRA_WHITE_WITH_TITLE, whiteWithTitle);
         activity.startActivity(intent);
         activity.overridePendingTransition(0, 0);
     }
@@ -130,11 +169,18 @@ public class PicturesActivity extends AppCompatActivity {
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(mPictures.get(position)))
                     .setResizeOptions(new ResizeOptions(mGalleryWidth, mGalleryHeight))
                     .build();
-            PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
-            controller.setImageRequest(request);
-            controller.setAutoPlayAnimations(true);
-            controller.setOldController(photoDrawee.getController());
-            controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder();
+            if (mSmallFirst) {
+                String url = UriUtils.buildSmallImageUrl(mPictures.get(position));
+                ImageRequest requestForSmall = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
+                        .setResizeOptions(new ResizeOptions(mGalleryWidth, mGalleryHeight))
+                        .build();
+                controllerBuilder.setLowResImageRequest(requestForSmall);
+            }
+            controllerBuilder.setImageRequest(request);
+            controllerBuilder.setAutoPlayAnimations(true);
+            controllerBuilder.setOldController(photoDrawee.getController());
+            controllerBuilder.setControllerListener(new BaseControllerListener<ImageInfo>() {
                 @Override
                 public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
                     super.onFinalImageSet(id, imageInfo, animatable);
@@ -144,7 +190,7 @@ public class PicturesActivity extends AppCompatActivity {
                     photoDrawee.update(imageInfo.getWidth(), imageInfo.getHeight());
                 }
             });
-            photoDrawee.setController(controller.build());
+            photoDrawee.setController(controllerBuilder.build());
             container.addView(photoDrawee);
             if (mOnPageClickListener != null) {
                 photoDrawee.setOnViewTapListener(new OnViewTapListener() {

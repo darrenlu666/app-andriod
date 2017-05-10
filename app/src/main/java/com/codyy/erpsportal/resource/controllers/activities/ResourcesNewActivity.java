@@ -26,9 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -36,6 +33,8 @@ import com.codyy.erpsportal.commons.models.entities.FilterItem;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsedListener;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -342,7 +341,7 @@ public class ResourcesNewActivity extends AppCompatActivity{
                     @Override
                     public void onAudioPlaying(String audioId) {
                         Cog.d(TAG, "onAudioPlaying audioId=", audioId);
-                        CountIncreaser.increaseViewCount(mRequestSender, mRequestTag, mUserInfo.getUuid(), audioId);
+                        CountIncreaser.increaseViewCount(mRequestSender, mUserInfo.getUuid(), audioId);
                     }
                 })
                 .build();
@@ -591,7 +590,7 @@ public class ResourcesNewActivity extends AppCompatActivity{
                     }
                 }, new ErrorListener() {
                     @Override
-                    public void onErrorResponse(final VolleyError error) {
+                    public void onErrorResponse(final Throwable error) {
                         Cog.e(TAG, "onErrorResponse:" + error);
                         delayResponding(startTime, new ResponseCallable() {
                             @Override
@@ -788,7 +787,7 @@ public class ResourcesNewActivity extends AppCompatActivity{
      * @param error   错误信息
      * @param refresh 是否是刷新
      */
-    private void handleErrorResponse(VolleyError error, boolean refresh) {
+    private void handleErrorResponse(Throwable error, boolean refresh) {
         if (!refresh) {
             mAdapter.removeItem(mAdapter.getItemCount() - 1);
             mAdapter.notifyItemRemoved(mAdapter.getItemCount());
