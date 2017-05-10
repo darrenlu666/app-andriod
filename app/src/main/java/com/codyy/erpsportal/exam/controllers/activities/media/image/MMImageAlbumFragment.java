@@ -176,7 +176,7 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
                                 mSelectedIndex.add(position);
                             }
                         } else {
-                            Snackbar.make(v, "请选择小于5M的图片", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(v, "你选择的图片过大，请选择小于5M的图片", Snackbar.LENGTH_SHORT).show();
                             return;
                         }
                     }
