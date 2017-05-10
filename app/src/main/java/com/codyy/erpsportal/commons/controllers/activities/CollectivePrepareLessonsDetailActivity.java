@@ -129,7 +129,12 @@ public class CollectivePrepareLessonsDetailActivity extends BaseHttpActivity imp
         mActiveMagValueTv.setText(mDetailEntity.getData().getDescription());
         mLaunchTv.setText(mDetailEntity.getData().getSponsorName());
         mRbStar.setProgress(mDetailEntity.getData().getAverageScore());
-        mGradeNameTv.setText(mDetailEntity.getData().getClassLevelName());
+        // TODO: 10/05/17 显示多个年级信息
+        if(TextUtils.isEmpty(mDetailEntity.getData().getClassLevelName())){
+            mGradeNameTv.setText("不限");
+        }else{
+            mGradeNameTv.setText(mDetailEntity.getData().getClassLevelName());
+        }
         mSubjectNameTv.setText(mDetailEntity.getData().getSubjectName());
         mReserveStartTimeTv.setText(mDetailEntity.getData().getBeginDate());
         mReserveEndTimeTv.setText(mDetailEntity.getData().getEndDate());

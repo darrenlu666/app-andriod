@@ -207,9 +207,9 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
         mSlidingTabLayout.setTabWidth(tabWidth);
         mAdapter = new ChannelAdapter(this, getSupportFragmentManager(), mViewPager);
         switch (mType) {
-            case PREPARE_LESSON:
-            case INTERACT_LESSON:
-            case EVALUATION_LESSON:
+            case PREPARE_LESSON://集体备课
+            case INTERACT_LESSON://互动听课
+            case EVALUATION_LESSON://评课课
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt("type", mType);
                 mAdapter.addTab(getResources().getString(R.string.activity_detail), VideoIntroductionFragment.class, bundle1);

@@ -42,7 +42,7 @@ import butterknife.OnClick;
  * modified by poe 2016-07-06
  */
 public class VideoMeetingDetailActivity extends BaseHttpActivity {
-    private static final String TAG = VideoMeetingDetailActivity.class.getSimpleName();
+    private static final String TAG = "VideoMeetingDetailActivity";
 
     @Bind(R.id.empty_view) EmptyView mEmptyView;
     @Bind(R.id.toolbar)Toolbar mToolBar;

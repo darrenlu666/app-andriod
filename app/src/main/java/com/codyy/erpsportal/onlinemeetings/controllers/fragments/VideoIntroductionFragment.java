@@ -3,6 +3,7 @@ package com.codyy.erpsportal.onlinemeetings.controllers.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,15 @@ public class VideoIntroductionFragment extends Fragment {
     }
 
     public void setVideoDetails(MeetDetail meetDetail, EvaluationScore score) {
-        mTvGrade.setText( meetDetail.getClassLevelName());
+        // TODO: 10/05/17 显示多个年级信息
+        if(TextUtils.isEmpty(meetDetail.getClassLevelName())){
+            if(ActivityThemeActivity.EVALUATION_LESSON != type){
+                mTvGrade.setText("不限");
+            }
+        }else{
+            mTvGrade.setText( meetDetail.getClassLevelName());
+        }
+
         mTvSubject.setText( meetDetail.getSubjectName());
         mTvStartTime.setText( meetDetail.getStartTime());
         mTvClickCount.setText( String.valueOf(meetDetail.getViewCount()));
