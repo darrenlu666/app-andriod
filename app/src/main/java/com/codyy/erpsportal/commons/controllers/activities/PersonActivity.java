@@ -94,6 +94,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     @Bind(R.id.empty_view)EmptyView mEmptyView ;
     @Bind(R.id.tv_school_desc)TextView mSchoolDescTv;
     @Bind(R.id.tv_class_desc)TextView mClassDescTv;
+    @Bind(R.id.tv_forbidden)TextView mForbiddenTv;//禁止访问提示TextView .
 
     //some variables .
     private List<Student> mStudents = new ArrayList<>();//家长名下孩子集合 .

@@ -143,6 +143,7 @@
     <string name="title_activity_more_resource">MoreResourceActivity</string>
     <string name="cache_my">离线缓存</string>
     <string name="setting_my">设置</string>
+    <string name="share_bar_code">分享二维码</string>
 
     <string name="by_rate">按评分高低</string>
     <string name="by_heat">按浏览次数</string>

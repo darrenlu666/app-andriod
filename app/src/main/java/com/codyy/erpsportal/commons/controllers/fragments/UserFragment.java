@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
+import com.codyy.erpsportal.commons.controllers.activities.BarCodeActivity;
 import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -605,7 +606,9 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
         }
     };
 
-    @OnClick({R.id.tv_WeiBo, R.id.tv_blog_post, R.id.tv_photos, R.id.tv_topic, R.id.tv_group_space, R.id.tv_good_resource, R.id.tv_qa, R.id.tv_offline_cache, R.id.tv_setting})
+    @OnClick({R.id.tv_WeiBo, R.id.tv_blog_post, R.id.tv_photos, R.id.tv_topic, R.id.tv_group_space
+            , R.id.tv_good_resource, R.id.tv_qa, R.id.tv_offline_cache, R.id.tv_setting
+            , R.id.tv_bar_code})
     void singleClick(TextView textView) {
         switch (textView.getId()) {
             case R.id.tv_WeiBo://我的微博
@@ -643,14 +646,13 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
                 getActivity().startActivityForResult(new Intent(getActivity(), SettingActivity.class), MainActivity.REQUEST_SETTING);
                 UIUtils.addEnterAnim(getActivity());
                 break;
+            case R.id.tv_bar_code://二维码
+                BarCodeActivity.start(getActivity(),mUserInfo);
+                break;
             default:
                 ToastUtil.showToast("暂未实现");
                 break;
         }
-    }
-
-    public interface OnLogoutListener {
-        void onLogout();
     }
 
     /**

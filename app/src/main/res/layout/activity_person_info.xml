@@ -9,6 +9,15 @@
     android:fitsSystemWindows="true"
     >
     <include layout="@layout/toolbar_layout"/>
+    <TextView
+        android:id="@+id/tv_forbidden"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="您访问的用户已停止使用"
+        android:textSize="20dp"
+        android:visibility="gone"
+        />
     <com.codyy.erpsportal.commons.widgets.EmptyView
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
