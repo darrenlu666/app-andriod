@@ -129,24 +129,24 @@ public class OnlineTeachActivity extends BaseHttpActivity {
                 mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceNetTeachMyCreate));
                 listFragments.add(OnlineTeachFragment.newInstance(OnlineTeachFragment.TYPE_MY_CREATE));
                 //区内课程管理　
-                if(mUserInfo.isAdmin()){
+//                if(mUserInfo.isAdmin()){
                     mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceNetTeachManage));
                     listFragments.add(OnlineTeachFragment.newInstance(OnlineTeachFragment.TYPE_MANAGER_AREA));
-                }else{
+                /*}else{
                     mTabContainerRlt.setVisibility(View.GONE);
-                }
+                }*/
                 break;
             case UserInfo.USER_TYPE_SCHOOL_USER://学校管理员
                 //我创建的
                 mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceNetTeachMyCreate));
                 listFragments.add(OnlineTeachFragment.newInstance(OnlineTeachFragment.TYPE_MY_CREATE));
                 //本校课程管理
-                if(mUserInfo.isAdmin()){
+//                if(mUserInfo.isAdmin()){
                     mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceNetTeachManage));
                     listFragments.add(OnlineTeachFragment.newInstance(OnlineTeachFragment.TYPE_MANAGER_SCHOOL));
-                }else{
+                /*}else{
                     mTabContainerRlt.setVisibility(View.GONE);
-                }
+                }*/
                 break;
             case UserInfo.USER_TYPE_TEACHER://教师
                 //我创建的

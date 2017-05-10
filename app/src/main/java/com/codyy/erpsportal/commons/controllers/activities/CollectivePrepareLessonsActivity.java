@@ -101,12 +101,12 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
             if (mUserInfo.isArea()) {//辖区内备课管理
                 mAdapter.addTab(Titles.sWorkspacePrepareLaunch, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_LAUNCH));
                 mAdapter.addTab(Titles.sWorkspacePrepareAttend, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_JOIN));
-                if (mUserInfo.isAdmin())//如果是超级管理员就有管理辖区内备课的权限
+//                if (mUserInfo.isAdmin())//如果是超级管理员就有管理辖区内备课的权限
                     mAdapter.addTab(Titles.sWorkspacePreparePrepare, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_MANAGE));
             } else if (mUserInfo.isSchool()) {//本校备课管理
                 mAdapter.addTab(Titles.sWorkspacePrepareLaunch, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_LAUNCH));
                 mAdapter.addTab(Titles.sWorkspacePrepareAttend, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_JOIN));
-                if (mUserInfo.isAdmin())//校级管理员有管理备课的权限
+//                if (mUserInfo.isAdmin())//校级管理员有管理备课的权限
                     mAdapter.addTab(Titles.sWorkspacePreparePrepare, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_MANAGE));
             } else if (mUserInfo.isTeacher()) {
                 //我发起的
@@ -122,15 +122,15 @@ public class CollectivePrepareLessonsActivity extends BaseHttpActivity {
             if (mUserInfo.isArea()) {
                 mAdapter.addTab(Titles.sWorkspaceListenLaunch, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_LAUNCH));
                 //mAdapter.addTab(Titles.sWorkspaceListenParticipation, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_JOIN));
-                if (mUserInfo.isAdmin()) {//如果是超级管理员就有管理辖区内听课的权限
+//                if (mUserInfo.isAdmin()) {//如果是超级管理员就有管理辖区内听课的权限
                     mAdapter.addTab(Titles.sWorkspaceListenManage, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_MANAGE));
-                }
+//                }
             } else if (mUserInfo.isSchool()) {
                 mAdapter.addTab(Titles.sWorkspaceListenLaunch, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_LAUNCH));
 //                mAdapter.addTab(Titles.sWorkspaceListenParticipation, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_JOIN));
-                if (mUserInfo.isAdmin()) {//校级管理员有管理听课的权限
+//                if (mUserInfo.isAdmin()) {//校级管理员有管理听课的权限
                     mAdapter.addTab(Titles.sWorkspaceListenManage, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_MANAGE));
-                }
+//                }
             } else if (mUserInfo.isTeacher()) {
                 if ("Y".equals(mUserInfo.getInteractiveListenFlag())) {//判断教师是否有发起听课的权限
                     mAdapter.addTab(Titles.sWorkspaceListenLaunch, CollectivePrepareLessonsFragment.class, createBundle(CollectivePrepareLessonsFragment.TYPE_LAUNCH));
