@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
@@ -116,6 +117,13 @@ public class ReportRepairActivity extends AppCompatActivity {
     private RequestSender mSender;
 
     private PhotosUploader mPhotosUploader;
+
+    private LoadingDialog mLoadingDialog;
+
+    /**
+     * 正在提交
+     */
+    private boolean mCommitting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -245,6 +253,7 @@ public class ReportRepairActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_commit)
     public void onCommitClick() {
+        if (mCommitting) return;//正在提交，不再处理提交点击
         if (mPhotosUploader != null && mPhotosUploader.mIsUploading) {
             ToastUtil.showToast(this, "图片上传中，请稍等...");
             return;
@@ -315,6 +324,9 @@ public class ReportRepairActivity extends AppCompatActivity {
             }
         }
 
+        mLoadingDialog = LoadingDialog.newInstance();
+        mLoadingDialog.show(getSupportFragmentManager(), "sending");
+        mCommitting = true;
         mSender.sendRequest(new RequestData(URLConfig.REPORT_MAL, params, new Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -325,12 +337,15 @@ public class ReportRepairActivity extends AppCompatActivity {
                 } else {
                     ToastUtil.showToast(ReportRepairActivity.this, "报修失败");
                 }
+                mLoadingDialog.dismiss();
             }
         }, new ErrorListener() {
             @Override
             public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onCommitClick error:", error);
+                mLoadingDialog.dismiss();
                 ToastUtil.showToast(ReportRepairActivity.this, "咦！出错了");
+                mCommitting = false;
             }
         }));
     }
