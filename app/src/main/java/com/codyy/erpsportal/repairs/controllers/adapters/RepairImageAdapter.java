@@ -161,11 +161,13 @@ public class RepairImageAdapter extends Adapter {
         String resourceType = data.getExtras().getString(MMVideoAlbumFragment.EXTRA_TYPE);
         List<UploadingImage> newAddedImages = new ArrayList<>();
         for (MMImageBean imageBean: imageList) {
-            UploadingImage imageDetail = new UploadingImage();
-            imageDetail.setStatus( UploadingImage.STATUS_UPLOADING);
-            imageDetail.setPath( imageBean.getPath());
-            addImage( imageDetail);
-            newAddedImages.add( imageDetail);
+            if (imageBean.isSelected()) {//取选中的
+                UploadingImage imageDetail = new UploadingImage();
+                imageDetail.setStatus(UploadingImage.STATUS_UPLOADING);
+                imageDetail.setPath(imageBean.getPath());
+                addImage(imageDetail);
+                newAddedImages.add(imageDetail);
+            }
         }
         notifyDataSetChanged();
         return newAddedImages;

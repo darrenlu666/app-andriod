@@ -86,7 +86,8 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
                     boolean confirmed = data.getBooleanExtra(MMPreviewImageActivity.EXTRA_CONFIRM, false);
                     if (confirmed) {
                         Intent intent = new Intent();
-                        intent.putParcelableArrayListExtra(EXTRA_DATA, data.getParcelableArrayListExtra(EXTRA_DATA));
+                        ArrayList<MMImageBean> imageBeans = data.getParcelableArrayListExtra(EXTRA_DATA);
+                        intent.putParcelableArrayListExtra(EXTRA_DATA, imageBeans);
                         intent.putExtra(EXTRA_TYPE, TYPE_IMAGE);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
