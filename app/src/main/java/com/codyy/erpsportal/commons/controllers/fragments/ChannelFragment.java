@@ -1,6 +1,5 @@
 package com.codyy.erpsportal.commons.controllers.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -22,11 +21,9 @@ import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.LoadingHandler;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.ChannelTab;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.OnFiveEvenClickListener;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.EmptyView.OnReloadClickListener;
@@ -116,10 +113,6 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
                 @Override
                 public void onFiveEvenClick(){
                     Toast.makeText(getContext(), "接口地址：" + URLConfig.BASE, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent();
-                    intent.setClassName(getContext(), "com.codyy.erpsportal.repairs.controllers.activities.AreaRepairsActivity");
-                    intent.putExtra(Extra.USER_INFO, UserInfoKeeper.obtainUserInfo());
-                    startActivity(intent);
                 }
             });
         }
