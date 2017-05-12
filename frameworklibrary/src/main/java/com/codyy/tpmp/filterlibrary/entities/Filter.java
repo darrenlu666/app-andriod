@@ -17,6 +17,11 @@ public class Filter {
     @SerializedName(value = "name",alternate = {"categoryName","areaName"})
     private String name;
 
+    public Filter(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public String getId() {
         return id;
     }

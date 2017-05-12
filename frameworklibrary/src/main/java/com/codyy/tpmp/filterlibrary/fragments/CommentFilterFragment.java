@@ -230,6 +230,7 @@ public class CommentFilterFragment extends Fragment {
                 case FilterConstants.LEVEL_CLASS_TEAM://组别
                 case FilterConstants.LEVEL_CLASS_STATE://状态
                 case FilterConstants.LEVEL_LESSON_CATEGORY://类别（系列课/单节课）
+                case FilterConstants.LEVEL_MANAGER_STATE://状态
                     filterModule = FilterModule.constructSimpleModule(level, mFilterUser);
                     break;
             }

@@ -22,15 +22,15 @@ public class SimpleFilterBuilder implements DataBuilder<FilterCell,List<FilterCe
     /**
      * 选项的名字集合,按照传入的顺序进行初始化.
      */
-    private List<String> mChoices = new ArrayList<>();
+    private List<Filter> mChoices = new ArrayList<>();
 
     public SimpleFilterBuilder() {
     }
 
-    public SimpleFilterBuilder(String name ,String ...params) {
+    public SimpleFilterBuilder(String name ,Filter ...params) {
         this.mLevelName = name;
-        for(String param:params){
-            if(!TextUtils.isEmpty(param)){
+        for(Filter param:params){
+            if(!TextUtils.isEmpty(param.getName())){
                 mChoices.add(param);
             }
         }
@@ -44,14 +44,15 @@ public class SimpleFilterBuilder implements DataBuilder<FilterCell,List<FilterCe
         all.setName(FilterConstants.STR_ALL);
         all.setParent(param);
         all.setCheck(true);
+        all.setId("");//all id 为“”空
         mData.add(all);
         //build
         if(mChoices != null && mChoices.size()>0){
-            for(String str : mChoices){
+            for(Filter filter : mChoices){
                 FilterCell fe = param.clone();
-                fe.setName(str);
+                fe.setId(filter.getId());
+                fe.setName(filter.getName());
                 fe.setParent(param);
-                fe.setId(param.getId());
                 fe.setCheck(false);
                 mData.add(fe);
             }

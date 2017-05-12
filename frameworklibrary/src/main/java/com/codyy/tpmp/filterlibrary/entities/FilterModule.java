@@ -288,21 +288,29 @@ public class FilterModule implements ParamBuilder, FilterModuleInterface<FilterC
         switch (level) {
             case FilterConstants.LEVEL_CLASS_STATE://状态
                 dataBuilder = new SimpleFilterBuilder(levelName
-                        , FilterConstants.STR_STATE_INIT
-                        , FilterConstants.STR_STATE_ON
-                        , FilterConstants.STR_STATE_END
+                        , new Filter(FilterConstants.VAL_STATE_INIT,FilterConstants.STR_STATE_INIT)//未开始
+                        , new Filter(FilterConstants.VAL_STATE_PROGRESS,FilterConstants.STR_STATE_PROGRESS)//进行中
+                        , new Filter(FilterConstants.VAL_STATE_END,FilterConstants.STR_STATE_END)//已结束
+                );
+                break;
+            case FilterConstants.LEVEL_MANAGER_STATE://状态
+                dataBuilder = new SimpleFilterBuilder(levelName
+                        , new Filter(FilterConstants.VAL_STATE_PENDING,FilterConstants.STR_STATE_PENDING)//待处理
+                        , new Filter(FilterConstants.VAL_STATE_PASS,FilterConstants.STR_STATE_PASS)//通过
+                        , new Filter(FilterConstants.VAL_STATE_REJECT,FilterConstants.STR_STATE_REJECT)//未通过
+                        , new Filter(FilterConstants.VAL_STATE_CLOSED,FilterConstants.STR_STATE_CLOSED)//已关闭
                 );
                 break;
             case FilterConstants.LEVEL_LESSON_CATEGORY://课程类别[单节课/系列课].
                 dataBuilder = new SimpleFilterBuilder(levelName
-                        , FilterConstants.STR_CATEGORY_LESSON_SINGLE
-                        , FilterConstants.STR_CATEGORY_LESSON_SERIES
+                        , new Filter(filterUser.getBaseAreaId(),FilterConstants.STR_CATEGORY_LESSON_SINGLE)
+                        , new Filter(filterUser.getBaseAreaId(),FilterConstants.STR_CATEGORY_LESSON_SERIES)
                 );
                 break;
             case FilterConstants.LEVEL_CLASS_TEAM://分组
                 dataBuilder = new SimpleFilterBuilder(levelName
-                        , FilterConstants.STR_TEAM_TEACH
-                        , FilterConstants.STR_TEAM_INTEREST
+                        , new Filter(filterUser.getBaseAreaId(),FilterConstants.STR_TEAM_TEACH)
+                        , new Filter(filterUser.getBaseAreaId(),FilterConstants.STR_TEAM_INTEREST)
                 );
                 break;
         }
