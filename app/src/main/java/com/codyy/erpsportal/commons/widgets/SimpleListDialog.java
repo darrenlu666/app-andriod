@@ -13,10 +13,10 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.groups.controllers.viewholders.SingleTextViewHolder;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
 
 import java.util.ArrayList;
 import java.util.List;

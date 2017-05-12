@@ -10,6 +10,8 @@ import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.PreparationEntity;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

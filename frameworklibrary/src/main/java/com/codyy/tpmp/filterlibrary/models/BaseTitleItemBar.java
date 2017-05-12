@@ -1,4 +1,4 @@
-package com.codyy.erpsportal.commons.models.entities;
+package com.codyy.tpmp.filterlibrary.models;
 
 /**
  * abstract Title bar parent Entity.

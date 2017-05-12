@@ -41,7 +41,6 @@ import com.codyy.erpsportal.IMeetingService;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsDetailActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ListenDetailsActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -82,6 +81,7 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.TabInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoShare;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;

@@ -1,13 +1,12 @@
-package com.codyy.erpsportal.commons.controllers.viewholders;
+package com.codyy.tpmp.filterlibrary.viewholders;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
-import butterknife.Bind;
-import butterknife.ButterKnife;
+
+import com.codyy.tpmp.filterlibrary.R;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 /**
  * 通用绿色箭头+更多>> 列表 title viewHold
@@ -18,30 +17,36 @@ public class TitleItemViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar
      * 仅显示标题
      * 0x100 - 0x200为不希望绘制divider的值
      */
-    public static final int ITEM_TYPE_TITLE_SIMPLE = 0x000101 ;
+    public static final int ITEM_TYPE_TITLE_SIMPLE = 0x100101 ;
     /**
      * 仅显示标题 /并且没有更多数据
      * 0x100 - 0x200为不希望绘制divider的值
      */
-    public static final int ITEM_TYPE_TITLE_SIMPLE_NO_DATA = 0x000102 ;
+    public static final int ITEM_TYPE_TITLE_SIMPLE_NO_DATA = 0x100102 ;
     /**
      * 显示更多>>
      * 0x100 - 0x200为不希望绘制divider的值
      */
-    public static final int ITEM_TYPE_TITLE_MORE = 0x000103;
+    public static final int ITEM_TYPE_TITLE_MORE = 0x100103;
     /**
      * 显示更多>> /并且没有更多数据
      * 0x100 - 0x200为不希望绘制divider的值
      */
-    public static final int ITEM_TYPE_TITLE_MORE_NO_DATA = 0x000104;
+    public static final int ITEM_TYPE_TITLE_MORE_NO_DATA = 0x100104;
 
-    @Bind(R.id.tv_title)TextView mTitleTextView;
-    @Bind(R.id.btn_more)Button mMoreButton;
-    @Bind(R.id.rlt_no_data)RelativeLayout mNoMoreRelativeLayout;
+    TextView mTitleTextView;
+    Button mMoreButton;
+    RelativeLayout mNoMoreRelativeLayout;
 
     public TitleItemViewHolder(View view) {
         super(view);
-        ButterKnife.bind(this,view);
+        bindViews(view);
+    }
+
+    private void bindViews(View itemView) {
+        mTitleTextView = (TextView) itemView.findViewById(R.id.tv_title);
+        mMoreButton = (Button) itemView.findViewById(R.id.btn_more);
+        mNoMoreRelativeLayout = (RelativeLayout) itemView.findViewById(R.id.rlt_no_data);
     }
 
     @Override

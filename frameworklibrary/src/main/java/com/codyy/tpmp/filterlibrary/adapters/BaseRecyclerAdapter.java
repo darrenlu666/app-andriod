@@ -1,12 +1,13 @@
-package com.codyy.erpsportal.commons.controllers.adapters;
+package com.codyy.tpmp.filterlibrary.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.LoadMoreViewHolder;
+
+import com.codyy.tpmp.filterlibrary.R;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.viewholders.LoadMoreViewHolder;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  * 基本抽象的Recycler adapter ...
  */
 public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends RecyclerView.Adapter{
-//    private static final String TAG = "BaseRecyclerAdapter";
+    private static final String TAG = "BaseRecyclerAdapter";
     public static final int TYPE_FOOTER = Integer.MIN_VALUE;
 
     private boolean mHasMoreData;//设置是否可以继续加载数据
@@ -51,6 +52,14 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
     public void clearData() {
         if (mData != null)
             mData.clear();
+    }
+
+    public boolean isEnable() {
+        return mEnable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.mEnable = enable;
     }
 
     public boolean isHasMoreData() {
@@ -124,11 +133,16 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
         }
     }
 
+    /**
+     * 是否可以点击 : default: true
+     */
+    private boolean mEnable = true;
+
     private void initItemClickListener(final BaseRecyclerViewHolder<T> viewHolder) {
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mOnItemClickListener != null){
+                if(mOnItemClickListener != null && mEnable){
                     try {
                         setSelectedPosition(viewHolder.getCurrentPosition());
                         mOnItemClickListener.onItemClicked(v , viewHolder.getCurrentPosition(),viewHolder.getData());
@@ -171,7 +185,11 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
         }else if(holder instanceof BaseRecyclerViewHolder){
             BaseRecyclerViewHolder<T> bvh = (BaseRecyclerViewHolder<T>) holder;
             try {
+                //设置数据
                 bvh.setData(mData.get(position));
+                //设置当前view处于recyclerView中的相对位置
+                bvh.setCurrentPosition(position);
+                //绘制View.
                 bvh.setData(position , mData.get(position));
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
@@ -198,7 +216,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
          * @return
          */
 
-        VH createViewHolder(ViewGroup parent , int viewType);
+        VH createViewHolder(ViewGroup parent, int viewType);
 
         /**
          * return the view type .
@@ -216,7 +234,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
          * @param position 子item的位置
          * @param data
          */
-        void onItemClicked(View v ,int position ,T data) throws  Exception;
+        void onItemClicked(View v, int position, T data) throws  Exception;
     }
 
     /**   more data click listener      */

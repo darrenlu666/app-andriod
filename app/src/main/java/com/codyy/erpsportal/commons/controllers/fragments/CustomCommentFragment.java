@@ -18,11 +18,8 @@ import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.BaseHttpFragment;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.exception.LogUtils;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.comment.BaseComment;
 import com.codyy.erpsportal.commons.models.entities.comment.BaseCommentParse;
@@ -33,12 +30,15 @@ import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.BlogComposeView;
 import com.codyy.erpsportal.commons.widgets.EmojiconEditText;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentMoreViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.ReplyCommentViewHolder;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 

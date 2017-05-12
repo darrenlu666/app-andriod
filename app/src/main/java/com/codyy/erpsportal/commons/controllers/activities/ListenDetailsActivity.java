@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.DocListViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.MainOrReceiveSchoolViewHolder;
@@ -34,6 +33,7 @@ import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.FixedRecyclerView;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;

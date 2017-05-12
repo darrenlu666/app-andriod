@@ -14,15 +14,11 @@ import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.LivingClassViewHolder;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
@@ -33,6 +29,10 @@ import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
@@ -102,7 +102,7 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
             mData.clear();
             if(null != dataList){
                 if(dataList.size() ==0){
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 }else{
                     mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
                     for(LivingClass lc : dataList){

@@ -15,15 +15,17 @@ import android.widget.TextView;
 
 
 import com.codyy.erpsportal.R;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
+import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.CategoryFilterFragment;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.ChannelBlogViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.GroupChildrenBlogViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.TopTextViewHolder;
@@ -35,8 +37,6 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;

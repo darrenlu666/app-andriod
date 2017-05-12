@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -23,9 +22,10 @@ import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
 import com.codyy.erpsportal.groups.controllers.viewholders.FilterChoiceViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.FilterConditionViewHolder;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONException;

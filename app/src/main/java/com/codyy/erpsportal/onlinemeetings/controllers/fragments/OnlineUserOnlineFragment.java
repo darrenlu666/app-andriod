@@ -18,14 +18,15 @@ import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.commons.models.entities.LoginOut;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineUserViewHolder;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
+
 import java.util.List;
 import butterknife.Bind;
 import de.greenrobot.event.EventBus;

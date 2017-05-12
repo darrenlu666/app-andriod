@@ -1,14 +1,10 @@
-package com.codyy.erpsportal.commons.controllers.viewholders;
+package com.codyy.tpmp.filterlibrary.viewholders;
 
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+import com.codyy.tpmp.filterlibrary.R;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 
 /**
  * 加载更多...在recyclerView的底部工多使用 .
@@ -16,15 +12,27 @@ import butterknife.OnClick;
  */
 public class LoadMoreViewHolder<VH> extends BaseRecyclerViewHolder<VH>{
 
-    @Bind(R.id.tv_title)TextView mTitleTextView;
-    @Bind(R.id.pro_loading)ProgressBar mProgressBar;
-    @Bind(R.id.tv_more_btn)TextView mMoreBtnTextView;
+    TextView mTitleTextView;
+    ProgressBar mProgressBar;
+    TextView mMoreBtnTextView;
     private BaseRecyclerAdapter.OnLoadMoreClickListener mOnLoadMoreClickListener;
 
-    public LoadMoreViewHolder(View itemView ,BaseRecyclerAdapter.OnLoadMoreClickListener listener) {
+    public LoadMoreViewHolder(View itemView , BaseRecyclerAdapter.OnLoadMoreClickListener listener) {
         super(itemView);
-        ButterKnife.bind(this,itemView);
+        bindViews(itemView, listener);
+    }
+
+    private void bindViews(View itemView, BaseRecyclerAdapter.OnLoadMoreClickListener listener) {
+        mTitleTextView = (TextView) itemView.findViewById(R.id.tv_title);
+        mProgressBar = (ProgressBar) itemView.findViewById(R.id.pro_loading);
+        mMoreBtnTextView = (TextView) itemView.findViewById(R.id.tv_more_btn);
         this.mOnLoadMoreClickListener = listener ;
+        mMoreBtnTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showProgress();
+            }
+        });
     }
 
     @Override
@@ -32,7 +40,6 @@ public class LoadMoreViewHolder<VH> extends BaseRecyclerViewHolder<VH>{
         return R.layout.item_view_load_more;
     }
 
-    @OnClick(R.id.tv_more_btn)
     void showProgress(){
         mMoreBtnTextView.setVisibility(View.GONE);
         show();

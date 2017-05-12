@@ -7,17 +7,17 @@ import android.view.ViewGroup;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.UpOrDownButton;
 import com.codyy.erpsportal.groups.controllers.activities.SimpleRecyclerActivity;
-import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.schooltv.controllers.viewholders.SchoolVideoViewHolder;
 import com.codyy.erpsportal.schooltv.models.SchoolVideo;
 import com.codyy.erpsportal.schooltv.models.SchoolVideoParse;
+import com.codyy.tpmp.filterlibrary.interfaces.SimpleRecyclerDelegate;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 
@@ -117,7 +117,7 @@ public class SchoolTvHistoryActivity extends SimpleRecyclerActivity<SchoolVideo>
             }
 
             @Override
-            public BaseRecyclerViewHolder<SchoolVideo> getViewHolder(ViewGroup parent,int viewType) {
+            public BaseRecyclerViewHolder<SchoolVideo> getViewHolder(ViewGroup parent, int viewType) {
                 return new SchoolVideoViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_school_tv_history));
             }
 

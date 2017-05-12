@@ -17,8 +17,8 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.DocListViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.PartnerViewHolder;

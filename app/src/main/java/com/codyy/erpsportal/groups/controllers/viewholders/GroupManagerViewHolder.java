@@ -7,11 +7,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.groups.models.entities.Group;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import butterknife.ButterKnife;
 

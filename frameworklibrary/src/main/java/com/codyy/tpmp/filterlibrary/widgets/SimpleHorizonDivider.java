@@ -1,4 +1,4 @@
-package com.codyy.erpsportal.commons.widgets.RecyclerView;
+package com.codyy.tpmp.filterlibrary.widgets;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -7,8 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
+import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
+
 
 /**
  * RecyclerView的简单分割线 Divider
@@ -94,7 +94,6 @@ public class SimpleHorizonDivider extends RecyclerView.ItemDecoration {
         int orientation = getOrientation(layoutManager);
         int childCount = parent.getChildCount();
         if (orientation == LinearLayoutManager.VERTICAL) {
-            int right = parent.getWidth();
             for (int i = 0; i < childCount; i++) {
 
                 //判断第一个item的下标是不是0，是则return，不需要draw divider
@@ -115,6 +114,7 @@ public class SimpleHorizonDivider extends RecyclerView.ItemDecoration {
                 int left = parent.getPaddingLeft() + childView.getPaddingLeft();
                 int bottom = childView.getTop() - params.topMargin;
                 int top = bottom - mDivider.getIntrinsicHeight();
+                int right = parent.getWidth() - childView.getPaddingRight();
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
             }
@@ -149,7 +149,7 @@ public class SimpleHorizonDivider extends RecyclerView.ItemDecoration {
             case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA:
             case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE:
             case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA:
-            case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE:
+//            case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE:
                 result = true;
                 break;
             default:

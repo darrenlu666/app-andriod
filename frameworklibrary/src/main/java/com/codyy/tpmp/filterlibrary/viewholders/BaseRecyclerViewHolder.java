@@ -1,8 +1,9 @@
-package com.codyy.erpsportal.commons.controllers.viewholders;
+package com.codyy.tpmp.filterlibrary.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+
 
 /**
  * 基本的ViewHolder

@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.utils.UserFragmentUtils;
 import com.codyy.erpsportal.commons.widgets.MyBottomSheet;

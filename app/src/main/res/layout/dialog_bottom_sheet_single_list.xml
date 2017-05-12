@@ -38,7 +38,7 @@
             android:background="@color/divide_color"
             android:layout_below="@id/tv_title"
             />
-        <com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView
+        <com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

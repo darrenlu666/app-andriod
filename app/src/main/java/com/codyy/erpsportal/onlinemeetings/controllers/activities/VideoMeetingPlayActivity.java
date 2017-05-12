@@ -21,9 +21,10 @@ import android.widget.Toast;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.StringUtils;
@@ -32,7 +33,6 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.models.entities.VideoDetails;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.VideoGridViewHolder;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
@@ -56,7 +56,8 @@ public  class VideoMeetingPlayActivity extends BaseHttpActivity implements BnVid
      /**     * 标题     */
     private static final String EXTRA_TITLE = "title";
     @Bind(R.id.download_text_view)    TextView mDownloadTextView;
-    @Bind(R.id.video_recycler_view)    SimpleRecyclerView mVideoRecyclerView;
+    @Bind(R.id.video_recycler_view)
+    SimpleRecyclerView mVideoRecyclerView;
     @Bind(R.id.tv_title)    TextView mTitleTextView;
     @Bind(R.id.video_name_tv)    TextView mVideoNameTextView;//主讲老师
     @Bind(R.id.tv_list)    TextView mIndexTextView;//列表

@@ -6,10 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
+import com.codyy.tpmp.filterlibrary.interfaces.SimpleRecyclerDelegate;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsDetailActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ListenDetailsActivity;
@@ -184,7 +184,7 @@ public class CollectivePrepareLessonsFragment extends SimpleRecyclerFragment<Pre
             }
 
             @Override
-            public BaseRecyclerViewHolder<PreparationEntity> getViewHolder(ViewGroup parent,int viewType) {
+            public BaseRecyclerViewHolder<PreparationEntity> getViewHolder(ViewGroup parent, int viewType) {
                 return new PrePareLessonsViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare));
             }
 

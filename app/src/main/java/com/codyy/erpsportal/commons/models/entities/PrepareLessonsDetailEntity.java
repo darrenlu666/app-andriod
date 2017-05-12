@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.codyy.erpsportal.Constants;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

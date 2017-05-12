@@ -26,8 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.FileUtils;

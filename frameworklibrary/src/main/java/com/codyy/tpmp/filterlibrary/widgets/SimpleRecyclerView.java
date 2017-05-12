@@ -1,4 +1,4 @@
-package com.codyy.erpsportal.commons.widgets.RecyclerView;
+package com.codyy.tpmp.filterlibrary.widgets;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

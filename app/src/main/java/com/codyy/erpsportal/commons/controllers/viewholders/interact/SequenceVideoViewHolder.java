@@ -5,8 +5,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
  * 互动听课-详情-视频列表ViewHolder
  * Created by poe on 16-6-23.
  */
-public class SequenceVideoViewHolder extends BaseRecyclerViewHolder<AssessmentDetails.VideoId>{
+public class SequenceVideoViewHolder extends BaseRecyclerViewHolder<AssessmentDetails.VideoId> {
 
     @Bind(R.id.tv_video_count) TextView mVideoNameTv;
     @Bind(R.id.ll_video_count_view)RelativeLayout mBackground;
