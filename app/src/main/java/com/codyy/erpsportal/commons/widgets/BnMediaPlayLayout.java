@@ -117,10 +117,6 @@ public class BnMediaPlayLayout extends RelativeLayout implements BnVideoView2.On
         }
     }
 
-    public void setmFragmentManagerInterface(IFragmentMangerInterface mFragmentManager) {
-        this.mFragmentManagerInterface = mFragmentManager;
-    }
-
     /**
      * 获取播放的实体类.
      * @return
