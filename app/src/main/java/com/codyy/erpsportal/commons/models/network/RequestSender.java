@@ -167,14 +167,6 @@ public class RequestSender {
         mCompositeDisposable.dispose();
     }
 
-    /**
-     * 取消对应tag的请求
-     *
-     * @param tag
-     */
-    public void stop(Object tag) {
-        stop();
-    }
 
     /**
      * 发送登录请求
@@ -247,7 +239,6 @@ public class RequestSender {
         private Response.Listener<JSONObject> mListener;
         private Response.ErrorListener mErrorListener;
         private volatile int mSendCount;
-        private Object mTag;
 
         /**
          * 显示内容加载中
@@ -267,13 +258,6 @@ public class RequestSender {
             this(url, param, listener, errorListener, true, true);
         }
 
-        public RequestData(String url, Map<String, String> param,
-                           Response.Listener<JSONObject> listener, Response.ErrorListener errorListener,
-                           Object tag) {
-            this(url, param, listener, errorListener, true, true);
-            this.mTag = tag;
-        }
-
         public RequestData(String url, Map<String, String> param, Response.Listener<JSONObject> listener,
                            Response.ErrorListener errorListener, boolean isToShowLoading, boolean needRetry) {
             this.mUrl = url;
@@ -282,13 +266,6 @@ public class RequestSender {
             this.setErrorListener(errorListener);
             this.setIsToShowLoading(isToShowLoading);
             this.mNeedRetry = needRetry;
-        }
-
-        public RequestData(String url, Map<String, String> param, Response.Listener<JSONObject> listener,
-                           Response.ErrorListener errorListener, boolean needRetry,
-                           Object tag) {
-            this(url, param, listener, errorListener, true, needRetry);
-            this.mTag = tag;
         }
 
         public RequestData(String url, Map<String, String> param,
@@ -376,15 +353,6 @@ public class RequestSender {
 
         public void setIsToShowLoading(boolean isToShowLoading) {
             this.mIsToShowLoading = isToShowLoading;
-        }
-
-        public Object getTag() {
-            return mTag;
-        }
-
-        public RequestData setTag(Object tag) {
-            this.mTag = tag;
-            return this;
         }
 
         public void setStartTime() {

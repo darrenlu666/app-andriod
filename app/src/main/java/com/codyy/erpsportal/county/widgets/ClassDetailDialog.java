@@ -29,7 +29,7 @@ import java.util.Map;
  * Created by kmdai on 16-8-4.
  */
 public class ClassDetailDialog extends DialogFragment {
-    private Integer mHashTag = this.hashCode();
+
     /**
      * 类型-区县总表
      */
@@ -191,7 +191,7 @@ public class ClassDetailDialog extends DialogFragment {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        }));
     }
 
     public void setData(TimetableDetail.ScheduleListBean scheduleListBean) {
@@ -201,7 +201,7 @@ public class ClassDetailDialog extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDismiss(dialog);
     }
 

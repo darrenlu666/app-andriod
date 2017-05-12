@@ -104,7 +104,6 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
     private UserInfo mUserInfo;
     private List<ThemeVideo> mVideoList = new ArrayList<>();
     private RequestSender mRequestSender;
-    private Object mReqTag = new Object();
     private MeetDetail mMeetDetail;
     private int mType;
     private String mId;
@@ -346,7 +345,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
             public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(ActivityThemeActivity.this, getString(R.string.net_error));
             }
-        }, mReqTag));
+        }));
     }
 
     /**
@@ -382,8 +381,8 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                 mTitleTv.setText(mResourceName);//设置标题
                 mResourceDetails.setThumbPath(mMeetDetail.getSubjectPic());
             }
-        } else if ("error".equals(result)) {
-        }
+        }/* else if ("error".equals(result)) {
+        }*/
     }
 
     /**
@@ -536,7 +535,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mReqTag);
+        mRequestSender.stop();
         mVideoControl.stop();
         super.onDestroy();
     }

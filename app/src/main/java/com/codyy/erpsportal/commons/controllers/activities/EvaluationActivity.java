@@ -546,7 +546,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
             public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(EvaluationActivity.this, getResources().getString(R.string.net_error));
             }
-        }, this.toString()));
+        }));
     }
 
     private void playVideo(String playUrl) {
@@ -828,7 +828,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         if (null != mWiFiBroadCastUtils) {
             mWiFiBroadCastUtils.destroy();
         }
-        mSender.stop(this.toString());
+        mSender.stop();
         super.onDestroy();
     }
 

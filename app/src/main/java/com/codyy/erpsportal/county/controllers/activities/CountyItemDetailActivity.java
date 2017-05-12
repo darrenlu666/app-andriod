@@ -39,7 +39,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CountyItemDetailActivity extends AppCompatActivity {
-    private Integer mHashTag = this.hashCode();
+
     public final static String EXTRA_DATA = "extra_data";
     private final static int CONTY_GET_PLAN_DETAIL = 0x001;
     private final static int CONTY_GET_SELF_DETAIL = 0x002;
@@ -213,7 +213,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        } ));
     }
 
     public static void start(Context context, int type) {
@@ -224,7 +224,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

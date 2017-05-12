@@ -54,7 +54,7 @@ import java.util.Map;
 import butterknife.Bind;
 
 public class CountyClassDetailActivity extends ToolbarActivity {
-    private Integer mHashTag = this.hashCode();
+
     /**
      * 主讲教室
      */
@@ -380,7 +380,7 @@ public class CountyClassDetailActivity extends ToolbarActivity {
                         break;
                 }
             }
-        }, mHashTag));
+        } ));
     }
 
     /**
@@ -474,7 +474,7 @@ public class CountyClassDetailActivity extends ToolbarActivity {
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

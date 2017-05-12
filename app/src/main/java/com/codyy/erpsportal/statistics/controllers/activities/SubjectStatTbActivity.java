@@ -69,8 +69,6 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
 
     private List<SubjectsStatEntity> mStatEntities;
 
-    private Object mRequestTag = new Object();
-
     private LoadingDialog mLoadingDialog;
 
     @Override
@@ -85,7 +83,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         super.onDestroy();
         ButterKnife.unbind(this);
     }
@@ -111,7 +109,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
             @Override
             public void onCancel() {
                 Cog.d(TAG, "cancel loading");
-                mRequestSender.stop(mRequestTag);
+                mRequestSender.stop();
             }
         });
     }
@@ -176,7 +174,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
                 mLoadingDialog.dismiss();
                 ToastUtil.showToast(SubjectStatTbActivity.this, getString(R.string.net_error));
             }
-        }, mRequestTag);
+        });
         requestData.setTimeout(60000);
         mRequestSender.sendRequest( requestData);
     }

@@ -19,7 +19,7 @@ public abstract class BaseRecyclerViewHolder<T>  extends RecyclerView.ViewHolder
      */
     protected int mCurrentPosition = -1;
 
-    protected BaseRecyclerAdapter mAdapter ;
+    protected BaseRecyclerAdapter mAdapter;
 
     public BaseRecyclerViewHolder(View itemView) {
         super(itemView);

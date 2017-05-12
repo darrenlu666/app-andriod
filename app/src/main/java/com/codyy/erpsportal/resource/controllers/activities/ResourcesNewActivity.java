@@ -184,8 +184,6 @@ public class ResourcesNewActivity extends AppCompatActivity{
 
     private RequestSender mRequestSender;
 
-    private Object mRequestTag = new Object();
-
     private Handler mHandler;
 
     private UserInfo mUserInfo;
@@ -369,7 +367,7 @@ public class ResourcesNewActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         mPlayController.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
     }
 
     public void onEvent(AudioEvent audioEvent) {
@@ -599,7 +597,7 @@ public class ResourcesNewActivity extends AppCompatActivity{
                             }
                         });
                     }
-                }, mRequestTag)
+                })
         );
     }
 

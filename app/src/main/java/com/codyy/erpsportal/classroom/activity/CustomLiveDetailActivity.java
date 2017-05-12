@@ -3,7 +3,6 @@ package com.codyy.erpsportal.classroom.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -47,7 +46,6 @@ import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
-import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -471,7 +469,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
                     handleRequestFailure();
                 }
             }
-        }, TAG));
+        }));
     }
 
     private void addViewPager() {
@@ -829,7 +827,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     protected void onDestroy() {
         super.onDestroy();
         //stop net request .
-        if (null != mRequestSender) mRequestSender.stop(TAG);
+        if (null != mRequestSender) mRequestSender.stop();
         if (null != mWifiUtil) mWifiUtil.destroy();
         if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy();
         mHandler.removeCallbacks(mPlayLiveRunnable);

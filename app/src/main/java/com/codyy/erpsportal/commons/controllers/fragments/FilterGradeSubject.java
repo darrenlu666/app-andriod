@@ -276,7 +276,7 @@ public class FilterGradeSubject extends Fragment implements View.OnClickListener
             public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse error=", error);
             }
-        }, this.toString()));
+        }));
     }
 
     /**
@@ -414,7 +414,7 @@ public class FilterGradeSubject extends Fragment implements View.OnClickListener
 
     @Override
     public void onDestroy() {
-        mSender.stop(this.toString());
+        mSender.stop();
         super.onDestroy();
     }
 }

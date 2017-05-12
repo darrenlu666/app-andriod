@@ -175,12 +175,12 @@ public class TutorshipDetailsActivity extends ToolbarActivity {
             public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "loadData error=", error);
             }
-        }, TAG));
+        }));
     }
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(TAG);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

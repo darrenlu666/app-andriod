@@ -146,8 +146,6 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
 
     private LoadingDialog mLoadingDialog;
 
-    private Object mRequestTag = new Object();
-
     private OnRowClickListener mOnRowClickListener = new OnRowClickListener() {
         @Override
         public void onRowClickListener(int position) {
@@ -278,7 +276,7 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
             public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onError error=", error);
             }
-        }, mRequestTag));
+        }));
     }
 
     /**
@@ -373,8 +371,7 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
                         Cog.d(TAG, "loadTermsStat error=", error);
                         mLoadingDialog.dismiss();
                     }
-                }, mRequestTag
-        );
+                });
         requestData.setTimeout(60000);
         mRequestSender.sendGetRequest( requestData);
     }
@@ -423,7 +420,7 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

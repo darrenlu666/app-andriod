@@ -30,7 +30,7 @@ import butterknife.OnClick;
  * Created by kmdai on 16-7-4.
  */
 public abstract class FilterBaseActivity extends AppCompatActivity {
-    private Integer mHashTag = this.hashCode();
+
     @Bind(R.id.title_text)
     TextView mTextView;
     @Bind(R.id.drawerlayout)
@@ -129,7 +129,7 @@ public abstract class FilterBaseActivity extends AppCompatActivity {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        }));
     }
 
     /**
@@ -157,7 +157,7 @@ public abstract class FilterBaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 }

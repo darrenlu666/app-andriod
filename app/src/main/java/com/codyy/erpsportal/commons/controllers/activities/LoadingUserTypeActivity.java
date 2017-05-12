@@ -27,8 +27,6 @@ public class LoadingUserTypeActivity extends AppCompatActivity {
 
     private RequestSender mRequestSender;
 
-    private Object mRequestTag = new Object();
-
     private String mUserId;
 
     @Override
@@ -69,13 +67,13 @@ public class LoadingUserTypeActivity extends AppCompatActivity {
                 Cog.d(TAG, "loadData onErrorResponse=", error);
                 finish();
             }
-        }, mRequestTag));
+        } ));
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
     }
 
     public static void start(Activity activity, String baseUserId) {
