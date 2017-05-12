@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.StringDef;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
@@ -74,7 +76,8 @@ import butterknife.Bind;
  * 首页-博文-博文详情
  * Created by poe on 16-1-18.
  */
-public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComposeView.OnComposeOperationDelegate{
+public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComposeView.OnComposeOperationDelegate
+    , IFragmentMangerInterface{
     private final static String TAG = "BlogPostDetailActivity";
     /** 来自门户*/
     public final static String FROM_TYPE_SHARE = "SHARE";
@@ -86,6 +89,12 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     public final static String EXTRA_BLOG_ID = "com.blog.id";//
     public final static String EXTRA_FROM_TYPE = "com.blog.from";//
     public final static String EXTRA_GROUP_ID = "com.group.id";//
+
+    @Override
+    public FragmentManager getNewFragmentManager() {
+        return getSupportFragmentManager();
+    }
+
     @StringDef(value = {FROM_TYPE_GROUP,FROM_TYPE_PERSON,FROM_TYPE_SHARE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface FromOption{}
