@@ -18,14 +18,11 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.commons.widgets.BlogComposeView;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.HorizontalListViewAdapter2;
 import com.codyy.erpsportal.commons.controllers.fragments.CustomCommentFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.DeliveryClassDetailFragment;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.DeliveryClassDetail;
 import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
@@ -119,6 +116,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
      * 点击次数
      */
     private int mViewCount;
+
     private View.OnClickListener mDownListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
