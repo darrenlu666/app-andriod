@@ -139,7 +139,6 @@ public class BaseCommentsAdapter extends Adapter<ViewHolder> {
                 mCommentBaseList.addAll(mCommentBaseList.size() - 1, comment.getReplies());
                 mCommentBaseList.add(mCommentBaseList.size() - 1, new MoreRelies(comment));
             }
-//                notifyItemRangeInserted(positionStart, comment.itemCount());
         } else {//如果最后没有更多，直接加在列表上面
             int positionStart = mCommentBaseList.size();
             mCommentBaseList.add(comment);
@@ -147,7 +146,6 @@ public class BaseCommentsAdapter extends Adapter<ViewHolder> {
                 mCommentBaseList.addAll(comment.getReplies());
                 mCommentBaseList.add(new MoreRelies(comment));
             }
-//                notifyItemRangeInserted(positionStart, comment.itemCount());
         }
     }
 
@@ -199,36 +197,41 @@ public class BaseCommentsAdapter extends Adapter<ViewHolder> {
         int start = index + originalCount + 1;
         Cog.d(TAG, "addReplies index=", index, "originalCount", originalCount);
         mCommentBaseList.addAll(start, newReplies);
-        notifyItemRangeInserted(start, newReplies.size() + 1);
+        notifyItemRangeChanged(start, newReplies.size() + 1);
     }
 
     public Object getItem(int position) {
         return mCommentBaseList.get(position);
     }
 
+    /**
+     * 删除评论或回复
+     * @param position 位置
+     */
     public void remove(int position) {
         Object item = getItem(position);
-        if (item instanceof RethinkComment) {
+        if (item instanceof RethinkComment) {//删除评论
             RethinkComment comment = (RethinkComment) item;
             mRethinkComments.remove(comment);
-            int i = comment.itemCount(), deletingItemCount = comment.itemCount();
-            while (i > 0) {
+            int i = comment.itemCount();
+            int deletingItemCount = comment.itemCount();
+            while (i > 0) {//删除评论下的二级评论
                 mCommentBaseList.remove(position);
                 i--;
             }
             notifyItemRangeRemoved(position, deletingItemCount);
-        } else {
+        } else {//删除回复
             RethinkReply reply = (RethinkReply) item;
             RethinkComment parent = reply.getComment();
+            parent.remove( reply);
+            parent.setTotalReplyCount( parent.getTotalReplyCount() - 1);
             mCommentBaseList.remove(position);
-            if (parent.getCurrentCount() == 1) {
+            int removedCount = 1;
+            if (!parent.hasMoreReplies() && parent.getCurrentCount() == 0) {//没有回复了，如果没有更多回复了就直接删了
                 mCommentBaseList.remove(position);
-                notifyItemRangeRemoved(position, 2);
-            } else {
-                notifyItemRemoved(position);
+                removedCount ++;
             }
-            parent.remove(reply);
-            notifyItemChanged(position - 1);
+            notifyItemRangeChanged(position, removedCount);
         }
         notifyDataSetChanged();
     }

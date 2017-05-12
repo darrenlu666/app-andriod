@@ -29,6 +29,8 @@ public class FilterItem implements Parcelable {
      */
     public final static int ARRAY = 1;
 
+    public final static String IS_DIRECT = "isDirect";
+
     /**
      * 过滤项类型名,中文的,如学科，年级
      */
@@ -188,6 +190,9 @@ public class FilterItem implements Parcelable {
             Choice choice = filterItem.getChoice();
             if (choice != null && !choice.isAll() && choice.getId() != null){
                 params.put(filterItem.getParamName(), choice.getId());
+                if (choice instanceof DirectSchoolsChoice) {//如果地区选了直属校，添加直属校参数
+                    params.put(IS_DIRECT, "true");
+                }
             }
         }
         return params;

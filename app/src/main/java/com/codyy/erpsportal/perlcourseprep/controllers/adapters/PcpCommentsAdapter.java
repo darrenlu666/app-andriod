@@ -205,7 +205,7 @@ public class PcpCommentsAdapter extends Adapter<RecyclerViewHolder> {
         int start = index + originalCount + 1;
         Cog.d(TAG, "addReplies index=", index, "originalCount", originalCount);
         mCommentBaseList.addAll(start, newReplies);
-        notifyItemRangeInserted(start, newReplies.size() + 1);
+        notifyItemRangeChanged(start, newReplies.size() + 1);
     }
 
     public Object getItem(int position) {
@@ -226,15 +226,15 @@ public class PcpCommentsAdapter extends Adapter<RecyclerViewHolder> {
         } else {
             RethinkReply reply = (RethinkReply) item;
             RethinkComment parent = reply.getComment();
+            parent.remove( reply);
+            parent.setTotalReplyCount( parent.getTotalReplyCount() - 1);
             mCommentBaseList.remove(position);
-            if (parent.getCurrentCount() == 1) {
+            int removedCount = 1;
+            if (!parent.hasMoreReplies() && parent.getCurrentCount() == 0) {//没有回复了，如果没有更多回复了就直接删了
                 mCommentBaseList.remove(position);
-                notifyItemRangeRemoved(position, 2);
-            } else {
-                notifyItemRemoved(position);
+                removedCount ++;
             }
-            parent.remove(reply);
-            notifyItemChanged(position - 1);
+            notifyItemRangeChanged(position, removedCount);
         }
         notifyDataSetChanged();
     }
