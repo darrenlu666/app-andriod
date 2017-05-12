@@ -18,14 +18,20 @@
             android:background="@color/main_green"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <TextView
-                android:id="@+id/tv_title"
+            <ImageButton
+                android:id="@+id/ib_hidden_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/title_activity_main"
-                android:textColor="@color/white"
-                android:textSize="24dp" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/btn_search"
+                android:textSize="15dp"
+                android:visibility="invisible"
+                android:contentDescription="@null"
+                tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/search"
@@ -39,7 +45,32 @@
                 android:background="@drawable/btn_search"
                 android:textSize="15dp"
                 android:visibility="gone"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null"
+                tools:visibility="visible"/>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/ib_hidden_search"
+                android:layout_toRightOf="@id/ib_hidden_search"
+                android:layout_toStartOf="@id/search"
+                android:layout_toLeftOf="@id/search">
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:scrollbars="none">
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_activity_main"
+                        android:layout_gravity="center_vertical"
+                        android:scrollHorizontally="true"
+                        android:textColor="@color/white"
+                        android:textSize="24dp" />
+                </HorizontalScrollView>
+            </FrameLayout>
         </RelativeLayout>
 
         <com.codyy.erpsportal.commons.widgets.SlidingTabLayout
