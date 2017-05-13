@@ -25,7 +25,7 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineChatReceiverViewHolder;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;

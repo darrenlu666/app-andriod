@@ -6,6 +6,7 @@
     android:fitsSystemWindows="true"
     >
     <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/layout_forbidden"/>
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
@@ -19,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
-                <com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView
+                <com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"

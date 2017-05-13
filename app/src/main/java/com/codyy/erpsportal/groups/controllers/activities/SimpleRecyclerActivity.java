@@ -20,8 +20,8 @@ import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.interfaces.SimpleRecyclerDelegate;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 
 import org.json.JSONObject;
 import java.util.ArrayList;

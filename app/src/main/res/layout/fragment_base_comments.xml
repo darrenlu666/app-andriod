@@ -10,7 +10,7 @@
         android:layout_above="@id/compose"
         app:appBarLayoutId="@id/app_bar_layout"
         >
-        <com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView
+        <com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

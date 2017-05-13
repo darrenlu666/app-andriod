@@ -46,7 +46,7 @@ import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.groups.controllers.viewholders.ClassMemberSelectViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.ClassMemberViewHolder;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;

@@ -22,7 +22,7 @@ import com.codyy.tpmp.filterlibrary.interfaces.HttpGetInterface;
 import com.codyy.tpmp.filterlibrary.utils.FilterUtil;
 import com.codyy.tpmp.filterlibrary.viewholders.FilterChoiceViewHolder;
 import com.codyy.tpmp.filterlibrary.viewholders.FilterConditionViewHolder;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -372,8 +372,14 @@ public class CommentFilterFragment extends Fragment {
                     if (TextUtils.isEmpty(levelName)) {//已经到区县末端
                         //跳转到下一个item
                         jumpToNextItem();
-                    } else if (FilterConstants.STR_SCHOOL_DIRECT.equals(levelName)
-                            || FilterConstants.STR_ALL.equals(levelName)) {
+                    } else if (FilterConstants.STR_SCHOOL_DIRECT.equals(levelName)) {//直属校
+                        // 全部/直属校
+                        clearAreaModule();
+                        mChoiceAdapter.setEnable(true);
+                        mChoiceAdapter.notifyDataSetChanged();
+                        mConditionAdapter.notifyDataSetChanged();
+                        jumpToNextItem();
+                    }else if(FilterConstants.STR_ALL.equals(levelName)){//全部.
                         // 全部/直属校
                         clearAreaModule();
                         mChoiceAdapter.setEnable(true);

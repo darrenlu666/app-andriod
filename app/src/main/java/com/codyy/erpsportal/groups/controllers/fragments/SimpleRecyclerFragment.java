@@ -17,8 +17,8 @@ import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.interfaces.SimpleRecyclerDelegate;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 
 import org.json.JSONObject;
 

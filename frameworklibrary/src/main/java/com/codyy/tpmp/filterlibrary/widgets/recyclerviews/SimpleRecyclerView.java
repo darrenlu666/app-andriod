@@ -1,4 +1,4 @@
-package com.codyy.tpmp.filterlibrary.widgets;
+package com.codyy.tpmp.filterlibrary.widgets.recyclerviews;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

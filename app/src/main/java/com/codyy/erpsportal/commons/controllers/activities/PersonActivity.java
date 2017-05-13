@@ -22,9 +22,9 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
@@ -94,7 +94,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     @Bind(R.id.empty_view)EmptyView mEmptyView ;
     @Bind(R.id.tv_school_desc)TextView mSchoolDescTv;
     @Bind(R.id.tv_class_desc)TextView mClassDescTv;
-    @Bind(R.id.tv_forbidden)TextView mForbiddenTv;//禁止访问提示TextView .
+    @Bind(R.id.forbidden_frame_layout)FrameLayout mForbiddenFrameLayout;//禁止访问提示TextView .
 
     //some variables .
     private List<Student> mStudents = new ArrayList<>();//家长名下孩子集合 .
@@ -175,6 +175,9 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
         mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
         mTitleTextView.setText(getString(R.string.person_info));
         initToolbar(mToolBar);
+        //用户默认没有被禁用.
+        mForbiddenFrameLayout.setVisibility(View.GONE);
+
         UiMainUtils.setNavigationTintColor(this,R.color.main_green);
         mClassLinear.setEnabled(false);
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {

@@ -30,8 +30,8 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 import com.codyy.erpsportal.commons.models.personal.Student;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 
 import java.io.DataOutputStream;
 import java.io.File;

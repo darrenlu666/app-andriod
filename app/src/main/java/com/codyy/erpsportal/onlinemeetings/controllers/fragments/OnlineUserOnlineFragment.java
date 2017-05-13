@@ -25,7 +25,7 @@ import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 
 import java.util.List;
 import butterknife.Bind;

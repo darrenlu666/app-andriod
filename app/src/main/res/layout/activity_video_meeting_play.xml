@@ -28,7 +28,7 @@
                 />
         </RelativeLayout>
 
-        <com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView
+        <com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView
             android:id="@+id/video_recycler_view"
             android:layout_width="198dp"
             android:layout_height="match_parent"

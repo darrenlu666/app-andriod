@@ -24,7 +24,7 @@ import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineDocumentViewHolder;
 import com.codyy.erpsportal.onlinemeetings.models.entities.DocumentDetailEntity;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONArray;

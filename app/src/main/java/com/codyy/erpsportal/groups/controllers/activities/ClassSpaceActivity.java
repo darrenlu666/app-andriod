@@ -18,18 +18,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 
-import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleRecyclerView;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassMemberActivity;
@@ -101,6 +100,7 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
     @Bind(R.id.refresh_layout)SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view)SimpleRecyclerView mRecyclerView;
     @Bind(R.id.drawer_layout)DrawerLayout mDrawerLayout;
+    @Bind(R.id.forbidden_frame_layout)FrameLayout mForbiddenFrameLayout;
 
     private ArrayList<MyBaseTitle> mTitleList = new ArrayList<>();//模块标题 .
     private List<BaseTitleItemBar> mDataList = new ArrayList<>();
@@ -267,7 +267,8 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
         mData = getIntent().getParcelableArrayListExtra(EXTRA_CLASS_LIST);
         mTitleTextView.setText(title);
         initToolbar(mToolBar);
-
+        //用户默认没有被禁用.
+        mForbiddenFrameLayout.setVisibility(View.GONE);
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {

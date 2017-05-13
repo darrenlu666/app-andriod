@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.codyy.erpsportal.R;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.BaseHttpFragment;
 import com.codyy.erpsportal.groups.controllers.viewholders.SimpleTextViewHolder;

@@ -25,7 +25,7 @@ import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.groups.controllers.viewholders.FilterChoiceViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.FilterConditionViewHolder;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
-import com.codyy.tpmp.filterlibrary.widgets.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONException;
