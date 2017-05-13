@@ -525,7 +525,7 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
                 leftListview.setEnabled(true);
                 Toast.makeText(mContext, mContext.getResources().getString(R.string.net_error), Toast.LENGTH_SHORT).show();
             }
-        }, this.toString()));
+        }));
     }
 
     /**
@@ -764,7 +764,7 @@ public class FilterFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onDestroy() {
-        mSender.stop(this.toString());
+        mSender.stop();
         super.onDestroy();
     }
 }

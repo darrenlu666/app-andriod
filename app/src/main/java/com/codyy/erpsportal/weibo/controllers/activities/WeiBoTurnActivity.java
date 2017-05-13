@@ -69,7 +69,6 @@ public class WeiBoTurnActivity extends ToolbarActivity {
     private RequestSender mRequestSender;
     private UserInfo mUserInfo;
     private ArrayList<WeiBoSearchPeople> mAtPeople;
-    private Integer mHashTag = this.hashCode();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -192,7 +191,7 @@ public class WeiBoTurnActivity extends ToolbarActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(Throwable error) { }
-        }, mHashTag));
+        }));
     }
 
     @Override
@@ -260,7 +259,7 @@ public class WeiBoTurnActivity extends ToolbarActivity {
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

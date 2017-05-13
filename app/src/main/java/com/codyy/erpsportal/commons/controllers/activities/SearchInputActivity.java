@@ -55,7 +55,6 @@ import butterknife.OnClick;
  * 搜索activity
  */
 public class SearchInputActivity extends Activity implements SearchAdapter.OnHistoryClickListener, ConfigBus.OnModuleConfigListener {
-    private Integer mHashTag = this.hashCode();
 
     private final static String EXTRA_SEARCH_FLAY = "EXTRA_SEARCH_FLAY";
     /**
@@ -385,7 +384,7 @@ public class SearchInputActivity extends Activity implements SearchAdapter.OnHis
                         mRefreshLayout.setRefreshing(false);
                     }
                 }
-            }, mHashTag));
+            }));
         }
     }
 
@@ -436,7 +435,7 @@ public class SearchInputActivity extends Activity implements SearchAdapter.OnHis
 
     @Override
     protected void onDestroy() {
-        mSender.stop(mHashTag);
+        mSender.stop();
         super.onDestroy();
     }
 

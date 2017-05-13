@@ -76,8 +76,6 @@ public class VideoDetailsActivity extends FragmentActivity {
 
     private RequestSender mRequestSender;
 
-    private Object mRequestTag = new Object();
-
     private ResourceDetails mResourceDetails;
 
     private UserInfo mUserInfo;
@@ -259,7 +257,7 @@ public class VideoDetailsActivity extends FragmentActivity {
                 Cog.d(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
             }
-        }, mRequestTag));
+        }));
     }
 
     private void updateDownloadBtn() {
@@ -349,7 +347,7 @@ public class VideoDetailsActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         mVideoView.stop();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

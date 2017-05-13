@@ -150,8 +150,6 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
 
     private RequestSender mRequestSender;
 
-    private Object mRequestTag = new Object();
-
     /**
      * 音频播放控制器
      */
@@ -319,7 +317,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         mPlayController.onDestroy();
     }
 
@@ -458,7 +456,7 @@ public class ParentsResourcesActivity extends AppCompatActivity implements OnLoa
                             }
                         });
                     }
-                }, mRequestTag)
+                })
         );
     }
 

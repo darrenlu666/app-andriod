@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -115,8 +114,6 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
     public static boolean mIsPlayable = false;
 
     private RequestSender mRequestSender;
-
-    private Object mRequestTag = new Object();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,7 +297,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                 }
 //                finish();
             }
-        }, mRequestTag));
+        }));
     }
 
     private void loadClassTourInfo() {
@@ -391,7 +388,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
             }
-        }, mRequestTag));
+        }));
     }
 
     private void setMarginTop(TextView textView) {
@@ -403,7 +400,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
     }
 
     public static void start(Activity activity, TourClassroom classroom, UserInfo userInfo, String type) {

@@ -51,7 +51,7 @@ import java.util.Map;
 import butterknife.Bind;
 
 public class WeiBoPrivateMessageActivity extends ToolbarActivity {
-    private Integer mHashTag = this.hashCode();
+
     public static final String MSG_USERID = "user_id";
     public static final String MSG_NAME = "user_name";
     public static final int FIRST_LOADING = 0x001;
@@ -357,12 +357,12 @@ public class WeiBoPrivateMessageActivity extends ToolbarActivity {
                 mRefreshing = false;
                 mSendable = true;
             }
-        }, mHashTag));
+        }));
     }
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

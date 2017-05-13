@@ -103,8 +103,6 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
 
     private List<CourseProfile> mCourseProfiles;
 
-    private Object mRequestTag = new Object();
-
     private LoadingDialog mLoadingDialog;
 
     @Override
@@ -157,7 +155,7 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
             @Override
             public void onCancel() {
                 Cog.d(TAG, "cancel loading");
-                mRequestSender.stop(mRequestTag);
+                mRequestSender.stop();
             }
         });
     }
@@ -227,7 +225,7 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
                 mLoadingDialog.dismiss();
                 ToastUtil.showToast(ClassStatTableActivity.this, getString(R.string.net_error));
             }
-        }, mRequestTag));
+        }));
     }
 
     /**

@@ -402,7 +402,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                     handleRequestFailure();
                 }
             }
-        },TAG));
+        }));
     }
 
     private void addViewPager() {
@@ -429,23 +429,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
                 mFragmentList, new String[]{getString(R.string.class_detail),getString(R.string.newest_comment)});
         mViewPager.setAdapter(mViewPagerAdapter);
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
+        mTabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
     }
 
     @Override
@@ -569,16 +553,10 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     }
 
     @Override
-    public void open() {
-//        mTabLine.setVisibility(View.GONE);
-//        mTabLineBottom.setVisibility(View.GONE);
-    }
+    public void open() {}
 
     @Override
-    public void close() {
-//        mTabLine.setVisibility(View.VISIBLE);
-//        mTabLineBottom.setVisibility(View.VISIBLE);
-    }
+    public void close() {}
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> fragmentList;
@@ -746,7 +724,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         super.onDestroy();
         if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
         if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy();
-        if(null != mRequestSender) mRequestSender.stop(TAG);
+        if(null != mRequestSender) mRequestSender.stop();
         mHandler.removeCallbacks(mPlayLiveRunnable);
     }
 }

@@ -239,7 +239,7 @@ public class EvaluationsFragment extends BaseRefreshFragment<Assessment> impleme
 
     @Override
     public void onDestroy() {
-        mSender.stop(this.toString());
+        mSender.stop();
         super.onDestroy();
     }
 

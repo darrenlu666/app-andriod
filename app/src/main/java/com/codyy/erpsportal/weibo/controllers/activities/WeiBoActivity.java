@@ -34,7 +34,7 @@ import butterknife.Bind;
  * Created by kmdai on 15-12-24.
  */
 public class WeiBoActivity extends ToolbarActivity {
-    private Integer mHashTag = this.hashCode();
+
     /**
      * 访客
      */
@@ -158,7 +158,7 @@ public class WeiBoActivity extends ToolbarActivity {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        }));
     }
 
     public void loadMSG() {
@@ -186,7 +186,7 @@ public class WeiBoActivity extends ToolbarActivity {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        }));
     }
 
     public static void start(Activity context, int type, String groupID, String userId, String userName) {
@@ -321,9 +321,7 @@ public class WeiBoActivity extends ToolbarActivity {
                 public void onErrorResponse(Throwable error) {
 
                 }
-            }, mHashTag));
-        } else {
-
+            }));
         }
     }
 
@@ -341,7 +339,7 @@ public class WeiBoActivity extends ToolbarActivity {
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 }
