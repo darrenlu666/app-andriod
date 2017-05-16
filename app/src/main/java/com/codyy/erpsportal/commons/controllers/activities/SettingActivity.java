@@ -22,6 +22,7 @@ import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
+import com.codyy.erpsportal.commons.utils.FileUtils;
 import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -441,6 +442,8 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
             boolean result = false;
             if (activity != null)
                 result = activity.deleteDocCache();
+            //清楚二维码.
+            FileUtils.clearBarCode(mRef.get());
             long spendTime = System.currentTimeMillis() - startTime;
             if (spendTime < 500) {
                 try {

@@ -2,8 +2,7 @@ package com.codyy.erpsportal.commons.controllers.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
+import android.graphics.BitmapFactory;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,11 +11,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.codyy.erpsportal.Constants;
 import  com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclingPagerAdapter;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.utils.FileUtils;
+import com.codyy.erpsportal.commons.utils.QRCodeUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -29,9 +29,7 @@ import com.umeng.socialize.utils.ShareBoardlistener;
 import com.viewpagerindicator.CirclePageIndicator;
 import org.json.JSONObject;
 
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.io.File;
 import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -135,10 +133,14 @@ public class BarCodeActivity extends BaseHttpActivity {
             }
         };
 
-        final UMImage imagelocal = new UMImage(this,R.drawable.test_bar_code);
-        new ShareAction(BarCodeActivity.this).setDisplayList(
-                SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE, SHARE_MEDIA.WEIXIN_FAVORITE,
-                SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE
+
+        new ShareAction(BarCodeActivity.this)
+                .setDisplayList(
+                          SHARE_MEDIA.WEIXIN
+                        , SHARE_MEDIA.WEIXIN_CIRCLE
+                        , SHARE_MEDIA.WEIXIN_FAVORITE,
+                          SHARE_MEDIA.QQ
+                        , SHARE_MEDIA.QZONE
                 )
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
@@ -152,9 +154,12 @@ public class BarCodeActivity extends BaseHttpActivity {
                         web.setThumb(new UMImage(BarCodeActivity.this, R.mipmap.ic_launcher));
 
                         if(SHARE_MEDIA.WEIXIN_CIRCLE == snsPlatform.mPlatform){
+                            String filePath = FileUtils.getBarCodePath(mViewPager.getCurrentItem(), BarCodeActivity.this);
+                            File imageFile = new File(filePath);
+                            UMImage imageLocal = new UMImage(BarCodeActivity.this,imageFile);
                             new ShareAction(BarCodeActivity.this)
                                     .withText(url)
-                                    .withMedia(imagelocal)
+                                    .withMedia(imageLocal)
                                     .setPlatform(share_media)
                                     .setCallback(umShareListener)
                                     .share();
@@ -180,7 +185,7 @@ public class BarCodeActivity extends BaseHttpActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        UMShareAPI.get(this).release();
+
     }
 
     class PictureAdapter extends RecyclingPagerAdapter {
@@ -214,16 +219,50 @@ public class BarCodeActivity extends BaseHttpActivity {
                 textView = (TextView) itemView.findViewById(R.id.app_tv);
             }
 
-            public void setData(int position) {
+            public void setData(final int position) {
                 // TODO: 10/05/17 get iamge from api .
                 if(position > 0){
                     textView.setText("iOS");
                 }else{
                     textView.setText("Android");
                 }
+
+                //生成二维码.
+                final String filePath = FileUtils.getBarCodePath(position, BarCodeActivity.this);
+
+                //二维码图片较大时，生成图片、保存文件的时间可能较长，因此放在新线程中
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String url ="http://10.1.10.235/Android/ECSP/2017-05-10_15-15-08/ErpsPortal-train-release.apk";
+                        if(position > 0 ){
+                            url ="http://www.baidu.com";
+                        }
+                        File file = new File(filePath);
+                        boolean success;
+                        if(file != null && file.exists()){
+                            success = true;
+                        }else{
+                            success = QRCodeUtil.createQRImage(url.trim(), 800, 800,
+                                    BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher),
+                                    filePath);
+                        }
+
+                        if (success) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imageView.setImageBitmap(BitmapFactory.decodeFile(filePath));
+                                }
+                            });
+                        }
+                    }
+                }).start();
             }
         }
     }
+
+
 
     /**
      * 启动二维码分享页面.
@@ -237,5 +276,6 @@ public class BarCodeActivity extends BaseHttpActivity {
 
         act.startActivity(intent);
     }
+
 }
 
