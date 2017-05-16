@@ -18,6 +18,10 @@ import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.url.URLConfig;
 import com.codyy.widgets.imagepipeline.ImagePipelineConfigFactory;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.common.QueuedWork;
 
 /**
  * Created by poe on 15-7-20.
@@ -36,7 +40,18 @@ public class EApplication extends MultiDexApplication {
         init();
         initUrlConfigBase();
         registerScreenBroadCast();
+        initUment();
     }
+
+    private void initUment() {
+        UMShareAPI.get(this);
+        QueuedWork.isUseThreadPool = false;
+        Config.DEBUG = true;
+        PlatformConfig.setWeixin("wx80c88ccce1f04718", "bdea572a85a7c5ab41f31fc6f45b352c");
+        PlatformConfig.setQQZone("1106150054", "GrdFQy6ldy7pHyyv");
+
+    }
+
     private ScreenLockChangeReceiver mScreenReceiver ;
     private void registerScreenBroadCast() {
         IntentFilter filter = new IntentFilter();

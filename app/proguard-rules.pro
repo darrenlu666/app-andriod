@@ -130,3 +130,7 @@
 -keepattributes Signature
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+# 分享腾讯
+-keep class com.tencent.mm.sdk.** {
+*;
+}
