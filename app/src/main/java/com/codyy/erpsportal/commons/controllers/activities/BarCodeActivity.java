@@ -78,9 +78,6 @@ public class BarCodeActivity extends BaseHttpActivity {
     private PictureAdapter mAdapter;
     private List<ShareApp> mData;
 
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 0x220;
-
     @Override
     public int obtainLayoutId() {
         return R.layout.activity_bar_code_share;
@@ -131,6 +128,7 @@ public class BarCodeActivity extends BaseHttpActivity {
     @Override
     public void onFailure(Throwable error) throws Exception {
         mHeaderLinearLayout.setVisibility(View.GONE);
+        finish();
     }
 
     @OnClick({R.id.save_tv, R.id.share_tv})
