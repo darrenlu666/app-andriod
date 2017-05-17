@@ -239,7 +239,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
         if (UserInfo.USER_TYPE_STUDENT.equals(mUserInfo.getUserType())) {
             List<ClassCont> contList = new ArrayList<>();
             contList.add(new ClassCont(mUserInfo.getBaseClassId(), mUserInfo.getBaseClassName(), mUserInfo.getClasslevelName()));
-            ClassSpaceActivity.start(getActivity(), "班级空间", mUserInfo.getBaseClassId(), contList);
+            ClassSpaceActivity.start(getActivity(), "班级空间", mUserInfo.getBaseClassId(), contList,mUserInfo);
         } else {
             showClassDialog();
         }
@@ -537,13 +537,13 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
                 public void onItemClicked(View v, int position, String data) {
                     if (mUserInfo.isTeacher()) {
                         if (position < mClassList.size()) {
-                            ClassSpaceActivity.start(getActivity(), "班级空间", mClassList.get(position).getBaseClassId(), mClassList);
+                            ClassSpaceActivity.start(getActivity(), "班级空间", mClassList.get(position).getBaseClassId(), mClassList,mUserInfo);
                         } else {
                             LogUtils.log(TAG + " :" + "班级index越界 {@link PersonActivity: line 148");
                         }
                     } else if (mUserInfo.isParent()) {
                         if (position < mStudents.size()) {
-                            ClassSpaceActivity.start(getActivity(), "班级空间", mStudents.get(position).getClassId(), UserFragmentUtils.constructClassListInfo(mStudents));
+                            ClassSpaceActivity.start(getActivity(), "班级空间", mStudents.get(position).getClassId(), UserFragmentUtils.constructClassListInfo(mStudents),mUserInfo);
                         } else {
                             LogUtils.log(TAG + " :" + "班级index越界 {@link PersonActivity: line 148");
                         }

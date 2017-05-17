@@ -22,7 +22,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
@@ -256,8 +258,33 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mRefreshLayout.setRefreshing(true);
-        requestData(true);
+//        requestData(true);
+        checkForbidden();
+    }
+
+    private void checkForbidden() {
+        HashMap<String,String> param = new HashMap<>();
+        param.put("accountId",mUserInfo.getBaseUserId());
+        param.put("accountType","USER");
+
+        requestData(URLConfig.CHECK_USER_FORBIDDEN, param, true, new IRequest() {
+            @Override
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+                if(!TextUtils.isEmpty(response.toString()) && "true".equals(response.optString("result"))){
+                    mForbiddenFrameLayout.setVisibility(View.GONE);
+                    mRefreshLayout.setRefreshing(true);
+                    requestData(true);
+                }else{
+                    mForbiddenFrameLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onRequestFailure(Throwable error) {
+                mForbiddenFrameLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     public void init() {
@@ -429,11 +456,12 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
      * @param title
      * @param classId
      */
-    public static void start(Context context, String title, String classId, List<ClassCont> classCont) {
+    public static void start(Context context, String title, String classId, List<ClassCont> classCont, UserInfo userInfo) {
         Intent intent = new Intent(context, ClassSpaceActivity.class);
         intent.putExtra(EXTRA_TITLE, title);
         intent.putExtra(EXTRA_CLASS_ID, classId);
         intent.putParcelableArrayListExtra(EXTRA_CLASS_LIST, (ArrayList<? extends Parcelable>) classCont);
+        intent.putExtra(Constants.USER_INFO,userInfo);
         context.startActivity(intent);
         UIUtils.addEnterAnim((Activity) context);
     }
