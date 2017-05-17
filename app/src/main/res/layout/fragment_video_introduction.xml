@@ -21,7 +21,7 @@
 
             <TextView
                 android:id="@+id/tv_grade"
-                style="@style/collective_prepare_lesson_detail_value_text_no_single_line"
+                style="@style/video_details_content_multi_lines"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="一年级 二年级 一年级 二年级 一年级 二年级 一年级 二年级 "
