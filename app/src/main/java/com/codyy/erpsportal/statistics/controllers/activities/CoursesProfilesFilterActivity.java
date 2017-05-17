@@ -223,7 +223,6 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }
         mTitle = intent.getStringExtra(EXTRA_TITLE);
         mFilterCarrier = intent.getParcelableExtra(EXTRA_IN_FILTER);
-//        mInsetTermIndex = mFilterTypeRg.indexOfChild(mSelectSubjectTv);
     }
 
     private void initViews() {
@@ -537,6 +536,8 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }
     }
 
+    private long mLastTime;
+
     @OnClick({R.id.ib_previous_week, R.id.ib_next_week, R.id.ib_previous_month, R.id.ib_next_month, R.id.btn_specific_date_begin, R.id.btn_specific_date_end })
     public void onClick(View view) {
         switch (view.getId()) {
@@ -557,35 +558,43 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                 plusMonth();
                 break;
             case R.id.btn_specific_date_begin: {
-                String beginDateStr = mSpecificDateBeginBtn.getText().toString();
-                String endDateStr = mSpecificDateEndBtn.getText().toString();
-                LocalDate defaultDate = null;
-                LocalDate endDate = null;
-                if (!TextUtils.isEmpty(endDateStr)) {
-                    endDate = parseToDate(endDateStr);
+                long currTime = System.currentTimeMillis();
+                if (currTime - mLastTime > 500L) {
+                    String beginDateStr = mSpecificDateBeginBtn.getText().toString();
+                    String endDateStr = mSpecificDateEndBtn.getText().toString();
+                    LocalDate defaultDate = null;
+                    LocalDate endDate = null;
+                    if (!TextUtils.isEmpty(endDateStr)) {
+                        endDate = parseToDate(endDateStr);
+                    }
+                    if (!TextUtils.isEmpty(beginDateStr)) {
+                        defaultDate = parseToDate(beginDateStr);
+                    }
+                    DayPickerDialog beginDayPickerDialog = DayPickerDialog.newInstance(null, endDate, defaultDate);
+                    beginDayPickerDialog.setOnConfirmListener(mOnBeginDateConfirmListener);
+                    beginDayPickerDialog.show(getSupportFragmentManager(), "begin");
                 }
-                if (!TextUtils.isEmpty(beginDateStr)) {
-                    defaultDate = parseToDate(beginDateStr);
-                }
-                DayPickerDialog beginDayPickerDialog = DayPickerDialog.newInstance(null, endDate, defaultDate);
-                beginDayPickerDialog.setOnConfirmListener(mOnBeginDateConfirmListener);
-                beginDayPickerDialog.show(getSupportFragmentManager(), "begin");
+                mLastTime = currTime;
                 break;
             }
             case R.id.btn_specific_date_end: {
-                String beginDateStr = mSpecificDateBeginBtn.getText().toString();
-                String endDateStr = mSpecificDateEndBtn.getText().toString();
-                LocalDate defaultDate = null;
-                LocalDate beginDate = null;
-                if (!TextUtils.isEmpty(beginDateStr)) {
-                    beginDate = parseToDate(beginDateStr);
+                long currTime = System.currentTimeMillis();
+                if (currTime - mLastTime > 500L) {
+                    String beginDateStr = mSpecificDateBeginBtn.getText().toString();
+                    String endDateStr = mSpecificDateEndBtn.getText().toString();
+                    LocalDate defaultDate = null;
+                    LocalDate beginDate = null;
+                    if (!TextUtils.isEmpty(beginDateStr)) {
+                        beginDate = parseToDate(beginDateStr);
+                    }
+                    if (!TextUtils.isEmpty(endDateStr)) {
+                        defaultDate = parseToDate(endDateStr);
+                    }
+                    DayPickerDialog endDayPickerDialog = DayPickerDialog.newInstance(beginDate, LocalDate.now(), defaultDate);
+                    endDayPickerDialog.setOnConfirmListener(mOnEndDateConfirmListener);
+                    endDayPickerDialog.show(getSupportFragmentManager(), "end");
                 }
-                if (!TextUtils.isEmpty(endDateStr)) {
-                    defaultDate = parseToDate(endDateStr);
-                }
-                DayPickerDialog endDayPickerDialog = DayPickerDialog.newInstance(beginDate, LocalDate.now(), defaultDate);
-                endDayPickerDialog.setOnConfirmListener(mOnEndDateConfirmListener);
-                endDayPickerDialog.show(getSupportFragmentManager(), "end");
+                mLastTime = currTime;
                 break;
             }
         }
