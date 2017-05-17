@@ -130,11 +130,11 @@ public class GroupManagerActivity extends BaseHttpActivity implements HttpGetInt
                       FilterConstants.LEVEL_AREA       //省
                     , FilterConstants.LEVEL_CLASS_SEMESTER //学段
                     , FilterConstants.LEVEL_SCHOOL     //学校
-                    , FilterConstants.LEVEL_CLASS_TEAM//年级
+                    , FilterConstants.LEVEL_CLASS_TEAM//组别
             };
         }else{
             filters = new int[]{
-                      FilterConstants.LEVEL_CLASS_TEAM     //学校
+                      FilterConstants.LEVEL_CLASS_TEAM     //组别
                     , FilterConstants.LEVEL_MANAGER_STATE//状态
             };
         }
