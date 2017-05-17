@@ -11,13 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.SimpleFragmentAdapter;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.GroupManagerFilterFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.NetTeachFilterFragment;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -26,6 +22,9 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.CodyyViewPager;
 import com.codyy.erpsportal.onlineteach.controllers.fragments.OnlineTeachFragment;
+import com.codyy.tpmp.filterlibrary.entities.FilterConstants;
+import com.codyy.tpmp.filterlibrary.fragments.CommentFilterFragment;
+import com.codyy.tpmp.filterlibrary.interfaces.HttpGetInterface;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
@@ -33,6 +32,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 
@@ -40,7 +40,7 @@ import butterknife.Bind;
  * 应用-网络授课
  * Created by poe on 16-6-20.
  */
-public class OnlineTeachActivity extends BaseHttpActivity {
+public class OnlineTeachActivity extends BaseHttpActivity implements HttpGetInterface{
     private static final String TAG = "OnlineTeachActivity";
     @Bind(R.id.toolbar)Toolbar mToolBar;
     @Bind(R.id.toolbar_title)TextView mTitleTextView;
@@ -48,8 +48,8 @@ public class OnlineTeachActivity extends BaseHttpActivity {
     @Bind(R.id.tab_layout)TabLayout mTabLayout;
     @Bind(R.id.vp_group)CodyyViewPager mViewPager;
     @Bind(R.id.drawer_layout)DrawerLayout mDrawerLayout;
-    private NetTeachFilterFragment mFilterFragment ;
-    private NetTeachFilterFragment mAreaFilterFragment ;
+    private CommentFilterFragment mFilterFragment ;
+    private CommentFilterFragment mAreaFilterFragment ;
     /**
      * {辖区内的圈组/校内圈组/我的圈组}
      */
@@ -97,9 +97,10 @@ public class OnlineTeachActivity extends BaseHttpActivity {
         mListFragments = makeTabs();
         mAdapter = new SimpleFragmentAdapter<>(getSupportFragmentManager(),mListFragments);
         mViewPager.setAdapter(mAdapter);
+        //默认筛选.
         crateMyFilter();
 
-        mDrawerLayout.setDrawerListener(new DrawerLayout.SimpleDrawerListener(){
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
             public void onDrawerStateChanged(int newState) {
                 super.onDrawerStateChanged(newState);
@@ -215,10 +216,17 @@ public class OnlineTeachActivity extends BaseHttpActivity {
      */
     private void crateMyFilter() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        mFilterFragment = new NetTeachFilterFragment();
-        Bundle bd = new Bundle();
-        bd.putString(GroupManagerFilterFragment.EXTRA_TYPE, GroupManagerFilterFragment.TYPE_FILTER_NET_TEACH);
-        mFilterFragment.setArguments(bd);
+        if(mFilterFragment == null){
+            mFilterFragment = CommentFilterFragment.newInstance(mUserInfo.getUuid()
+                    ,mUserInfo.getUserType()
+                    ,mUserInfo.getBaseAreaId()
+                    ,mUserInfo.getSchoolId()
+                    ,new int[]{
+                            FilterConstants.LEVEL_CLASS_LEVEL//年级
+                            ,FilterConstants.LEVEL_CLASS_SUBJECT//学科
+                            ,FilterConstants.LEVEL_CLASS_STATE//状态
+                    });
+        }
         ft.replace(R.id.fl_filter, mFilterFragment);
         ft.commitAllowingStateLoss();
     }
@@ -229,10 +237,17 @@ public class OnlineTeachActivity extends BaseHttpActivity {
         //2.筛选－＂区内课程管理＂
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if(mAreaFilterFragment == null){
-            mAreaFilterFragment = new NetTeachFilterFragment();
-            Bundle bd = new Bundle();
-            bd.putString(GroupManagerFilterFragment.EXTRA_TYPE, GroupManagerFilterFragment.TYPE_FILTER_NET_TEACH_AREA_MANAGER);
-            mAreaFilterFragment.setArguments(bd);
+            mAreaFilterFragment = CommentFilterFragment.newInstance(mUserInfo.getUuid()
+                    ,mUserInfo.getUserType()
+                    ,mUserInfo.getBaseAreaId()
+                    ,mUserInfo.getSchoolId()
+                    ,new int[]{
+                              FilterConstants.LEVEL_AREA            //省
+                            , FilterConstants.LEVEL_SCHOOL          //学校
+                            , FilterConstants.LEVEL_CLASS_LEVEL     //年级
+                            , FilterConstants.LEVEL_CLASS_SUBJECT   //学科
+                            , FilterConstants.LEVEL_CLASS_STATE     //状态
+                    });
         }
         ft.replace(R.id.fl_filter, mAreaFilterFragment);
         ft.commitAllowingStateLoss();
@@ -263,5 +278,20 @@ public class OnlineTeachActivity extends BaseHttpActivity {
         Intent intent = new Intent(from , OnlineTeachActivity.class);
         from.startActivity(intent);
         UIUtils.addEnterAnim(from);
+    }
+
+    @Override
+    public void sendRequest(String url, Map<String, String> param, final Listener listener, final ErrorListener errorListener) {
+        requestData(url, (HashMap<String, String>) param, false, new IRequest() {
+            @Override
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+                if(null != listener) listener.onResponse(response);
+            }
+
+            @Override
+            public void onRequestFailure(Throwable error) {
+                if(null != errorListener) errorListener.onErrorResponse(error);
+            }
+        });
     }
 }

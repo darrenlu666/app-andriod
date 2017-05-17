@@ -52,7 +52,7 @@ import java.util.List;
  * Created by poe on 16-4-25.
  */
 public class CommentFilterFragment extends Fragment {
-    private static final String TAG = "BaseFilterFragment";
+    private static final String TAG = "CommentFilterFragment";
     RecyclerView mConditionRecyclerView;
     RecyclerView mChoiceRecyclerView;
     /**
@@ -362,6 +362,11 @@ public class CommentFilterFragment extends Fragment {
      * @param currentModule
      */
     private void executeLeftAreaClick(int position, FilterCell fe, FilterModule currentModule) {
+        //update the next module param . {if (type == COMPLEX)}
+        //  04/05/17 ~~更换区域需要更新余下的filterParam.areaId~~
+        currentModule.setSelectedId(fe.getId());
+        updateNextCondition(currentModule);
+        //跳转.
         currentModule.onChildrenClick(position, fe, new DataBuilder.BuildListener<List<FilterCell>>() {
 
             @Override
@@ -400,9 +405,7 @@ public class CommentFilterFragment extends Fragment {
                 mChoiceAdapter.setEnable(true);
             }
         });
-        //update the next module param . {if (type == COMPLEX)}
-        //  04/05/17 ~~更换区域需要更新余下的filterParam.areaId~~
-        updateNextCondition(currentModule);
+
     }
 
     /**
