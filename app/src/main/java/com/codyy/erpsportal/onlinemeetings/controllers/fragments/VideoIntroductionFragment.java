@@ -61,13 +61,14 @@ public class VideoIntroductionFragment extends Fragment {
     }
 
     public void setVideoDetails(MeetDetail meetDetail, EvaluationScore score) {
-        // TODO: 10/05/17 显示多个年级信息
-        if(TextUtils.isEmpty(meetDetail.getClassLevelName())){
-            if(ActivityThemeActivity.EVALUATION_LESSON != type){
-                mTvGrade.setText("不限");
-            }
+        if(TextUtils.isEmpty(meetDetail.getClassLevelName())||"不限年级".equals(meetDetail.getClassLevelName())){
+            mTvGrade.setText("不限");
         }else{
-            mTvGrade.setText( meetDetail.getClassLevelName());
+            String levels = meetDetail.getClassLevelName();
+            if(levels.contains(",")){
+                levels = levels.replace(","," ");
+            }
+            mTvGrade.setText(levels);
         }
 
         mTvSubject.setText( meetDetail.getSubjectName());
