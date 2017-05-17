@@ -2219,8 +2219,8 @@ public class URLConfig {
     /**
      * 移动端的二维码信息 .
      */
-//    @UrlSuffix("app/version/getShareVersionList.do")
-    public static String GET_MOBILE_SHARE_BAR_CODE = "http://10.1.80.22:8080/mobile/app/version/getShareVersionList.do";
+    @UrlSuffix("app/version/getShareVersionList.do")
+    public static String GET_MOBILE_SHARE_BAR_CODE ;//= "http://10.1.80.22:8080/mobile/app/version/getShareVersionList.do";
 
     /**
      * poe add

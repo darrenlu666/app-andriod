@@ -28,6 +28,7 @@ import com.codyy.erpsportal.commons.models.personal.ShareApp;
 import com.codyy.erpsportal.commons.models.personal.ShareParse;
 import com.codyy.erpsportal.commons.utils.FileUtils;
 import com.codyy.erpsportal.commons.utils.ImageUtils;
+import com.codyy.erpsportal.commons.utils.PermissionUtils;
 import com.codyy.erpsportal.commons.utils.QRCodeUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.url.URLConfig;
@@ -41,11 +42,8 @@ import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 import com.viewpagerindicator.CirclePageIndicator;
-
 import org.json.JSONObject;
-
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -79,10 +77,7 @@ public class BarCodeActivity extends BaseHttpActivity {
     CirclePageIndicator mIndicator;
     private PictureAdapter mAdapter;
     private List<ShareApp> mData;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+
     // Storage Permissions
     private static final int REQUEST_EXTERNAL_STORAGE = 0x220;
 
@@ -106,7 +101,7 @@ public class BarCodeActivity extends BaseHttpActivity {
 
     @Override
     public void init() {
-
+        mShareAPI = UMShareAPI.get(this);
         //get data .
         requestData(true);
     }
@@ -142,12 +137,7 @@ public class BarCodeActivity extends BaseHttpActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.save_tv:
-                if (Build.VERSION.SDK_INT >= 23) {
-                    verifyStoragePermissions();
-                } else {
-                    savePicToSystem();
-                }
-
+                PermissionUtils.verifyStoragePermissions(BarCodeActivity.this , mSaveTv,mPermissionInterface);
                 break;
             case R.id.share_tv:
                 shareApp();
@@ -155,43 +145,17 @@ public class BarCodeActivity extends BaseHttpActivity {
         }
     }
 
-    /**
-     * Checks if the app has permission to write to device storage
-     * If the app does not has permission then the user will be prompted to grant permissions
-     */
-    public void verifyStoragePermissions() {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(BarCodeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(BarCodeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Snackbar.make(mViewPager, "申请SD卡查看权限！", Snackbar.LENGTH_INDEFINITE).setAction("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityCompat.requestPermissions(BarCodeActivity.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-                    }
-                }).show();
-            } else {
-                // We don't have permission so prompt the user
-                ActivityCompat.requestPermissions(BarCodeActivity.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-            }
-        } else {
+    private PermissionUtils.PermissionInterface mPermissionInterface = new PermissionUtils.PermissionInterface() {
+        @Override
+        public void next() {
             savePicToSystem();
         }
-    }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE:
-                if (ActivityCompat.checkSelfPermission(BarCodeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    //do nothing ．．．　ｏｒ
-                    savePicToSystem();
-                }
-                break;
-        }
+        PermissionUtils.onRequestPermissionsResult(requestCode,BarCodeActivity.this,mPermissionInterface);
     }
 
     /**
@@ -220,14 +184,13 @@ public class BarCodeActivity extends BaseHttpActivity {
                 });
     }
 
-    UMShareAPI mShareAPI = UMShareAPI.get(this);
+    UMShareAPI mShareAPI ;
     private ShareAction mShareAction;
 
     /**
      * 分享app.
      */
     private void shareApp() {
-
         if (null == mShareAction) {
             mShareAction = new ShareAction(BarCodeActivity.this);
             //weixin
@@ -256,7 +219,6 @@ public class BarCodeActivity extends BaseHttpActivity {
                          SHARE_MEDIA.QZONE
                 );
             }
-
         }
         mShareAction
                 .setShareboardclickCallback(new ShareBoardlistener() {

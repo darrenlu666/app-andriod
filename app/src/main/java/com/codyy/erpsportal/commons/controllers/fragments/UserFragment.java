@@ -29,6 +29,8 @@ import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.BarCodeActivity;
+import com.codyy.erpsportal.commons.utils.NetworkUtils;
+import com.codyy.erpsportal.commons.utils.PermissionUtils;
 import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
@@ -83,14 +85,6 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     private static final int REQUEST_CROP_PIC = 3;
     private static final int REQUEST_GET_IMAGE_FROM = 4;
     private static final int REQUEST_CHOOSE_FROM_GALLERY = 5;
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 0x220;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
-
     @Bind(R.id.sdv_my_head_icon)  SimpleDraweeView mSimpleDraweeView;
     @Bind(R.id.tv__my_name)   TextView mNameTextView;
     @Bind(R.id.lin_class_namespace)    LinearLayout mClassSpaceLinearLayout;//class space .
@@ -449,11 +443,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     @OnClick(R.id.sdv_my_head_icon)
     void userIconClick() {
         if (isAdmin()) {
-            if(Build.VERSION.SDK_INT>=23){
-                verifyStoragePermissions();
-            }else{
-                showBSDialog();
-            }
+            PermissionUtils.verifyStorageCameraPermissions(getActivity(),mSimpleDraweeView,mPermissionInterface);
         }
     }
 
@@ -461,13 +451,15 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
      * Checks if the app has permission to write to device storage
      * If the app does not has permission then the user will be prompted to grant permissions
      */
-    public  void verifyStoragePermissions() {
+    /*public void verifyStoragePermissions() {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permissionCamera = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
+        if (permission != PackageManager.PERMISSION_GRANTED || permissionCamera != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.CAMERA)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.CAMERA)||
+                    ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.WRITE_EXTERNAL_STORAGE) ) {
                 Snackbar.make(mSimpleDraweeView , "申请SD卡查看权限！",Snackbar.LENGTH_INDEFINITE).setAction("OK",new View.OnClickListener(){
                     @Override
                     public void onClick(View v) {
@@ -481,19 +473,27 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
         }else{
             showBSDialog();
         }
-    }
+    }*/
+
+    private PermissionUtils.PermissionInterface mPermissionInterface = new PermissionUtils.PermissionInterface() {
+        @Override
+        public void next() {
+            showBSDialog();
+        }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        /*switch (requestCode){
             case REQUEST_EXTERNAL_STORAGE:
                 if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     //do nothing ．．．　ｏｒ
                     showBSDialog();
                 }
                 break;
-        }
+        }*/
+        PermissionUtils.onRequestPermissionsResult(requestCode,getActivity(),mPermissionInterface);
     }
 
     private void showBSDialog() {
@@ -647,7 +647,11 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
                 UIUtils.addEnterAnim(getActivity());
                 break;
             case R.id.tv_bar_code://二维码
-                BarCodeActivity.start(getActivity(),mUserInfo);
+                if(NetworkUtils.isConnected()){
+                    BarCodeActivity.start(getActivity(),mUserInfo);
+                }else{
+                    ToastUtil.showSnake(getString(R.string.net_error),mNameTextView);
+                }
                 break;
             default:
                 ToastUtil.showToast("暂未实现");
