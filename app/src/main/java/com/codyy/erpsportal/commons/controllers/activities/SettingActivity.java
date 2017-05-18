@@ -298,6 +298,7 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
             @Override
             public void onRequestFailure(Throwable error) {
                 Cog.d(TAG, "+fetchLatestVersion error:" + error);
+                error.printStackTrace();
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
                 dismissCheckUpdateDialog();
             }
