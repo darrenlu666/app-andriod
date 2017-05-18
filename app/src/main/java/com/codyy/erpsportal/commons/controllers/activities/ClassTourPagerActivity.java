@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -195,9 +196,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
         });
 
         TextView mainTeacherLbTv = (TextView) findViewById(R.id.lb_main_teacher);
-        TextView receivingTeacherLbTv = (TextView) findViewById(R.id.tv_lb_receiving_teacher);
         mainTeacherLbTv.setText(getString(R.string.teacher_type_lb, Titles.sMasterTeacher));
-        receivingTeacherLbTv.setText(getString(R.string.teacher_type_lb, Titles.sCoachTeacher));
+        mTvLbReceivingTeacher.setText(getString(R.string.teacher_type_lb, Titles.sCoachTeacher));
     }
 
     private void updateViewPager() {
@@ -456,6 +456,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
 //            TextView mTitleTv = (TextView) view.findViewById(R.id.txtTitleOfLiveVideoPlay);
             final BnVideoLayout2 videoLayout = (BnVideoLayout2) view.findViewById(R.id.bnVideoViewOfLiveVideoLayout);
             videoLayout.setVolume(100);
+            videoLayout.getVideoView().setBackgroundColor(Color.TRANSPARENT);
             videoLayout.setOnSurfaceChangeListener(new BnVideoView2.OnSurfaceChangeListener() {
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
