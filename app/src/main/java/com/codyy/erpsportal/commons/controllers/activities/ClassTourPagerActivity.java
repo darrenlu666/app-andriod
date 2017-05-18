@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -48,6 +47,7 @@ import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.models.parsers.ClassTourClassroomNewParser;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.NumberUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
@@ -90,7 +90,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
     private ViewPager mViewPager;
     private DrawerLayout mDrawerLayout;
     private Button mClassInfoBtn;
-    private TextView mTvGrade, mTvSubject, mTvWeek, mTvCourseNum, mTvMainTeacher, mTvLbWeek;
+    private TextView mTvGrade, mTvSubject, mTvWeek, mTvCourseNum, mTvMainTeacher, mTvLbWeek, mTvLbReceivingTeacher;
     private LinearLayout mLlReceiverTeacher;
     private UserInfo mUserInfo;
 
@@ -155,6 +155,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
         mTvCourseNum = (TextView) findViewById(R.id.tv_course_number);
         mTvMainTeacher = (TextView) findViewById(R.id.tv_main_teacher);
         mTvLbWeek = (TextView) findViewById(R.id.tv_lb_week);
+        mTvLbReceivingTeacher = (TextView) findViewById(R.id.tv_lb_receiving_teacher);
         mLlReceiverTeacher = (LinearLayout) findViewById(R.id.ll_receiving_teachers);
 
         mReturnIb.setOnClickListener(new OnClickListener() {
@@ -327,7 +328,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                 mTvGrade.setText(detailBean.getClasslevelName());
                                 mTvSubject.setText(detailBean.getSubjectName());
                                 mTvWeek.setText(TextUtils.isEmpty(detailBean.getWeekSeq()) ? "" : "第" + detailBean.getWeekSeq() + "周");
-                                mTvCourseNum.setText(TextUtils.isEmpty(detailBean.getClassSeq()) ? "" : "第" + detailBean.getClassSeq() + "节");
+                                String[] numArr = getResources().getStringArray(R.array.numbers);
+                                mTvCourseNum.setText(TextUtils.isEmpty(detailBean.getClassSeq()) ? "" : "第" + numArr[NumberUtils.intOf(detailBean.getClassSeq())] + "节");
                                 mTvMainTeacher.setText(TextUtils.isEmpty(detailBean.getTeacherMobile()) ? detailBean.getTeacherName() : detailBean.getTeacherName() + "(" + detailBean.getTeacherMobile() + ")");
                                 if (detailBean.getReceiveTeacherList() != null && detailBean.getReceiveTeacherList().size() > 0) {
                                     for (int i = 0; i < detailBean.getReceiveTeacherList().size(); i++) {
@@ -347,6 +349,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                         }
                                         mLlReceiverTeacher.addView(textView);
                                     }
+                                } else {
+                                    mTvLbReceivingTeacher.setVisibility(View.GONE);
                                 }
                             }
                         }
@@ -361,7 +365,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                             mTvSubject.setText(info.getSubjectName());
                             mTvLbWeek.setVisibility(View.GONE);
                             mTvWeek.setVisibility(View.GONE);
-                            mTvCourseNum.setText("第" + info.getClassSeq() + "节");
+                            String[] numArr = getResources().getStringArray(R.array.numbers);
+                            mTvCourseNum.setText("第" + numArr[NumberUtils.intOf(info.getClassSeq())] + "节");
                             mTvMainTeacher.setText(TextUtils.isEmpty(info.getContact()) ? info.getSpeakUserName() : info.getSpeakUserName() + "(" + info.getContact() + ")");
                             if (info.getReceiveList() != null && info.getReceiveList().size() > 0) {
                                 for (int i = 0; i < info.getReceiveList().size(); i++) {
@@ -379,6 +384,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                     }
                                     mLlReceiverTeacher.addView(textView);
                                 }
+                            } else {
+                                mTvLbReceivingTeacher.setVisibility(View.GONE);
                             }
                         }
                     } catch (JsonSyntaxException e) {
