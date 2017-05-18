@@ -805,4 +805,6 @@
     <string name="new_version_detected_please_update">检测到新版本\n请下载更新</string>
     <string name="new_version_detected_do_update">检测到有新版本\n是否立即下载更新？</string>
     <string name="new_version_downloading">新版本下载中\n请稍后…</string>
+    <string name="bar_save">保存</string>
+    <string name="bar_share_str">分享</string>
 </resources>
