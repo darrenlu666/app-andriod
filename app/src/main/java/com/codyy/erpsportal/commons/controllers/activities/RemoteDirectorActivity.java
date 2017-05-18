@@ -1576,6 +1576,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
         Cog.d(TAG, mConfig.getMainStreamUrl());
         if (!mBnVideoLayout.isPlaying() && !mBnVideoLayout.isUrlEmpty()) {
             mBnVideoLayout.play();
+            mBnVideoLayout.setVolume(100);
             Cog.d(TAG, "---mBnVideoLayout.play");
         }
     }

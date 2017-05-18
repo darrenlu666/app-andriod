@@ -2898,8 +2898,6 @@ public class URLConfig {
     @UrlSuffix("mobile/malfunction/addAppend.do")
     public static String MAKE_DETAILED_INQUIRY;
 
-
-
     static {
         UrlBuilder.updateUrls();
     }

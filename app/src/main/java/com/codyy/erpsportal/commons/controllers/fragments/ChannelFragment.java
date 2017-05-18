@@ -21,6 +21,7 @@ import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.LoadingHandler;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.ChannelTab;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;

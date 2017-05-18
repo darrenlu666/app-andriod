@@ -11,6 +11,7 @@ public class MMImageBean implements Parcelable {
 
     private String path = null;
     private boolean isSelected = false;
+    private boolean selectable = true;
     private String thumbnails = null;
 
     public MMImageBean(String path, boolean selected, String thumbnails) {
@@ -67,6 +68,7 @@ public class MMImageBean implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.path);
         dest.writeByte(isSelected ? (byte) 1 : (byte) 0);
+        dest.writeByte(selectable ? (byte) 1 : (byte) 0);
         dest.writeString(this.thumbnails);
     }
 
@@ -88,6 +90,7 @@ public class MMImageBean implements Parcelable {
     protected MMImageBean(Parcel in) {
         this.path = in.readString();
         this.isSelected = in.readByte() != 0;
+        this.selectable = in.readByte() != 0;
         this.thumbnails = in.readString();
     }
 
@@ -108,5 +111,13 @@ public class MMImageBean implements Parcelable {
                 ", path='" + path + '\'' +
                 ", thumbnails='" + thumbnails + '\'' +
                 '}';
+    }
+
+    public boolean isSelectable() {
+        return selectable;
+    }
+
+    public void setSelectable(boolean selectable) {
+        this.selectable = selectable;
     }
 }

@@ -115,13 +115,23 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
      * @param areaId 地区筛选根级，无需地区筛选的传null
      * @return 筛选碎片
      */
-    public static BaseFilterFragment newInstance(AreaInfo areaInfo, String areaId) {
+    public static BaseFilterFragment newInstance(@Nullable AreaInfo areaInfo, @Nullable String areaId) {
         BaseFilterFragment fragment = new BaseFilterFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ARG_AREA_INFO, areaInfo);
+        if (areaInfo != null) {
+            bundle.putParcelable(ARG_AREA_INFO, areaInfo);
+        }
         if (!TextUtils.isEmpty(areaId)) {
             bundle.putString(ARG_AREA_ID, areaId);
         }
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static BaseFilterFragment newInstance(@NonNull String areaId) {
+        BaseFilterFragment fragment = new BaseFilterFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_AREA_ID, areaId);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -137,6 +147,7 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
         }
         return newInstance(areaInfo, areaId);
     }
+
 
     public static BaseFilterFragment newInstance(UserInfo userInfo) {
         if (userInfo.isArea()) {
@@ -403,7 +414,7 @@ public class BaseFilterFragment extends Fragment implements FilterParamsProvider
      */
     protected void initOptionItems() {
         List<FilterItem> items = new ArrayList<>();
-        if (mInitFilterItem != null) { //有初始地区筛选数据，无需请求，直接天骄
+        if (mInitFilterItem != null) { //有初始地区筛选数据，无需请求，直接添加
             items.add(mInitFilterItem);
             mOptionsLv.setItemChecked(0 ,true);
             updateChoices(mInitFilterItem, mInitFilterItem.getChoices());

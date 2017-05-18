@@ -27,11 +27,10 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity.ClassroomViewHolder;
+import com.codyy.erpsportal.commons.controllers.fragments.BaseFilterFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.Builder;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.ListExtractor;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.BaseFilterFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.NetTeachFilterFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingCommonRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
@@ -47,22 +46,16 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.TitleBar;
 import com.codyy.erpsportal.commons.widgets.components.FilterButton;
+import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
 import com.codyy.url.URLConfig;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.cache.disk.FileCache;
-import com.facebook.common.internal.Supplier;
-import com.facebook.common.references.CloseableReference;
-import com.facebook.datasource.AbstractDataSource;
-import com.facebook.datasource.BaseDataSubscriber;
-import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.image.CloseableImage;
-import com.facebook.imagepipeline.request.ImageRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -74,7 +67,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -124,11 +117,11 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     @Bind(R.id.tv_empty)
     TextView mEmptyTv;
 
-    private NetTeachFilterFragment mFilterFragment ;
+    private BaseFilterFragment mFilterFragment ;
 
 //    private LiveFilterFragment mLiveFilterFragment;
 
-    private Bundle mBundleFilter = null;
+    private Map<String,String> mFilterParams = null;
 
     private boolean mHasScreenshot;
 
@@ -180,14 +173,13 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
      */
     private void createFilter() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        mFilterFragment = new NetTeachFilterFragment();
-        Bundle bd = new Bundle();
+        mFilterFragment = null;
         if(mUserInfo.isArea()){
-            bd.putString(BaseFilterFragment.EXTRA_TYPE, BaseFilterFragment.TYPE_FILTER_LIVE_WATCH_AREA);
+            mFilterFragment = BaseFilterFragment.newInstance(mUserInfo.getBaseAreaId());
         }else{
-            bd.putString(BaseFilterFragment.EXTRA_TYPE, BaseFilterFragment.TYPE_FILTER_LIVE_WATCH_SCHOOL);
+            AreaInfo areaInfo = new AreaInfo(mUserInfo);
+            mFilterFragment = BaseFilterFragment.newInstance(areaInfo, null);
         }
-        mFilterFragment.setArguments(bd);
         ft.replace(R.id.fl_filter, mFilterFragment);
         ft.commitAllowingStateLoss();
     }
@@ -218,7 +210,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     @OnClick(R.id.btn_filter)
     public void onFilterBtnClick(View view) {
         if (mFilterBtn.isFiltering()) {
-            mBundleFilter = mFilterFragment.getFilterData();
+            mFilterParams = mFilterFragment.acquireFilterParams();
             loadData();
             mDrawerLayout.closeDrawer(GravityCompat.END);
         } else {
@@ -274,20 +266,24 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
     //default search
     private void loadData() {
-        if (mBundleFilter != null) {
-            loadData(obtainParam("areaId"), obtainParam("directSchoolId"), obtainParam("class"), obtainParam("subject"), mBundleFilter.getBoolean("hasDirect"));
+        if (mFilterParams != null) {
+            loadData(obtainParam("baseAreaId"),
+                    obtainParam("schoolId"),
+                    obtainParam("classLevelId"),
+                    obtainParam("subjectId"),
+                    "true".equals(mFilterParams.get("isDirect")));
         } else {
             loadData(null, null, null, null, false);
         }
     }
 
     private String obtainParam(String key) {
-        return mBundleFilter.getString(key);
+        return mFilterParams.get(key);
     }
 
     /**
      * 加载课堂巡视
-     *  @param areaId       地区id
+     * @param areaId       地区id
      * @param schoolId     学校id
      * @param classLevelId 年级id
      * @param subjectId    学科id
@@ -327,7 +323,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
     @Override
     public String getUrl() {
-        String url = null;
+        String url;
         if (TYPE_SPECIAL_DELIVERY_CLASSROOM.equals(mType)) {
             url = URLConfig.SPECIAL_MONITOR_CLASSROOM;
         } else {
@@ -496,81 +492,12 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     }
 
     public static class Status {
-        public Status() {
-            this.sourceSupplier = new MyDataSourceSupplier();
-        }
-        boolean isParent;
+        public Status() { }
         boolean showThumb;
-        MyDataSourceSupplier sourceSupplier;
     }
 
     @Target(ElementType.PARAMETER)
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({TYPE_SPECIAL_DELIVERY_CLASSROOM, TYPE_SCHOOL_NET})
     @interface TourType {}
-
-    static class MyDataSourceSupplier implements Supplier<DataSource<CloseableReference<CloseableImage>>> {
-
-        private Uri mCurrentUri;
-        private MyDataSource mCurrentDataSource;
-
-        public void setUri(Uri uri) {
-            mCurrentUri = uri;
-            if (mCurrentDataSource != null) {
-                mCurrentDataSource.setUri(mCurrentUri);
-            }
-        }
-
-        @Override
-        public DataSource<CloseableReference<CloseableImage>> get() {
-            mCurrentDataSource = new MyDataSource();
-            mCurrentDataSource.setUri(mCurrentUri);
-            return mCurrentDataSource;
-        }
-
-        private class MyDataSource extends AbstractDataSource<CloseableReference<CloseableImage>> {
-            private DataSource mUnderlyingDataSource;
-
-            @Override
-            protected void closeResult(CloseableReference<CloseableImage> result) {
-                CloseableReference.closeSafely(result);
-            }
-
-            @Override
-            public CloseableReference<CloseableImage> getResult() {
-                return CloseableReference.cloneOrNull(super.getResult());
-            }
-
-
-            @Override
-            public boolean close() {
-                if (mUnderlyingDataSource != null) {
-                    mUnderlyingDataSource.close();
-                    mUnderlyingDataSource = null;
-                }
-                return super.close();
-            }
-
-            public void setUri(Uri uri) {
-                if (mUnderlyingDataSource != null) {
-                    mUnderlyingDataSource.close();
-                    mUnderlyingDataSource = null;
-                }
-                if (uri != null && !isClosed()) {
-                    mUnderlyingDataSource = Fresco.getImagePipeline().fetchDecodedImage(ImageRequest.fromUri(uri), null);
-                    mUnderlyingDataSource.subscribe(new BaseDataSubscriber<CloseableReference<CloseableImage>>() {
-                        @Override
-                        protected void onNewResultImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
-                            MyDataSource.super.setResult(dataSource.getResult(), false);
-                        }
-
-                        @Override
-                        protected void onFailureImpl(DataSource dataSource) {
-
-                        }
-                    }, Executors.newCachedThreadPool());
-                }
-            }
-        }
-    }
 }

@@ -68,7 +68,7 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
 
     //注册屏幕锁屏监听
     private void registerScreenReceiver() {
-        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(getActivity(),new ScreenBroadCastUtils.ScreenLockListener() {
             @Override
             public void onScreenOn() {
                 Log.i(TAG,"onScreenOn() ");
@@ -88,7 +88,7 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
      */
     private void unRegisterScreenReceiver(){
         if(mScreenBroadCastUtils != null){
-            mScreenBroadCastUtils.destroy();
+            mScreenBroadCastUtils.destroy(getActivity());
         }
     }
 

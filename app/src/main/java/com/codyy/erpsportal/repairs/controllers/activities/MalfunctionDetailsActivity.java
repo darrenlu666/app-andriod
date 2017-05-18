@@ -15,6 +15,7 @@ import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
 import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.WebViewUtils;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
@@ -68,7 +69,7 @@ public class MalfunctionDetailsActivity extends AppCompatActivity {
                             mTitleTv.setText(jsonObject.optString("summary"));
                             String contentHtml = jsonObject.optString("description");
                             contentHtml = contentHtml.replace("<pre>", "").replace("</pre>", "");
-                            mContentWv.loadData(contentHtml, "text/html; charset=UTF-8", null);
+                            WebViewUtils.setContentToWebView(mContentWv, contentHtml);
                         }
                     }
                 },

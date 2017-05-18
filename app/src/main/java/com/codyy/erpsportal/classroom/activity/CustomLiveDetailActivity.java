@@ -176,7 +176,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
 
     private ScreenBroadCastUtils mScreenBroadCastUtils;
     private void registerScreenReceiver() {
-        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(CustomLiveDetailActivity.this ,new ScreenBroadCastUtils.ScreenLockListener() {
             @Override
             public void onScreenOn() {
                 Log.i(TAG,"onScreenOn()");
@@ -829,10 +829,9 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         //stop net request .
         if (null != mRequestSender) mRequestSender.stop();
         if (null != mWifiUtil) mWifiUtil.destroy();
-        if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy();
+        if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy(CustomLiveDetailActivity.this );
         mHandler.removeCallbacks(mPlayLiveRunnable);
         mHandler.removeCallbacks(mHeartJump);
         mVideoLayout = null;
     }
-
 }
