@@ -18,13 +18,25 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
 
+import static com.codyy.bennu.sdk.impl.BNLivePublisher.AUDIOANDVIDEO;
+
 /**
  * A publish client to publish stream to server.
- * use librtmp
  */
 public class RTMPClient
 {
-	private static final boolean VERBOSE = false;  // lots of logging
+	private native int  StartRTMP(String url);
+	private native void StopRTMP();
+	private native void SetVideoParams(boolean hasVideo, int width, int height, int framerate);
+	private native void SetAudioParams(boolean hasAudio, int samplerate);
+	private native int  WriteRTMP(byte[] buf, int len);
+	private native int  OpenRTMPLog(byte[] logname, int length);
+	private native int  ConfigRTMP();
+
+	static {
+		System.loadLibrary("rtmp_jni");
+	}
+	private static final boolean VERBOSE = true;  // lots of logging
 	private final static String TAG = "RTMPClient";
 
 	public final static int STOP_DONE = 0x01;
@@ -45,30 +57,32 @@ public class RTMPClient
 	public final static int MESSAGE_ERROR_START_OPEN_CAMERA = 11;
 	public final static int MESSAGE_ERROR_START_OPEN_AUDIO_RECORD = 12;
 	public final static int MESSAGE_WARNING_VIDEO_ENCODE_CAPACITY_LACKING = 13;
-	// 
+	//
 	private final static int STATE_STARTED = 0x00;
 	private final static int STATE_STARTING = 0x01;
 	private final static int STATE_STOPPING = 0x02;
 	private final static int STATE_STOPPED = 0x03;
 	private int   mState = 0;
-	
+
 	private String mUri = null;
-	private MediaEngine mMediaEngine = null; 
+	private MediaEngine mMediaEngine = null;
+	private int mMediaType = AUDIOANDVIDEO;
+	private int mCurConfigTagNum = 0;
 	private Callback mCallback;
 	private Handler  mMainHandler;
-	
+
 	private long starttime  = 0;
 	private Thread  mThread = null;
-	
+
 	private boolean hasVideo = false;
 	private boolean hasAudio = false;
-	
+
 	private boolean audioInit = false;
 	private boolean videoInit = false;
 	private boolean isCanSent = false;
 	private boolean isSetVideoConf = false;
 	private boolean isSetAudioConf = false;
-	
+
 	// 音频和视频单独队列
 	private List<MediaData> videolist = null;
 	private List<MediaData> audiolist = null;
@@ -85,11 +99,11 @@ public class RTMPClient
 	private BNHandlerThread mHandlerThread;
 	private boolean mFirstAudioTag;
 
-	public interface Callback 
+	public interface Callback
 	{
 		public void onRtmpUpdate(int message,int messagetpye, Exception exception);
 	}
-	
+
 	public RTMPClient()
 	{
 		videolist = Collections.synchronizedList(new LinkedList<MediaData>());
@@ -98,7 +112,7 @@ public class RTMPClient
 		mQueueLock = new ReentrantLock();
 		videoPacketizer = new VideoPacketizer();
 		audioPacketizer = new AudioPacketizer();
-		
+
 		mCallback = null;
 		mMainHandler = new Handler(Looper.getMainLooper());
 		mState = STATE_STOPPED;
@@ -109,23 +123,25 @@ public class RTMPClient
 		mHandlerThread.prepareHandler();
 		Log.d(TAG,"RTMPClient");
 	}
-	
-	public boolean isStreaming() 
+
+	public boolean isStreaming()
 	{
 		return (mState == STATE_STARTED) | (mState == STATE_STARTING);
 	}
-	
-	public void setMediaEngine(MediaEngine mediaEngine) 
+
+	public void setMediaEngine(MediaEngine mediaEngine, int mediaType)
 	{
 		mMediaEngine = mediaEngine;
 		mMediaEngine.setClient(this);
+
+		mMediaType = mediaType;
 	}
-	
-	public void setCallback(Callback cb) 
+
+	public void setCallback(Callback cb)
 	{
 		mCallback = cb;
 	}
-	
+
 	public void setServerAddress(String uri)
 	{
 		mUri = uri;
@@ -140,7 +156,10 @@ public class RTMPClient
 		starttime = 0;
 		hasVideo = false;
 		hasAudio = false;
-
+		isCanSent = false;
+		isSetVideoConf = false;
+		isSetAudioConf = false;
+		mCurConfigTagNum = 0;
 	}
 
 	private void ExceptionHandling()
@@ -154,7 +173,7 @@ public class RTMPClient
 		abord();
 	}
 
-	public void startStream() 
+	public void startStream()
 	{
 		if (mUri == null) throw new IllegalStateException("setServerAddress(String) has not been called !");
 		if (mMediaEngine == null) throw new IllegalStateException("setMediaEngine(MediaEngine) has not been called !");
@@ -233,13 +252,13 @@ public class RTMPClient
 
 		});
 	}
-	
-	public void release() 
+
+	public void release()
 	{
 		mHandlerThread.quit();
 	}
-	
-	public void stopStream() 
+
+	public void stopStream()
 	{
 		if (mState == STATE_STOPPED || mState == STATE_STOPPING) {
 			Log.w(TAG,"The publisher has been stopped or on stopping");
@@ -248,7 +267,7 @@ public class RTMPClient
 
 		mHandlerThread.postTask(new Runnable () {
 			@Override
-			public void run() 
+			public void run()
 			{
 				if (mMediaEngine != null) {
 					mMediaEngine.syncStop();
@@ -277,7 +296,7 @@ public class RTMPClient
 		});
 	}
 
-	private void abord() 
+	private void abord()
 	{
 		mState = STATE_STOPPED;
 	}
@@ -285,10 +304,10 @@ public class RTMPClient
 	/**
 	 * 开始发送rtmp流
 	 * @throws IOException
-     */
-	private void tryConnection() throws IOException 
+	 */
+	private void tryConnection() throws IOException
 	{
-		ConfigRTMP(); // add 
+		ConfigRTMP(); // add
 		int ret = StartRTMP(mUri);
 		if (ret != 0) {
 			throw new IOException("connect to RTMP Server failed");
@@ -304,9 +323,9 @@ public class RTMPClient
 				}
 			}
 		});
-	}	
-	
-	
+	}
+
+
 	public class PublishTask implements Runnable
 	{
 		@Override
@@ -326,7 +345,7 @@ public class RTMPClient
 			Log.d(TAG, "Leave publish thread");
 		}
 	}
-	
+
 	//==========================================================================
 	public void SetVideoParams(int width, int height, int framerate)
 	{
@@ -339,8 +358,8 @@ public class RTMPClient
 		hasAudio = true;
 		SetAudioParams(hasAudio, samplerate);
 	}
-	
-	public synchronized void setAudioInit() 
+
+	public synchronized void setAudioInit()
 	{
 		audioInit = true;
 		if (firstCapture == 0) {
@@ -348,7 +367,7 @@ public class RTMPClient
 		}
 	}
 
-	public synchronized void setVideoInit() 
+	public synchronized void setVideoInit()
 	{
 		videoInit = true;
 		if (firstCapture == 0) {
@@ -379,21 +398,17 @@ public class RTMPClient
 				}
 			}
 		} else if (hasVideo) {
-			if(videolist.size()>0){
-				mMuxerQueue.offer(videolist.get(0));
-				videolist.remove(0);
-			}
+			mMuxerQueue.offer(videolist.get(0));
+			videolist.remove(0);
 		} else if (hasAudio) {
-			if(audiolist.size()>0){
-				mMuxerQueue.offer(audiolist.get(0));
-				audiolist.remove(0);
-			}
+			mMuxerQueue.offer(audiolist.get(0));
+			audiolist.remove(0);
 		}
 
 		mQueueLock.unlock();
 		//Unlock
 	}
-	
+
 	// 使用对象池避免重复生成对象造成的消耗
 	public synchronized int putAudioEncodedFrame(byte[] data, int offset, int length, long captureTimeMs)
 	{
@@ -410,7 +425,7 @@ public class RTMPClient
 			return -1;
 		}
 
-//		Log.d(TAG, "Audio capture timestamp = " + captureTimeMs + " Audio queue_size = " + audiolist.size());
+		if (VERBOSE)Log.d(TAG, "Audio capture timestamp = " + captureTimeMs + " Audio queue_size = " + audiolist.size());
 
 		collectData();
 		return  0;
@@ -431,7 +446,7 @@ public class RTMPClient
 			return -1;
 		}
 
-//		Log.d(TAG, "Video capture timestamp = " + captureTimeMs + " Video queue_size = " + videolist.size());
+		if (VERBOSE)Log.d(TAG, "Video capture timestamp = " + captureTimeMs + " Video queue_size = " + videolist.size());
 
 		collectData();
 		return  0;
@@ -473,7 +488,7 @@ public class RTMPClient
 		return false;
 	}
 
-	public synchronized void putEncodedFrame(MediaData mediaData) 
+	public synchronized void putEncodedFrame(MediaData mediaData)
 	{
 		if (mediaData == null) return;
 		if (mediaData.isAudio())
@@ -485,7 +500,7 @@ public class RTMPClient
 			videolist.add(mediaData);
 		}
 	}
-	
+
 	// 取最小时间戳
 	private int SendTag()
 	{
@@ -505,7 +520,7 @@ public class RTMPClient
 
 		return ret;
 	}
-	
+
 	private int SendTagFromOneList(int listType)
 	{
 		MediaData tag = null;
@@ -518,7 +533,7 @@ public class RTMPClient
 		{
 			tmpList = videolist;
 		}
-		
+
 		while (tmpList != null && tmpList.size() > 0)
 		{
 			tag = tmpList.remove(0);
@@ -530,7 +545,7 @@ public class RTMPClient
 		}
 		return 0;
 	}
-	
+
 	private int SendTagFromTwoList()
 	{
 		int videoSize = videolist.size();
@@ -548,11 +563,11 @@ public class RTMPClient
 				if (videoSize > 0) {
 					videoTag = videolist.get(0);
 				}
-				
+
 				if (audioSize > 0) {
 					audioTag = audiolist.get(0);
 				}
-				
+
 				if (videoTag != null && audioTag != null)
 				{
 					if (audioTag.getTimestamp() <= videoTag.getTimestamp())
@@ -570,14 +585,14 @@ public class RTMPClient
 				{
 					break;//
 				}
-				
+
 				if (tag != null)
 				{
 					ret = writeTag(tag);
 					if (ret != 0)
 					{
 						return ret;
-					}	
+					}
 				}
 			}
 		}
@@ -594,16 +609,15 @@ public class RTMPClient
 		}
 		return ret;
 	}
-	
+
 	private int writeAudioTag(byte[] buf, int len, long timepoint)
 	{
 		if (audioPacketizer == null || buf == null || len <= 0) return -1;
 
 		if (mFirstAudioTag) {
-			if (VERBOSE) Log.d(TAG, "Send an audio conf tag len = [" + len + "] timestamp = " + timepoint);
+			if (VERBOSE) Log.d(TAG, "Send audio conf tag len = [" + len + "] timestamp = " + timepoint);
 			audioPacketizer.parseAudioConf(buf, len);
 			setAudioConf(buf, len);
-			isSetAudioConf = true;
 			mFirstAudioTag = false;
 			sendAudioConf(0);
 			setAudioOrVideoCanSent(true);
@@ -615,17 +629,17 @@ public class RTMPClient
 		if (isAudioOrVideoCanSent())
 		{
 			int timeStamp = calcTimestamp(timepoint);
-			if (VERBOSE) Log.d(TAG, "Send an audio tag len = [" + len + "] timestamp = " + timeStamp + " timepoint = " + timepoint);
+			if (VERBOSE) Log.d(TAG, "Send audio tag len = [" + len + "] timestamp = " + timeStamp + " timepoint = " + timepoint);
 			byte[] tag = audioPacketizer.makeAudio(buf, len, timeStamp);
 			int ret = send(tag, tag.length, timepoint);// 发送数据
-			
+
 //			int timeStamp = calcTimestamp(timepoint);
 //			int ret = WriteAudio(buf, len, timeStamp, false);
 			return ret;
 		}
 		return 0;
 	}
-	
+
 	private byte[] audioConf = null;
 	private byte[] videoConf = null;
 	public void setAudioConf(byte[] buf, int len)
@@ -633,35 +647,35 @@ public class RTMPClient
 		audioConf = new byte[len];
 		System.arraycopy(buf, 0, audioConf, 0, len);
 	}
-	
+
 	public void setVideoConf(byte[] buf, int len)
 	{
 		videoConf = new byte[len];
 		System.arraycopy(buf, 0, videoConf, 0, len);
 	}
-	
+
 	private int writeVideoTag(byte[] buf, int len, long timepoint)
 	{
 		if (videoPacketizer == null || buf == null || len <= 0) return -1;
-		
+
 		if (videoPacketizer.isVideoConf(buf, len))
 		{
-			if (VERBOSE) Log.d(TAG, "Send a video conf tag len = [" + len + "] timestamp = " + timepoint);
+			if (VERBOSE) Log.d(TAG, "Send video conf tag len = [" + len + "] timestamp = " + timepoint);
 			videoPacketizer.parseVideoConf(buf, len);
-			isSetVideoConf = true;
+
 			setVideoConf(buf, len);
 			sendVideoConf(0);
 			setAudioOrVideoCanSent(true);
 			//trySendAudioAndVideoConf();
 			return 0;
 		}
-		
+
 		if (isAudioOrVideoCanSent())
 		{
 			boolean isKeyFrame = videoPacketizer.isKeyFrame(buf, len);
 			int timeStamp = calcTimestamp(timepoint);
 			String msg =  isKeyFrame ? "[KeyFrame]" : "";
-			if (VERBOSE) Log.d(TAG, "Send a video tag len = [" + len + "] timestamp = " + timeStamp + "" + msg);
+			if (VERBOSE) Log.d(TAG, "Send video tag len = [" + len + "] timestamp = " + timeStamp + "" + msg);
 			byte[] tag = videoPacketizer.makeVideoTag(buf, len, timeStamp, isKeyFrame);
 			int ret = send(tag, tag.length, timepoint);// 发送数据
 
@@ -669,7 +683,7 @@ public class RTMPClient
 		}
 		return 0;
 	}
-	
+
 	private void trySendAudioAndVideoConf()
 	{
 		if (hasAudio || hasVideo) {
@@ -677,7 +691,7 @@ public class RTMPClient
 				if (isSetVideoConf && isSetAudioConf) {
 					sendAudioConf(0);
 					sendVideoConf(0);
-				}	
+				}
 			} else if (hasAudio) {
 				sendAudioConf(0);
 
@@ -690,29 +704,44 @@ public class RTMPClient
 		}
 
 	}
-	
+
 	private boolean isAudioOrVideoCanSent()
 	{
 		return isCanSent;
 	}
-	
+
 	private void setAudioOrVideoCanSent(boolean isCanSent)
 	{
+		if (mMediaType == AUDIOANDVIDEO && mCurConfigTagNum < 2)
+			return;;
+
 		this.isCanSent = isCanSent;
 	}
-	
+
 	private int sendVideoConf(int ts)
 	{
+		if (isSetVideoConf)
+			return 0;
+
+		isSetVideoConf = true;
+		mCurConfigTagNum ++;
+
 		byte[] tag = videoPacketizer.makeVideoConf(ts);
 		return send(tag, tag.length, ts);
 	}
-	
+
 	private int sendAudioConf(int ts)
 	{
+		if(isSetAudioConf)
+			return 0;
+
+		isSetAudioConf = true;
+		mCurConfigTagNum ++;
+
 		byte[] tag = audioPacketizer.makeAudioConf(ts);
 		return send(tag, tag.length, ts);
 	}
-	
+
 	private long firstCapture = 0;
 	private long firstSend = 0;
 	private long fixed = 0;
@@ -728,7 +757,7 @@ public class RTMPClient
 	}
 
 	// 返回值由long改成int
-	private int calcTimestamp(long time) 
+	private int calcTimestamp(long time)
 	{
 		if (time != 0) {
 			if (starttime == 0) {
@@ -737,18 +766,6 @@ public class RTMPClient
 			return (int)(time - starttime);
 		}
 		return 0;
-	}
-
-	private native int  StartRTMP(String url);
-	private native void StopRTMP();
-	private native void SetVideoParams(boolean hasVideo, int width, int height, int framerate);
-	private native void SetAudioParams(boolean hasAudio, int samplerate);
-	private native int  WriteRTMP(byte[] buf, int len);
-	private native int  OpenRTMPLog(byte[] logname, int length);
-	private native int  ConfigRTMP();
-
-	static {
-		System.loadLibrary("rtmp_jni");
 	}
 
 }

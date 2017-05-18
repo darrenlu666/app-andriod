@@ -502,7 +502,5 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
             //博文
             ClassBlogActivity.start(ClassSpaceActivity.this, mClassId);
         }
-
-        this.finish();
     }
 }

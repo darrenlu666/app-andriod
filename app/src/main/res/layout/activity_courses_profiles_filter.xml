@@ -173,14 +173,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="按具体日期统计"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
             <LinearLayout
                 android:id="@+id/ll_by_specific_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <Button
                     android:id="@+id/btn_specific_date_begin"

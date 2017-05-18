@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
@@ -71,6 +72,10 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
     private RequestSender mSender;
 
     private PhotosUploader mPhotosUploader;
+
+    private LoadingDialog mLoadingDialog;
+
+    private boolean mCommitting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +138,7 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_commit)
     public void onCommitClick() {
+        if (mCommitting) return;
         if (mPhotosUploader != null && mPhotosUploader.mIsUploading) {
             ToastUtil.showToast(this, "图片上传中，请稍等...");
             return;
@@ -168,6 +174,9 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
             }
         }
 
+        mLoadingDialog = LoadingDialog.newInstance();
+        mLoadingDialog.show(getSupportFragmentManager(), "sending");
+        mCommitting = true;
         mSender.sendRequest(new RequestData(URLConfig.MAKE_DETAILED_INQUIRY, params,
                 new Listener<JSONObject>() {
                     @Override
@@ -177,12 +186,15 @@ public class MakeDetailedInquiryActivity extends AppCompatActivity {
                             setResult(RESULT_OK);
                             finish();
                         }
+                        mLoadingDialog.dismiss();
                     }
                 }, new ErrorListener() {
                     @Override
                     public void onErrorResponse(Throwable error) {
                         Cog.d(TAG, "onErrorResponse error=", error);
+                        mLoadingDialog.dismiss();
                         ToastUtil.showToast(MakeDetailedInquiryActivity.this, "出错了，请重试");
+                        mCommitting = false;//失败了才能重试
                     }
                 }));
     }

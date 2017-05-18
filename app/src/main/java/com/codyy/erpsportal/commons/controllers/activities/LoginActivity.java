@@ -21,9 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog.ServerChangedListener;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.UpdateDialog;
+import com.codyy.erpsportal.commons.data.source.remote.VersionApi;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
@@ -117,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
         //添加键盘高度
         InputUtils.getKeyboardHeight(this);
         loadLoginToken();
+        checkNewVersion();
     }
 
     private void initAttributes() {
@@ -196,6 +200,38 @@ public class LoginActivity extends AppCompatActivity {
     private void clearToken() {
         SharedPreferences sp = getSharedPreferences(SP_TOKEN, MODE_PRIVATE);
         sp.edit().clear().apply();
+    }
+
+    /**
+     * 检查新版本
+     */
+    private void checkNewVersion() {
+        VersionApi versionApi = RsGenerator.create(VersionApi.class);
+        versionApi.getVersion()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "checkNewVersion response=", response);
+                        String result = response.optString("result");
+                        String version = response.optString("version");
+                        String forceUpdate = response.optString("upgrade_ind");
+                        if ("success".equals(result) && !BuildConfig.VERSION_NAME.equals(version)) {
+                            final String url = response.optString("appPhoneUrl");
+                            Cog.d(TAG, "checkNewVersion url=", url);
+                            UpdateDialog updateDialog = UpdateDialog.newInstance(
+                                    "Y".equals(forceUpdate), url);
+                            updateDialog.show(getSupportFragmentManager(), "update");
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Cog.d(TAG, "checkNewVersion error", throwable);
+                        throwable.printStackTrace();
+                    }
+                });
     }
 
     /**

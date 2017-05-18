@@ -39,10 +39,6 @@ public class RequestSender {
 
     private final static String TAG = "RequestSender";
 
-    private final static int DEFAULT_TIMEOUT_MS = 15000;
-
-//    private RequestQueue mRequestQueue;
-
     private WebApi mWebApi;
 
     private CompositeDisposable mCompositeDisposable;
@@ -57,7 +53,6 @@ public class RequestSender {
 
     public RequestSender(Context context) {
         mContext = context;
-//        mRequestQueue = RequestManager.getRequestQueue();
         mWebApi = RsGenerator.create(WebApi.class);
         mHandler = new Handler();
         mCompositeDisposable = new CompositeDisposable();

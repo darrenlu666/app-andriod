@@ -112,6 +112,11 @@ public class LessonPlanListFragment extends LoadMoreFragment<LessonPlan, LessonP
             updateParamsBaseOnMap(params, "baseAreaId");
             updateParamsBaseOnMap(params, "classLevelId", "classlevelId");
             updateParamsBaseOnMap(params, "subjectId");
+            if ("true".equals(params.get("isDirect"))) {
+                addParam("dataType", "zs");
+            } else {
+                removeParam("dataType");
+            }
             loadData(true);
         }
     }

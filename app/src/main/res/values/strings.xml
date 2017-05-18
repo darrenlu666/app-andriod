@@ -800,4 +800,9 @@
     <string name="please_select">请选择</string>
     <string name="report_repair_classroom_all">报修教室 (全部)</string>
     <string name="handle_status_all">处理状态 (全部)</string>
+    <string name="update">更新</string>
+    <string name="close">关闭</string>
+    <string name="new_version_detected_please_update">检测到新版本\n请下载更新</string>
+    <string name="new_version_detected_do_update">检测到有新版本\n是否立即下载更新？</string>
+    <string name="new_version_downloading">新版本下载中\n请稍后…</string>
 </resources>

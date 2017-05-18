@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.utils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
@@ -13,7 +14,7 @@ import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
  */
 public class ScreenBroadCastUtils {
     private static final String TAG = "ScreenBroadCastUtils";
-    private LocalBroadcastManager mLocalBroadcastManager;
+//    private LocalBroadcastManager mLocalBroadcastManager;
     private ScreenBroadcastReceiver myBroadcastReceive;
     private ScreenLockListener mScreenLockListener;
 
@@ -22,15 +23,15 @@ public class ScreenBroadCastUtils {
      * 注册Lock通知广播
      * 解绑：：destroy()
      */
-    public ScreenBroadCastUtils(ScreenLockListener lockListener) {
+    public ScreenBroadCastUtils(Context context , ScreenLockListener lockListener) {
         this.mScreenLockListener =   lockListener;
-        registerMyBroadCast();
+        registerMyBroadCast(context);
     }
 
     //注册
-    private void registerMyBroadCast(){
+    private void registerMyBroadCast(Context context ){
         //注册广播
-        mLocalBroadcastManager  =   LocalBroadcastManager.getInstance(EApplication.instance());
+//        mLocalBroadcastManager  =   LocalBroadcastManager.getInstance(EApplication.instance());
         myBroadcastReceive = new ScreenBroadcastReceiver(new ScreenBroadcastReceiver.ScreenStateListener() {
             @Override
             public void onScreenOn() {
@@ -51,20 +52,20 @@ public class ScreenBroadCastUtils {
         });
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ScreenBroadcastReceiver.ACTION_SCREEN_ON);
-        filter.addAction(ScreenBroadcastReceiver.ACTION_SCREEN_OFF);
-        filter.addAction(ScreenBroadcastReceiver.ACTION_SCREEN_USER_PRESENTER);
-        mLocalBroadcastManager.registerReceiver(myBroadcastReceive,filter);
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        if(null != context)
+        context.registerReceiver(myBroadcastReceive,filter);
     }
 
     /**
      * 解除广播的绑定
      */
-    public void destroy(){
+    public void destroy(Context context){
         //解除广播接收器
-        if(myBroadcastReceive != null && mLocalBroadcastManager != null){
-            mLocalBroadcastManager.unregisterReceiver(myBroadcastReceive);
-            mLocalBroadcastManager  = null;
+        if(myBroadcastReceive != null && context != null){
+            context.unregisterReceiver(myBroadcastReceive);
             this.myBroadcastReceive = null;
         }
         this.mScreenLockListener =   null;
