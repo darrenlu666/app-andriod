@@ -726,6 +726,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity

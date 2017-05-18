@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,6 +171,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
      * @param view
      */
     public void enterClass(View view) {
+        Log.i("poe","ClassTourPagerActivity.start() ");
         TourClassroom tourClassroom = new TourClassroom();
         tourClassroom.setClassRoomId(mContyListItemDetial.getClassroomId());
         tourClassroom.setId(mContyListItemDetial.getScheduleDetailId());
