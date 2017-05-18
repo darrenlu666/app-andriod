@@ -689,7 +689,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
 
     private ScreenBroadCastUtils mScreenBroadCastUtils;
     private void registerScreenReceiver() {
-        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(ClassRoomDetailActivity.this, new ScreenBroadCastUtils.ScreenLockListener() {
             @Override
             public void onScreenOn() {
                 Log.i(TAG,"onScreenOn()");
@@ -747,7 +747,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     protected void onDestroy() {
         super.onDestroy();
         if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
-        if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy();
+        if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy(ClassRoomDetailActivity.this);
         if(null != mRequestSender) mRequestSender.stop(TAG);
         mHandler.removeCallbacks(mPlayLiveRunnable);
     }

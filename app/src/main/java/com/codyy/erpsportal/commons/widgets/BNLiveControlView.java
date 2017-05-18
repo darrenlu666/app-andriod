@@ -177,7 +177,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSur
 
     private ScreenBroadCastUtils mScreenBroadCastUtils;
     private void registerScreenReceiver() {
-        mScreenBroadCastUtils = new ScreenBroadCastUtils(new ScreenBroadCastUtils.ScreenLockListener() {
+        mScreenBroadCastUtils = new ScreenBroadCastUtils(getContext(),new ScreenBroadCastUtils.ScreenLockListener() {
             @Override
             public void onScreenOn() {
                 Log.i(TAG,"onScreenOn()");
@@ -421,7 +421,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSur
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (null != mScreenBroadCastUtils) {
-            mScreenBroadCastUtils.destroy();
+            mScreenBroadCastUtils.destroy(getContext());
         }
     }
 

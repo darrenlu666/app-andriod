@@ -14,18 +14,6 @@ import com.codyy.erpsportal.commons.utils.Cog;
  */
 public class ScreenBroadcastReceiver extends BroadcastReceiver {
     public static final String TAG = "ScreenBroadcastReceiver";
-    /**
-     * 打开锁屏
-     */
-    public static final String ACTION_SCREEN_ON = "com.codyy.screen.on";
-    /**
-     * 锁屏
-     */
-    public static final String ACTION_SCREEN_OFF = "com.codyy.screen.off";
-    /**
-     * 用户自己解锁.
-     */
-    public static final String ACTION_SCREEN_USER_PRESENTER = "com.codyy.screen.user.presenter";
 
     private ScreenStateListener mScreenStateListener;
 
@@ -41,11 +29,12 @@ public class ScreenBroadcastReceiver extends BroadcastReceiver {
             return;
         }
         String action = intent.getAction();
-        if (ACTION_SCREEN_ON.equals(action)) { // 开屏
+        Log.i(TAG,action);
+        if (Intent.ACTION_SCREEN_ON.equals(action)) { // 开屏
             if(null != mScreenStateListener) mScreenStateListener.onScreenOn();
-        } else if (ACTION_SCREEN_OFF.equals(action)) { // 锁屏
+        } else if (Intent.ACTION_SCREEN_OFF.equals(action)) { // 锁屏
             if(null != mScreenStateListener) mScreenStateListener.onScreenOff();
-        } else if (ACTION_SCREEN_USER_PRESENTER.equals(action)) { // 解锁
+        } else if (Intent.ACTION_USER_PRESENT.equals(action)) { // 解锁
             if(null != mScreenStateListener) mScreenStateListener.onUserPresent();
         }
     }
