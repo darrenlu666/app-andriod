@@ -86,7 +86,8 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
                     boolean confirmed = data.getBooleanExtra(MMPreviewImageActivity.EXTRA_CONFIRM, false);
                     if (confirmed) {
                         Intent intent = new Intent();
-                        intent.putParcelableArrayListExtra(EXTRA_DATA, data.getParcelableArrayListExtra(EXTRA_DATA));
+                        ArrayList<MMImageBean> imageBeans = data.getParcelableArrayListExtra(EXTRA_DATA);
+                        intent.putParcelableArrayListExtra(EXTRA_DATA, imageBeans);
                         intent.putExtra(EXTRA_TYPE, TYPE_IMAGE);
                         getActivity().setResult(Activity.RESULT_OK, intent);
                         getActivity().finish();
@@ -156,23 +157,28 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
         mImageGridAdapter.setOnInViewClickListener(R.id.v_selected_frame, new MMBaseRecyclerViewAdapter.onInternalClickListener<MMImageBean>() {
             @Override
             public void OnClickListener(View parentV, View v, Integer position, MMImageBean values) {
-                if (position != 0) {
+                if (position != 0) {//第一项是拍照，排除
                     RelativeLayout relativeLayout = (RelativeLayout) v;
                     if (relativeLayout.getChildAt(0) instanceof ImageView) {
-                        if (values.isSelected()) {
-                            values.setSelected(false);
-                            mSelectedIndex.remove(position);
-                            relativeLayout.setBackgroundResource(R.color.transparent);
-                            ((ImageView) relativeLayout.getChildAt(0)).setImageResource(R.drawable.ic_exam_select_n);
-                        } else {
-                            if (mSelectedIndex.size() == mNeedImageCount) {
-                                Snackbar.make(v, getString(R.string.exam_image_max_count, (mNeedImageCount)), Snackbar.LENGTH_SHORT).show();
-                                return;
+                        if (values.isSelectable()) {
+                            if (values.isSelected()) {
+                                values.setSelected(false);
+                                mSelectedIndex.remove(position);
+                                relativeLayout.setBackgroundResource(R.color.transparent);
+                                ((ImageView) relativeLayout.getChildAt(0)).setImageResource(R.drawable.ic_exam_select_n);
+                            } else {
+                                if (mSelectedIndex.size() == mNeedImageCount) {
+                                    Snackbar.make(v, getString(R.string.exam_image_max_count, (mNeedImageCount)), Snackbar.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                values.setSelected(true);
+                                relativeLayout.setBackgroundResource(R.color.image_selected_color);
+                                ((ImageView) relativeLayout.getChildAt(0)).setImageResource(R.drawable.ic_exam_select_p);
+                                mSelectedIndex.add(position);
                             }
-                            values.setSelected(true);
-                            relativeLayout.setBackgroundResource(R.color.image_selected_color);
-                            ((ImageView) relativeLayout.getChildAt(0)).setImageResource(R.drawable.ic_exam_select_p);
-                            mSelectedIndex.add(position);
+                        } else {
+                            Snackbar.make(v, "你选择的图片过大，请选择小于5M的图片", Snackbar.LENGTH_SHORT).show();
+                            return;
                         }
                     }
                     uploadButtonState();
@@ -254,15 +260,17 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
             String projection[] = {Media._ID,
                     Media.DISPLAY_NAME,
                     Media.DATA,
-                    Media.MIME_TYPE
+                    Media.MIME_TYPE,
+                    Media.SIZE
             };
             Cursor imageCursor = cr.query(
                     Media.EXTERNAL_CONTENT_URI, projection,
-                    Media.SIZE + "<? and " + Media.SIZE + ">0 and ("
+                    Media.SIZE + ">0 and ("
                             + Media.MIME_TYPE + "='image/jpeg' or "
                             + Media.MIME_TYPE + "='image/png' or "
                             + Media.MIME_TYPE + "='image/bmp')",
-                    new String[]{"5242881"}, Media.DATE_ADDED + " ASC");
+                    null, Media.DATE_ADDED + " ASC");
+            //new String[]{"5242881"}
             try {
                 if (imageCursor != null && imageCursor.getCount() > 0) {
                     while (imageCursor.moveToNext()) {
@@ -272,15 +280,15 @@ public class MMImageAlbumFragment extends Fragment implements Handler.Callback {
                                              MediaStore.Images.Thumbnails.DATA},
                                 MediaStore.Images.Thumbnails.IMAGE_ID + "=" + imageCursor.getString(0), null, null);
                         try {
+                            String thumbnails;
                             if (thumbCursor != null && thumbCursor.getCount() > 0 && thumbCursor.moveToFirst()) {
-                                do {
-                                    bean = new MMImageBean(imageCursor.getString(2), false, thumbCursor.getString(1));
-                                    list.add(bean);
-                                } while (thumbCursor.moveToNext());
+                                thumbnails = thumbCursor.getString(1);
                             } else {
-                                bean = new MMImageBean(imageCursor.getString(2), false, imageCursor.getString(2));
-                                list.add(bean);
+                                thumbnails = imageCursor.getString(2);
                             }
+                            bean = new MMImageBean(imageCursor.getString(2), false, thumbnails);
+                            bean.setSelectable(imageCursor.getInt(4) <= 5242881);//图片大于5m不可选
+                            list.add(bean);
                         } finally {
                             if (thumbCursor != null)
                                 thumbCursor.close();

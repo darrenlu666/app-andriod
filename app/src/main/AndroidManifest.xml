@@ -330,7 +330,6 @@
             android:name=".groups.controllers.activities.ClassSpaceActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_main"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
         <activity

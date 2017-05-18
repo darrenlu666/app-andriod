@@ -569,7 +569,7 @@ public class URLConfig {
     /**
      * 课堂的课堂作业列表
      */
-    @UrlSuffix("./classWork/classWorkList.do")
+    @UrlSuffix("/classWork/classWorkList.do")
     public static String NEW_GET_HOMEWORK_LIST;
 
     /**

@@ -36,8 +36,10 @@ public class NetworkUtils {
      */
     public static boolean isConnected() {
         ConnectivityManager con = (ConnectivityManager) EApplication.instance().getSystemService(Activity.CONNECTIVITY_SERVICE);
-        boolean wifi = con.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
-        boolean internet = con.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+        NetworkInfo wifiNetworkInfo = con.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        boolean wifi = wifiNetworkInfo != null && wifiNetworkInfo.isConnectedOrConnecting();
+        NetworkInfo internetNetworkInfo = con.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        boolean internet = internetNetworkInfo != null &&internetNetworkInfo.isConnectedOrConnecting();
         return wifi | internet;
     }
 
