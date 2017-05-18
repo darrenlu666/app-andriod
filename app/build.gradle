@@ -110,7 +110,7 @@ android {
         release {
             minifyEnabled true
             shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-url.pro', 'proguard-rules.pro', 'proguard-fresco.pro', 'proguard-eventbus.pro', 'proguard-butterknife.pro', 'proguard-mupdf.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt') ,'proguard-umeng.pro', 'proguard-url.pro', 'proguard-rules.pro', 'proguard-fresco.pro', 'proguard-eventbus.pro', 'proguard-butterknife.pro', 'proguard-mupdf.pro'
             signingConfig signingConfigs.config
             versionNameSuffix ".$BUILD_VERSION"
         }
@@ -176,4 +176,5 @@ dependencies {
     compile 'com.google.android:flexbox:0.2.5'
     compile project(path: ':zxing')
     compile project(path: ':frameworklibrary')
+    compile project(':umenglibrary')
 }

@@ -2215,6 +2215,19 @@ public class URLConfig {
      */
     @UrlSuffix("personInfo.do")
     public static String GET_PERSON_INFO;
+
+    /**
+     * 移动端的二维码信息 .
+     */
+    @UrlSuffix("app/version/getShareVersionList.do")
+    public static String GET_MOBILE_SHARE_BAR_CODE ;//= "http://10.1.80.22:8080/mobile/app/version/getShareVersionList.do";
+
+    /**
+     * 查看账号状态 .
+     */
+    @UrlSuffix("personinfo/checkForbidden.do")
+    public static String CHECK_USER_FORBIDDEN ;//= "http://10.1.80.22:8080/mobile/app/version/getShareVersionList.do";
+
     /**
      * poe add
      * 网络授课-我创建的
@@ -2884,6 +2897,8 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/malfunction/addAppend.do")
     public static String MAKE_DETAILED_INQUIRY;
+
+
 
     static {
         UrlBuilder.updateUrls();

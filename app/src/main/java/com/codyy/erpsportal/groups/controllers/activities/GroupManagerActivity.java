@@ -48,7 +48,6 @@ public class GroupManagerActivity extends BaseHttpActivity implements HttpGetInt
     @Bind(R.id.tab_layout)TabLayout mTabLayout;
     @Bind(R.id.vp_group)CodyyViewPager mViewPager;
     @Bind(R.id.drawer_layout)DrawerLayout mDrawerLayout;
-//    private GroupManagerFilterFragment mFilterFragment ;
     private CommentFilterFragment mFilterFragment ;
     /**
      * {辖区内的圈组/校内圈组/我的圈组}

@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
@@ -134,11 +135,14 @@ public class ListenDetailsActivity extends BaseHttpActivity implements View.OnCl
         mActiveMagValueTv.setText(mDetailEntity.getData().getDescription());
         mLaunchTv.setText(mDetailEntity.getData().getSponsorName());
         mRbStar.setProgress(mDetailEntity.getData().getAverageScore());
-        // TODO: 10/05/17 显示多个年级信息
-        if(TextUtils.isEmpty(mDetailEntity.getData().getClassLevelName())){
+        if(TextUtils.isEmpty(mDetailEntity.getData().getClassLevelName())||"不限年级".equals(mDetailEntity.getData().getClassLevelName())){
             mGradeNameTv.setText("不限");
         }else{
-            mGradeNameTv.setText(mDetailEntity.getData().getClassLevelName());
+            String levels = mDetailEntity.getData().getClassLevelName();
+            if(levels.contains(",")){
+                levels = levels.replace(","," ");
+            }
+            mGradeNameTv.setText(levels);
         }
 
         mSubjectNameTv.setText(mDetailEntity.getData().getSubjectName());

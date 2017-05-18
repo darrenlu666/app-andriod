@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tencent_qq_appid"></string>
+    <string name="weixin_key">wx80c88ccce1f04718</string>
+    <string name="weixin_redirecturi"></string>
+    <string name="sina_weibo_redirecturi"></string>
+    <string name="sina_weibo_key"></string>
+</resources>
