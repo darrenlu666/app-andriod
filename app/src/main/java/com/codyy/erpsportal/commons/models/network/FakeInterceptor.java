@@ -1,19 +1,13 @@
 package com.codyy.erpsportal.commons.models.network;
 
 import com.codyy.erpsportal.BuildConfig;
-import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
@@ -32,23 +26,23 @@ public class FakeInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         if(BuildConfig.DEBUG) {
-            HttpUrl httpUrl = chain.request().url();
-            String urlStr = httpUrl.url().toString();
-            if (urlStr.equals(URLConfig.VERSION + "?applicationId=4")) {
-                Cog.d(TAG, "urlStr:", urlStr);
-                Response response = chain.proceed(chain.request());
-                ResponseBody responseBody = response.body();
-                String bodyStr = responseBody.string();
-                try {
-                    JSONObject jsonObject = new JSONObject(bodyStr);
-                    jsonObject.put("upgrade_ind", "N");
-                    bodyStr = jsonObject.toString();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Cog.d(TAG, "bodyStr:", bodyStr);
-                return buildResponse(chain, bodyStr);
-            }
+//            HttpUrl httpUrl = chain.request().url();
+//            String urlStr = httpUrl.url().toString();
+//            if (urlStr.equals(URLConfig.VERSION + "?applicationId=4")) {
+//                Cog.d(TAG, "urlStr:", urlStr);
+//                Response response = chain.proceed(chain.request());
+//                ResponseBody responseBody = response.body();
+//                String bodyStr = responseBody.string();
+//                try {
+//                    JSONObject jsonObject = new JSONObject(bodyStr);
+//                    jsonObject.put("upgrade_ind", "N");
+//                    bodyStr = jsonObject.toString();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                Cog.d(TAG, "bodyStr:", bodyStr);
+//                return buildResponse(chain, bodyStr);
+//            }
         }
         return chain.proceed(chain.request());
     }

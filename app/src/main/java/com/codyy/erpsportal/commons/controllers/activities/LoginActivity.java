@@ -14,6 +14,8 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,15 +23,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog.ServerChangedListener;
-import com.codyy.erpsportal.commons.controllers.fragments.dialogs.UpdateDialog;
-import com.codyy.erpsportal.commons.data.source.remote.VersionApi;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
+import com.codyy.erpsportal.commons.models.engine.VersionChecker;
+import com.codyy.erpsportal.commons.models.engine.VersionChecker.VersionCheckerListener;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.tasks.SavePasswordTask;
@@ -108,6 +109,8 @@ public class LoginActivity extends AppCompatActivity {
     private boolean mIsFetchingToken;
 
     private PendingLoginRequestData mPendingRequest;
+
+    private VersionChecker mVersionChecker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,36 +205,40 @@ public class LoginActivity extends AppCompatActivity {
         sp.edit().clear().apply();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mVersionChecker != null) {
+            mVersionChecker.release();
+        }
+    }
+
     /**
      * 检查新版本
      */
     private void checkNewVersion() {
-        VersionApi versionApi = RsGenerator.create(VersionApi.class);
-        versionApi.getVersion()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<JSONObject>() {
-                    @Override
-                    public void accept(JSONObject response) throws Exception {
-                        Cog.d(TAG, "checkNewVersion response=", response);
-                        String result = response.optString("result");
-                        String version = response.optString("version");
-                        String forceUpdate = response.optString("upgrade_ind");
-                        if ("success".equals(result) && !BuildConfig.VERSION_NAME.equals(version)) {
-                            final String url = response.optString("appPhoneUrl");
-                            Cog.d(TAG, "checkNewVersion url=", url);
-                            UpdateDialog updateDialog = UpdateDialog.newInstance(
-                                    "Y".equals(forceUpdate), url);
-                            updateDialog.show(getSupportFragmentManager(), "update");
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Cog.d(TAG, "checkNewVersion error", throwable);
-                        throwable.printStackTrace();
-                    }
-                });
+        mVersionChecker = VersionChecker.getInstance();
+        mVersionChecker.setVersionCheckerListener(new VersionCheckerListener() {
+            @Override
+            public void onNewVersionDetected() {
+                hideSoftKeyboard();
+            }
+        });
+        mVersionChecker.checkNewVersion(this);
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    private void hideSoftKeyboard() {
+        mUserNameEt.post(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(mUserNameEt.getWindowToken(),0);
+            }
+        });
+        getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     /**
@@ -580,10 +587,10 @@ public class LoginActivity extends AppCompatActivity {
             UIUtils.addEnterAnim((Activity) context);
     }
 
-    public static void start(Fragment mFragment) {
-        Intent intent = new Intent(mFragment.getActivity(), LoginActivity.class);
+    public static void start(Fragment fragment) {
+        Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        mFragment.startActivityForResult(intent, REQUEST_LOGIN);
+        fragment.startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     /**
@@ -594,19 +601,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(IS_BACK_TO_MAIN, false);
         context.startActivity(intent);
-    }
-
-    /**
-     * 从主界面进登陆
-     *
-     * @param activity 源活动
-     * @param index    用户点击应用或是我的进的登陆，待会登陆完了传回给主界面直接跳转到应用或是我的
-     */
-    public static void start(Activity activity, int index) {
-        Intent intent = new Intent(activity, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra(EXTRA_INDEX_GOTO, index);
-        activity.startActivity(intent);
     }
 
     private void executeSaveUserInfo(final UserInfo userInfo) {
@@ -621,7 +615,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 挂起的登录请求数据
      */
-    class PendingLoginRequestData {
+    private class PendingLoginRequestData {
         private String username;
         private String password;
         private Map<String, String> params;
