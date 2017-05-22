@@ -350,7 +350,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity{
                 .append(".html?attachementName=")
                 .append(URLEncoder.encode(mLessonPlanDetails.getLessonPlanPath()))
                 .append("&showName=")
-                .append(mLessonPlanDetails.getLessonPlanName());
+                .append(URLEncoder.encode(mLessonPlanDetails.getLessonPlanName()));
         return sb.toString();
     }
 
