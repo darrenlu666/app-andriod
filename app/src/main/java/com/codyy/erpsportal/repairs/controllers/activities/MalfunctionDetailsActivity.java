@@ -1,9 +1,11 @@
 package com.codyy.erpsportal.repairs.controllers.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -15,12 +17,18 @@ import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
 import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.HtmlUtils;
 import com.codyy.erpsportal.commons.utils.WebViewUtils;
+import com.codyy.erpsportal.perlcourseprep.models.entities.SubjectMaterialPicture;
+import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -47,11 +55,18 @@ public class MalfunctionDetailsActivity extends AppCompatActivity {
 
     private RequestSender mSender;
 
+    private ImagesInteraction mImagesInteraction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_malfunction_details);
         ButterKnife.bind(this);
+        mImagesInteraction = new ImagesInteraction(this);
+        mContentWv.getSettings().setDefaultTextEncodingName("utf-8");
+        mContentWv.getSettings().setJavaScriptEnabled(true);
+        mContentWv.addJavascriptInterface(mImagesInteraction,"control");
+
         mSender = new RequestSender(this);
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
         mMalfunctionId = getIntent().getStringExtra(EXTRA_MALFUNCTION_ID);
@@ -68,8 +83,9 @@ public class MalfunctionDetailsActivity extends AppCompatActivity {
                         if (jsonObject != null) {
                             mTitleTv.setText(jsonObject.optString("summary"));
                             String contentHtml = jsonObject.optString("description");
+                            mImagesInteraction.searchImageUrls( contentHtml);
                             contentHtml = contentHtml.replace("<pre>", "").replace("</pre>", "");
-                            WebViewUtils.setContentToWebView(mContentWv, contentHtml);
+                            mImagesInteraction.setHtmlToWebView( contentHtml);
                         }
                     }
                 },
@@ -80,6 +96,48 @@ public class MalfunctionDetailsActivity extends AppCompatActivity {
                     }
                 }
         ));
+    }
+
+    public class ImagesInteraction {
+
+        private WeakReference<Activity> mActRef;
+
+        private List<String> mImageList = new ArrayList<>();
+
+        public ImagesInteraction(Activity activity) {
+            mActRef = new WeakReference<>(activity);
+        }
+
+        public boolean hasImage() {
+            return mImageList != null && mImageList.size() > 0;
+        }
+
+        public void searchImageUrls(String html) {
+            mImageList = HtmlUtils.filterImages(html);
+        }
+
+        @JavascriptInterface
+        public void showImage(int position ,String url) {
+            Activity activity = mActRef.get();
+            if (activity != null) {
+                List<SubjectMaterialPicture> subjectMaterialPictures = new ArrayList<>();
+                for (int i = 0; i < mImageList.size(); i++) {
+                    SubjectMaterialPicture smp = new SubjectMaterialPicture();
+                    smp.setId("" + i);
+                    smp.setUrl(mImageList.get(i));
+                    subjectMaterialPictures.add(smp);
+                }
+                SubjectMaterialPicturesActivity.start(activity, subjectMaterialPictures, position);
+            }
+        }
+
+        public void setHtmlToWebView(String contentHtml) {
+            if (hasImage()) {
+                WebViewUtils.setContentToWebView(mContentWv, HtmlUtils.constructExecActionJs(contentHtml));
+            } else {
+                WebViewUtils.setContentToWebView(mContentWv, HtmlUtils.constructWordBreakJs(contentHtml));
+            }
+        }
     }
 
     public static void start(Context context, UserInfo userInfo, String malfunctionId) {

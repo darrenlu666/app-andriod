@@ -20,8 +20,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -140,7 +138,8 @@ public class UpdateDialog extends DialogFragment {
             }
         });
         builder.setView(view);
-        return builder.create();
+        Dialog dialog = builder.create();
+        return dialog;
     }
 
     private void listener(final long downloaderId) {
@@ -149,11 +148,10 @@ public class UpdateDialog extends DialogFragment {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                //下载完成了会自动跳到安装界面
                 long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
                 if (id == downloaderId) {
                     mDownloadStatus = STATUS_FINISHED;
-                    mTextTv.setText(R.string.new_version_detected_please_update);
-                    mBtnsContainerLl.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -168,17 +166,20 @@ public class UpdateDialog extends DialogFragment {
             getDialog().setOnKeyListener(new OnKeyListener() {
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK
+                            && mDownloadStatus != STATUS_STARTED) {//正在下载时不让用户退出，否则无法下次进入无法同步状态
                         getActivity().finish();
                         return true;
                     }
                     return false;
                 }
             });
+
+            if(mDownloadStatus == STATUS_FINISHED) {
+                mTextTv.setText(R.string.new_version_detected_please_update);
+                mBtnsContainerLl.setVisibility(View.VISIBLE);
+            }
         }
-        Window window = getDialog().getWindow();
-        if (window != null)
-            window.setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override

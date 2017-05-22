@@ -31,6 +31,7 @@ import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
+import com.codyy.erpsportal.commons.models.engine.VersionChecker;
 import com.codyy.erpsportal.commons.models.entities.LocationBean;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.UpdatePortalEvent;
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
 
     private WifiBroadCastReceiver mWifiBroadCastReceiver;
 
+    private VersionChecker mVersionChecker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         if (savedInstanceState != null) {
             mTabHost.setCurrentTab(savedInstanceState.getInt("tab"));
         }
+        checkNewVersion();
     }
 
     /**
@@ -148,6 +152,14 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         }
         Cog.d(TAG, "checkUserInfo UserInfoKeeper=", UserInfoKeeper.obtainUserInfo());
         return true;
+    }
+
+    /**
+     * 检查新版本
+     */
+    private void checkNewVersion() {
+        mVersionChecker = VersionChecker.getInstance();
+        mVersionChecker.checkNewVersion(this);
     }
 
     private void findViews() {
@@ -350,6 +362,9 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         Cog.d(TAG, "Stop polling service...");
         PollingUtils.stopPollingService(EApplication.instance(), PollingService.class, PollingService.ACTION);
         if (BuildConfig.DEBUG) ViewServer.get(this).removeWindow(this);
+        if (mVersionChecker != null) {
+            mVersionChecker.release();
+        }
     }
 
     public UserInfo getUserInfo() {
