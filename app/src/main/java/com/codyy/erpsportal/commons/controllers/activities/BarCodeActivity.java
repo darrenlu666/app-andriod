@@ -348,7 +348,7 @@ public class BarCodeActivity extends BaseHttpActivity {
                         }
                         //非空处理.
                         if(TextUtils.isEmpty(url)){
-                            url ="http://10.1.10.235/Android/ECSP/2017-05-10_15-15-08/ErpsPortal-train-release.apk";
+                            url ="http://mobile.needu.cn/app/downloadAndroidByBrower.html";
                         }
                         File file = new File(filePath);
                         boolean success;
