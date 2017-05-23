@@ -265,7 +265,7 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
     private void checkForbidden() {
         HashMap<String,String> param = new HashMap<>();
         param.put("accountId",mUserInfo.getBaseUserId());
-        param.put("accountType","USER");
+        param.put("accountType","CLASS");
 
         requestData(URLConfig.CHECK_USER_FORBIDDEN, param, true, new IRequest() {
             @Override

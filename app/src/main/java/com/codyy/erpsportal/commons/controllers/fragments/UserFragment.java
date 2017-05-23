@@ -447,34 +447,6 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
         }
     }
 
-    /**
-     * Checks if the app has permission to write to device storage
-     * If the app does not has permission then the user will be prompted to grant permissions
-     */
-    /*public void verifyStoragePermissions() {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int permissionCamera = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
-
-        if (permission != PackageManager.PERMISSION_GRANTED || permissionCamera != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.CAMERA)||
-                    ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.WRITE_EXTERNAL_STORAGE) ) {
-                Snackbar.make(mSimpleDraweeView , "申请SD卡查看权限！",Snackbar.LENGTH_INDEFINITE).setAction("OK",new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
-                    }
-                }).show();
-            } else {
-                // We don't have permission so prompt the user
-                ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-            }
-        }else{
-            showBSDialog();
-        }
-    }*/
-
     private PermissionUtils.PermissionInterface mPermissionInterface = new PermissionUtils.PermissionInterface() {
         @Override
         public void next() {
@@ -485,14 +457,6 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        /*switch (requestCode){
-            case REQUEST_EXTERNAL_STORAGE:
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    //do nothing ．．．　ｏｒ
-                    showBSDialog();
-                }
-                break;
-        }*/
         PermissionUtils.onRequestPermissionsResult(requestCode,getActivity(),mPermissionInterface);
     }
 
