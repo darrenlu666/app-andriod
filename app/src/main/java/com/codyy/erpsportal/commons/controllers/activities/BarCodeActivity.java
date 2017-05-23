@@ -283,14 +283,14 @@ public class BarCodeActivity extends BaseHttpActivity {
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(BarCodeActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(BarCodeActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
         }
     };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+        mShareAPI.onActivityResult(requestCode, resultCode, data);
     }
 
     class PictureAdapter extends RecyclingPagerAdapter {
@@ -338,13 +338,17 @@ public class BarCodeActivity extends BaseHttpActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String url = "http://10.1.10.235/Android/ECSP/2017-05-10_15-15-08/ErpsPortal-train-release.apk";
+                        String url = null;
                         if (null != mData && position < mData.size()) {
                             if (position == 0) {
                                 url = mData.get(position).getAppPhoneUrl();
                             } else {
                                 url = mData.get(position).getDownload_url();
                             }
+                        }
+                        //非空处理.
+                        if(TextUtils.isEmpty(url)){
+                            url ="http://10.1.10.235/Android/ECSP/2017-05-10_15-15-08/ErpsPortal-train-release.apk";
                         }
                         File file = new File(filePath);
                         boolean success;
