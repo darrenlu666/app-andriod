@@ -7,7 +7,7 @@ package com.codyy.erpsportal.commons.models.personal;
 
 public class ShareApp {
 
-    private String appOs;//android or iOS
+    private String appOS;//android or iOS appOS
     private String appPad;//
     private String appPhoneUrl;//android download url .
     private String applicationName;//互动学习平台
@@ -15,11 +15,11 @@ public class ShareApp {
     private String latestVersion;
 
     public String getAppOs() {
-        return appOs;
+        return appOS;
     }
 
     public void setAppOs(String appOs) {
-        this.appOs = appOs;
+        this.appOS = appOs;
     }
 
     public String getAppPad() {

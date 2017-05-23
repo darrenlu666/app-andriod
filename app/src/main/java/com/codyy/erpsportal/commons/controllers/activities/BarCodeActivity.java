@@ -229,7 +229,7 @@ public class BarCodeActivity extends BaseHttpActivity {
                                 url = shareApp.getDownload_url();
                             }
                             String title = shareApp.getApplicationName();
-                            String content = "让人人都有获得优质教育资源的机会,点击下载" + shareApp.getAppOs() + "客户端";
+                            String content = "让人人拥有获得优质教育资源的机会,点击下载" + shareApp.getAppOs() + "客户端";
 
 
                             if (SHARE_MEDIA.WEIXIN_CIRCLE == snsPlatform.mPlatform) {
