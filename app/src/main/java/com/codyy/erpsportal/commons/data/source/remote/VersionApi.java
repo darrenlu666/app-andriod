@@ -12,7 +12,7 @@ import retrofit2.http.GET;
 
 public interface VersionApi {
 
-    @GET("app/version/getAndroidPhoneCurrentVersionInfo.do?applicationId=4")
+    @GET("app/version/getAndroidPhoneCurrentVersionInfo.do?applicationId=1")
     Observable<JSONObject> getVersion();
 
 }

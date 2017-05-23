@@ -38,6 +38,11 @@ public class UpdateDialog extends DialogFragment {
 
     private final static String ARG_FORCE = "ARG_FORCE";
 
+    /**
+     * 强制更新时是否可以退出
+     */
+    private final static String ARG_EXITABLE = "ARG_EXITABLE";
+
     private final static String ARG_URL = "ARG_URL";
 
     private final static int STATUS_NOT_STARTED = 0;
@@ -59,6 +64,11 @@ public class UpdateDialog extends DialogFragment {
      */
     private boolean mForce;
 
+    /**
+     * 强制更新时是否可以点返回退出，默认可以
+     */
+    private boolean mExitable = true;
+
     private String mUrl;
 
     private BroadcastReceiver mBroadcastReceiver;
@@ -69,10 +79,15 @@ public class UpdateDialog extends DialogFragment {
     private int mDownloadStatus = STATUS_NOT_STARTED;
 
     public static UpdateDialog newInstance(boolean forceUpdate, String url) {
+        return newInstance(forceUpdate, url, true);
+    }
+
+    public static UpdateDialog newInstance(boolean forceUpdate, String url, boolean exitable) {
         UpdateDialog updateDialog = new UpdateDialog();
         Bundle bundle = new Bundle();
         bundle.putBoolean(ARG_FORCE, forceUpdate);
         bundle.putString(ARG_URL, url);
+        bundle.putBoolean(ARG_EXITABLE, exitable);
         updateDialog.setArguments(bundle);
         return updateDialog;
     }
@@ -84,6 +99,7 @@ public class UpdateDialog extends DialogFragment {
         if (getArguments() != null) {
             mForce = getArguments().getBoolean(ARG_FORCE);
             mUrl = getArguments().getString(ARG_URL);
+            mExitable = getArguments().getBoolean(ARG_EXITABLE, true);
         }
         if (mForce) {
             setCancelable(false);
@@ -126,20 +142,24 @@ public class UpdateDialog extends DialogFragment {
                         return;
                     }
                 }
-                long downloaderId = NewVersionDownloader.download(getContext(), mUrl);
-                mDownloadStatus = STATUS_STARTED;
-                if (mForce) {
-                    listener(downloaderId);
-                    mTextTv.setText(R.string.new_version_downloading);
-                    mBtnsContainerLl.setVisibility(View.GONE);
-                } else {
-                    dismiss();
-                }
+                startToDownload();
             }
         });
         builder.setView(view);
         Dialog dialog = builder.create();
         return dialog;
+    }
+
+    public void startToDownload() {
+        long downloaderId = NewVersionDownloader.download(getContext(), mUrl);
+        mDownloadStatus = STATUS_STARTED;
+        if (mForce) {
+            listener(downloaderId);
+            mTextTv.setText(R.string.new_version_downloading);
+            mBtnsContainerLl.setVisibility(View.GONE);
+        } else {
+            dismiss();
+        }
     }
 
     private void listener(final long downloaderId) {
@@ -163,17 +183,19 @@ public class UpdateDialog extends DialogFragment {
     public void onResume() {
         super.onResume();
         if (mForce) {
-            getDialog().setOnKeyListener(new OnKeyListener() {
-                @Override
-                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK
-                            && mDownloadStatus != STATUS_STARTED) {//正在下载时不让用户退出，否则无法下次进入无法同步状态
-                        getActivity().finish();
-                        return true;
+            if (mExitable) {
+                getDialog().setOnKeyListener(new OnKeyListener() {
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_BACK
+                                && mDownloadStatus != STATUS_STARTED) {//正在下载时不让用户退出，否则无法下次进入无法同步状态
+                            getActivity().finish();
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
-                }
-            });
+                });
+            }
 
             if(mDownloadStatus == STATUS_FINISHED) {
                 mTextTv.setText(R.string.new_version_detected_please_update);

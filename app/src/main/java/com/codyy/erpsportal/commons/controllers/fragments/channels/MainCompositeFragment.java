@@ -273,7 +273,11 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                 }
             });
             titleTv.setText(infoSlide.title);
-            ImageFetcher.getInstance(container).fetchSmall(iconDv, infoSlide.url);
+            if ( !TextUtils.isEmpty(infoSlide.url)) {
+                ImageFetcher.getInstance(container).fetchSmall(iconDv, infoSlide.url);
+            } else {
+                iconDv.setImageResource(R.drawable.ph_no_image_uploaded);
+            }
         }
     }
 

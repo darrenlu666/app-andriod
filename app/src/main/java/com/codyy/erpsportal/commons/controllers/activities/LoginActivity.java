@@ -30,7 +30,7 @@ import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.erpsportal.commons.models.engine.VersionChecker;
-import com.codyy.erpsportal.commons.models.engine.VersionChecker.VersionCheckerListener;
+import com.codyy.erpsportal.commons.models.engine.VersionChecker.SimpleListener;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.tasks.SavePasswordTask;
@@ -77,7 +77,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String IS_BACK_TO_MAIN = "go-to-main";
 
-    public final static String EXTRA_INDEX_GOTO = "com.codyy.lrticlassroom.index";
+    public final static String EXTRA_INDEX_GOTO = "com.codyy.erpsportal.index";
+
+    private static final String EXTRA_LAUNCHING = "com.codyy.erpsportal.EXTRA_LAUNCHING";
 
     private boolean mIsBackToMain = true;
 
@@ -111,6 +113,8 @@ public class LoginActivity extends AppCompatActivity {
     private PendingLoginRequestData mPendingRequest;
 
     private VersionChecker mVersionChecker;
+
+    private boolean mLaunching;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,14 +221,17 @@ public class LoginActivity extends AppCompatActivity {
      * 检查新版本
      */
     private void checkNewVersion() {
-        mVersionChecker = VersionChecker.getInstance();
-        mVersionChecker.setVersionCheckerListener(new VersionCheckerListener() {
-            @Override
-            public void onNewVersionDetected() {
-                hideSoftKeyboard();
-            }
-        });
-        mVersionChecker.checkNewVersion(this);
+        mLaunching = getIntent().getBooleanExtra(EXTRA_LAUNCHING, false);
+        if (mLaunching) {
+            mVersionChecker = VersionChecker.getInstance();
+            mVersionChecker.setVersionCheckerListener(new SimpleListener() {
+                @Override
+                public void onNewVersionDetected() {
+                    hideSoftKeyboard();
+                }
+            });
+            mVersionChecker.checkNewVersion(this);
+        }
     }
 
     /**
@@ -567,14 +574,23 @@ public class LoginActivity extends AppCompatActivity {
 
     private void gotoMain(UserInfo userInfo) {
         if (mIsBackToMain) {
-            MainActivity.start(LoginActivity.this, userInfo, mIndexGoto);
+            MainActivity.startNoNeedToCheckUpdate(LoginActivity.this, userInfo, mIndexGoto);
         }
         finish();
     }
 
     public static void start(Activity activity) {
+        start(activity, false);
+    }
+
+    public static void startOnLaunching(Activity activity) {
+        start(activity, true);
+    }
+
+    public static void start(Activity activity, boolean launching) {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(EXTRA_LAUNCHING, launching);
         activity.startActivity(intent);
         UIUtils.addEnterAnim(activity);
     }

@@ -96,7 +96,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
     private void jumpToMain() {
-        MainActivity.start(this, mUserInfo, 0);
+        MainActivity.startNoNeedToCheckUpdate(this, mUserInfo, 0);
         finish();
     }
 
