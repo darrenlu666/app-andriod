@@ -36,7 +36,7 @@ public class VersionChecker {
     /**
      * 上次检查更新检查到的版本号
      */
-    private String mLastDetectedVersion;
+//    private String mLastDetectedVersion;
 
     private VersionChecker() {
     }
@@ -72,7 +72,7 @@ public class VersionChecker {
                             String version = response.optString("version");
                             boolean forceUpdate = "Y".equals(response.optString("upgrade_ind"));
                             if(!TextUtils.isEmpty(version)
-                                    && (forceUpdate || !version.equals(mLastDetectedVersion))
+//                                    && (forceUpdate || !version.equals(mLastDetectedVersion))
                                     && !BuildConfig.VERSION_NAME.equals(version)) {
                                 final String url = response.optString("appPhoneUrl");
                                 Cog.d(TAG, "checkNewVersion url=", url);
@@ -82,7 +82,7 @@ public class VersionChecker {
                                         forceUpdate, url);
                                 updateDialog.show(activity.getSupportFragmentManager(), "update");
                             }
-                            mLastDetectedVersion = version;
+//                            mLastDetectedVersion = version;
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -100,6 +100,12 @@ public class VersionChecker {
         }
         mDisposable = null;
         mVersionCheckerListener = null;
+    }
+
+    public static class SimpleListener implements VersionCheckerListener{
+
+        @Override
+        public void onNewVersionDetected() { }
     }
 
     public interface VersionCheckerListener {
