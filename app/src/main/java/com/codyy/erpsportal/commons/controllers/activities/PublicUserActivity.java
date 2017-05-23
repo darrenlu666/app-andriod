@@ -9,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
@@ -93,6 +94,9 @@ public class PublicUserActivity extends BaseHttpActivity {
         UserInfo userInfo = UserInfo.parseJson(response);
         if (null != userInfo) {
             mNativeUserInfo = userInfo;
+            if(null != mUserInfo){
+                mNativeUserInfo.setUuid(mUserInfo.getUuid());
+            }
             refreshUI();
             mEmptyView.setVisibility(View.GONE);
             if(mNativeUserInfo.getUserType().equals(UserInfo.USER_TYPE_PARENT)){
@@ -230,13 +234,12 @@ public class PublicUserActivity extends BaseHttpActivity {
         mClassSpaceLinearLayout.setEnabled(false);
         mEmptyView.setVisibility(View.VISIBLE);
         mEmptyView.setLoading(true);
-//        requestData(true);
         checkForbidden();
     }
 
     private void checkForbidden() {
         HashMap<String,String> param = new HashMap<>();
-        param.put("accountId",mUserInfo.getBaseUserId());
+        param.put("accountId",mUserId);
         param.put("accountType","USER");
 
         requestData(URLConfig.CHECK_USER_FORBIDDEN, param, true, new IRequest() {
@@ -252,7 +255,13 @@ public class PublicUserActivity extends BaseHttpActivity {
 
             @Override
             public void onRequestFailure(Throwable error) {
-                mForbiddenFrameLayout.setVisibility(View.VISIBLE);
+//                mForbiddenFrameLayout.setVisibility(View.VISIBLE);
+                if (null == mEmptyView) return;
+                if (null != mNativeUserInfo) {
+                    mEmptyView.setVisibility(View.GONE);
+                } else {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -347,7 +356,28 @@ public class PublicUserActivity extends BaseHttpActivity {
         }
     }
 
-    public static void start(Activity activity, String baseUserId) {
+    /**
+     *
+     * @param activity
+     * @param userInfo
+     * @param baseUserId
+     */
+    public static void start(Activity activity,UserInfo userInfo,  String baseUserId) {
+        Intent intent = new Intent(activity, PublicUserActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        intent.putExtra(Constants.USER_INFO,userInfo);
+        intent.putExtra(EXTRA_ID, baseUserId);
+        activity.startActivity(intent);
+        UIUtils.addEnterAnim(activity);
+    }
+
+
+    /**
+     *
+     * @param activity
+     * @param baseUserId
+     */
+    public static void start(Activity activity,  String baseUserId) {
         Intent intent = new Intent(activity, PublicUserActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         intent.putExtra(EXTRA_ID, baseUserId);

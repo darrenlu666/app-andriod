@@ -161,7 +161,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                             if(data.getBaseUserId().equals(mUserInfo.getBaseUserId())){
                                 MainActivity.start(getActivity() , mUserInfo , 2);
                             }else{//2.访客
-                                PublicUserActivity.start(getActivity() , data.getBaseUserId());
+                                PublicUserActivity.start(getActivity() , mUserInfo, data.getBaseUserId());
                             }
                             break;
                     }

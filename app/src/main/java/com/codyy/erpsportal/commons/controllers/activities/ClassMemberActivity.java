@@ -23,6 +23,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.UserClassAdapter;
@@ -475,7 +476,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
                     if (studentObject.optString("studentId").equals(userInfo.getBaseUserId())) {
                         MainActivity.start(ClassMemberActivity.this, userInfo, 2);
                     } else {//2.访客
-                        PublicUserActivity.start(ClassMemberActivity.this, studentObject.optString("studentId"));
+                        PublicUserActivity.start(ClassMemberActivity.this, mUserInfo,studentObject.optString("studentId"));
                     }
                 }
             });
@@ -528,6 +529,7 @@ public class ClassMemberActivity extends BaseHttpActivity implements UserClassAd
         intent.putExtra(ClassMemberActivity.EXTRA_USER_ID, userInfo.getBaseUserId());
         intent.putExtra(ClassMemberActivity.EXTRA_USER_TYPE, userInfo.getUserType());
         intent.putExtra(ClassMemberActivity.EXTRA_CLASS_ID, classId);
+        intent.putExtra(Constants.USER_INFO,userInfo);
         intent.putExtra(ClassMemberActivity.EXTRA_CLASS_NAME, className);
         intent.putParcelableArrayListExtra(EXTRA_CLASS_LIST , (ArrayList<? extends Parcelable>) classCont);
         intent.putExtra(EXTRA_FROM , type);

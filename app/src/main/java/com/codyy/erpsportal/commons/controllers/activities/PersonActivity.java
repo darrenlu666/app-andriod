@@ -126,11 +126,13 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
         if(null != userInfo){
             mNativeUserInfo = userInfo ;
             //更新本人的ｕｕｉｄ防止过期
+            mNativeUserInfo.setUuid(mUserInfo.getUuid());
+
             if(mNativeUserInfo.getBaseUserId().equals(mUserInfo.getBaseUserId())){
-                mNativeUserInfo.setUuid(mUserInfo.getUuid());
                 mNativeUserInfo.setChildList(mUserInfo.getChildList());
                 mNativeUserInfo.setClassList(mUserInfo.getClassList());
             }
+
             refreshUI();
             switch (mNativeUserInfo.getUserType()){
                 case UserInfo.USER_TYPE_TEACHER://教师
@@ -184,8 +186,8 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
 
         mEmptyView.setVisibility(View.VISIBLE);
         mEmptyView.setLoading(true);
+        requestData(true);
     }
-
 
 
     private void refreshUI() {

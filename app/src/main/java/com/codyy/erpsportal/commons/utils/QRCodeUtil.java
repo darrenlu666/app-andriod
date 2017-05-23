@@ -42,7 +42,7 @@ public class QRCodeUtil {
             //容错级别
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
             //设置空白边距的宽度
-//            hints.put(EncodeHintType.MARGIN, 2); //default is 4
+            hints.put(EncodeHintType.MARGIN, 2); //default is 4
             // 图像数据转换，使用了矩阵转换
             BitMatrix bitMatrix = new QRCodeWriter().encode(content, BarcodeFormat.QR_CODE, widthPix, heightPix, hints);
             int[] pixels = new int[widthPix * heightPix];
@@ -67,7 +67,7 @@ public class QRCodeUtil {
             }
 
             //必须使用compress方法将bitmap保存到文件中再进行读取。直接返回的bitmap是没有任何压缩的，内存消耗巨大！
-            return bitmap != null && bitmap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(filePath));
+            return bitmap != null && bitmap.compress(Bitmap.CompressFormat.JPEG, 70, new FileOutputStream(filePath));
         } catch (WriterException | IOException e) {
             e.printStackTrace();
         }

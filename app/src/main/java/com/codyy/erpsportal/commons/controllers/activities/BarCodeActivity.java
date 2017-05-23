@@ -42,7 +42,9 @@ import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.SnsPlatform;
 import com.umeng.socialize.utils.ShareBoardlistener;
 import com.viewpagerindicator.CirclePageIndicator;
+
 import org.json.JSONObject;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -71,8 +73,6 @@ public class BarCodeActivity extends BaseHttpActivity {
     TextView mShareTv;
     @Bind(R.id.view_pager)
     ViewPager mViewPager;
-    @Bind(R.id.app_tv)
-    TextView mAppTv;
     @Bind(R.id.indicator)
     CirclePageIndicator mIndicator;
     private PictureAdapter mAdapter;
@@ -91,7 +91,7 @@ public class BarCodeActivity extends BaseHttpActivity {
     @Override
     public HashMap<String, String> getParam(boolean isRefreshing) throws Exception {
         HashMap<String, String> param = new HashMap<>();
-        param.put("applicationId", String.valueOf(4));
+        param.put("applicationId", String.valueOf(1));
         param.put("uuid", mUserInfo.getUuid());
         return param;
     }
@@ -135,7 +135,7 @@ public class BarCodeActivity extends BaseHttpActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.save_tv:
-                PermissionUtils.verifyStoragePermissions(BarCodeActivity.this , mSaveTv,mPermissionInterface);
+                PermissionUtils.verifyStoragePermissions(BarCodeActivity.this, mSaveTv, mPermissionInterface);
                 break;
             case R.id.share_tv:
                 shareApp();
@@ -153,7 +153,7 @@ public class BarCodeActivity extends BaseHttpActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PermissionUtils.onRequestPermissionsResult(requestCode,BarCodeActivity.this,mPermissionInterface);
+        PermissionUtils.onRequestPermissionsResult(requestCode, BarCodeActivity.this, mPermissionInterface);
     }
 
     /**
@@ -182,7 +182,7 @@ public class BarCodeActivity extends BaseHttpActivity {
                 });
     }
 
-    UMShareAPI mShareAPI ;
+    UMShareAPI mShareAPI;
     private ShareAction mShareAction;
 
     /**
@@ -194,7 +194,7 @@ public class BarCodeActivity extends BaseHttpActivity {
             //weixin
             if (mShareAPI.isInstall(this, SHARE_MEDIA.WEIXIN) && mShareAPI.isInstall(this, SHARE_MEDIA.QQ)) {
                 mShareAction.setDisplayList(
-                          SHARE_MEDIA.WEIXIN
+                        SHARE_MEDIA.WEIXIN
                         , SHARE_MEDIA.WEIXIN_CIRCLE
                         , SHARE_MEDIA.WEIXIN_FAVORITE
                         , SHARE_MEDIA.QQ
@@ -207,14 +207,14 @@ public class BarCodeActivity extends BaseHttpActivity {
                         , SHARE_MEDIA.WEIXIN_FAVORITE
                         , SHARE_MEDIA.QZONE
                 );
-            } else if(mShareAPI.isInstall(this, SHARE_MEDIA.QQ)){
+            } else if (mShareAPI.isInstall(this, SHARE_MEDIA.QQ)) {
                 mShareAction.setDisplayList(
-                          SHARE_MEDIA.QQ
+                        SHARE_MEDIA.QQ
                         , SHARE_MEDIA.QZONE
                 );
-            }else{
+            } else {
                 mShareAction.setDisplayList(
-                         SHARE_MEDIA.QZONE
+                        SHARE_MEDIA.QZONE
                 );
             }
         }
@@ -222,14 +222,14 @@ public class BarCodeActivity extends BaseHttpActivity {
                 .setShareboardclickCallback(new ShareBoardlistener() {
                     @Override
                     public void onclick(SnsPlatform snsPlatform, SHARE_MEDIA share_media) {
-                        try{
+                        try {
                             ShareApp shareApp = mData.get(mViewPager.getCurrentItem());
                             String url = shareApp.getAppPhoneUrl();
-                            if(mViewPager.getCurrentItem()>0){
+                            if (mViewPager.getCurrentItem() > 0) {
                                 url = shareApp.getDownload_url();
                             }
                             String title = shareApp.getApplicationName();
-                            String content = "让人人都有获得优质教育资源的机会,点击下载"+shareApp.getAppOs()+"客户端";
+                            String content = "让人人都有获得优质教育资源的机会,点击下载" + shareApp.getAppOs() + "客户端";
 
 
                             if (SHARE_MEDIA.WEIXIN_CIRCLE == snsPlatform.mPlatform) {
@@ -254,7 +254,7 @@ public class BarCodeActivity extends BaseHttpActivity {
                                         .setCallback(mUmShareListener)
                                         .share();
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -293,12 +293,6 @@ public class BarCodeActivity extends BaseHttpActivity {
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
-
     class PictureAdapter extends RecyclingPagerAdapter {
 
         @Override
@@ -331,7 +325,6 @@ public class BarCodeActivity extends BaseHttpActivity {
             }
 
             public void setData(final int position) {
-                // TODO: 10/05/17 get iamge from api .
                 if (position > 0) {
                     textView.setText("iOS");
                 } else {
@@ -346,9 +339,6 @@ public class BarCodeActivity extends BaseHttpActivity {
                     @Override
                     public void run() {
                         String url = "http://10.1.10.235/Android/ECSP/2017-05-10_15-15-08/ErpsPortal-train-release.apk";
-                        if (position > 0) {
-                            url = "http://www.baidu.com";
-                        }
                         if (null != mData && position < mData.size()) {
                             if (position == 0) {
                                 url = mData.get(position).getAppPhoneUrl();
@@ -361,7 +351,7 @@ public class BarCodeActivity extends BaseHttpActivity {
                         if (file != null && file.exists()) {
                             success = true;
                         } else {
-                            success = QRCodeUtil.createQRImage(url.trim(), 800, 800,
+                            success = QRCodeUtil.createQRImage(url.trim(), 350, 350,
                                     BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher),
                                     filePath);
                         }

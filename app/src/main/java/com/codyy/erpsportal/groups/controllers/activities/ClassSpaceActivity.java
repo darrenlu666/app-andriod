@@ -281,7 +281,11 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
 
             @Override
             public void onRequestFailure(Throwable error) {
-                mForbiddenFrameLayout.setVisibility(View.VISIBLE);
+                if (mDataList.size() <= 0) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyView.setVisibility(View.GONE);
+                }
             }
         });
 
