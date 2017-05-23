@@ -44,7 +44,7 @@ public class EApplication extends MultiDexApplication {
         QueuedWork.isUseThreadPool = false;
         Config.DEBUG = true;
         PlatformConfig.setWeixin("wx80c88ccce1f04718", "bdea572a85a7c5ab41f31fc6f45b352c");
-        PlatformConfig.setQQZone("1106150054", "GrdFQy6ldy7pHyyv");
+        PlatformConfig.setQQZone("1105710483", "EppjikdbZ8X1C03k");
 
     }
 
