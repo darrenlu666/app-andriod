@@ -345,12 +345,8 @@ public class BarCodeActivity extends BaseHttpActivity {
             }
 
             public void setData(final int position) throws Exception{
-               ShareApp app = mData.get(position);
-                if (app.getAppOs().toLowerCase().equals("android")) {
-                    textView.setText("Android");
-                } else {
-                    textView.setText("iOS");
-                }
+
+                textView.setText(mData.get(position).getAppOs());
 
                 //生成二维码.
                 final String filePath = FileUtils.getBarCodePath(position, BarCodeActivity.this);
