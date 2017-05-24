@@ -1,6 +1,7 @@
 package com.codyy.widgets;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.codyy.widgets.adapter.AlbumAdapter;
 import com.codyy.widgets.imagepipeline.ImagePipelineConfigFactory;
@@ -141,8 +141,10 @@ public class AlbumActivity extends AppCompatActivity implements AlbumAdapter.Tak
 
     @Override
     public void takePhoto() {
-        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+        int cameraGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int fileGranted = ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE);
+        if (cameraGranted == PackageManager.PERMISSION_GRANTED
+                && fileGranted == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
             long createTime = System.currentTimeMillis();
@@ -159,7 +161,7 @@ public class AlbumActivity extends AppCompatActivity implements AlbumAdapter.Tak
         } else {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.CAMERA},
+                        new String[]{Manifest.permission.CAMERA, permission.WRITE_EXTERNAL_STORAGE},
                         REQUEST_PERMISSION);
             }
         }
@@ -170,7 +172,7 @@ public class AlbumActivity extends AppCompatActivity implements AlbumAdapter.Tak
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_PERMISSION:
-                Snackbar.make(mPreview, "没有相机权限！", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mPreview, "没有相机或文件写入权限！", Snackbar.LENGTH_LONG).show();
                 break;
         }
     }

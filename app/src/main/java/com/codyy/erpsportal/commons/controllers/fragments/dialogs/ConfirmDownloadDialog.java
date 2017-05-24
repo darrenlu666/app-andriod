@@ -1,8 +1,8 @@
 package com.codyy.erpsportal.commons.controllers.fragments.dialogs;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,10 +39,10 @@ public class ConfirmDownloadDialog extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnCancelUpdateListener) {
-            this.onOnCancelUpdateListener = (OnCancelUpdateListener) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCancelUpdateListener) {
+            this.onOnCancelUpdateListener = (OnCancelUpdateListener) context;
         }
     }
 
