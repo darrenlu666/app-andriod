@@ -127,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
         //添加键盘高度
         InputUtils.getKeyboardHeight(this);
         loadLoginToken();
-        checkNewVersion();
+        checkNewVersion(false);
     }
 
     private void initAttributes() {
@@ -219,10 +219,11 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * 检查新版本
+     * @param changeServer true 服务器地址换了，方便测试测试
      */
-    private void checkNewVersion() {
+    private void checkNewVersion(boolean changeServer) {
         mLaunching = getIntent().getBooleanExtra(EXTRA_LAUNCHING, false);
-        if (mLaunching) {
+        if (mLaunching || changeServer) {//如果是换服务器了，直接检查更新
             mVersionChecker = VersionChecker.getInstance();
             mVersionChecker.setVersionCheckerListener(new SimpleListener() {
                 @Override
@@ -335,6 +336,7 @@ public class LoginActivity extends AppCompatActivity {
                 changeServerDialog.setServerChangedListener(new ServerChangedListener() {
                     @Override
                     public void onServerChangedListener() {
+                        checkNewVersion(true);
                         loadLoginToken();
                     }
                 });
@@ -583,6 +585,10 @@ public class LoginActivity extends AppCompatActivity {
         start(activity, false);
     }
 
+    /**
+     * 应用启动中，进入首页直接发现未登录跳到此登录的
+     * @param activity 首页活动
+     */
     public static void startOnLaunching(Activity activity) {
         start(activity, true);
     }
