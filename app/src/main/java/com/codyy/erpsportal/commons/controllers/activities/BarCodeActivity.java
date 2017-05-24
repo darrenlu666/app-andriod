@@ -126,8 +126,7 @@ public class BarCodeActivity extends BaseHttpActivity {
                         mData.add(ap);
                     }
                 }
-
-                mData = apps;
+//                mData = apps;
                 mAdapter = new PictureAdapter();
                 mViewPager.setAdapter(mAdapter);
                 //test viewPager .
