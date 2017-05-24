@@ -154,7 +154,9 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
         } else {
             mEmptyView.setVisibility(View.GONE);
         }
-        //init the filter more fragment .
+
+        //init the filter more fragment
+        initMenu();
         initFilterFragment();
     }
 
@@ -426,6 +428,10 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
             }
         });
 
+//        initMenu();
+    }
+
+    private void initMenu() {
         this.setFilterListener(new IFilterListener() {
             @Override
             public void onFilterClick(MenuItem item) {

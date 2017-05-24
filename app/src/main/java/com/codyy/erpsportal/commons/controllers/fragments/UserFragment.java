@@ -19,6 +19,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -495,7 +496,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
      * 选择班级进入
      */
     private void showClassDialog() {
-        if (mClassDialog == null) {
+        if (mClassDialog == null || null == mClassList || mClassList.size() == 0) {
             mClassDialog = UserFragmentUtils.createBottomSheet(getActivity(), mUserInfo, mClassList, mStudents, new BaseRecyclerAdapter.OnItemClickListener<String>() {
                 @Override
                 public void onItemClicked(View v, int position, String data) {
