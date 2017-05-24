@@ -19,6 +19,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -167,8 +168,6 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     @Override
     public void init() {
         mUserId   =   getIntent().getStringExtra(EXTRA_ID);
-        mImageUrl = UserFragmentUtils.createDir().getAbsolutePath() + "/image.jpg";
-        mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
         mTitleTextView.setText(getString(R.string.person_info));
         initToolbar(mToolBar);
         //用户默认没有被禁用.
@@ -452,6 +451,10 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     private PermissionUtils.PermissionInterface mPermissionInterface = new PermissionUtils.PermissionInterface() {
         @Override
         public void next() {
+            mImageUrl = UserFragmentUtils.createDir().getAbsolutePath() + "/image.jpg";
+            Log.i(TAG,"mImageUrl : "+mImageUrl);
+            mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
+            Log.i(TAG," mImageHead: "+mImageHead);
             showBSDialog();
         }
     };

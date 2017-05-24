@@ -121,14 +121,6 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     private StudentParse mStudentParse;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Cog.d(TAG, "onCreate()");
-        mImageUrl = UserFragmentUtils.createDir().getAbsolutePath() + "/image.jpg";
-        mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
-    }
-
-    @Override
     public int obtainLayoutId() {
         return R.layout.fragment_user;
     }
@@ -451,6 +443,8 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     private PermissionUtils.PermissionInterface mPermissionInterface = new PermissionUtils.PermissionInterface() {
         @Override
         public void next() {
+            mImageUrl = UserFragmentUtils.createDir().getAbsolutePath() + "/image.jpg";
+            mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
             showBSDialog();
         }
     };

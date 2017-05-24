@@ -354,6 +354,7 @@ public class BarCodeActivity extends BaseHttpActivity {
 
                 //生成二维码.
                 final String filePath = FileUtils.getBarCodePath(position, BarCodeActivity.this);
+                Log.i(TAG,"filePath: "+filePath);
 
                 //二维码图片较大时，生成图片、保存文件的时间可能较长，因此放在新线程中
                 new Thread(new Runnable() {
