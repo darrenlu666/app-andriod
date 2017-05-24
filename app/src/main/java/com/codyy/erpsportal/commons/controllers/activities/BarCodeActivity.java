@@ -46,6 +46,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -110,6 +111,22 @@ public class BarCodeActivity extends BaseHttpActivity {
         if (null != parse) {
             List<ShareApp> apps = parse.getData();
             if (null != apps) {
+                if(null == mData){
+                    mData = new ArrayList<>();
+                }else {
+                    mData.clear();
+                }
+
+                //reOrder . android . -> iOs .
+                for(ShareApp ap : apps){
+                    if(TextUtils.isEmpty(ap.getAppOs())) continue;
+                    if(ap.getAppOs().toLowerCase().equals("android")){
+                        mData.add(0,ap);
+                    }else{
+                        mData.add(ap);
+                    }
+                }
+
                 mData = apps;
                 mAdapter = new PictureAdapter();
                 mViewPager.setAdapter(mAdapter);
@@ -305,7 +322,11 @@ public class BarCodeActivity extends BaseHttpActivity {
             } else {
                 vh = (ViewHolder) convertView.getTag();
             }
-            vh.setData(position);
+            try {
+                vh.setData(position);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return convertView;
         }
 
@@ -324,11 +345,12 @@ public class BarCodeActivity extends BaseHttpActivity {
                 textView = (TextView) itemView.findViewById(R.id.app_tv);
             }
 
-            public void setData(final int position) {
-                if (position > 0) {
-                    textView.setText("iOS");
-                } else {
+            public void setData(final int position) throws Exception{
+               ShareApp app = mData.get(position);
+                if (app.getAppOs().toLowerCase().equals("android")) {
                     textView.setText("Android");
+                } else {
+                    textView.setText("iOS");
                 }
 
                 //生成二维码.
