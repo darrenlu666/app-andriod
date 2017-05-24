@@ -934,6 +934,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Cog.e(TAG, "onConfigurationChanged");
+        if(isFinishing()) return;
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //当前为横屏， 在此处添加额外的处理代码
             MeetingAction mac = new MeetingAction();

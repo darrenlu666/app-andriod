@@ -698,6 +698,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        if(isFinishing()) return;
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_RECORD) || mFrom.equals(ClassRoomContants.TYPE_LIVE_RECORD)) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 int height = UIUtils.dip2px(this, 180f);
