@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.fragments.dialogs;
 
+import android.Manifest.permission;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
@@ -26,8 +27,12 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.engine.NewVersionDownloader;
+import com.codyy.erpsportal.commons.models.engine.rxpermissions.RxPermissions;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 
 import java.io.File;
+
+import io.reactivex.functions.Consumer;
 
 /**
  * 更新Dialog
@@ -142,7 +147,19 @@ public class UpdateDialog extends DialogFragment {
                         return;
                     }
                 }
-                startToDownload();
+                RxPermissions rxPermissions = new RxPermissions(getFragmentManager());
+                rxPermissions.request(permission.WRITE_EXTERNAL_STORAGE)
+                        .subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                if (aBoolean) {
+                                    startToDownload();
+                                } else {
+                                    ToastUtil.showToast(getContext(), R.string.cant_download_for_no_permission);
+                                }
+                            }
+                        });
+//                startToDownload();
             }
         });
         builder.setView(view);

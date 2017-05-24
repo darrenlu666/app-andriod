@@ -456,6 +456,7 @@ public class WeiBoPrivateMessageActivity extends ToolbarActivity {
         }
     }
 
+    @Deprecated
     private void onUploadButtonClick(String path, String parameterName, String fileName, String url) {
         // TODO: 16-6-6 修改上传路径和url
         String path1 = Environment.getExternalStorageDirectory().getPath() + "/test_kmdai.aac";
