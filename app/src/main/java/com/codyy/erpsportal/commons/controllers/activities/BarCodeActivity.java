@@ -100,6 +100,9 @@ public class BarCodeActivity extends BaseHttpActivity {
     @Override
     public void init() {
         mShareAPI = UMShareAPI.get(this);
+        if (!mShareAPI.isInstall(this, SHARE_MEDIA.WEIXIN) && !mShareAPI.isInstall(this, SHARE_MEDIA.QQ)) {
+            mShareTv.setVisibility(View.GONE);
+        }
         //get data .
         requestData(true);
     }
@@ -126,7 +129,6 @@ public class BarCodeActivity extends BaseHttpActivity {
                         mData.add(ap);
                     }
                 }
-//                mData = apps;
                 mAdapter = new PictureAdapter();
                 mViewPager.setAdapter(mAdapter);
                 //test viewPager .
@@ -218,20 +220,17 @@ public class BarCodeActivity extends BaseHttpActivity {
                 );
             } else if (mShareAPI.isInstall(this, SHARE_MEDIA.WEIXIN)) {
                 mShareAction.setDisplayList(
-                        SHARE_MEDIA.WEIXIN
+                          SHARE_MEDIA.WEIXIN
                         , SHARE_MEDIA.WEIXIN_CIRCLE
                         , SHARE_MEDIA.WEIXIN_FAVORITE
-                        , SHARE_MEDIA.QZONE
                 );
             } else if (mShareAPI.isInstall(this, SHARE_MEDIA.QQ)) {
                 mShareAction.setDisplayList(
-                        SHARE_MEDIA.QQ
+                          SHARE_MEDIA.QQ
                         , SHARE_MEDIA.QZONE
                 );
             } else {
-                mShareAction.setDisplayList(
-                        SHARE_MEDIA.QZONE
-                );
+                return;
             }
         }
         mShareAction
