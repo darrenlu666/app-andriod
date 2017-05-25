@@ -302,6 +302,7 @@ public class ChannelCustomizedFragment extends BaseHttpFragment implements Confi
 
     @Override
     public void onConfigLoaded(ModuleConfig config) {
+        if(null == mRefreshLayout) return;
         baseAreaId = config.getBaseAreaId();
         schoolId = config.getSchoolId();
         mRefreshLayout.setRefreshing(true);

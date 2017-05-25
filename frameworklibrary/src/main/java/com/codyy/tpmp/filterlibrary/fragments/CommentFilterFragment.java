@@ -66,7 +66,7 @@ public class CommentFilterFragment extends Fragment {
     /**
      * 筛选数据源-
      */
-    public static LinkedList<FilterModule> mData = new LinkedList<>();
+    public LinkedList<FilterModule> mData = new LinkedList<>();
     /**
      * 保存右侧点击了哪一项
      */
@@ -150,12 +150,14 @@ public class CommentFilterFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.i(TAG,"onViewCreated!");
         initView();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.i(TAG,"onActivityCreated!"+mData.size());
         initData();
     }
 
@@ -216,6 +218,7 @@ public class CommentFilterFragment extends Fragment {
      */
     // 03/05/17 自由插拔任意多个筛选选项
     public void initData() {
+        Log.i(TAG,"initData()!");
         for (int level : mFilterLevels) {
             FilterModule filterModule = null;
             switch (level) {

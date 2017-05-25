@@ -131,17 +131,17 @@ public class CollectivePrepareLessonsFragment extends SimpleRecyclerFragment<Pre
      * @param gradeId
      * @param subjectId
      */
-    public void execAreaSearch(String gradeId, String subjectId, String status, AreaBase areaBase) {
+    public void execAreaSearch(String gradeId, String subjectId, String status, String schoolId, String areaId) {
         mGradeId = gradeId;
         mSubjectId = subjectId;
         mStatus = status;
-        mClsSchoolId = "";
-        mAreaId = "";
-        if ("area".equals(areaBase.getType())) {
+        mClsSchoolId = schoolId;
+        mAreaId = areaId;
+        /*if ("area".equals(areaBase.getType())) {
             mAreaId = areaBase.getAreaId();
         } else if ("school".equals(areaBase.getType())) {
             mClsSchoolId = areaBase.getSchoolID();
-        }
+        }*/
         initData();
     }
 
