@@ -54,7 +54,7 @@ public class FilterConstants {
 
     public static final String VAL_STATE_INIT = "INIT";
     public static final String VAL_STATE_PROGRESS = "PROGRESS";
-    public static final String VAL_STATE_END = "CLOSED";
+    public static final String VAL_STATE_END = "END";
 
 
 

@@ -134,3 +134,7 @@
 -keep class com.tencent.mm.sdk.** {
 *;
 }
+
+# 过滤frameworklibrary .
+-keep class com.codyy.url.** {*;}
+-keep class com.codyy.tpmp.filterlibrary.entities.** {*;}

@@ -239,6 +239,7 @@ public class ChannelBlogPostFragment extends BaseHttpFragment implements ConfigB
 
     @Override
     public void onConfigLoaded(ModuleConfig config) {
+        if(mRefreshLayout == null) return;
         mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
         mBaseAreaId = config.getBaseAreaId();
         mSchoolId = config.getSchoolId();
