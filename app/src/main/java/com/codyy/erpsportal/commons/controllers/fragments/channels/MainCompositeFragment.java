@@ -299,7 +299,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
             params.put("schoolId", schoolId);
         }
         params.put("eachSize", "1");
-        params.put("thumbCount", "0");
+        params.put("thumbCount", "4");
         params.put("baseAreaId", areaId);
         mOnLoadingCount++;
         Cog.d(TAG, "loadInfoSwitches url=", URLConfig.GET_MIXINFORMATION, params);
