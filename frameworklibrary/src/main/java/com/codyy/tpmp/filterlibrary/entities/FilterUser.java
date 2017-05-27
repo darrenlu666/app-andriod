@@ -55,6 +55,14 @@ public class FilterUser {
         this.schoolId = schoolId;
     }
 
+    public boolean isTeacher() {
+        return USER_TYPE_TEACHER.equals(userType);
+    }
+
+    public boolean isSchool() {
+        return USER_TYPE_SCHOOL_USER.equals(userType);
+    }
+
     public String getUuid() {
         return uuid;
     }

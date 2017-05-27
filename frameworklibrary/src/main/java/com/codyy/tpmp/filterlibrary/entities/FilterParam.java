@@ -41,6 +41,11 @@ public class FilterParam implements ParamBuilder {
     private String semesterId;
 
     /**
+     * 此处不可去除，学校，老师，等获取本校的年纪
+     */
+    private String schoolId;
+
+    /**
      * 是否需要更新
      */
     private boolean update = true;
@@ -82,6 +87,17 @@ public class FilterParam implements ParamBuilder {
         }
     }
 
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(String newId) {
+        if (needUpdate(getUuid(), newId)) {
+            this.schoolId = newId;
+            setUpdate(true);
+        }
+    }
+
     /**
      * 判断是否需要更新
      *
@@ -118,6 +134,7 @@ public class FilterParam implements ParamBuilder {
     public void setSemesterId(String semesterId) {
         if (needUpdate(getSemesterId(), semesterId)) {
             this.semesterId = semesterId;
+            setUpdate(true);
         }
     }
 
@@ -130,6 +147,12 @@ public class FilterParam implements ParamBuilder {
             params.put("areaId",baseAreaId);
         }
         params.put("uuid",uuid);
+        if(!TextUtils.isEmpty(semesterId)){
+            params.put("semesterId",semesterId);
+        }
+        if(!TextUtils.isEmpty(schoolId)){
+            params.put("schoolId",schoolId);
+        }
         /*Field[] fields = FilterParam.this.getClass().getFields();
         for (Field field : fields) {
             try {

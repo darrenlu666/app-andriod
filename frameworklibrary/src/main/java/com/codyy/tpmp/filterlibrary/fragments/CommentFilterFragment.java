@@ -309,6 +309,10 @@ public class CommentFilterFragment extends Fragment {
             } else if (FilterConstants.LEVEL_CLASS_TEAM == currentModule.getData().getLevel()) {//组别
                 // 05/05/17 组别的扩展.
                 executeLeftTeamClick(position,fe);
+            }else if (FilterConstants.LEVEL_CLASS_SEMESTER == currentModule.getData().getLevel()) {//学段.
+                // 05/05/17 组别的扩展.
+//                executeLeftTeamClick(position,fe);
+                executeLeftSemesterClick(position, fe, currentModule);
             } else {
                 // TODO: 05/05/17 扩展其他的处理情况.
                 Log.e(TAG, "未知的筛选节点，暂未处理" + fe.getLevelName());
@@ -321,6 +325,23 @@ public class CommentFilterFragment extends Fragment {
             mChoiceRecyclerView.setEnabled(true);
             mChoiceAdapter.setEnable(true);
         }
+    }
+
+    private void executeLeftSemesterClick(int position, FilterCell fe, FilterModule currentModule) {
+
+        // TODO: 27/05/17 更新余下学校item的semesterId.
+        currentModule.setSelectedId(fe.getId());
+
+        if(FilterConstants.STR_ALL.equals(fe.getName())){//全部.
+            // 全部/semesterId =""
+            currentModule.setSelectedId("");
+        }
+        updateNextCondition(currentModule);
+        currentModule.onChildrenClick(position, fe, null);
+        //jump to next item .
+        jumpToNextItem();
+        mChoiceRecyclerView.setEnabled(true);
+        mChoiceAdapter.setEnable(true);
     }
 
     /**
@@ -367,7 +388,10 @@ public class CommentFilterFragment extends Fragment {
     private void executeLeftAreaClick(int position, FilterCell fe, FilterModule currentModule) {
         //update the next module param . {if (type == COMPLEX)}
         //  04/05/17 ~~更换区域需要更新余下的filterParam.areaId~~
-        if(!hasAreaModel(currentModule.getSelectedId())) {
+        if(fe.getName().equals(FilterConstants.STR_SCHOOL_DIRECT)//直属校
+               || fe.getName().equals(FilterConstants.STR_ALL)   //all
+               || !hasAreaModel(currentModule.getSelectedId()))  //相同的模块选择.
+       {
             currentModule.setSelectedId(fe.getId());
             updateNextCondition(currentModule);
         }
@@ -544,7 +568,11 @@ public class CommentFilterFragment extends Fragment {
 
     //    @Override
     public void updateNextCondition(FilterModule currentModule) {
-        updateNextConditionReverse(currentModule.getSelectedId(), currentModule);
+        if(FilterConstants.LEVEL_AREA == currentModule.getData().getLevel()){
+            updateNextConditionReverse(currentModule.getSelectedId(), currentModule);
+        }else if(FilterConstants.LEVEL_CLASS_SEMESTER == currentModule.getData().getLevel()){
+            updateNextSemesterConditionReverse(currentModule.getSelectedId(), currentModule);
+        }
         mConditionAdapter.notifyDataSetChanged();
     }
 
@@ -565,6 +593,23 @@ public class CommentFilterFragment extends Fragment {
             updateNextConditionReverse(areaId, next);
         } else {
             return;
+        }
+    }
+
+    /**
+     * 递归更新孩子节点.
+     *
+     * @param semesterId
+     * @param currentModule
+     */
+    private void updateNextSemesterConditionReverse(String semesterId, FilterModule currentModule) {
+        Log.i(TAG," updateNextConditionReverse(String areaId, FilterModule currentModule) : current : "+mRightClickPosition+" select id :"+semesterId);
+        FilterModule next = currentModule.getNext();
+        if (null != next && next.getData().getLevel() == FilterConstants.LEVEL_SCHOOL) {
+            next.getFilterParam().setSemesterId(semesterId);
+            return;
+        } else {
+            updateNextSemesterConditionReverse(semesterId, next);
         }
     }
 

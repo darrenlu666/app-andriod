@@ -268,7 +268,8 @@ public class FilterModule implements ParamBuilder, FilterModuleInterface<FilterC
     public static FilterModule constructSimpleModule(int level, FilterUser filterUser) {
         FilterModule areaModule = new FilterModule();
         //组别->特殊,产生节点的增减.
-        if(FilterConstants.LEVEL_CLASS_TEAM == level){
+        if(FilterConstants.LEVEL_CLASS_TEAM == level
+                || FilterConstants.LEVEL_CLASS_SEMESTER == level){
             areaModule.setType(Mode.COMPLEX);
         }
         //data .
@@ -333,7 +334,8 @@ public class FilterModule implements ParamBuilder, FilterModuleInterface<FilterC
      */
     public static FilterModule constructRemoteModule(int level , FilterUser filterUser , HttpGetInterface requestSender) {
         FilterModule areaModule = new FilterModule();
-        if (level == FilterConstants.LEVEL_AREA) {
+        if (level == FilterConstants.LEVEL_AREA
+                || FilterConstants.LEVEL_CLASS_SEMESTER == level) {
             areaModule.setType(FilterModuleInterface.Mode.COMPLEX);
         }
         //data .
@@ -359,6 +361,11 @@ public class FilterModule implements ParamBuilder, FilterModuleInterface<FilterC
             isCasCade = true;
         }
         FilterParam param = new FilterParam(filterUser.getUuid(), filterUser.getBaseAreaId(),isCasCade);
+        //学校，老师必须传递schoolId.
+        if(filterUser.isSchool()
+                || filterUser.isTeacher()){
+            param.setSchoolId(filterUser.getSchoolId());
+        }
         areaModule.setFilterParam(param);
         //dataBuilder
         RemoteFilterBuilder dataBuilder = new RemoteFilterBuilder(URLFilter.getURL(level), requestSender);
