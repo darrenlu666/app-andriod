@@ -11,14 +11,30 @@ import java.util.Map;
  */
 
 public class FilterParam implements ParamBuilder {
+
     /**
      * uuid
      */
     private String uuid;
+
+    /**
+     * 最顶级的AreaId
+     *  学段/年级/学科 暂时只是用baseAreaId.
+     */
+    private String baseAreaId;
+
     /**
      * 选中的区域id
      */
     private String areaId;
+
+    /**
+     * 是否支持地区id级联缩小范围
+     * default :false use {#baseAreaId}
+     * true : use {#areaId}
+     */
+    private boolean isAreaCascade;
+
     /**
      * 选中的学段id
      */
@@ -32,15 +48,19 @@ public class FilterParam implements ParamBuilder {
     public FilterParam() {
     }
 
-    public FilterParam(String uuid, String areaId, String semesterId) {
+    public FilterParam(String uuid, String areaId, String semesterId, boolean areaCascade) {
         this.uuid = uuid;
+        this.baseAreaId = areaId;
         this.areaId = areaId;
         this.semesterId = semesterId;
+        this.isAreaCascade = areaCascade;
     }
 
-    public FilterParam(String uuid, String areaId) {
+    public FilterParam(String uuid, String areaId , boolean areaCascade) {
         this.uuid = uuid;
         this.areaId = areaId;
+        this.baseAreaId = areaId;
+        this.isAreaCascade = areaCascade;
     }
 
     public boolean isUpdate() {
@@ -104,7 +124,11 @@ public class FilterParam implements ParamBuilder {
     @Override
     public Map<String, String> getParams() {
         Map<String, String> params = new HashMap<>();
-        params.put("areaId",areaId);
+        if(isAreaCascade){
+            params.put("areaId",areaId);
+        }else{
+            params.put("areaId",baseAreaId);
+        }
         params.put("uuid",uuid);
         /*Field[] fields = FilterParam.this.getClass().getFields();
         for (Field field : fields) {

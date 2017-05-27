@@ -37,6 +37,9 @@ public class FilterModule implements ParamBuilder, FilterModuleInterface<FilterC
      */
     private int selectPosition = 0;
 
+    /**
+     * 筛选的单元实体类
+     */
     private FilterCell data;
     /**
      * 孩子的数据合集
@@ -281,7 +284,7 @@ public class FilterModule implements ParamBuilder, FilterModuleInterface<FilterC
 
         areaModule.setData(filterCell);
         //param
-        FilterParam param = new FilterParam(filterUser.getUuid(), filterUser.getBaseAreaId());
+        FilterParam param = new FilterParam(filterUser.getUuid(), filterUser.getBaseAreaId(),false);
         areaModule.setFilterParam(param);
         //dataBuilder
         SimpleFilterBuilder dataBuilder = null;
@@ -346,7 +349,16 @@ public class FilterModule implements ParamBuilder, FilterModuleInterface<FilterC
 
         areaModule.setData(filterCell);
         //param
-        FilterParam param = new FilterParam(filterUser.getUuid(), filterUser.getBaseAreaId());
+        boolean isCasCade = false;
+        //区域需要areaId级联.
+        if (level == FilterConstants.LEVEL_AREA){
+            isCasCade = true;
+        }
+        //直属校需要级联.
+        if(level == FilterConstants.LEVEL_SCHOOL){
+            isCasCade = true;
+        }
+        FilterParam param = new FilterParam(filterUser.getUuid(), filterUser.getBaseAreaId(),isCasCade);
         areaModule.setFilterParam(param);
         //dataBuilder
         RemoteFilterBuilder dataBuilder = new RemoteFilterBuilder(URLFilter.getURL(level), requestSender);

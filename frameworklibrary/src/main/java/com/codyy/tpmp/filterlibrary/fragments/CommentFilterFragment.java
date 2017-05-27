@@ -367,8 +367,10 @@ public class CommentFilterFragment extends Fragment {
     private void executeLeftAreaClick(int position, FilterCell fe, FilterModule currentModule) {
         //update the next module param . {if (type == COMPLEX)}
         //  04/05/17 ~~更换区域需要更新余下的filterParam.areaId~~
-        currentModule.setSelectedId(fe.getId());
-        updateNextCondition(currentModule);
+        if(!hasAreaModel(currentModule.getSelectedId())) {
+            currentModule.setSelectedId(fe.getId());
+            updateNextCondition(currentModule);
+        }
         //跳转.
         currentModule.onChildrenClick(position, fe, new DataBuilder.BuildListener<List<FilterCell>>() {
 
@@ -378,10 +380,12 @@ public class CommentFilterFragment extends Fragment {
                     FilterModule nowModule = mData.get(mRightClickPosition);
                     //处理区域的点击
                     if (TextUtils.isEmpty(levelName)) {//已经到区县末端
+                        clearAreaModule();
                         //跳转到下一个item
                         jumpToNextItem();
                     } else if (FilterConstants.STR_SCHOOL_DIRECT.equals(levelName)) {//直属校
                         // 全部/直属校
+
                         clearAreaModule();
                         mChoiceAdapter.setEnable(true);
                         mChoiceAdapter.notifyDataSetChanged();
@@ -393,9 +397,15 @@ public class CommentFilterFragment extends Fragment {
                         mChoiceAdapter.setEnable(true);
                         mChoiceAdapter.notifyDataSetChanged();
                         mConditionAdapter.notifyDataSetChanged();
-                    } else {
-                        //  04/05/17 新增节点
-                        addNewAreaModel(levelName, result, nowModule);
+                    } else {//正常区域item->获取下级数据.
+
+                        if(!hasAreaModel(nowModule.getSelectedId())){
+                            //  04/05/17 新增节点
+                            addNewAreaModel(levelName, result, nowModule);
+                        }else{
+                            jumpToNextItem();
+                        }
+
                     }
                 }
             }
@@ -468,12 +478,13 @@ public class CommentFilterFragment extends Fragment {
      */
     private void addNewAreaModel(String levelName, List<FilterCell> result, FilterModule currentModule) {
         Log.i(TAG, " addNewAreaModel () " + "levelName: " + levelName);
-        //清理多余的area Item .
-        clearRightData(mData.get(mRightClickPosition).getSelectedId());
         // 03/05/17 新建一个Module  .
         FilterModule areaModule = FilterModule.constructRemoteModule(FilterConstants.getLevel(levelName), mFilterUser, mRequestSender);
+        //set the id as last one select area id .
+        areaModule.getData().setId(currentModule.getSelectedId());
+
         areaModule.getData().setLevelName(levelName);
-        areaModule.getFilterParam().setAreaId(mData.get(mRightClickPosition).getSelectedId());
+        areaModule.getFilterParam().setAreaId(currentModule.getSelectedId());
 
         //处理孩子数据.
         if (result != null && result.size() > 0) {
@@ -563,24 +574,21 @@ public class CommentFilterFragment extends Fragment {
     }
 
     /**
-     * 清除clickposition之后的所有数据
+     * 判断是否已经有了相同的area item .
+     * 减少重复数据new.
      */
-    public void clearRightData(String areaId) {
+    public boolean hasAreaModel(String areaId) {
         Log.i(TAG, "clearRightData start~ ");
         //清多余的item
         if (mRightClickPosition < mData.size() - 1) {
             FilterModule next = mData.get((mRightClickPosition + 1));
             if (next.getData().getId().equals(areaId)) {
                 //do nothing ..
-                return;
-            } else if (next.getData().getLevel() == FilterConstants.LEVEL_AREA) {
-                Log.i(TAG, "clearRightData success : " + (mRightClickPosition + 1));
-                mData.remove(next);
-                clearRightData(areaId);
-            } else {
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
