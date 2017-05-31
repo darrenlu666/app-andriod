@@ -255,7 +255,7 @@ public class ListenDetailsActivity extends BaseHttpActivity implements View.OnCl
     public void init() {
         mPreparationId = getIntent().getStringExtra(Constants.PREPARATIONID);
         initToolbar(mToolBar);
-        mTitleTextView.setText(Titles.sWorkspaceListen);
+        mTitleTextView.setText(Titles.sWorkspaceListen+"详情");
         mMasterSchoolTitleTv.setText(Titles.sMasterSchool);
         mMasterTeacherTitleTv.setText(Titles.sMasterTeacher);
         mMasterClassroomTitleTv.setText(Titles.sMasterRoom);

@@ -263,7 +263,7 @@ public class CollectivePrepareLessonsDetailActivity extends BaseHttpActivity imp
     public void init() {
         mPreparationId = getIntent().getStringExtra(Constants.PREPARATIONID);
         initToolbar(mToolBar);
-        mTitleTextView.setText(Titles.sWorkspacePrepare);
+        mTitleTextView.setText(Titles.sWorkspacePrepare+"详情");
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
