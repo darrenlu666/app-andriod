@@ -581,8 +581,8 @@ public class WheelPicker extends LinearLayout {
                 attrs, R.styleable.WheelPicker, defStyleAttr, defStyleRes);
         final int layoutResId = R.layout.wheel_picker;
 
-        mHideWheelUntilFocused = attributesArray.getBoolean(
-                R.styleable.WheelPicker_android_hideWheelUntilFocused, false);
+        mHideWheelUntilFocused = false;/*attributesArray.getBoolean(
+                R.styleable.WheelPicker_android_hideWheelUntilFocused, false);*/
 
         mSolidColor = attributesArray.getColor(R.styleable.WheelPicker_android_solidColor, 0);
 
