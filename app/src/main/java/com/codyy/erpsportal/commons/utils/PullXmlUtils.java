@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.utils;
 
+import android.util.Log;
 import android.util.Xml;
 
 import com.codyy.erpsportal.Constants;
@@ -574,10 +575,12 @@ public class PullXmlUtils {
                 postSystemMsg(jsonArray.get(0).toString(), "申请发言", nickName);
                 break;
             case KICK_MEET://被请出对象
+                Log.i(TAG,"eventBus post action : " + KICK_MEET+":"+jsonArray.get(0).toString());
                 coCoAction.setActionType(KICK_MEET);
                 coCoAction.setByOperationObject(jsonArray.get(0).toString());
                 EventBus.getDefault().post(coCoAction);
                 postSystemMsg(jsonArray.get(0).toString(), "被请出会议", nickName);
+                break;
             case SWITCH_MODE://**setActionResult = showMode 演示模式  setActionResult = videoMode 视频模式 */
                 coCoAction.setActionType(SWITCH_MODE);
                 coCoAction.setActionResult(jsonArray.get(0).toString());
