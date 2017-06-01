@@ -159,11 +159,9 @@ public class AlbumActivity extends AppCompatActivity implements AlbumAdapter.Tak
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse("file://" + mPhotoName));
             startActivityForResult(intent, TAKE_PHOTO);
         } else {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.CAMERA, permission.WRITE_EXTERNAL_STORAGE},
-                        REQUEST_PERMISSION);
-            }
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA, permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_PERMISSION);
         }
     }
 
