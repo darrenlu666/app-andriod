@@ -61,9 +61,11 @@ public class ChangeServerDialog extends DialogFragment {
     public void onStart() {
         super.onStart();
         Window window = getDialog().getWindow();
-        window.setLayout((int) (0.8f * getResources().getDisplayMetrics().widthPixels + 0.5f),
-                LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
+        if (window != null) {
+            window.setLayout((int) (0.8f * getResources().getDisplayMetrics().widthPixels + 0.5f),
+                    LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+        }
     }
 
     @Nullable
