@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -143,26 +142,37 @@ public class AlbumActivity extends AppCompatActivity implements AlbumAdapter.Tak
     public void takePhoto() {
         int cameraGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         int fileGranted = ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE);
+
         if (cameraGranted == PackageManager.PERMISSION_GRANTED
                 && fileGranted == PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-            long createTime = System.currentTimeMillis();
-            Date d1 = new Date(createTime);
-            String t1 = format.format(d1);
-            String cameraPath = AlbumActivity.IMAGE_BASE_PATH + "/Camera/";
-            File file = new File(cameraPath);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            mPhotoName = cameraPath + t1 + ".jpg";
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse("file://" + mPhotoName));
-            startActivityForResult(intent, TAKE_PHOTO);
+            startCamera();
         } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.CAMERA, permission.WRITE_EXTERNAL_STORAGE},
+            StringBuilder permissions = new StringBuilder();
+            if (cameraGranted != PackageManager.PERMISSION_GRANTED) {
+                permissions.append(Manifest.permission.CAMERA).append("$");
+            }
+            if (fileGranted != PackageManager.PERMISSION_GRANTED) {
+                permissions.append(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+            ActivityCompat.requestPermissions(this, permissions.toString().split("$"),
                     REQUEST_PERMISSION);
         }
+    }
+
+    private void startCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        long createTime = System.currentTimeMillis();
+        Date d1 = new Date(createTime);
+        String t1 = format.format(d1);
+        String cameraPath = AlbumActivity.IMAGE_BASE_PATH + "/Camera/";
+        File file = new File(cameraPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        mPhotoName = cameraPath + t1 + ".jpg";
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse("file://" + mPhotoName));
+        startActivityForResult(intent, TAKE_PHOTO);
     }
 
     @Override
@@ -170,7 +180,13 @@ public class AlbumActivity extends AppCompatActivity implements AlbumAdapter.Tak
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case REQUEST_PERMISSION:
-                Snackbar.make(mPreview, "没有相机或文件写入权限！", Snackbar.LENGTH_LONG).show();
+                for (int grant : grantResults) {
+                    if (grant != PackageManager.PERMISSION_GRANTED) {
+                        Snackbar.make(mPreview, "没有相机或文件写入权限！", Snackbar.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                startCamera();
                 break;
         }
     }

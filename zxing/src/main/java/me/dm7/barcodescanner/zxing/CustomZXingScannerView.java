@@ -115,9 +115,9 @@ public class CustomZXingScannerView extends BarcodeScannerView {
         }
 
         private void init() {
-            this.mDefaultLaserColor = this.getResources().getColor(me.dm7.barcodescanner.core.R.color.viewfinder_laser);
-            this.mDefaultMaskColor = this.getResources().getColor(me.dm7.barcodescanner.core.R.color.viewfinder_mask);
-            this.mDefaultBorderColor = this.getResources().getColor(me.dm7.barcodescanner.core.R.color.viewfinder_border);
+            this.mDefaultLaserColor = this.getResources().getColor(R.color.viewfinder_laser);
+            this.mDefaultMaskColor = this.getResources().getColor(R.color.viewfinder_mask);
+            this.mDefaultBorderColor = this.getResources().getColor(R.color.viewfinder_border);
             this.mDefaultBorderStrokeWidth = this.getResources().getDimension(R.dimen.border_width);
             this.mDefaultBorderLineLength = this.getResources().getDimension(R.dimen.border_length);
 
@@ -164,6 +164,36 @@ public class CustomZXingScannerView extends BarcodeScannerView {
 
         public void setBorderStrokeWidth(int borderStrokeWidth) {
             this.mCornerBorderPaint.setStrokeWidth((float) borderStrokeWidth);
+        }
+
+        @Override
+        public void setBorderLineLength(int borderLineLength) {
+
+        }
+
+        @Override
+        public void setLaserEnabled(boolean isLaserEnabled) {
+
+        }
+
+        @Override
+        public void setBorderCornerRounded(boolean isBorderCornersRounded) {
+
+        }
+
+        @Override
+        public void setBorderAlpha(float alpha) {
+
+        }
+
+        @Override
+        public void setBorderCornerRadius(int borderCornersRadius) {
+
+        }
+
+        @Override
+        public void setViewFinderOffset(int offset) {
+
         }
 
         public void setCornerBorderLength(int cornerBorderLength) {
