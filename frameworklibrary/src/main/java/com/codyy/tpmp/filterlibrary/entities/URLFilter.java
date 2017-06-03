@@ -5,41 +5,41 @@ package com.codyy.tpmp.filterlibrary.entities;
  */
 
 public class URLFilter {
-    public static String BASE = "http://mobile.9itest.com:85";
+
     /**
      * 获得地区
      * areaId
      */
-    public static String GET_AREA = BASE+"/bArea/getNextAreasAndLevelByParentId.do";
+    public static String GET_AREA = "bArea/getNextAreasAndLevelByParentId.do";
 
     /**
      * 获取学校
      * areaId	String	筛选时选择的区域id
      * semesterId	String	筛选时选择的学段id(可以为空)
      */
-    public static String GET_DIRECT_SCHOOL = BASE+"/bSchool/getSchoolByAreaId.do";
+    public static String GET_DIRECT_SCHOOL = "bSchool/getSchoolByAreaId.do";
     /**
      * 根据学校id查询年级信息
      * areaId 区域ID和学校ID有且只有一个有值
      * schoolId 区域ID和学校ID有且只有一个有值
      */
-    public static String ALL_CLASS_LEVEL = BASE+"/bClasslevel/getClasslevels.do";
+    public static String ALL_CLASS_LEVEL = "bClasslevel/getClasslevels.do";
     /**
      * 根据年级id查询学科信息
      * pClasslevelId    上一级(年级)返回的id	string
      */
-    public static String ALL_SUBJECTS_BY_CLASS_ID = BASE+"/bSubject/getSubjectsByPclasslevelId.do";
+    public static String ALL_SUBJECTS_BY_CLASS_ID = "bSubject/getSubjectsByPclasslevelId.do";
 
     /**
      * 根据年级id查询班级信息
      * ///bClassRoom/getClassRoomByClassLevelId.do
      */
-    public static String ALL_CLASS_BY_CLASSLEVEL_ID = BASE+"/mobile/bClassRoom/getSchoolClassRoomByClassLevelId.do";
+    public static String ALL_CLASS_BY_CLASSLEVEL_ID = "mobile/bClassRoom/getSchoolClassRoomByClassLevelId.do";
 
     /**
      * 获取所有学科,列表形式
      */
-    public static String ALL_SUBJECTS_LIST = BASE+"/bSubject/getAllSubjects.do";
+    public static String ALL_SUBJECTS_LIST = "bSubject/getAllSubjects.do";
 
     /**
      * poe add
@@ -47,13 +47,13 @@ public class URLFilter {
      * areaId 区域ID和学校ID有且只有一个有值
      * schoolId 区域ID和学校ID有且只有一个有值
      */
-    public static String GET_SEMESTER_LIST = BASE+"/bSemester/getSemestersById.do";
+    public static String GET_SEMESTER_LIST = "bSemester/getSemestersById.do";
 
     /**
      * 获取圈组兴趣组筛选的分类信息
      * uuid String : 32位uuid字符串	用户唯一识别码
      */
-    public static String GET_GROUP_CATEGORY_LIST = BASE+"/mobile/group/getAllGroupCategory.do";
+    public static String GET_GROUP_CATEGORY_LIST = "mobile/group/getAllGroupCategory.do";
 
     /**
      * 根据LEVEL返回对应的 API .

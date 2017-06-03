@@ -48,7 +48,7 @@ import java.util.List;
  * |item2|年级 |
  * |item3|学科 |
  * |直属校|状态 |
- * -------------
+ * ------------
  * Created by poe on 16-4-25.
  */
 public class CommentFilterFragment extends Fragment {
