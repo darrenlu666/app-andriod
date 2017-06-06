@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="match_parent"
-              android:background="@drawable/bg_popup_menu"
-              android:orientation="vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_popup_menu"
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/btn_filter_by_properties"
@@ -12,14 +12,14 @@
         android:background="@null"
         android:ems="7"
         android:padding="8dp"
-        android:text="@string/filter_by_property"
+        android:text="@string/property"
         android:textColor="@color/popup_menu_item_text_color"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/divide_color"/>
+        android:background="@color/divide_color" />
 
     <Button
         android:id="@+id/btn_filter_by_knowledge"
@@ -28,7 +28,7 @@
         android:background="@null"
         android:ems="7"
         android:padding="8dp"
-        android:text="@string/filter_by_knowledge_point"
+        android:text="@string/knowledge_point"
         android:textColor="@color/popup_menu_item_text_color"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 </LinearLayout>
