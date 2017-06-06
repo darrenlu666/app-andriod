@@ -124,20 +124,8 @@ public class GroupManagerActivity extends BaseHttpActivity implements HttpGetInt
 
     private void initFilterFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        int[] filters ;
-        if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())){
-            filters = new int[]{
-                      FilterConstants.LEVEL_AREA       //省
-                    , FilterConstants.LEVEL_CLASS_SEMESTER //学段
-                    , FilterConstants.LEVEL_SCHOOL     //学校
-                    , FilterConstants.LEVEL_CLASS_TEAM//组别
-            };
-        }else{
-            filters = new int[]{
-                      FilterConstants.LEVEL_CLASS_TEAM     //组别
-                    , FilterConstants.LEVEL_MANAGER_STATE//状态
-            };
-        }
+        int[] filters = getFilterTree();
+
 
         mFilterFragment = CommentFilterFragment.newInstance(mUserInfo.getUuid()
                 ,mUserInfo.getUserType()
@@ -147,6 +135,69 @@ public class GroupManagerActivity extends BaseHttpActivity implements HttpGetInt
 
         ft.replace(R.id.fl_filter, mFilterFragment);
         ft.commitAllowingStateLoss();
+    }
+
+    private int[] getFilterTree() {
+        int[] filters = null;
+
+        //区域用户
+        if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())){
+
+            if( mUserInfo.getGroupCategoryConfig()!= null && mUserInfo.getGroupCategoryConfig().length() > 1){
+                if(mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_INTEREST) && mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_TEACH)){
+                    //组别
+                    filters = new int[]{
+                            FilterConstants.LEVEL_AREA       //省
+                            , FilterConstants.LEVEL_CLASS_SEMESTER //学段
+                            , FilterConstants.LEVEL_SCHOOL     //学校
+                            , FilterConstants.LEVEL_CLASS_TEAM//组别
+                    };
+                }else if(mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_INTEREST)){
+                    //兴趣组-分类
+                    filters = new int[]{
+                            FilterConstants.LEVEL_AREA       //省
+                            , FilterConstants.LEVEL_CLASS_SEMESTER //学段
+                            , FilterConstants.LEVEL_SCHOOL     //学校
+                            , FilterConstants.LEVEL_CLASS_CATEGORY//分类
+                    };
+                }else if( mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_TEACH)){
+                    //年级
+                    filters = new int[]{
+                            FilterConstants.LEVEL_AREA       //省
+                            , FilterConstants.LEVEL_CLASS_SEMESTER //学段
+                            , FilterConstants.LEVEL_SCHOOL     //学校
+                            , FilterConstants.LEVEL_CLASS_LEVEL//年级
+                            , FilterConstants.LEVEL_CLASS_SUBJECT//学科
+                    };
+                }
+            }
+
+        }else{//非区域用户
+
+            if( mUserInfo.getGroupCategoryConfig()!= null && mUserInfo.getGroupCategoryConfig().length() > 1){
+                if(mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_INTEREST) && mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_TEACH)){
+                    //组别
+                    filters = new int[]{
+                              FilterConstants.LEVEL_CLASS_TEAM//组别
+                            , FilterConstants.LEVEL_MANAGER_STATE//状态
+                    };
+                }else if(mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_INTEREST)){
+                    //兴趣组-分类
+                    filters = new int[]{
+                              FilterConstants.LEVEL_CLASS_CATEGORY//分类
+                            , FilterConstants.LEVEL_MANAGER_STATE//状态
+                    };
+                }else if( mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_TEACH)){
+                    //年级
+                    filters = new int[]{
+                              FilterConstants.LEVEL_CLASS_LEVEL//年级
+                            , FilterConstants.LEVEL_CLASS_SUBJECT//学科
+                            , FilterConstants.LEVEL_MANAGER_STATE//状态
+                    };
+                }
+            }
+        }
+        return filters;
     }
 
     @NonNull

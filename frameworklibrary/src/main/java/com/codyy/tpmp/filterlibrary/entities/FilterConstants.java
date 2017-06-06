@@ -14,7 +14,7 @@ public class FilterConstants {
     public static final int LEVEL_CLASS_TEAM = 0x004;//固定的筛选条件-组别
     public static final int LEVEL_CLASS_LEVEL = 0x005;//固定的筛选条件-年级
     public static final int LEVEL_CLASS_SUBJECT = 0x006;//固定的筛选条件-学科
-    public static final int LEVEL_CLASS_CATEGORY = 0x007;//固定的筛选条件-分类
+    public static final int LEVEL_CLASS_CATEGORY = 0x007;//固定的筛选条件-分类-圈组
     public static final int LEVEL_CLASS_STATE = 0x008;//固定的筛选条件-状态[未开始/进行中/已结束]
     public static final int LEVEL_LESSON_CATEGORY = 0x009;//固定的筛选条件-类别
     public static final int LEVEL_MANAGER_STATE = 0x010;//固定的筛选条件-状态[待处理/通过/未通过/被关闭]
