@@ -202,8 +202,10 @@
     <string name="please_connect_internet">请先连接网络！</string>
     <string name="login_invalid">登录已失效，请重新登录！</string>
     <string name="all">全部</string>
-    <string name="filter_by_property">属性</string>
-    <string name="filter_by_knowledge_point">知识点</string>
+    <string name="filter_by_property">按属性筛选</string>
+    <string name="filter_by_knowledge_point">按知识点筛选</string>
+    <string name="property">属性</string>
+    <string name="knowledge_point">知识点</string>
     <string name="no_filter">不限</string>
     <string name="video">视频</string>
     <string name="video_model">视频模式</string>
