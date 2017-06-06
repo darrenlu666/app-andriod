@@ -91,6 +91,12 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'armeabi'
         }
+
+        javaCompileOptions{
+            annotationProcessorOptions{
+                includeCompileClasspath=true
+            }
+        }
     }
     dataBinding {
         enabled = true
@@ -122,18 +128,23 @@ android {
         }
     }
 
+    flavorDimensions "mode"//,"api"
+
     productFlavors {
         codyyTest {
+            dimension "mode"
             applicationId "com.codyy.erpsportal.ct"
             buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85/\"")
         }
 
         train {
+            dimension "mode"
             applicationId "com.codyy.erpsportal.tr"
             buildConfigField("String", "API_HOST", "\"http://mobile.needu.cn/\"")
         }
 
         web {
+            dimension "mode"
             applicationId "com.codyy.erpsportal.web"
             buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile/\"")
         }

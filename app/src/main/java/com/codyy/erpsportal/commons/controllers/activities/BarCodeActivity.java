@@ -246,22 +246,21 @@ public class BarCodeActivity extends BaseHttpActivity {
                             String title = shareApp.getApplicationName();
                             String content = "让人人拥有获得优质教育资源的机会,点击下载" + shareApp.getAppOs() + "客户端";
 
-
+                            UMWeb web = new UMWeb(url);
+                            web.setTitle(title);
+                            web.setDescription(content);
+                            web.setThumb(new UMImage(BarCodeActivity.this, R.mipmap.ic_launcher));
                             if (SHARE_MEDIA.WEIXIN_CIRCLE == snsPlatform.mPlatform) {
-                                String filePath = FileUtils.getBarCodePath(mViewPager.getCurrentItem(), BarCodeActivity.this);
+                                /*String filePath = FileUtils.getBarCodePath(mViewPager.getCurrentItem(), BarCodeActivity.this);
                                 File imageFile = new File(filePath);
-                                UMImage imageLocal = new UMImage(BarCodeActivity.this, imageFile);
+                                UMImage imageLocal = new UMImage(BarCodeActivity.this, imageFile);*/
                                 new ShareAction(BarCodeActivity.this)
                                         .withText(url)
-                                        .withMedia(imageLocal)
+                                        .withMedia(web)
                                         .setPlatform(share_media)
                                         .setCallback(mUmShareListener)
                                         .share();
                             } else {
-                                UMWeb web = new UMWeb(url);
-                                web.setTitle(title);
-                                web.setDescription(content);
-                                web.setThumb(new UMImage(BarCodeActivity.this, R.mipmap.ic_launcher));
                                 new ShareAction(BarCodeActivity.this)
                                         .withText(url)
                                         .withMedia(web)
