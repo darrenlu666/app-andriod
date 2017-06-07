@@ -78,6 +78,7 @@ public class ResourceIntroFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mCompositeDisposable.dispose();
         ConfigBus.unregister(mOnModuleConfigListener);
     }
 
@@ -122,12 +123,6 @@ public class ResourceIntroFragment extends Fragment{
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mCompositeDisposable.dispose();
-    }
-
     private void initEmptyView() {
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
@@ -140,6 +135,7 @@ public class ResourceIntroFragment extends Fragment{
 
     private void loadData(String baseAreaId, String schoolId) {
         onLoadingStart();
+        mOnLoadingCount = 0;
         loadSlides( baseAreaId, schoolId);
         loadSemesterResData( baseAreaId, schoolId);
     }
