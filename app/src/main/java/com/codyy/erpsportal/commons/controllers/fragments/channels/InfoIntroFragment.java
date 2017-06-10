@@ -51,6 +51,9 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -159,13 +162,25 @@ public class InfoIntroFragment extends Fragment {
      */
     private boolean mInfoSlideLoaded = false;
 
+    private OnRefreshListener mRefreshListener = new OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            loadData();
+        }
+    };
+
     /**
      * 减一下加载任务数量计数器
      */
     private void minusLoadingCount() {
         mOnLoadingCount--;
-        if (mOnLoadingCount == 0 && mInfoIntroRefreshLayout.isRefreshing()) {
-            mInfoIntroRefreshLayout.setRefreshing(false);
+        if (mOnLoadingCount == 0) {
+            mInfoIntroRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mInfoIntroRefreshLayout.setRefreshing(false);
+                }
+            });
         }
     }
 
@@ -196,12 +211,7 @@ public class InfoIntroFragment extends Fragment {
             mNewsTitleBar.setOnMoreClickListener(mOnMoreClickListener);
             mNotificationTb.setOnMoreClickListener(mOnMoreClickListener);
             mAnnouncementTb.setOnMoreClickListener(mOnMoreClickListener);
-            mInfoIntroRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    loadData();
-                }
-            });
+            mInfoIntroRefreshLayout.setOnRefreshListener(mRefreshListener);
             mInfoIntroRefreshLayout.setColorSchemeResources(R.color.main_color);
 
             mNewsAdapter = new ObjectsAdapter<>(getActivity(), InfoContentViewHolder.class);
@@ -217,7 +227,6 @@ public class InfoIntroFragment extends Fragment {
             mNewsLv.setOnItemClickListener(mOnItemClickListener);
             mNotificationLv.setOnItemClickListener(mOnItemClickListener);
             mAnnouncementLv.setOnItemClickListener(mOnItemClickListener);
-
         }
     }
 
@@ -230,6 +239,8 @@ public class InfoIntroFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mCompositeDisposable.dispose();
+        mOnLoadingCount = 0;
         ConfigBus.unregister(mOnModuleConfigListener);
     }
 
@@ -237,12 +248,6 @@ public class InfoIntroFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return mRootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mCompositeDisposable.dispose();
     }
 
     @Override
@@ -265,6 +270,7 @@ public class InfoIntroFragment extends Fragment {
     public void loadData() {
         mNewsEmptyCount = 0;
         mNewsEmptyTv.setVisibility(View.GONE);
+        mOnLoadingCount = 0;
         loadSlideNews();
         loadNews();
         loadNotification();
@@ -317,12 +323,27 @@ public class InfoIntroFragment extends Fragment {
         loadNewsItemData(URLConfig.HOME_NEWS, params, 0);
     }
 
+    private ObservableTransformer<JSONObject, JSONObject> mObsTran = new ObservableTransformer<JSONObject, JSONObject>() {
+
+        @Override
+        public ObservableSource<JSONObject> apply(Observable<JSONObject> upstream) {
+            return upstream
+                    .doOnSubscribe(new Consumer<Disposable>() {
+                        @Override
+                        public void accept(Disposable disposable) throws Exception {
+                            mOnLoadingCount++;
+                            mCompositeDisposable.add(disposable);
+                        }
+                    });
+        }
+    };
+
     private void loadNewsItemData(String url, Map<String, String> params, final int position) {
         Cog.d(TAG, "loadNewsItemData url=", url, params);
-        mOnLoadingCount++;
-        Disposable disposable = mWebApi.post4Json(url, params)
+        mWebApi.post4Json(url, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(mObsTran)
                 .subscribe(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
@@ -361,7 +382,6 @@ public class InfoIntroFragment extends Fragment {
                         minusLoadingCount();
                     }
                 });
-        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -381,6 +401,8 @@ public class InfoIntroFragment extends Fragment {
         Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_SHORT).show();
     }
 
+    private SlidePagerAdapter mSlidePagerAdapter;
+
     /**
      * 加载幻灯片新闻
      */
@@ -388,17 +410,18 @@ public class InfoIntroFragment extends Fragment {
         Map<String, String> params = new HashMap<>();
         params.put("size", "4");
         putAreaIdAndSchoolId(params);
-        mOnLoadingCount++;
         Cog.d(TAG, "loadSlideNews", URLConfig.HOME_NEWS_SLIDE, params);
-        Disposable disposable = mWebApi.post4Json(URLConfig.HOME_NEWS_SLIDE, params)
+        mWebApi.post4Json(URLConfig.HOME_NEWS_SLIDE, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .compose(mObsTran)
                 .subscribe(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadSlideNews response = " + response);
                         minusLoadingCount();
                         mInfoSlideLoaded = true;
+                        long start = System.currentTimeMillis();
                         if ("success".equals(response.optString("result"))) {
                             JSONArray slideItems = response.optJSONArray("data");
                             if (slideItems == null || slideItems.length() == 0) {
@@ -414,12 +437,18 @@ public class InfoIntroFragment extends Fragment {
                                 infoSlides.add(new InfoSlide(slideItem));
                             }
 
-                            mSlideView.setAdapter(new SlidePagerAdapter(infoSlides, new HolderCreator() {
-                                @Override
-                                public SlidePagerHolder<?> create(View view) {
-                                    return new InfoSlidePagerHolder(view);
-                                }
-                            }));
+                            if (mSlidePagerAdapter == null) {
+                                mSlidePagerAdapter = new SlidePagerAdapter(infoSlides, new HolderCreator() {
+                                    @Override
+                                    public SlidePagerHolder<?> create(View view) {
+                                        return new InfoSlidePagerHolder(view);
+                                    }
+                                });
+                                mSlideView.setAdapter(mSlidePagerAdapter);
+                            } else {
+                                mSlidePagerAdapter.setItems(infoSlides);
+                            }
+
                             mSlideView.setOnPageClickListener(new OnPageClickListener() {
                                 @Override
                                 public void onPageClick(int position) {
@@ -440,7 +469,6 @@ public class InfoIntroFragment extends Fragment {
                         increaseNewsEmptyCount();
                     }
                 });
-        mCompositeDisposable.add(disposable);
     }
 
     private OnMoreClickListener mOnMoreClickListener = new OnMoreClickListener() {

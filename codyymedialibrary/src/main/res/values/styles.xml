@@ -14,4 +14,9 @@
     <style name="TreeNodeStyle">
         <item name="android:paddingLeft">20dp</item>
     </style>
+
+    <style name="ToastAnimation">
+        <item name="android:windowEnterAnimation">@anim/toast_enter</item>
+        <item name="android:windowExitAnimation">@anim/toast_exit</item>
+    </style>
 </resources>
