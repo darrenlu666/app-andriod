@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclingPagerAdapter;
@@ -240,6 +241,9 @@ public class BarCodeActivity extends BaseHttpActivity {
                         try {
                             ShareApp shareApp = mData.get(mViewPager.getCurrentItem());
                             String url = shareApp.getAppPhoneUrl();
+                            if(shareApp.getAppOs().toLowerCase().equals("android")){
+                                url = URLConfig.BASE+"app/downloadAndroidByBrower.html";
+                            }
                             if (mViewPager.getCurrentItem() > 0) {
                                 url = shareApp.getDownload_url();
                             }
