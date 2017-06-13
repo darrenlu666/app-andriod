@@ -1503,6 +1503,9 @@ public class URLConfig {
     @UrlSuffix("index/getIndexRecommendResource.do")
     public static String SLIDE_RESOURCES;
 
+    @UrlSuffix("/index/getChannelRecommendResource.do")
+    public static String SLIDE_CHANNEL_RESOURCES;
+
     /**
      * 首页（资源）要显示的资源
      * ?categorySize=3&resourceSize=2&baseAreaId=3268c4982fbd47b996de356d00d8adcc&schoolId=
