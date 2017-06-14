@@ -219,8 +219,8 @@ public class MainResFragment extends Fragment {
         if (!TextUtils.isEmpty(areaId)) params.put("baseAreaId" ,areaId);
         if (!TextUtils.isEmpty(schoolId)) params.put("schoolId", schoolId);
         mOnLoadingCount++;
-        Cog.d(TAG, "loadSlides url=" + URLConfig.SLIDE_CHANNEL_RESOURCES + params);
-        Disposable disposable = mWebApi.post4Json(URLConfig.SLIDE_CHANNEL_RESOURCES, params)
+        Cog.d(TAG, "loadSlides url=" + URLConfig.SLIDE_RESOURCES + params);
+        Disposable disposable = mWebApi.post4Json(URLConfig.SLIDE_RESOURCES, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JSONObject>() {

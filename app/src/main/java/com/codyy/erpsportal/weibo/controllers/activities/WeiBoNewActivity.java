@@ -672,7 +672,7 @@ public class WeiBoNewActivity extends ToolbarActivity {
     private void onUploadButtonClick(String path, String parameterName, String fileName, String url) {
         final UploadRequest request = new UploadRequest(this, path, url);
         request.addFileToUpload(path, parameterName, fileName, "multipart/form-data");
-        request.setNotificationConfig(R.mipmap.ic_launcher, getString(R.string.title_activity_main), "上传", "成功", "错误", false);
+        request.setNotificationConfig(R.mipmap.ic_launcher, getString(R.string.app_name), "上传", "成功", "错误", false);
         request.setCustomUserAgent("UploadServiceDemo/1.0");
         request.setNotificationClickIntent(null);
         request.setMaxRetries(2);
