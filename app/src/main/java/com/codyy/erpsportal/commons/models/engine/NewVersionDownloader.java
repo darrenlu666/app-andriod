@@ -19,7 +19,7 @@ public class NewVersionDownloader {
         Cog.d("NewVersionDownloader", "+downloadNewVersion url=" + url);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setDescription("新版本下载中…");
-        request.setTitle(context.getString(R.string.app_name));
+        request.setTitle(context.getString(R.string.title_activity_main));
 
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);

@@ -349,7 +349,7 @@ public class HomeWorkDetailActivity extends ToolbarActivity {
     private void onUploadButtonClick(PhotoInfo filename, String url) {
         final UploadRequest request = new UploadRequest(this, UUID.randomUUID().toString(), url);
         request.addFileToUpload(filename.getPath(), filename.getName(), filename.getName(), "multipart/form-data");
-        request.setNotificationConfig(R.mipmap.ic_launcher, getString(R.string.app_name), "上传", "成功", "错误", true);
+        request.setNotificationConfig(R.mipmap.ic_launcher, getString(R.string.title_activity_main), "上传", "成功", "错误", true);
         request.setCustomUserAgent("UploadServiceDemo/1.0");
         request.setNotificationClickIntent(null);
 

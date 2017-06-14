@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">全国教育云</string>
 
-    <string name="title_activity_main">全国教育云</string>
+    <string name="title_activity_main">全国教育云服务平台</string>
     <string name="click_to_refresh">没有数据，点击刷新。</string>
     <string name="no_data_for_now">暂时没有相关内容</string>
     <string name="net_error">网络连接错误！</string>

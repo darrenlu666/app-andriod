@@ -463,7 +463,7 @@ public class WeiBoPrivateMessageActivity extends ToolbarActivity {
         String url1 = mUserInfo.getServerAddress() + "/res/mix/" + mUserInfo.getAreaCode() + "/upload.do?printscreen=Y&printscreenType=auto&sourceType=miblog_message&validateCode=" + mUserInfo.getValidateCode();
         final UploadRequest request = new UploadRequest(this, path1, url1);
         request.addFileToUpload(path, path, "record_audio.aac", "multipart/form-data");
-        request.setNotificationConfig(R.mipmap.ic_launcher, getString(R.string.app_name), "上传", "成功", "错误", false);
+        request.setNotificationConfig(R.mipmap.ic_launcher, getString(R.string.title_activity_main), "上传", "成功", "错误", false);
         request.setCustomUserAgent("UploadServiceDemo/1.0");
         request.setNotificationClickIntent(null);
         request.setMaxRetries(2);
