@@ -324,6 +324,7 @@ public class WeiBoNewActivity extends ToolbarActivity {
                 break;
             case WeiBoActivity.TYPE_GROUP:
             case WeiBoActivity.TYPE_GROUP_MANAGER:
+            case WeiBoActivity.TYPE_GROUP_VISITOR:
                 parm.put("groupId", mGroupID);
                 if (mCheckBox.isChecked()) {
                     parm.put("onlyGroupViewFlag", "Y");

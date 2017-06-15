@@ -182,7 +182,6 @@ public class AlbumBase {
                 cursor.close();
             }
         }
-        System.out.println(PHOTO_INFO.size());
         return true;
     }
 

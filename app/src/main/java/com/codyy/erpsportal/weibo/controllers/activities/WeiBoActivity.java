@@ -122,9 +122,13 @@ public class WeiBoActivity extends ToolbarActivity {
                 break;
             case TYPE_GROUP:
             case TYPE_GROUP_MANAGER:
-            case TYPE_GROUP_VISITOR:
                 mTextView.setText("圈组微博");
                 break;
+            case TYPE_GROUP_VISITOR:
+                mTextView.setText("圈组微博");
+                mSendWeiBoFloat.setVisibility(View.GONE);
+                break;
+
         }
         mSendWeiBoFloat.setOnClickListener(new View.OnClickListener() {
             @Override
