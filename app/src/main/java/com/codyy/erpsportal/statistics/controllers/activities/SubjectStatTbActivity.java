@@ -22,7 +22,6 @@ import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.CenterLongTextView;
 import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment;
-import com.codyy.erpsportal.statistics.controllers.fragments.StatTableFragment.OnRowClickListener;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterCarrier;
@@ -47,10 +46,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.codyy.erpsportal.statistics.models.entities.StatFilterBy.BY_TERM;
+
 /**
  * 学科统计
  */
-public class SubjectStatTbActivity extends AppCompatActivity implements OnRowClickListener {
+public class SubjectStatTbActivity extends AppCompatActivity{
 
     private final static String TAG = "SubjectStatTbActivity";
 
@@ -102,7 +103,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
     private void initViews() {
         mTableFragment = (StatTableFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_stat_table);
-        mTableFragment.setOnRowClickListener(this);
+//        mTableFragment.setOnRowClickListener(this);
         mTitleTv.setText(R.string.subject_statistics);
         mLoadingDialog = LoadingDialog.newInstance(true);
         mLoadingDialog.setOnCancelListener(new OnCancelListener() {
@@ -126,7 +127,7 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
                     localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
             mStatFilterCarrier.setEndDate(
                     localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
-            mStatFilterCarrier.setSubjectId("-1");
+//            mStatFilterCarrier.setSubjectId("-1");
             mStatFilterCarrier.setFilterBy(StatFilterBy.BY_WEEK);
         }
         loadData( mStatFilterCarrier);
@@ -139,17 +140,10 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
     private void loadData(StatFilterCarrier statFilterCarrier) {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
-        String url;
+        String url = URLConfig.SUBJECT_STAT;
         if (mAreaInfo.isArea() || mAreaInfo.isDirectSchool()) {
-            url = URLConfig.SUBJECT_STAT_AREA;
-            if (mAreaInfo.isDirectSchool()) {
-                params.put("isDirect", "Y");
-            } else {
-                params.put("isDirect", "N");
-            }
             params.put("areaId", mAreaInfo.getId());
         } else {
-            url = URLConfig.SUBJECT_STAT_SCHOOL;
             params.put("schoolId", mAreaInfo.getId());
         }
         putFilterParams(statFilterCarrier, params);
@@ -175,7 +169,6 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
                 ToastUtil.showToast(SubjectStatTbActivity.this, getString(R.string.net_error));
             }
         });
-        requestData.setTimeout(60000);
         mRequestSender.sendRequest( requestData);
     }
 
@@ -186,16 +179,15 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
      */
     private void putFilterParams(StatFilterCarrier statFilterCarrier, Map<String, String> params) {
         if (statFilterCarrier != null) {
-            if (!TextUtils.isEmpty(statFilterCarrier.getStartDate())) {
-                params.put("startDt", statFilterCarrier.getStartDate());
-            }
-            if (!TextUtils.isEmpty(statFilterCarrier.getEndDate())) {
-                params.put("endDt", statFilterCarrier.getEndDate());
-            }
-            if (!TextUtils.isEmpty(statFilterCarrier.getSubjectId())) {
-                params.put("subjectId", statFilterCarrier.getSubjectId());
+            if (statFilterCarrier.getFilterBy() == BY_TERM) {
+                params.put("trimesterId", statFilterCarrier.getTermId());
             } else {
-                params.put("subjectId", "-1");
+                if (!TextUtils.isEmpty(statFilterCarrier.getStartDate())) {
+                    params.put("startDt", statFilterCarrier.getStartDate());
+                }
+                if (!TextUtils.isEmpty(statFilterCarrier.getEndDate())) {
+                    params.put("endDt", statFilterCarrier.getEndDate());
+                }
             }
         }
     }
@@ -208,37 +200,19 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
         mStatEntities = courseProfilesResult.getStatEntities();
         StatTableModel<StatRow> statTableModel = new StatTableModel<>();
         List<StatRow> statRows = new ArrayList<>();
-        statTableModel.setTitle(courseProfilesResult.getTitle());
+        statTableModel.setTitle("学科");
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
         numberFormat.setMinimumFractionDigits(0);
-        if (mAreaInfo.isSchool()) {
-            statTableModel.setColumnTitles(getResources().getStringArray(R.array.subject_school_table_titles));
-            for (SubjectsStatEntity statEntity: mStatEntities) {
-                statRows.add(new StatRow(statEntity.getSubjectName()
-                        , statEntity.getPlanCnt()
-                        , statEntity.getRequiredCnt()
-                        , statEntity.getDownCnt()
-                        , numberFormat.format(statEntity.getDownRate()) + "%"
-                ));
-            }
-        } else {
-            statTableModel.setColumnTitles(getResources().getStringArray(R.array.subject_area_table_titles));
-            for (SubjectsStatEntity statEntity: mStatEntities) {
-                statRows.add(new StatRow(statEntity.getAreaName()
-                        , statEntity.getSubjectName()
-                        , statEntity.getPlanCnt()
-                        , statEntity.getRequiredCnt()
-                        , statEntity.getDownCnt()
-                        , numberFormat.format(statEntity.getDownRate()) + "%"
-                ));
-            }
-            if (mStatEntities != null && mStatEntities.size() > 0
-                    && mStatEntities.get(0) != null
-                    && mStatEntities.get(0).getAreaType().equals("school")) {//如果是学校第一列显示5个字
-                statTableModel.setEms(5);
-            }
+        statTableModel.setColumnTitles(getResources().getStringArray(R.array.subject_table_titles));
+        for (SubjectsStatEntity statEntity: mStatEntities) {
+            statRows.add(new StatRow( statEntity.getSubjectName()
+                    , statEntity.getPlanCnt()
+                    , statEntity.getDownCnt()
+                    , numberFormat.format(statEntity.getDownRate()) + "%"
+            ));
         }
+
         statTableModel.setRows(statRows);
         mTableFragment.setTableModel(statTableModel);
     }
@@ -246,29 +220,12 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
     @OnClick(R.id.ib_filter)
     public void onFilterClick(View view) {
         String title = mTitleTv.getText().toString();
-        CoursesProfilesFilterActivity.startSubjectFilter(this, mUserInfo, title, mStatFilterCarrier);
-    }
-
-    @Override
-    public void onRowClickListener(int position) {
-        Cog.d(TAG, "onRowClickListener position=" + position);
-        SubjectsStatEntity statEntity = mStatEntities.get(position);
-        AreaInfo areaInfo = null;
-        if ("area".equals(statEntity.getAreaType())) {
-            areaInfo = new AreaInfo(statEntity.getAreaId(), AreaInfo.TYPE_AREA);
-        } else if ("dirSch".equals(statEntity.getAreaType())) {
-            areaInfo = new AreaInfo(statEntity.getAreaId(), AreaInfo.TYPE_DSCH);
-        }
-        if (areaInfo == null) return;
-        if (TextUtils.isEmpty(mAreaInfo.getName())) {
-            areaInfo.setName(statEntity.getAreaName());
-        } else {
-            areaInfo.setName(mAreaInfo.getName()+ "/" + statEntity.getAreaName());
-        }
-        start(this, mUserInfo, areaInfo, mStatFilterCarrier);
+        CoursesProfilesFilterActivity.startFilter(this, mUserInfo, title, mStatFilterCarrier, mSpecificDate);
     }
 
     private StatFilterCarrier mStatFilterCarrier;
+
+    private int mSpecificDate;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -278,6 +235,10 @@ public class SubjectStatTbActivity extends AppCompatActivity implements OnRowCli
             mStatFilterCarrier = data.getParcelableExtra(
                     CoursesProfilesFilterActivity.EXTRA_OUT_FILTER);
             loadData(mStatFilterCarrier);
+        } else if (requestCode == CoursesProfilesFilterActivity.REQUEST_CODE
+                && resultCode == RESULT_CANCELED) {
+            mSpecificDate = data.getIntExtra(
+                    CoursesProfilesFilterActivity.EXTRA_SPECIFIC_DATE, 0);
         }
     }
 

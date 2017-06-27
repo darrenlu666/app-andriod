@@ -189,7 +189,7 @@
                     style="@style/StatisticsFilterDate.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2016-05-09"/>
+                    android:text="2016-05-09" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -232,60 +232,6 @@
             <!--android:text="2015年下半学期"-->
             <!--android:visibility="gone"/>-->
 
-            <TextView
-                android:id="@+id/tv_select_subject"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="学科选择："
-                android:visibility="gone"/>
-
-            <com.codyy.erpsportal.statistics.widgets.OrderLayout
-                android:id="@+id/ol_subjects"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:visibility="gone"
-                app:horizontalGap="12dp"
-                app:verticalGap="12dp">
-
-                <!--<CheckedTextView-->
-                <!--style="@style/StatisticsFilterSubject"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="全部"/>-->
-
-                <!--<CheckedTextView-->
-                <!--style="@style/StatisticsFilterSubject"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="数学"/>-->
-
-                <!--<CheckedTextView-->
-                <!--style="@style/StatisticsFilterSubject"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="英语"/>-->
-
-                <!--<CheckedTextView-->
-                <!--style="@style/StatisticsFilterSubject"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="历史"/>-->
-
-                <!--<CheckedTextView-->
-                <!--style="@style/StatisticsFilterSubject"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="我是一门课"/>-->
-
-                <!--<CheckedTextView-->
-                <!--style="@style/StatisticsFilterSubject"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="自然科学社会与法"/>-->
-            </com.codyy.erpsportal.statistics.widgets.OrderLayout>
         </RadioGroup>
 
     </ScrollView>

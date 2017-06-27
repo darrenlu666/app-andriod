@@ -190,7 +190,6 @@ public class MonthlyStatFragment extends Fragment implements OnItemClickListener
                 mLoadingDialog.dismiss();
             }
         });
-        requestData.setTimeout(60000);
         mRequestSender.sendGetRequest( requestData);
     }
 

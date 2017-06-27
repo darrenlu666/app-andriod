@@ -280,6 +280,9 @@ public class URLConfig {
     @UrlSuffix("mobile/statisticsAnaly/getSubject.do")
     public static String GET_SUBJECTS;
 
+    @UrlSuffix("mobile/statisticsAnaly/subject/isCustomized.do")
+    public static String IS_CUSTOMIZED;
+
     /**
      * 开课比统计获取基础数据
      */
@@ -303,6 +306,9 @@ public class URLConfig {
 
     @UrlSuffix("mobile/statisticsAnaly/subject/school.do")
     public static String SUBJECT_STAT_SCHOOL;
+
+    @UrlSuffix("mobile/statisticsAnaly/subject/getSubjectStatistics.do")
+    public static String SUBJECT_STAT;
 
     /**
      * 资源统计 学校

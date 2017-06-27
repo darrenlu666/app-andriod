@@ -306,13 +306,15 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
     @OnClick(R.id.ib_filter)
     public void onFilterClick(View view) {
         String title = mTitleTv.getText().toString();
-        CoursesProfilesFilterActivity.startProfileFilter(this, mUserInfo, title, mStatFilterCarrier);
+        CoursesProfilesFilterActivity.startFilter(this, mUserInfo, title, mStatFilterCarrier, mSpecificDate);
     }
 
     /**
      * 当前筛选参数
      */
     private StatFilterCarrier mStatFilterCarrier;
+
+    private int mSpecificDate;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -322,6 +324,10 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
             mStatFilterCarrier = data.getParcelableExtra(
                     CoursesProfilesFilterActivity.EXTRA_OUT_FILTER);
             loadData(mStatFilterCarrier);
+        } else if (requestCode == CoursesProfilesFilterActivity.REQUEST_CODE
+                && resultCode == RESULT_CANCELED) {
+            mSpecificDate = data.getIntExtra(
+                    CoursesProfilesFilterActivity.EXTRA_SPECIFIC_DATE, 0);
         }
     }
 

@@ -6,9 +6,7 @@ package com.codyy.erpsportal.statistics.models.entities;
  */
 public class SubjectsStatEntity {
     /**
-     * areaId : 580b6c458db349ee8a35ec70ec5bd201
      * areaName : 直属校
-     * areaType : dirSch
      * downCnt : 0
      * downRate : 0
      * planCnt : 0
@@ -17,39 +15,12 @@ public class SubjectsStatEntity {
      * subjectName : 江苏语文
      */
 
-    private String areaId;
-    private String areaName;
-    private String areaType;
     private String downCnt;
     private float downRate;
     private String planCnt;
     private String requiredCnt;
     private String subjectId;
     private String subjectName;
-
-    public String getAreaId() {
-        return areaId;
-    }
-
-    public void setAreaId(String areaId) {
-        this.areaId = areaId;
-    }
-
-    public String getAreaName() {
-        return areaName;
-    }
-
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
-    }
-
-    public String getAreaType() {
-        return areaType;
-    }
-
-    public void setAreaType(String areaType) {
-        this.areaType = areaType;
-    }
 
     public String getDownCnt() {
         return downCnt;

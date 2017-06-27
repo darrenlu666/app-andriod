@@ -372,7 +372,6 @@ public class CoursesProportionTableActivity extends AppCompatActivity {
                         mLoadingDialog.dismiss();
                     }
                 });
-        requestData.setTimeout(60000);
         mRequestSender.sendGetRequest( requestData);
     }
 

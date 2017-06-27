@@ -144,6 +144,7 @@ public class RequestSender {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Cog.e(TAG, "+onErrorResponse:" + throwable);
+                        throwable.printStackTrace();
                         requestData.getErrorListener().onErrorResponse(throwable);
                     }
                 });
@@ -241,26 +242,9 @@ public class RequestSender {
         private boolean mIsToShowLoading;
         private long mStartTime;
 
-        /**
-         * 请求是否需要重试。
-         */
-        private boolean mNeedRetry = true;
-
-        private int mTimeout = -1;
-
         public RequestData(String url, Map<String, String> param,
                            Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
-            this(url, param, listener, errorListener, true, true);
-        }
-
-        public RequestData(String url, Map<String, String> param, Response.Listener<JSONObject> listener,
-                           Response.ErrorListener errorListener, boolean isToShowLoading, boolean needRetry) {
-            this.mUrl = url;
-            this.mParam = param;
-            this.setListener(listener);
-            this.setErrorListener(errorListener);
-            this.setIsToShowLoading(isToShowLoading);
-            this.mNeedRetry = needRetry;
+            this(url, param, listener, errorListener, true);
         }
 
         public RequestData(String url, Map<String, String> param,
@@ -354,22 +338,6 @@ public class RequestSender {
             if (this.mStartTime == 0L) {//未设置开始时间时设置请求时间
                 this.mStartTime = System.currentTimeMillis();
             }
-        }
-
-        public boolean isNeedRetry() {
-            return mNeedRetry;
-        }
-
-        public void setNeedRetry(boolean needRetry) {
-            this.mNeedRetry = needRetry;
-        }
-
-        public int getTimeout() {
-            return mTimeout;
-        }
-
-        public void setTimeout(int timeout) {
-            mTimeout = timeout;
         }
 
         @Override

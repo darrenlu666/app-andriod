@@ -664,7 +664,7 @@ public class WorkItemDetailActivity extends TaskActivity implements View.OnClick
                 }
                 ToastUtil.showToast(WorkItemDetailActivity.this, getResources().getString(R.string.work_answer_submit_failure));
             }
-        }, false, false));
+        }, false));
     }
 
     public static void startActivity(Context context, String workId, String status, @Nullable String studentId, String readType, String mTitle) {

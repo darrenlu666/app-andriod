@@ -704,19 +704,10 @@
         <item>平均开课</item>
     </string-array>
 
-    <string-array name="subject_area_table_titles">
-        <item>学科</item>
-        <item>计划开课时</item>
-        <item>应开课时</item>
+    <string-array name="subject_table_titles">
+        <item>计划课时</item>
         <item>实开课时</item>
-        <item>开课时比例</item>
-    </string-array>
-
-    <string-array name="subject_school_table_titles">
-        <item>计划开课时</item>
-        <item>应开课时</item>
-        <item>实开课时</item>
-        <item>开课时比例</item>
+        <item>实开课时占比</item>
     </string-array>
 
     <!--辅导-->
