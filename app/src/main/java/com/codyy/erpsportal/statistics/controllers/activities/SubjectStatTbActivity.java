@@ -122,13 +122,18 @@ public class SubjectStatTbActivity extends AppCompatActivity{
         LocalDate localDate = LocalDate.now();
         if (mStatFilterCarrier == null) {
             mStatFilterCarrier = new StatFilterCarrier();
-            //默认筛选本周
-            mStatFilterCarrier.setStartDate(
-                    localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
-            mStatFilterCarrier.setEndDate(
-                    localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
+            //省市县校用户进入默认选中【按学期】，国家用户进入默认选中【按周】
+            if (mUserInfo.isNation()) {
+                mStatFilterCarrier.setStartDate(
+                        localDate.withDayOfWeek(DateTimeConstants.MONDAY).toString());
+                mStatFilterCarrier.setEndDate(
+                        localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toString());
+                mStatFilterCarrier.setFilterBy(StatFilterBy.BY_WEEK);
+            } else {
+                mStatFilterCarrier.setTermId("-1");
+                mStatFilterCarrier.setFilterBy(StatFilterBy.BY_TERM);
+            }
 //            mStatFilterCarrier.setSubjectId("-1");
-            mStatFilterCarrier.setFilterBy(StatFilterBy.BY_WEEK);
         }
         loadData( mStatFilterCarrier);
     }

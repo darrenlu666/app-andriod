@@ -302,7 +302,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                         @Override
                         public void handleParsing(JSONObject jsonObject, TermEntity termEntity) {
                             CheckBox checkBox = createTermItem(termEntity);
-                            if (!TextUtils.isEmpty(formerTermId)) {
+                            if (!TextUtils.isEmpty(formerTermId) && !"-1".equals(formerTermId)) {
                                 if (formerTermId.equals(termEntity.getId()))
                                     checkBox.setChecked(true);
                             } else if (jsonObject.optInt("currentFlag") == 1) {
@@ -477,6 +477,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                 plusMonth();
                 break;
             case R.id.btn_specific_date_begin: {
+                if (!mBySpecificDateRb.isChecked()) return;
                 long currTime = System.currentTimeMillis();
                 if (currTime - mLastTime > 500L) {
                     String beginDateStr = mSpecificDateBeginBtn.getText().toString();
@@ -497,6 +498,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                 break;
             }
             case R.id.btn_specific_date_end: {
+                if (!mBySpecificDateRb.isChecked()) return;
                 long currTime = System.currentTimeMillis();
                 if (currTime - mLastTime > 500L) {
                     String beginDateStr = mSpecificDateBeginBtn.getText().toString();
