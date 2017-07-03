@@ -376,7 +376,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "loadSpecificDateNeeded response=", response);
                 if (response.optBoolean("result", false)
-                        || response.optBoolean("isCustomized", false)) {
+                        && response.optBoolean("isCustomized", false)) {
                     mSpecificDate = 1;
                     showSpecificDates();
                 } else {
