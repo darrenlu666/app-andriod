@@ -93,9 +93,6 @@ public class SubjectStatTbActivity extends AppCompatActivity{
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
         mAreaInfo = getIntent().getParcelableExtra(Extra.AREA_INFO);
         mStatFilterCarrier = getIntent().getParcelableExtra(EXTRA_STAT_FILTER_CARRIER);
-        if (mAreaInfo == null) {
-            mAreaInfo = new AreaInfo(mUserInfo);
-        }
 
         mRequestSender = new RequestSender(this);
     }
@@ -146,10 +143,17 @@ public class SubjectStatTbActivity extends AppCompatActivity{
         Map<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         String url = URLConfig.SUBJECT_STAT;
-        if (mAreaInfo.isArea() || mAreaInfo.isDirectSchool()) {
-            params.put("areaId", mAreaInfo.getId());
+        if (mAreaInfo != null) {
+            if (mAreaInfo.isArea() || mAreaInfo.isDirectSchool()) {
+                params.put("areaId", mAreaInfo.getId());
+            } else {
+                params.put("schoolId", mAreaInfo.getId());
+            }
         } else {
-            params.put("schoolId", mAreaInfo.getId());
+            params.put("areaId", mUserInfo.getBaseAreaId());
+            if (mUserInfo.isSchool()) {
+                params.put("schoolId", mUserInfo.getSchoolId());
+            }
         }
         putFilterParams(statFilterCarrier, params);
         mLoadingDialog.show(getSupportFragmentManager(), "loading");
