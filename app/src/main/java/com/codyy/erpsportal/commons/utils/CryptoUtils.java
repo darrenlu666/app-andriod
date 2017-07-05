@@ -57,7 +57,6 @@ public class CryptoUtils {
         return raw;
     }
 
-
     private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         Cipher cipher = Cipher.getInstance("AES");
