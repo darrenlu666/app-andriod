@@ -69,9 +69,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private final static String SP_LOGIN_INFO = "com.codyy.erpsportal.LoginInfo";
 
-    private final static String KEY_USERNAME = "AAAUNAAA";
+    private final static String KEY_USERNAME = "AA";
 
-    private final static String KEY_PASSWORD = "AAAPSAAA";
+    private final static String KEY_PASSWORD = "AAA";
 
     public final static int REQUEST_LOGIN = 0xf1;
 
