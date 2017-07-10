@@ -444,6 +444,9 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 重新设置日期选择弹框回调
+     */
     private void resetDialogListener() {
         DayPickerDialog beginPickerDialog = (DayPickerDialog) getSupportFragmentManager().findFragmentByTag("begin");
         if (beginPickerDialog != null) {
@@ -552,6 +555,11 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         mBySpecificDateRb.setChecked(true);
     }
 
+    /**
+     * 字符串转为LocalDate
+     * @param str
+     * @return
+     */
     private LocalDate parseToDate(String str) {
         return LocalDate.parse(str, DateTimeFormat.forPattern("yyyy-MM-dd"));
     }
@@ -613,12 +621,18 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         addSlideDownExitAnim();
     }
 
+    /**
+     * 设置取消结果
+     */
     private void setCancelResult() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_SPECIFIC_DATE, mSpecificDate);
         setResult(RESULT_CANCELED, intent);
     }
 
+    /**
+     * 添加下滑退出动画
+     */
     private void addSlideDownExitAnim() {
         overridePendingTransition(R.anim.layout_show, R.anim.slide_down_to_hide);
     }
