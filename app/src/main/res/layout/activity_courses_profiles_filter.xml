@@ -172,7 +172,7 @@
                 style="@style/StatisticsFilterRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="按具体日期统计"
+                android:text="按日期统计"
                 android:visibility="gone"
                 tools:visibility="visible"/>
 

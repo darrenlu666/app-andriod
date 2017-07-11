@@ -206,6 +206,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         mTitleTv.setText( mTitle);
         initWeeks();
         initMonths();
+        initDates();
         initTerms();
     }
 
@@ -380,7 +381,10 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                     mSpecificDate = 1;
                     showSpecificDates();
                 } else {
-                    mSpecificDate = 2;
+                    mSpecificDate = 2;//没有配置按日期筛选
+                    if (mBySpecificDateRb.isChecked()) {//没有配置按日期筛选时选中按日期筛选没有意义，按周吧
+                        mFilterTypeRg.check(mByWeekRb.getId());
+                    }
                 }
             }
         }, new ErrorListener() {
@@ -426,15 +430,21 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     }
 
     /**
+     * 初始化按日期统计
+     */
+    private void initDates() {
+        LocalDate currDate = LocalDate.now();
+        //开始时间默认也是当天
+        mSpecificDateBeginBtn.setText(currDate.toString("yyyy-MM-dd"));
+        mSpecificDateEndBtn.setText(currDate.toString("yyyy-MM-dd"));
+    }
+
+    /**
      * 初始化按具体日期统计块日期
      */
     private void showSpecificDates() {
         mBySpecificDateRb.setVisibility(View.VISIBLE);
         mBySpecificDateLl.setVisibility(View.VISIBLE);
-        LocalDate currDate = LocalDate.now();
-        //开始时间默认也是当天
-        mSpecificDateBeginBtn.setText(currDate.toString("yyyy-MM-dd"));
-        mSpecificDateEndBtn.setText(currDate.toString("yyyy-MM-dd"));
     }
 
     private void initTerms() {
@@ -484,16 +494,11 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                 long currTime = System.currentTimeMillis();
                 if (currTime - mLastTime > 500L) {
                     String beginDateStr = mSpecificDateBeginBtn.getText().toString();
-                    String endDateStr = mSpecificDateEndBtn.getText().toString();
                     LocalDate defaultDate = null;
-                    LocalDate endDate = null;
-                    if (!TextUtils.isEmpty(endDateStr)) {
-                        endDate = parseToDate(endDateStr);
-                    }
                     if (!TextUtils.isEmpty(beginDateStr)) {
                         defaultDate = parseToDate(beginDateStr);
                     }
-                    DayPickerDialog beginDayPickerDialog = DayPickerDialog.newInstance(null, endDate, defaultDate);
+                    DayPickerDialog beginDayPickerDialog = DayPickerDialog.newInstance(null, null, defaultDate);
                     beginDayPickerDialog.setOnConfirmListener(mOnBeginDateConfirmListener);
                     beginDayPickerDialog.show(getSupportFragmentManager(), "begin");
                 }
@@ -504,17 +509,12 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                 if (!mBySpecificDateRb.isChecked()) return;
                 long currTime = System.currentTimeMillis();
                 if (currTime - mLastTime > 500L) {
-                    String beginDateStr = mSpecificDateBeginBtn.getText().toString();
                     String endDateStr = mSpecificDateEndBtn.getText().toString();
                     LocalDate defaultDate = null;
-                    LocalDate beginDate = null;
-                    if (!TextUtils.isEmpty(beginDateStr)) {
-                        beginDate = parseToDate(beginDateStr);
-                    }
                     if (!TextUtils.isEmpty(endDateStr)) {
                         defaultDate = parseToDate(endDateStr);
                     }
-                    DayPickerDialog endDayPickerDialog = DayPickerDialog.newInstance(beginDate, LocalDate.now(), defaultDate);
+                    DayPickerDialog endDayPickerDialog = DayPickerDialog.newInstance(null, null, defaultDate);
                     endDayPickerDialog.setOnConfirmListener(mOnEndDateConfirmListener);
                     endDayPickerDialog.show(getSupportFragmentManager(), "end");
                 }
@@ -639,9 +639,18 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
 
     @OnClick({R.id.btn_confirm_filter})
     public void onConfirmFilter(View view) {
+        if (mBySpecificDateRb.getId() == mFilterTypeRg.getCheckedRadioButtonId()) {
+            LocalDate specificDateBeginDate = parseToDate(mSpecificDateBeginBtn.getText().toString());
+            LocalDate specificDateEndDate = parseToDate(mSpecificDateEndBtn.getText().toString());
+            if (specificDateBeginDate.isAfter(specificDateEndDate)) {
+                ToastUtil.showToast(this, "结束日期不能早于开始日期");
+                return;
+            }
+        }
         Intent intent = new Intent();
         StatFilterCarrier statFilterCarrier = createFilterCarrier();
         intent.putExtra(EXTRA_OUT_FILTER, statFilterCarrier);
+        intent.putExtra(EXTRA_SPECIFIC_DATE, mSpecificDate);
         setResult(RESULT_OK, intent);
         finish();
         addSlideDownExitAnim();
@@ -658,8 +667,8 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
             statFilterCarrier.setStartDate(mMonthBeginTv.getText().toString());
             statFilterCarrier.setEndDate(mMonthEndTv.getText().toString());
         } else if (mBySpecificDateRb.getId() == checkedRbId) {
-            statFilterCarrier.setStartDate(mSpecificDateBeginBtn.getText().toString());
-            statFilterCarrier.setEndDate(mSpecificDateEndBtn.getText().toString());
+            statFilterCarrier.setStartDate( mSpecificDateBeginBtn.getText().toString());
+            statFilterCarrier.setEndDate( mSpecificDateEndBtn.getText().toString());
         } else if (checkedRbId == mByTermRb.getId()) {
             for (CheckBox termCb: mTermCbList) {
                 if (termCb.isChecked()) {

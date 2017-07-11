@@ -319,13 +319,12 @@ public class ClassStatTableActivity extends AppCompatActivity implements OnRowCl
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CoursesProfilesFilterActivity.REQUEST_CODE
-                && resultCode == RESULT_OK) {
-            mStatFilterCarrier = data.getParcelableExtra(
-                    CoursesProfilesFilterActivity.EXTRA_OUT_FILTER);
-            loadData(mStatFilterCarrier);
-        } else if (requestCode == CoursesProfilesFilterActivity.REQUEST_CODE
-                && resultCode == RESULT_CANCELED) {
+        if (requestCode == CoursesProfilesFilterActivity.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                mStatFilterCarrier = data.getParcelableExtra(
+                        CoursesProfilesFilterActivity.EXTRA_OUT_FILTER);
+                loadData(mStatFilterCarrier);
+            }
             mSpecificDate = data.getIntExtra(
                     CoursesProfilesFilterActivity.EXTRA_SPECIFIC_DATE, 0);
         }
