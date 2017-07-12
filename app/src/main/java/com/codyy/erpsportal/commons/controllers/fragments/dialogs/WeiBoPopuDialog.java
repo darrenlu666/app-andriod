@@ -1,3 +1,8 @@
+/*
+ * 阔地教育科技有限公司版权所有（codyy.com/codyy.cn）
+ * Copyright (c) 2017, Codyy and/or its affiliates. All rights reserved.
+ */
+
 package com.codyy.erpsportal.commons.controllers.fragments.dialogs;
 
 import android.app.Dialog;
