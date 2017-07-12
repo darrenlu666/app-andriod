@@ -2,8 +2,9 @@ package com.codyy.erpsportal.commons.utils;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.models.entities.comment.BaseComment;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.utils;
 
+import android.os.Build;
 import android.util.Base64;
 
 import java.security.KeyFactory;
@@ -41,14 +42,20 @@ public class CryptoUtils {
 
     private static byte[] getRawKey(byte[] seed) throws Exception {
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
+        SecureRandom sr;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            sr = SecureRandom.getInstance("SHA1PRNG", new CryptoProvider());
+        } else if (Build.VERSION.SDK_INT >= 17) {
+            sr = SecureRandom.getInstance("SHA1PRNG", "Crypto");
+        } else {
+            sr = SecureRandom.getInstance("SHA1PRNG");
+        }
         sr.setSeed(seed);
         kgen.init(128, sr); // 192 and 256 bits may not be available
         SecretKey skey = kgen.generateKey();
         byte[] raw = skey.getEncoded();
         return raw;
     }
-
 
     private static byte[] encrypt(byte[] raw, byte[] clear) throws Exception {
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");

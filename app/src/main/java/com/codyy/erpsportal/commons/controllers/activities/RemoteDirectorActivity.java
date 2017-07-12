@@ -967,9 +967,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             btnMoreSetting.setOnClickListener(this);
         }
         mSlidingLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        if (mSlidingLayout != null) {
-            mSlidingLayout.setTouchEnabled(false);
-        }
+        mSlidingLayout.setTouchEnabled(true);
         mPositionGridView = (GridView) findViewById(R.id.lv_class_list);
         mPositionAdapter = new NewClassListAdapter(this, mVideoBarData, mConfig);
         mPositionGridView.setAdapter(mPositionAdapter);
@@ -1303,7 +1301,7 @@ public class RemoteDirectorActivity extends AppCompatActivity implements View.On
             case R.id.btn_more_setting:
                 if (mSlidingLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                } else if (mSlidingLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                } else {
                     mSlidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                 }
                 break;

@@ -9,8 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
-import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
+import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
 
 /**
  * RecyclerView的简单分割线 Divider

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
@@ -22,60 +21,28 @@ import okhttp3.ResponseBody;
 
 public class FakeInterceptor implements Interceptor {
 
+    private final static String TAG = "FakeInterceptor";
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         if(BuildConfig.DEBUG) {
-            HttpUrl httpUrl = chain.request().url();
-            String urlStr = httpUrl.url().toString();
-            /*if (urlStr.equals(URLConfig.GET_REPAIR_DETAILS)) {
-                Map<String, Object> responseMap = new HashMap<>();
-                responseMap.put("result", "success");
-                RepairDetails repairDetails = new RepairDetails();
-                repairDetails.setId("1");
-                repairDetails.setMalCode("zx201512120001");
-                repairDetails.setSkey("教室编号");
-                repairDetails.setClassRoomName("教室名称教室名称");
-                repairDetails.setMalDescription("声音太小听不到？声音太小听不到？声音太小听不到？");
-                repairDetails.setCategories("硬件故障-班班通故障-声卡问题");
-                repairDetails.setReporter("雪诺");
-                repairDetails.setReporterContact("1388888888");
-                repairDetails.setCreateTime(System.currentTimeMillis());
-                repairDetails.setStatus(4);
-                repairDetails.setRepairman("张三");
-                responseMap.put("data", repairDetails);
-                return buildResponse(chain, new Gson().toJson(responseMap));
-            } else *//*if (urlStr.equals(URLConfig.GET_REPAIR_TRACKING)) {
-                List<InquiryItem> inquiryItems = new ArrayList<>();
-                InquiryItem inquiryItem = new InquiryItem();
-                inquiryItem.setReply(false);
-                inquiryItem.setContent("听不见，我听不见");
-                inquiryItem.setTime(System.currentTimeMillis());
-                inquiryItems.add(inquiryItem);
-
-                InquiryItem inquiryItem1 = new InquiryItem();
-                inquiryItem1.setReply(true);
-                inquiryItem1.setContent("请找医生看眼科");
-                inquiryItem1.setAnswererName("张三");
-                inquiryItem1.setTime(System.currentTimeMillis());
-                inquiryItem1.setReply(true);
-                inquiryItems.add(inquiryItem1);
-
-                InquiryItem inquiryItem2 = new InquiryItem();
-                inquiryItem2.setReply(false);
-                inquiryItem2.setContent("听不见，我还是听不见");
-                inquiryItem2.setTime(System.currentTimeMillis());
-                inquiryItems.add(inquiryItem2);
-
-                InquiryItem inquiryItem3 = new InquiryItem();
-                inquiryItem3.setReply(true);
-                inquiryItem3.setContent("再去看");
-                inquiryItem3.setAnswererName("张三");
-                inquiryItem3.setTime(System.currentTimeMillis());
-                inquiryItem3.setReply(true);
-                inquiryItems.add(inquiryItem3);
-
-                return buildResponse(chain, inquiryItems);
-            }*/
+//            HttpUrl httpUrl = chain.request().url();
+//            String urlStr = httpUrl.url().toString();
+//            if (urlStr.equals(URLConfig.VERSION + "?applicationId=4")) {
+//                Cog.d(TAG, "urlStr:", urlStr);
+//                Response response = chain.proceed(chain.request());
+//                ResponseBody responseBody = response.body();
+//                String bodyStr = responseBody.string();
+//                try {
+//                    JSONObject jsonObject = new JSONObject(bodyStr);
+//                    jsonObject.put("upgrade_ind", "N");
+//                    bodyStr = jsonObject.toString();
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                Cog.d(TAG, "bodyStr:", bodyStr);
+//                return buildResponse(chain, bodyStr);
+//            }
         }
         return chain.proceed(chain.request());
     }

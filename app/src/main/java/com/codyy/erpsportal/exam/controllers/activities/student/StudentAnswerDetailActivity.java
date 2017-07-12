@@ -232,7 +232,7 @@ public class StudentAnswerDetailActivity extends TaskActivity implements View.On
                 mHandler.removeCallbacksAndMessages(null);
             }
         }
-        ,false,false));
+        ,false));
     }
 
     private boolean isDoHomeWork;
@@ -485,7 +485,7 @@ public class StudentAnswerDetailActivity extends TaskActivity implements View.On
                                 mDialog.cancel();
                                 ToastUtil.showToast(getString(R.string.exam_submit_fail));
                             }
-                        }, false, false));
+                        }, false));
                         myDialog.dismiss();
                     }
 

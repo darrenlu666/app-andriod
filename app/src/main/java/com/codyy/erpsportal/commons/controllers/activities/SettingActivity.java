@@ -18,26 +18,37 @@ import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ConfirmDownloadDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.LoadingDialog;
+import com.codyy.erpsportal.commons.controllers.fragments.dialogs.UpdateDialog;
+import com.codyy.erpsportal.commons.data.source.remote.VersionApi;
 import com.codyy.erpsportal.commons.exception.LogUtils;
+import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
+import com.codyy.erpsportal.commons.utils.FileUtils;
 import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
-import com.codyy.erpsportal.commons.models.ImageFetcher;
-import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.url.URLConfig;
+
 import org.json.JSONObject;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.HashMap;
+
 import butterknife.Bind;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * obtained by poe 2016-03-29
@@ -90,6 +101,7 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
     private SharedPreferences mSp;
     private Handler mHandler = new Handler(this);
 
+    private Disposable mDisposable;
 
     @Override
     public int obtainLayoutId() {
@@ -270,38 +282,48 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
         }
         mCheckUpdateDialog.show(getSupportFragmentManager(), "check_update");
         final long startTime = System.currentTimeMillis();
-        requestData(URLConfig.VERSION, new HashMap<String, String>(),false, new IRequest() {
-            @Override
-            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
-                Cog.d(TAG, "+fetchLatestVersion response:" + response);
-                String result = response.optString("result");
-                final String version = response.optString("version");
-                if ("success".equals(result) && !BuildConfig.VERSION_NAME.equals(version)) {
-                    final String url = response.optString("appPhoneUrl");
-                    long spendTime = System.currentTimeMillis() - startTime;
-                    if (spendTime > 500) {
-                        showConfirmUpdateDialog(url, version);
-                    } else {
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                showConfirmUpdateDialog(url, version);
+        VersionApi versionApi = RsGenerator.create(VersionApi.class);
+        mDisposable = versionApi.getVersion()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(JSONObject response) throws Exception {
+                        Cog.d(TAG, "checkNewVersion response=", response);
+                        String result = response.optString("result");
+                        if ("success".equals(result)){
+                            String version = response.optString("version");
+                            final boolean forceUpdate = "Y".equals(response.optString("upgrade_ind"));
+                            if(!TextUtils.isEmpty(version)
+                                    && !BuildConfig.VERSION_NAME.equals(version)) {
+                                final String url = response.optString("appPhoneUrl");
+                                Cog.d(TAG, "checkNewVersion url=", url);
+                                long spendTime = System.currentTimeMillis() - startTime;
+                                if (spendTime > 500) {
+                                    showConfirmUpdateDialog(url, forceUpdate);
+                                } else {
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            showConfirmUpdateDialog(url, forceUpdate);
+                                        }
+                                    }, spendTime - 500);
+                                }
+                            } else {
+                                UIUtils.toast(SettingActivity.this, "当前版本已是最新版本！", Toast.LENGTH_SHORT);
+                                mCheckUpdateDialog.dismiss();
                             }
-                        }, spendTime - 500);
+                        }
                     }
-                } else {
-                    UIUtils.toast(SettingActivity.this, "当前版本已是最新版本！", Toast.LENGTH_SHORT);
-                    mCheckUpdateDialog.dismiss();
-                }
-            }
-
-            @Override
-            public void onRequestFailure(Throwable error) {
-                Cog.d(TAG, "+fetchLatestVersion error:" + error);
-                UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
-                dismissCheckUpdateDialog();
-            }
-        });
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Cog.d(TAG, "checkNewVersion error", throwable);
+                        throwable.printStackTrace();
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
+                        dismissCheckUpdateDialog();
+                    }
+                });
     }
 
     private void dismissCheckUpdateDialog() {
@@ -309,10 +331,19 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
             mCheckUpdateDialog.dismiss();
     }
 
-    private void showConfirmUpdateDialog(String url, String version) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDisposable != null) mDisposable.dispose();
+    }
+
+    private void showConfirmUpdateDialog(String url, boolean forceUpdate) {
         dismissCheckUpdateDialog();
-        ConfirmDownloadDialog confirmDownloadDialog = ConfirmDownloadDialog.newInstance(url, version);
-        confirmDownloadDialog.show(getSupportFragmentManager(), "confirmDownloadDialog");
+//        ConfirmDownloadDialog confirmDownloadDialog = ConfirmDownloadDialog.newInstance(url, version);
+//        confirmDownloadDialog.show(getSupportFragmentManager(), "confirmDownloadDialog");
+        UpdateDialog updateDialog = UpdateDialog.newInstance(
+                forceUpdate, url, false);
+        updateDialog.show(getSupportFragmentManager(), "update");
     }
 
     @Override
@@ -441,6 +472,8 @@ public class SettingActivity extends BaseHttpActivity implements CompoundButton.
             boolean result = false;
             if (activity != null)
                 result = activity.deleteDocCache();
+            //清楚二维码.
+            FileUtils.clearBarCode(mRef.get());
             long spendTime = System.currentTimeMillis() - startTime;
             if (spendTime < 500) {
                 try {

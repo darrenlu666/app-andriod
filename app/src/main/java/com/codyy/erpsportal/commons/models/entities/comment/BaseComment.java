@@ -1,6 +1,6 @@
 package com.codyy.erpsportal.commons.models.entities.comment;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

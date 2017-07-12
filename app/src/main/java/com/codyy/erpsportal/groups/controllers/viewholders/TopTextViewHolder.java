@@ -12,9 +12,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  * 置顶博文
  * Created by poe on 16-3-7.
  */
-public class TopTextViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar>{
+public class TopTextViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar> {
 
     @Bind(R.id.text)TextView mTextView;
 

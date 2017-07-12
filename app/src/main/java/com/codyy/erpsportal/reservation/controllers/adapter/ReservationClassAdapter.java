@@ -1,21 +1,16 @@
 package com.codyy.erpsportal.reservation.controllers.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
 import com.codyy.erpsportal.databinding.ItemReservationClassBinding;
-import com.codyy.erpsportal.reservation.controllers.activities.ReservationClassDetailActivity;
 import com.codyy.erpsportal.reservation.models.entities.ReservationClassItem;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import java.util.List;
 
 /**

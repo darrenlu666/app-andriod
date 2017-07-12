@@ -209,7 +209,7 @@ public abstract class BaseHttpFragment extends Fragment {
                 LogUtils.log(error);
                 notifyEndlessLoadMoreFailed(isRefreshing);
             }
-        }, TAG));
+        }));
     }
 
     private void notifyEndlessLoadMoreFailed(boolean isRefreshing) {
@@ -269,7 +269,7 @@ public abstract class BaseHttpFragment extends Fragment {
      */
     private void stopRequest() {
         if (null != mSender)
-            mSender.stop(TAG);
+            mSender.stop();
     }
 
     @Override

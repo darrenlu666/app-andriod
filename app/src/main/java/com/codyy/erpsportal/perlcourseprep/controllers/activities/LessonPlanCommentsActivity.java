@@ -128,6 +128,6 @@ public class LessonPlanCommentsActivity extends AppCompatActivity {
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
                 mLoadingDialog.dismiss();
             }
-        }, true/*需要显示提交画面*/, false/*无需重试*/));
+        }, true/*需要显示提交画面*/));
     }
 }

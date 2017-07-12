@@ -76,7 +76,6 @@ public class WeiBoCommentActivity extends ToolbarActivity implements WeiBoCommen
     private LinearLayoutManager mLinearLayoutManager;
     private int mType;
     private String mUrlCommentList;
-    private Integer mHash = this.hashCode();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,12 +225,12 @@ public class WeiBoCommentActivity extends ToolbarActivity implements WeiBoCommen
                     mRecyclerView.setRefreshing(false);
                 }
             }
-        }, mHash));
+        }));
     }
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHash);
+        mRequestSender.stop();
         super.onDestroy();
     }
 
@@ -291,7 +290,7 @@ public class WeiBoCommentActivity extends ToolbarActivity implements WeiBoCommen
                 public void onErrorResponse(Throwable error) {
 
                 }
-            }, mHash));
+            }));
         }
     }
 
@@ -362,7 +361,7 @@ public class WeiBoCommentActivity extends ToolbarActivity implements WeiBoCommen
                         public void onErrorResponse(Throwable error) {
 
                         }
-                    }, mHash));
+                    }));
                 }
 
                 @Override
@@ -511,7 +510,7 @@ public class WeiBoCommentActivity extends ToolbarActivity implements WeiBoCommen
                         Snackbar.make(view, getString(R.string.net_error), Snackbar.LENGTH_SHORT).show();
                     }
                 }
-            }, mHash));
+            }));
         } else {
             Snackbar.make(view, "评论不能为空！", Snackbar.LENGTH_SHORT).show();
         }

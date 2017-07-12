@@ -5,7 +5,9 @@ package com.codyy.erpsportal.commons.controllers.fragments;
  */
 import android.view.View;
 import android.view.ViewGroup;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
+
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+
 import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;

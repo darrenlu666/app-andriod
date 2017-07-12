@@ -63,8 +63,6 @@ public class TutorialTestActivity extends AppCompatActivity implements OnPageCha
 
     private RequestSender mRequestSender;
 
-    private Object mRequestTag = new Object();
-
     private List<QuestionInfo> mQuestionInfos;
 
     private int mSingleChoiceQuestionCount;
@@ -148,7 +146,7 @@ public class TutorialTestActivity extends AppCompatActivity implements OnPageCha
                 dismissLoadingDialog();
                 UIUtils.toast(TutorialTestActivity.this, getString(R.string.get_tutorial_test_failed), Toast.LENGTH_SHORT);
             }
-        }, mRequestTag));
+        }));
     }
 
     private void showLoadingDialog() {
@@ -196,7 +194,7 @@ public class TutorialTestActivity extends AppCompatActivity implements OnPageCha
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         mRequestSender = null;
     }
 

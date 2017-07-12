@@ -140,7 +140,7 @@ public class WeiBoNewActivity extends ToolbarActivity {
     private final int IMAGE_SIZE = 1024 * 1024 * 5;
     private String mSendUrl;
     private WeiBoUpVideoDialogFragment mWeiBoUpVideoDialogFragment;
-    private Integer mHashTag = this.hashCode();
+
     private final AbstractUploadServiceReceiver uploadReceiver = new AbstractUploadServiceReceiver() {
 
         @Override
@@ -324,6 +324,7 @@ public class WeiBoNewActivity extends ToolbarActivity {
                 break;
             case WeiBoActivity.TYPE_GROUP:
             case WeiBoActivity.TYPE_GROUP_MANAGER:
+            case WeiBoActivity.TYPE_GROUP_VISITOR:
                 parm.put("groupId", mGroupID);
                 if (mCheckBox.isChecked()) {
                     parm.put("onlyGroupViewFlag", "Y");
@@ -371,7 +372,7 @@ public class WeiBoNewActivity extends ToolbarActivity {
                 }
                 Snackbar.make(mRootView, "发送失败！", Snackbar.LENGTH_SHORT).show();
             }
-        }, false, mHashTag));
+        }, false));
     }
 
     private void sendWeiBo() {
@@ -685,7 +686,7 @@ public class WeiBoNewActivity extends ToolbarActivity {
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         UploadService.stopCurrentUpload();
         if (mMyFriends != null) {
             mMyFriends.clear();

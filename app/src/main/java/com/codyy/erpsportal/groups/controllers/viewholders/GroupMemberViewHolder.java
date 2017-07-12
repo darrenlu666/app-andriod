@@ -4,9 +4,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.groups.models.entities.GroupMember;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
  * 圈组成员
  * Created by poe on 15-7-21.
  */
-public class GroupMemberViewHolder extends BaseRecyclerViewHolder<GroupMember>{
+public class GroupMemberViewHolder extends BaseRecyclerViewHolder<GroupMember> {
 
     @Bind(R.id.tv_title) TextView mTitleTextView;
     @Bind(R.id.sdv)SimpleDraweeView mHeadPicSdv;

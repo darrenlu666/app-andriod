@@ -162,8 +162,6 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
 
     private RequestSender mRequestSender;
 
-    private Object mRequestTag = new Object();
-
     private Handler mHandler;
 
     private UserInfo mUserInfo;
@@ -337,7 +335,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         mPlayController.onDestroy();
     }
 
@@ -497,7 +495,7 @@ public class ClassResourcesActivity extends AppCompatActivity implements Callbac
                             }
                         });
                     }
-                }, mRequestTag)
+                })
         );
     }
 

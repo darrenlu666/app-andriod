@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.codyy.MediaFileUtils;
 import com.codyy.ScreenUtils;
 import com.codyy.media.R;
+import com.codyy.media.RaiseUpToast;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -59,7 +60,6 @@ public class CaptureImageActivity extends CaptureImageBaseActivity implements Ha
     private float dist;
     private int PHOTO_SIZE = 2000;
     private int mCurrentCameraId = 0;  //1是前置 0是后置
-    private Handler handler = new Handler();
 
     View takePhotoPanel;
     Button takePicture;
@@ -194,7 +194,7 @@ public class CaptureImageActivity extends CaptureImageBaseActivity implements Ha
                         ScaleAnimation.RELATIVE_TO_SELF, 0.5f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
                 sa.setDuration(800);
                 focusIndex.startAnimation(sa);
-                handler.postDelayed(new Runnable() {
+                mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         focusIndex.setVisibility(View.INVISIBLE);
@@ -395,6 +395,12 @@ public class CaptureImageActivity extends CaptureImageBaseActivity implements Ha
                     cameraInst.startPreview();
                 } catch (Throwable e) {
                     e.printStackTrace();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            toastError();
+                        }
+                    });
                 }
             }
         }
@@ -403,6 +409,13 @@ public class CaptureImageActivity extends CaptureImageBaseActivity implements Ha
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             autoFocus();
         }
+    }
+
+    private void toastError() {
+        Toast toast = new RaiseUpToast(getApplicationContext());
+        toast.setText("请在设置中打开摄像头权限");
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     //实现自动对焦
@@ -806,7 +819,6 @@ public class CaptureImageActivity extends CaptureImageBaseActivity implements Ha
             }
         } else {
             Toast.makeText(getApplicationContext(), "切换失败，请重试！", Toast.LENGTH_LONG).show();
-
         }
     }
 

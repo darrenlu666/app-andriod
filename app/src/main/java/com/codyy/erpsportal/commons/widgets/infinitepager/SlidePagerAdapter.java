@@ -62,4 +62,9 @@ public class SlidePagerAdapter extends InfinitePagerAdapter {
         container.removeView( view);
         mTrash.add( view);
     }
+
+    public void setItems(List items) {
+        mItems = items;
+        notifyDataSetChanged();
+    }
 }

@@ -400,27 +400,6 @@ public class StatTableFragment extends Fragment {
                 LayoutParams layoutParams = new LayoutParams(columnWidth[i], LayoutParams.WRAP_CONTENT);
                 columnLl.addView(view, layoutParams);
             }
-//            if (columnWidth == null || columnWidth.length == 0) {
-//                columnLl.removeViewAt(0);
-//                return;
-//            }
-//            for (int i=0; i<columnWidth.length; i++) {
-//                TextView view;
-//                if (i == 0) {
-//                    view = (TextView) columnLl.getChildAt(0);
-//                    LayoutParams layoutParams = view.getLayoutParams();
-//                    layoutParams.width = columnWidth[i];
-//                    view.setLayoutParams(layoutParams);
-//                } else {
-//                    view = new TextView(columnLl.getContext());
-//                    view.setPadding(padding, 0, padding, 0);
-//                    view.setGravity(Gravity.CENTER_HORIZONTAL);
-//                    view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-//                    view.setLines(1);
-//                    LayoutParams layoutParams = new LayoutParams(columnWidth[i], LayoutParams.WRAP_CONTENT);
-//                    columnLl.addView(view, layoutParams);
-//                }
-//            }
         }
     }
 

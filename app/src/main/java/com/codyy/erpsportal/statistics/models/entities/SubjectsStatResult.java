@@ -12,7 +12,7 @@ public class SubjectsStatResult {
 
     private boolean result;
 
-    private String title;
+    private int code;
 
     @SerializedName("data")
     private List<SubjectsStatEntity> statEntities;
@@ -25,12 +25,12 @@ public class SubjectsStatResult {
         this.result = result;
     }
 
-    public String getTitle() {
-        return title;
+    public int getCode() {
+        return code;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public List<SubjectsStatEntity> getStatEntities() {

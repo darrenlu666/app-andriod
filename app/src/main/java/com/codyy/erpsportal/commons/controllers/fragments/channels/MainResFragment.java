@@ -207,6 +207,8 @@ public class MainResFragment extends Fragment {
         mInfosSwitcher.resume();
     }
 
+    private SlidePagerAdapter mSlidePagerAdapter;
+
     /**
      * 加载资源幻灯片数据
      * @param schoolId 学校id
@@ -233,12 +235,17 @@ public class MainResFragment extends Fragment {
                             } else {
                                 mSlideView.setVisibility(View.VISIBLE);
                                 List<Resource> resources = JsonParseUtil.parseArray(slideItems, mResourceParser);
-                                mSlideView.setAdapter(new SlidePagerAdapter(resources, new HolderCreator() {
-                                    @Override
-                                    public SlidePagerHolder<?> create(View view) {
-                                        return new ResourceSlidePagerHolder(view);
-                                    }
-                                }));
+                                if (mSlidePagerAdapter == null) {
+                                    mSlidePagerAdapter = new SlidePagerAdapter(resources, new HolderCreator() {
+                                        @Override
+                                        public SlidePagerHolder<?> create(View view) {
+                                            return new ResourceSlidePagerHolder(view);
+                                        }
+                                    });
+                                    mSlideView.setAdapter(mSlidePagerAdapter);
+                                } else {
+                                    mSlidePagerAdapter.setItems(resources);
+                                }
                             }
                         }
                     }

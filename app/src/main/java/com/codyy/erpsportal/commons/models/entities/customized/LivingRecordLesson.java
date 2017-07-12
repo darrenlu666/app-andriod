@@ -2,7 +2,7 @@ package com.codyy.erpsportal.commons.models.entities.customized;
 
 import android.text.TextUtils;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 import java.io.Serializable;
 

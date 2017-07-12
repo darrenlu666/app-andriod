@@ -9,8 +9,8 @@
         android:layout_height="3dp" />
 
     <ImageView
-        android:background="@drawable/tab_channel"
         android:id="@+id/tab_indicator_image"
+        android:background="@drawable/tab_channel"
         android:layout_marginTop="3dp"
         android:layout_centerHorizontal="true"
         android:layout_width="25dp"

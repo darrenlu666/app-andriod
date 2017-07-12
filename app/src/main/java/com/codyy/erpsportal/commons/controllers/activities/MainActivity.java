@@ -31,6 +31,7 @@ import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
+import com.codyy.erpsportal.commons.models.engine.VersionChecker;
 import com.codyy.erpsportal.commons.models.entities.LocationBean;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.UpdatePortalEvent;
@@ -71,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
     public final static int REQUEST_AREA = 13;
     public final static int REQUEST_SETTING = 14;
     public final static int MSG_GOTO = 0x98;
+    /**
+     * 从登录界面或完善个人信息进入首页时无需检查更新，因为登录界面检查过了
+     */
+    public final static String EXTRA_NO_NEED_TO_CHECK_UPDATE = "com.codyy.erpsportal.EXTRA_NO_NEED_TO_CHECK_UPDATE";
 
     @Bind(android.R.id.tabs)
     protected MyTabWidget mTabs;
@@ -87,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
     private Handler mHandler;
 
     private WifiBroadCastReceiver mWifiBroadCastReceiver;
+
+    private VersionChecker mVersionChecker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         if (savedInstanceState != null) {
             mTabHost.setCurrentTab(savedInstanceState.getInt("tab"));
         }
+        checkNewVersion();
     }
 
     /**
@@ -142,12 +150,23 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         }
 
         if (mUserInfo == null) {
-            LoginActivity.start(this);
+            LoginActivity.startOnLaunching(this);
             finish();
             return false;
         }
         Cog.d(TAG, "checkUserInfo UserInfoKeeper=", UserInfoKeeper.obtainUserInfo());
         return true;
+    }
+
+    /**
+     * 检查新版本
+     */
+    private void checkNewVersion() {
+        boolean noNeedToCheck = getIntent().getBooleanExtra(EXTRA_NO_NEED_TO_CHECK_UPDATE, false);
+        if (!noNeedToCheck) {
+            mVersionChecker = VersionChecker.getInstance();
+            mVersionChecker.checkNewVersion(this);
+        }
     }
 
     private void findViews() {
@@ -319,6 +338,16 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         UIUtils.addExitTranAnim(activity);
     }
 
+    public static void startNoNeedToCheckUpdate(Activity activity, UserInfo userInfo, int index) {
+        Intent intent = new Intent(activity, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(Extra.USER_INFO, userInfo);
+        intent.putExtra(EXTRA_NO_NEED_TO_CHECK_UPDATE, true);
+        intent.putExtra(LoginActivity.EXTRA_INDEX_GOTO, index);
+        activity.startActivity(intent);
+        UIUtils.addExitTranAnim(activity);
+    }
+
     /**
      * 进入学校首页
      * @param activity 原活动
@@ -350,6 +379,9 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         Cog.d(TAG, "Stop polling service...");
         PollingUtils.stopPollingService(EApplication.instance(), PollingService.class, PollingService.ACTION);
         if (BuildConfig.DEBUG) ViewServer.get(this).removeWindow(this);
+        if (mVersionChecker != null) {
+            mVersionChecker.release();
+        }
     }
 
     public UserInfo getUserInfo() {

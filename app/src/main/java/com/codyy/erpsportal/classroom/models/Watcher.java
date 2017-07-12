@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.classroom.models;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 /**
  * 应用-直播-观看者

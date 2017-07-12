@@ -19,15 +19,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.PermissionUtils;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.FileUtils;
@@ -69,13 +71,6 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     private static final int REQUEST_GET_IMAGE_FROM = 4;
     private static final int REQUEST_CHOOSE_FROM_GALLERY = 5;
 
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 0x220;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
     @Bind(R.id.toolbar)Toolbar mToolBar;
     @Bind(R.id.toolbar_title)TextView mTitleTextView;
     @Bind(R.id.sdv_my_head_icon)SimpleDraweeView mSimpleDraweeView;
@@ -94,6 +89,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     @Bind(R.id.empty_view)EmptyView mEmptyView ;
     @Bind(R.id.tv_school_desc)TextView mSchoolDescTv;
     @Bind(R.id.tv_class_desc)TextView mClassDescTv;
+    @Bind(R.id.forbidden_frame_layout)FrameLayout mForbiddenFrameLayout;//禁止访问提示TextView .
 
     //some variables .
     private List<Student> mStudents = new ArrayList<>();//家长名下孩子集合 .
@@ -131,11 +127,13 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
         if(null != userInfo){
             mNativeUserInfo = userInfo ;
             //更新本人的ｕｕｉｄ防止过期
+            mNativeUserInfo.setUuid(mUserInfo.getUuid());
+
             if(mNativeUserInfo.getBaseUserId().equals(mUserInfo.getBaseUserId())){
-                mNativeUserInfo.setUuid(mUserInfo.getUuid());
                 mNativeUserInfo.setChildList(mUserInfo.getChildList());
                 mNativeUserInfo.setClassList(mUserInfo.getClassList());
             }
+
             refreshUI();
             switch (mNativeUserInfo.getUserType()){
                 case UserInfo.USER_TYPE_TEACHER://教师
@@ -170,10 +168,11 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     @Override
     public void init() {
         mUserId   =   getIntent().getStringExtra(EXTRA_ID);
-        mImageUrl = UserFragmentUtils.createDir().getAbsolutePath() + "/image.jpg";
-        mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
         mTitleTextView.setText(getString(R.string.person_info));
         initToolbar(mToolBar);
+        //用户默认没有被禁用.
+        mForbiddenFrameLayout.setVisibility(View.GONE);
+
         UiMainUtils.setNavigationTintColor(this,R.color.main_green);
         mClassLinear.setEnabled(false);
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
@@ -188,6 +187,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
         mEmptyView.setLoading(true);
         requestData(true);
     }
+
 
     private void refreshUI() {
         if(null == mNativeUserInfo) return;
@@ -269,7 +269,7 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
         if(UserInfo.USER_TYPE_STUDENT.equals(mNativeUserInfo.getUserType())){
             List<ClassCont> contList = new ArrayList<>();
             contList.add(new ClassCont(mNativeUserInfo.getBaseClassId() ,mNativeUserInfo.getBaseClassName(),mNativeUserInfo.getClasslevelName()));
-            ClassSpaceActivity.start(PersonActivity.this,"班级空间",mUserInfo.getBaseClassId(),contList);
+            ClassSpaceActivity.start(PersonActivity.this,"班级空间",mNativeUserInfo.getBaseClassId(),contList,mNativeUserInfo);
         }else{
             showClassDialog(mNativeUserInfo);
         }
@@ -445,51 +445,24 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
     void userIconClick() {
         //过滤访客
         if(!mUserId.equals(mUserInfo.getBaseUserId())) return;
-
-        if(Build.VERSION.SDK_INT>=23){
-            verifyStoragePermissions();
-        }else{
-            showBSDialog();
-        }
+        PermissionUtils.verifyStorageCameraPermissions(PersonActivity.this , mSimpleDraweeView,mPermissionInterface);
     }
 
-    /**
-     * Checks if the app has permission to write to device storage
-     * If the app does not has permission then the user will be prompted to grant permissions
-     */
-    public  void verifyStoragePermissions() {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(PersonActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(PersonActivity.this,Manifest.permission.CAMERA)) {
-                Snackbar.make(mEmptyView , "申请SD卡查看权限！",Snackbar.LENGTH_INDEFINITE).setAction("OK",new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        ActivityCompat.requestPermissions(PersonActivity.this, PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
-                    }
-                }).show();
-            } else {
-                // We don't have permission so prompt the user
-                ActivityCompat.requestPermissions(PersonActivity.this, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-            }
-        }else{
+    private PermissionUtils.PermissionInterface mPermissionInterface = new PermissionUtils.PermissionInterface() {
+        @Override
+        public void next() {
+            mImageUrl = UserFragmentUtils.createDir().getAbsolutePath() + "/image.jpg";
+            Log.i(TAG,"mImageUrl : "+mImageUrl);
+            mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
+            Log.i(TAG," mImageHead: "+mImageHead);
             showBSDialog();
         }
-    }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case REQUEST_EXTERNAL_STORAGE:
-                if (ActivityCompat.checkSelfPermission(PersonActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    //do nothing ．．．　ｏｒ
-                    showBSDialog();
-                }
-                break;
-        }
+       PermissionUtils.onRequestPermissionsResult(requestCode ,PersonActivity.this,mPermissionInterface);
     }
 
     private void showBSDialog() {
@@ -575,14 +548,14 @@ public class PersonActivity extends BaseHttpActivity implements Handler.Callback
                 public void onItemClicked(View v, int position, String data) {
                     if(userinfo.isTeacher()){
                         if(position < mClassList.size()){
-                            ClassSpaceActivity.start(PersonActivity.this,"班级空间",mClassList.get(position).getBaseClassId(),mClassList);
+                            ClassSpaceActivity.start(PersonActivity.this,"班级空间",mClassList.get(position).getBaseClassId(),mClassList,mNativeUserInfo);
                         }else{
                             LogUtils.log(TAG+" :"+"班级index越界 {@link PersonActivity: line 148");
                         }
                     }else if(userinfo.isParent()){
                         if(position < mStudents.size()){
                             ClassSpaceActivity.start(PersonActivity.this,"班级空间",mStudents.get(position).getClassId() ,
-                                    UserFragmentUtils.constructClassListInfo(mStudents));
+                                    UserFragmentUtils.constructClassListInfo(mStudents),mNativeUserInfo);
                         }else{
                             LogUtils.log(TAG+" :"+"班级index越界 {@link PersonActivity: line 148");
                         }

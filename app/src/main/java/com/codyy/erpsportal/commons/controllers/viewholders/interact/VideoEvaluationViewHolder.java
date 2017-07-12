@@ -11,11 +11,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.AssessmentClassActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+
 import java.text.NumberFormat;
 import java.util.List;
 import butterknife.Bind;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
  * 评课议课-详情-评课详情-打分及基本信息【评论之上的一块】
  * Created by poe on 16-6-28.
  */
-public class VideoEvaluationViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar>{
+public class VideoEvaluationViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar> {
     public static final String TAG = "VideoEvaluationViewHolder";
 //    @Bind(R.id.lin_period)LinearLayout mPeriodLinearLayout;
     @Bind(R.id.tv_video_count)TextView mVideoCountTv;

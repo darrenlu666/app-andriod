@@ -105,8 +105,6 @@ public class ImageDetailsActivity extends FragmentActivity {
 
     private RequestSender mRequestSender;
 
-    private Object mRequestTag = new Object();
-
     private ResourceDetails mResourceDetails;
 
     private Handler mHandler;
@@ -261,7 +259,7 @@ public class ImageDetailsActivity extends FragmentActivity {
                 Cog.d(TAG, "onErrorResponse:" + error);
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
             }
-        }, mRequestTag));
+        }));
     }
 
     @OnClick(R.id.btn_download)
@@ -370,7 +368,7 @@ public class ImageDetailsActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         ButterKnife.unbind(this);
     }
 

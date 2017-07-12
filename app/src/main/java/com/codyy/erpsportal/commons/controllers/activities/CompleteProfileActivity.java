@@ -48,8 +48,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
     private RequestSender mSender;
 
-    private Object mRequestTag;
-
     @Bind(R.id.title_bar)
     TitleBar mTitleBar;
 
@@ -79,7 +77,6 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
     private void initAttributes() {
         mSender = new RequestSender(this);
-        mRequestTag = new Object();
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
     }
 
@@ -99,7 +96,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
     private void jumpToMain() {
-        MainActivity.start(this, mUserInfo, 0);
+        MainActivity.startNoNeedToCheckUpdate(this, mUserInfo, 0);
         finish();
     }
 
@@ -133,7 +130,7 @@ public class CompleteProfileActivity extends AppCompatActivity {
                         Cog.d(TAG, "onSubmitClick error=", error);
                         ToastUtil.showToast(CompleteProfileActivity.this, R.string.net_error);
                     }
-                }, mRequestTag
+                }
         ));
     }
 

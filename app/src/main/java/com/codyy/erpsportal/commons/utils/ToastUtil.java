@@ -51,7 +51,7 @@ public class ToastUtil {
         if (context == null) return;
         if (toast == null) {
             toast = new Toast(context.getApplicationContext());
-            View view = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.toast_layout, null);
+            View view = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.toast_raise_up, null);
             TextView textView = (TextView) view.findViewById(R.id.toast_text);
             textView.setText(text);
             toast.setGravity(Gravity.CENTER, 0, 0);
@@ -82,7 +82,6 @@ public class ToastUtil {
                     if (mParams != null && mParams instanceof WindowManager.LayoutParams) {
                         WindowManager.LayoutParams params = (WindowManager.LayoutParams) mParams;
                         params.windowAnimations = R.style.ToastAnimation;
-
                     }
                 }
             } catch (Exception e) {

@@ -7,9 +7,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
+import com.codyy.tpmp.filterlibrary.interfaces.SimpleRecyclerDelegate;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
 import com.codyy.erpsportal.onlineteach.models.entities.NetTeach;
@@ -140,7 +140,7 @@ public class OnlineTeachFragment extends SimpleRecyclerFragment<NetTeach> {
             }
 
             @Override
-            public BaseRecyclerViewHolder<NetTeach> getViewHolder(ViewGroup parent,int viewType) {
+            public BaseRecyclerViewHolder<NetTeach> getViewHolder(ViewGroup parent, int viewType) {
                 return new NetTeachManagerViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_net_teach));
             }
 

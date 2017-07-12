@@ -4,10 +4,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
 import com.codyy.erpsportal.commons.models.entities.SchoolTeacher;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
  * 互动听课-听课端/评课议课-参与范围
  * Created by poe on 16-6-23.
  */
-public class ParticipateSchoolViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar>{
+public class ParticipateSchoolViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar> {
 
     public static final int ITEM_TYPE_ATTEND_TEACHER     =   0x01;//参与教师
     public static final int ITEM_TYPE_LISTEN_TERMINAL    =   0x02;//听课段

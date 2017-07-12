@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -15,13 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
+import com.codyy.tpmp.filterlibrary.entities.FilterConstants;
+import com.codyy.tpmp.filterlibrary.fragments.CommentFilterFragment;
+import com.codyy.tpmp.filterlibrary.interfaces.HttpGetInterface;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.SimpleFragmentAdapter;
 import com.codyy.erpsportal.groups.controllers.fragments.GroupManagerListFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.filters.GroupManagerFilterFragment;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -32,13 +32,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import butterknife.Bind;
 
 /**
  * 应用-圈组
  * Created by poe on 16-1-19.
  */
-public class GroupManagerActivity extends BaseHttpActivity {
+public class GroupManagerActivity extends BaseHttpActivity implements HttpGetInterface{
     private static final String TAG = "GroupManagerActivity";
     @Bind(R.id.toolbar)Toolbar mToolBar;
     @Bind(R.id.toolbar_title)TextView mTitleTextView;
@@ -46,7 +48,7 @@ public class GroupManagerActivity extends BaseHttpActivity {
     @Bind(R.id.tab_layout)TabLayout mTabLayout;
     @Bind(R.id.vp_group)CodyyViewPager mViewPager;
     @Bind(R.id.drawer_layout)DrawerLayout mDrawerLayout;
-    private GroupManagerFilterFragment mFilterFragment ;
+    private CommentFilterFragment mFilterFragment ;
     /**
      * {辖区内的圈组/校内圈组/我的圈组}
      */
@@ -58,6 +60,7 @@ public class GroupManagerActivity extends BaseHttpActivity {
     private String mBaseAreaId ;
     private String mSchoolId ;
     private String mCategory ;//分类
+    private String mState ;//状态
     private boolean mIsDirectory = false;//是否为直属校 nodirectory /directory
 
     @Override
@@ -95,17 +98,7 @@ public class GroupManagerActivity extends BaseHttpActivity {
         mAdapter = new SimpleFragmentAdapter<>(getSupportFragmentManager(),mListFragments);
         mViewPager.setAdapter(mAdapter);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        mFilterFragment = new GroupManagerFilterFragment();
-        Bundle bd = new Bundle();
-        if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())){
-            bd.putString(GroupManagerFilterFragment.EXTRA_TYPE, GroupManagerFilterFragment.TYPE_FILTER_GROUP_AREA);
-        }else{
-            bd.putString(GroupManagerFilterFragment.EXTRA_TYPE, GroupManagerFilterFragment.TYPE_FILTER_GROUP_SCHOOL);
-        }
-        mFilterFragment.setArguments(bd);
-        ft.replace(R.id.fl_filter, mFilterFragment);
-        ft.commitAllowingStateLoss();
+        initFilterFragment();
 
         mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener(){
             @Override
@@ -127,6 +120,84 @@ public class GroupManagerActivity extends BaseHttpActivity {
             }
         });
 
+    }
+
+    private void initFilterFragment() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        int[] filters = getFilterTree();
+
+
+        mFilterFragment = CommentFilterFragment.newInstance(mUserInfo.getUuid()
+                ,mUserInfo.getUserType()
+                ,mUserInfo.getBaseAreaId()
+                ,mUserInfo.getSchoolId()
+                ,filters);
+
+        ft.replace(R.id.fl_filter, mFilterFragment);
+        ft.commitAllowingStateLoss();
+    }
+
+    private int[] getFilterTree() {
+        int[] filters = null;
+
+        //区域用户
+        if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())){
+
+            if( mUserInfo.getGroupCategoryConfig()!= null && mUserInfo.getGroupCategoryConfig().length() > 1){
+                if(mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_INTEREST) && mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_TEACH)){
+                    //组别
+                    filters = new int[]{
+                            FilterConstants.LEVEL_AREA       //省
+                            , FilterConstants.LEVEL_CLASS_SEMESTER //学段
+                            , FilterConstants.LEVEL_SCHOOL     //学校
+                            , FilterConstants.LEVEL_CLASS_TEAM//组别
+                    };
+                }else if(mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_INTEREST)){
+                    //兴趣组-分类
+                    filters = new int[]{
+                            FilterConstants.LEVEL_AREA       //省
+                            , FilterConstants.LEVEL_CLASS_SEMESTER //学段
+                            , FilterConstants.LEVEL_SCHOOL     //学校
+                            , FilterConstants.LEVEL_CLASS_CATEGORY//分类
+                    };
+                }else if( mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_TEACH)){
+                    //年级
+                    filters = new int[]{
+                            FilterConstants.LEVEL_AREA       //省
+                            , FilterConstants.LEVEL_CLASS_SEMESTER //学段
+                            , FilterConstants.LEVEL_SCHOOL     //学校
+                            , FilterConstants.LEVEL_CLASS_LEVEL//年级
+                            , FilterConstants.LEVEL_CLASS_SUBJECT//学科
+                    };
+                }
+            }
+
+        }else{//非区域用户
+
+            if( mUserInfo.getGroupCategoryConfig()!= null && mUserInfo.getGroupCategoryConfig().length() > 1){
+                if(mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_INTEREST) && mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_TEACH)){
+                    //组别
+                    filters = new int[]{
+                              FilterConstants.LEVEL_CLASS_TEAM//组别
+                            , FilterConstants.LEVEL_MANAGER_STATE//状态
+                    };
+                }else if(mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_INTEREST)){
+                    //兴趣组-分类
+                    filters = new int[]{
+                              FilterConstants.LEVEL_CLASS_CATEGORY//分类
+                            , FilterConstants.LEVEL_MANAGER_STATE//状态
+                    };
+                }else if( mUserInfo.isHasTeam(UserInfo.TEAM_TYPE_TEACH)){
+                    //年级
+                    filters = new int[]{
+                              FilterConstants.LEVEL_CLASS_LEVEL//年级
+                            , FilterConstants.LEVEL_CLASS_SUBJECT//学科
+                            , FilterConstants.LEVEL_MANAGER_STATE//状态
+                    };
+                }
+            }
+        }
+        return filters;
     }
 
     @NonNull
@@ -233,8 +304,12 @@ public class GroupManagerActivity extends BaseHttpActivity {
             mGrade      =   bd.getString("class");
             mSubject    =   bd.getString("subject");
             mCategory   =   bd.getString("category");
+            mState      =   bd.getString("state");
         }
-        Cog.i(TAG,"mBaseAreaId"+mBaseAreaId+" mIsDirectory"+mIsDirectory+" mSemester"+mSemester+" mSchoolId"+mSchoolId+" mGrade"+mGrade+" mSubject"+mSubject+" mCategory"+mCategory);
+        Cog.i(TAG,"mBaseAreaId"+mBaseAreaId+" mIsDirectory"+mIsDirectory+" mSemester"+mSemester
+                +" mSchoolId"+mSchoolId+" mGrade"+mGrade
+                +" mSubject"+mSubject+" mCategory"+mCategory
+                +" mState" + mState);
         //refresh .
         mListFragments.get(0).refresh(bd);
     }
@@ -243,5 +318,20 @@ public class GroupManagerActivity extends BaseHttpActivity {
         Intent intent = new Intent(from , GroupManagerActivity.class);
         from.startActivity(intent);
         UIUtils.addEnterAnim(from);
+    }
+
+    @Override
+    public void sendRequest(String url, Map<String, String> param, final Listener listener, final ErrorListener errorListener) {
+        requestData(url, (HashMap<String, String>) param, true, new IRequest() {
+            @Override
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+                if(null != listener) listener.onResponse(response);
+            }
+
+            @Override
+            public void onRequestFailure(Throwable error) {
+                if(null != errorListener) errorListener.onErrorResponse(error);
+            }
+        });
     }
 }
