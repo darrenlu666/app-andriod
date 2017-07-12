@@ -8,6 +8,7 @@ import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import org.joda.time.format.DateTimeFormat;
 import butterknife.Bind;

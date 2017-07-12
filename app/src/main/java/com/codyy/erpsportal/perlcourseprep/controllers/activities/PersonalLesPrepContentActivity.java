@@ -128,8 +128,6 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity{
 
     private List<Courseware> mCoursewareList;
 
-    private Object mRequestTag = new Object();
-
     private RequestSender mRequestSender;
 
     private BroadcastReceiver mRethinkUpdateReceiver = new BroadcastReceiver() {
@@ -177,7 +175,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity{
             public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onErrorResponse error:", error);
             }
-        }, mRequestTag));
+        }));
 
     }
 
@@ -270,7 +268,7 @@ public class PersonalLesPrepContentActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         ButterKnife.unbind(this);
     }
 

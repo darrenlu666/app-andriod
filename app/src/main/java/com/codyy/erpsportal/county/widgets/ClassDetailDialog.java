@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -20,10 +19,8 @@ import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.databinding.ContyClassdetailPopuBinding;
 import com.codyy.erpsportal.timetable.models.entities.TimetableDetail;
 import com.codyy.url.URLConfig;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +29,7 @@ import java.util.Map;
  * Created by kmdai on 16-8-4.
  */
 public class ClassDetailDialog extends DialogFragment {
-    private Integer mHashTag = this.hashCode();
+
     /**
      * 类型-区县总表
      */
@@ -194,7 +191,7 @@ public class ClassDetailDialog extends DialogFragment {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        }));
     }
 
     public void setData(TimetableDetail.ScheduleListBean scheduleListBean) {
@@ -204,7 +201,7 @@ public class ClassDetailDialog extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDismiss(dialog);
     }
 

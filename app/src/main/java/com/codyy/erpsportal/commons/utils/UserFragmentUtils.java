@@ -22,16 +22,16 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.widgets.MyBottomSheet;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.widgets.SimpleListDialog;
 import com.codyy.erpsportal.groups.controllers.viewholders.SingleTextViewHolder;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 import com.codyy.erpsportal.commons.models.personal.Student;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 
 import java.io.DataOutputStream;
 import java.io.File;

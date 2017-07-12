@@ -9,6 +9,7 @@ import org.json.JSONObject;
  * Created by gujiajia on 2015/7/24.
  */
 public class Titles {
+
     public static String sHomepageBlog = "博文";
     public static String sHomepageBlogClassify = "分类目录";
     public static String sHomepageBlogHot = "最热博文";

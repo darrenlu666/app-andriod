@@ -18,13 +18,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 
-import com.codyy.erpsportal.EApplication;
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassMemberActivity;
@@ -35,14 +41,10 @@ import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderB
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.ClassResourceViewHolder;
 import com.codyy.erpsportal.exam.controllers.activities.classroom.ExamClassSpaceActivity;
 import com.codyy.erpsportal.homework.controllers.activities.WorkListsClassSpaceActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.SimpleListFilterFragment;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.GroupAnnounceViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.ClassSpaceViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.MyClassBlogViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
 import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
 import com.codyy.erpsportal.commons.models.entities.my.ClassResource;
@@ -55,8 +57,6 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.resource.controllers.activities.ClassResourcesActivity;
 import com.codyy.erpsportal.resource.controllers.activities.ImageDetailsActivity;
 import com.codyy.erpsportal.resource.controllers.activities.VideoDetailsActivity;
@@ -102,6 +102,7 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
     @Bind(R.id.refresh_layout)SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view)SimpleRecyclerView mRecyclerView;
     @Bind(R.id.drawer_layout)DrawerLayout mDrawerLayout;
+    @Bind(R.id.forbidden_frame_layout)FrameLayout mForbiddenFrameLayout;
 
     private ArrayList<MyBaseTitle> mTitleList = new ArrayList<>();//模块标题 .
     private List<BaseTitleItemBar> mDataList = new ArrayList<>();
@@ -153,7 +154,9 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
         } else {
             mEmptyView.setVisibility(View.GONE);
         }
-        //init the filter more fragment .
+
+        //init the filter more fragment
+        initMenu();
         initFilterFragment();
     }
 
@@ -257,8 +260,37 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mRefreshLayout.setRefreshing(true);
-        requestData(true);
+//        requestData(true);
+        checkForbidden();
+    }
+
+    private void checkForbidden() {
+        HashMap<String,String> param = new HashMap<>();
+        param.put("accountId",mClassId);
+        param.put("accountType","CLASS");
+
+        requestData(URLConfig.CHECK_USER_FORBIDDEN, param, true, new IRequest() {
+            @Override
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+                if(!TextUtils.isEmpty(response.toString()) && "true".equals(response.optString("result"))){
+                    mForbiddenFrameLayout.setVisibility(View.GONE);
+                    mRefreshLayout.setRefreshing(true);
+                    requestData(true);
+                }else{
+                    mForbiddenFrameLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onRequestFailure(Throwable error) {
+                if (mDataList.size() <= 0) {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyView.setVisibility(View.GONE);
+                }
+            }
+        });
+
     }
 
     public void init() {
@@ -268,7 +300,8 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
         mData = getIntent().getParcelableArrayListExtra(EXTRA_CLASS_LIST);
         mTitleTextView.setText(title);
         initToolbar(mToolBar);
-
+        //用户默认没有被禁用.
+        mForbiddenFrameLayout.setVisibility(View.GONE);
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
@@ -395,6 +428,10 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
             }
         });
 
+//        initMenu();
+    }
+
+    private void initMenu() {
         this.setFilterListener(new IFilterListener() {
             @Override
             public void onFilterClick(MenuItem item) {
@@ -429,11 +466,12 @@ public class ClassSpaceActivity extends BaseHttpActivity implements BaseRecycler
      * @param title
      * @param classId
      */
-    public static void start(Context context, String title, String classId, List<ClassCont> classCont) {
+    public static void start(Context context, String title, String classId, List<ClassCont> classCont, UserInfo userInfo) {
         Intent intent = new Intent(context, ClassSpaceActivity.class);
         intent.putExtra(EXTRA_TITLE, title);
         intent.putExtra(EXTRA_CLASS_ID, classId);
         intent.putParcelableArrayListExtra(EXTRA_CLASS_LIST, (ArrayList<? extends Parcelable>) classCont);
+        intent.putExtra(Constants.USER_INFO,userInfo);
         context.startActivity(intent);
         UIUtils.addEnterAnim((Activity) context);
     }

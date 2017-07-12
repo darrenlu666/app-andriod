@@ -79,8 +79,6 @@ public class InfoDeleteActivity extends AppCompatActivity{
 
     private RequestSender mSender;
 
-    private Object mReqTag = new Object();
-
     private UserInfo mUserInfo;
 
     private LoadingDialog mLoadingDialog;
@@ -209,7 +207,7 @@ public class InfoDeleteActivity extends AppCompatActivity{
                 Toast.makeText(InfoDeleteActivity.this, R.string.net_error, Toast.LENGTH_SHORT).show();
                 quitEditing();
             }
-        }, mReqTag));
+        }));
     }
 
     @OnClick(R.id.cb_select_all)

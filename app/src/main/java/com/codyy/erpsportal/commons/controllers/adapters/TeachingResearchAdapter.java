@@ -177,7 +177,7 @@ public class TeachingResearchAdapter extends RecyclerView.Adapter<RecyclerView.V
                     public void onClick(View v) {
                         if (!UserInfoKeeper.getInstance().isEmpty()) {
                             switch (getItemViewType(position)) {
-                                case TeachingResearchBase.PREPARE_LESSON:
+                                case TeachingResearchBase.PREPARE_LESSON://集体评课
                                     ActivityThemeActivity.start(mContext, ActivityThemeActivity.PREPARE_LESSON, teachingResearchPrepare.getId(), teachingResearchPrepare.getViewCount());
                                     break;
                                 case TeachingResearchBase.EVALUATION_LESSON:
@@ -190,7 +190,7 @@ public class TeachingResearchAdapter extends RecyclerView.Adapter<RecyclerView.V
                                             teachingResearchPrepare.getViewCount(),
                                             evaluationScore);
                                     break;
-                                case TeachingResearchBase.INTERAC_LESSON:
+                                case TeachingResearchBase.INTERAC_LESSON://互动听课
                                     ActivityThemeActivity.start(mContext, ActivityThemeActivity.INTERACT_LESSON, teachingResearchPrepare.getId(), teachingResearchPrepare.getViewCount());
                                     break;
                                 case TeachingResearchBase.PERSON_PREPARE:

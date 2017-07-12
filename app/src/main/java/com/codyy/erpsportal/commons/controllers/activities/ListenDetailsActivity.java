@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.DocListViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.MainOrReceiveSchoolViewHolder;
@@ -34,6 +34,7 @@ import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.FixedRecyclerView;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
@@ -134,7 +135,16 @@ public class ListenDetailsActivity extends BaseHttpActivity implements View.OnCl
         mActiveMagValueTv.setText(mDetailEntity.getData().getDescription());
         mLaunchTv.setText(mDetailEntity.getData().getSponsorName());
         mRbStar.setProgress(mDetailEntity.getData().getAverageScore());
-        mGradeNameTv.setText(mDetailEntity.getData().getClassLevelName());
+        if(TextUtils.isEmpty(mDetailEntity.getData().getClassLevelName())||"不限年级".equals(mDetailEntity.getData().getClassLevelName())){
+            mGradeNameTv.setText("不限");
+        }else{
+            String levels = mDetailEntity.getData().getClassLevelName();
+            if(levels.contains(",")){
+                levels = levels.replace(","," ");
+            }
+            mGradeNameTv.setText(levels);
+        }
+
         mSubjectNameTv.setText(mDetailEntity.getData().getSubjectName());
         mReserveStartTimeTv.setText(mDetailEntity.getData().getBeginDate());
         mReserveEndTimeTv.setText(mDetailEntity.getData().getEndDate());
@@ -245,7 +255,7 @@ public class ListenDetailsActivity extends BaseHttpActivity implements View.OnCl
     public void init() {
         mPreparationId = getIntent().getStringExtra(Constants.PREPARATIONID);
         initToolbar(mToolBar);
-        mTitleTextView.setText(Titles.sWorkspaceListen);
+        mTitleTextView.setText(Titles.sWorkspaceListen+"详情");
         mMasterSchoolTitleTv.setText(Titles.sMasterSchool);
         mMasterTeacherTitleTv.setText(Titles.sMasterTeacher);
         mMasterClassroomTitleTv.setText(Titles.sMasterRoom);

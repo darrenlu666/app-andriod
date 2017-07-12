@@ -72,7 +72,7 @@
                 android:layout_marginTop="5dp"
                 android:background="@color/divide_color" />
 
-            <com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView
+            <com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/forbidden_frame_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+    <com.codyy.tpmp.filterlibrary.widgets.AspectRatioImageView
+        android:id="@+id/forbidden_iv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/ic_fox"
+        app:aspectRatio="0.5625"
+        app:aspectRatioEnabled="true"
+        app:dominantMeasurement="width"
+        />
+    <TextView
+        android:id="@+id/forbidden_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="您访问的用户已停止使用"
+        android:layout_gravity="center"
+        android:textSize="18dp"
+        android:textColor="#666666"
+        />
+</FrameLayout>

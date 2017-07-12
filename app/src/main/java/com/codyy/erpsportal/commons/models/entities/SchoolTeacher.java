@@ -3,6 +3,8 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+
 /**
  * Created by kmdai on 2015/4/20.
  */

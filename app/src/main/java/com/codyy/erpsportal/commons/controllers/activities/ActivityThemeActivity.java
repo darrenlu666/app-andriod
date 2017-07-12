@@ -18,14 +18,11 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.commons.widgets.BlogComposeView;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.HorizontalListViewAdapter2;
 import com.codyy.erpsportal.commons.controllers.fragments.CustomCommentFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.DeliveryClassDetailFragment;
+import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.DeliveryClassDetail;
 import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
@@ -107,7 +104,6 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
     private UserInfo mUserInfo;
     private List<ThemeVideo> mVideoList = new ArrayList<>();
     private RequestSender mRequestSender;
-    private Object mReqTag = new Object();
     private MeetDetail mMeetDetail;
     private int mType;
     private String mId;
@@ -119,6 +115,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
      * 点击次数
      */
     private int mViewCount;
+
     private View.OnClickListener mDownListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -207,9 +204,9 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
         mSlidingTabLayout.setTabWidth(tabWidth);
         mAdapter = new ChannelAdapter(this, getSupportFragmentManager(), mViewPager);
         switch (mType) {
-            case PREPARE_LESSON:
-            case INTERACT_LESSON:
-            case EVALUATION_LESSON:
+            case PREPARE_LESSON://集体备课
+            case INTERACT_LESSON://互动听课
+            case EVALUATION_LESSON://评课课
                 Bundle bundle1 = new Bundle();
                 bundle1.putInt("type", mType);
                 mAdapter.addTab(getResources().getString(R.string.activity_detail), VideoIntroductionFragment.class, bundle1);
@@ -348,7 +345,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
             public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(ActivityThemeActivity.this, getString(R.string.net_error));
             }
-        }, mReqTag));
+        }));
     }
 
     /**
@@ -384,8 +381,8 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                 mTitleTv.setText(mResourceName);//设置标题
                 mResourceDetails.setThumbPath(mMeetDetail.getSubjectPic());
             }
-        } else if ("error".equals(result)) {
-        }
+        }/* else if ("error".equals(result)) {
+        }*/
     }
 
     /**
@@ -491,6 +488,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        if(isFinishing()) return;
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             RelativeLayout.LayoutParams lparam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             mFrameLayout.setLayoutParams(lparam);
@@ -538,7 +536,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mReqTag);
+        mRequestSender.stop();
         mVideoControl.stop();
         super.onDestroy();
     }

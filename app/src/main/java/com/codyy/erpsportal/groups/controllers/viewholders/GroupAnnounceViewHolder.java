@@ -3,9 +3,9 @@ package com.codyy.erpsportal.groups.controllers.viewholders;
 import android.view.View;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.widgets.MarqueeTextView;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

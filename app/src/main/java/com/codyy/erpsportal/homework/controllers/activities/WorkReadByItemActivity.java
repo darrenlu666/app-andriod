@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -62,6 +65,7 @@ import com.codyy.erpsportal.homework.utils.WorkUtils;
 import com.codyy.erpsportal.homework.widgets.AudioBar;
 import com.codyy.erpsportal.homework.widgets.PressBar;
 import com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView;
+import com.codyy.erpsportal.homework.widgets.WorkAnswerMediaPlayer;
 import com.codyy.erpsportal.perlcourseprep.models.entities.SubjectMaterialPicture;
 import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
 import com.codyy.url.URLConfig;
@@ -69,6 +73,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -274,6 +280,13 @@ public class WorkReadByItemActivity extends TaskReadByItemActivity implements Vi
         mVideoAnswerView = findViewById(R.id.fl_video_view_answer);//学生答案视频
         mVideoAnalysisView = findViewById(R.id.fl_video_view_analysis);//习题解析视频
         mAudioIv.setOnClickListener(this);
+        mStuAnswerInfoSfsv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mStuAnswerInfoSfsv.requestDisallowInterceptTouchEvent(false);
+                return false;
+            }
+        });
     }
 
     private void loadStudentData(int position) {
@@ -593,6 +606,7 @@ public class WorkReadByItemActivity extends TaskReadByItemActivity implements Vi
     private AnimationDrawable mAnimationDrawable;//音频播放条动画
     private WeiBoMediaService.MediaBinder mMediaBinder;
     private WeiBoMediaService mWeiBoMediaService;
+    private MediaPlayer mCommentMediaPlayer;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -619,6 +633,7 @@ public class WorkReadByItemActivity extends TaskReadByItemActivity implements Vi
         mAnimationDrawable = (AnimationDrawable) audioBar.getBackground();
         LinearLayout audioItem = (LinearLayout) findViewById(autoItemResId);
         final TextView timeTv = (TextView) findViewById(timeResId);
+        initLocalMedia(playUrl,timeTv);
         audioItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -627,6 +642,18 @@ public class WorkReadByItemActivity extends TaskReadByItemActivity implements Vi
                 }
             }
         });
+    }
+
+    private void initLocalMedia(String url,TextView textView) {
+        try {
+            mCommentMediaPlayer = new MediaPlayer();
+            mCommentMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mCommentMediaPlayer.setDataSource(this,Uri.parse(url));
+            mCommentMediaPlayer.prepare();
+            textView.setText(WorkUtils.formatCommentTime(mCommentMediaPlayer.getDuration(), false));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

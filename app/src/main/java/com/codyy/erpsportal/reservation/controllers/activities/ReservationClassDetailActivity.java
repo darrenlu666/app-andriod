@@ -69,7 +69,6 @@ public class ReservationClassDetailActivity extends AppCompatActivity {
     private TimeTableView2 mTimeTableView2;
     private String mCurrentDate;
     private String mSchollID;
-    private Integer mHashTag = this.hashCode();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,12 +230,12 @@ public class ReservationClassDetailActivity extends AppCompatActivity {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        }));
     }
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

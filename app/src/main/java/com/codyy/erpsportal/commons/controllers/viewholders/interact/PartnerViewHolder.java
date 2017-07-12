@@ -5,10 +5,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoMeetingDetailEntity;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
  * 参会者（集体备课）/参与机构（视频会议）
  * Created by poe on 16-6-23.
  */
-public class PartnerViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar>{//PrepareLessonsDetailEntity.ParticipatorItem
+public class PartnerViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar> {//PrepareLessonsDetailEntity.ParticipatorItem
 
     public static final int ITEM_TYPE_JOIN_PARTNER  =   0x01;//参会者
     public static final int ITEM_TYPE_JOIN_GROUP    =   0x02;//参与机构－视频会议

@@ -28,11 +28,6 @@ public class StatFilterCarrier implements android.os.Parcelable {
      */
     private String termId;
 
-    /**
-     * 学科id，-1为全部学期
-     */
-    private String subjectId;
-
     @StatFilterBy
     public int getFilterBy() {
         return filterBy;
@@ -48,14 +43,6 @@ public class StatFilterCarrier implements android.os.Parcelable {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
-    }
-
-    public String getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(String subjectId) {
-        this.subjectId = subjectId;
     }
 
     public String getTermId() {
@@ -86,7 +73,6 @@ public class StatFilterCarrier implements android.os.Parcelable {
         dest.writeString(this.startDate);
         dest.writeString(this.endDate);
         dest.writeString(this.termId);
-        dest.writeString(this.subjectId);
     }
 
     public StatFilterCarrier() {
@@ -97,7 +83,6 @@ public class StatFilterCarrier implements android.os.Parcelable {
         this.startDate = in.readString();
         this.endDate = in.readString();
         this.termId = in.readString();
-        this.subjectId = in.readString();
     }
 
     public static final Creator<StatFilterCarrier> CREATOR = new Creator<StatFilterCarrier>() {

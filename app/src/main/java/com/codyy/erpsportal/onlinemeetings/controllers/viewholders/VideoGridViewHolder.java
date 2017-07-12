@@ -4,10 +4,11 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.widgets.onlinemeeting.CheckableTextView;
 import com.codyy.erpsportal.commons.models.entities.VideoDetails;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.VideoMeetingPlayActivity;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

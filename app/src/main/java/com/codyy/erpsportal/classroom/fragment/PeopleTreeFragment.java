@@ -14,14 +14,14 @@ import com.codyy.erpsportal.classroom.models.WatcherParse;
 import com.codyy.erpsportal.classroom.viewholder.PeopleTreeViewHolder;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.dialogs.ProgressDialog4Children;
 import com.codyy.erpsportal.commons.widgets.dialogs.SimpleLoadingDialog;
-import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
+import com.codyy.tpmp.filterlibrary.interfaces.SimpleRecyclerDelegate;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import org.json.JSONObject;
@@ -130,7 +130,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
             }
 
             @Override
-            public BaseRecyclerViewHolder<Watcher> getViewHolder(ViewGroup parent,int viewType) {
+            public BaseRecyclerViewHolder<Watcher> getViewHolder(ViewGroup parent, int viewType) {
                 return new PeopleTreeViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(), R.layout.item_custom_living_people_tree));
             }
 
@@ -161,7 +161,7 @@ public class PeopleTreeFragment extends SimpleRecyclerFragment<Watcher> {
                             if(data.getBaseUserId().equals(mUserInfo.getBaseUserId())){
                                 MainActivity.start(getActivity() , mUserInfo , 2);
                             }else{//2.访客
-                                PublicUserActivity.start(getActivity() , data.getBaseUserId());
+                                PublicUserActivity.start(getActivity() , mUserInfo, data.getBaseUserId());
                             }
                             break;
                     }

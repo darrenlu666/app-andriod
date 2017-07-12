@@ -4,14 +4,6 @@ package com.codyy.erpsportal.commons.controllers.fragments;
  * Created by poe on 3/8/17.
  */
 
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
 
 /**
  * 代理基本的评论类接口

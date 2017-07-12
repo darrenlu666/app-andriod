@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -49,7 +51,9 @@ import com.codyy.erpsportal.commons.models.parsers.ClassTourClassroomNewParser;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NumberUtils;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.url.URLConfig;
@@ -70,7 +74,7 @@ import java.util.Map;
  * <p>
  * 多个视频播放、主辅课堂页面
  */
-public class ClassTourPagerActivity extends FragmentActivity implements IFragmentMangerInterface{
+public class ClassTourPagerActivity extends FragmentActivity implements IFragmentMangerInterface {
 
     private String TAG = "ClassTourPagerActivity";
 
@@ -116,12 +120,16 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
     public static boolean mIsPlayable = false;
 
     private RequestSender mRequestSender;
+    /**
+     * 检测屏幕开关.
+     */
+    private ScreenBroadCastUtils mScreenBroadCastUtils;
 
-    private Object mRequestTag = new Object();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Cog.i(TAG,"onCreate()");
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_class_tour_pager);
         initAttributes();
@@ -129,7 +137,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
         loadData();
         loadClassTourInfo();
         //禁止锁屏
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         showPrompt();
     }
 
@@ -192,7 +200,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) { }
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
         TextView mainTeacherLbTv = (TextView) findViewById(R.id.lb_main_teacher);
@@ -210,7 +219,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
 
         Check3GUtil.instance().CheckNetType(this, new Check3GUtil.OnWifiListener() {
             @Override
-            public void onNetError() {}
+            public void onNetError() {
+            }
 
             @Override
             public void onContinue() {
@@ -224,7 +234,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
         int current = mViewPager.getCurrentItem();
         final BnVideoLayout2 videoLayout = mClassroomPagerAdapter.getBnVideoLayout(current);
         final TourClassroom classroom = mClassroomList.get(current);
-        if (!TextUtils.isEmpty(classroom.getVideoUrl())&& null != videoLayout) {
+        if (!TextUtils.isEmpty(classroom.getVideoUrl()) && null != videoLayout) {
             playVideo(videoLayout, classroom.getVideoUrl());
         }
     }
@@ -262,6 +272,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
     }
 
     private void loadData() {
+        Cog.i(TAG,"loadData()");
         Map<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
         String url;
@@ -301,7 +312,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                 }
 //                finish();
             }
-        }, mRequestTag));
+        }));
     }
 
     private void loadClassTourInfo() {
@@ -341,10 +352,10 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                         ReceiveTeacherListBean receiveTeacherListBean = detailBean.getReceiveTeacherList().get(i);
                                         textView.setText(
                                                 (TextUtils.isEmpty(receiveTeacherListBean.getTeacherName()) ? "未选择教师" : receiveTeacherListBean.getTeacherName())
-                                                + (TextUtils.isEmpty(receiveTeacherListBean.getTeacherMobile()) ? "" : "("
-                                                + receiveTeacherListBean.getTeacherMobile() + ")")
-                                                + "\n" + receiveTeacherListBean.getSchoolName());
-                                        if ( i != 0) {
+                                                        + (TextUtils.isEmpty(receiveTeacherListBean.getTeacherMobile()) ? "" : "("
+                                                        + receiveTeacherListBean.getTeacherMobile() + ")")
+                                                        + "\n" + receiveTeacherListBean.getSchoolName());
+                                        if (i != 0) {
                                             setMarginTop(textView);
                                         }
                                         mLlReceiverTeacher.addView(textView);
@@ -375,11 +386,11 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                     textView.setLinkTextColor(ContextCompat.getColor(ClassTourPagerActivity.this, android.R.color.white));
                                     ReceiveListBean receiveListBean = info.getReceiveList().get(i);
                                     textView.setText(
-                                            (TextUtils.isEmpty(receiveListBean.getHelpUserName())?"未选择教师" : receiveListBean.getHelpUserName())
-                                            + (TextUtils.isEmpty(receiveListBean.getContact()) ? "" : "("
-                                            + receiveListBean.getContact() + ")")
-                                            + "\n" + receiveListBean.getSchoolName());
-                                    if ( i != 0) {
+                                            (TextUtils.isEmpty(receiveListBean.getHelpUserName()) ? "未选择教师" : receiveListBean.getHelpUserName())
+                                                    + (TextUtils.isEmpty(receiveListBean.getContact()) ? "" : "("
+                                                    + receiveListBean.getContact() + ")")
+                                                    + "\n" + receiveListBean.getSchoolName());
+                                    if (i != 0) {
                                         setMarginTop(textView);
                                     }
                                     mLlReceiverTeacher.addView(textView);
@@ -398,7 +409,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
             }
-        }, mRequestTag));
+        }));
     }
 
     private void setMarginTop(TextView textView) {
@@ -407,10 +418,13 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
         textView.setLayoutParams(lp);
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
+        if (null != mScreenBroadCastUtils)
+            mScreenBroadCastUtils.destroy(ClassTourPagerActivity.this);
     }
 
     public static void start(Activity activity, TourClassroom classroom, UserInfo userInfo, String type) {
@@ -429,14 +443,33 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
     }
 
 
+    // TODO: 18/05/17 锁屏处理视频播放暂停.
     private class ClassroomsPagerAdapter extends PagerAdapter {
 
         private LayoutInflater mLayoutInflater;
+
+        private String mainUrl ;
 
         private SparseArray<BnVideoLayout2> mBnVideoLayouts = new SparseArray<>();
 
         public ClassroomsPagerAdapter(Context context) {
             mLayoutInflater = LayoutInflater.from(context);
+            mScreenBroadCastUtils = new ScreenBroadCastUtils(ClassTourPagerActivity.this, new ScreenBroadCastUtils.ScreenLockListener() {
+                @Override
+                public void onScreenOn() {
+                    if(mBnVideoLayouts.size()>0 && !TextUtils.isEmpty(mainUrl)){
+                        mBnVideoLayouts.get(0).setUrl(mainUrl, BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+                        mBnVideoLayouts.get(0).play(BnVideoView2.BN_PLAY_DEFAULT);
+                    }
+                }
+
+                @Override
+                public void onScreenLock() {
+                    if(mBnVideoLayouts.size()>0){
+                        mBnVideoLayouts.get(0).stop();
+                    }
+                }
+            });
         }
 
         @Override
@@ -454,6 +487,9 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             final TourClassroom classroom = mClassroomList.get(position);
             View view = mLayoutInflater.inflate(R.layout.pager_class_tour, container, false);
 //            TextView mTitleTv = (TextView) view.findViewById(R.id.txtTitleOfLiveVideoPlay);
+            if(position == 0){
+                mainUrl = classroom.getVideoUrl();
+            }
             final BnVideoLayout2 videoLayout = (BnVideoLayout2) view.findViewById(R.id.bnVideoViewOfLiveVideoLayout);
             videoLayout.setVolume(100);
             videoLayout.getVideoView().setBackgroundColor(Color.TRANSPARENT);
@@ -467,31 +503,24 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                         Cog.i(TAG, "mVideoLayout is playing .............~~~~~~~~~~~~~~~");
                         videoLayout.stop();
                     }
+//
+                    if (mIsPlayable) {
+                        Cog.d(TAG, "startPlay mUrl=" + classroom.getVideoUrl());
+                        if (TextUtils.isEmpty(classroom.getVideoUrl())) {
+                            Cog.e(TAG, "startPlay mUrl is NULL!");
+                            return;
+                        }
 
-//                    videoLayout.setUrl(classroom.getVideoUrl(),BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
-//                    videoLayout.play(BnVideoView2.BN_PLAY_TYPE_1);
+                        videoLayout.setUrl(classroom.getVideoUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
+                        videoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
+                        videoLayout.setTimeOut(15);
+                    }
 
-                    //延迟2s执行视频恢复等待 stop销毁动作结束
-                  /*  new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {*/
-                            if (mIsPlayable) {
-                                Cog.d(TAG, "startPlay mUrl=" + classroom.getVideoUrl());
-                                if (TextUtils.isEmpty(classroom.getVideoUrl())) {
-                                    Cog.e(TAG, "startPlay mUrl is NULL!");
-                                    return;
-                                }
-
-                                videoLayout.setUrl(classroom.getVideoUrl(), BnVideoView2.BN_URL_TYPE_RTMP_LIVE);
-                                videoLayout.play(BnVideoView2.BN_PLAY_DEFAULT);
-                                videoLayout.setTimeOut(15);
-                            }
-                     /*   }
-                    }, 2 * 1000);*/
                 }
 
                 @Override
-                public void surfaceChanged(SurfaceHolder holder) { }
+                public void surfaceChanged(SurfaceHolder holder) {
+                }
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
@@ -518,27 +547,12 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
 
     class AppointmentInfo {
 
-        /**
-         * classSeq : 18542
-         * classlevelName : 测试内容52rf
-         * contact : 测试内容6vjk
-         * receiveList : [{"contact":"测试内容7i56","helpUserName":"测试内容5udv","schoolName":"测试内容qn8g"}]
-         * result : 测试内容ubw7
-         * speakUserName : 测试内容cp5t
-         * subjectName : 测试内容96a8
-         */
-
         private String classSeq;
         private String classlevelName;
         private String contact;
         private String result;
         private String speakUserName;
         private String subjectName;
-        /**
-         * contact : 测试内容7i56
-         * helpUserName : 测试内容5udv
-         * schoolName : 测试内容qn8g
-         */
 
         private List<ReceiveListBean> receiveList;
 
@@ -631,21 +645,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
 
     class ClassTourInfo {
 
-        /**
-         * result : success
-         * detail : {"classSeq":"二","classlevelName":"一年级","receiveTeacherList":[{"schoolName":"别用我","teacherMobile":"","teacherName":""},{"schoolName":"别用我","teacherMobile":"","teacherName":""}],"subjectName":"数学","teacherMobile":"","teacherName":"t2&lt;input/&gt;","weekSeq":"12"}
-         */
-
         private String result;
-        /**
-         * classSeq : 二
-         * classlevelName : 一年级
-         * receiveTeacherList : [{"schoolName":"别用我","teacherMobile":"","teacherName":""},{"schoolName":"别用我","teacherMobile":"","teacherName":""}]
-         * subjectName : 数学
-         * teacherMobile :
-         * teacherName : t2&lt;input/&gt;
-         * weekSeq : 12
-         */
 
         private DetailBean detail;
 
@@ -672,11 +672,6 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             private String teacherMobile;
             private String teacherName;
             private String weekSeq;
-            /**
-             * schoolName : 别用我
-             * teacherMobile :
-             * teacherName :
-             */
 
             private List<ReceiveTeacherListBean> receiveTeacherList;
 

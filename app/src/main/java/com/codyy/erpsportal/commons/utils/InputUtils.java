@@ -155,7 +155,7 @@ public class InputUtils {
         } else {
             SharedPreferences.Editor editor = sp.edit();
             editor.putInt("KeyboardHeight", height);
-            editor.commit();
+            editor.apply();
         }
         return height;
     }

@@ -3,6 +3,7 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;

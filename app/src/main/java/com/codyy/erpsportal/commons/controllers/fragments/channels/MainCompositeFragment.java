@@ -188,6 +188,8 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         mInfosSwitcher.resume();
     }
 
+    private SlidePagerAdapter mSlidePagerAdapter;
+
     /**
      * 加载幻灯片新闻
      */
@@ -220,12 +222,17 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                                 infoSlides.add(new InfoSlide(slideItem));
                             }
 
-                            mSlideView.setAdapter(new SlidePagerAdapter(infoSlides, new HolderCreator() {
-                                @Override
-                                public SlidePagerHolder<?> create(View view) {
-                                    return new InfoSlidePagerHolder(view);
-                                }
-                            }));
+                            if (mSlidePagerAdapter == null) {
+                                mSlidePagerAdapter = new SlidePagerAdapter(infoSlides, new HolderCreator() {
+                                    @Override
+                                    public SlidePagerHolder<?> create(View view) {
+                                        return new InfoSlidePagerHolder(view);
+                                    }
+                                });
+                                mSlideView.setAdapter(mSlidePagerAdapter);
+                            } else {
+                                mSlidePagerAdapter.setItems(infoSlides);
+                            }
                         } else {
                             Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
                         }
@@ -273,7 +280,11 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                 }
             });
             titleTv.setText(infoSlide.title);
-            ImageFetcher.getInstance(container).fetchSmall(iconDv, infoSlide.url);
+            if ( !TextUtils.isEmpty(infoSlide.url)) {
+                ImageFetcher.getInstance(container).fetchSmall(iconDv, infoSlide.url);
+            } else {
+                iconDv.setImageResource(R.drawable.ph_no_image_uploaded);
+            }
         }
     }
 
@@ -295,7 +306,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
             params.put("schoolId", schoolId);
         }
         params.put("eachSize", "1");
-        params.put("thumbCount", "0");
+        params.put("thumbCount", "4");
         params.put("baseAreaId", areaId);
         mOnLoadingCount++;
         Cog.d(TAG, "loadInfoSwitches url=", URLConfig.GET_MIXINFORMATION, params);

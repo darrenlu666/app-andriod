@@ -1,19 +1,14 @@
 package com.codyy.erpsportal.commons.controllers.fragments.dialogs;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.models.engine.NewVersionDownloader;
 
 
 /**
@@ -44,10 +39,10 @@ public class ConfirmDownloadDialog extends DialogFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof OnCancelUpdateListener) {
-            this.onOnCancelUpdateListener = (OnCancelUpdateListener) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCancelUpdateListener) {
+            this.onOnCancelUpdateListener = (OnCancelUpdateListener) context;
         }
     }
 
@@ -70,7 +65,7 @@ public class ConfirmDownloadDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 //                url = "https://www.oschina.net/uploads/oschina-1.7.7.1.apk";
-                downloadNewVersion(url);
+                NewVersionDownloader.download(getContext(), url);
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -89,30 +84,6 @@ public class ConfirmDownloadDialog extends DialogFragment {
         super.onCancel(dialog);
         if (onOnCancelUpdateListener != null)
             onOnCancelUpdateListener.onCancelUpdate();
-//        saveVersion();
-    }
-
-    /**
-     * 如果取消了就保存版本号，到时再设置中显示
-     */
-//    private void saveVersion(){
-//        Cog.d(TAG, "+saveVersion");
-//        SharedPreferences sp = getActivity().getSharedPreferences(SettingActivity.SHARE_PREFERENCE_SETTING, Activity.MODE_PRIVATE);
-//        sp.edit().putString(SettingActivity.KEY_NEW_VERSION_CODE, version).apply();
-//    }
-
-    private void downloadNewVersion(String url){
-        Cog.d(TAG, "+downloadNewVersion url=" + url);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setDescription("新版本下载中…");
-        request.setTitle(getResources().getString(R.string.app_name));
-
-        request.allowScanningByMediaScanner();
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "ErpsPortal.apk");
-        DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
-        long id = manager.enqueue(request);
     }
 
     public interface OnCancelUpdateListener {

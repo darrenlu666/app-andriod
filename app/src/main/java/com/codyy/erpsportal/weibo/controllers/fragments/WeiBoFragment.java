@@ -35,7 +35,7 @@ import java.util.Map;
  * Created by kmdai on 15-12-23.
  */
 public class WeiBoFragment extends BaseRefreshFragment<WeiBoListInfo> implements WeiBoAdapter.OnItemClick {
-    private Integer mHashTag = this.hashCode();
+
     /**
      * 微博点赞
      */
@@ -427,7 +427,7 @@ public class WeiBoFragment extends BaseRefreshFragment<WeiBoListInfo> implements
                     public void onErrorResponse(Throwable error) {
 
                     }
-                }, mHashTag));
+                }));
             }
 
             @Override
@@ -440,7 +440,7 @@ public class WeiBoFragment extends BaseRefreshFragment<WeiBoListInfo> implements
 
     @Override
     public void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         ((WeiBoAdapter) mRefreshBaseAdapter).onDestroy();
         super.onDestroy();
     }
