@@ -3,6 +3,7 @@ package com.codyy.erpsportal.statistics.controllers.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
@@ -51,6 +53,8 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.codyy.erpsportal.R.id.rb_by_term;
 
 /**
  * 统计过滤
@@ -170,6 +174,8 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
 
     private List<CheckBox> mTermCbList;
 
+    private CheckBox mTempCheckedTermCb;
+
     private RequestSender mRequestSender;
 
     @Override
@@ -208,6 +214,32 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         initMonths();
         initDates();
         initTerms();
+        setFilterTypeChangeListener();
+    }
+
+    private void setFilterTypeChangeListener() {
+        mFilterTypeRg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                //如果切掉按学期，不应该有学期被选中，先记下当前选中的学期
+                if (checkedId != R.id.rb_by_term) {
+                    if (mTermCbList != null && mTermCbList.size() > 0) {
+                        for (CheckBox cb : mTermCbList) {
+                            if (cb.isChecked()) {
+                                mTempCheckedTermCb = cb;
+                                cb.setChecked(false);
+                                break;
+                            }
+                        }
+                    }
+                } else {//切回按学期时，如果有之前已经记下选中的学期，直接就选中之前的好了
+                    if (mTempCheckedTermCb != null) {
+                        mTempCheckedTermCb.setChecked(true);
+                        mTempCheckedTermCb = null;
+                    }
+                }
+            }
+        });
     }
 
     private void initState() {
@@ -596,7 +628,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         updateMonthDates();
     }
 
-    @OnClick({R.id.rb_by_week, R.id.rb_by_month, R.id.rb_by_specific_date, R.id.rb_by_term})
+    @OnClick({R.id.rb_by_week, R.id.rb_by_month, R.id.rb_by_specific_date, rb_by_term})
     public void onRadioButtonClick(View view) {
         switch (view.getId()) {
             case R.id.rb_by_week:
@@ -608,7 +640,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
             case R.id.rb_by_specific_date:
                 mFilterBy = StatFilterBy.BY_SPECIFIC_DATE;
                 break;
-            case R.id.rb_by_term:
+            case rb_by_term:
                 mFilterBy = StatFilterBy.BY_TERM;
                 break;
         }
