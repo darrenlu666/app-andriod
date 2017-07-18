@@ -339,7 +339,11 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                                 if (formerTermId.equals(termEntity.getId()))
                                     checkBox.setChecked(true);
                             } else if (jsonObject.optInt("currentFlag") == 1) {
-                                checkBox.setChecked(true);
+                                if (mByTermRb.isChecked()) {
+                                    checkBox.setChecked(true);
+                                } else {
+                                    mTempCheckedTermCb = checkBox;
+                                }
                             }
                             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
                             layoutParams.width = 0;

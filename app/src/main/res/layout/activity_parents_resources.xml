@@ -44,7 +44,7 @@
         <Button
             android:id="@+id/btn_confirm_filter"
             android:text="@string/confirm_filter"
-            style="@style/TextButtonInLeftOfTitleBar"
+            style="@style/TextButtonInEndOfTitleBar"
             android:visibility="gone"/>
     </com.codyy.erpsportal.commons.widgets.TitleBar>
 
