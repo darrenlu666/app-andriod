@@ -336,7 +336,6 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                 mTvGrade.setText(detailBean.getClasslevelName());
                                 mTvSubject.setText(detailBean.getSubjectName());
                                 mTvWeek.setText(TextUtils.isEmpty(detailBean.getWeekSeq()) ? "" : "第" + detailBean.getWeekSeq() + "周");
-                                String[] numArr = getResources().getStringArray(R.array.numbers);
                                 mTvCourseNum.setText(TextUtils.isEmpty(detailBean.getClassSeq()) ? "" : "第" + detailBean.getClassSeq() + "节");
                                 mTvMainTeacher.setText(TextUtils.isEmpty(detailBean.getTeacherMobile()) ? detailBean.getTeacherName() : detailBean.getTeacherName() + "(" + detailBean.getTeacherMobile() + ")");
                                 if (detailBean.getReceiveTeacherList() != null && detailBean.getReceiveTeacherList().size() > 0) {
