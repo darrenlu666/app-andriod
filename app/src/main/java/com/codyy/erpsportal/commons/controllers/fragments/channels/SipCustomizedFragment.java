@@ -12,19 +12,23 @@ import android.view.ViewGroup;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
-import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.customized.LivingClassViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.customized.SipLessonViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.PictureViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SchoolRankTitleViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SchoolRankViewHolder;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
-import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
-import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
-import com.codyy.erpsportal.commons.models.entities.customized.LivingParse;
+import com.codyy.erpsportal.commons.models.entities.customized.SchoolRank;
+import com.codyy.erpsportal.commons.models.entities.customized.SchoolRankParse;
+import com.codyy.erpsportal.commons.models.entities.customized.SipLesson;
+import com.codyy.erpsportal.commons.models.entities.customized.SipLessonParse;
+import com.codyy.erpsportal.commons.models.entities.customized.SipSemesterLesson;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
@@ -52,20 +56,41 @@ import butterknife.Bind;
  */
 public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus.OnModuleConfigListener {
     private final String TAG = "SipCustomizedFragment";
-    @Bind(R.id.empty_view) EmptyView mEmptyView;
-    @Bind(R.id.refresh_layout) RefreshLayout mRefreshLayout;
-    @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
+    /**
+     * 展示位Banner图片.
+     */
+    private static final int TYPE_ITEM_VIEW_HOLDER_BANNER = 0x000;
+    /**
+     * 学段－专递课程.
+     */
+    private static final int TYPE_ITEM_VIEW_HOLDER_SEMESTER_CLASS = 0x001;
+    /**
+     * 学校排名title.
+     */
+    private static final int TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER = 0x002;
+
+    /**
+     * 学校排名title.
+     */
+    private static final int TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL = 0x003;
+
+    @Bind(R.id.empty_view)
+    EmptyView mEmptyView;
+    @Bind(R.id.refresh_layout)
+    RefreshLayout mRefreshLayout;
+    @Bind(R.id.recycler_view)
+    RecyclerView mRecyclerView;
 
     private String baseAreaId;
     private String schoolId;
     private List<BaseTitleItemBar> mData = new ArrayList<>();
-    private BaseRecyclerAdapter<BaseTitleItemBar,BaseRecyclerViewHolder> mAdapter ;
+    private BaseRecyclerAdapter<BaseTitleItemBar, BaseRecyclerViewHolder> mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ConfigBus.register(this);
-        Log.i(TAG,"onCreate()");
+        Log.i(TAG, "onCreate()");
     }
 
     @Override
@@ -75,7 +100,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
 
     @Override
     public String obtainAPI() {
-        return URLConfig.GET_SCHEDULE_LIVE;
+        return URLConfig.GET_SIP_ONLINE_CLASS;
     }
 
     @Override
@@ -83,40 +108,24 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
         data.put("schoolId", schoolId);
-        data.put("size", String.valueOf(4));
+        data.put("size", String.valueOf(8));
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
         }
-        return  data ;
+        return data;
     }
 
     @Override
-    public void onSuccess(JSONObject response,boolean isRefreshing) {
-        if(null == mRecyclerView ) return;
-        if(isRefreshing) mData.clear();
+    public void onSuccess(JSONObject response, boolean isRefreshing) {
+        if (null == mRecyclerView) return;
+        if (isRefreshing) mData.clear();
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
         mRecyclerView.setEnabled(true);
         mEmptyView.setLoading(false);
-        LivingParse lp = new Gson().fromJson(response.toString(),LivingParse.class);
-        if(null != lp){
-            List<LivingClass> dataList = lp.getData();
-            mData.clear();
-            if(null != dataList){
-                if(dataList.size() ==0){
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                }else{
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
-                    for(LivingClass lc : dataList){
-                        lc.setBaseViewHoldType(LivingClassViewHolder.ITEM_TYPE_LIVING);
-                        mData.add(lc);
-                    }
-                }
-            }else{
-                mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-            }
-        }
+        SipLessonParse lp = new Gson().fromJson(response.toString(), SipLessonParse.class);
+        parseLessonData(lp);
         mAdapter.setData(mData);
         mAdapter.notifyDataSetChanged();
         if (mData.size() <= 0) {
@@ -124,21 +133,54 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         } else {
             mEmptyView.setVisibility(View.GONE);
         }
-
         getRecommendSchedule();
+    }
+
+    /**
+     * 解析同步课堂的数据　& 设置到数据栈中.
+     *
+     * @param lp
+     */
+    private void parseLessonData(SipLessonParse lp) {
+        if (null != lp && "success".equals(lp.getResult())) {
+            List<SipSemesterLesson> dataList = lp.getData();
+            mData.clear();
+            //banner picture.
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexSipRecentClass, TYPE_ITEM_VIEW_HOLDER_BANNER));
+            //解析学段
+            if (null != dataList) {
+                for (SipSemesterLesson ssl : dataList) {
+                    if (ssl == null) continue;
+                    //学段
+                    if (ssl.getScheduleList() == null || ssl.getScheduleList().size() == 0) {
+                        mData.add(new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    } else {
+                        mData.add(new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE));
+                        for (SipLesson lc : ssl.getScheduleList()) {
+                            lc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_SEMESTER_CLASS);
+                            mData.add(lc);
+                        }
+                    }
+                }
+
+            } else {
+//                mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            }
+        }
+
     }
 
     @Override
     public void onFailure(Throwable error) {
-        if(null == mRecyclerView ) return;
+        if (null == mRecyclerView) return;
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
         mRecyclerView.setEnabled(true);
-        if(mData.size()<=0){
+        if (mData.size() <= 0) {
             mEmptyView.setVisibility(View.VISIBLE);
             mEmptyView.setLoading(false);
-        }else {
+        } else {
             mEmptyView.setVisibility(View.GONE);
         }
     }
@@ -154,7 +196,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-        mRecyclerView.addItemDecoration(new SimpleBisectDivider(divider, (int)getResources().getDimension(R.dimen.poe_recycler_grid_layout_padding), new SimpleBisectDivider.IGridLayoutViewHolder() {
+        mRecyclerView.addItemDecoration(new SimpleBisectDivider(divider, (int) getResources().getDimension(R.dimen.poe_recycler_grid_layout_padding), new SimpleBisectDivider.IGridLayoutViewHolder() {
             @Override
             public int obtainSingleBigItemViewHolderType() {
                 return HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE;
@@ -179,8 +221,8 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
             @Override
             public int getSpanSize(int position) {
 
-                if(mAdapter.getItemViewType(position) == HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE){
-                    return  1;
+                if (mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_SEMESTER_CLASS) {
+                    return 1;
                 }
                 return 2;
             }
@@ -189,27 +231,32 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
             @Override
             public BaseRecyclerViewHolder createViewHolder(ViewGroup parent, int viewType) {
                 BaseRecyclerViewHolder viewHolder = null;
-                switch (viewType){
+                switch (viewType) {
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE:
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA:
+                    case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE:
+                    case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA:
                         viewHolder = TitleItemViewHolderBuilder.getInstance().constructTitleItem(
-                                parent.getContext(),parent,TitleItemViewHolderBuilder.ITEM_TIPS_SIMPLE_TEXT);
+                                parent.getContext(), parent, TitleItemViewHolderBuilder.ITEM_TIPS_SIMPLE_TEXT);
                         break;
-                    case LivingClassViewHolder.ITEM_TYPE_LIVING:
-                    case LivingClassViewHolder.ITEM_TYPE_LIVING_PREPARE:
-                        //解决半边view无法点击
-                        viewHolder =  new LivingClassViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate( R.layout.item_channel_interact_live,parent,false));
+                    case TYPE_ITEM_VIEW_HOLDER_BANNER://banner picture .
+                        viewHolder = new PictureViewHolder(LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_picture_banner_sip, parent, false));
                         break;
-                    case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
-                        viewHolder =  new HistoryClassViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.item_customized_history_class,parent,false));
+                    case TYPE_ITEM_VIEW_HOLDER_SEMESTER_CLASS://同步课堂－学科－多行
+                        viewHolder = new SipLessonViewHolder(LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_customized_history_class_small, parent, false));
                         break;
-                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
-                        viewHolder =  new HistoryClassViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.item_customized_history_class_small,parent,false));
+                    case TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER://学校排行header
+                        viewHolder = new SchoolRankTitleViewHolder(LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_rank_school_title,null));
+                        break;
+                    case TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL://学校排行.
+                        viewHolder = new SchoolRankViewHolder(LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_rank_school, parent, false));
                         break;
                 }
+                if(null == viewHolder) new Throwable("viewHolder is NULL viewType: "+viewType).printStackTrace();
                 return viewHolder;
             }
 
@@ -221,21 +268,16 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<BaseTitleItemBar>() {
             @Override
             public void onItemClicked(View v, int position, BaseTitleItemBar data) {
-                if(null == data) return;
-                switch (mAdapter.getItemViewType(position)){
-                    case LivingClassViewHolder.ITEM_TYPE_LIVING:
-                    case LivingClassViewHolder.ITEM_TYPE_LIVING_PREPARE:
-                        //解决半边view无法点击
-                        LivingClass lc = (LivingClass) data;
-                        CustomLiveDetailActivity.startActivity(getActivity(),mUserInfo,lc.getId(),ClassRoomContants.TYPE_CUSTOM_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                if (null == data) return;
+                switch (mAdapter.getItemViewType(position)) {
+                    case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE://网络授课－更多
+                    case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA://网络授课－更多
+                        // TODO: 24/07/17 小学／初中／高中 跳往更多页面
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
-                        HistoryClass hc = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
-                        break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
-                        HistoryClass hc2 = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc2.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        HistoryClass hc = (HistoryClass) data;
+                        ClassRoomDetailActivity.startActivity(getActivity(), mUserInfo, hc.getId(), ClassRoomContants.TYPE_CUSTOM_RECORD, hc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                 }
             }
@@ -244,49 +286,21 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
     }
 
     /**
-     * 课堂回放
+     * 学校排名
      */
     private void getRecommendSchedule() {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
         data.put("schoolId", schoolId);
-        data.put("size", "8");
-        data.put("uuid",mUserInfo.getUuid());
+        data.put("uuid", mUserInfo.getUuid());
 
-        requestData(URLConfig.GET_RECOMMEND_SCHEDULE, data,false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_SIP_SCHOOL_RANK, data, false, new BaseHttpActivity.IRequest() {
             @Override
-            public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
-                HistoryClassParse hcp = new Gson().fromJson(response.toString(),HistoryClassParse.class);
-                if(null != hcp ){
-                    List<HistoryClass> hcList = hcp.getData();
-                    if(null != hcList){
-                        if(hcList.size()==0){
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                        }else{
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
-
-                            for (HistoryClass hc : hcList){
-                                //判断--奇数/偶数
-                                if(hcList.indexOf(hc) == 0){
-                                    int hcount = hcList.size();
-                                    if(hcount%2 >0){//奇数
-                                        hc.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE);
-                                    }else{//偶数
-                                        hc.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
-                                    }
-                                }else{
-                                    hc.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
-                                }
-                                mData.add(hc);
-                            }
-                        }
-                    }else{
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                    }
-                }
+                parseSchoolRank(response);
                 mAdapter.notifyDataSetChanged();
                 if (mData.size() <= 0) {
                     mEmptyView.setLoading(false);
@@ -303,9 +317,31 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         });
     }
 
+    private void parseSchoolRank(JSONObject response) {
+        SchoolRankParse hcp = new Gson().fromJson(response.toString(), SchoolRankParse.class);
+        if (null != hcp) {
+            List<SchoolRank> hcList = hcp.getData();
+            if (null != hcList) {
+                if (hcList.size() == 0) {
+                    mData.add(new BaseTitleItemBar("学校排行", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                } else {
+                    mData.add(new BaseTitleItemBar("学校排行", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                    //title .
+                    mData.add(new BaseTitleItemBar("学校排行", TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER));
+                    for (SchoolRank hc : hcList) {
+                        hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL);
+                        mData.add(hc);
+                    }
+                }
+            } else {
+                mData.add(new BaseTitleItemBar("学校排行", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            }
+        }
+    }
+
     @Override
     public void onConfigLoaded(ModuleConfig config) {
-        if(null == mRefreshLayout) return;
+        if (null == mRefreshLayout) return;
         baseAreaId = config.getBaseAreaId();
         schoolId = config.getSchoolId();
         if (mRefreshLayout == null) return;//防止界面回收还有回调

@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.fragments.channels;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,7 +14,9 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
+import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
+import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsNewActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolderSip;
@@ -24,18 +27,23 @@ import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipInter
 import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipPersonalClassViewHolder;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
+import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingParse;
 import com.codyy.erpsportal.commons.models.entities.onlineclass.SipNetResearch;
 import com.codyy.erpsportal.commons.models.entities.onlineclass.SipNetResearchParse;
+import com.codyy.erpsportal.commons.utils.NumberUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.erpsportal.perlcourseprep.controllers.activities.MoreLessonPlansActivity;
+import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepContentActivity;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
@@ -278,19 +286,48 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
             public void onItemClicked(View v, int position, BaseTitleItemBar data) {
                 if(null == data) return;
                 switch (mAdapter.getItemViewType(position)){
-                    case LivingClassViewHolder.ITEM_TYPE_LIVING:
-                    case LivingClassViewHolder.ITEM_TYPE_LIVING_PREPARE:
-                        //解决半边view无法点击
-                        LivingClass lc = (LivingClass) data;
-                        CustomLiveDetailActivity.startActivity(getActivity(),mUserInfo,lc.getId(),ClassRoomContants.TYPE_CUSTOM_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                    case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE://网络授课－更多
+                    case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA://网络授课－更多
+                        if(Titles.sPagetitleNetteachInteract.equals(data.getBaseTitle())){//互动听课
+                            CollectivePrepareLessonsNewActivity.start(getActivity(), TeachingResearchBase.INTERAC_LESSON, schoolId, baseAreaId);
+                        }else if(Titles.sPagetitleNetteachPrepare.equals(data.getBaseTitle())){//个人备课
+                            MoreLessonPlansActivity.start(getActivity(), baseAreaId, schoolId);
+                        }else if(Titles.sPagetitleNetteachAllprepare.equals(data.getBaseTitle())){//集体备课
+                            CollectivePrepareLessonsNewActivity.start(getActivity(), TeachingResearchBase.PREPARE_LESSON, schoolId, baseAreaId);
+                        }else if(Titles.sPagetitleNetteachDisucss.equals(data.getBaseTitle())){//评课议课
+                            CollectivePrepareLessonsNewActivity.start(getActivity(), TeachingResearchBase.EVALUATION_LESSON, schoolId, baseAreaId);
+                        }
                         break;
-                    case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
-                        HistoryClass hc = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
-                        break;
-                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
+                    case TYPE_ITEM_VIEW_HOLDER_RECORD_CLASS://课程回放.
                         HistoryClass hc2 = (HistoryClass) data;
                         ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc2.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        break;
+                    case TYPE_ITEM_VIEW_HOLDER_INTERACT_CLASS://互动听课
+                        ActivityThemeActivity.start(getActivity(), ActivityThemeActivity.INTERACT_LESSON
+                                , ((SipNetResearch)data).getId()
+                                , ((SipNetResearch)data).getViewCount());
+                        break;
+                    case TYPE_ITEM_VIEW_HOLDER_PERSONAL_PREPARE_CLASS://个人备课
+                        PersonalLesPrepContentActivity.start(getActivity(), ((SipNetResearch)data).getId());
+                        break;
+                    case TYPE_ITEM_VIEW_HOLDER_GROUP_PREPARE_CLASS://集体备课
+                        if(data instanceof SipNetResearch){
+                            ActivityThemeActivity.start(getActivity(), ActivityThemeActivity.PREPARE_LESSON
+                                    ,((SipNetResearch)data).getId(), ((SipNetResearch)data).getViewCount());
+                        }
+                        break;
+                    case TYPE_ITEM_VIEW_HOLDER_EVALUATE_CLASS://评课议课
+                        if(data instanceof SipNetResearch){
+                            SipNetResearch netResearch = (SipNetResearch) data;
+                            EvaluationScore evaluationScore = new EvaluationScore();
+                            evaluationScore.setTotalScore(NumberUtils.floatOf(netResearch.getTotalScore()));
+                            evaluationScore.setScoreType(netResearch.getScoreType());
+                            evaluationScore.setAvgScore(netResearch.getAverageScore());
+                            ActivityThemeActivity.start(getActivity(), ActivityThemeActivity.EVALUATION_LESSON,
+                                    netResearch.getId(),
+                                    netResearch.getViewCount(),
+                                    evaluationScore);
+                        }
                         break;
                 }
             }

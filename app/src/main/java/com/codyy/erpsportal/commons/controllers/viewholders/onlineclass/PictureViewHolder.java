@@ -13,6 +13,7 @@ import com.codyy.erpsportal.commons.models.entities.onlineclass.SipNetResearch;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.tpmp.filterlibrary.widgets.AspectRatioImageView;
 import com.facebook.drawee.interfaces.DraweeController;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
  * 圈组-博文-下一页-热门博文item
  * Created by poe on 16-1-15.
  */
-public class PictureViewHolder extends BaseRecyclerViewHolder<SipNetResearch> {
+public class PictureViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar> {
 
     @Bind(R.id.sdv)
     AspectRatioImageView mSdv;
@@ -42,7 +43,7 @@ public class PictureViewHolder extends BaseRecyclerViewHolder<SipNetResearch> {
 
 
     @Override
-    public void setData(int position,SipNetResearch data) {
+    public void setData(int position,BaseTitleItemBar data) {
         //do nothing .
     }
 }
