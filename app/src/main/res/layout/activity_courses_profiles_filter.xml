@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +11,16 @@
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/layout_title_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:background="@color/main_green">
+
+        <Button
+            android:id="@+id/btn_space"
+            style="@style/TextButtonInStartOfTitleBar"
+            android:text="@string/confirm_filter"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/btn_return"
@@ -20,34 +28,38 @@
             android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/back_btn_bg"/>
+            android:background="@drawable/back_btn_bg" />
 
         <Button
             android:id="@+id/btn_confirm_filter"
-            style="@style/TextButtonInLeftOfTitleBar"
-            android:text="@string/confirm_filter"/>
+            style="@style/TextButtonInEndOfTitleBar"
+            android:text="@string/confirm_filter" />
 
-        <HorizontalScrollView
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_toEndOf="@id/btn_return"
+            android:layout_toEndOf="@id/btn_space"
             android:layout_toLeftOf="@id/btn_confirm_filter"
-            android:layout_toRightOf="@id/btn_return"
-            android:layout_toStartOf="@id/btn_confirm_filter"
-            android:scrollbars="none">
+            android:layout_toRightOf="@id/btn_space"
+            android:layout_toStartOf="@id/btn_confirm_filter">
 
-            <TextView
-                android:id="@+id/tv_title"
+            <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:singleLine="true"
-                android:textColor="@color/white"
-                android:textSize="@dimen/layout_title_text_size"
-                tools:text="开课比分析-主讲教室(主讲)"/>
-        </HorizontalScrollView>
+                android:layout_gravity="center"
+                android:scrollbars="none">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/layout_title_text_size"
+                    tools:text="开课比分析-主讲教室(主讲)" />
+            </HorizontalScrollView>
+        </FrameLayout>
     </RelativeLayout>
 
     <ScrollView
@@ -66,7 +78,7 @@
                 style="@style/StatisticsFilterRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="按周统计"/>
+                android:text="按周统计" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,27 +93,27 @@
                     android:layout_marginRight="12dp"
                     android:background="@null"
                     android:padding="8dp"
-                    android:src="@drawable/ic_past"/>
+                    android:src="@drawable/ic_past" />
 
                 <TextView
                     android:id="@+id/tv_week_begin"
                     style="@style/StatisticsFilterDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="2016-05-09"/>
+                    tools:text="2016-05-09" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="@string/to"/>
+                    android:text="@string/to" />
 
                 <TextView
                     android:id="@+id/tv_week_end"
                     style="@style/StatisticsFilterDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="2016-05-09"/>
+                    tools:text="2016-05-09" />
 
                 <ImageButton
                     android:id="@+id/ib_next_week"
@@ -111,7 +123,7 @@
                     android:layout_marginStart="12dp"
                     android:background="@null"
                     android:padding="8dp"
-                    android:src="@drawable/ic_future"/>
+                    android:src="@drawable/ic_future" />
             </LinearLayout>
 
             <RadioButton
@@ -119,7 +131,7 @@
                 style="@style/StatisticsFilterRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="按月统计"/>
+                android:text="按月统计" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,27 +146,27 @@
                     android:layout_marginRight="12dp"
                     android:background="@null"
                     android:padding="8dp"
-                    android:src="@drawable/ic_past"/>
+                    android:src="@drawable/ic_past" />
 
                 <TextView
                     android:id="@+id/tv_month_begin"
                     style="@style/StatisticsFilterDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="2016-05-09"/>
+                    tools:text="2016-05-09" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="@string/to"/>
+                    android:text="@string/to" />
 
                 <TextView
                     android:id="@+id/tv_month_end"
                     style="@style/StatisticsFilterDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="2016-05-16"/>
+                    tools:text="2016-05-16" />
 
                 <ImageButton
                     android:id="@+id/ib_next_month"
@@ -164,7 +176,7 @@
                     android:layout_marginStart="12dp"
                     android:background="@null"
                     android:padding="8dp"
-                    android:src="@drawable/ic_future"/>
+                    android:src="@drawable/ic_future" />
             </LinearLayout>
 
             <RadioButton
@@ -174,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:text="按日期统计"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/ll_by_specific_date"
@@ -195,14 +207,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="@string/to"/>
+                    android:text="@string/to" />
 
                 <Button
                     android:id="@+id/btn_specific_date_end"
                     style="@style/StatisticsFilterDate.Button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2016-05-16"/>
+                    android:text="2016-05-16" />
             </LinearLayout>
 
             <RadioButton
@@ -211,7 +223,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="按学期选择"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <android.support.v7.widget.GridLayout
                 android:id="@+id/gl_terms"
@@ -220,7 +232,7 @@
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
                 android:visibility="gone"
-                app:columnCount="2"/>
+                app:columnCount="2" />
             <!--<TextView-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->

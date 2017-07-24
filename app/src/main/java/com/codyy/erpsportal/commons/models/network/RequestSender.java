@@ -160,7 +160,7 @@ public class RequestSender {
      * 取消所有请求
      */
     public void stop() {
-        mCompositeDisposable.dispose();
+        mCompositeDisposable.clear();
     }
 
 
