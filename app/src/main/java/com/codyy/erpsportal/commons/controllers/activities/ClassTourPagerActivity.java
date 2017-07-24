@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +16,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v4.widget.DrawerLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -53,7 +51,6 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NumberUtils;
 import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.url.URLConfig;
@@ -339,8 +336,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                 mTvGrade.setText(detailBean.getClasslevelName());
                                 mTvSubject.setText(detailBean.getSubjectName());
                                 mTvWeek.setText(TextUtils.isEmpty(detailBean.getWeekSeq()) ? "" : "第" + detailBean.getWeekSeq() + "周");
-                                String[] numArr = getResources().getStringArray(R.array.numbers);
-                                mTvCourseNum.setText(TextUtils.isEmpty(detailBean.getClassSeq()) ? "" : "第" + numArr[NumberUtils.intOf(detailBean.getClassSeq())] + "节");
+                                mTvCourseNum.setText(TextUtils.isEmpty(detailBean.getClassSeq()) ? "" : "第" + detailBean.getClassSeq() + "节");
                                 mTvMainTeacher.setText(TextUtils.isEmpty(detailBean.getTeacherMobile()) ? detailBean.getTeacherName() : detailBean.getTeacherName() + "(" + detailBean.getTeacherMobile() + ")");
                                 if (detailBean.getReceiveTeacherList() != null && detailBean.getReceiveTeacherList().size() > 0) {
                                     for (int i = 0; i < detailBean.getReceiveTeacherList().size(); i++) {
