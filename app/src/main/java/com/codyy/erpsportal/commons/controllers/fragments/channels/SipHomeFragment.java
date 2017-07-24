@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
@@ -19,6 +18,7 @@ import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderB
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolderSip;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.LivingClassViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.PictureViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipEvaluateClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipInteractClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipPersonalClassViewHolder;
@@ -36,18 +36,13 @@ import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
-import com.codyy.erpsportal.groups.controllers.viewholders.SimpleTextViewHolder;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +59,10 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
     @Bind(R.id.refresh_layout) RefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
+    /**
+     * 展示位Banner图片
+     */
+    private static final int TYPE_ITEM_VIEW_HOLDER_BANNER = 0x000;
     /**
      * 近期课程
      */
@@ -137,6 +136,9 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
         if(null != lp){
             List<LivingClass> dataList = lp.getData();
             mData.clear();
+            //banner picture.
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexSipRecentClass, TYPE_ITEM_VIEW_HOLDER_BANNER));
+
             if(null != dataList){
                 if(dataList.size() ==0){
                     mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexSipRecentClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
@@ -230,6 +232,10 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA:
                         viewHolder = TitleItemViewHolderBuilder.getInstance().constructTitleItem(
                                 parent.getContext(),parent,TitleItemViewHolderBuilder.ITEM_TIPS_SIMPLE_TEXT);
+                        break;
+                    case TYPE_ITEM_VIEW_HOLDER_BANNER://banner picture .
+                        viewHolder =  new PictureViewHolder(LayoutInflater.from(parent.getContext())
+                                .inflate( R.layout.item_picture_banner_sip,parent,false));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_RECENT_CLASS://近期课程
                         viewHolder =  new LivingClassViewHolder(LayoutInflater.from(parent.getContext())
@@ -386,7 +392,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
         JSONObject personJson = response.optJSONObject("personPrepareLesson");
         JSONObject groupJson = response.optJSONObject("groupPreparation");
         JSONObject evaluationJson = response.optJSONObject("evaluationAndDiscussion");
-        // TODO: 21/07/17 互动听课解析 
+        // 21/07/17 互动听课解析
         if(null != interactJson
                 &&interactJson.optInt("total")  > 0){
             //add title .
