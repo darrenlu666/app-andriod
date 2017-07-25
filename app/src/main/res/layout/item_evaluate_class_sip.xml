@@ -38,6 +38,8 @@
         android:layout_marginRight="10dp"
         android:maxLines="1"
         android:drawableLeft="@drawable/see_worklist"
+        android:drawablePadding="10dp"
+        android:paddingLeft="5dp"
         />
     <TextView
         android:id="@+id/tv_create_time"

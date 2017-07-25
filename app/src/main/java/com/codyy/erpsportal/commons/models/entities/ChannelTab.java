@@ -133,6 +133,8 @@ public class ChannelTab {
                 break;
             case "onlineclassid"://专递课堂
                 if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){
+                    bundle = new Bundle();
+                    bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE,name);
                     clazz = SipCustomizedFragment.class;
                     tabId = 3;
                 }else{

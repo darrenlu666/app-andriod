@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="开课活动数"
                 style="@style/rank_school_title"
+                android:gravity="center"
                 />
             <View android:layout_width="1px"
                 android:layout_height="18dp"
@@ -52,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:text="教研活动数"
                 style="@style/rank_school_title"
+                android:gravity="center"
                 />
         </LinearLayout>
 

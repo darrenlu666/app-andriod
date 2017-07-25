@@ -48,6 +48,7 @@
         android:layout_marginRight="10dp"
         android:maxLines="1"
         android:drawableLeft="@drawable/see_worklist"
+        android:drawablePadding="10dp"
         android:layout_toLeftOf="@id/tv_create_time"
         />
     <TextView

@@ -14,11 +14,21 @@ public class BaseTitleItemBar {
      */
     private int baseViewHoldType = 0x00 ;
 
+    private String id;//some id such as semester id .
+
     public BaseTitleItemBar() {
     }
     public BaseTitleItemBar(String baseTitle, int baseViewHoldType) {
         this.baseTitle = baseTitle;
         this.baseViewHoldType = baseViewHoldType;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getBaseTitle() {

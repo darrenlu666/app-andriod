@@ -14,10 +14,19 @@ public class SchoolRank extends BaseTitleItemBar{
      * schoolName : 琦琦学校
      * teacherActivityCount : 7
      */
+    private int rankPosition = 0;//排名
     private String schoolId;
     private String schoolName;
     private int scheduleActivityCount;//开课活动数
     private int teacherActivityCount;//教研活动数
+
+    public int getRankPosition() {
+        return rankPosition;
+    }
+
+    public void setRankPosition(int rankPosition) {
+        this.rankPosition = rankPosition;
+    }
 
     public int getScheduleActivityCount() {
         return scheduleActivityCount;

@@ -9,11 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
+import com.codyy.erpsportal.commons.controllers.activities.MoreSemesterLessonActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.SipLessonViewHolder;
@@ -23,7 +23,6 @@ import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SchoolRa
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
-import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
 import com.codyy.erpsportal.commons.models.entities.customized.SchoolRank;
 import com.codyy.erpsportal.commons.models.entities.customized.SchoolRankParse;
 import com.codyy.erpsportal.commons.models.entities.customized.SipLesson;
@@ -56,6 +55,7 @@ import butterknife.Bind;
  */
 public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus.OnModuleConfigListener {
     private final String TAG = "SipCustomizedFragment";
+    public static final String EXTRA_ARG_TITLE = "com.codyy.sip.title";
     /**
      * 展示位Banner图片.
      */
@@ -81,6 +81,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
+    private String mTitle = "同步课堂";//默认标题.传递到更多页面.
     private String baseAreaId;
     private String schoolId;
     private List<BaseTitleItemBar> mData = new ArrayList<>();
@@ -91,6 +92,9 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         super.onCreate(savedInstanceState);
         ConfigBus.register(this);
         Log.i(TAG, "onCreate()");
+        if(null != getArguments()){
+            mTitle = getArguments().getString(EXTRA_ARG_TITLE);
+        }
     }
 
     @Override
@@ -155,9 +159,11 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                     if (ssl.getScheduleList() == null || ssl.getScheduleList().size() == 0) {
                         mData.add(new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     } else {
-                        mData.add(new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE));
+                        BaseTitleItemBar titleItemBar = new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE);
+                        titleItemBar.setId(ssl.getSemesterId());
+                        mData.add(titleItemBar);
                         for (SipLesson lc : ssl.getScheduleList()) {
-                            lc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_SEMESTER_CLASS);
+                            lc.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
                             mData.add(lc);
                         }
                     }
@@ -221,7 +227,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
             @Override
             public int getSpanSize(int position) {
 
-                if (mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_SEMESTER_CLASS) {
+                if (mAdapter.getItemViewType(position) == HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE) {
                     return 1;
                 }
                 return 2;
@@ -243,7 +249,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                         viewHolder = new PictureViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_picture_banner_sip, parent, false));
                         break;
-                    case TYPE_ITEM_VIEW_HOLDER_SEMESTER_CLASS://同步课堂－学科－多行
+                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://同步课堂－学科－多行
                         viewHolder = new SipLessonViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_customized_history_class_small, parent, false));
                         break;
@@ -265,6 +271,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                 return mData.get(position).getBaseViewHoldType();
             }
         });
+
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<BaseTitleItemBar>() {
             @Override
             public void onItemClicked(View v, int position, BaseTitleItemBar data) {
@@ -272,12 +279,13 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                 switch (mAdapter.getItemViewType(position)) {
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE://网络授课－更多
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA://网络授课－更多
-                        // TODO: 24/07/17 小学／初中／高中 跳往更多页面
+                        MoreSemesterLessonActivity.start(getActivity(),mTitle,data.getId());
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
-                        HistoryClass hc = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(), mUserInfo, hc.getId(), ClassRoomContants.TYPE_CUSTOM_RECORD, hc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        SipLesson hc = (SipLesson) data;
+                        ClassRoomDetailActivity.startActivity(getActivity(), mUserInfo, hc.getId()
+                                , ClassRoomContants.TYPE_CUSTOM_RECORD, hc.getSubjectName());
                         break;
                 }
             }
@@ -328,7 +336,9 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                     mData.add(new BaseTitleItemBar("学校排行", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
                     //title .
                     mData.add(new BaseTitleItemBar("学校排行", TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER));
-                    for (SchoolRank hc : hcList) {
+                    for (int i= 0 ; i <hcList.size();i++) {
+                        SchoolRank hc = hcList.get(i);
+                        hc.setRankPosition(i);
                         hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL);
                         mData.add(hc);
                     }

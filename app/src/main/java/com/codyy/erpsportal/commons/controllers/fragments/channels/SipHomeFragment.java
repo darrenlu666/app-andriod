@@ -223,7 +223,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
             @Override
             public int getSpanSize(int position) {
 
-                if(mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_RECORD_CLASS){
+                if(mAdapter.getItemViewType(position) == HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE){
                     return  1;
                 }
                 return 2;
@@ -249,7 +249,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                         viewHolder =  new LivingClassViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate( R.layout.item_channel_interact_live,parent,false));
                         break;
-                    case TYPE_ITEM_VIEW_HOLDER_RECORD_CLASS://课程回放
+                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://课程回放
                         viewHolder =  new HistoryClassViewHolderSip(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_customized_history_class_small,parent,false));
                         break;
@@ -298,7 +298,11 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                             CollectivePrepareLessonsNewActivity.start(getActivity(), TeachingResearchBase.EVALUATION_LESSON, schoolId, baseAreaId);
                         }
                         break;
-                    case TYPE_ITEM_VIEW_HOLDER_RECORD_CLASS://课程回放.
+                    case TYPE_ITEM_VIEW_HOLDER_RECENT_CLASS://近期课程
+                        LivingClass lc = (LivingClass) data;
+                        CustomLiveDetailActivity.startActivity(getActivity(),mUserInfo,lc.getId(),ClassRoomContants.TYPE_CUSTOM_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        break;
+                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://课程回放.
                         HistoryClass hc2 = (HistoryClass) data;
                         ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc2.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
@@ -361,7 +365,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                             mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
                             for (HistoryClass hc : hcList){
-                                hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_RECORD_CLASS);
+                                hc.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
                                 mData.add(hc);
                             }
                         }
