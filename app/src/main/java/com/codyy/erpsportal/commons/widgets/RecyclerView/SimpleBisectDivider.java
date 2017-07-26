@@ -8,9 +8,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-
-import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RecyclerView的简单分割线 Divider
@@ -30,20 +31,25 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
     private boolean isBigShow = false;//是否有大图片
     private IGridLayoutViewHolder mIGridLayoutViewHolder;
 
-//    public SimpleBisectDivider(Drawable divider) {
-//        this(divider, 20);
-//    }
-
-    public SimpleBisectDivider(Drawable divider, int space,IGridLayoutViewHolder iGridLayoutViewHolder) {
+    public SimpleBisectDivider(Drawable divider, int space, IGridLayoutViewHolder iGridLayoutViewHolder) {
         this(divider, false);
         this.mSpace = space;
-        this.mIGridLayoutViewHolder = iGridLayoutViewHolder ;
+        this.mIGridLayoutViewHolder = iGridLayoutViewHolder;
         mLastPosition = 0;
+
+        //IGridLayoutViewHolder 多变的item不需要绘制divider .
+        addNoDivider(mIGridLayoutViewHolder.obtainSingleBigItemViewHolderType());
+        addNoDivider(mIGridLayoutViewHolder.obtainMultiInLineViewHolderType());
     }
 
     public SimpleBisectDivider(Drawable divider, boolean isHeadDraw) {
         this.mDivider = divider;
         this.isHeadDividerEnable = isHeadDraw;
+        //不需要绘制divider
+        mDividerDisappearCollections.add(TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE);
+        mDividerDisappearCollections.add(TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA);
+        mDividerDisappearCollections.add(TitleItemViewHolder.ITEM_TYPE_TITLE_MORE);
+        mDividerDisappearCollections.add(TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA);
     }
 
     public boolean isHeadDividerEnable() {
@@ -57,7 +63,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         GridLayoutManager gridLayoutManager = (GridLayoutManager) parent.getLayoutManager();
-        if (gridLayoutManager == null ) return;
+        if (gridLayoutManager == null) return;
         //如果下一个item的recyclerType为TitleBar or TitleBarMore 则 返回
         int position = parent.getChildLayoutPosition(view);
         int viewType = parent.getAdapter().getItemViewType(position);
@@ -71,13 +77,15 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 outRect.bottom = mSpace;
                 return;
             } else if (mIGridLayoutViewHolder.obtainMultiInLineViewHolderType() == viewType) {
-                //记录初始位置
-                if (mLastPosition == 0) {
+                //记录初始位置,仅当第一位ｉｔｅｍ不是{@link HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE}记录下开始的位置.
+                if (mLastPosition == 0
+                        && parent.getAdapter().getItemViewType(0) != viewType) {
                     mLastPosition = position;
                     Log.i(TAG, " last Position : " + mLastPosition);
                 }
                 int count = gridLayoutManager.getSpanCount();
                 setSpace(outRect, position - mLastPosition, count);
+                Log.i(TAG,"set space : left: "+outRect.left+" top: "+outRect.top +" right: "+outRect.right+" bottom: "+outRect.bottom);
                 return;
             }
         }
@@ -107,20 +115,20 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
 
     /**
      * 设置grid等分space
-     * @param outRect
-     * @param position
-     * @param count
+     *
+     * @param outRect item的方框.
+     * @param position　在当前布局下的位置.
+     * @param count    一行显示的列数.
      */
     private void setSpace(Rect outRect, int position, int count) {
         if (position < count && !isBigShow) {
-            Log.i(TAG,"top: "+mSpace);
             outRect.top = mSpace;
         } else {
             outRect.top = 0;
         }
         outRect.bottom = mSpace;
         int pos = position % count;
-        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count+" top:"+outRect.top);
+        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count);
         //起始位置 .
         if (pos == 0) {
             outRect.left = mSpace;
@@ -165,7 +173,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
         int orientation = getOrientation(layoutManager);
         int childCount = parent.getChildCount();
         if (orientation == LinearLayoutManager.VERTICAL) {
-            int right = parent.getWidth();
+
             for (int i = 0; i < childCount; i++) {
 
                 //判断第一个item的下标是不是0，是则return，不需要draw divider
@@ -186,6 +194,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 int left = parent.getPaddingLeft() + childView.getPaddingLeft();
                 int bottom = childView.getTop() - params.topMargin;
                 int top = bottom - mDivider.getIntrinsicHeight();
+                int right = parent.getWidth() - childView.getPaddingRight();
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
             }
@@ -208,6 +217,22 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
     }
 
     /**
+     * 不希望绘制分割线集合
+     */
+    private List<Integer> mDividerDisappearCollections = new ArrayList<>();
+
+    /**
+     * 添加不会绘制分割线的viewType
+     *
+     * @param viewHolderType 不需要绘制分割线的地方.
+     */
+    public void addNoDivider(int viewHolderType) {
+        if (!mDividerDisappearCollections.contains(viewHolderType)) {
+            mDividerDisappearCollections.add(viewHolderType);
+        }
+    }
+
+    /**
      * 再次处过滤不希望回执divider的类型 0x100 - 0x200
      *
      * @param viewType
@@ -215,18 +240,8 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
      */
     private boolean needDivider(int viewType) {
         boolean result = false;
-        switch (viewType) {
-            case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE:
-            case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA:
-            case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE:
-            case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA:
-            case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE:
-            case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE:
-                result = true;
-                break;
-            default:
-                result = false;
-                break;
+        if (mDividerDisappearCollections.contains(viewType)) {
+            result = true;
         }
         return result;
     }
@@ -247,15 +262,17 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
         return -1;
     }
 
-    public interface IGridLayoutViewHolder{
+    public interface IGridLayoutViewHolder {
         /**
          * 单个item填充整行
+         *
          * @return
          */
         int obtainSingleBigItemViewHolderType();
 
         /**
          * 多个item填充一行
+         *
          * @return
          */
         int obtainMultiInLineViewHolderType();

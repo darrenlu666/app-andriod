@@ -215,7 +215,7 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
             }
         });
 
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<SipLesson>>() {
             @Override
             public BaseRecyclerViewHolder<SipLesson> createViewHolder(ViewGroup parent, int viewType) {
