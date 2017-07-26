@@ -118,7 +118,7 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
             mRefreshLayout.setRefreshing(false);
         }
         mEmptyView.setLoading(false);
-        parseLesson(response);
+        parseLesson(response,isRefreshing);
         mAdapter.setData(mData);
 
         if(mData.size()<=0){
@@ -128,14 +128,16 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
         }
     }
 
-    private void parseLesson(JSONObject response) {
+    private void parseLesson(JSONObject response , boolean isRefresh) {
         SipLessonMoreParse parse = new Gson().fromJson(response.toString(),SipLessonMoreParse.class);
         if(null != parse) {
             if (parse.getData() != null && parse.getData().size()>0) {
                 //clear data .
-                mData.clear();
+                if(isRefresh){
+                    mData.clear();
+                }
                 // TODO: 25/07/17 测试数据，需要删除　ｉｆ　ａｐｉ　total is available .
-                if(parse.getTotal() <= 0) parse.setTotal(parse.getData().size());
+//                if(parse.getTotal() <= 0) parse.setTotal(parse.getData().size());
                 for (SipLesson group : parse.getData()) {
                     group.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
                     mData.add(group);
