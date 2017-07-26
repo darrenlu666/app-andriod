@@ -160,7 +160,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                         mData.add(new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     } else {
                         BaseTitleItemBar titleItemBar = new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE);
-                        titleItemBar.setId(ssl.getSemesterId());
+                        titleItemBar.setCacheId(ssl.getSemesterId());
                         mData.add(titleItemBar);
                         for (SipLesson lc : ssl.getScheduleList()) {
                             lc.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
@@ -279,7 +279,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                 switch (mAdapter.getItemViewType(position)) {
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE://网络授课－更多
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA://网络授课－更多
-                        MoreSemesterLessonActivity.start(getActivity(),mTitle,data.getId());
+                        MoreSemesterLessonActivity.start(getActivity(),mTitle,data.getCacheId());
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行

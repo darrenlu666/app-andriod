@@ -113,13 +113,14 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
      */
     private void setSpace(Rect outRect, int position, int count) {
         if (position < count && !isBigShow) {
+            Log.i(TAG,"top: "+mSpace);
             outRect.top = mSpace;
         } else {
             outRect.top = 0;
         }
         outRect.bottom = mSpace;
         int pos = position % count;
-        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count);
+        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count+" top:"+outRect.top);
         //起始位置 .
         if (pos == 0) {
             outRect.left = mSpace;

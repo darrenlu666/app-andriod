@@ -215,23 +215,12 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
             }
         });
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-
-                if (mAdapter.getItemViewType(position) == HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE) {
-                    return 1;
-                }
-                return 2;
-            }
-        });
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<SipLesson>>() {
             @Override
             public BaseRecyclerViewHolder<SipLesson> createViewHolder(ViewGroup parent, int viewType) {
                 return  new SipLessonViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.item_customized_history_class_small, parent, false));
+                        .inflate(R.layout.item_custom_record_small, parent, false));
             }
 
             @Override
