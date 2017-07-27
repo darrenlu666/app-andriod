@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
@@ -23,6 +24,7 @@ import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SchoolRa
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
+import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.customized.SchoolRank;
 import com.codyy.erpsportal.commons.models.entities.customized.SchoolRankParse;
 import com.codyy.erpsportal.commons.models.entities.customized.SipLesson;
@@ -67,8 +69,11 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
     /**
      * 学校排名title.
      */
-    private static final int TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER = 0x002;
-
+    public static final int TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER = 0x002;
+    /**
+     * 学校排名title.暂无数据.
+     */
+    public static final int TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER_NO_DATA = 0x0020;
     /**
      * 学校排名title.
      */
@@ -92,7 +97,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         super.onCreate(savedInstanceState);
         ConfigBus.register(this);
         Log.i(TAG, "onCreate()");
-        if(null != getArguments()){
+        if (null != getArguments()) {
             mTitle = getArguments().getString(EXTRA_ARG_TITLE);
         }
     }
@@ -137,7 +142,10 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         } else {
             mEmptyView.setVisibility(View.GONE);
         }
-        getRecommendSchedule();
+        //判断如果是学校则不显示学校排名
+        if (UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())) {
+            getSchoolRankData();
+        }
     }
 
 
@@ -220,14 +228,15 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER://学校排行header
                         viewHolder = new SchoolRankTitleViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.item_rank_school_title,null));
+                                .inflate(R.layout.item_rank_school_title, null));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL://学校排行.
                         viewHolder = new SchoolRankViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_rank_school, parent, false));
                         break;
                 }
-                if(null == viewHolder) new Throwable("viewHolder is NULL viewType: "+viewType).printStackTrace();
+                if (null == viewHolder)
+                    new Throwable("viewHolder is NULL viewType: " + viewType).printStackTrace();
                 return viewHolder;
             }
 
@@ -244,7 +253,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                 switch (mAdapter.getItemViewType(position)) {
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE://网络授课－更多
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA://网络授课－更多
-                        MoreSemesterLessonActivity.start(getActivity(),mTitle,data.getCacheId());
+                        MoreSemesterLessonActivity.start(getActivity(), mTitle, data.getCacheId());
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
@@ -298,7 +307,7 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
     /**
      * 学校排名
      */
-    private void getRecommendSchedule() {
+    private void getSchoolRankData() {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
         data.put("schoolId", schoolId);
@@ -331,14 +340,16 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         SchoolRankParse hcp = new Gson().fromJson(response.toString(), SchoolRankParse.class);
         if (null != hcp) {
             List<SchoolRank> hcList = hcp.getData();
+            //学校tag.
+            mData.add(new BaseTitleItemBar("学校排行", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
             if (null != hcList) {
                 if (hcList.size() == 0) {
-                    mData.add(new BaseTitleItemBar("学校排行", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    //排行－暂无数据
+                    mData.add(new BaseTitleItemBar("学校排行", TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER_NO_DATA));
                 } else {
-                    mData.add(new BaseTitleItemBar("学校排行", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
                     //title .
                     mData.add(new BaseTitleItemBar("学校排行", TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER));
-                    for (int i= 0 ; i <hcList.size();i++) {
+                    for (int i = 0; i < hcList.size(); i++) {
                         SchoolRank hc = hcList.get(i);
                         hc.setRankPosition(i);
                         hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL);
@@ -346,7 +357,8 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                     }
                 }
             } else {
-                mData.add(new BaseTitleItemBar("学校排行", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                //排行－暂无数据
+                mData.add(new BaseTitleItemBar("学校排行", TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER_NO_DATA));
             }
         }
     }

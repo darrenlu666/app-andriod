@@ -331,6 +331,7 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
     public static void start(Context context , String title ,String semesterId){
         Intent intent = new Intent(context , MoreSemesterLessonActivity.class);
         intent.putExtra(EXTRA_TITLE , title);
+        intent.putExtra(EXTRA_SEMESTER_ID,semesterId);
         context.startActivity(intent);
         UIUtils.addEnterAnim((Activity) context);
     }
