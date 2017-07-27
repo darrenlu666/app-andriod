@@ -140,41 +140,6 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
         getRecommendSchedule();
     }
 
-    /**
-     * 解析同步课堂的数据　& 设置到数据栈中.
-     *
-     * @param lp
-     */
-    private void parseLessonData(SipLessonParse lp) {
-        if (null != lp && "success".equals(lp.getResult())) {
-            List<SipSemesterLesson> dataList = lp.getData();
-            mData.clear();
-            //banner picture.
-            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexSipRecentClass, TYPE_ITEM_VIEW_HOLDER_BANNER));
-            //解析学段
-            if (null != dataList) {
-                for (SipSemesterLesson ssl : dataList) {
-                    if (ssl == null) continue;
-                    //学段
-                    if (ssl.getScheduleList() == null || ssl.getScheduleList().size() == 0) {
-                        mData.add(new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                    } else {
-                        BaseTitleItemBar titleItemBar = new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE);
-                        titleItemBar.setCacheId(ssl.getSemesterId());
-                        mData.add(titleItemBar);
-                        for (SipLesson lc : ssl.getScheduleList()) {
-                            lc.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
-                            mData.add(lc);
-                        }
-                    }
-                }
-
-            } else {
-//                mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-            }
-        }
-
-    }
 
     @Override
     public void onFailure(Throwable error) {
@@ -291,6 +256,43 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+
+    /**
+     * 解析同步课堂的数据　& 设置到数据栈中.
+     *
+     * @param lp
+     */
+    private void parseLessonData(SipLessonParse lp) {
+        if (null != lp && "success".equals(lp.getResult())) {
+            List<SipSemesterLesson> dataList = lp.getData();
+            mData.clear();
+            //banner picture.
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexSipRecentClass, TYPE_ITEM_VIEW_HOLDER_BANNER));
+            //解析学段
+            if (null != dataList) {
+                for (SipSemesterLesson ssl : dataList) {
+                    if (ssl == null) continue;
+                    //学段
+                    if (ssl.getScheduleList() == null || ssl.getScheduleList().size() == 0) {
+                        mData.add(new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA));
+                    } else {
+                        BaseTitleItemBar titleItemBar = new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE);
+                        titleItemBar.setCacheId(ssl.getSemesterId());
+                        mData.add(titleItemBar);
+                        for (SipLesson lc : ssl.getScheduleList()) {
+                            lc.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
+                            mData.add(lc);
+                        }
+                    }
+                }
+
+            } else {
+//                mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassLive,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            }
+        }
+
     }
 
     /**

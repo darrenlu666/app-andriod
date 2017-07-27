@@ -453,7 +453,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
             }
 
         }else{
-            mData.add(new BaseTitleItemBar(Titles.sPagetitleNetteachInteract,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleNetteachInteract,TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA));
         }
 
         // 21/07/17 个人备课
@@ -476,7 +476,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
             }
 
         }else{
-            mData.add(new BaseTitleItemBar(Titles.sPagetitleNetteachPrepare,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleNetteachPrepare,TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA));
         }
         // 21/07/17 集体备课
         if(null != groupJson
@@ -498,7 +498,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
             }
 
         }else{
-            mData.add(new BaseTitleItemBar(Titles.sPagetitleNetteachAllprepare,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleNetteachAllprepare,TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA));
         }
         // 21/07/17 评课议课
         if(null != evaluationJson
@@ -520,7 +520,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
             }
 
         }else{
-            mData.add(new BaseTitleItemBar(Titles.sPagetitleNetteachDisucss,TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleNetteachDisucss,TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA));
         }
     }
 

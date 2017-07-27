@@ -31,6 +31,6 @@ public class SipPersonalClassViewHolder extends BaseRecyclerViewHolder<SipNetRes
     public void setData(int position,SipNetResearch data) {
         mCurrentPosition    =   position ;
         mData   =   data ;
-        mTitleTextView.setText(Html.fromHtml(UIUtils.filterCharacter(data.getSubjectName())));
+        mTitleTextView.setText(Html.fromHtml(UIUtils.filterCharacter(data.getTitle())));
     }
 }

@@ -42,7 +42,7 @@ public class SipEvaluateClassViewHolder extends BaseRecyclerViewHolder<SipNetRes
         mCurrentPosition    =   position ;
         mData   =   data ;
 
-        mTitleTextView.setText(Html.fromHtml(UIUtils.filterCharacter(data.getSubjectName())));
+        mTitleTextView.setText(Html.fromHtml(UIUtils.filterCharacter(data.getTitle())));
         mDescTextView.setText(data.getDescription());
         mViewCountTv.setText(String.valueOf(data.getViewCount()));
         //create time
