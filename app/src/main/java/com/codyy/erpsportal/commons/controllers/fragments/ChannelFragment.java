@@ -168,6 +168,7 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
      */
     private void initViewsWithConfig(ModuleConfig config) {
         if(isDetached()) return;
+        Cog.d(TAG,"title:"+Titles.sHomepageSysTitle);
         mTitleTv.setText(Titles.sHomepageSysTitle);
         mEmptyView.setVisibility(View.GONE);
         mViewPager.setVisibility(View.VISIBLE);
@@ -194,7 +195,7 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
         if (mSearchFlag > 0) {
             mSearchIb.setVisibility(View.VISIBLE);
         } else {
-            mSearchIb.setVisibility(View.GONE);
+            mSearchIb.setVisibility(View.INVISIBLE);
         }
     }
 

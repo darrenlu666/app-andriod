@@ -3,78 +3,84 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
+
     <LinearLayout
         android:id="@+id/lin_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        android:background="@color/user_bg_color"
-        android:padding="10dp"
-        >
+        android:background="#f7f7f7"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
         <TextView
             android:id="@+id/tv_school"
+            style="@style/rank_school_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="学校名称"
-            style="@style/rank_school_title"
-            />
+            android:text="学校名称" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <View android:layout_width="1px"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="1px"
                 android:layout_height="18dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="6dp"
                 android:layout_marginLeft="6dp"
-                android:background="@color/grey_444"
-                />
+                android:layout_marginRight="6dp"
+                android:background="@color/grey_444" />
+
             <TextView
                 android:id="@+id/tv_lesson_count"
+                style="@style/rank_school_title"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
-                android:text="开课活动数"
-                style="@style/rank_school_title"
                 android:gravity="center"
-                />
-            <View android:layout_width="1px"
+                android:text="开课活动数" />
+
+            <View
+                android:layout_width="1px"
                 android:layout_height="18dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="6dp"
                 android:layout_marginLeft="6dp"
-                android:background="@color/grey_444"
-                />
+                android:layout_marginRight="6dp"
+                android:background="@color/grey_444" />
+
             <TextView
                 android:id="@+id/tv_teach_count"
+                style="@style/rank_school_title"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
-                android:text="教研活动数"
-                style="@style/rank_school_title"
                 android:gravity="center"
-                />
+                android:text="教研活动数" />
         </LinearLayout>
 
     </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/rlt_no_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/ep_tip_bg"
         android:layout_below="@id/lin_header"
+        android:background="@color/ep_tip_bg"
         android:visibility="gone"
-        tools:visibility="visible"
-        >
+        tools:visibility="visible">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divide_color" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tips_no_data_to_show"
-            android:padding="10dp"
             android:layout_centerInParent="true"
-            />
+            android:padding="10dp"
+            android:text="@string/tips_no_data_to_show" />
     </RelativeLayout>
 </RelativeLayout>

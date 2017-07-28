@@ -53,7 +53,7 @@ public class SchoolRankViewHolder extends BaseRecyclerViewHolder<SchoolRank> {
         String text = String.valueOf(1+data.getRankPosition());
         Spannable spannable = new SpannableString(text);
         if(data.getRankPosition()<3){
-            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#EE9A00")),0,1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#ff600")),0,1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         }
         mLineNumberTv.setText(spannable);
         mSchoolTv.setText(Html.fromHtml(UIUtils.filterCharacter(data.getSchoolName())));

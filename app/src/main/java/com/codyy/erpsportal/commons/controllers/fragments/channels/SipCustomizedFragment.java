@@ -222,11 +222,12 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                         viewHolder = new PictureViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_picture_banner_sip, parent, false));
                         break;
-                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://同步课堂－学科－多行
+                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://同步课堂－小学－多行
                         viewHolder = new SipLessonViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_customized_history_class_small, parent, false));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER://学校排行header
+                    case TYPE_ITEM_VIEW_HOLDER_RANK_SCHOOL_HEADER_NO_DATA://没有数据的
                         viewHolder = new SchoolRankTitleViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_rank_school_title, null));
                         break;
@@ -255,7 +256,6 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA://网络授课－更多
                         MoreSemesterLessonActivity.start(getActivity(), mTitle, data.getCacheId());
                         break;
-                    case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
                         SipLesson hc = (SipLesson) data;
                         ClassRoomDetailActivity.startActivity(getActivity(), mUserInfo, hc.getId()
@@ -285,7 +285,9 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                     if (ssl == null) continue;
                     //学段
                     if (ssl.getScheduleList() == null || ssl.getScheduleList().size() == 0) {
-                        mData.add(new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA));
+                        BaseTitleItemBar titleItemBar = new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA);
+                        titleItemBar.setCacheId(ssl.getSemesterId());
+                        mData.add(titleItemBar);
                     } else {
                         BaseTitleItemBar titleItemBar = new BaseTitleItemBar(ssl.getSemesterName(), TitleItemViewHolder.ITEM_TYPE_TITLE_MORE);
                         titleItemBar.setCacheId(ssl.getSemesterId());
