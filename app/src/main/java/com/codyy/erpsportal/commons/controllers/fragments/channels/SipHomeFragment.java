@@ -305,10 +305,13 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                         ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc2.getId(),ClassRoomContants.TYPE_CUSTOM_RECORD,hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_INTERACT_CLASS://互动听课
-                        ActivityThemeActivity.start(getActivity(), ActivityThemeActivity.INTERACT_LESSON
-                                , ((SipNetResearch)data).getId()
-                                , ((SipNetResearch)data).getViewCount());
-                    ((SipNetResearch) data).setViewCount(((SipNetResearch) data).getViewCount()+1);
+                        if(data instanceof SipNetResearch){
+                            ActivityThemeActivity.start(getActivity(), ActivityThemeActivity.INTERACT_LESSON
+                                    , ((SipNetResearch)data).getId()
+                                    , ((SipNetResearch)data).getViewCount());
+                            ((SipNetResearch) data).setViewCount(((SipNetResearch) data).getViewCount()+1);
+                            mAdapter.notifyItemChanged(position);
+                        }
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_PERSONAL_PREPARE_CLASS://个人备课
                         PersonalLesPrepContentActivity.start(getActivity(), ((SipNetResearch)data).getId());
@@ -317,6 +320,8 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                         if(data instanceof SipNetResearch){
                             ActivityThemeActivity.start(getActivity(), ActivityThemeActivity.PREPARE_LESSON
                                     ,((SipNetResearch)data).getId(), ((SipNetResearch)data).getViewCount());
+                            ((SipNetResearch) data).setViewCount(((SipNetResearch) data).getViewCount()+1);
+                            mAdapter.notifyItemChanged(position);
                         }
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_EVALUATE_CLASS://评课议课
@@ -330,6 +335,8 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                                     netResearch.getId(),
                                     netResearch.getViewCount(),
                                     evaluationScore);
+                            ((SipNetResearch) data).setViewCount(((SipNetResearch) data).getViewCount()+1);
+                            mAdapter.notifyItemChanged(position);
                         }
                         break;
                 }
