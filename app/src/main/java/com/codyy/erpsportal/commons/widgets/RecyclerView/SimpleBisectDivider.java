@@ -81,11 +81,11 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 if (mLastPosition == 0
                         && parent.getAdapter().getItemViewType(0) != viewType) {
                     mLastPosition = position;
-                    Log.i(TAG, " last Position : " + mLastPosition);
+//                    Log.i(TAG, " last Position : " + mLastPosition);
                 }
                 int count = gridLayoutManager.getSpanCount();
                 setSpace(outRect, position - mLastPosition, count);
-                Log.i(TAG,"set space : left: "+outRect.left+" top: "+outRect.top +" right: "+outRect.right+" bottom: "+outRect.bottom);
+//                Log.i(TAG,"set space : left: "+outRect.left+" top: "+outRect.top +" right: "+outRect.right+" bottom: "+outRect.bottom);
                 return;
             }
         }
@@ -128,7 +128,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
         }
         outRect.bottom = mSpace;
         int pos = position % count;
-        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count);
+//        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count);
         //起始位置 .
         if (pos == 0) {
             outRect.left = mSpace;
@@ -182,21 +182,28 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 }
                 //如果下一个item的recyclerType为TitleBar or TitleBarMore 则 返回
                 int count = parent.getAdapter().getItemCount();
+                boolean isLastTitle = false;
+                boolean isNeedJump = false;
                 if ((i + firstVisiblePosition) < count) {
                     int viewType = parent.getAdapter().getItemViewType(i + firstVisiblePosition);
-                    if (needDivider(viewType)) {
-                        continue;
+                    isLastTitle = isLastTitleBar(parent, firstVisiblePosition, viewType, i);
+                    if (needDivider(viewType) && !isLastTitle) {
+                        isNeedJump = true;
                     }
                 }
 
+                //continue to next loop .
+                if(isNeedJump) continue;
                 View childView = parent.getChildAt(i);
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) childView.getLayoutParams();
-                int left = parent.getPaddingLeft() + childView.getPaddingLeft();
+                //过滤标题的下方divider 的 padding
+                int left = isLastTitle?0:(parent.getPaddingLeft() + childView.getPaddingLeft());
                 int bottom = childView.getTop() - params.topMargin;
                 int top = bottom - mDivider.getIntrinsicHeight();
                 int right = parent.getWidth() - childView.getPaddingRight();
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
+//                Log.i(TAG,"draw divider left padding :"+left);
             }
         } else if (orientation == LinearLayoutManager.HORIZONTAL) {
             for (int i = 0; i < childCount; i++) {
@@ -214,6 +221,29 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 mDivider.draw(c);
             }
         }
+    }
+
+    /**
+     * 判断上一个viewType是否为标题项.
+     * @param parent
+     * @param firstVisiblePosition
+     * @param currentViewType 当前的viewType
+     * @param i
+     * @return
+     */
+    private boolean isLastTitleBar(RecyclerView parent, int firstVisiblePosition, int currentViewType, int i) {
+        boolean isNeeded = false;
+        int lastPosition = (i-1);
+        if(lastPosition>0){
+            int lastViewType = parent.getAdapter().getItemViewType(lastPosition + firstVisiblePosition);
+//            Log.i(TAG,"lastViewType: "+lastViewType+" / currentViewType: "+currentViewType);
+            if(isTitleItem(lastViewType) && lastViewType != currentViewType){
+                //draw divider in the middle of two no divider item which last is a titleBar and current is other item view type .
+                isNeeded = true;
+            }
+        }
+//        Log.i(TAG,"isLastTitleBar : "+isNeeded);
+        return isNeeded;
     }
 
     /**
@@ -244,6 +274,28 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
             result = true;
         }
         return result;
+    }
+
+    /**
+     * 是否为标题选项.
+     * @param viewType
+     * @return
+     */
+    private boolean isTitleItem(int viewType){
+        boolean result = false;
+        switch (viewType){
+            case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE:
+            case TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA:
+            case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE:
+            case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA:
+                result = true;
+                break;
+                default:
+                    result = false;
+                    break;
+        }
+
+        return  result;
     }
 
     private LinearLayoutManager getLinearLayoutManger(RecyclerView parent) {

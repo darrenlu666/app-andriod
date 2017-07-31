@@ -1,6 +1,5 @@
 package com.codyy.erpsportal.commons.controllers.fragments.channels;
 
-import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -54,7 +53,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.Bind;
 
 /**
@@ -310,6 +308,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                         ActivityThemeActivity.start(getActivity(), ActivityThemeActivity.INTERACT_LESSON
                                 , ((SipNetResearch)data).getId()
                                 , ((SipNetResearch)data).getViewCount());
+                    ((SipNetResearch) data).setViewCount(((SipNetResearch) data).getViewCount()+1);
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_PERSONAL_PREPARE_CLASS://个人备课
                         PersonalLesPrepContentActivity.start(getActivity(), ((SipNetResearch)data).getId());
