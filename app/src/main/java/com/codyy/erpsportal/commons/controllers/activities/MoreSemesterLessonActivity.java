@@ -139,7 +139,6 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
                 if(isRefresh){
                     mData.clear();
                 }
-                // TODO: 25/07/17 测试数据，需要删除　ｉｆ　ａｐｉ　total is available .
                 for (SipLesson group : parse.getData()) {
                     group.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
                     mData.add(group);
@@ -220,7 +219,18 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
             }
         });
 
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+
+                if(mAdapter.getItemViewType(position) == HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE){
+                    return  1;
+                }
+                return 2;
+            }
+        });
         mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<BaseRecyclerViewHolder<SipLesson>>() {
             @Override
             public BaseRecyclerViewHolder<SipLesson> createViewHolder(ViewGroup parent, int viewType) {
