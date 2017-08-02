@@ -69,7 +69,7 @@ def getSvnVersion() {
     }
 }*/
 
-String BUILD_VERSION = /*getSvnVersion() + '.' +*/ buildTime();
+String BUILD_VERSION =/* getSvnVersion() + '.' +*/ buildTime();
 
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
@@ -86,7 +86,7 @@ android {
         multiDexEnabled true
 //        setProperty("archivesBaseName", "InteractiveLearning-$versionName.$BUILD_VERSION")
         println("version:$versionName.$BUILD_VERSION");
-        setProperty("archivesBaseName", "ErpsPortal")
+        setProperty("archivesBaseName", "ErpsPortal-$versionName.$BUILD_VERSION")
         vectorDrawables.useSupportLibrary = true
         ndk {
             abiFilters 'armeabi-v7a', 'armeabi'
