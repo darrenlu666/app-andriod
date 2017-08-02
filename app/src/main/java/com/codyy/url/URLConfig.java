@@ -1037,6 +1037,58 @@ public class URLConfig {
     public static String GET_RECOMMEND_SCHEDULE;
 
     /**
+     * 首页- 近期课程(sip园区首页)
+     * baseAreaId	区域id	string
+     * schoolId	学校id	string
+     * size	获取条数	string	园区33间教室，请输入3
+     * uuid	用户唯一标识码	string
+     */
+    @UrlSuffix("mobile/home/onlineclass/getRecentlyScheduleList.do")
+    public static String GET_SIP_RECENT_LESSON;
+
+
+    /**
+     * 首页- 网络教研(sip园区首页)
+     * areaId	区域ID	string
+     * schoolId	学校ID	string
+     * uuid
+     */
+    @UrlSuffix("mobile/netTeach/sipIndex.do")
+    public static String GET_SIP_NET_TECH_LIST;
+
+    /**
+     * 首页- 学校排行(sip园区首页)
+     * areaId	区域ID	string
+     * schoolId	学校ID	string
+     * uuid
+     */
+    @UrlSuffix("mobile/home/onlineclass/getAllSchoolScheduleStatistic.do")
+    public static String GET_SIP_SCHOOL_RANK;
+
+    /**
+     * 首页- 同步课堂（专递课堂）(sip园区首页)
+     * baseAreaId	行政区ID	string
+     * schoolId	学校ID	string
+     * uuid		string
+     */
+    @UrlSuffix("mobile/home/onlineclass/getAllSemesterRecordScheduleList.do")
+    public static String GET_SIP_ONLINE_CLASS;
+
+    /**
+     * 更多- 同步课堂（专递课堂）(sip园区首页)
+     * baseAreaId	行政区ID	string	与学校参数互斥
+     * baseClasslevelId	年级ID	string	可不传
+     * baseSemesterId	学段ID	string
+     * baseSubjectId	学科ID	string	可不传
+     * end	结束下表	number
+     * schoolId	学校ID	string	与行政区域参数互斥
+     * start	起始下标	number
+     * uuid		string
+     */
+    @UrlSuffix("mobile/home/onlineclass/getOneSemesterRecordScheduleList.do")
+    public static String GET_SIP_ONLINE_CLASS_MORE;
+
+    /**
      * 首页网络调研
      */
     @UrlSuffix("mobile/netTeach/index.do")

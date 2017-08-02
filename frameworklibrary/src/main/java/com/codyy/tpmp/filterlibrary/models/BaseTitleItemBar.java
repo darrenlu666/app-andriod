@@ -14,11 +14,21 @@ public class BaseTitleItemBar {
      */
     private int baseViewHoldType = 0x00 ;
 
+    private String cacheId;//some id such as semester id .
+
     public BaseTitleItemBar() {
     }
     public BaseTitleItemBar(String baseTitle, int baseViewHoldType) {
         this.baseTitle = baseTitle;
         this.baseViewHoldType = baseViewHoldType;
+    }
+
+    public String getCacheId() {
+        return cacheId;
+    }
+
+    public void setCacheId(String cacheId) {
+        this.cacheId = cacheId;
     }
 
     public String getBaseTitle() {

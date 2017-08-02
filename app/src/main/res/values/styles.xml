@@ -750,4 +750,11 @@
         <item name="android:textColor">@color/black_666</item>
     </style>
 
+    <!-- sip school rank -->
+    <style name="rank_school_title">
+        <item name="android:textSize">@dimen/list_item_body</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/md_grey_800</item>
+    </style>
 </resources>

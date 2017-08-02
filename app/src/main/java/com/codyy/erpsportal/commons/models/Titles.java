@@ -85,6 +85,9 @@ public class Titles {
     public static String sPagetitleIndexTianjinSchedule = "市级课表";
     public static String sPagetitleIndexTianjinResource = "精品资源";
 
+    //门户苏州园区首页
+    public static String sPagetitleIndexSipRecentClass="近期课程";
+
     //门户资讯页
     public static String sPagetitleIndexInfoNewcenter = "新闻中心";
     public static String sPagetitleIndexInfoNoticecenter = "通知中心";
@@ -515,6 +518,8 @@ public class Titles {
         sPagetitleIndexTianjinClass = jsonObject.optString("front.pagetitle.index.tianjin.class", "课堂");
         sPagetitleIndexTianjinSchedule = jsonObject.optString("front.pagetitle.index.tianjin.schedule", "市级课表");
         sPagetitleIndexTianjinResource = jsonObject.optString("front.pagetitle.index.tianjin.resource", "精品资源");
+
+        sPagetitleIndexSipRecentClass = jsonObject.optString("front.pagetitle.index.suzhousip.nearclass", "近期课程");
 
         sPagetitleIndexInfoNewcenter = jsonObject.optString("front.pagetitle.index.info.newcenter", "新闻中心");
         sPagetitleIndexInfoNoticecenter = jsonObject.optString("front.pagetitle.index.info.noticecenter", "通知中心");

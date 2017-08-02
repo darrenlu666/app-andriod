@@ -53,6 +53,16 @@ public class ModuleConfig {
     public final static String TEMPLATE_FX = "index.template.fx";
 
     /**
+     * 首页模板：苏州园区
+     */
+    public final static String TEMPLATE_SIP = "index.template.sipstl";
+
+    /**
+     * 首页模块：专递课堂(苏州园区)
+     */
+    public final static String TEMPLATE_SIP_CUSTOME = "index.template.sipstl.onlineclassid";
+
+    /**
      * 地区
      */
     public final static String VISIT_TYPE_AREA = "area";
