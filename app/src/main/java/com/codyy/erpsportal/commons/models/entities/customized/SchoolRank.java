@@ -17,8 +17,8 @@ public class SchoolRank extends BaseTitleItemBar{
     private int rankPosition = 0;//排名
     private String schoolId;
     private String schoolName;
-    private int scheduleActivityCount;//开课活动数
-    private int teacherActivityCount;//教研活动数
+    private String scheduleActivityCount;//开课活动数
+    private String teacherActivityCount;//教研活动数
 
     public int getRankPosition() {
         return rankPosition;
@@ -26,14 +26,6 @@ public class SchoolRank extends BaseTitleItemBar{
 
     public void setRankPosition(int rankPosition) {
         this.rankPosition = rankPosition;
-    }
-
-    public int getScheduleActivityCount() {
-        return scheduleActivityCount;
-    }
-
-    public void setScheduleActivityCount(int scheduleActivityCount) {
-        this.scheduleActivityCount = scheduleActivityCount;
     }
 
     public String getSchoolId() {
@@ -52,11 +44,19 @@ public class SchoolRank extends BaseTitleItemBar{
         this.schoolName = schoolName;
     }
 
-    public int getTeacherActivityCount() {
+    public String getScheduleActivityCount() {
+        return scheduleActivityCount;
+    }
+
+    public void setScheduleActivityCount(String scheduleActivityCount) {
+        this.scheduleActivityCount = scheduleActivityCount;
+    }
+
+    public String getTeacherActivityCount() {
         return teacherActivityCount;
     }
 
-    public void setTeacherActivityCount(int teacherActivityCount) {
+    public void setTeacherActivityCount(String teacherActivityCount) {
         this.teacherActivityCount = teacherActivityCount;
     }
 }

@@ -19,7 +19,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
     public static final int TYPE_FOOTER = Integer.MIN_VALUE;
 
     private boolean mHasMoreData;//设置是否可以继续加载数据
-    private boolean mRefreshing = false ;//当前是否在加载中... 控制加载更多是否显示...
+    private boolean mRefreshing = false ;//控制加载"更多"是否显示...
 
     private List<T> mData;
     private ViewCreator<VH> mCreator;
@@ -92,9 +92,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
     public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseRecyclerViewHolder<T> viewHolder = null ;
         if (viewType == TYPE_FOOTER) {//底部 加载view
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_load_more,null);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            view.setLayoutParams(params);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view_load_more,parent,false);
             viewHolder =  new LoadMoreViewHolder(view,mOnLoadMoreClickListener);
         } else if(null != mCreator){
             viewHolder =  mCreator.createViewHolder(parent,viewType);
