@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -115,9 +116,11 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
     @Override
     public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
-        data.put("baseAreaId", baseAreaId);
-        data.put("schoolId", schoolId);
-        data.put("size", String.valueOf(8));
+        if(TextUtils.isEmpty(schoolId)){
+            data.put("baseAreaId", baseAreaId);
+        }else{
+            data.put("schoolId", schoolId);
+        }
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
         }

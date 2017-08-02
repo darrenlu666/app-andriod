@@ -98,8 +98,11 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
             data.put("uuid", mUserInfo.getUuid());
         }
         if(null != mSemester) data.put("baseSemesterId",mSemester);
-        if(null != mBaseAreaId) data.put("baseAreaId", mBaseAreaId);
-        if(null != mSchoolId) data.put("schoolId", mSchoolId);
+        if(TextUtils.isEmpty(mSchoolId)) {
+            data.put("baseAreaId", mBaseAreaId);
+        }else{
+            data.put("schoolId", mSchoolId);
+        }
         if(null != mGrade)  data.put("baseClasslevelId",mGrade);
         if(null != mSubject) data.put("baseSubjectId",mSubject);
         data.put("start", mData.size()+"");
