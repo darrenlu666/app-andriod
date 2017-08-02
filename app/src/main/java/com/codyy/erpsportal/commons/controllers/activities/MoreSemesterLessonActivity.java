@@ -140,7 +140,6 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
                     mData.clear();
                 }
                 // TODO: 25/07/17 测试数据，需要删除　ｉｆ　ａｐｉ　total is available .
-//                if(parse.getTotal() <= 0) parse.setTotal(parse.getData().size());
                 for (SipLesson group : parse.getData()) {
                     group.setBaseViewHoldType(HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE);
                     mData.add(group);
@@ -194,6 +193,7 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
+                mEmptyView.setLoading(true);
                 requestData(true);
             }
         });
