@@ -53,7 +53,7 @@ public class ResetPasswordActivity extends FragmentActivity {
         }else{
 
             if (!newPassword.equals(repeatNewPassword)){
-                Toast.makeText(ResetPasswordActivity.this, "两次输入的新密码不相同!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ResetPasswordActivity.this, "两次输入的新密码不相同!", Toast.LENGTH_SHORT).show();
                 mNewPasswordEt.setText("");
                 loginEditextRepasswd2.setText("");
                 return;
@@ -106,7 +106,6 @@ public class ResetPasswordActivity extends FragmentActivity {
             if(!normalStyleStr.contains(keyword.substring(i,i+1)))
                 return false;
         }
-
         return true;
     }
 
