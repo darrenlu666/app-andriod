@@ -2,96 +2,51 @@ package com.codyy.erpsportal.commons.controllers.fragments.channels;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.RelativeLayout;
-import android.widget.TextSwitcher;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
-import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
-import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsNewActivity;
-import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
-import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
+import com.codyy.erpsportal.commons.controllers.viewholders.LessonsViewHold;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolderSip;
-import com.codyy.erpsportal.commons.controllers.viewholders.customized.LivingClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.AnnounceViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.PictureViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipEvaluateClassViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipInteractClassViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipPersonalClassViewHolder;
-import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
-import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
-import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.engine.GroupViewStuffer;
-import com.codyy.erpsportal.commons.models.engine.InfosSwitcher;
 import com.codyy.erpsportal.commons.models.engine.ItemFillerUtil;
 import com.codyy.erpsportal.commons.models.engine.LiveClassroomViewStuffer;
-import com.codyy.erpsportal.commons.models.engine.ViewStuffer;
-import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
-import com.codyy.erpsportal.commons.models.entities.MainPageConfig;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
+import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
+import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntityParse;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
-import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
-import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
-import com.codyy.erpsportal.commons.models.entities.customized.LivingParse;
-import com.codyy.erpsportal.commons.models.entities.mainpage.Announce;
 import com.codyy.erpsportal.commons.models.entities.mainpage.AnnounceParse;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
-import com.codyy.erpsportal.commons.models.entities.mainpage.MainResGroup;
-import com.codyy.erpsportal.commons.models.entities.onlineclass.SipNetResearch;
-import com.codyy.erpsportal.commons.models.entities.onlineclass.SipNetResearchParse;
 import com.codyy.erpsportal.commons.models.listeners.MainLiveClickListener;
-import com.codyy.erpsportal.commons.models.network.RsGenerator;
-import com.codyy.erpsportal.commons.models.parsers.JsonParseUtil;
-import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.NumberUtils;
-import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.MoreLessonPlansActivity;
-import com.codyy.erpsportal.perlcourseprep.controllers.activities.PersonalLesPrepContentActivity;
-import com.codyy.erpsportal.resource.controllers.viewholders.VideoItemViewHolder;
-import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
 import com.codyy.url.URLConfig;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -102,9 +57,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -135,7 +88,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
     /**
      * 直播课堂
      */
-    private static final int TYPE_ITEM_VIEW_HOLDER_RECORD_CLASS = 0x002;
+    private static final int TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS = 0x002;
 
     /**
      * 校本资源
@@ -214,8 +167,8 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
             mEmptyView.setVisibility(View.GONE);
         }
 
-        // TODO: 17-8-7 获取教研活动(集体备课)
-//        getRecommendSchedule();
+        // 17-8-7 获取教研活动(集体备课)
+        getNetTeach();
     }
 
     @Override
@@ -291,11 +244,14 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         viewHolder = new AnnounceViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_home_announce, parent, false));
                         break;
-                    /*case TYPE_ITEM_VIEW_HOLDER_RECENT_CLASS://近期课程
-                        viewHolder = new LivingClassViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.item_channel_interact_live, parent, false));
+
+                    case TYPE_ITEM_VIEW_HOLDER_NET_TEACH://教研活动－集体备课
+                        viewHolder = new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(
+                                parent.getContext(),
+                                R.layout.item_collective_prepare_lessons),
+                                TeachingResearchBase.PREPARE_LESSON);
                         break;
-                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://课程回放
+                    /*case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://课程回放
                         viewHolder = new HistoryClassViewHolderSip(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_customized_history_class_small, parent, false));
                         break;
@@ -344,11 +300,11 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                             CollectivePrepareLessonsNewActivity.start(getActivity(), TeachingResearchBase.EVALUATION_LESSON, schoolId, baseAreaId);
                         }
                         break;
-                    /*case TYPE_ITEM_VIEW_HOLDER_RECENT_CLASS://近期课程
-                        LivingClass lc = (LivingClass) data;
-                        CustomLiveDetailActivity.startActivity(getActivity(), mUserInfo, lc.getId(), ClassRoomContants.TYPE_CUSTOM_LIVE, lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                    case TYPE_ITEM_VIEW_HOLDER_NET_TEACH://网络教研(集体备课)
+                        PrepareLessonsShortEntity lc = (PrepareLessonsShortEntity) data;
+                        ActivityThemeActivity.start(getActivity(),ActivityThemeActivity.PREPARE_LESSON,lc.getId(),lc.getViewCount());
                         break;
-                    case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://课程回放.
+                    /*case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://课程回放.
                         HistoryClass hc2 = (HistoryClass) data;
                         ClassRoomDetailActivity.startActivity(getActivity(), mUserInfo, hc2.getId(), ClassRoomContants.TYPE_CUSTOM_RECORD, hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
@@ -393,8 +349,121 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         mRecyclerView.setAdapter(mAdapter);
     }
 
+
     /**
-     * 课堂回放
+     * 教研活动
+     */
+    private void getNetTeach() {
+        HashMap<String, String> data = new HashMap<>();
+        data.put("areaId", baseAreaId);
+        data.put("schoolId", schoolId);
+        data.put("userType", mUserInfo.getUserType());
+        data.put("uuid", mUserInfo.getUuid());
+        data.put("start", String.valueOf(0));
+        data.put("end", String.valueOf(3));
+        data.put("orderType", "DESC");
+
+        requestData(URLConfig.GET_PREPARE_LESSON, data, false, new BaseHttpActivity.IRequest() {
+            @Override
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
+                if (mRefreshLayout.isRefreshing()) {
+                    mRefreshLayout.setRefreshing(false);
+                }
+                //parse data .
+                if ("success".equals(response.optString("result"))) {
+                    JSONObject jsonObject = response.optJSONObject("groupPreparation");
+                    PrepareLessonsShortEntityParse hcp = new Gson().fromJson(jsonObject.toString(), PrepareLessonsShortEntityParse.class);
+                    if(null != hcp && hcp.getList() != null && hcp.getList().size()>0){
+                        mData.add(new BaseTitleItemBar("教研活动",TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                        for(PrepareLessonsShortEntity entity: hcp.getList()){
+                            entity.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_NET_TEACH);
+                            mData.add(entity);
+                        }
+                    }else{
+                        mData.add(new BaseTitleItemBar("教研活动",TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    }
+                }else{
+                    mData.add(new BaseTitleItemBar("教研活动",TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                }
+
+                mAdapter.notifyDataSetChanged();
+                if (mData.size() <= 0) {
+                    mEmptyView.setLoading(false);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyView.setVisibility(View.GONE);
+                }
+                //  获取直播课堂
+                loadLiveClass();
+            }
+
+            @Override
+            public void onRequestFailure(Throwable error) {
+                onFailure(error);
+                // 获取直播课堂
+                loadLiveClass();
+            }
+        });
+    }
+
+
+    /**
+     * 加载直播课堂
+     */
+    private void loadLiveClass() {
+        Cog.d(TAG, "loadLiveClass areaId=", baseAreaId, ",schoolId=", schoolId);
+        HashMap<String, String> params = new HashMap<>();
+        if (!TextUtils.isEmpty(schoolId)) {
+            params.put("schoolId", schoolId);
+        }
+        params.put("baseAreaId", baseAreaId);
+        params.put("size", "3");
+
+        requestData(URLConfig.MAIN_LIVE_CLASSROOM, params, false, new BaseHttpActivity.IRequest() {
+            @Override
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
+                if (mRefreshLayout.isRefreshing()) {
+                    mRefreshLayout.setRefreshing(false);
+                }
+                //parse data .
+                if ("success".equals(response.optString("result"))) {
+                    List<MainResClassroom> classroomList = MainResClassroom.PARSER
+                            .parseArray(response.optJSONArray("data"));
+                    if(null != classroomList && classroomList.size()>0){
+                        mData.add(new BaseTitleItemBar("直播课堂",TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                        for (MainResClassroom room : classroomList){
+                            room.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS);
+                            mData.add(room);
+                        }
+                    }else{
+                        mData.add(new BaseTitleItemBar("直播课堂",TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    }
+                }else{
+                    mData.add(new BaseTitleItemBar("直播课堂",TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                }
+
+                mAdapter.notifyDataSetChanged();
+                if (mData.size() <= 0) {
+                    mEmptyView.setLoading(false);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyView.setVisibility(View.GONE);
+                }
+                // TODO: 17-8-7 获取校本资源
+
+            }
+
+            @Override
+            public void onRequestFailure(Throwable error) {
+                onFailure(error);
+                // TODO: 17-8-7 获取校本资源
+
+            }
+        });
+    }
+
+    /**
+     * 校本资源
      */
     private void getRecommendSchedule() {
         HashMap<String, String> data = new HashMap<>();
@@ -434,48 +503,16 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 } else {
                     mEmptyView.setVisibility(View.GONE);
                 }
-                //获取网络教研.
-//                getNetTeach();
+                // TODO: 17-8-7 获取直播课堂
             }
 
             @Override
             public void onRequestFailure(Throwable error) {
                 onFailure(error);
-                //获取网络教研.
-//                getNetTeach();
+                // TODO: 17-8-7 获取直播课堂
             }
         });
     }
-
-    //获取网络授课.
-    /*private void getNetTeach() {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("areaId", baseAreaId);
-        data.put("schoolId", schoolId);
-        data.put("uuid", mUserInfo.getUuid());
-
-        requestData(URLConfig.GET_SIP_NET_TECH_LIST, data, false, new BaseHttpActivity.IRequest() {
-            @Override
-            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                if (mRefreshLayout.isRefreshing()) {
-                    mRefreshLayout.setRefreshing(false);
-                }
-                parseNetTeachJson(response);
-                mAdapter.notifyDataSetChanged();
-                if (mData.size() <= 0) {
-                    mEmptyView.setLoading(false);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onRequestFailure(Throwable error) {
-                onFailure(error);
-            }
-        });
-    }*/
 
     /**
      * 处理网络授课.
