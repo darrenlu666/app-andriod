@@ -1089,7 +1089,7 @@ public class URLConfig {
     public static String GET_SIP_ONLINE_CLASS_MORE;
 
     /**
-     * 首页网络调研
+     * (v5.3.6)首页网络调研（sip）
      */
     @UrlSuffix("mobile/netTeach/index.do")
     public static String GET_TEACHERING_RESEARCH;
