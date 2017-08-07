@@ -58,9 +58,9 @@ public class ModuleConfig {
     public final static String TEMPLATE_SIP = "index.template.sipstl";
 
     /**
-     * 首页模块：专递课堂(苏州园区)
+     * 首页模板：集团校
      */
-    public final static String TEMPLATE_SIP_CUSTOME = "index.template.sipstl.onlineclassid";
+    public final static String TEMPLATE_GROUP_SCHOOL = "index.template.groupschool";
 
     /**
      * 地区

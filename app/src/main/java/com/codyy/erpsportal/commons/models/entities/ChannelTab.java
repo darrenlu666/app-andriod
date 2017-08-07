@@ -6,6 +6,7 @@ import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter.Cha
 import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.InfoIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainCompositeFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.MainGroupSchoolFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ManagementFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipCustomizedFragment;
@@ -122,9 +123,12 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_FX.equals(indexTemplateId)){//费县
                     clazz = FeiXianFragment.class;
                     tabId = 12;
-                } else if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){
+                } else if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){//苏州园区
                     clazz = SipHomeFragment.class;
                     tabId = 13;
+                }else if(ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)){//集团校
+                    clazz = MainGroupSchoolFragment.class;
+                    tabId = 14;
                 }else {
                     clazz = FeiXianFragment.class;
                     tabId = 12;
