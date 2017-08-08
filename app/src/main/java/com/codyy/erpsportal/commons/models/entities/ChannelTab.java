@@ -110,7 +110,9 @@ public class ChannelTab {
                     clazz = MainCompositeFragment.class;
                     tabId = 1;
                 } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)){
-                    clazz = MainResFragment.class;
+//                    clazz = MainResFragment.class;
+                    // TODO: 17-8-7 test group school .
+                    clazz = MainGroupSchoolFragment.class;
                     tabId = 2;
                 } else if (ModuleConfig.TEMPLATE_RESOURCE_NO_LIVE.equals(indexTemplateId)) {
                     bundle = new Bundle();
