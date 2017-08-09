@@ -196,18 +196,29 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 requestData(true);
             }
         });
+        //add divider item which only draw the space.
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-        mRecyclerView.addItemDecoration(new SimpleBisectDivider(divider, (int) getResources().getDimension(R.dimen.poe_recycler_grid_layout_padding), new SimpleBisectDivider.IGridLayoutViewHolder() {
+        mRecyclerView.addItemDecoration((new SimpleBisectDivider(divider
+                , (int) getResources().getDimension(R.dimen.poe_recycler_grid_layout_padding)
+                , new SimpleBisectDivider.IMultiLine() {
             @Override
-            public int obtainSingleBigItemViewHolderType() {
-                return HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE;
+            public int[] obtainMultiInLine() {
+                return new int[]{
+                        TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS
+                        ,TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE
+                        ,TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE
+                        ,TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST
+                        ,TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL
+                };
             }
 
             @Override
-            public int obtainMultiInLineViewHolderType() {
-                return TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE;
+            public int[] obtainMultiSingleLine() {
+                return new int[]{
+                        TYPE_ITEM_VIEW_HOLDER_NET_TEACH
+                };
             }
-        }));
+        })));
         mRefreshLayout.setColorSchemeColors(UiMainUtils.getColor(R.color.main_color));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -222,7 +233,11 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
             @Override
             public int getSpanSize(int position) {
 
-                if (mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE) {
+                if (mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS
+                        || mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE
+                        || mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE
+                        || mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST
+                        || mAdapter.getItemViewType(position) == TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL) {
                     return 1;
                 }
                 return 2;
@@ -238,7 +253,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE:
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA:
                         viewHolder = TitleItemViewHolderBuilder.getInstance().constructTitleItem(
-                                parent.getContext(), parent, TitleItemViewHolderBuilder.ITEM_TIPS_SIMPLE_TEXT);
+                                parent.getContext(), parent, TitleItemViewHolderBuilder.ITEM_TIPS_SIMPLE_CENTER);
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_INFO://info announce  .
                         viewHolder = new AnnounceViewHolder(LayoutInflater.from(parent.getContext())
@@ -265,7 +280,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST://名师推荐
                         viewHolder = new HomeTeacherViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.famousteacher_layout_item, parent, false));
+                                .inflate(R.layout.item_home_great_teacher, parent, false));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL://集团学校.
                         viewHolder = new HomeGroupSchoolViewHolder(LayoutInflater.from(parent.getContext())

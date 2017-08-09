@@ -36,7 +36,7 @@
         android:id="@+id/tag_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="总校总校"
+        android:text="总校总校"
         android:background="@color/transparent_dark"
         android:textSize="@dimen/txt_size_small"
         android:textColor="@color/white"

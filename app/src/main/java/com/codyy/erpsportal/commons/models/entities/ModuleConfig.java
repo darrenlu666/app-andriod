@@ -43,6 +43,12 @@ public class ModuleConfig {
     public final static String TEMPLATE_PURE_MONITOR = "index.template.puremonitor";
 
     /**
+     * 首页模板:玉溪/沾益
+     */
+    public final static String TEMPLATE_YX＿ZHY = "index.template.zhanyi";
+
+
+    /**
      * 首页模板：天津
      */
     public final static String TEMPLATE_TJ = "index.template.TJ";

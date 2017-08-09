@@ -42,7 +42,7 @@ public class HomeGroupSchoolViewHolder extends BaseRecyclerViewHolder<Resource> 
         ImageFetcher.getInstance(mSdv.getContext()).fetchSmall(mSdv, data.getIconUrl());
         mTvSchool.setText(data.getTitle());
         // TODO: 17-8-8 to get the tag name !
-        mTagTv.setText(data.getTitle());
+//        mTagTv.setText(data.getTitle());
     }
 
 }

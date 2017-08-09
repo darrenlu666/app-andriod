@@ -34,6 +34,7 @@ public class TitleItemViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar
      */
     public static final int ITEM_TYPE_TITLE_MORE_NO_DATA = 0x100104;
 
+
     TextView mTitleTextView;
     Button mMoreButton;
     RelativeLayout mNoMoreRelativeLayout;

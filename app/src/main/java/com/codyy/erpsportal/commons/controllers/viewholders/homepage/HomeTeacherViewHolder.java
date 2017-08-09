@@ -33,7 +33,7 @@ public class HomeTeacherViewHolder extends BaseRecyclerViewHolder<GreatTeacher> 
 
     @Override
     public int obtainLayoutId() {
-        return R.layout.famousteacher_layout_item;
+        return R.layout.item_home_great_teacher;
     }
 
     @Override
