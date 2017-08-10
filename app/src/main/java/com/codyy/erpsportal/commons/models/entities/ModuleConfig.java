@@ -66,7 +66,7 @@ public class ModuleConfig {
     /**
      * 首页模板：集团校
      */
-    public final static String TEMPLATE_GROUP_SCHOOL = "index.template.groupschool";
+    public final static String TEMPLATE_GROUP_SCHOOL = "index.template.jtx";
 
     /**
      * 地区
