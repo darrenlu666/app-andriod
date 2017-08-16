@@ -63,7 +63,7 @@ import java.util.List;
 import butterknife.Bind;
 
 /**
- * 频道页 首页（资源&资源无直播）
+ * 频道页 首页（集团校）
  * created by poe on 2017/08/04 .
  */
 public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigBus.OnModuleConfigListener {
@@ -136,11 +136,8 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         if (!TextUtils.isEmpty(schoolId)) {
             data.put("schoolId", schoolId);
         }
-        data.put("eachSize", "1");
+//        data.put("eachSize", "1"); //v5.3.4已废弃 不赋值
         data.put("thumbCount", "0");
-        if (mUserInfo != null) {
-            data.put("uuid", mUserInfo.getUuid());
-        }
         return data;
     }
 

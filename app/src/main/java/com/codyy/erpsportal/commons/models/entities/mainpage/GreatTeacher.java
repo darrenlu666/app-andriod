@@ -1,13 +1,17 @@
 package com.codyy.erpsportal.commons.models.entities.mainpage;
 
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
 
 /**
  * 名师推荐
  * Created by poe on 17-8-8.
  */
 
-public class GreatTeacher extends BaseTitleItemBar{
+public class GreatTeacher extends BaseTitleItemBar implements Serializable{
 
     /**
      * realName :
