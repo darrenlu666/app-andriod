@@ -308,11 +308,19 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_RECENT_CLASS://近期课程
                         LivingClass lc = (LivingClass) data;
-                        CustomLiveDetailActivity.startActivity(getActivity(), mUserInfo, lc.getId(), ClassRoomContants.TYPE_CUSTOM_LIVE, lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        CustomLiveDetailActivity.startActivity(getActivity(),
+                                mUserInfo, lc.getId(),
+                                ClassRoomContants.TYPE_CUSTOM_LIVE,
+                                lc.getStatus(),
+                                lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://课程回放.
                         HistoryClass hc2 = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(), mUserInfo, hc2.getId(), ClassRoomContants.TYPE_CUSTOM_RECORD, hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),
+                                mUserInfo,
+                                hc2.getId(),
+                                ClassRoomContants.TYPE_CUSTOM_RECORD,
+                                hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_INTERACT_CLASS://互动听课
                         if (data instanceof SipNetResearch) {
