@@ -57,7 +57,10 @@ public class SchoolRankViewHolder extends BaseRecyclerViewHolder<SchoolRank> {
             spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#ff6000")),0,1,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         }
         mLineNumberTv.setText(spannable);
-        mSchoolTv.setText(Html.fromHtml(UIUtils.filterCharacter(data.getSchoolName())));
+        //特殊处理：新需求　 6. 学校名称如果检测到含有"苏州工业园区"几个字自动过滤掉.
+        String school = Html.fromHtml(UIUtils.filterCharacter(data.getSchoolName())).toString();
+        if(school.contains("苏州工业园区")) school = school.replace("苏州工业园区","");
+        mSchoolTv.setText(school);
         mLessonCountTv.setText(TextUtils.isEmpty(data.getScheduleActivityCount())?"0":data.getScheduleActivityCount());
         mTeachCountTv.setText(TextUtils.isEmpty(data.getTeacherActivityCount())?"0":data.getTeacherActivityCount());
     }
