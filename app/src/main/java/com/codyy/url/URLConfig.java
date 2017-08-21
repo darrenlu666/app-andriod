@@ -1007,6 +1007,37 @@ public class URLConfig {
     public static String GET_MIXINFORMATION;
 
     /**
+     * 教研活动3条（v5.3.7集团校）
+     */
+    @UrlSuffix("mobile/netTeach/getjtxpreparelesson.do")
+    public static String GET_GROUP_SCHOOL_NET_PREPARE;
+
+    /**
+     * 直播前2条（v5.3.7集团校）
+     */
+    @UrlSuffix("index/live.do")
+    public static String GET_GROUP_SCHOOL_LIVING_LESSON;
+
+
+    /**
+     * 名师推荐4条（v5.3.7集团校）
+     * schoolId	学校id（若为学校，则需要学校id，否为空）	string	必填，只有学校才会配置此模板
+     * size	条数	string
+     */
+    @UrlSuffix("index/getindexjtxtopuser.do")
+    public static String GET_GROUP_SCHOOL_TEACHER_RECOMMEND;
+
+
+    /**
+     * 集团校4条（v5.3.7集团校）
+     * clsSchoolId	学校id（若为学校，则需要学校id，否为空）	string	必填，只有学校才会配置此模板
+     * size	条数	string
+     */
+    @UrlSuffix("index/jtx/getindexjtxclubschoollist.do")
+    public static String GET_GROUP_SCHOOL_LIST;
+
+
+    /**
      * 获取名师推荐
      */
     @UrlSuffix("index/getIndexTopUser.do")

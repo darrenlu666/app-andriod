@@ -346,15 +346,15 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
      */
     private void getNetTeach() {
         HashMap<String, String> data = new HashMap<>();
-        data.put("areaId", baseAreaId);
-        data.put("schoolId", schoolId);
-        data.put("userType", mUserInfo.getUserType());
+//        data.put("areaId", baseAreaId);
+        data.put("clsSchoolId", schoolId);
+//        data.put("userType", mUserInfo.getUserType());
         data.put("uuid", mUserInfo.getUuid());
-        data.put("start", String.valueOf(0));
-        data.put("end", String.valueOf(3));
-        data.put("orderType", "DESC");
+//        data.put("start", String.valueOf(0));
+//        data.put("end", String.valueOf(3));
+//        data.put("orderType", "DESC");
 
-        requestData(URLConfig.GET_PREPARE_LESSON, data, false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_GROUP_SCHOOL_NET_PREPARE, data, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {
@@ -402,15 +402,15 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
      * 加载直播课堂
      */
     private void loadLiveClass() {
-        Cog.d(TAG, "loadLiveClass areaId=", baseAreaId, ",schoolId=", schoolId);
         HashMap<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("schoolId", schoolId);
         }
-        params.put("baseAreaId", baseAreaId);
-        params.put("size", "3");
+        params.put("uuid",mUserInfo.getUuid());
+//        params.put("baseAreaId", baseAreaId);
+//        params.put("size", "3");
 
-        requestData(URLConfig.MAIN_LIVE_CLASSROOM, params, false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_GROUP_SCHOOL_LIVING_LESSON, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {
@@ -571,11 +571,11 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("schoolId", schoolId);
         }
-        params.put("baseAreaId", baseAreaId);
+//        params.put("baseAreaId", baseAreaId);
         params.put("size", "4");//请求4个数据
         params.put("type", "composite");
 
-        requestData(URLConfig.MAIN_TEACHER_RECOMMENDED, params, false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_GROUP_SCHOOL_TEACHER_RECOMMEND, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {

@@ -105,7 +105,8 @@ public class ChannelTab {
                 if (ModuleConfig.TEMPLATE_MONITOR.equals(indexTemplateId)
                         || ModuleConfig.TEMPLATE_PURE_MONITOR.equals(indexTemplateId)
                         || ModuleConfig.TEMPLATE_YX＿ZHY.equals(indexTemplateId)) {
-                    clazz = ManagementFragment.class;
+//                    clazz = ManagementFragment.class;
+                    clazz = MainGroupSchoolFragment.class;
                     tabId = 0;
                 } else if (ModuleConfig.TEMPLATE_COMPOSITE.equals(indexTemplateId)) {
                     clazz = MainCompositeFragment.class;
