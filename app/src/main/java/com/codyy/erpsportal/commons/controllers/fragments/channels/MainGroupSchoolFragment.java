@@ -19,26 +19,25 @@ import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsNewActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.LessonsViewHold;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
-import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.AnnounceViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.HomeGroupSchoolViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.HomeResourceViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.HomeTeacherViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.homepage.MainLiveViewHolder;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
-import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntityParse;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
-import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
-import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
 import com.codyy.erpsportal.commons.models.entities.mainpage.AnnounceParse;
+import com.codyy.erpsportal.commons.models.entities.mainpage.FormatJsonParse;
 import com.codyy.erpsportal.commons.models.entities.mainpage.GreatTeacher;
-import com.codyy.erpsportal.commons.models.entities.mainpage.GreatTeacherParse;
+import com.codyy.erpsportal.commons.models.entities.mainpage.GroupLive;
+import com.codyy.erpsportal.commons.models.entities.mainpage.GroupLiveParse;
+import com.codyy.erpsportal.commons.models.entities.mainpage.GroupSchool;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
 import com.codyy.erpsportal.commons.models.listeners.MainLiveClickListener;
-import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
@@ -202,10 +201,10 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
             public int[] obtainMultiInLine() {
                 return new int[]{
                         TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS
-                        ,TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE
-                        ,TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE
-                        ,TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST
-                        ,TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL
+                        , TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE
+                        , TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE
+                        , TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST
+                        , TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL
                 };
             }
 
@@ -264,11 +263,11 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                                 TeachingResearchBase.PREPARE_LESSON);
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS://直播课堂
-                        viewHolder = new HistoryClassViewHolder(LayoutInflater.from(parent.getContext())
+                        viewHolder = new MainLiveViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_customized_history_class_small, parent, false));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE://校本资源(往期录播)
-                        viewHolder = new HistoryClassViewHolder(LayoutInflater.from(parent.getContext())
+                        viewHolder = new MainLiveViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_customized_history_class_small, parent, false));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE://优课资源
@@ -318,13 +317,22 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         ActivityThemeActivity.start(getActivity(), ActivityThemeActivity.PREPARE_LESSON, lc.getId(), lc.getViewCount());
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS://直播课堂
+                        GroupLive live = (GroupLive) data;
+                        MainResClassroom room = new MainResClassroom();
+                        room.setId(live.getCourseId());
+                        room.setType(live.getType());
+                        room.setSubjectName(live.getBaseSubjectName());
                         new MainLiveClickListener(
                                 MainGroupSchoolFragment.this, UserInfoKeeper.obtainUserInfo())
-                                .onLiveClassroomClick((MainResClassroom) data);
+                                .onLiveClassroomClick(room);
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE://校本资源.(课程回放)
-                        HistoryClass hc2 = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(), mUserInfo, hc2.getId(), ClassRoomContants.TYPE_CUSTOM_RECORD, hc2.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        GroupLive hc2 = (GroupLive) data;
+                        ClassRoomDetailActivity.startActivity(getActivity(),
+                                mUserInfo,
+                                hc2.getCourseId(),
+                                ClassRoomContants.TYPE_CUSTOM_RECORD,
+                                hc2.getBaseSubjectName());
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE://优课资源.
                         Resource.gotoResDetails(getActivity(), UserInfoKeeper.obtainUserInfo(), (Resource) data);
@@ -346,13 +354,8 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
      */
     private void getNetTeach() {
         HashMap<String, String> data = new HashMap<>();
-//        data.put("areaId", baseAreaId);
         data.put("clsSchoolId", schoolId);
-//        data.put("userType", mUserInfo.getUserType());
         data.put("uuid", mUserInfo.getUuid());
-//        data.put("start", String.valueOf(0));
-//        data.put("end", String.valueOf(3));
-//        data.put("orderType", "DESC");
 
         requestData(URLConfig.GET_GROUP_SCHOOL_NET_PREPARE, data, false, new BaseHttpActivity.IRequest() {
             @Override
@@ -360,13 +363,13 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
+
                 //parse data .
                 if ("success".equals(response.optString("result"))) {
-                    JSONObject jsonObject = response.optJSONObject("groupPreparation");
-                    PrepareLessonsShortEntityParse hcp = new Gson().fromJson(jsonObject.toString(), PrepareLessonsShortEntityParse.class);
-                    if (null != hcp && hcp.getList() != null && hcp.getList().size() > 0) {
+                    FormatJsonParse<PrepareLessonsShortEntity> parse = new FormatJsonParse<PrepareLessonsShortEntity>().parse(response, PrepareLessonsShortEntity.class);
+                    if (null != parse && parse.getData() != null && parse.getData().size() > 0) {
                         mData.add(new BaseTitleItemBar("教研活动", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
-                        for (PrepareLessonsShortEntity entity : hcp.getList()) {
+                        for (PrepareLessonsShortEntity entity : parse.getData()) {
                             entity.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_NET_TEACH);
                             mData.add(entity);
                         }
@@ -404,11 +407,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
     private void loadLiveClass() {
         HashMap<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
-            params.put("schoolId", schoolId);
+            params.put("clsSchoolId", schoolId);
         }
-        params.put("uuid",mUserInfo.getUuid());
-//        params.put("baseAreaId", baseAreaId);
-//        params.put("size", "3");
+        params.put("uuid", mUserInfo.getUuid());
 
         requestData(URLConfig.GET_GROUP_SCHOOL_LIVING_LESSON, params, false, new BaseHttpActivity.IRequest() {
             @Override
@@ -418,11 +419,10 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 }
                 //parse data .
                 if ("success".equals(response.optString("result"))) {
-                    List<MainResClassroom> classroomList = MainResClassroom.PARSER
-                            .parseArray(response.optJSONArray("data"));
-                    if (null != classroomList && classroomList.size() > 0) {
+                    FormatJsonParse<GroupLive> parse = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
+                    if (null != parse && parse.getData().size() > 0) {
                         mData.add(new BaseTitleItemBar("直播课堂", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
-                        for (MainResClassroom room : classroomList) {
+                        for (GroupLive room : parse.getData()) {
                             room.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS);
                             mData.add(room);
                         }
@@ -458,27 +458,24 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
      */
     private void getRecommendSchedule() {
         HashMap<String, String> data = new HashMap<>();
-        data.put("baseAreaId", baseAreaId);
-        data.put("schoolId", schoolId);
-        data.put("size", String.valueOf(2));
-        data.put("uuid", mUserInfo.getUuid());
+        data.put("clsSchoolId", schoolId);
 
-        requestData(URLConfig.GET_RECOMMEND_SCHEDULE, data, false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_GROUP_SCHOOL_HISTORY_LESSON, data, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
-                HistoryClassParse hcp = new Gson().fromJson(response.toString(), HistoryClassParse.class);
+                FormatJsonParse<GroupLive> hcp = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
                 if (null != hcp) {
-                    List<HistoryClass> hcList = hcp.getData();
+                    List<GroupLive> hcList = hcp.getData();
                     if (null != hcList) {
                         if (hcList.size() == 0) {
                             mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                         } else {
                             mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
-                            for (HistoryClass hc : hcList) {
+                            for (GroupLive hc : hcList) {
                                 hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE);
                                 mData.add(hc);
                             }
@@ -571,7 +568,6 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("schoolId", schoolId);
         }
-//        params.put("baseAreaId", baseAreaId);
         params.put("size", "4");//请求4个数据
         params.put("type", "composite");
 
@@ -581,7 +577,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
-                GreatTeacherParse hcp = new Gson().fromJson(response.toString(), GreatTeacherParse.class);
+                FormatJsonParse<GreatTeacher> hcp = new FormatJsonParse<GreatTeacher>().parse(response, GreatTeacher.class);
                 if (null != hcp) {
                     List<GreatTeacher> hcList = hcp.getData();
                     if (null != hcList) {
@@ -626,27 +622,27 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
     private void getGroupSchool() {
         HashMap<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
-            params.put("schoolId", schoolId);
+            params.put("clsSchoolId", schoolId);
         }
-        params.put("baseAreaId", baseAreaId);
         params.put("size", "4");
 
-        requestData(URLConfig.GET_RECOMMEND_RESOURCE, params, false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_GROUP_SCHOOL_LIST, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
-                ResourceParse hcp = new Gson().fromJson(response.toString(), ResourceParse.class);
+//                ResourceParse hcp = new Gson().fromJson(response.toString(), ResourceParse.class);
+                FormatJsonParse<GroupSchool> hcp = new FormatJsonParse<GroupSchool>().parse(response,GroupSchool.class);
                 if (null != hcp) {
-                    List<Resource> hcList = hcp.getData();
+                    List<GroupSchool> hcList = hcp.getData();
                     if (null != hcList) {
                         if (hcList.size() == 0) {
                             mData.add(new BaseTitleItemBar("集团学校", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                         } else {
                             mData.add(new BaseTitleItemBar("集团学校", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
-                            for (Resource hc : hcList) {
+                            for (GroupSchool hc : hcList) {
                                 hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL);
                                 mData.add(hc);
                             }

@@ -1014,10 +1014,16 @@ public class URLConfig {
 
     /**
      * 直播前2条（v5.3.7集团校）
+     * clsSchoolId	学校id	string
+     */
+    @UrlSuffix("/index/video.do")
+    public static String GET_GROUP_SCHOOL_HISTORY_LESSON;
+
+    /**
+     * 校本资源2条（v5.3.7集团校）
      */
     @UrlSuffix("index/live.do")
     public static String GET_GROUP_SCHOOL_LIVING_LESSON;
-
 
     /**
      * 名师推荐4条（v5.3.7集团校）

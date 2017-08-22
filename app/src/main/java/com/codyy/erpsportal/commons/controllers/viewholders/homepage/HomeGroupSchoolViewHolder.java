@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.models.entities.mainpage.GroupSchool;
 import com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
@@ -17,7 +18,7 @@ import butterknife.ButterKnife;
  * Created by poe on 17-8-7.
  */
 
-public class HomeGroupSchoolViewHolder extends BaseRecyclerViewHolder<Resource> {
+public class HomeGroupSchoolViewHolder extends BaseRecyclerViewHolder<GroupSchool> {
 
 
     @Bind(R.id.sdv)
@@ -38,11 +39,10 @@ public class HomeGroupSchoolViewHolder extends BaseRecyclerViewHolder<Resource> 
     }
 
     @Override
-    public void setData(int position, Resource data) throws Throwable {
-        ImageFetcher.getInstance(mSdv.getContext()).fetchSmall(mSdv, data.getIconUrl());
-        mTvSchool.setText(data.getTitle());
+    public void setData(int position, GroupSchool data) throws Throwable {
+        ImageFetcher.getInstance(mSdv.getContext()).fetchSmall(mSdv, data.getCoverPic());
+        mTvSchool.setText(data.getClsSchoolName());
         // TODO: 17-8-8 to get the tag name !
-//        mTagTv.setText(data.getTitle());
+        mTagTv.setText(data.getSchoolTypeName());
     }
-
 }

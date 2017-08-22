@@ -3,13 +3,13 @@ package com.codyy.erpsportal.commons.models.entities.mainpage;
 import java.util.List;
 
 /**
- * 名师推荐
- * Created by poe on 17-8-8.
+ * 集团校－直播类
+ * Created by poe on 17-8-22.
  */
 
-public class GreatTeacherParse {
+public class GroupLiveParse {
     private String result;
-    private List<GreatTeacher> data;
+    private List<GroupLive> data;
 
     public String getResult() {
         return result;
@@ -19,11 +19,11 @@ public class GreatTeacherParse {
         this.result = result;
     }
 
-    public List<GreatTeacher> getData() {
+    public List<GroupLive> getData() {
         return data;
     }
 
-    public void setData(List<GreatTeacher> data) {
+    public void setData(List<GroupLive> data) {
         this.data = data;
     }
 }
