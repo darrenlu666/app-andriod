@@ -32,16 +32,17 @@ public class FormatJsonParse<T> {
         parse.setMessage(result.optString("message"));
 
         JSONArray array = result.optJSONArray("data");
+        List<T> data = new ArrayList<>();
         if(null != array && array.length()>0){
-            List<T> data = new ArrayList<>();
+
             for(int i=0;i<array.length();i++){
                 JSONObject object = array.optJSONObject(i);
 
                 T tt= new Gson().fromJson(object.toString(),Calss);
                 data.add(tt);
             }
-            parse.setData(data);
         }
+        parse.setData(data);
 
         return parse;
     }

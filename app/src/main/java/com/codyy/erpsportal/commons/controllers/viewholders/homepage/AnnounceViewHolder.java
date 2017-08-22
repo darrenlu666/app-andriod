@@ -41,9 +41,11 @@ public class AnnounceViewHolder extends BaseRecyclerViewHolder<AnnounceParse> {
     public void setData(int position, AnnounceParse data) throws Throwable {
         if(null != data && data.getData() != null){
             //广告轮转器.
-            mInfosSwitcher = new AnnounceSwitcher(mTsInfo);
-            mInfosSwitcher.setInfoArray(data.getData());
-            mInfosSwitcher.startSwitch();
+            if(null == mInfosSwitcher){
+                mInfosSwitcher = new AnnounceSwitcher(mTsInfo);
+                mInfosSwitcher.setInfoArray(data.getData());
+                mInfosSwitcher.startSwitch();
+            }
         }
     }
 

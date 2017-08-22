@@ -1009,7 +1009,7 @@ public class URLConfig {
     /**
      * 教研活动3条（v5.3.7集团校）
      */
-    @UrlSuffix("mobile/netTeach/getjtxpreparelesson.do")
+    @UrlSuffix("index/getjtxpreparelesson.do")
     public static String GET_GROUP_SCHOOL_NET_PREPARE;
 
     /**
@@ -1039,7 +1039,7 @@ public class URLConfig {
      * clsSchoolId	学校id（若为学校，则需要学校id，否为空）	string	必填，只有学校才会配置此模板
      * size	条数	string
      */
-    @UrlSuffix("index/jtx/getindexjtxclubschoollist.do")
+    @UrlSuffix("index/getindexjtxclubschoollist.do")
     public static String GET_GROUP_SCHOOL_LIST;
 
 
