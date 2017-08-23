@@ -1026,6 +1026,13 @@ public class URLConfig {
     public static String GET_GROUP_SCHOOL_LIVING_LESSON;
 
     /**
+     * 优客资源2条（v5.3.7集团校）
+     * schoolId	学校id（若为学校，则需要学校id，否为空）	string	必填，只有学校才会配置此模板
+     */
+    @UrlSuffix("index/getjtxresource.do")
+    public static String GET_GROUP_SCHOOL_RESOURCE;
+
+    /**
      * 名师推荐4条（v5.3.7集团校）
      * schoolId	学校id（若为学校，则需要学校id，否为空）	string	必填，只有学校才会配置此模板
      * size	条数	string

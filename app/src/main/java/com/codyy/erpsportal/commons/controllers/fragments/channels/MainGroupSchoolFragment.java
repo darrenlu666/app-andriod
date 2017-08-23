@@ -37,6 +37,7 @@ import com.codyy.erpsportal.commons.models.entities.mainpage.GroupLive;
 import com.codyy.erpsportal.commons.models.entities.mainpage.GroupLiveParse;
 import com.codyy.erpsportal.commons.models.entities.mainpage.GroupSchool;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
+import com.codyy.erpsportal.commons.models.entities.mainpage.MainResource;
 import com.codyy.erpsportal.commons.models.listeners.MainLiveClickListener;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
@@ -335,7 +336,12 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                                 hc2.getBaseSubjectName());
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE://优课资源.
-                        Resource.gotoResDetails(getActivity(), UserInfoKeeper.obtainUserInfo(), (Resource) data);
+                        MainResource resource = (MainResource) data;
+                        Resource bundle = new Resource(resource.getResourceId(),
+                                resource.getResourceName(),
+                                resource.getThumbPath());
+                        bundle.setType(resource.getResourceColumn());
+                        Resource.gotoResDetails(getActivity(), UserInfoKeeper.obtainUserInfo(), bundle);
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST://名师推荐
                         break;
@@ -512,25 +518,23 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("schoolId", schoolId);
         }
-        params.put("baseAreaId", baseAreaId);
-        params.put("size", "2");
 
-        requestData(URLConfig.GET_RECOMMEND_RESOURCE, params, false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_GROUP_SCHOOL_RESOURCE, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {
                     mRefreshLayout.setRefreshing(false);
                 }
-                ResourceParse hcp = new Gson().fromJson(response.toString(), ResourceParse.class);
+                FormatJsonParse<MainResource> hcp = new FormatJsonParse<MainResource>().parse(response, MainResource.class);
                 if (null != hcp) {
-                    List<Resource> hcList = hcp.getData();
+                    List<MainResource> hcList = hcp.getData();
                     if (null != hcList) {
                         if (hcList.size() == 0) {
                             mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                         } else {
                             mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
-                            for (Resource hc : hcList) {
+                            for (MainResource hc : hcList) {
                                 hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE);
                                 mData.add(hc);
                             }
@@ -633,7 +637,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     mRefreshLayout.setRefreshing(false);
                 }
 //                ResourceParse hcp = new Gson().fromJson(response.toString(), ResourceParse.class);
-                FormatJsonParse<GroupSchool> hcp = new FormatJsonParse<GroupSchool>().parse(response,GroupSchool.class);
+                FormatJsonParse<GroupSchool> hcp = new FormatJsonParse<GroupSchool>().parse(response, GroupSchool.class);
                 if (null != hcp) {
                     List<GroupSchool> hcList = hcp.getData();
                     if (null != hcList) {

@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.commons.models.entities.mainpage.MainResource;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -17,7 +18,7 @@ import butterknife.ButterKnife;
  * Created by poe on 17-8-7.
  */
 
-public class HomeResourceViewHolder extends BaseRecyclerViewHolder<Resource> {
+public class HomeResourceViewHolder extends BaseRecyclerViewHolder<MainResource> {
 
     @Bind(R.id.firstpageclass_item_simpledraweeview)
     SimpleDraweeView simpledraweeview;
@@ -35,9 +36,9 @@ public class HomeResourceViewHolder extends BaseRecyclerViewHolder<Resource> {
     }
 
     @Override
-    public void setData(int position, Resource data) throws Throwable {
-        ImageFetcher.getInstance(simpledraweeview.getContext()).fetchSmall( simpledraweeview, data.getIconUrl());
-        textview.setText(data.getTitle());
+    public void setData(int position, MainResource data) throws Throwable {
+        ImageFetcher.getInstance(simpledraweeview.getContext()).fetchSmall( simpledraweeview, data.getThumbPath());
+        textview.setText(data.getResourceName());
     }
 
 }
