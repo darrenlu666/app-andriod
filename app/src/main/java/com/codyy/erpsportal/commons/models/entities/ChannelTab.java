@@ -106,15 +106,12 @@ public class ChannelTab {
                         || ModuleConfig.TEMPLATE_PURE_MONITOR.equals(indexTemplateId)
                         || ModuleConfig.TEMPLATE_YX＿ZHY.equals(indexTemplateId)) {
                     clazz = ManagementFragment.class;
-//                    clazz = MainGroupSchoolFragment.class;
                     tabId = 0;
                 } else if (ModuleConfig.TEMPLATE_COMPOSITE.equals(indexTemplateId)) {
                     clazz = MainCompositeFragment.class;
                     tabId = 1;
                 } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)){
                     clazz = MainResFragment.class;
-                    // test group school .
-//                    clazz = MainGroupSchoolFragment.class;
                     tabId = 2;
                 } else if (ModuleConfig.TEMPLATE_RESOURCE_NO_LIVE.equals(indexTemplateId)) {
                     bundle = new Bundle();

@@ -1,5 +1,7 @@
 package com.codyy.erpsportal.commons.models;
 
+import android.text.TextUtils;
+
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 
 import org.json.JSONObject;
@@ -540,14 +542,31 @@ public class Titles {
         sPagetitleIndexInfoAnnouncement = jsonObject.optString("front.pagetitle.index.info.announcement", "公告");
 
         //集团校　add by poe 20170825
-        sPagetitleIndexClubSchoolTeachingActivity = jsonObject.optString("front.pagetitle.index.clubschool.teachingactivity","教研活动");
-        sPagetitleIndexClubSchoolInfoNew = jsonObject.optString("front.pagetitle.index.clubschool.newsnoticeannoun","新闻/通知/公告");
-        sPagetitleIndexClubSchoolTeacherSuggest = jsonObject.optString("front.pagetitle.index.clubschool.tearecomd","名师推荐");
-        sPagetitleIndexClubSchoolClassDesign = jsonObject.optString("front.pagetitle.index.clubschool.classdesign","课程建设");
-        sPagetitleIndexClubSchoolLiveClass = jsonObject.optString("front.pagetitle.index.clubschool.liveclass","直播课堂");
-        sPagetitleIndexClubSchoolSchoolResource = jsonObject.optString("front.pagetitle.index.clubschool.schoolres","优课资源");
-        sPagetitleIndexClubSchoolResource = jsonObject.optString("front.pagetitle.index.clubschool.resource","优课资源");
-        sPagetitleIndexClubSchool = jsonObject.optString("front.pagetitle.index.clubschool.clubschoo","集团学校");
+        sPagetitleIndexClubSchoolTeachingActivity = jsonObject.optString("front.pagetitle.index.clubschool.teachingactivity", "教研活动");
+        sPagetitleIndexClubSchoolInfoNew = jsonObject.optString("front.pagetitle.index.clubschool.newsnoticeannoun", "新闻/通知/公告");
+        //  17-8-25 分割为三个类型的tag .
+        if (!TextUtils.isEmpty(jsonObject.optString("front.pagetitle.index.clubschool.newsnoticeannoun"))) {
+            parseNewsTitle(jsonObject.optString("front.pagetitle.index.clubschool.newsnoticeannoun"));
+        }
+        sPagetitleIndexClubSchoolTeacherSuggest = jsonObject.optString("front.pagetitle.index.clubschool.tearecomd", "名师推荐");
+        sPagetitleIndexClubSchoolClassDesign = jsonObject.optString("front.pagetitle.index.clubschool.classdesign", "课程建设");
+        sPagetitleIndexClubSchoolLiveClass = jsonObject.optString("front.pagetitle.index.clubschool.liveclass", "直播课堂");
+        sPagetitleIndexClubSchoolSchoolResource = jsonObject.optString("front.pagetitle.index.clubschool.schoolres", "优课资源");
+        sPagetitleIndexClubSchoolResource = jsonObject.optString("front.pagetitle.index.clubschool.resource", "优课资源");
+        sPagetitleIndexClubSchool = jsonObject.optString("front.pagetitle.index.clubschool.clubschoo", "集团学校");
+    }
+
+    //集团校的特殊处理.
+    private static void parseNewsTitle(String s) {
+        if (s.contains("/")) {
+            String[] titles = s.split("/");
+
+            if (titles.length == 3) {
+                sPagetitleIndexCompositeNew = titles[0];//"新闻";
+                sPagetitleIndexCompositeNotice = titles[1];//"通知";
+                sPagetitleIndexCompositeAnnouncement = titles[2];//"公告";
+            }
+        }
     }
 
     /**
