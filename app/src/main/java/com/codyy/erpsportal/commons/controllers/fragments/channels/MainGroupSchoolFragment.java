@@ -34,7 +34,6 @@ import com.codyy.erpsportal.commons.models.entities.mainpage.AnnounceParse;
 import com.codyy.erpsportal.commons.models.entities.mainpage.FormatJsonParse;
 import com.codyy.erpsportal.commons.models.entities.mainpage.GreatTeacher;
 import com.codyy.erpsportal.commons.models.entities.mainpage.GroupLive;
-import com.codyy.erpsportal.commons.models.entities.mainpage.GroupLiveParse;
 import com.codyy.erpsportal.commons.models.entities.mainpage.GroupSchool;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResource;
@@ -46,7 +45,6 @@ import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.MoreLessonPlansActivity;
 import com.codyy.erpsportal.resource.models.entities.Resource;
-import com.codyy.erpsportal.resource.models.entities.ResourceParse;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
@@ -374,16 +372,16 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 if ("success".equals(response.optString("result"))) {
                     FormatJsonParse<PrepareLessonsShortEntity> parse = new FormatJsonParse<PrepareLessonsShortEntity>().parse(response, PrepareLessonsShortEntity.class);
                     if (null != parse && parse.getData() != null && parse.getData().size() > 0) {
-                        mData.add(new BaseTitleItemBar("教研活动", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
                         for (PrepareLessonsShortEntity entity : parse.getData()) {
                             entity.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_NET_TEACH);
                             mData.add(entity);
                         }
                     } else {
-                        mData.add(new BaseTitleItemBar("教研活动", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 } else {
-                    mData.add(new BaseTitleItemBar("教研活动", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 }
 
                 mAdapter.notifyDataSetChanged();
@@ -427,16 +425,16 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 if ("success".equals(response.optString("result"))) {
                     FormatJsonParse<GroupLive> parse = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
                     if (null != parse && parse.getData().size() > 0) {
-                        mData.add(new BaseTitleItemBar("直播课堂", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
                         for (GroupLive room : parse.getData()) {
                             room.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS);
                             mData.add(room);
                         }
                     } else {
-                        mData.add(new BaseTitleItemBar("直播课堂", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 } else {
-                    mData.add(new BaseTitleItemBar("直播课堂", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 }
 
                 mAdapter.notifyDataSetChanged();
@@ -477,9 +475,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     List<GroupLive> hcList = hcp.getData();
                     if (null != hcList) {
                         if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                         } else {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
                             for (GroupLive hc : hcList) {
                                 hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE);
@@ -487,7 +485,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                             }
                         }
                     } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
                 mAdapter.notifyDataSetChanged();
@@ -530,9 +528,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     List<MainResource> hcList = hcp.getData();
                     if (null != hcList) {
                         if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                         } else {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
                             for (MainResource hc : hcList) {
                                 hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE);
@@ -540,7 +538,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                             }
                         }
                     } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
                 mAdapter.notifyDataSetChanged();
@@ -586,9 +584,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     List<GreatTeacher> hcList = hcp.getData();
                     if (null != hcList) {
                         if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeTearec, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                         } else {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeTearec, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
                             for (GreatTeacher hc : hcList) {
                                 hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST);
@@ -596,7 +594,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                             }
                         }
                     } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeTearec, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
                 mAdapter.notifyDataSetChanged();
@@ -642,9 +640,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     List<GroupSchool> hcList = hcp.getData();
                     if (null != hcList) {
                         if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar("集团学校", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                         } else {
-                            mData.add(new BaseTitleItemBar("集团学校", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
                             for (GroupSchool hc : hcList) {
                                 hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL);
@@ -652,7 +650,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                             }
                         }
                     } else {
-                        mData.add(new BaseTitleItemBar("集团学校", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
                 mAdapter.notifyDataSetChanged();
