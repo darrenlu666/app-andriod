@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
@@ -28,6 +29,7 @@ import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipInter
 import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.SipPersonalClassViewHolder;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.EvaluationScore;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
@@ -35,9 +37,13 @@ import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingParse;
+import com.codyy.erpsportal.commons.models.entities.mainpage.GroupLive;
+import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
 import com.codyy.erpsportal.commons.models.entities.onlineclass.SipNetResearch;
 import com.codyy.erpsportal.commons.models.entities.onlineclass.SipNetResearchParse;
+import com.codyy.erpsportal.commons.models.listeners.MainLiveClickListener;
 import com.codyy.erpsportal.commons.utils.NumberUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
@@ -307,12 +313,24 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                         }
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_RECENT_CLASS://近期课程
-                        LivingClass lc = (LivingClass) data;
-                        CustomLiveDetailActivity.startActivity(getActivity(),
-                                mUserInfo, lc.getId(),
-                                ClassRoomContants.TYPE_CUSTOM_LIVE,
-                                lc.getStatus(),
-                                lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        LivingClass live = (LivingClass) data;
+                        /*if(lc.isCanView()){
+                            CustomLiveDetailActivity.startActivity(getActivity(),
+                                    mUserInfo, lc.getId(),
+                                    ClassRoomContants.TYPE_CUSTOM_LIVE,
+                                    lc.getStatus(),
+                                    lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        }else{
+                            ToastUtil.showToast("权限不足!");
+                        }*/
+                        MainResClassroom room = new MainResClassroom();
+                        room.setId(live.getId());
+                        room.setType(MainResClassroom.TYPE_ONLINE_CLASS);
+                        room.setStatus(live.getStatus());
+                        room.setSubjectName(live.getSubjectName());
+                        new MainLiveClickListener(
+                                SipHomeFragment.this, UserInfoKeeper.obtainUserInfo())
+                                .onLiveClassroomClick(room);
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://课程回放.
                         HistoryClass hc2 = (HistoryClass) data;

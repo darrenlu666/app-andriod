@@ -321,6 +321,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         MainResClassroom room = new MainResClassroom();
                         room.setId(live.getCourseId());
                         room.setType("live".equals(live.getType())?MainResClassroom.TYPE_ONLINE_CLASS:MainResClassroom.TYPE_LIVE);
+                        room.setStatus(live.getStatus());
                         room.setSubjectName(live.getBaseSubjectName());
                         new MainLiveClickListener(
                                 MainGroupSchoolFragment.this, UserInfoKeeper.obtainUserInfo())
