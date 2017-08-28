@@ -180,7 +180,7 @@ public class ClassDetailFragment extends Fragment {
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_RECORD) || mFrom.equals(ClassRoomContants.TYPE_LIVE_RECORD)) {
             mLengthLayout.setVisibility(View.VISIBLE);
             mPlayCountLayout.setVisibility(View.VISIBLE);
-            mClassLengthTv.setText(getTimeMinite(mLength));
+            mClassLengthTv.setText(getTimeMinite(TextUtils.isEmpty(mLength)?"0":mLength));
             mPlayCountTv.setText(mPlayCount + "");
         }
         if (ClassRoomContants.TYPE_LIVE_LIVE.equals(mFrom)) {

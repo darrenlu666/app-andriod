@@ -141,26 +141,26 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
 
     @Override
     public void onSuccess(JSONObject response, boolean isRefreshing) {
-        if (null == mRecyclerView) return;
+        /*if (null == mRecyclerView) return;
         if (isRefreshing) mData.clear();
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
         mRecyclerView.setEnabled(true);
-        mEmptyView.setLoading(false);
+        mEmptyView.setLoading(false);*/
         AnnounceParse lp = new Gson().fromJson(response.toString(), AnnounceParse.class);
         if (null != lp) {
             mData.clear();
             lp.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_INFO);
             mData.add(lp);
         }
-        mAdapter.setData(mData);
+        /*mAdapter.setData(mData);
         mAdapter.notifyDataSetChanged();
         if (mData.size() <= 0) {
             mEmptyView.setVisibility(View.VISIBLE);
         } else {
             mEmptyView.setVisibility(View.GONE);
-        }
+        }*/
 
         // 17-8-7 获取教研活动(集体备课)
         getNetTeach();
@@ -177,6 +177,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
             mEmptyView.setVisibility(View.VISIBLE);
             mEmptyView.setLoading(false);
         } else {
+            mAdapter.setData(mData);
             mEmptyView.setVisibility(View.GONE);
         }
     }
@@ -319,7 +320,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         GroupLive live = (GroupLive) data;
                         MainResClassroom room = new MainResClassroom();
                         room.setId(live.getCourseId());
-                        room.setType(live.getType());
+                        room.setType("live".equals(live.getType())?MainResClassroom.TYPE_ONLINE_CLASS:MainResClassroom.TYPE_LIVE);
                         room.setSubjectName(live.getBaseSubjectName());
                         new MainLiveClickListener(
                                 MainGroupSchoolFragment.this, UserInfoKeeper.obtainUserInfo())
@@ -330,7 +331,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         ClassRoomDetailActivity.startActivity(getActivity(),
                                 mUserInfo,
                                 hc2.getCourseId(),
-                                ClassRoomContants.TYPE_CUSTOM_RECORD,
+                                "live".equals(hc2.getType())?ClassRoomContants.TYPE_CUSTOM_RECORD:ClassRoomContants.TYPE_LIVE_RECORD,
                                 hc2.getBaseSubjectName());
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE://优课资源.
@@ -364,9 +365,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_NET_PREPARE, data, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                if (mRefreshLayout.isRefreshing()) {
-                    mRefreshLayout.setRefreshing(false);
-                }
+//                if (mRefreshLayout.isRefreshing()) {
+//                    mRefreshLayout.setRefreshing(false);
+//                }
 
                 //parse data .
                 if ("success".equals(response.optString("result"))) {
@@ -384,13 +385,13 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 }
 
-                mAdapter.notifyDataSetChanged();
+               /* mAdapter.notifyDataSetChanged();
                 if (mData.size() <= 0) {
                     mEmptyView.setLoading(false);
                     mEmptyView.setVisibility(View.VISIBLE);
                 } else {
                     mEmptyView.setVisibility(View.GONE);
-                }
+                }*/
                 //  获取直播课堂
                 loadLiveClass();
             }
@@ -418,9 +419,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_LIVING_LESSON, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                if (mRefreshLayout.isRefreshing()) {
-                    mRefreshLayout.setRefreshing(false);
-                }
+//                if (mRefreshLayout.isRefreshing()) {
+//                    mRefreshLayout.setRefreshing(false);
+//                }
                 //parse data .
                 if ("success".equals(response.optString("result"))) {
                     FormatJsonParse<GroupLive> parse = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
@@ -437,13 +438,13 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 }
 
-                mAdapter.notifyDataSetChanged();
+               /* mAdapter.notifyDataSetChanged();
                 if (mData.size() <= 0) {
                     mEmptyView.setLoading(false);
                     mEmptyView.setVisibility(View.VISIBLE);
                 } else {
                     mEmptyView.setVisibility(View.GONE);
-                }
+                }*/
                 //  获取校本资源
                 getRecommendSchedule();
             }
@@ -467,9 +468,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_HISTORY_LESSON, data, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                if (mRefreshLayout.isRefreshing()) {
-                    mRefreshLayout.setRefreshing(false);
-                }
+//                if (mRefreshLayout.isRefreshing()) {
+//                    mRefreshLayout.setRefreshing(false);
+//                }
                 FormatJsonParse<GroupLive> hcp = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
                 if (null != hcp) {
                     List<GroupLive> hcList = hcp.getData();
@@ -488,13 +489,13 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
-                mAdapter.notifyDataSetChanged();
+                /*mAdapter.notifyDataSetChanged();
                 if (mData.size() <= 0) {
                     mEmptyView.setLoading(false);
                     mEmptyView.setVisibility(View.VISIBLE);
                 } else {
                     mEmptyView.setVisibility(View.GONE);
-                }
+                }*/
                 // 17-8-7 获取优课资源
                 getLessonResources();
             }
@@ -520,9 +521,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_RESOURCE, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                if (mRefreshLayout.isRefreshing()) {
-                    mRefreshLayout.setRefreshing(false);
-                }
+//                if (mRefreshLayout.isRefreshing()) {
+//                    mRefreshLayout.setRefreshing(false);
+//                }
                 FormatJsonParse<MainResource> hcp = new FormatJsonParse<MainResource>().parse(response, MainResource.class);
                 if (null != hcp) {
                     List<MainResource> hcList = hcp.getData();
@@ -541,13 +542,13 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
-                mAdapter.notifyDataSetChanged();
+                /*mAdapter.notifyDataSetChanged();
                 if (mData.size() <= 0) {
                     mEmptyView.setLoading(false);
                     mEmptyView.setVisibility(View.VISIBLE);
                 } else {
                     mEmptyView.setVisibility(View.GONE);
-                }
+                }*/
                 // 17-8-7 获取名师推荐
                 loadTeacherRecommended();
             }
@@ -576,9 +577,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_TEACHER_RECOMMEND, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                if (mRefreshLayout.isRefreshing()) {
-                    mRefreshLayout.setRefreshing(false);
-                }
+//                if (mRefreshLayout.isRefreshing()) {
+//                    mRefreshLayout.setRefreshing(false);
+//                }
                 FormatJsonParse<GreatTeacher> hcp = new FormatJsonParse<GreatTeacher>().parse(response, GreatTeacher.class);
                 if (null != hcp) {
                     List<GreatTeacher> hcList = hcp.getData();
@@ -597,13 +598,13 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
-                mAdapter.notifyDataSetChanged();
+                /*mAdapter.notifyDataSetChanged();
                 if (mData.size() <= 0) {
                     mEmptyView.setLoading(false);
                     mEmptyView.setVisibility(View.VISIBLE);
                 } else {
                     mEmptyView.setVisibility(View.GONE);
-                }
+                }*/
                 //  获取集团学校
                 getGroupSchool();
             }
@@ -653,6 +654,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
+                mAdapter.setData(mData);
                 mAdapter.notifyDataSetChanged();
                 if (mData.size() <= 0) {
                     mEmptyView.setLoading(false);
