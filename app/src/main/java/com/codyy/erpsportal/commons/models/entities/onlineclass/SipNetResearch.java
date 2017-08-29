@@ -24,7 +24,7 @@ public class SipNetResearch extends BaseTitleItemBar {
      * viewCount : 10
      */
 
-    private int averageScore;
+    private float averageScore;
     private String classLevelName;
     private String description;
     private String id;
@@ -37,11 +37,11 @@ public class SipNetResearch extends BaseTitleItemBar {
     private String totalScore;
     private int viewCount;
 
-    public int getAverageScore() {
+    public float getAverageScore() {
         return averageScore;
     }
 
-    public void setAverageScore(int averageScore) {
+    public void setAverageScore(float averageScore) {
         this.averageScore = averageScore;
     }
 

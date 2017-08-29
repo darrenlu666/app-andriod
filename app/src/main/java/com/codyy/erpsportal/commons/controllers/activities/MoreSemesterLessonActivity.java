@@ -197,7 +197,9 @@ public class MoreSemesterLessonActivity extends BaseHttpActivity implements Http
             }
         });
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
-        mRecyclerView.addItemDecoration(new SimpleBisectDivider(divider, (int) getResources().getDimension(R.dimen.poe_recycler_grid_layout_padding), new SimpleBisectDivider.IGridLayoutViewHolder() {
+        mRecyclerView.addItemDecoration(
+                new SimpleBisectDivider(divider, (int) getResources().getDimension(R.dimen.poe_recycler_grid_layout_padding)
+                        , new SimpleBisectDivider.IGridLayoutViewHolder() {
             @Override
             public int obtainSingleBigItemViewHolderType() {
                 return HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE;

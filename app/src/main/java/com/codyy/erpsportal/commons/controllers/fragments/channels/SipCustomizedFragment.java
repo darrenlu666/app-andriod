@@ -257,7 +257,9 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
                 switch (mAdapter.getItemViewType(position)) {
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE://网络授课－更多
                     case TitleItemViewHolder.ITEM_TYPE_TITLE_MORE_NO_DATA://网络授课－更多
-                        MoreSemesterLessonActivity.start(getActivity(), mTitle, data.getCacheId());
+                        if(v.getId() == R.id.btn_more){
+                            MoreSemesterLessonActivity.start(getActivity(), mTitle, data.getCacheId());
+                        }
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
                         SipLesson hc = (SipLesson) data;

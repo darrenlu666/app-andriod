@@ -22,7 +22,7 @@ public class LivingClass extends BaseTitleItemBar implements Serializable {
     private String beginTime;//预备开课时间
     private String status;//状态是否开课了 INIT/PROGRESS/END.
     private String liveType;//无用数据
-    private String canView;//是否可以观看
+    private boolean canView;//是否可以观看
 
     public String getBeginTime() {
         return beginTime;
@@ -40,11 +40,11 @@ public class LivingClass extends BaseTitleItemBar implements Serializable {
         this.status = status;
     }
 
-    public String getCanView() {
+    public boolean isCanView() {
         return canView;
     }
 
-    public void setCanView(String canView) {
+    public void setCanView(boolean canView) {
         this.canView = canView;
     }
 

@@ -14,6 +14,7 @@ import com.codyy.erpsportal.resource.controllers.activities.VideoDetailsActivity
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 import org.json.JSONObject;
 
@@ -21,7 +22,7 @@ import org.json.JSONObject;
  * 资源实体类
  * Created by gujiajia on 2015/4/14.
  */
-public class Resource implements Parcelable {
+public class Resource extends BaseTitleItemBar implements Parcelable {
 
     public final static String TYPE_DOCUMENT = "doc";
 
