@@ -62,8 +62,12 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
                             ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
                                     liveClassroom.getId(), ClassRoomContants.TYPE_LIVE_LIVE,liveClassroom.getSubjectName());
                         } else {
-                            CustomLiveDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
-                                    liveClassroom.getId(), ClassRoomContants.TYPE_CUSTOM_LIVE,liveClassroom.getSubjectName());
+                            CustomLiveDetailActivity.startActivity(mFragment.getActivity()
+                                    ,mUserInfo
+                                    ,liveClassroom.getId()
+                                    , ClassRoomContants.TYPE_CUSTOM_LIVE
+                                    ,liveClassroom.getStatus()
+                                    ,liveClassroom.getSubjectName());
                         }
                     } else {
                         String msg = response.optString("msg");

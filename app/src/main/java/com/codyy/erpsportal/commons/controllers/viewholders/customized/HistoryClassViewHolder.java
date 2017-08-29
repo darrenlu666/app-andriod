@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.commons.controllers.viewholders.customized;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
@@ -45,9 +46,13 @@ public class HistoryClassViewHolder extends BaseRecyclerViewHolder<HistoryClass>
         mCurrentPosition = position;
         mData   =   data;
         if(null == data) return;
-        // TODO: 16-6-1 set data content .
+        // 16-6-1 set data content .
         ImageFetcher.getInstance(mSchoolTextView.getContext()).fetchSmall(mSDV,data.getThumb());
         mSchoolTextView.setText(data.getSchoolName());
-        mLevelSTTextView.setText(data.getClasslevelName()+"/"+data.getSubjectName()+"/"+data.getTeacherName());
+        StringBuilder sb = new StringBuilder();
+        if(!TextUtils.isEmpty(data.getClasslevelName())) sb.append(data.getClasslevelName());
+        if(!TextUtils.isEmpty(data.getSubjectName())) sb.append("/"+data.getSubjectName());
+        if(!TextUtils.isEmpty(data.getTeacherName())) sb.append("/"+data.getTeacherName());
+        mLevelSTTextView.setText(sb.toString());
     }
 }

@@ -62,7 +62,7 @@ public class GroupFragment extends BaseHttpFragment implements ConfigBus.OnModul
         return R.layout.fragment_single_recycleview;
     }
 
-    // TODO: 16-1-8  获取数据获取的api
+    //  16-1-8  获取数据获取的api
     @Override
     public String obtainAPI() {
         return URLConfig.GET_HOME_GROUP;

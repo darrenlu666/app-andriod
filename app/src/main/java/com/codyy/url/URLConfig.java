@@ -1007,6 +1007,50 @@ public class URLConfig {
     public static String GET_MIXINFORMATION;
 
     /**
+     * 教研活动3条（v5.3.7集团校）
+     */
+    @UrlSuffix("index/getjtxpreparelesson.do")
+    public static String GET_GROUP_SCHOOL_NET_PREPARE;
+
+    /**
+     * 直播前2条（v5.3.7集团校）
+     * clsSchoolId	学校id	string
+     */
+    @UrlSuffix("/index/video.do")
+    public static String GET_GROUP_SCHOOL_HISTORY_LESSON;
+
+    /**
+     * 校本资源2条（v5.3.7集团校）
+     */
+    @UrlSuffix("index/live.do")
+    public static String GET_GROUP_SCHOOL_LIVING_LESSON;
+
+    /**
+     * 优客资源2条（v5.3.7集团校）
+     * schoolId	学校id（若为学校，则需要学校id，否为空）	string	必填，只有学校才会配置此模板
+     */
+    @UrlSuffix("index/getjtxresource.do")
+    public static String GET_GROUP_SCHOOL_RESOURCE;
+
+    /**
+     * 名师推荐4条（v5.3.7集团校）
+     * schoolId	学校id（若为学校，则需要学校id，否为空）	string	必填，只有学校才会配置此模板
+     * size	条数	string
+     */
+    @UrlSuffix("index/getindexjtxtopuser.do")
+    public static String GET_GROUP_SCHOOL_TEACHER_RECOMMEND;
+
+
+    /**
+     * 集团校4条（v5.3.7集团校）
+     * clsSchoolId	学校id（若为学校，则需要学校id，否为空）	string	必填，只有学校才会配置此模板
+     * size	条数	string
+     */
+    @UrlSuffix("index/getindexjtxclubschoollist.do")
+    public static String GET_GROUP_SCHOOL_LIST;
+
+
+    /**
      * 获取名师推荐
      */
     @UrlSuffix("index/getIndexTopUser.do")
@@ -1037,7 +1081,59 @@ public class URLConfig {
     public static String GET_RECOMMEND_SCHEDULE;
 
     /**
-     * 首页网络调研
+     * 首页- 近期课程(sip园区首页)
+     * baseAreaId	区域id	string
+     * schoolId	学校id	string
+     * size	获取条数	string	园区33间教室，请输入3
+     * uuid	用户唯一标识码	string
+     */
+    @UrlSuffix("mobile/home/onlineclass/getRecentlyScheduleList.do")
+    public static String GET_SIP_RECENT_LESSON;
+
+
+    /**
+     * 首页- 网络教研(sip园区首页)
+     * areaId	区域ID	string
+     * schoolId	学校ID	string
+     * uuid
+     */
+    @UrlSuffix("mobile/netTeach/sipIndex.do")
+    public static String GET_SIP_NET_TECH_LIST;
+
+    /**
+     * 首页- 学校排行(sip园区首页)
+     * areaId	区域ID	string
+     * schoolId	学校ID	string
+     * uuid
+     */
+    @UrlSuffix("mobile/home/onlineclass/getAllSchoolScheduleStatistic.do")
+    public static String GET_SIP_SCHOOL_RANK;
+
+    /**
+     * 首页- 同步课堂（专递课堂）(sip园区首页)
+     * baseAreaId	行政区ID	string
+     * schoolId	学校ID	string
+     * uuid		string
+     */
+    @UrlSuffix("mobile/home/onlineclass/getAllSemesterRecordScheduleList.do")
+    public static String GET_SIP_ONLINE_CLASS;
+
+    /**
+     * 更多- 同步课堂（专递课堂）(sip园区首页)
+     * baseAreaId	行政区ID	string	与学校参数互斥
+     * baseClasslevelId	年级ID	string	可不传
+     * baseSemesterId	学段ID	string
+     * baseSubjectId	学科ID	string	可不传
+     * end	结束下表	number
+     * schoolId	学校ID	string	与行政区域参数互斥
+     * start	起始下标	number
+     * uuid		string
+     */
+    @UrlSuffix("mobile/home/onlineclass/getOneSemesterRecordScheduleList.do")
+    public static String GET_SIP_ONLINE_CLASS_MORE;
+
+    /**
+     * (v5.3.6)首页网络调研（sip）
      */
     @UrlSuffix("mobile/netTeach/index.do")
     public static String GET_TEACHERING_RESEARCH;

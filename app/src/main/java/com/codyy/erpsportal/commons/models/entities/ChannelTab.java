@@ -6,8 +6,11 @@ import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter.Cha
 import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.InfoIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainCompositeFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.MainGroupSchoolFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ManagementFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.SipCustomizedFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.SipHomeFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TeachingResearchFragment;
@@ -88,6 +91,11 @@ public class ChannelTab {
         return channelTabs;
     }
 
+    /**
+     * 根据传递的ｉｄ构建不同的Fragment的{@linkplain ChannelTabInfo}
+     * @param indexTemplateId
+     * @return
+     */
     public ChannelTabInfo createTabInfo(String indexTemplateId) {
         Class<?> clazz = null;
         long tabId;
@@ -95,33 +103,49 @@ public class ChannelTab {
         switch (id) {
             case "homepageid":
                 if (ModuleConfig.TEMPLATE_MONITOR.equals(indexTemplateId)
-                        || ModuleConfig.TEMPLATE_PURE_MONITOR.equals(indexTemplateId)) {
+                        || ModuleConfig.TEMPLATE_PURE_MONITOR.equals(indexTemplateId)
+                        || ModuleConfig.TEMPLATE_YX＿ZHY.equals(indexTemplateId)) {
                     clazz = ManagementFragment.class;
                     tabId = 0;
                 } else if (ModuleConfig.TEMPLATE_COMPOSITE.equals(indexTemplateId)) {
                     clazz = MainCompositeFragment.class;
                     tabId = 1;
+                } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)){
+                    clazz = MainResFragment.class;
+                    tabId = 2;
                 } else if (ModuleConfig.TEMPLATE_RESOURCE_NO_LIVE.equals(indexTemplateId)) {
                     bundle = new Bundle();
                     bundle.putBoolean(MainResFragment.ARG_NO_LIVE, true);
                     clazz = MainResFragment.class;
                     tabId = 10;
-                } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)){
-                    clazz = MainResFragment.class;
-                    tabId = 2;
                 } else if (ModuleConfig.TEMPLATE_TJ.equals(indexTemplateId)){
                     clazz = TianJinFragment.class;
                     tabId = 11;
-                } else {//费县
+                } else if (ModuleConfig.TEMPLATE_FX.equals(indexTemplateId)){//费县
+                    clazz = FeiXianFragment.class;
+                    tabId = 12;
+                } else if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){//苏州园区
+                    clazz = SipHomeFragment.class;
+                    tabId = 13;
+                }else if(ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)){//集团校
+                    clazz = MainGroupSchoolFragment.class;
+                    tabId = 14;
+                }else {
                     clazz = FeiXianFragment.class;
                     tabId = 12;
                 }
 
                 break;
             case "onlineclassid"://专递课堂
-//                clazz = DeliveryClassFragment.class;
-                clazz = ChannelCustomizedFragment.class;
-                tabId = 3;
+                if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){
+                    bundle = new Bundle();
+                    bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE,name);
+                    clazz = SipCustomizedFragment.class;
+                    tabId = 3;
+                }else{
+                    clazz = ChannelCustomizedFragment.class;
+                    tabId = 3;
+                }
                 break;
             case "netteachid"://网络教研
                 clazz = TeachingResearchFragment.class;

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlt_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:padding="10dp"
+    >
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdv_pic"
+        android:layout_width="@dimen/poe_head_pic_size_small"
+        android:layout_height="@dimen/poe_head_pic_size_small"
+        app:placeholderImage="@drawable/default_subject"
+        android:layout_margin="10dp"
+        />
+    <TextView
+        android:id="@+id/tv_name"
+        tools:text="追求思想者的课堂追求思想者的课堂追求思想者的课堂"
+        style="@style/txt_group_txt_Title"
+        android:singleLine="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        />
+    <TextView
+        android:id="@+id/tv_desc"
+        tools:text="大数据时代,对传统的教科书概念大数据时代,对传统的教科书概念"
+        style="@style/txt_group_txt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:singleLine="true"
+        android:layout_below="@id/tv_name"
+        android:gravity="bottom"
+        />
+    <TextView
+        android:id="@+id/tv_view_count"
+        tools:text="123456 detail desc ..........blog detail desc ..........blog detail desc ..........blog detail desc ..........blog detail desc .........."
+        style="@style/txt_group_txt_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_desc"
+        android:layout_toRightOf="@id/sdv_pic"
+        android:layout_marginRight="10dp"
+        android:maxLines="1"
+        android:drawableLeft="@drawable/see_worklist"
+        android:drawablePadding="10dp"
+        android:layout_toLeftOf="@id/tv_create_time"
+        />
+    <TextView
+        android:id="@+id/tv_create_time"
+        tools:text="2016-04-08 12:00"
+        style="@style/txt_group_txt_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_desc"
+        android:layout_alignBottom="@id/tv_creator"
+        android:gravity="bottom"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        />
+</RelativeLayout>
