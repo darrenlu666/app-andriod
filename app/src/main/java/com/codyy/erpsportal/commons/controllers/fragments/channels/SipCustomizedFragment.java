@@ -116,11 +116,8 @@ public class SipCustomizedFragment extends BaseHttpFragment implements ConfigBus
     @Override
     public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
-        if(TextUtils.isEmpty(schoolId)){
-            data.put("baseAreaId", baseAreaId);
-        }else{
-            data.put("schoolId", schoolId);
-        }
+        if(null != baseAreaId)data.put("baseAreaId", baseAreaId);
+        if(null != schoolId) data.put("schoolId", schoolId);
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
         }
