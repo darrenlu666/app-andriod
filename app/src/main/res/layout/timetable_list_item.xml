@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="com.codyy.erpsportal.commons.models.Titles" />
+        <import type="com.codyy.erpsportal.commons.models.Titles"/>
 
         <variable
             name="item"
-            type="com.codyy.erpsportal.commons.models.entities.TimeTableListContent" />
+            type="com.codyy.erpsportal.commons.models.entities.TimeTableListContent"/>
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="90dp"
+        android:layout_height="120dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:onClick="@{(theview)->item.onClick(theview,item)}"
@@ -24,17 +24,18 @@
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/simledraweeview"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="160dp"
+            android:layout_height="90dp"
             android:layout_centerVertical="true"
-            app:placeholderImage="@drawable/school_holder"
-            app:placeholderImageScaleType="fitCenter" />
+            app:placeholderImage="@drawable/school_holder_big"
+            app:placeholderImageScaleType="fitCenter"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_toEndOf="@+id/simledraweeview"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/simledraweeview"
             android:orientation="vertical">
 
@@ -42,14 +43,15 @@
                 android:id="@+id/timetable_item_text_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:ellipsize="end"
+                android:maxLines="2"
+                android:minLines="2"
                 android:maxWidth="260dp"
-                android:singleLine="true"
+                android:textStyle="bold"
                 android:text="@{item.schoolName}"
                 android:textColor="@color/list_item_title"
                 android:textSize="@dimen/list_item_title"
-                tools:text="东方红小学" />
+                tools:text="东方红小学"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,7 +63,7 @@
                 android:text='@{Titles.sMasterRoom+"："+item.masterCount}'
                 android:textColor="@color/list_item_body"
                 android:textSize="@dimen/list_item_body"
-                tools:text="主讲教室:53" />
+                tools:text="主讲教室:53"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,7 +75,7 @@
                 android:text='@{Titles.sReceiveRoom+"："+item.reciveCount}'
                 android:textColor="@color/list_item_body"
                 android:textSize="@dimen/list_item_body"
-                tools:text="接收教室:52" />
+                tools:text="接收教室:52"/>
         </LinearLayout>
 
 
@@ -82,6 +84,6 @@
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="10dp"
-            android:background="@color/divider" />
+            android:background="@color/divider"/>
     </RelativeLayout>
 </layout>
