@@ -1,6 +1,6 @@
 package com.codyy.erpsportal.commons.models.entities.blog;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -8,24 +8,6 @@ import java.io.Serializable;
 /**
  * 单条博文
  * Created by poe on 16-1-8.
- * {
- "realName": "老师2",
- "headPic": "http://10.5.32.45/reserver/images/8e44e8a16a4747cf8e86dfd1450ee777_146828d880cb4c9e905b67df2c020a6d.jpg",
- "textContent": "按时发顺丰撒按时",
- "serverAddress": "http://10.5.32.45/reserver",
- "blogTitle": "啥地方萨法",
- "blogId": "c5528b5b8bc245af9e10a9f126643d68"
- }
- {
- blogId: "2e1fcfc6649d49d19e4ef023576f948f",
- headPic: "http://www.test5.com/reserver/images/4397707a9484431ea80a1a76d5e4a2e0_5a90429c37a3435a82b05d566c1e728e.jpg",
- baseUserId: "cc9b7baa82f24fcb95f9fc1390c2f976",
- categoryName: null,
- blogTitle: "分享到班级的博文",
- createTime: 1459145000433,
- blogTextContent: "分享到班级的博文",
- serverAddress: "http://www.test5.com/reserver"
- }
  */
 public class GroupBlogPost extends BaseTitleItemBar implements Serializable {
 

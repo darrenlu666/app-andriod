@@ -8,15 +8,15 @@ import android.view.ViewGroup;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
-import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerDelegate;
 import com.codyy.erpsportal.groups.controllers.fragments.SimpleRecyclerFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.VideoMeetingDetailActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.VideoMeetingViewHolder;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoMeetingEntity;
+import com.codyy.tpmp.filterlibrary.interfaces.SimpleRecyclerDelegate;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.url.URLConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -115,7 +115,7 @@ public class VideoMeetingFragment extends SimpleRecyclerFragment<VideoMeetingEnt
             }
 
             @Override
-            public BaseRecyclerViewHolder<VideoMeetingEntity> getViewHolder(ViewGroup parent,int viewType) {
+            public BaseRecyclerViewHolder<VideoMeetingEntity> getViewHolder(ViewGroup parent, int viewType) {
                 return new VideoMeetingViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_videomeeting));
             }
 

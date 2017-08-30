@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.schooltv.models;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 /**
  * 校园电视台-往期视频

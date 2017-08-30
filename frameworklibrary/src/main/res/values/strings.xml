@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Filter Library</string>
+    <string name="loading">加载中&#8230;</string>
+    <string name="more">更多</string>
+    <string name="tips_no_data_to_show">暂时没有相关内容</string>
+
+</resources>

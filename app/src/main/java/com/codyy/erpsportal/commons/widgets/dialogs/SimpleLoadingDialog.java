@@ -238,7 +238,7 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
                 ToastUtil.showToast(getString(R.string.net_connect_error));
                 LogUtils.log(error);
             }
-        }, TAG));
+        }));
     }
 
     /**
@@ -247,7 +247,7 @@ public abstract class SimpleLoadingDialog extends DialogFragment {
     private void stopRequest() {
         Cog.i(TAG, "stopREquest() ~");
         if (null != mSender)
-            mSender.stop(TAG);
+            mSender.stop();
     }
 
 

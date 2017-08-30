@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationsFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.ParticipateSchoolViewHolder;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -25,6 +24,7 @@ import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.FixedRecyclerView;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;

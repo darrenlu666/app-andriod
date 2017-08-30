@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/rlt_container"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?selectableItemBackground"
-    >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlt_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="?selectableItemBackground">
 
     <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/sdv"
@@ -16,7 +16,7 @@
         app:aspectRatio="0.5625"
         app:aspectRatioEnabled="true"
         app:dominantMeasurement="width"
-        app:placeholderImage="@drawable/icon_default_video"/>
+        app:placeholderImage="@drawable/icon_default_video" />
 
     <TextView
         android:id="@+id/tv_school"
@@ -27,10 +27,10 @@
         android:layout_marginTop="15dp"
         android:layout_toLeftOf="@id/eliteschool_adapter_text_play"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:singleLine="true"
         android:textColor="@color/list_item_title"
         android:textSize="@dimen/list_item_title"
-        tools:text="王烈奇中心小学"/>
+        tools:text="王烈奇中心小学" />
 
     <TextView
         android:id="@+id/tv_level_subject_teacher"
@@ -44,5 +44,5 @@
         android:singleLine="true"
         android:textColor="@color/list_item_body"
         android:textSize="@dimen/list_item_body"
-        tools:text="六年级 音乐 张三"/>
+        tools:text="六年级 音乐 张三" />
 </RelativeLayout>

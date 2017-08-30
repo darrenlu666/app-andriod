@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.groups.models.entities;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 /**
  * 单个-圈组成员实体类

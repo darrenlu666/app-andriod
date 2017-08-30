@@ -204,7 +204,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
                 //如果分页加载失败，则页码回归-1
                 notifyEndlessLoadMoreFailed(isRefreshing);
             }
-        },TAG));
+        }));
     }
 
     private void notifyEndlessLoadMoreFailed(boolean isRefreshing) {
@@ -231,7 +231,7 @@ public abstract class BaseHttpActivity extends AppCompatActivity{
     private void stopRequest(){
         Cog.i(TAG,"stopREquest() ~");
         if(null != mSender)
-            mSender.stop(TAG);
+            mSender.stop();
     }
 
     protected void initToolbar(Toolbar toolbar) {

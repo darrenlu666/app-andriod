@@ -3,7 +3,7 @@ package com.codyy.erpsportal.onlinemeetings.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 /**
  * Created by yangxinwu on 2015/8/19.

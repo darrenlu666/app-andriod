@@ -47,7 +47,6 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
     private String mURL = null;
     protected LinearLayoutManager mLinearLayoutManager;
     private int mLastVisibleNB;
-    private Integer mHashTag = this.hashCode();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -170,7 +169,7 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
                 emptyViewState();
                 mRefreshRecycleView.setAdapterLastState(RefreshRecycleView.STATE_LOADE_ERROR);
             }
-        }, mHashTag));
+        }));
     }
 
 
@@ -264,7 +263,7 @@ public abstract class BaseRefreshFragment<T extends RefreshEntity> extends Fragm
 
     @Override
     public void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 }

@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.commons.models.entities.mainpage;
 
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 import org.json.JSONObject;
 
@@ -8,7 +9,7 @@ import org.json.JSONObject;
  * 首页（资源） 直播课堂 实体项
  * Created by gujiajia on 2016/8/4.
  */
-public class MainResClassroom {
+public class MainResClassroom extends BaseTitleItemBar{
 
     /**
      * 专递课堂
@@ -29,6 +30,15 @@ public class MainResClassroom {
     private String subjectIcon;
     private long realBeginTime;
     private int classSeq;
+    private String status;//状态
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getId() {
         return id;

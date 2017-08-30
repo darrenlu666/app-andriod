@@ -1,11 +1,13 @@
 package com.codyy.erpsportal.commons.controllers.viewholders.customized;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
+import com.codyy.erpsportal.commons.utils.DateUtil;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,7 +49,14 @@ public class LivingClassViewHolder extends BaseRecyclerViewHolder<LivingClass> {
         if(null == data) return;
         mTitleTextView.setText(data.getSchoolName());
         mLevelSTTextView.setText(data.getClasslevelName()+"/"+data.getSubjectName()+"/"+data.getTeacherName());
-//        mStartTimeTextView.setText(DateUtil.getDateStr(data.getStartTime(),"HH:mm"));
-        mStartTimeTextView.setText(data.getStartTime());
+
+        //开始时间
+        String startTime = data.getBeginTime();
+        if("PROGRESS".equals(data.getStatus())){
+            startTime = data.getStartTime();
+        }
+        if(!TextUtils.isEmpty(startTime)){
+            mStartTimeTextView.setText(DateUtil.getDateStr(Long.parseLong(startTime),"HH:mm"));
+        }
     }
 }

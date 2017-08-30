@@ -4,11 +4,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.Titles;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
 import com.codyy.erpsportal.onlineteach.models.entities.NetParticipator;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
  * 网络授课－听课学校.
  * Created by poe on 16-6-23.
  */
-public class MainOrReceiveSchoolViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar>{
+public class MainOrReceiveSchoolViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar> {
 
     public static final int ITEM_TYPE_MAIN_SCHOOL       =   0x01;//主讲学校
     public static final int ITEM_TYPE_RECEIVE_SCHOOL    =   0x02;//接收学校

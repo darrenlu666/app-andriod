@@ -30,10 +30,12 @@ import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -86,6 +88,7 @@ import com.codyy.erpsportal.homework.widgets.AudioBar;
 import com.codyy.erpsportal.homework.widgets.DialogUtils;
 import com.codyy.erpsportal.homework.widgets.MySubmitDialog;
 import com.codyy.erpsportal.homework.widgets.ProgressCircle;
+import com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView;
 import com.codyy.erpsportal.homework.widgets.UploadAsyncTask;
 import com.codyy.erpsportal.homework.widgets.WorkAnswerMediaPlayer;
 import com.codyy.erpsportal.perlcourseprep.models.entities.SubjectMaterialPicture;
@@ -312,6 +315,10 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
      */
     private List<String> mImageList;
 
+    protected ScrollView scrollView;
+
+    protected SlidingFloatScrollView mParent;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -323,7 +330,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             mUserInfo = UserInfoKeeper.obtainUserInfo();
         }
         mSpaceing = UIUtils.dip2px(getActivity(), 8f);
-        ScrollView scrollView = new ScrollView(getActivity());
+        scrollView = new ScrollView(getActivity());
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         scrollView.setLayoutParams(params);
         scrollView.setBackgroundColor(getResources().getColor(R.color.exam_bg_color));

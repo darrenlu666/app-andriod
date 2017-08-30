@@ -2,10 +2,9 @@ package com.codyy.erpsportal.groups.controllers.viewholders;
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -14,7 +13,7 @@ import butterknife.ButterKnife;
  * 单个灰底黑字title（圈组成员）
  * Created by poe on 16-1-15.
  */
-public class GroupMemberTitleViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar>{
+public class GroupMemberTitleViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar> {
 
     @Bind(R.id.tv_title)TextView mTitleTextView;
 

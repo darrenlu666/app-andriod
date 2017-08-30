@@ -42,7 +42,6 @@ public class ReservationDetialDialog extends AppCompatDialogFragment {
     private LinearLayout mReceiveLayout;
     private LayoutInflater mLayoutInflater;
     private LinearLayout mDirectLayout;
-    private Integer mHashTag = this.hashCode();
 
     public static ReservationDetialDialog newInstance(String schoolID, String liveID) {
 
@@ -171,7 +170,7 @@ public class ReservationDetialDialog extends AppCompatDialogFragment {
             public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(getContext(), "获取数据失败！");
             }
-        }, mHashTag));
+        }));
     }
 
     /**
@@ -198,7 +197,7 @@ public class ReservationDetialDialog extends AppCompatDialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDismiss(dialog);
     }
 }

@@ -11,8 +11,9 @@ import com.codyy.erpsportal.commons.controllers.fragments.FunctionFragment;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
-import com.codyy.erpsportal.commons.models.Jumpable;
 import com.codyy.erpsportal.commons.models.entities.AppInfo;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
  * 应用-多孩子item
  * Created by poe on 16-6-6.
  */
-public class ApplicationChildViewHold extends BaseRecyclerViewHolder<AppInfo>{
+public class ApplicationChildViewHold extends BaseRecyclerViewHolder<AppInfo> {
 
     public static final String TAG = "ApplicationChildViewHold";
     @Bind(R.id.lin_container)LinearLayout mContainerLinearLayout;

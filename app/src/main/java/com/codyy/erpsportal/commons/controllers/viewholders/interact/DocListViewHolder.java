@@ -3,8 +3,9 @@ package com.codyy.erpsportal.commons.controllers.viewholders.interact;
 import android.view.View;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.onlineteach.models.entities.NetDocument;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -12,7 +13,7 @@ import butterknife.ButterKnife;
  * 互动听课-详情-文档ViewHolder
  * Created by poe on 16-6-23.
  */
-public class DocListViewHolder extends BaseRecyclerViewHolder<Object>{
+public class DocListViewHolder extends BaseRecyclerViewHolder<Object> {
 
     @Bind(R.id.tv_resource_name) TextView mSchoolTextView;
 

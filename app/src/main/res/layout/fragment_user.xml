@@ -73,7 +73,6 @@
                 />
         </LinearLayout>
 
-
         <TextView
             android:id="@+id/tv_WeiBo"
             style="@style/style_my_simple_text_item2"
@@ -239,6 +238,13 @@
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_my_setting"
             android:text="@string/setting_my"/>
+        <TextView
+            android:id="@+id/tv_bar_code"
+            style="@style/style_my_simple_text_item2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_my_bar_code"
+            android:text="@string/share_bar_code"/>
 
     </LinearLayout>
 </ScrollView>

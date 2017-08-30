@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.onlineteach.models.entities;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 import java.util.ArrayList;
 

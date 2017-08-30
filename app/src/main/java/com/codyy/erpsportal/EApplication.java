@@ -2,7 +2,6 @@ package com.codyy.erpsportal;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.multidex.MultiDexApplication;
@@ -16,6 +15,10 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.url.URLConfig;
 import com.codyy.widgets.imagepipeline.ImagePipelineConfigFactory;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.common.QueuedWork;
 
 /**
  * Created by poe on 15-7-20.
@@ -33,6 +36,16 @@ public class EApplication extends MultiDexApplication {
         mApp = this;
         init();
         initUrlConfigBase();
+        initUment();
+    }
+
+    private void initUment() {
+        UMShareAPI.get(this);
+        QueuedWork.isUseThreadPool = false;
+        Config.DEBUG = true;
+        PlatformConfig.setWeixin("wx80c88ccce1f04718", "bdea572a85a7c5ab41f31fc6f45b352c");
+        PlatformConfig.setQQZone("1105710483", "EppjikdbZ8X1C03k");
+
     }
 
     public static EApplication instance() {

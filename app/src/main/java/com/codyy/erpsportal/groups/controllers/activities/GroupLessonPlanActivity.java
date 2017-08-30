@@ -90,8 +90,6 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
 
     private DateTimeFormatter mDateTimeFormatter;
 
-    private Object mRequestTag = new Object();
-
     private int mStart;
 
     private int mRefreshingCount;
@@ -248,7 +246,7 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
                 hideRefreshing();
                 updateEmptyView();
             }
-        }, mRequestTag));
+        }));
     }
 
     private void loadAllGroupLessonPlans(final boolean isRefreshing) {
@@ -304,7 +302,7 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
                 }
                 updateEmptyView();
             }
-        }, mRequestTag));
+        }));
     }
 
     /**
@@ -392,7 +390,7 @@ public class GroupLessonPlanActivity extends AppCompatActivity implements OnRefr
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         mRequestSender = null;
     }
 

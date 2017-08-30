@@ -41,7 +41,6 @@ import com.codyy.erpsportal.IMeetingService;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsDetailActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ListenDetailsActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -82,10 +81,12 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.TabInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoShare;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -104,25 +105,37 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         , ContactsFragment.QueryAllOnLineUser
         , Handler.Callback
         , IFragmentMangerInterface
-        , OnlineGroupChatFragment.onSoftKeyListener{
+        , OnlineGroupChatFragment.onSoftKeyListener {
     private final static String TAG = OnlineMeetingActivity.class.getSimpleName();
-    /**     * jump to video meeting pager .    */
-    private static final int MSG_JUMP_TO_VIDEO_MEETING = 0 ;
-    /**     * dismiss the progress bar .  and notify all loader the newest user list data .   */
-    private static final int MSG_PROGRESS_BAR_DISMISS = 200 ;
-    /** 请求悬浮窗权限**/
+    /**
+     * jump to video meeting pager .
+     */
+    private static final int MSG_JUMP_TO_VIDEO_MEETING = 0;
+    /**
+     * dismiss the progress bar .  and notify all loader the newest user list data .
+     */
+    private static final int MSG_PROGRESS_BAR_DISMISS = 200;
+    /**
+     * 请求悬浮窗权限
+     **/
     public static final int MY_PERMISSION_REQUEST_FLOAT_WINDOW = 0x125;
 
     public final static String INTENT_ACTION_NOTICE2 = "com.codyy.erpsportal.INTENT_ACTION_HASMESSAGE";//会议系统消息通知
     public static final String EXTRA_MEETING_ID = "com.codyy.erpsportal.MEETING_ID";//会议id
     public static final String EXTRA_MEETING_BASE = "com.codyy.erpsportal.MEETING_BASE";//会议基本信息json数据
 
-    @Bind(android.R.id.tabhost)FragmentTabHost mTabHost;
-    @Bind(android.R.id.tabs)MyTabWidget mTabs;
-    @Bind(R.id.view_tab_line)View mTabLineView;
-    @Bind(R.id.toolbar_online_main)Toolbar mToolbar;
-    @Bind(R.id.tv_title)TextView mTitleTextView;
-    @Bind(R.id.chronometer_online_header)Chronometer mChronometer;
+    @Bind(android.R.id.tabhost)
+    FragmentTabHost mTabHost;
+    @Bind(android.R.id.tabs)
+    MyTabWidget mTabs;
+    @Bind(R.id.view_tab_line)
+    View mTabLineView;
+    @Bind(R.id.toolbar_online_main)
+    Toolbar mToolbar;
+    @Bind(R.id.tv_title)
+    TextView mTitleTextView;
+    @Bind(R.id.chronometer_online_header)
+    Chronometer mChronometer;
 
     private OnlineMeetingService mChatService;
     private UserInfo mUserInfo;
@@ -137,24 +150,31 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     private BGABadgeTextView mNoticeText;
     private String mPromptTitle = "申请发言";//最后一个tab的title
     private static List<OnlineUserInfo> mUserList;//所有参加会议的用户列表 .
-    private boolean mIsLoginInit = false ;//是否进入会议的时候验证自己上线了，用于处理账号单点登录！default :false
+    private boolean mIsLoginInit = false;//是否进入会议的时候验证自己上线了，用于处理账号单点登录！default :false
     private List<String> mOnLineUserIds = new ArrayList<>();//当前在线用户id .
-//    private  ProgressDialog mProgressBar;
     private static List<ILoader> mUserLoaders = new ArrayList<>();//长时间通知单位
     private static List<ILoader> mTemptUserLoaders = new ArrayList<>();//一次性查询
-    /**     * 中专变量-互动当前的ITEM index     */
+    /**
+     * 中专变量-互动当前的ITEM index
+     */
     private int mTabIndex = 0;
-    /**     * 关闭/打开视频会议(测试或发布版本控制视频会议模块是否放开)     */
-    public static boolean mShowMyViewState = false ;//是否显示我的视频  false：不显示 （default） true:显示 个人点击行为
+    /**
+     * 关闭/打开视频会议(测试或发布版本控制视频会议模块是否放开)
+     */
+    public static boolean mShowMyViewState = false;//是否显示我的视频  false：不显示 （default） true:显示 个人点击行为
     private static int mRequestFrom;//进入视频会议的界面（视频会议/互动听课/集体备课）
-    public static boolean mFirstEnter =true;//是否第一进入演示模式
+    public static boolean mFirstEnter = true;//是否第一进入演示模式
     private Handler mHandler = new Handler(this);
 
-    // TODO: 16-9-7 缓存聊天区域的数据
-    private String mToUserId ;//视频会议id
-    /** 群聊数据　**/
+    //  16-9-7 缓存聊天区域的数据
+    private String mToUserId;//视频会议id
+    /**
+     * 群聊数据
+     **/
     private List<ChatMessage> mGroupMessageCache = new ArrayList<>();
-    /** 单聊数据　**/
+    /**
+     * 单聊数据
+     **/
     private List<ChatMessage> mSingleMessageCache = new ArrayList<>();
     /***系统提示**/
     private List<SystemMessage> mSystemCache = new ArrayList<SystemMessage>();
@@ -178,29 +198,29 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     @Override
     protected void onTitleChanged(CharSequence title, int color) {
         super.onTitleChanged(title, color);
-        Cog.i(TAG , title);
-        if(null != mTitleTextView){
+        Cog.i(TAG, title);
+        if (null != mTitleTextView) {
             mTitleTextView.setText(title);
-        }else{
+        } else {
             finish();
         }
     }
 
     private void init() {
         mUserInfo = getIntent().getParcelableExtra(Constants.USER_INFO);
-        if(null == mUserInfo){
+        if (null == mUserInfo) {
             mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
         }
         mMyMeetingID = getIntent().getStringExtra(EXTRA_MEETING_ID);
         mMeetingBase = getIntent().getParcelableExtra(EXTRA_MEETING_BASE);
-        if(mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_0){
+        if (mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_0) {
             Snackbar.make(mTitleTextView, "手机端暂不支持主讲人功能！", Snackbar.LENGTH_SHORT).show();
             finish();
             return;
         }
-        mToUserId = Integer.valueOf(mMeetingBase.getBaseMeetID().substring(0,6),16)+"";
+        mToUserId = Integer.valueOf(mMeetingBase.getBaseMeetID().substring(0, 6), 16) + "";
         //开启计时器
-        UiOnlineMeetingUtils.startCount(mMeetingBase , mChronometer);
+        UiOnlineMeetingUtils.startCount(mMeetingBase, mChronometer);
 
         setSupportActionBar(mToolbar);
         if (getSupportActionBar() != null) {
@@ -221,22 +241,22 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         mTabs.setOnTabClickListener(this);
 
         Bundle bd = new Bundle();
-        bd.putParcelable(Constants.USER_INFO , mUserInfo);
+        bd.putParcelable(Constants.USER_INFO, mUserInfo);
 
         mView = makeTabIndicator(this, getString(R.string.title_tab_online_meeting_messages), R.drawable.tab_online_message);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
         mTabHost.addTab(mTabHost.newTabSpec("interact").setIndicator(
-                UiOnlineMeetingUtils.makeTabIndicator(this, getString(R.string.title_tab_online_meeting_interacts), R.drawable.tab_online_interact)),OnlineInteractFragment.class, bd);
+                UiOnlineMeetingUtils.makeTabIndicator(this, getString(R.string.title_tab_online_meeting_interacts), R.drawable.tab_online_interact)), OnlineInteractFragment.class, bd);
         //聊天区　
         mTabHost.addTab(mTabHost.newTabSpec("messages").setIndicator(mView), OnLineChatFragment.class, bd);
         mTabHost.addTab(mTabHost.newTabSpec("documents").setIndicator(
-                UiOnlineMeetingUtils.makeTabIndicator(this, getString(R.string.title_tab_online_meeting_documents), R.drawable.tab_online_document)),OnlineDocumentsFragment.class, bd);
+                UiOnlineMeetingUtils.makeTabIndicator(this, getString(R.string.title_tab_online_meeting_documents), R.drawable.tab_online_document)), OnlineDocumentsFragment.class, bd);
         mTabHost.addTab(mTabHost.newTabSpec("users").setIndicator(
-                        UiOnlineMeetingUtils.makeTabIndicator(this, getString(R.string.title_tab_online_meeting_user_lists), R.drawable.tab_online_user)),OnlineUserOnlineFragment.class, bd);
+                UiOnlineMeetingUtils.makeTabIndicator(this, getString(R.string.title_tab_online_meeting_user_lists), R.drawable.tab_online_user)), OnlineUserOnlineFragment.class, bd);
         //观摩者无法申请发言
-        if(mMeetingBase.getBaseRole()<MeetingBase.BASE_MEET_ROLE_3){
+        if (mMeetingBase.getBaseRole() < MeetingBase.BASE_MEET_ROLE_3) {
             mTabHost.addTab(mTabHost.newTabSpec("priority").setIndicator(
-                            UiOnlineMeetingUtils.makeTabIndicator(this, getString(R.string.title_tab_online_meeting_prompt), R.drawable.tab_online_priority)),OnlinePriorityFragment.class, bd);
+                    UiOnlineMeetingUtils.makeTabIndicator(this, getString(R.string.title_tab_online_meeting_prompt), R.drawable.tab_online_priority)), OnlinePriorityFragment.class, bd);
         }
 
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -252,14 +272,14 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         IntentFilter filter = new IntentFilter(INTENT_ACTION_NOTICE2);
         this.registerReceiver(mNoticeBroadCast, filter);
         //视频采集
-        if(Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= 23) {
             if (!Settings.canDrawOverlays(this)) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, MY_PERMISSION_REQUEST_FLOAT_WINDOW);
             } else {
                 startPublishService();
             }
-        }else{
+        } else {
             startPublishService();
         }
         //connect to coco .
@@ -271,8 +291,8 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     }
 
     private void startPublishService() {
-        Intent startService = new Intent(this,OnlineMeetingService.class);
-        bindService(startService,mChatServiceConnection,Context.BIND_AUTO_CREATE);
+        Intent startService = new Intent(this, OnlineMeetingService.class);
+        bindService(startService, mChatServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     public OnlineMeetingService getChatService() {
@@ -298,25 +318,24 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     }
 
     /**
-     *
      * @param loader
-     * @param refresh 是否需要重新拉取数据
+     * @param refresh    是否需要重新拉取数据
      * @param singleMode 是否为一次注册
      */
-    public synchronized void  getUsers(ILoader loader , boolean refresh ,boolean singleMode) {
-        Cog.e(TAG,"getUsers()~");
-        if(singleMode){
+    public synchronized void getUsers(ILoader loader, boolean refresh, boolean singleMode) {
+        Cog.e(TAG, "getUsers()~");
+        if (singleMode) {
             mTemptUserLoaders.add(loader);
-        }else{
+        } else {
             mUserLoaders.add(loader);
         }
 
-        if(refresh){
+        if (refresh) {
             getMeetingUserList();
-        }else{
-            if(mUserList == null || mUserList.size() == 0 ){
+        } else {
+            if (mUserList == null || mUserList.size() == 0) {
                 getMeetingUserList();
-            }else{
+            } else {
                 notifyAllLoader();
             }
         }
@@ -326,13 +345,13 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MY_PERMISSION_REQUEST_FLOAT_WINDOW) {
-            if(Build.VERSION.SDK_INT>=23){
+            if (Build.VERSION.SDK_INT >= 23) {
                 if (!Settings.canDrawOverlays(this)) {
-                    SnackToastUtils.toastShort(mToolbar,"权限授予失败，无法开启悬浮窗");
+                    SnackToastUtils.toastShort(mToolbar, "权限授予失败，无法开启悬浮窗");
                     finish();
                     UIUtils.addExitTranAnim(OnlineMeetingActivity.this);
                 } else {
-                    SnackToastUtils.toastShort(mToolbar,"权限授予成功！");
+                    SnackToastUtils.toastShort(mToolbar, "权限授予成功！");
                     //启动视频采集
                     startPublishService();
                 }
@@ -342,11 +361,12 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
     /**
      * 取消绑定
+     *
      * @param loader
      */
-    public synchronized void unRegister(ILoader loader){
-        if(null == loader) return;
-        if(mUserLoaders.contains(loader)){
+    public synchronized void unRegister(ILoader loader) {
+        if (null == loader) return;
+        if (mUserLoaders.contains(loader)) {
             mUserLoaders.remove(loader);
         }
     }
@@ -354,18 +374,18 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     /**
      * 通知所有获取用户信息的数据更新
      */
-    private synchronized  static void notifyAllLoader(){
-        if(mUserLoaders.size()>0){
-            for (ILoader loader : mUserLoaders){
-                if(null != loader){
+    private synchronized static void notifyAllLoader() {
+        if (mUserLoaders.size() > 0) {
+            for (ILoader loader : mUserLoaders) {
+                if (null != loader) {
                     loader.onLoadUserSuccess(mUserList);
                 }
             }
         }
 
-        if(mTemptUserLoaders.size()>0){
-            for (ILoader loader : mTemptUserLoaders){
-                if(null != loader){
+        if (mTemptUserLoaders.size() > 0) {
+            for (ILoader loader : mTemptUserLoaders) {
+                if (null != loader) {
                     loader.onLoadUserSuccess(mUserList);
                 }
             }
@@ -373,7 +393,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         }
     }
 
-    private synchronized static  void clearOnlineUserLoaders(){
+    private synchronized static void clearOnlineUserLoaders() {
         mUserLoaders.clear();
         mTemptUserLoaders.clear();
         mUserList.clear();
@@ -419,15 +439,15 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 mMeetingBase.getBaseDMS().getServer(OnlineMeetingActivity.this, mMeetingBase, new DMSEntity.ICallBack() {
                     @Override
                     public void onSuccess(String serverURL) {
-                        Cog.i(TAG , "checkShare：开始获取视频地址～返回成功～"+serverURL);
+                        Cog.i(TAG, "checkShare：开始获取视频地址～返回成功～" + serverURL);
                         VideoShare vs = mMeetingBase.getBaseVideoShare();
                         DeskShare ds = mMeetingBase.getBaseDeskShare();
                         LoopPatrol lp = mMeetingBase.getBaseLoopPatrol();
-                        String mainUrl = serverURL+ "/" + UiOnlineMeetingUtils.getStream(mMeetingBase, mMeetingBase.getBaseDMS().getDmsMainSpeakID());
+                        String mainUrl = serverURL + "/" + UiOnlineMeetingUtils.getStream(mMeetingBase, mMeetingBase.getBaseDMS().getDmsMainSpeakID());
                         if (null != vs && vs.getVideoSwitch() == 1) {
-                            String playUrl = serverURL + "/" + UiOnlineMeetingUtils.getShareVideoStream(mMeetingBase,vs.getVideoID());
+                            String playUrl = serverURL + "/" + UiOnlineMeetingUtils.getShareVideoStream(mMeetingBase, vs.getVideoID());
                             Cog.e(TAG, "开始共享视频: " + playUrl);
-                            OnlineLiveVideoPlayActivity.start(OnlineMeetingActivity.this, mMeetingBase, "", playUrl, OnlineLiveVideoPlayActivity.TYPE_SHARE_VIDEO,mainUrl);
+                            OnlineLiveVideoPlayActivity.start(OnlineMeetingActivity.this, mMeetingBase, "", playUrl, OnlineLiveVideoPlayActivity.TYPE_SHARE_VIDEO, mainUrl);
                         } else if (null != ds && ds.getDeskSwitch() == 1) {
                           /*  String streamer = UiOnlineMeetingUtils.getDeskStream(mMeetingBase, ds.getDeskID());
                             String Url = serverURL + "/" + streamer;
@@ -457,7 +477,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         });
     }
 
-    private void printLog(String msg){
+    private void printLog(String msg) {
         Log.i(TAG, msg);
     }
 
@@ -465,7 +485,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
      * 获取用户列表
      */
     private void getMeetingUserList() {
-        Cog.e(TAG,"getMeetingUserList~");
+        Cog.e(TAG, "getMeetingUserList~");
         //1.去获取视频会议基本信息
         UiOnlineMeetingUtils.loadMeetingData(this, mUserInfo.getUuid(), mMyMeetingID, URLConfig.GET_ONLINE_MEETING_USER_LIST, new UiOnlineMeetingUtils.ICallback() {
             @Override
@@ -486,7 +506,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                         if (mOnLineUserIds != null) {
                             doFilterOnline();
                         }
-                        Cog.d(TAG,"get user success callback...");
+                        Cog.d(TAG, "get user success callback...");
                         mHandler.sendEmptyMessage(MSG_PROGRESS_BAR_DISMISS);
                     }
                 }).start();
@@ -495,13 +515,13 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             @Override
             public void onFailure(JSONObject response) {
                 //do someting ... except dialog .
-                Cog.d(TAG,"onFailure()..."+response.toString());
+                Cog.d(TAG, "onFailure()..." + response.toString());
                 mHandler.sendEmptyMessage(MSG_PROGRESS_BAR_DISMISS);
             }
 
             @Override
             public void onNetError() {
-                Cog.d(TAG,"onNetError()...");
+                Cog.d(TAG, "onNetError()...");
                 mHandler.sendEmptyMessage(MSG_PROGRESS_BAR_DISMISS);
             }
         });
@@ -516,8 +536,8 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         if (mMeetingBase == null)
             this.finish();
         mIntent = new Intent(this, BackService.class);
-        mIntent.putExtra("ip",mMeetingBase.getBaseCoco().getCocoIP());
-        mIntent.putExtra("port",mMeetingBase.getBaseCoco().getCocoPort());
+        mIntent.putExtra("ip", mMeetingBase.getBaseCoco().getCocoIP());
+        mIntent.putExtra("port", mMeetingBase.getBaseCoco().getCocoPort());
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -536,42 +556,41 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
         if (index < 4) {
             mTabHost.setCurrentTab(index);
-            if(index>0){
+            if (index > 0) {
                 mChronometer.setVisibility(View.INVISIBLE);
-            }else{
+            } else {
                 mChronometer.setVisibility(View.VISIBLE);
             }
 
-            if(index != 0){
-                if(null != getChatService()){
+            if (index != 0) {
+                if (null != getChatService()) {
                     getChatService().hideView();
                 }
             }
             //隐藏键盘
-            if(index != 1){
+            if (index != 1) {
                 DeviceUtils.hideSoftKeyboard(mView);
             }
         } else {
-            long now        =   System.currentTimeMillis();
-            if(mStartPrompt>0){
-                if((now - mStartPrompt) > 15* 1000){
+            long now = System.currentTimeMillis();
+            if (mStartPrompt > 0) {
+                if ((now - mStartPrompt) > 15 * 1000) {
                     mStartPrompt = now;
                     prompt();
-                }else{
+                } else {
                     Snackbar.make(mTitleTextView, getResources().getString(R.string.tips_duplicate_click_in_period), Snackbar.LENGTH_SHORT).show();
                 }
-            }else{
+            } else {
                 //观摩者不能申请发言
-                if(mMeetingBase.getBaseRole()<MeetingBase.BASE_MEET_ROLE_3){
+                if (mMeetingBase.getBaseRole() < MeetingBase.BASE_MEET_ROLE_3) {
                     //init
-                    mStartPrompt    =  now;
+                    mStartPrompt = now;
                     prompt();
-                }else{
+                } else {
                     Snackbar.make(mTitleTextView, getResources().getString(R.string.tips_no_auth_prompt), Snackbar.LENGTH_SHORT).show();
                 }
             }
         }
-
 
 
     }
@@ -592,49 +611,49 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         ft.addToBackStack(null);
 
         String type = MyDialog.DIALOG_STYLE_TYPE_0;
-        if(mMeetingBase.getBaseNoDisturbing() == 1){
-            type    =   MyDialog.DIALOG_STYLE_TYPE_1;
+        if (mMeetingBase.getBaseNoDisturbing() == 1) {
+            type = MyDialog.DIALOG_STYLE_TYPE_1;
         }
 
-        if(null!=mMeetingBase.getBaseLoopPatrol() && mMeetingBase.getBaseLoopPatrol().getLoopSwitch() == 1){
-            type    =   MyDialog.DIALOG_STYLE_TYPE_1;
+        if (null != mMeetingBase.getBaseLoopPatrol() && mMeetingBase.getBaseLoopPatrol().getLoopSwitch() == 1) {
+            type = MyDialog.DIALOG_STYLE_TYPE_1;
         }
         // Create and show the dialog.
-        MyDialog promptDialog = MyDialog.newInstance(content,type,new MyDialog.OnclickListener() {
+        MyDialog promptDialog = MyDialog.newInstance(content, type, new MyDialog.OnclickListener() {
 
             @Override
             public void leftClick(MyDialog myDialog) {
                 myDialog.dismiss();
                 setPromptTab();
                 //还原我的视频
-                if(mTabHost.getCurrentTab()==0 && mTabIndex == 0 &&null != mChatService && mShowMyViewState){
+                if (mTabHost.getCurrentTab() == 0 && mTabIndex == 0 && null != mChatService && mShowMyViewState) {
                     getChatService().showView();
                 }
             }
 
             @Override
             public void rightClick(MyDialog myDialog) {
-                if(mMeetingBase.getBaseNoDisturbing()==0){
+                if (mMeetingBase.getBaseNoDisturbing() == 0) {
                     boolean isPrompt = false;
-                    if(mMeetingBase.getBaseRole()>=MeetingBase.BASE_MEET_ROLE_2){
+                    if (mMeetingBase.getBaseRole() >= MeetingBase.BASE_MEET_ROLE_2) {
                         isPrompt = true;
                     }
                     //send coca info .
                     if (mIMeetingService != null) {
                         try {
-                            mIMeetingService.setProposerSpeak(mUserInfo.getBaseUserId(),mMeetingBase.getBaseDMS().getDmsMainSpeakID(), isPrompt);
-                            if(!isPrompt){//取消发言需要同步数据 。
+                            mIMeetingService.setProposerSpeak(mUserInfo.getBaseUserId(), mMeetingBase.getBaseDMS().getDmsMainSpeakID(), isPrompt);
+                            if (!isPrompt) {//取消发言需要同步数据 。
 
                                 UiOnlineMeetingUtils.loadMeetingData(OnlineMeetingActivity.this, mUserInfo.getUuid(), mMeetingBase.getBaseMeetID(), URLConfig.SET_ONLINE_MEETING_SPEAKER_DISABLE, new UiOnlineMeetingUtils.ICallback() {
                                     @Override
                                     public void onSuccess(JSONObject response) {
-                                        Cog.e(TAG,"取消发言成功同步到web服务器～"+response.toString());
+                                        Cog.e(TAG, "取消发言成功同步到web服务器～" + response.toString());
 
                                     }
 
                                     @Override
                                     public void onFailure(JSONObject response) {
-                                        Cog.e(TAG,"取消发言同步到web服务器失败～"+response.toString());
+                                        Cog.e(TAG, "取消发言同步到web服务器失败～" + response.toString());
                                     }
 
                                     @Override
@@ -650,7 +669,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 }
                 myDialog.dismiss();
                 //还原我的视频
-                if(mTabHost.getCurrentTab()==0 && mTabIndex == 0 &&null != mChatService && mShowMyViewState){
+                if (mTabHost.getCurrentTab() == 0 && mTabIndex == 0 && null != mChatService && mShowMyViewState) {
                     getChatService().showView();
                 }
             }
@@ -658,7 +677,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             @Override
             public void dismiss() {
                 //还原我的视频
-                if(mTabHost.getCurrentTab()==0 && mTabIndex == 0 &&null != mChatService && mShowMyViewState){
+                if (mTabHost.getCurrentTab() == 0 && mTabIndex == 0 && null != mChatService && mShowMyViewState) {
                     getChatService().showView();
                 }
             }
@@ -666,32 +685,33 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
         promptDialog.show(ft, "dialog");
         //隐藏我的视频
-        if(mTabHost.getCurrentTab()==0 &&null != mChatService){
+        if (mTabHost.getCurrentTab() == 0 && null != mChatService) {
             getChatService().hideView();
         }
     }
 
     /**
      * 申请发言 的不同状态下提示文字 .
+     *
      * @return
      */
     @NonNull
     private String getPromptTitle() {
         String content = "";
         //if(!免打扰)...
-        if(mMeetingBase.getBaseNoDisturbing()==0){
+        if (mMeetingBase.getBaseNoDisturbing() == 0) {
             //开启轮训
-            if(null!=mMeetingBase.getBaseLoopPatrol() && mMeetingBase.getBaseLoopPatrol().getLoopSwitch() == 1){
-                content =   String.format(getString(R.string.format_dialog_loop_patrol),mPromptTitle);
-            }else{
-                if (mMeetingBase.getBaseRole()>1) {
+            if (null != mMeetingBase.getBaseLoopPatrol() && mMeetingBase.getBaseLoopPatrol().getLoopSwitch() == 1) {
+                content = String.format(getString(R.string.format_dialog_loop_patrol), mPromptTitle);
+            } else {
+                if (mMeetingBase.getBaseRole() > MeetingBase.BASE_MEET_ROLE_1) {
                     content = getString(R.string.title_tab_online_meeting_prompt);
                 } else {
                     content = getString(R.string.title_tab_online_meeting_prompt_cancel);
                 }
             }
-        }else if(mMeetingBase.getBaseNoDisturbing()==1){//免打扰
-            content =   getString(R.string.txt_dialog_forbidden);
+        } else if (mMeetingBase.getBaseNoDisturbing() == 1) {//免打扰
+            content = getString(R.string.txt_dialog_forbidden);
         }
 
         return content;
@@ -702,23 +722,23 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
      */
     private void setPromptTab() {
         //观摩者和来宾无申请发言选项 .
-        if(mMeetingBase.getBaseRole() >= MeetingBase.BASE_MEET_ROLE_3){
+        if (mMeetingBase.getBaseRole() >= MeetingBase.BASE_MEET_ROLE_3) {
             return;
         }
 
         mPromptTitle = "";
         int icon = R.drawable.ic_priority_press;
         //if(!免打扰)...
-        if(mMeetingBase.getBaseNoDisturbing()==0){
-            if (mMeetingBase.getBaseRole()>1) {
+        if (mMeetingBase.getBaseNoDisturbing() == 0) {
+            if (mMeetingBase.getBaseRole() > MeetingBase.BASE_MEET_ROLE_1) {
                 mPromptTitle = getString(R.string.title_tab_online_meeting_prompt);
-                icon    =   R.drawable.ic_priority_normal ;
+                icon = R.drawable.ic_priority_normal;
             } else {
                 mPromptTitle = getString(R.string.title_tab_online_meeting_prompt_cancel);
-                icon    =   R.drawable.ic_priority_press ;
+                icon = R.drawable.ic_priority_press;
             }
-        }else if(mMeetingBase.getBaseNoDisturbing()==1){//免打扰
-            mPromptTitle =   getString(R.string.title_tab_online_meeting_prompt_forbidden);
+        } else if (mMeetingBase.getBaseNoDisturbing() == 1) {//免打扰
+            mPromptTitle = getString(R.string.title_tab_online_meeting_prompt_forbidden);
             //icon    =   R.drawable.ic_speak_close_press ;
         }
 
@@ -736,9 +756,9 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         return mTabIndex;
     }
 
-    public int getHostTabIndex(){
+    public int getHostTabIndex() {
         if (mTabHost == null) return -1;
-        return  mTabHost.getCurrentTab();
+        return mTabHost.getCurrentTab();
     }
 
     public void setTabIndex(int mTabIndex) {
@@ -784,16 +804,16 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     protected void onDestroy() {
         ButterKnife.unbind(this);
         EventBus.getDefault().unregister(this);
-        Cog.e(TAG,"onDestroy~");
+        Cog.e(TAG, "onDestroy~");
         ExitMeetingPre();
         this.unregisterReceiver(mNoticeBroadCast);
 //        if(null != mIMeetingService){
-            unbindService(mMeetingServiceConn);
+        unbindService(mMeetingServiceConn);
 //        }
 //        if(null != getChatService()){
         unbindService(mChatServiceConnection);
 //        }
-        OnlineMeetingActivity.mFirstEnter = true ;
+        OnlineMeetingActivity.mFirstEnter = true;
         OnlineMeetingActivity.mShowMyViewState = false;
         clearOnlineUserLoaders();
         super.onDestroy();
@@ -846,13 +866,13 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         }
         ft.addToBackStack(null);
         // Create and show the dialog.
-        MyDialog promptDialog = MyDialog.newInstance(content,MyDialog.DIALOG_STYLE_TYPE_0 , new MyDialog.OnclickListener() {
+        MyDialog promptDialog = MyDialog.newInstance(content, MyDialog.DIALOG_STYLE_TYPE_0, new MyDialog.OnclickListener() {
 
             @Override
             public void leftClick(MyDialog myDialog) {
                 myDialog.dismiss();
                 //还原我的视频
-                if(mTabHost.getCurrentTab()==0 && mTabIndex == 0 &&null != mChatService && mShowMyViewState){
+                if (mTabHost.getCurrentTab() == 0 && mTabIndex == 0 && null != mChatService && mShowMyViewState) {
                     getChatService().showView();
                 }
             }
@@ -873,7 +893,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
         promptDialog.show(ft, "dialog");
         //还原我的视频
-        if(mTabHost.getCurrentTab()==0 &&null != mChatService){
+        if (mTabHost.getCurrentTab() == 0 && null != mChatService) {
             getChatService().hideView();
         }
     }
@@ -882,7 +902,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
      * 推出会议 并执行数据解绑 ！
      */
     private void ExitMeetingPre() {
-        if(null != mTabHost && mTabHost.getCurrentTab() == 0 &&null != mChatService){
+        if (null != mTabHost && mTabHost.getCurrentTab() == 0 && null != mChatService) {
             getChatService().hideView();
         }
         if (null != mIMeetingService) {
@@ -893,40 +913,41 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             }
         }
 
-        if(null != mChatService) mChatService.stop();
+        if (null != mChatService) mChatService.stop();
         mChatService = null;
     }
 
     public static void start(Context context, String mid, MeetingBase meetingBase) {
-            Intent intent = new Intent(context, OnlineMeetingActivity.class);
-            intent.putExtra(OnlineMeetingActivity.EXTRA_MEETING_ID, mid);
-            intent.putExtra(OnlineMeetingActivity.EXTRA_MEETING_BASE, meetingBase);
-            context.startActivity(intent);
-            UIUtils.addEnterAnim((Activity) context);
+        Intent intent = new Intent(context, OnlineMeetingActivity.class);
+        intent.putExtra(OnlineMeetingActivity.EXTRA_MEETING_ID, mid);
+        intent.putExtra(OnlineMeetingActivity.EXTRA_MEETING_BASE, meetingBase);
+        context.startActivity(intent);
+        UIUtils.addEnterAnim((Activity) context);
     }
 
     /**
      * 请求参数返回 .
+     *
      * @param context
      * @param mid
      * @param meetingBase
      * @param requestCode
      */
-    public static void startForResult(Activity context, String mid,UserInfo userinfo , MeetingBase meetingBase ,int requestCode) {
-        if(requestCode == VideoMeetingDetailActivity.REQUEST_ONLINE_MEETING_CODE){//视频会议
+    public static void startForResult(Activity context, String mid, UserInfo userinfo, MeetingBase meetingBase, int requestCode) {
+        if (requestCode == VideoMeetingDetailActivity.REQUEST_ONLINE_MEETING_CODE) {//视频会议
             mRequestFrom = VideoMeetingDetailActivity.RESPONSE_ONLINE_MEETING_CODE;
         }
-        if(requestCode == CollectivePrepareLessonsDetailActivity.REQUEST_PREPARE_LESSON_CODE)//集体备课
+        if (requestCode == CollectivePrepareLessonsDetailActivity.REQUEST_PREPARE_LESSON_CODE)//集体备课
         {
             mRequestFrom = CollectivePrepareLessonsDetailActivity.RESPONSE_PREPARE_LESSON_CODE;
         }
-        if(requestCode == ListenDetailsActivity.REQUEST_LISTEN_LESSON_CODE){//互动听课
+        if (requestCode == ListenDetailsActivity.REQUEST_LISTEN_LESSON_CODE) {//互动听课
             mRequestFrom = ListenDetailsActivity.RESPONSE_LISTEN_LESSON_CODE;
         }
         Intent intent = new Intent(context, OnlineMeetingActivity.class);
         intent.putExtra(OnlineMeetingActivity.EXTRA_MEETING_ID, mid);
         intent.putExtra(OnlineMeetingActivity.EXTRA_MEETING_BASE, meetingBase);
-        intent.putExtra(Constants.USER_INFO , userinfo);
+        intent.putExtra(Constants.USER_INFO, userinfo);
         context.startActivityForResult(intent, requestCode);
     }
 
@@ -934,13 +955,14 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Cog.e(TAG, "onConfigurationChanged");
+        if (isFinishing()) return;
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             //当前为横屏， 在此处添加额外的处理代码
             MeetingAction mac = new MeetingAction();
             mac.setType(MeetingAction.ACTION_TYPE_EXPAND);
             mac.setAction(mExpandIndex);
             EventBus.getDefault().post(mac);
-        } else if (newConfig.orientation  == Configuration.ORIENTATION_PORTRAIT) {
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             //当前为竖屏， 在此处添加额外的处理代码
             MeetingAction mac = new MeetingAction();
             mac.setType(MeetingAction.ACTION_TYPE_COLLAPSE);
@@ -975,7 +997,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         action.setActionResult(OnlineInteractFragment.ACTION_SHOW_VIDEO);
         EventBus.getDefault().post(action);
 
-        MeetingShow meetingShow = new MeetingShow(documentDetailEntity.getDocName(), documentDetailEntity.getDocId(), "1", 0, 0,documentDetailEntity.getDocPath());
+        MeetingShow meetingShow = new MeetingShow(documentDetailEntity.getDocName(), documentDetailEntity.getDocId(), "1", 0, 0, documentDetailEntity.getDocPath());
         meetingShow.setShowDelete(true);
         EventBus.getDefault().post(meetingShow);
     }
@@ -1027,7 +1049,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
      * 给所有在线用户分配状态 .
      */
     private void doFilterOnline() {
-        Cog.e(TAG,"doFilterOnline～");
+        Cog.e(TAG, "doFilterOnline～");
         if (mUserList == null || mUserList.size() == 0) return;
         if (mOnLineUserIds == null || mOnLineUserIds.size() == 0) return;
         //排序
@@ -1075,28 +1097,31 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         }
     }
 
+
     /**
      * 处理COCO回来的信息 ,主动推送的即时命令 如:禁言/免打扰/踢出房间/会议结束.
+     *
      * @throws RemoteException
      */
     public void onEventMainThread(CoCoAction action) throws RemoteException {
+        Log.i(TAG, "action : " + action.getActionType() + ":" + action.getActionResult() + ":" + action.getByOperationObject());
         switch (action.getActionType()) {
             case PullXmlUtils.TYPE_LOGIN://某人上线了
 //                String userID  =  action.getActionResult();
                 break;
-            case    PullXmlUtils.WEB_NO_SPEAKER://开启－免打扰
+            case PullXmlUtils.WEB_NO_SPEAKER://开启－免打扰
                 //重新计时，15s
-                mStartPrompt    =   -1;
-                if(null != mMeetingBase){
+                mStartPrompt = -1;
+                if (null != mMeetingBase) {
                     mMeetingBase.setBaseNoDisturbing(1);
                 }
                 setPromptTab();
                 break;
             case PullXmlUtils.WEB_ALLOW_SPEAKER://关闭－免打扰
                 //重新计时，15s
-                mStartPrompt    =   -1;
+                mStartPrompt = -1;
                 //恢复申请/取消发言状态 .
-                if(null != mMeetingBase){
+                if (null != mMeetingBase) {
                     mMeetingBase.setBaseNoDisturbing(0);
                 }
                 setPromptTab();
@@ -1110,7 +1135,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     //参会者 ,来宾 都可以申请发言 ...
                     if (mMeetingBase.getBaseRole() <= MeetingBase.BASE_MEET_ROLE_2) {
                         mMeetingBase.setBaseRole(MeetingBase.BASE_MEET_ROLE_1);
-                        mStartPrompt    =   -1;
+                        mStartPrompt = -1;
                     }
                     EventBus.getDefault().post(true);
                     setPromptTab();
@@ -1119,7 +1144,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             case PullXmlUtils.CANCEL_SPEAKER://取消发言人
             case PullXmlUtils.WEB_CANCEL_SPEAKER://取消发言人
             case PullXmlUtils.WEB_CANCEL_SPEAKER_ALL://取消发言人
-                mStartPrompt    =   -1;
+                mStartPrompt = -1;
                 Cog.e(TAG, "取消发言:" + action.getTo());
                 if (mUserInfo.getBaseUserId().equals(action.getTo())) {
                     Snackbar.make(mTitleTextView, "您现在不能发言", Snackbar.LENGTH_SHORT).show();
@@ -1129,7 +1154,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     EventBus.getDefault().post(false);
                     setPromptTab();
 
-                    if(null != getChatService()){
+                    if (null != getChatService()) {
                         getChatService().hideView();
                     }
                 }
@@ -1137,11 +1162,11 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             case PullXmlUtils.COMMAND_WHITE_BOARD_MARK: //授予-白板标注权限
                 // TODO: 16-8-22 判断ｐａｒｓ　ｔｒｕｅ　ｏｒ　ｆａｌｓｅ　
                 String result = action.getActionResult();
-                if(TextUtils.isEmpty(result)){
+                if (TextUtils.isEmpty(result)) {
                     mMeetingBase.setWhiteBoardManager("1");
-                }else{
+                } else {
                     boolean mark = Boolean.valueOf(result);
-                    mMeetingBase.setWhiteBoardManager(mark?"1":"0");
+                    mMeetingBase.setWhiteBoardManager(mark ? "1" : "0");
                 }
                 break;
             case PullXmlUtils.APPLY_SPEAKER://申请发言
@@ -1153,29 +1178,29 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
                 String userid = action.getByOperationObject();
 
-                Cog.e(TAG,"踢出会议～～～："+userid != null?userid:"null");
+                Cog.e(TAG, "踢出会议～～～：" + (userid != null ? userid : "null"));
 
-                if (userid.equals(mUserInfo.getBaseUserId())){
+                if (userid.equals(mUserInfo.getBaseUserId())) {
                     ExitByAction(TipProgressFragment.OUT_STATUS_TIP);
-                }else{
+                } else {
                     // login ...
-                    if(removeUser(userid,0)){
+                    if (removeUser(userid, 0)) {
                         doFilterOnline();
                     }
                 }
 
                 break;
             case PullXmlUtils.VS_CREATE_PLAYER://开始共享视频
-                mStartPrompt    =   -1;
+                mStartPrompt = -1;
                 String videoId = action.getActionResult();
 
                 //设置视频共享信息 .
-                if(null == mMeetingBase.getBaseVideoShare()){
-                    VideoShare  vs = new VideoShare();
+                if (null == mMeetingBase.getBaseVideoShare()) {
+                    VideoShare vs = new VideoShare();
                     vs.setVideoSwitch(1);
                     vs.setVideoID(videoId);
                     mMeetingBase.setBaseVideoShare(vs);
-                }else{
+                } else {
                     mMeetingBase.getBaseVideoShare().setVideoSwitch(1);
                     mMeetingBase.getBaseVideoShare().setVideoID(videoId);
                 }
@@ -1183,10 +1208,10 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 mMeetingBase.getBaseDMS().getServer(OnlineMeetingActivity.this, mMeetingBase, new DMSEntity.ICallBack() {
                     @Override
                     public void onSuccess(String serverURL) {
-                        String playUrl = serverURL+"/"+UiOnlineMeetingUtils.getShareVideoStream(mMeetingBase,mMeetingBase.getBaseVideoShare().getVideoID());
-                        String mainUrl = serverURL+ "/" + UiOnlineMeetingUtils.getStream(mMeetingBase, mMeetingBase.getBaseDMS().getDmsMainSpeakID());
+                        String playUrl = serverURL + "/" + UiOnlineMeetingUtils.getShareVideoStream(mMeetingBase, mMeetingBase.getBaseVideoShare().getVideoID());
+                        String mainUrl = serverURL + "/" + UiOnlineMeetingUtils.getStream(mMeetingBase, mMeetingBase.getBaseDMS().getDmsMainSpeakID());
                         Cog.e(TAG, "开始共享视频: " + playUrl);
-                        OnlineLiveVideoPlayActivity.start(OnlineMeetingActivity.this, mMeetingBase, "", playUrl, "0",mainUrl);
+                        OnlineLiveVideoPlayActivity.start(OnlineMeetingActivity.this, mMeetingBase, "", playUrl, "0", mainUrl);
                     }
 
                     @Override
@@ -1196,9 +1221,9 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 });
                 break;
             case PullXmlUtils.VS_CALL_STOP://结束视频共享
-                Cog.e(TAG,"结束共享视频");
-                mStartPrompt    =   -1;
-                if(null != mMeetingBase.getBaseVideoShare()){
+                Cog.e(TAG, "结束共享视频");
+                mStartPrompt = -1;
+                if (null != mMeetingBase.getBaseVideoShare()) {
                     mMeetingBase.getBaseVideoShare().setVideoSwitch(0);
                 }
                 break;
@@ -1240,24 +1265,24 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 }
                 break;*/
             case PullXmlUtils.WEB_COMMAND_PUBLISH:  //开启轮巡
-                Cog.i(TAG,"开启轮巡：："+PullXmlUtils.WEB_COMMAND_PUBLISH);
-                mStartPrompt    =   -1;
-                if(null == mMeetingBase.getBaseLoopPatrol()){
+                Cog.i(TAG, "开启轮巡：：" + PullXmlUtils.WEB_COMMAND_PUBLISH);
+                mStartPrompt = -1;
+                if (null == mMeetingBase.getBaseLoopPatrol()) {
                     LoopPatrol lp = new LoopPatrol();
                     lp.setLoopSwitch(1);
                     mMeetingBase.setBaseLoopPatrol(lp);
-                }else{
+                } else {
                     mMeetingBase.getBaseLoopPatrol().setLoopSwitch(1);
                 }
                 break;
             case PullXmlUtils.WEB_COMMAND_UN_PUBLISH://结束轮巡
-                Cog.i(TAG,"关闭轮巡：："+PullXmlUtils.WEB_COMMAND_UN_PUBLISH);
-                mStartPrompt    =   -1;
-                if(mMeetingBase.getBaseLoopPatrol() == null){
+                Cog.i(TAG, "关闭轮巡：：" + PullXmlUtils.WEB_COMMAND_UN_PUBLISH);
+                mStartPrompt = -1;
+                if (mMeetingBase.getBaseLoopPatrol() == null) {
                     LoopPatrol lp2 = new LoopPatrol();
                     lp2.setLoopSwitch(0);
                     mMeetingBase.setBaseLoopPatrol(lp2);
-                }else{
+                } else {
                     mMeetingBase.getBaseLoopPatrol().setLoopSwitch(0);
                 }
                 break;
@@ -1269,7 +1294,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 }
                 break;
             case PullXmlUtils.END_MEET://会议结束 .
-                Cog.i(TAG,"会议结束　：　"+PullXmlUtils.END_MEET);
+                Cog.i(TAG, "会议结束　：　" + PullXmlUtils.END_MEET);
                 ExitByAction(TipProgressFragment.END_STATUS_TIP);
                 break;
             default:
@@ -1291,29 +1316,31 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
     /**
      * 会议结束/被挤下线/被踢出房间 等操作回退提示 .
+     *
      * @param actionType
      */
-    public void ExitByAction(String actionType){
-        Cog.e(TAG," ExitByAction " +actionType);
+    public void ExitByAction(String actionType) {
+        Cog.e(TAG, " ExitByAction " + actionType);
         ExitMeetingPre();
         Intent intent = new Intent();
-        intent.putExtra(TipProgressFragment.ARG_TIP_STATUS_TYPE,actionType);
-        setResult(mRequestFrom,intent);
+        intent.putExtra(TipProgressFragment.ARG_TIP_STATUS_TYPE, actionType);
+        setResult(mRequestFrom, intent);
         OnlineMeetingActivity.this.finish();
         UIUtils.addExitTranAnim(OnlineMeetingActivity.this);
     }
 
     /**
      * 用户ID下线
+     *
      * @throws RemoteException
      */
     public void onEventMainThread(LoginOut loginOut) throws RemoteException {
         Cog.d(TAG, "loginOUt : " + loginOut.getFrom());
-        if(loginOut.getFrom().equals(mUserInfo.getBaseUserId())){
+        if (loginOut.getFrom().equals(mUserInfo.getBaseUserId())) {
             ExitByAction(TipProgressFragment.LOADED_STATUS_TIP);
-        }else if(mUserList != null&&mUserList.size()>0){
+        } else if (mUserList != null && mUserList.size() > 0) {
             //更新在线用户状态
-            if(removeUser(loginOut.getFrom(),1)){
+            if (removeUser(loginOut.getFrom(), 1)) {
                 doFilterOnline();
             }
         }
@@ -1321,15 +1348,16 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
     /**
      * 是否删除成功
+     *
      * @param userID 废弃的用户id
-     * @param  type  0:都删 1：删除在线id 2：删除 用户列表
+     * @param type   0:都删 1：删除在线id 2：删除 用户列表
      * @return
      */
-    private boolean removeUser(String userID , int type) {
+    private boolean removeUser(String userID, int type) {
         boolean result = false;
         OnlineUserInfo user = UiOnlineMeetingUtils.getOnlineUserByID(userID, mUserList);
-        if(null != user){
-            switch (type){
+        if (null != user) {
+            switch (type) {
                 case 0:
                     mOnLineUserIds.remove(userID);
                     mUserList.remove(user);
@@ -1341,28 +1369,29 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     mUserList.remove(user);
                     break;
             }
-            result  =   true;
+            result = true;
         }
         return result;
     }
 
     /**
      * 在线用户ID
+     *
      * @throws RemoteException
      */
     public void onEventMainThread(String[] onLineUserId) throws RemoteException {
 
-        if(onLineUserId == null || onLineUserId.length == 0) return;
+        if (onLineUserId == null || onLineUserId.length == 0) return;
 
         boolean needUpdate = false;
-        for(String id : onLineUserId){
-            if(!mOnLineUserIds.contains(id)){
+        for (String id : onLineUserId) {
+            if (!mOnLineUserIds.contains(id)) {
                 mOnLineUserIds.add(id);
-                needUpdate  =   true;
+                needUpdate = true;
             }
         }
 
-        if(mUserList != null&&needUpdate){
+        if (mUserList != null && needUpdate) {
             doFilterOnline();
         }
 
@@ -1384,7 +1413,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         public void onServiceConnected(ComponentName name, IBinder service) {
             mIMeetingService = IMeetingService.Stub.asInterface(service);
             try {
-                mMeetingConfig = MeetingConfig.getSimulateConfig(mMeetingBase,mUserInfo);
+                mMeetingConfig = MeetingConfig.getSimulateConfig(mMeetingBase, mUserInfo);
                 mIMeetingService.bindConfig(mMeetingConfig);
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -1393,20 +1422,20 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            mIMeetingService    = null ;
+            mIMeetingService = null;
         }
     };
     private ServiceConnection mChatServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            if(null != iBinder){
-                mChatService  =  ((OnlineMeetingService.MyBinder)iBinder).getService();
+            if (null != iBinder) {
+                mChatService = ((OnlineMeetingService.MyBinder) iBinder).getService();
             }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            mChatService        =   null;
+            mChatService = null;
         }
     };
 
@@ -1428,13 +1457,13 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         //如果是当前会话的消息，刷新聊天页面
         if (userId.equals(mToUserId) && !msg.getFrom().equals(mUserInfo.getBaseUserId())) {
 //            if (msg.getChatType() == Ty) {
-            final ChatMessage cm = msg ;
+            final ChatMessage cm = msg;
             cm.setBaseViewHoldType(OnlineGroupChatFragment.TYPE_CHAT_GROUP_RECEIVER);
             getUsers(new OnlineMeetingActivity.ILoader() {
                 @Override
                 public void onLoadUserSuccess(List<OnlineUserInfo> users) {
 
-                    if(users !=null && users.size()>0) {
+                    if (users != null && users.size() > 0) {
                         for (int i = 0; i < users.size(); i++) {
                             if (cm.getFrom().equals(users.get(i).getId())) {
                                 cm.setName(users.get(i).getName());
@@ -1448,7 +1477,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                         sendBroadcast(intent);
                     }
                 }
-            },false,true);
+            }, false, true);
 
         }
     }

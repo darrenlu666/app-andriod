@@ -2,6 +2,8 @@ package com.codyy.erpsportal.homework.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ScrollView;
 
 /**
@@ -28,6 +30,12 @@ public class SlidingFloatScrollView extends ScrollView {
         if (onScrollListener != null) {
             onScrollListener.onScroll(t);
         }
+    }
+
+    @Override
+    public void setOnTouchListener(OnTouchListener l) {
+        requestDisallowInterceptTouchEvent(true);
+        super.setOnTouchListener(l);
     }
 
     public interface OnScrollListener {

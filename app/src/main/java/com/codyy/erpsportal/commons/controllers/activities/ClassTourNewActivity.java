@@ -18,6 +18,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -488,6 +489,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     }
 
     public void onEventMainThread(TourClassroom classroom) {
+        Log.i(TAG,"ClassTourPagerActivity.start() ");
         ClassTourPagerActivity.start(this, classroom, mUserInfo, mType);
     }
 

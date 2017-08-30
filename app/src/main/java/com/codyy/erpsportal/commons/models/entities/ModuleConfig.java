@@ -43,6 +43,12 @@ public class ModuleConfig {
     public final static String TEMPLATE_PURE_MONITOR = "index.template.puremonitor";
 
     /**
+     * 首页模板:玉溪/沾益
+     */
+    public final static String TEMPLATE_YX＿ZHY = "index.template.zhanyi";
+
+
+    /**
      * 首页模板：天津
      */
     public final static String TEMPLATE_TJ = "index.template.TJ";
@@ -51,6 +57,16 @@ public class ModuleConfig {
      * 首页模板：费县
      */
     public final static String TEMPLATE_FX = "index.template.fx";
+
+    /**
+     * 首页模板：苏州园区
+     */
+    public final static String TEMPLATE_SIP = "index.template.sipstl";
+
+    /**
+     * 首页模板：集团校
+     */
+    public final static String TEMPLATE_GROUP_SCHOOL = "index.template.jtx";
 
     /**
      * 地区

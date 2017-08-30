@@ -83,7 +83,7 @@ public class WeiBoMyFriendActivity extends ToolbarActivity implements WeiBoMyFri
     private String mUrl;
     private int mType;
     public ArrayList<WeiBoGroup> mWeiBoGroups;
-    private Integer mHashTag = this.hashCode();
+
     private TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -248,7 +248,7 @@ public class WeiBoMyFriendActivity extends ToolbarActivity implements WeiBoMyFri
                 Snackbar.make(mEditText, "加载失败！", Snackbar.LENGTH_SHORT).show();
                 mRefreshRecycleView.setAdapterLastState(RefreshRecycleView.STATE_LOADE_ERROR);
             }
-        }, mHashTag));
+        }));
     }
 
     private boolean removeFocus() {
@@ -295,7 +295,7 @@ public class WeiBoMyFriendActivity extends ToolbarActivity implements WeiBoMyFri
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

@@ -63,11 +63,5 @@ public class AudioViewHolder extends BindingRvHolder<Audio> {
         mViewCountTv.setText(audio.getPlayCount() + "");
         mDownloadCountTv.setText(audio.getDownloadCount() + "");
         mDurationTv.setText(DateTimeFormat.forPattern("HH:mm:ss").withZoneUTC().print(audio.getDuration()));
-//        itemView.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                AudioDetailsActivity.start(v.getContext(), audioList, position);
-//            }
-//        });
     }
 }

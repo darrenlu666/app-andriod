@@ -3,6 +3,7 @@ package com.codyy.erpsportal.statistics.controllers.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.text.TextUtils;
@@ -15,16 +16,16 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
 import com.codyy.erpsportal.commons.models.network.Response.Listener;
-import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser.OnParsingListener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
@@ -33,10 +34,9 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.statistics.controllers.fragments.dialogs.DayPickerDialog;
 import com.codyy.erpsportal.statistics.controllers.fragments.dialogs.DayPickerDialog.OnClickTimePicker;
 import com.codyy.erpsportal.statistics.models.entities.AreaInfo;
-import com.codyy.erpsportal.statistics.models.entities.BaseEntity;
+import com.codyy.erpsportal.statistics.models.entities.StatFilterBy;
 import com.codyy.erpsportal.statistics.models.entities.StatFilterCarrier;
 import com.codyy.erpsportal.statistics.models.entities.TermEntity;
-import com.codyy.erpsportal.statistics.widgets.OrderLayout;
 import com.codyy.url.URLConfig;
 
 import org.joda.time.DateTimeConstants;
@@ -54,6 +54,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.codyy.erpsportal.R.id.rb_by_term;
+
 /**
  * 统计过滤
  */
@@ -61,17 +63,15 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
 
     private final static String TAG = "CoursesProfilesFilterActivity";
 
-    private final static String EXTRA_BY_SPECIFIC_DATE = "com.codyy.erpsportal.EXTRA_BY_SPECIFIC_DATE";
-
     private final static String EXTRA_BY_TERM = "com.codyy.erpsportal.EXTRA_BY_TERM";
-
-    private final static String EXTRA_BY_SUBJECT = "com.codyy.erpsportal.EXTRA_BY_SUBJECT";
 
     private final static String EXTRA_TITLE = "com.codyy.erpsportal.ARG_EXTRA_TITLE";
 
     public final static String EXTRA_IN_FILTER = "com.codyy.erpsportal.EXTRA_IN_FILTER";
 
     public final static String EXTRA_OUT_FILTER = "com.codyy.erpsportal.EXTRA_OUT_FILTER";
+
+    public final static String EXTRA_SPECIFIC_DATE = "com.codyy.erpsportal.EXTRA_SPECIFIC_DATE";
 
     public final static int REQUEST_CODE = 1;
 
@@ -140,14 +140,6 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     GridLayout mTermsGl;
     /* -学期选择相关- */
 
-    /* +学科选择相关+ */
-    @Bind(R.id.tv_select_subject)
-    TextView mSelectSubjectTv;
-
-    @Bind(R.id.ol_subjects)
-    OrderLayout mSubjectsOl;
-    /* -学科选择相关- */
-
     @Bind(R.id.rg_filter_type)
     RadioGroup mFilterTypeRg;
 
@@ -162,25 +154,18 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     private String mTitle;
 
     /**
-     * 是否需要显示按具体日期选择
-     */
-    private boolean mBySpecificDate;
-
-    /**
      * 是否需要显示按学期选择
      */
     private boolean mByTerm;
 
     /**
-     * 是否需要显示按学科选择
+     * 按特定日期 0.未加载、1.加载了需要特定日期、2.加载了不要特定日期
      */
-    private boolean mBySubject;
+    private int mSpecificDate;
 
     private int mTermItemPadding;
 
     private int mTermMargin;
-
-    private int mSubjectItemPadding;
 
     /**
      * 原筛选参数
@@ -189,7 +174,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
 
     private List<CheckBox> mTermCbList;
 
-    private List<CheckBox> mSubjectCbList;
+    private CheckBox mTempCheckedTermCb;
 
     private RequestSender mRequestSender;
 
@@ -212,26 +197,49 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         mRequestSender = new RequestSender(this);
         mTermItemPadding = UIUtils.dip2px(this, 12);
         mTermMargin = UIUtils.dip2px(this, 4);
-        mSubjectItemPadding = UIUtils.dip2px(this, 8);
         mUserInfo = intent.getParcelableExtra(Extra.USER_INFO);
-        mBySpecificDate = intent.getBooleanExtra(EXTRA_BY_SPECIFIC_DATE, false);
         mByTerm = intent.getBooleanExtra(EXTRA_BY_TERM, false);
-        mBySubject = intent.getBooleanExtra(EXTRA_BY_SUBJECT, false);
         mAreaInfo = intent.getParcelableExtra(Extra.AREA_INFO);
         if (mAreaInfo == null) {
             mAreaInfo = new AreaInfo(mUserInfo);
         }
         mTitle = intent.getStringExtra(EXTRA_TITLE);
         mFilterCarrier = intent.getParcelableExtra(EXTRA_IN_FILTER);
+        mSpecificDate = intent.getIntExtra(EXTRA_SPECIFIC_DATE, 0);
     }
 
     private void initViews() {
         mTitleTv.setText( mTitle);
         initWeeks();
         initMonths();
-        initSpecificDates();
+        initDates();
         initTerms();
-        initSubjects();
+        setFilterTypeChangeListener();
+    }
+
+    private void setFilterTypeChangeListener() {
+        mFilterTypeRg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                //如果切掉按学期，不应该有学期被选中，先记下当前选中的学期
+                if (checkedId != R.id.rb_by_term) {
+                    if (mTermCbList != null && mTermCbList.size() > 0) {
+                        for (CheckBox cb : mTermCbList) {
+                            if (cb.isChecked()) {
+                                mTempCheckedTermCb = cb;
+                                cb.setChecked(false);
+                                break;
+                            }
+                        }
+                    }
+                } else {//切回按学期时，如果有之前已经记下选中的学期，直接就选中之前的好了
+                    if (mTempCheckedTermCb != null) {
+                        mTempCheckedTermCb.setChecked(true);
+                        mTempCheckedTermCb = null;
+                    }
+                }
+            }
+        });
     }
 
     private void initState() {
@@ -291,8 +299,10 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         if (mByTerm) {
             loadTerms();
         }
-        if (mBySubject) {
-            loadSubjects();
+        if (mSpecificDate == 0) {//首次进入此页面未加载
+            loadFilterConfiguration();
+        } else if (mSpecificDate == 1) {//已经知道要显示特定日期筛选
+            showSpecificDates();
         }
     }
 
@@ -325,11 +335,15 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                         @Override
                         public void handleParsing(JSONObject jsonObject, TermEntity termEntity) {
                             CheckBox checkBox = createTermItem(termEntity);
-                            if (!TextUtils.isEmpty(formerTermId)) {
+                            if (!TextUtils.isEmpty(formerTermId) && !"-1".equals(formerTermId)) {
                                 if (formerTermId.equals(termEntity.getId()))
                                     checkBox.setChecked(true);
                             } else if (jsonObject.optInt("currentFlag") == 1) {
-                                checkBox.setChecked(true);
+                                if (mByTermRb.isChecked()) {
+                                    checkBox.setChecked(true);
+                                } else {
+                                    mTempCheckedTermCb = checkBox;
+                                }
                             }
                             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
                             layoutParams.width = 0;
@@ -389,84 +403,38 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     }
 
     /**
-     * 加载学科
+     * 加载是否显示指定日期筛选
      */
-    private void loadSubjects() {
+    private void loadFilterConfiguration() {
         Map<String, String> params = new HashMap<>();
         params.put("uuid", mUserInfo.getUuid());
-        mRequestSender.sendGetRequest(new RequestData(URLConfig.GET_SUBJECTS, params, new Listener<JSONObject>() {
+        mRequestSender.sendGetRequest(new RequestData(URLConfig.IS_CUSTOMIZED, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Cog.d(TAG, "loadSubjects response=", response);
-                boolean result = response.optBoolean("result");
-                if (result) {
-                    JSONArray subjectJa = response.optJSONArray("subjectList");
-                    if (subjectJa != null) {
-                        mSubjectCbList = new ArrayList<>(subjectJa.length() + 1);
-                        addSubjectCbList( new BaseEntity("-1", "全部"));
-                        List<BaseEntity> subjectList = new JsonParser<BaseEntity>() {
-                            @Override
-                            public BaseEntity parse(JSONObject jsonObject) {
-                                BaseEntity baseEntity = new BaseEntity();
-                                baseEntity.setId(jsonObject.optString("id"));
-                                baseEntity.setName(jsonObject.optString("name"));
-
-                                addSubjectCbList(baseEntity);
-                                return baseEntity;
-                            }
-                        }.parseArray(subjectJa);
+                Cog.d(TAG, "loadSpecificDateNeeded response=", response);
+                if (response.optBoolean("result", false)
+                        && response.optBoolean("isCustomized", false)) {
+                    mSpecificDate = 1;
+                    showSpecificDates();
+                } else {
+                    mSpecificDate = 2;//没有配置按日期筛选
+                    if (mBySpecificDateRb.isChecked()) {//没有配置按日期筛选时选中按日期筛选没有意义，按周吧
+                        mFilterTypeRg.check(mByWeekRb.getId());
                     }
                 }
             }
         }, new ErrorListener() {
             @Override
             public void onErrorResponse(Throwable error) {
-                Cog.d(TAG, "loadSubjects error=", error);
-                ToastUtil.showToast(CoursesProfilesFilterActivity.this, "获取学科失败！");
+                error.printStackTrace();
+                mSpecificDate = 0;
             }
         }));
     }
 
-    /**
-     * 添加一个学科项
-     * @param subjectEntity 学科项数据
-     */
-    private void addSubjectCbList(BaseEntity subjectEntity) {
-        CheckBox subjectCb = createSubjectCb(subjectEntity);
-        mSubjectsOl.addView(subjectCb);
-        mSubjectCbList.add(subjectCb);
-        subjectCb.setOnClickListener(mOnSubjectClickListener);
-        //如果已经筛选过，选中原来选中的学科
-        if (mFilterCarrier != null && mFilterCarrier.getSubjectId() != null) {
-            if (mFilterCarrier.getSubjectId().equals(subjectEntity.getId())) {
-                subjectCb.setChecked(true);
-            }
-        }
-    }
-
-    private OnClickListener mOnSubjectClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            for (CheckBox checkBox: mSubjectCbList) {
-                checkBox.setChecked(v.equals(checkBox));
-            }
-        }
-    };
-
-    private CheckBox createSubjectCb(BaseEntity subject) {
-        CheckBox checkBox = new CheckBox(this);
-        checkBox.setTag(subject);
-        checkBox.setButtonDrawable(null);
-        checkBox.setPadding(mSubjectItemPadding, mSubjectItemPadding,
-                mSubjectItemPadding, mSubjectItemPadding);
-        checkBox.setTextColor(getResources().getColorStateList(R.color.sl_tv_stat_subject));
-        checkBox.setBackgroundResource(R.drawable.bg_tv_statistics_filter_subject);
-        checkBox.setText(subject.getName());
-        return checkBox;
-    }
-
     @OnClick(R.id.btn_return)
     public void onReturnClick() {
+        setCancelResult();
         finish();
         addSlideDownExitAnim();
     }
@@ -498,17 +466,21 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
     }
 
     /**
+     * 初始化按日期统计
+     */
+    private void initDates() {
+        LocalDate currDate = LocalDate.now();
+        //开始时间默认也是当天
+        mSpecificDateBeginBtn.setText(currDate.toString("yyyy-MM-dd"));
+        mSpecificDateEndBtn.setText(currDate.toString("yyyy-MM-dd"));
+    }
+
+    /**
      * 初始化按具体日期统计块日期
      */
-    private void initSpecificDates() {
-        if (mBySpecificDate) {
-            mBySpecificDateRb.setVisibility(View.VISIBLE);
-            mBySpecificDateLl.setVisibility(View.VISIBLE);
-            LocalDate currDate = LocalDate.now();
-            mSpecificDateEndBtn.setText(currDate.toString("yyyy-MM-dd"));
-            //开始时间默认向前一个月
-            mSpecificDateBeginBtn.setText(currDate.minusMonths(1).toString("yyyy-MM-dd"));
-        }
+    private void showSpecificDates() {
+        mBySpecificDateRb.setVisibility(View.VISIBLE);
+        mBySpecificDateLl.setVisibility(View.VISIBLE);
     }
 
     private void initTerms() {
@@ -518,13 +490,9 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         }
     }
 
-    private void initSubjects() {
-        if (mBySubject) {
-            mSelectSubjectTv.setVisibility(View.VISIBLE);
-            mSubjectsOl.setVisibility(View.VISIBLE);
-        }
-    }
-
+    /**
+     * 重新设置日期选择弹框回调
+     */
     private void resetDialogListener() {
         DayPickerDialog beginPickerDialog = (DayPickerDialog) getSupportFragmentManager().findFragmentByTag("begin");
         if (beginPickerDialog != null) {
@@ -558,19 +526,15 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                 plusMonth();
                 break;
             case R.id.btn_specific_date_begin: {
+                if (!mBySpecificDateRb.isChecked()) return;
                 long currTime = System.currentTimeMillis();
                 if (currTime - mLastTime > 500L) {
                     String beginDateStr = mSpecificDateBeginBtn.getText().toString();
-                    String endDateStr = mSpecificDateEndBtn.getText().toString();
                     LocalDate defaultDate = null;
-                    LocalDate endDate = null;
-                    if (!TextUtils.isEmpty(endDateStr)) {
-                        endDate = parseToDate(endDateStr);
-                    }
                     if (!TextUtils.isEmpty(beginDateStr)) {
                         defaultDate = parseToDate(beginDateStr);
                     }
-                    DayPickerDialog beginDayPickerDialog = DayPickerDialog.newInstance(null, endDate, defaultDate);
+                    DayPickerDialog beginDayPickerDialog = DayPickerDialog.newInstance(null, null, defaultDate);
                     beginDayPickerDialog.setOnConfirmListener(mOnBeginDateConfirmListener);
                     beginDayPickerDialog.show(getSupportFragmentManager(), "begin");
                 }
@@ -578,19 +542,15 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                 break;
             }
             case R.id.btn_specific_date_end: {
+                if (!mBySpecificDateRb.isChecked()) return;
                 long currTime = System.currentTimeMillis();
                 if (currTime - mLastTime > 500L) {
-                    String beginDateStr = mSpecificDateBeginBtn.getText().toString();
                     String endDateStr = mSpecificDateEndBtn.getText().toString();
                     LocalDate defaultDate = null;
-                    LocalDate beginDate = null;
-                    if (!TextUtils.isEmpty(beginDateStr)) {
-                        beginDate = parseToDate(beginDateStr);
-                    }
                     if (!TextUtils.isEmpty(endDateStr)) {
                         defaultDate = parseToDate(endDateStr);
                     }
-                    DayPickerDialog endDayPickerDialog = DayPickerDialog.newInstance(beginDate, LocalDate.now(), defaultDate);
+                    DayPickerDialog endDayPickerDialog = DayPickerDialog.newInstance(null, null, defaultDate);
                     endDayPickerDialog.setOnConfirmListener(mOnEndDateConfirmListener);
                     endDayPickerDialog.show(getSupportFragmentManager(), "end");
                 }
@@ -631,6 +591,11 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         mBySpecificDateRb.setChecked(true);
     }
 
+    /**
+     * 字符串转为LocalDate
+     * @param str
+     * @return
+     */
     private LocalDate parseToDate(String str) {
         return LocalDate.parse(str, DateTimeFormat.forPattern("yyyy-MM-dd"));
     }
@@ -667,7 +632,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         updateMonthDates();
     }
 
-    @OnClick({R.id.rb_by_week, R.id.rb_by_month, R.id.rb_by_specific_date, R.id.rb_by_term})
+    @OnClick({R.id.rb_by_week, R.id.rb_by_month, R.id.rb_by_specific_date, rb_by_term})
     public void onRadioButtonClick(View view) {
         switch (view.getId()) {
             case R.id.rb_by_week:
@@ -679,7 +644,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
             case R.id.rb_by_specific_date:
                 mFilterBy = StatFilterBy.BY_SPECIFIC_DATE;
                 break;
-            case R.id.rb_by_term:
+            case rb_by_term:
                 mFilterBy = StatFilterBy.BY_TERM;
                 break;
         }
@@ -687,19 +652,41 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        setCancelResult();
         super.onBackPressed();
         addSlideDownExitAnim();
     }
 
+    /**
+     * 设置取消结果
+     */
+    private void setCancelResult() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_SPECIFIC_DATE, mSpecificDate);
+        setResult(RESULT_CANCELED, intent);
+    }
+
+    /**
+     * 添加下滑退出动画
+     */
     private void addSlideDownExitAnim() {
         overridePendingTransition(R.anim.layout_show, R.anim.slide_down_to_hide);
     }
 
     @OnClick({R.id.btn_confirm_filter})
     public void onConfirmFilter(View view) {
+        if (mBySpecificDateRb.getId() == mFilterTypeRg.getCheckedRadioButtonId()) {
+            LocalDate specificDateBeginDate = parseToDate(mSpecificDateBeginBtn.getText().toString());
+            LocalDate specificDateEndDate = parseToDate(mSpecificDateEndBtn.getText().toString());
+            if (specificDateBeginDate.isAfter(specificDateEndDate)) {
+                ToastUtil.showToast(this, "结束日期不能早于开始日期");
+                return;
+            }
+        }
         Intent intent = new Intent();
         StatFilterCarrier statFilterCarrier = createFilterCarrier();
         intent.putExtra(EXTRA_OUT_FILTER, statFilterCarrier);
+        intent.putExtra(EXTRA_SPECIFIC_DATE, mSpecificDate);
         setResult(RESULT_OK, intent);
         finish();
         addSlideDownExitAnim();
@@ -716,8 +703,8 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
             statFilterCarrier.setStartDate(mMonthBeginTv.getText().toString());
             statFilterCarrier.setEndDate(mMonthEndTv.getText().toString());
         } else if (mBySpecificDateRb.getId() == checkedRbId) {
-            statFilterCarrier.setStartDate(mSpecificDateBeginBtn.getText().toString());
-            statFilterCarrier.setEndDate(mSpecificDateEndBtn.getText().toString());
+            statFilterCarrier.setStartDate( mSpecificDateBeginBtn.getText().toString());
+            statFilterCarrier.setEndDate( mSpecificDateEndBtn.getText().toString());
         } else if (checkedRbId == mByTermRb.getId()) {
             for (CheckBox termCb: mTermCbList) {
                 if (termCb.isChecked()) {
@@ -726,55 +713,20 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
                 }
             }
         }
-        if (mBySubject && mSubjectCbList != null) {
-            for (CheckBox subjectCb: mSubjectCbList){
-                if (subjectCb.isChecked()) {
-                    BaseEntity subject = (BaseEntity) subjectCb.getTag();
-                    statFilterCarrier.setSubjectId(subject.getId());
-                    break;
-                }
-            }
-        }
         return statFilterCarrier;
     }
 
     /**
-     * 学科统计筛选
-     * @param activity
-     * @param userInfo
-     * @param title
-     */
-    public static void startSubjectFilter(Activity activity, UserInfo userInfo, String title,
-                                          StatFilterCarrier statFilterCarrier) {
-        Intent intent = new Intent(activity, CoursesProfilesFilterActivity.class);
-        intent.putExtra(EXTRA_BY_SPECIFIC_DATE, true);
-        if (!userInfo.isSchool()) {
-            intent.putExtra(EXTRA_BY_SUBJECT, true);
-        }
-        intent.putExtra(Extra.USER_INFO, userInfo);
-        intent.putExtra(EXTRA_TITLE, title);
-        if (statFilterCarrier != null) {
-            intent.putExtra(EXTRA_IN_FILTER, statFilterCarrier);
-        }
-        activity.startActivityForResult(intent, REQUEST_CODE);
-        activity.overridePendingTransition(R.anim.slide_up_to_show, R.anim.layout_hide);
-    }
-
-    /**
-     * 统计概况筛选
+     * 提供按周、按月、按日、按学期筛选
      * @param activity
      * @param userInfo
      * @param title
      * @param statFilterCarrier 筛选参数
      */
-    public static void startProfileFilter(Activity activity, UserInfo userInfo, String title,
-                                          StatFilterCarrier statFilterCarrier) {
+    public static void startFilter(Activity activity, UserInfo userInfo, String title,
+                                   StatFilterCarrier statFilterCarrier, int specificDate) {
         Intent intent = new Intent(activity, CoursesProfilesFilterActivity.class);
-        //国家查看省级：提供按周、按月、具体日期区间筛选
-        //省市县校级查看：提供按周、按月、按学期筛选
-        if (userInfo.isArea() && TextUtils.isEmpty(userInfo.getParentId())) {
-            intent.putExtra(EXTRA_BY_SPECIFIC_DATE, true);
-        } else {
+        if (!userInfo.isArea() || !TextUtils.isEmpty(userInfo.getParentId())) {
             intent.putExtra(EXTRA_BY_TERM, true);
         }
         intent.putExtra(Extra.USER_INFO, userInfo);
@@ -782,6 +734,7 @@ public class CoursesProfilesFilterActivity extends AppCompatActivity {
         if (statFilterCarrier != null) {
             intent.putExtra(EXTRA_IN_FILTER, statFilterCarrier);
         }
+        intent.putExtra(EXTRA_SPECIFIC_DATE, specificDate);
         activity.startActivityForResult(intent, REQUEST_CODE);
         activity.overridePendingTransition(R.anim.slide_up_to_show, R.anim.layout_hide);
     }

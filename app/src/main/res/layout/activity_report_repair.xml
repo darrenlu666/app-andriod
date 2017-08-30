@@ -15,7 +15,7 @@
 
         <Button
             android:id="@+id/btn_commit"
-            style="@style/TextButtonInLeftOfTitleBar"
+            style="@style/TextButtonInEndOfTitleBar"
             android:text="@string/send" />
     </com.codyy.erpsportal.commons.widgets.TitleBar>
 

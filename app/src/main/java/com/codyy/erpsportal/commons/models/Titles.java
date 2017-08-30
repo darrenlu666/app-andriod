@@ -1,5 +1,7 @@
 package com.codyy.erpsportal.commons.models;
 
+import android.text.TextUtils;
+
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 
 import org.json.JSONObject;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
  * Created by gujiajia on 2015/7/24.
  */
 public class Titles {
+
     public static String sHomepageBlog = "博文";
     public static String sHomepageBlogClassify = "分类目录";
     public static String sHomepageBlogHot = "最热博文";
@@ -84,6 +87,9 @@ public class Titles {
     public static String sPagetitleIndexTianjinSchedule = "市级课表";
     public static String sPagetitleIndexTianjinResource = "精品资源";
 
+    //门户苏州园区首页
+    public static String sPagetitleIndexSipRecentClass = "近期课程";
+
     //门户资讯页
     public static String sPagetitleIndexInfoNewcenter = "新闻中心";
     public static String sPagetitleIndexInfoNoticecenter = "通知中心";
@@ -91,6 +97,16 @@ public class Titles {
     public static String sPagetitleIndexInfoNew = "新闻";
     public static String sPagetitleIndexInfoNotice = "通知";
     public static String sPagetitleIndexInfoAnnouncement = "公告";
+
+    //门户集团校首页
+    public static String sPagetitleIndexClubSchoolTeachingActivity = "教研活动";
+    public static String sPagetitleIndexClubSchoolInfoNew = "新闻/通知/公告";
+    public static String sPagetitleIndexClubSchoolTeacherSuggest = "名师推荐";
+    public static String sPagetitleIndexClubSchoolClassDesign = "课程建设";
+    public static String sPagetitleIndexClubSchoolLiveClass = "直播课堂";
+    public static String sPagetitleIndexClubSchoolSchoolResource = "校本资源";
+    public static String sPagetitleIndexClubSchoolResource = "优课资源";
+    public static String sPagetitleIndexClubSchool = "集团学校";
 
     //专递课堂
     public static String sPagetitleSpeclassLive = "正在直播";
@@ -186,7 +202,7 @@ public class Titles {
     public static String sWorkspaceNetClassBroadcast = "远程导播";
 
     //集体备课
-    public static String sWorkspacePrepare="集体备课";
+    public static String sWorkspacePrepare = "集体备课";
 
     public static String sWorkspacePrepareLaunch = "我发起的";
     public static String sWorkspacePrepareAttend = "我参与的";
@@ -460,6 +476,7 @@ public class Titles {
 
     /**
      * 解析首页标题
+     *
      * @param jsonObject
      */
     private static void parseMainTitles(JSONObject jsonObject) {
@@ -515,16 +532,46 @@ public class Titles {
         sPagetitleIndexTianjinSchedule = jsonObject.optString("front.pagetitle.index.tianjin.schedule", "市级课表");
         sPagetitleIndexTianjinResource = jsonObject.optString("front.pagetitle.index.tianjin.resource", "精品资源");
 
+        sPagetitleIndexSipRecentClass = jsonObject.optString("front.pagetitle.index.suzhousip.nearclass", "近期课程");
+
         sPagetitleIndexInfoNewcenter = jsonObject.optString("front.pagetitle.index.info.newcenter", "新闻中心");
         sPagetitleIndexInfoNoticecenter = jsonObject.optString("front.pagetitle.index.info.noticecenter", "通知中心");
         sPagetitleIndexInfoAnnouncenter = jsonObject.optString("front.pagetitle.index.info.announcenter", "公告中心");
         sPagetitleIndexInfoNew = jsonObject.optString("front.pagetitle.index.info.new", "新闻");
         sPagetitleIndexInfoNotice = jsonObject.optString("front.pagetitle.index.info.notice", "通知");
         sPagetitleIndexInfoAnnouncement = jsonObject.optString("front.pagetitle.index.info.announcement", "公告");
+
+        //集团校　add by poe 20170825
+        sPagetitleIndexClubSchoolTeachingActivity = jsonObject.optString("front.pagetitle.index.clubschool.teachingactivity", "教研活动");
+        sPagetitleIndexClubSchoolInfoNew = jsonObject.optString("front.pagetitle.index.clubschool.newsnoticeannoun", "新闻/通知/公告");
+        //  17-8-25 分割为三个类型的tag .
+        if (!TextUtils.isEmpty(jsonObject.optString("front.pagetitle.index.clubschool.newsnoticeannoun"))) {
+            parseNewsTitle(jsonObject.optString("front.pagetitle.index.clubschool.newsnoticeannoun"));
+        }
+        sPagetitleIndexClubSchoolTeacherSuggest = jsonObject.optString("front.pagetitle.index.clubschool.tearecomd", "名师推荐");
+        sPagetitleIndexClubSchoolClassDesign = jsonObject.optString("front.pagetitle.index.clubschool.classdesign", "课程建设");
+        sPagetitleIndexClubSchoolLiveClass = jsonObject.optString("front.pagetitle.index.clubschool.liveclass", "直播课堂");
+        sPagetitleIndexClubSchoolSchoolResource = jsonObject.optString("front.pagetitle.index.clubschool.schoolres", "优课资源");
+        sPagetitleIndexClubSchoolResource = jsonObject.optString("front.pagetitle.index.clubschool.resource", "优课资源");
+        sPagetitleIndexClubSchool = jsonObject.optString("front.pagetitle.index.clubschool.clubschoo", "集团学校");
+    }
+
+    //集团校的特殊处理.
+    private static void parseNewsTitle(String s) {
+        if (s.contains("/")) {
+            String[] titles = s.split("/");
+
+            if (titles.length == 3) {
+                sPagetitleIndexCompositeNew = titles[0];//"新闻";
+                sPagetitleIndexCompositeNotice = titles[1];//"通知";
+                sPagetitleIndexCompositeAnnouncement = titles[2];//"公告";
+            }
+        }
     }
 
     /**
      * 门户页各标签标题解析
+     *
      * @param jsonObject
      */
     private static void parsePortalTitles(JSONObject jsonObject) {
@@ -609,24 +656,24 @@ public class Titles {
         sWorkspaceTutor = jsonObject.optString("front.workspace.tutor", "辅导");//辅导
         sWorkspaceRepairs = jsonObject.optString("front.workspace.repairs", "报修信息跟踪");//报修信息跟踪
         sWorkspaceAskAndAns = jsonObject.optString("front.workspace.askandans", "问答");//问答
-        sWorkspaceMatch = jsonObject.optString("front.workspace.match","赛课");
-        sWorkspaceOnlineClassExam = jsonObject.optString("front.workspace.onlineclassexam","随堂测验");
-        sWorkspaceQuestionnaire = jsonObject.optString("front.workspace.questionnaire","调查问卷");
-        sWorkspaceNetTeach = jsonObject.optString("front.workspace.netteach","网络授课");
-        sWorkspaceTvProgram = jsonObject.optString("front.workspace.tvProgram","校园电视台");
+        sWorkspaceMatch = jsonObject.optString("front.workspace.match", "赛课");
+        sWorkspaceOnlineClassExam = jsonObject.optString("front.workspace.onlineclassexam", "随堂测验");
+        sWorkspaceQuestionnaire = jsonObject.optString("front.workspace.questionnaire", "调查问卷");
+        sWorkspaceNetTeach = jsonObject.optString("front.workspace.netteach", "网络授课");
+        sWorkspaceTvProgram = jsonObject.optString("front.workspace.tvProgram", "校园电视台");
     }
 
-    private static void parseAreaTitles(JSONObject jsonObject){
+    private static void parseAreaTitles(JSONObject jsonObject) {
         //专递课堂
-        sWorkspaceSpeclassAllTable = jsonObject.optString("front.workspace.speclass.alltable.area" ,sWorkspaceSpeclassAllTable);
-        sWorkspaceSpeclassSpacktable = jsonObject.optString("front.workspace.speclass.spacktable.area",sWorkspaceSpeclassSpacktable);
-        sWorkspaceSpeclassReceivetable = jsonObject.optString("front.workspace.speclass.receivetable.area",sWorkspaceSpeclassReceivetable);
-        sWorkspaceSpeclassSpacktea = jsonObject.optString("front.workspace.speclass.spacktea.area" ,sWorkspaceSpeclassSpacktea);
-        sWorkspaceSpeclassSchedule = jsonObject.optString("front.workspace.speclass.schedule.area" ,sWorkspaceSpeclassSchedule);
-        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.area" ,sWorkspaceSpeclassLive);
-        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.area" ,sWorkspaceSpeclassReplay);
-        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.area" ,sWorkspaceSpeclassTask);
-        sWorkspaceSpeclassRound = jsonObject.optString("front.workspace.speclass.round.area" ,sWorkspaceSpeclassRound);
+        sWorkspaceSpeclassAllTable = jsonObject.optString("front.workspace.speclass.alltable.area", sWorkspaceSpeclassAllTable);
+        sWorkspaceSpeclassSpacktable = jsonObject.optString("front.workspace.speclass.spacktable.area", sWorkspaceSpeclassSpacktable);
+        sWorkspaceSpeclassReceivetable = jsonObject.optString("front.workspace.speclass.receivetable.area", sWorkspaceSpeclassReceivetable);
+        sWorkspaceSpeclassSpacktea = jsonObject.optString("front.workspace.speclass.spacktea.area", sWorkspaceSpeclassSpacktea);
+        sWorkspaceSpeclassSchedule = jsonObject.optString("front.workspace.speclass.schedule.area", sWorkspaceSpeclassSchedule);
+        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.area", sWorkspaceSpeclassLive);
+        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.area", sWorkspaceSpeclassReplay);
+        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.area", sWorkspaceSpeclassTask);
+        sWorkspaceSpeclassRound = jsonObject.optString("front.workspace.speclass.round.area", sWorkspaceSpeclassRound);
 
         //名校网络课堂
         sWorkspaceNetClassClass = jsonObject.optString("front.workspace.netclass.class.area", sWorkspaceNetClassClass);//约课列表
@@ -636,19 +683,19 @@ public class Titles {
         sWorkspaceNetClassTask = jsonObject.optString("front.workspace.netclass.task.area", sWorkspaceNetClassTask);//"课堂作业";
 
         //集体备课
-        sWorkspacePrepareLaunch = jsonObject.optString("front.workspace.prepare.launch.area","我发起的");//"我发起的";
-        sWorkspacePrepareAttend = jsonObject.optString("front.workspace.prepare.attend.area","我参与的");//"我参与的";
-        sWorkspacePreparePrepare = jsonObject.optString("front.workspace.prepare.areaprepare.area","区内备课管理");//"区内备课管理";
+        sWorkspacePrepareLaunch = jsonObject.optString("front.workspace.prepare.launch.area", "我发起的");//"我发起的";
+        sWorkspacePrepareAttend = jsonObject.optString("front.workspace.prepare.attend.area", "我参与的");//"我参与的";
+        sWorkspacePreparePrepare = jsonObject.optString("front.workspace.prepare.areaprepare.area", "区内备课管理");//"区内备课管理";
 
         //互动听课
         sWorkspaceListenLaunch = jsonObject.optString("front.workspace.listen.launch.area", "我发起的");//我发起的
         sWorkspaceListenManage = jsonObject.optString("front.workspace.listen.manage.area", "区内听课管理");//区内听课管理
 
         //评课议课
-        sWorkspaceDisucssLaunch = jsonObject.optString("front.workspace.disucss.launch.area","我发起的");//我发起的
-        sWorkspaceDisucssInArea = jsonObject.optString("front.workspace.disucss.inarea.area","区内评课");//区内评课
-        sWorkspaceDisucssEvaluStand = jsonObject.optString("front.workspace.disucss.evalustand.area","我的评估标准");//我的评估标准
-        sWorkspaceDisucssPublishStand = jsonObject.optString("front.workspace.disucss.publishstand.area","公开的评估标准");//公开的评估标准
+        sWorkspaceDisucssLaunch = jsonObject.optString("front.workspace.disucss.launch.area", "我发起的");//我发起的
+        sWorkspaceDisucssInArea = jsonObject.optString("front.workspace.disucss.inarea.area", "区内评课");//区内评课
+        sWorkspaceDisucssEvaluStand = jsonObject.optString("front.workspace.disucss.evalustand.area", "我的评估标准");//我的评估标准
+        sWorkspaceDisucssPublishStand = jsonObject.optString("front.workspace.disucss.publishstand.area", "公开的评估标准");//公开的评估标准
 
         //视频会议
         sWorkspaceVidmeetLaunch = jsonObject.optString("front.workspace.vidmeet.launch.area", "我发起的");
@@ -688,7 +735,7 @@ public class Titles {
         sWorkspaceBaseAccountmanage = jsonObject.optString("front.workspace.base.accountmanage.area", "帐号管理");
         sWorkspaceBaseRolemanage = jsonObject.optString("front.workspace.base.rolemanage.area", "角色管理");
         sWorkspaceBaseUsermanage = jsonObject.optString("front.workspace.base.usermanage.area", "用户管理");
-        sWorkspaceBaseSubmanage= jsonObject.optString("front.workspace.base.submanage.area", "下级管理");
+        sWorkspaceBaseSubmanage = jsonObject.optString("front.workspace.base.submanage.area", "下级管理");
         sWorkspaceBaseSchoolmanage = jsonObject.optString("front.workspace.base.schoolmanage.area", "学校管理");
 
         //在线编辑
@@ -717,13 +764,13 @@ public class Titles {
         sWorkspaceNetTeachManage = jsonObject.optString("front.workspace.netteach.manage.area", "区内课程管理");
     }
 
-    private static void parseSchoolTitles(JSONObject jsonObject){
+    private static void parseSchoolTitles(JSONObject jsonObject) {
         //专递课堂
-        sWorkspaceSpeclassSchedule = jsonObject.optString("front.workspace.speclass.schedule.school" ,sWorkspaceSpeclassSchedule);
-        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.school" ,sWorkspaceSpeclassLive);
-        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.school" ,sWorkspaceSpeclassReplay);
-        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.school" ,sWorkspaceSpeclassTask);
-        sWorkspaceSpeclassRound = jsonObject.optString("front.workspace.speclass.round.school" ,sWorkspaceSpeclassRound);
+        sWorkspaceSpeclassSchedule = jsonObject.optString("front.workspace.speclass.schedule.school", sWorkspaceSpeclassSchedule);
+        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.school", sWorkspaceSpeclassLive);
+        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.school", sWorkspaceSpeclassReplay);
+        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.school", sWorkspaceSpeclassTask);
+        sWorkspaceSpeclassRound = jsonObject.optString("front.workspace.speclass.round.school", sWorkspaceSpeclassRound);
 
         //名校网络课堂
         sWorkspaceNetClassClass = jsonObject.optString("front.workspace.netclass.class.school", sWorkspaceNetClassClass);//约课列表
@@ -733,9 +780,9 @@ public class Titles {
         sWorkspaceNetClassTask = jsonObject.optString("front.workspace.netclass.task.school", sWorkspaceNetClassTask);//"课堂作业";
 
         //集体备课
-        sWorkspacePrepareLaunch = jsonObject.optString("front.workspace.prepare.launch.school","我发起的");//"我发起的";
-        sWorkspacePrepareAttend = jsonObject.optString("front.workspace.prepare.attend.school","我参与的");//"我参与的";
-        sWorkspacePreparePrepare = jsonObject.optString("front.workspace.schoolprepare.school","本校备课管理");//"区内备课管理";
+        sWorkspacePrepareLaunch = jsonObject.optString("front.workspace.prepare.launch.school", "我发起的");//"我发起的";
+        sWorkspacePrepareAttend = jsonObject.optString("front.workspace.prepare.attend.school", "我参与的");//"我参与的";
+        sWorkspacePreparePrepare = jsonObject.optString("front.workspace.schoolprepare.school", "本校备课管理");//"区内备课管理";
 
         //互动听课
         sWorkspaceListenLaunch = jsonObject.optString("front.workspace.listen.launch.school", "我发起的");//我发起的
@@ -746,8 +793,8 @@ public class Titles {
         sWorkspaceDisucssInvited = jsonObject.optString("front.workspace.disucss.invited.school", "我受邀的");
         sWorkspaceDisucssTeaLaunch = jsonObject.optString("front.workspace.disucss.tealaunch.school", "教师发起的");
         sWorkspaceDisucssInSchool = jsonObject.optString("front.workspace.disucss.inschool.school", "本校主讲的");
-        sWorkspaceDisucssEvaluStand = jsonObject.optString("front.workspace.disucss.evalustand.school","我的评估标准");//我的评估标准
-        sWorkspaceDisucssPublishStand = jsonObject.optString("front.workspace.disucss.publishstand.school","公开的评估标准");//公开的评估标准
+        sWorkspaceDisucssEvaluStand = jsonObject.optString("front.workspace.disucss.evalustand.school", "我的评估标准");//我的评估标准
+        sWorkspaceDisucssPublishStand = jsonObject.optString("front.workspace.disucss.publishstand.school", "公开的评估标准");//公开的评估标准
 
         //视频会议
         sWorkspaceVidmeetLaunch = jsonObject.optString("front.workspace.disucss.launch.school", "我发起的");
@@ -776,7 +823,7 @@ public class Titles {
         sWorkspaceCountResource = jsonObject.optString("front.workspace.count.resource.school", "资源统计");
         sWorkspaceCountBysubject = jsonObject.optString("front.workspace.count.bysubject.school", "按学科统计");
         sWorkspaceCountByclasslevel = jsonObject.optString("front.workspace.count.byclasslevel.school", "按年级统计");
-        sWorkspaceCountBytea= jsonObject.optString("front.workspace.count.bytea.school", "按教师统计");
+        sWorkspaceCountBytea = jsonObject.optString("front.workspace.count.bytea.school", "按教师统计");
         sWorkspaceCountDisucss = jsonObject.optString("front.workspace.count.disucss.school", "评课统计");
         sWorkspaceCountSubject1 = jsonObject.optString("front.workspace.count.subject1.school", "学科统计");
         sWorkspaceCountClasslevel = jsonObject.optString("front.workspace.count.classlevel.school", "年级统计");
@@ -843,13 +890,13 @@ public class Titles {
         sWorkspaceTvProgramProgramList = jsonObject.optString("front.workspace.tvProgram.programlist.school", "节目表");
     }
 
-    private static void parseTeacherTitles(JSONObject jsonObject){
+    private static void parseTeacherTitles(JSONObject jsonObject) {
         //专递课堂
-        sWorkspaceSpeclassSchedule = jsonObject.optString("front.workspace.speclass.schedule.tea" ,sWorkspaceSpeclassSchedule);
-        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.tea" ,sWorkspaceSpeclassLive);
-        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.tea" ,sWorkspaceSpeclassReplay);
-        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.tea" ,sWorkspaceSpeclassTask);
-        sWorkspaceSpeclassBroadcast = jsonObject.optString("front.workspace.speclass.broadcast.tea",sWorkspaceSpeclassBroadcast);
+        sWorkspaceSpeclassSchedule = jsonObject.optString("front.workspace.speclass.schedule.tea", sWorkspaceSpeclassSchedule);
+        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.tea", sWorkspaceSpeclassLive);
+        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.tea", sWorkspaceSpeclassReplay);
+        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.tea", sWorkspaceSpeclassTask);
+        sWorkspaceSpeclassBroadcast = jsonObject.optString("front.workspace.speclass.broadcast.tea", sWorkspaceSpeclassBroadcast);
 
         //名校网络课堂
         sWorkspaceNetClassClass = jsonObject.optString("front.workspace.netclass.class.tea", sWorkspaceNetClassClass);//约课列表
@@ -859,8 +906,8 @@ public class Titles {
         sWorkspaceNetClassTask = jsonObject.optString("front.workspace.netclass.task.tea", sWorkspaceNetClassTask);//"课堂作业";
 
         //集体备课
-        sWorkspacePrepareLaunch = jsonObject.optString("front.workspace.prepare.launch.tea","我发起的");
-        sWorkspacePrepareAttend = jsonObject.optString("front.workspace.prepare.attend.tea","我参与的");
+        sWorkspacePrepareLaunch = jsonObject.optString("front.workspace.prepare.launch.tea", "我发起的");
+        sWorkspacePrepareAttend = jsonObject.optString("front.workspace.prepare.attend.tea", "我参与的");
 
         //互动听课
         sWorkspaceListenLaunch = jsonObject.optString("front.workspace.listen.launch.tea", "我发起的");//我发起的
@@ -870,8 +917,8 @@ public class Titles {
         sWorkspaceDisucssLaunch = jsonObject.optString("front.workspace.disucss.launch.tea", "我发起的");//我发起的
         sWorkspaceDisucssAttend = jsonObject.optString("front.workspace.disucss.attend.tea", "我参与的");
         sWorkspaceDisucssMySpack = jsonObject.optString("front.workspace.disucss.myspack.tea", "我主讲的");
-        sWorkspaceDisucssEvaluStand = jsonObject.optString("front.workspace.disucss.evalustand.tea","我的评估标准");//我的评估标准
-        sWorkspaceDisucssPublishStand = jsonObject.optString("front.workspace.disucss.publishstand.tea","公开的评估标准");//公开的评估标准
+        sWorkspaceDisucssEvaluStand = jsonObject.optString("front.workspace.disucss.evalustand.tea", "我的评估标准");//我的评估标准
+        sWorkspaceDisucssPublishStand = jsonObject.optString("front.workspace.disucss.publishstand.tea", "公开的评估标准");//公开的评估标准
 
         //视频会议
         sWorkspaceVidmeetLaunch = jsonObject.optString("front.workspace.disucss.launch.tea", "我发起的");
@@ -937,11 +984,11 @@ public class Titles {
         sWorkspaceTvProgramProgramList = jsonObject.optString("front.workspace.tvProgram.programlist.tea", "节目表");
     }
 
-    private static void parseStudentTitles(JSONObject jsonObject){
+    private static void parseStudentTitles(JSONObject jsonObject) {
         //专递课堂
-        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.stu" ,sWorkspaceSpeclassLive);
-        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.stu" ,sWorkspaceSpeclassReplay);
-        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.stu" ,sWorkspaceSpeclassTask);
+        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.stu", sWorkspaceSpeclassLive);
+        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.stu", sWorkspaceSpeclassReplay);
+        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.stu", sWorkspaceSpeclassTask);
 
         //名校网络课堂
         sWorkspaceNetClassLive = jsonObject.optString("front.workspace.netclass.live.stu", sWorkspaceNetClassLive);//"正在直播"
@@ -972,7 +1019,7 @@ public class Titles {
 
         //问答
         sWorkspaceAskAndAnsMyAsk = jsonObject.optString("front.workspace.askandans.myask.stu", "我的提问");
-        sWorkspaceAskAndAnsMyAnswer= jsonObject.optString("front.workspace.askandans.myanswer.stu", "我的回答");
+        sWorkspaceAskAndAnsMyAnswer = jsonObject.optString("front.workspace.askandans.myanswer.stu", "我的回答");
         sWorkspaceAskAndAnsMateAsk = jsonObject.optString("front.workspace.askandans.mateask.stu", "同学提问");
         sWorkspaceAskAndAnsWaitMyAnswer = jsonObject.optString("front.workspace.askandans.waitmyanswer.stu", "等我来答");
 
@@ -989,11 +1036,11 @@ public class Titles {
         sWorkspaceTvProgramProgramList = jsonObject.optString("front.workspace.tvProgram.programlist.stu", "节目表");
     }
 
-    private static void parseParentTitles(JSONObject jsonObject){
+    private static void parseParentTitles(JSONObject jsonObject) {
         //专递课堂
-        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.par" ,sWorkspaceSpeclassLive);
-        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.par" ,sWorkspaceSpeclassReplay);
-        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.par" ,sWorkspaceSpeclassTask);
+        sWorkspaceSpeclassLive = jsonObject.optString("front.workspace.speclass.live.par", sWorkspaceSpeclassLive);
+        sWorkspaceSpeclassReplay = jsonObject.optString("front.workspace.speclass.replay.par", sWorkspaceSpeclassReplay);
+        sWorkspaceSpeclassTask = jsonObject.optString("front.workspace.speclass.task.par", sWorkspaceSpeclassTask);
 
         //名校网络课堂
         sWorkspaceNetClassLive = jsonObject.optString("front.workspace.netclass.live.par", sWorkspaceNetClassLive);//"正在直播"

@@ -19,6 +19,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,14 +29,17 @@ import android.widget.TextView;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
+import com.codyy.erpsportal.commons.controllers.activities.BarCodeActivity;
+import com.codyy.erpsportal.commons.utils.NetworkUtils;
+import com.codyy.erpsportal.commons.utils.PermissionUtils;
 import com.codyy.erpsportal.commons.utils.SharedPreferenceUtil;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.CacheResourceActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PersonActivity;
 import com.codyy.erpsportal.commons.controllers.activities.SettingActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.BaseHttpFragment;
 import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -82,14 +86,6 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     private static final int REQUEST_CROP_PIC = 3;
     private static final int REQUEST_GET_IMAGE_FROM = 4;
     private static final int REQUEST_CHOOSE_FROM_GALLERY = 5;
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 0x220;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
-
     @Bind(R.id.sdv_my_head_icon)  SimpleDraweeView mSimpleDraweeView;
     @Bind(R.id.tv__my_name)   TextView mNameTextView;
     @Bind(R.id.lin_class_namespace)    LinearLayout mClassSpaceLinearLayout;//class space .
@@ -123,14 +119,6 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     private List<Student> mStudents = new ArrayList<>();//家长名下孩子集合 .
     private List<ClassCont> mClassList = new ArrayList<>();//老师下面的班级.
     private StudentParse mStudentParse;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Cog.d(TAG, "onCreate()");
-        mImageUrl = UserFragmentUtils.createDir().getAbsolutePath() + "/image.jpg";
-        mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
-    }
 
     @Override
     public int obtainLayoutId() {
@@ -244,7 +232,7 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
         if (UserInfo.USER_TYPE_STUDENT.equals(mUserInfo.getUserType())) {
             List<ClassCont> contList = new ArrayList<>();
             contList.add(new ClassCont(mUserInfo.getBaseClassId(), mUserInfo.getBaseClassName(), mUserInfo.getClasslevelName()));
-            ClassSpaceActivity.start(getActivity(), "班级空间", mUserInfo.getBaseClassId(), contList);
+            ClassSpaceActivity.start(getActivity(), "班级空间", mUserInfo.getBaseClassId(), contList,mUserInfo);
         } else {
             showClassDialog();
         }
@@ -448,51 +436,23 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     @OnClick(R.id.sdv_my_head_icon)
     void userIconClick() {
         if (isAdmin()) {
-            if(Build.VERSION.SDK_INT>=23){
-                verifyStoragePermissions();
-            }else{
-                showBSDialog();
-            }
+            PermissionUtils.verifyStorageCameraPermissions(getActivity(),mSimpleDraweeView,mPermissionInterface);
         }
     }
 
-    /**
-     * Checks if the app has permission to write to device storage
-     * If the app does not has permission then the user will be prompted to grant permissions
-     */
-    public  void verifyStoragePermissions() {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.CAMERA)) {
-                Snackbar.make(mSimpleDraweeView , "申请SD卡查看权限！",Snackbar.LENGTH_INDEFINITE).setAction("OK",new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v) {
-                        ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE,REQUEST_EXTERNAL_STORAGE);
-                    }
-                }).show();
-            } else {
-                // We don't have permission so prompt the user
-                ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-            }
-        }else{
+    private PermissionUtils.PermissionInterface mPermissionInterface = new PermissionUtils.PermissionInterface() {
+        @Override
+        public void next() {
+            mImageUrl = UserFragmentUtils.createDir().getAbsolutePath() + "/image.jpg";
+            mImageHead = UserFragmentUtils.createDir().getAbsolutePath() + "/heard.jpg";
             showBSDialog();
         }
-    }
+    };
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case REQUEST_EXTERNAL_STORAGE:
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    //do nothing ．．．　ｏｒ
-                    showBSDialog();
-                }
-                break;
-        }
+        PermissionUtils.onRequestPermissionsResult(requestCode,getActivity(),mPermissionInterface);
     }
 
     private void showBSDialog() {
@@ -530,19 +490,19 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
      * 选择班级进入
      */
     private void showClassDialog() {
-        if (mClassDialog == null) {
+        if (mClassDialog == null || null == mClassList || mClassList.size() == 0) {
             mClassDialog = UserFragmentUtils.createBottomSheet(getActivity(), mUserInfo, mClassList, mStudents, new BaseRecyclerAdapter.OnItemClickListener<String>() {
                 @Override
                 public void onItemClicked(View v, int position, String data) {
                     if (mUserInfo.isTeacher()) {
                         if (position < mClassList.size()) {
-                            ClassSpaceActivity.start(getActivity(), "班级空间", mClassList.get(position).getBaseClassId(), mClassList);
+                            ClassSpaceActivity.start(getActivity(), "班级空间", mClassList.get(position).getBaseClassId(), mClassList,mUserInfo);
                         } else {
                             LogUtils.log(TAG + " :" + "班级index越界 {@link PersonActivity: line 148");
                         }
                     } else if (mUserInfo.isParent()) {
                         if (position < mStudents.size()) {
-                            ClassSpaceActivity.start(getActivity(), "班级空间", mStudents.get(position).getClassId(), UserFragmentUtils.constructClassListInfo(mStudents));
+                            ClassSpaceActivity.start(getActivity(), "班级空间", mStudents.get(position).getClassId(), UserFragmentUtils.constructClassListInfo(mStudents),mUserInfo);
                         } else {
                             LogUtils.log(TAG + " :" + "班级index越界 {@link PersonActivity: line 148");
                         }
@@ -605,7 +565,9 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
         }
     };
 
-    @OnClick({R.id.tv_WeiBo, R.id.tv_blog_post, R.id.tv_photos, R.id.tv_topic, R.id.tv_group_space, R.id.tv_good_resource, R.id.tv_qa, R.id.tv_offline_cache, R.id.tv_setting})
+    @OnClick({R.id.tv_WeiBo, R.id.tv_blog_post, R.id.tv_photos, R.id.tv_topic, R.id.tv_group_space
+            , R.id.tv_good_resource, R.id.tv_qa, R.id.tv_offline_cache, R.id.tv_setting
+            , R.id.tv_bar_code})
     void singleClick(TextView textView) {
         switch (textView.getId()) {
             case R.id.tv_WeiBo://我的微博
@@ -643,14 +605,17 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
                 getActivity().startActivityForResult(new Intent(getActivity(), SettingActivity.class), MainActivity.REQUEST_SETTING);
                 UIUtils.addEnterAnim(getActivity());
                 break;
+            case R.id.tv_bar_code://二维码
+                if(NetworkUtils.isConnected()){
+                    BarCodeActivity.start(getActivity(),mUserInfo);
+                }else{
+                    ToastUtil.showSnake(getString(R.string.net_error),mNameTextView);
+                }
+                break;
             default:
                 ToastUtil.showToast("暂未实现");
                 break;
         }
-    }
-
-    public interface OnLogoutListener {
-        void onLogout();
     }
 
     /**

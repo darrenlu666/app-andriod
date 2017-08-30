@@ -3,6 +3,7 @@ package com.codyy.erpsportal.commons.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.text.TextUtils;
 
 import com.codyy.erpsportal.EApplication;
@@ -172,7 +173,8 @@ public class VideoDownloadUtils {
     public static boolean isConnected(Context context) {
         ConnectivityManager con=(ConnectivityManager)context.getSystemService(Activity.CONNECTIVITY_SERVICE);
         boolean wifi=con.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
-        boolean internet=con.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+        NetworkInfo internetNetworkInfo = con.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        boolean internet = internetNetworkInfo != null &&internetNetworkInfo.isConnectedOrConnecting();
         if(wifi|internet){
             return true;
         }else{

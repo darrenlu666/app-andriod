@@ -14,6 +14,8 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,6 +29,8 @@ import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDi
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
+import com.codyy.erpsportal.commons.models.engine.VersionChecker;
+import com.codyy.erpsportal.commons.models.engine.VersionChecker.SimpleListener;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.tasks.SavePasswordTask;
@@ -73,7 +77,9 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String IS_BACK_TO_MAIN = "go-to-main";
 
-    public final static String EXTRA_INDEX_GOTO = "com.codyy.lrticlassroom.index";
+    public final static String EXTRA_INDEX_GOTO = "com.codyy.erpsportal.index";
+
+    private static final String EXTRA_LAUNCHING = "com.codyy.erpsportal.EXTRA_LAUNCHING";
 
     private boolean mIsBackToMain = true;
 
@@ -106,6 +112,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private PendingLoginRequestData mPendingRequest;
 
+    private VersionChecker mVersionChecker;
+
+    private boolean mLaunching;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
         //添加键盘高度
         InputUtils.getKeyboardHeight(this);
         loadLoginToken();
+        checkNewVersion(false);
     }
 
     private void initAttributes() {
@@ -196,6 +207,46 @@ public class LoginActivity extends AppCompatActivity {
     private void clearToken() {
         SharedPreferences sp = getSharedPreferences(SP_TOKEN, MODE_PRIVATE);
         sp.edit().clear().apply();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mVersionChecker != null) {
+            mVersionChecker.release();
+        }
+    }
+
+    /**
+     * 检查新版本
+     * @param changeServer true 服务器地址换了，方便测试测试
+     */
+    private void checkNewVersion(boolean changeServer) {
+        mLaunching = getIntent().getBooleanExtra(EXTRA_LAUNCHING, false);
+        if (mLaunching || changeServer) {//如果是换服务器了，直接检查更新
+            mVersionChecker = VersionChecker.getInstance();
+            mVersionChecker.setVersionCheckerListener(new SimpleListener() {
+                @Override
+                public void onNewVersionDetected() {
+                    hideSoftKeyboard();
+                }
+            });
+            mVersionChecker.checkNewVersion(this);
+        }
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    private void hideSoftKeyboard() {
+        mUserNameEt.post(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(mUserNameEt.getWindowToken(),0);
+            }
+        });
+        getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     /**
@@ -285,6 +336,7 @@ public class LoginActivity extends AppCompatActivity {
                 changeServerDialog.setServerChangedListener(new ServerChangedListener() {
                     @Override
                     public void onServerChangedListener() {
+                        checkNewVersion(true);
                         loadLoginToken();
                     }
                 });
@@ -524,14 +576,27 @@ public class LoginActivity extends AppCompatActivity {
 
     private void gotoMain(UserInfo userInfo) {
         if (mIsBackToMain) {
-            MainActivity.start(LoginActivity.this, userInfo, mIndexGoto);
+            MainActivity.startNoNeedToCheckUpdate(LoginActivity.this, userInfo, mIndexGoto);
         }
         finish();
     }
 
     public static void start(Activity activity) {
+        start(activity, false);
+    }
+
+    /**
+     * 应用启动中，进入首页直接发现未登录跳到此登录的
+     * @param activity 首页活动
+     */
+    public static void startOnLaunching(Activity activity) {
+        start(activity, true);
+    }
+
+    public static void start(Activity activity, boolean launching) {
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(EXTRA_LAUNCHING, launching);
         activity.startActivity(intent);
         UIUtils.addEnterAnim(activity);
     }
@@ -544,10 +609,10 @@ public class LoginActivity extends AppCompatActivity {
             UIUtils.addEnterAnim((Activity) context);
     }
 
-    public static void start(Fragment mFragment) {
-        Intent intent = new Intent(mFragment.getActivity(), LoginActivity.class);
+    public static void start(Fragment fragment) {
+        Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        mFragment.startActivityForResult(intent, REQUEST_LOGIN);
+        fragment.startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     /**
@@ -558,19 +623,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(IS_BACK_TO_MAIN, false);
         context.startActivity(intent);
-    }
-
-    /**
-     * 从主界面进登陆
-     *
-     * @param activity 源活动
-     * @param index    用户点击应用或是我的进的登陆，待会登陆完了传回给主界面直接跳转到应用或是我的
-     */
-    public static void start(Activity activity, int index) {
-        Intent intent = new Intent(activity, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra(EXTRA_INDEX_GOTO, index);
-        activity.startActivity(intent);
     }
 
     private void executeSaveUserInfo(final UserInfo userInfo) {
@@ -585,7 +637,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * 挂起的登录请求数据
      */
-    class PendingLoginRequestData {
+    private class PendingLoginRequestData {
         private String username;
         private String password;
         private Map<String, String> params;

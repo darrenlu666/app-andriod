@@ -3,6 +3,7 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.codyy.erpsportal.commons.models.dao.UserInfoDao;
 import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
@@ -481,6 +482,10 @@ public class UserInfo implements Parcelable {
 
     public boolean isArea() {
         return USER_TYPE_AREA_USER.equals(userType);
+    }
+
+    public boolean isNation() {
+        return isArea() && TextUtils.isEmpty(parentId);
     }
 
     public boolean isTeacher() {
