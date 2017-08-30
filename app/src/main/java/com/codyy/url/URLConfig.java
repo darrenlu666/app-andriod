@@ -1081,6 +1081,12 @@ public class URLConfig {
     public static String GET_RECOMMEND_SCHEDULE;
 
     /**
+     * 专递课堂课堂回放(sip:v5.3.6)
+     * http://172.17.53.6:8080/index/getRecommendSchedule.do?size=7&baseAreaId=3268c4982fbd47b996de356d00d8adcc&schoolId=
+     */
+    @UrlSuffix("mobile/home/onlineclass/getIndexRecordScheduleListForSIP.do")
+    public static String GET_SIP_RECOMMEND_SCHEDULE;
+    /**
      * 首页- 近期课程(sip园区首页)
      * baseAreaId	区域id	string
      * schoolId	学校id	string
