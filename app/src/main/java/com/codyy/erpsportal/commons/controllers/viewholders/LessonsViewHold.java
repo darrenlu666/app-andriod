@@ -70,6 +70,6 @@ public class LessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortE
         date.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(data.getStartTime()));
         clickCount.setText(String.valueOf(data.getViewCount()));
         ratingBar.setProgress((int)data.getAverageScore());
-        ImageFetcher.getInstance(rateTv.getContext()).fetchSmall(headerImage, data.getSubjectPic());
+        ImageFetcher.getInstance(rateTv.getContext()).fetchImage(headerImage, data.getSubjectPic());
     }
 }
