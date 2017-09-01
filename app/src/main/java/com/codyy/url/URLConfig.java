@@ -68,6 +68,12 @@ public class URLConfig {
     public static String URL_MAP;
 
     /**
+     * 天津首页地图
+     */
+    @UrlSuffix("map/mapTJPage.html")
+    public static String URL_MAP_TZ;
+
+    /**
      * 天津数据
      */
     @UrlSuffix("map/getDataByAreaId.do")
