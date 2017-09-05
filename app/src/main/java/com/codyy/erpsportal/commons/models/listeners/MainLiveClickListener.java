@@ -72,20 +72,20 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
                     } else {
                         String msg = response.optString("msg");
                         if (TextUtils.isEmpty(msg)) {
-                            Toast.makeText(mFragment.getContext(), "获取权限失败！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mFragment.getContext(), "您没有权限查看该课堂直播！", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mFragment.getContext(), msg, Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    Toast.makeText(mFragment.getContext(), "获取权限失败！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mFragment.getContext(), "您没有权限查看该课堂直播！", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new ErrorListener() {
             @Override
             public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onLiveClassroomClick error=", error);
-                Toast.makeText(mFragment.getContext(), "获取权限失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mFragment.getContext(), "您没有权限查看该课堂直播！", Toast.LENGTH_SHORT).show();
             }
         }));
     }
