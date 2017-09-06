@@ -391,7 +391,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
         data.put("size", String.valueOf(4));
         data.put("uuid", mUserInfo.getUuid());
 
-        requestData(URLConfig.GET_RECOMMEND_SCHEDULE, data, false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_SIP_RECOMMEND_SCHEDULE, data, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {

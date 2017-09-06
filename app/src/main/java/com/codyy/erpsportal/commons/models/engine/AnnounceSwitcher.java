@@ -17,8 +17,7 @@ import java.util.List;
 
 /**
  * 资讯切换器
- * Created by gujiajia on 2017/5/9.
- * modified by poe .
+ * Created by poe on 2017/8/30.
  */
 
 public class AnnounceSwitcher implements Callback {
@@ -105,13 +104,13 @@ public class AnnounceSwitcher implements Callback {
         String infoTypeName;
         switch (infoType) {
             case Info.TYPE_NEWS:
-                infoTypeName = Titles.sPagetitleIndexCompositeNew;
+                infoTypeName = Titles.sPagetitleIndexGroupSchoolNew;
                 break;
             case Info.TYPE_ANNOUNCEMENT:
-                infoTypeName = Titles.sPagetitleIndexCompositeAnnouncement;
+                infoTypeName = Titles.sPagetitleIndexGroupSchoolAnnouncement;
                 break;
             default: // if (infoType.equals(Info.TYPE_NOTICE))
-                infoTypeName = Titles.sPagetitleIndexCompositeNotice;
+                infoTypeName = Titles.sPagetitleIndexGroupSchoolNotice;
                 break;
         }
         String infoTitleStr = mInfoArray.get(mInfoCurrentPos).getTitle();

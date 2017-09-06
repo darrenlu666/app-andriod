@@ -11,6 +11,8 @@ import com.codyy.erpsportal.commons.controllers.fragments.channels.MainResFragme
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ManagementFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipHomeFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TZLivingFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TaiZhouFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TeachingResearchFragment;
@@ -35,7 +37,7 @@ public class ChannelTab {
 
     private final static String TAG = "ChannelTab";
 
-    private static String[] sKnownIds = new String[]{"blogid", "classresourceid", "groupid","homepageid","informationid","netclassid","netteachid","onlineclassid"};
+    private static String[] sKnownIds = new String[]{"blogid", "classresourceid", "groupid", "homepageid", "informationid", "netclassid", "netteachid", "onlineclassid"};
 
     private String id;
 
@@ -86,13 +88,14 @@ public class ChannelTab {
             if (Arrays.binarySearch(sKnownIds, channelTab.getId()) < 0) {
                 continue;
             }
-            channelTabs.add( channelTab);
+            channelTabs.add(channelTab);
         }
         return channelTabs;
     }
 
     /**
      * 根据传递的ｉｄ构建不同的Fragment的{@linkplain ChannelTabInfo}
+     *
      * @param indexTemplateId
      * @return
      */
@@ -110,7 +113,7 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_COMPOSITE.equals(indexTemplateId)) {
                     clazz = MainCompositeFragment.class;
                     tabId = 1;
-                } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)){
+                } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)) {
                     clazz = MainResFragment.class;
                     tabId = 2;
                 } else if (ModuleConfig.TEMPLATE_RESOURCE_NO_LIVE.equals(indexTemplateId)) {
@@ -118,31 +121,34 @@ public class ChannelTab {
                     bundle.putBoolean(MainResFragment.ARG_NO_LIVE, true);
                     clazz = MainResFragment.class;
                     tabId = 10;
-                } else if (ModuleConfig.TEMPLATE_TJ.equals(indexTemplateId)){
+                } else if (ModuleConfig.TEMPLATE_TJ.equals(indexTemplateId)) {
                     clazz = TianJinFragment.class;
                     tabId = 11;
-                } else if (ModuleConfig.TEMPLATE_FX.equals(indexTemplateId)){//费县
+                } else if (ModuleConfig.TEMPLATE_FX.equals(indexTemplateId)) {//费县
                     clazz = FeiXianFragment.class;
                     tabId = 12;
-                } else if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){//苏州园区
+                } else if (ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)) {//苏州园区
                     clazz = SipHomeFragment.class;
                     tabId = 13;
-                }else if(ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)){//集团校
+                } else if (ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)) {//集团校
                     clazz = MainGroupSchoolFragment.class;
                     tabId = 14;
-                }else {
+                } else if (ModuleConfig.TEMPLATE_TZ.equals(indexTemplateId)) {
+                    clazz = TaiZhouFragment.class;
+                    tabId = 15;
+                } else {
                     clazz = FeiXianFragment.class;
                     tabId = 12;
                 }
 
                 break;
             case "onlineclassid"://专递课堂
-                if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){
+                if (ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)) {
                     bundle = new Bundle();
-                    bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE,name);
+                    bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE, name);
                     clazz = SipCustomizedFragment.class;
                     tabId = 3;
-                }else{
+                } else {
                     clazz = ChannelCustomizedFragment.class;
                     tabId = 3;
                 }
@@ -153,7 +159,11 @@ public class ChannelTab {
                 break;
             case "netclassid"://名校网络课堂
 //                clazz = EliteSchoolOnlineClassFragment.class;
-                clazz = ChannelLivingFragment.class;
+                if (ModuleConfig.TEMPLATE_TZ.equals(indexTemplateId)) {
+                    clazz = TZLivingFragment.class;
+                } else {
+                    clazz = ChannelLivingFragment.class;
+                }
                 tabId = 5;
                 break;
             case "informationid"://资讯
@@ -178,7 +188,7 @@ public class ChannelTab {
 //                tabId = 8;
 //                break;
         }
-        Cog.d(TAG, "createTabInfo clazz=", clazz );
+        Cog.d(TAG, "createTabInfo clazz=", clazz);
         return new ChannelTabInfo(name, clazz, bundle, tabId);
     }
 }

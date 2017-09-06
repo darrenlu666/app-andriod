@@ -1,6 +1,8 @@
 package com.codyy.erpsportal.commons.utils;
 
 
+import android.text.TextUtils;
+
 import com.codyy.url.URLConfig;
 
 /**
@@ -51,7 +53,13 @@ public class UriUtils {
         return pic;
     }
 
+    /**
+     * 防止多吃传递基础base_url .
+     * @param name
+     * @return
+     */
     public static String getImageUrl(String name) {
+        if(!TextUtils.isEmpty(name) && name.contains("http://")) return name;
         return URLConfig.IMAGE_URL + name;
     }
 }

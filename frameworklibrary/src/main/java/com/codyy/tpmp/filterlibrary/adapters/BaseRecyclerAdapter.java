@@ -163,8 +163,17 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
             if (position == getBasicItemCount() && mHasMoreData) {
                 return TYPE_FOOTER;
             }
+
+            if(position>= getBasicItemCount()){
+                return 0;
+            }
             //USER INTERFACE
-            return  mCreator.getItemViewType(position);
+            try{
+                return  mCreator.getItemViewType(position);
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                return 0;
+            }
         }else{
             return super.getItemViewType(position);
         }
