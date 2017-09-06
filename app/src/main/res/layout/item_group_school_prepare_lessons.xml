@@ -17,7 +17,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_gravity="center_vertical"
-            android:background="@drawable/icon_direct_video_default"
+            android:background="@drawable/default_subject"
             app:roundAsCircle="false"/>
 
         <RelativeLayout
@@ -67,6 +67,7 @@
                 android:layout_below="@id/tv_lesson_title"
                 android:layout_toRightOf="@id/tv_teacher"
                 android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
                 android:text="点击量"/>
 
             <TextView
@@ -137,7 +138,7 @@
                 android:layout_toRightOf="@id/rl_star"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
-                android:gravity="right"
+                android:layout_marginLeft="10dp"
                 android:text="2015-1-1"/>
             <View
                 android:layout_width="fill_parent"

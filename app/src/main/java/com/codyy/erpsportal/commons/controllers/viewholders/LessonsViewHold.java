@@ -4,11 +4,15 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.viewholders.homepage.SimpleControllerListener;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
+import com.codyy.erpsportal.commons.utils.UriUtils;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import org.joda.time.format.DateTimeFormat;
 import butterknife.Bind;
@@ -57,7 +61,21 @@ public class LessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortE
                     scoreTv.setText("评分");
                     ratingBar.setRating(data.getAverageScore() / 2f);
                 }
-                ImageFetcher.getInstance(rateTv.getContext()).fetchImage(headerImage, data.getSubjectPic());
+
+                //icon_direct_video_default
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setUri(data.getSubjectPic())
+                        .setTapToRetryEnabled(true)
+                        .setOldController(headerImage.getController())
+                        .setControllerListener(new SimpleControllerListener() {
+                            @Override
+                            public void onFailure(String id, Throwable throwable) {
+                                headerImage.setImageResource(R.drawable.ic_group_school_default);
+                            }
+                        })
+                        .build();
+//                ImageFetcher.getInstance(rateTv.getContext()).fetchImage(headerImage, data.getSubjectPic());
+                headerImage.setController(controller);
                 break;
             case TeachingResearchBase.INTERAC_LESSON://互动听课
                 teacherTitle.setText(Titles.sMasterTeacher);//"主讲教师");

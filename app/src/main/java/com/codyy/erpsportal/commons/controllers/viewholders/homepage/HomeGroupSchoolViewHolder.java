@@ -53,40 +53,14 @@ public class HomeGroupSchoolViewHolder extends BaseRecyclerViewHolder<GroupSchoo
 
         //设置默认图片.
 //        ImageFetcher.getInstance(mSdv.getContext()).fetchSmall(mSdv, data.getCoverPic());
-
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setUri(UriUtils.buildSmallImageUrl(data.getCoverPic()))
                 .setTapToRetryEnabled(true)
                 .setOldController(mSdv.getController())
-                .setControllerListener(new ControllerListener<ImageInfo>() {
-                    @Override
-                    public void onSubmit(String id, Object callerContext) {
-
-                    }
-
-                    @Override
-                    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
-
-                    }
-
-                    @Override
-                    public void onIntermediateImageSet(String id, ImageInfo imageInfo) {
-
-                    }
-
-                    @Override
-                    public void onIntermediateImageFailed(String id, Throwable throwable) {
-
-                    }
-
+                .setControllerListener(new SimpleControllerListener() {
                     @Override
                     public void onFailure(String id, Throwable throwable) {
                         mSdv.setImageResource(R.drawable.ic_group_school_default);
-                    }
-
-                    @Override
-                    public void onRelease(String id) {
-
                     }
                 })
                 .build();
