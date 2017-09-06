@@ -170,7 +170,8 @@ public class CollectivePrepareLessonsNewActivity extends BaseHttpActivity implem
         mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<LessonsViewHold>() {
             @Override
             public LessonsViewHold createViewHolder(ViewGroup parent, int viewType) {
-                return new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare_lessons),mFromType);
+                return new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare_lessons)
+                        ,mFromType);
             }
 
             @Override

@@ -17,6 +17,7 @@ import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsNewActivity;
+import com.codyy.erpsportal.commons.controllers.viewholders.GSLessonsViewHold;
 import com.codyy.erpsportal.commons.controllers.viewholders.LessonsViewHold;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.AnnounceViewHolder;
@@ -257,10 +258,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         break;
 
                     case TYPE_ITEM_VIEW_HOLDER_NET_TEACH://教研活动－集体备课
-                        viewHolder = new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(
+                        viewHolder = new GSLessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(
                                 parent.getContext(),
-                                R.layout.item_collective_prepare_lessons),
-                                TeachingResearchBase.PREPARE_LESSON);
+                                R.layout.item_group_school_prepare_lessons));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS://直播课堂
                         viewHolder = new MainLiveViewHolder(LayoutInflater.from(parent.getContext())

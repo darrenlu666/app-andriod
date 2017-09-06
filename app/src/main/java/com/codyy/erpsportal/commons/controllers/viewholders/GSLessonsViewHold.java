@@ -1,16 +1,24 @@
 package com.codyy.erpsportal.commons.controllers.viewholders;
 
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
+import com.codyy.erpsportal.commons.utils.InputUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
+
 import org.joda.time.format.DateTimeFormat;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -18,7 +26,7 @@ import butterknife.ButterKnife;
  * 首页－网络授课－集体备课／互动听课／评课议课
  * Created by poe on 3/6/17.
  */
-public class LessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortEntity> {
+public class GSLessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortEntity> {
     @Bind(R.id.img_lesson_item) SimpleDraweeView headerImage;
     @Bind(R.id.tv_lesson_title) TextView title;
     @Bind(R.id.tv_teacher) TextView teachName;
@@ -28,44 +36,27 @@ public class LessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortE
     @Bind(R.id.tv_teacher_view) TextView teacherTitle;
     @Bind(R.id.tv_star) TextView scoreTv;
     @Bind(R.id.tv_rate) TextView rateTv;
-    private int mFromType ;
 
-    public LessonsViewHold(View itemView , int fromType) {
+    public GSLessonsViewHold(View itemView ) {
         super(itemView);
         ButterKnife.bind(this,itemView);
-        this.mFromType = fromType;
     }
 
 
     @Override
     public int obtainLayoutId() {
-        return R.layout.item_collective_prepare_lessons;
+        return R.layout.item_group_school_prepare_lessons;
     }
 
     @Override
     public void setData(int position, PrepareLessonsShortEntity data) throws Throwable {
-        switch (mFromType) {
-            case TeachingResearchBase.EVALUATION_LESSON://评课议课
-                teacherTitle.setText(Titles.sMasterTeacher);//"主讲教师");
-                if ("SCORE".equals(data.getScoreType())) {
-                    rateTv.setVisibility(View.GONE);
-                    ratingBar.setVisibility(View.GONE);
-                    scoreTv.setText("评分   " + data.getAverageScore() + "/" + data.getTotalScore());
-                } else {
-                    rateTv.setVisibility(View.VISIBLE);
-                    ratingBar.setVisibility(View.VISIBLE);
-                    scoreTv.setText("评分");
-                    ratingBar.setRating(data.getAverageScore() / 2f);
-                }
-                ImageFetcher.getInstance(rateTv.getContext()).fetchImage(headerImage, data.getSubjectPic());
-                break;
-            case TeachingResearchBase.INTERAC_LESSON://互动听课
-                teacherTitle.setText(Titles.sMasterTeacher);//"主讲教师");
-            case TeachingResearchBase.PREPARE_LESSON://集体备课
-                ImageFetcher.getInstance(rateTv.getContext()).fetchSmall(headerImage, data.getSubjectPic());
-                break;
-        }
-        rateTv.setText(rateTv.getContext().getString(R.string.f_score, data.getAverageScore()));
+        ImageFetcher.getInstance(rateTv.getContext()).fetchSmall(headerImage, data.getSubjectPic());
+
+        String rate = rateTv.getContext().getString(R.string.f_score, data.getAverageScore());
+        SpannableStringBuilder ssb = new SpannableStringBuilder(rate);
+        ssb.setSpan(new ForegroundColorSpan(UiMainUtils.getColor(R.color.main_color)), 0, String.valueOf(data.getAverageScore()).length()+1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        rateTv.setText(ssb);
         title.setText(data.getTitle());
         teachName.setText(data.getMainTeacher());
         date.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(data.getStartTime()));

@@ -41,11 +41,10 @@ public class MainLiveViewHolder extends BaseRecyclerViewHolder<GroupLive> {
         if(null == data) return;
         // 16-6-1 set data content .
         ImageFetcher.getInstance(mSchoolTextView.getContext()).fetchSmall(mSDV,data.getImagePath());
-        mSchoolTextView.setText(data.getSchoolName());
+        mSchoolTextView.setText(data.getRealName());
         StringBuilder sb = new StringBuilder();
         if(!TextUtils.isEmpty(data.getBaseClasslevelName())) sb.append(data.getBaseClasslevelName());
         if(!TextUtils.isEmpty(data.getBaseSubjectName())) sb.append("/"+data.getBaseSubjectName());
-        if(!TextUtils.isEmpty(data.getRealName())) sb.append("/"+data.getRealName());
         mLevelSTTextView.setText(sb.toString());
     }
 }
