@@ -54,8 +54,8 @@ public class HomeResourceViewHolder extends BaseRecyclerViewHolder<MainResource>
                     @Override
                     public void onFailure(String id, Throwable throwable) {
 
-                        if(TextUtils.isEmpty(data.getResourceColumn())) return;
-                        if("video".equals(data.getResourceColumn())){
+                        if(TextUtils.isEmpty(mData.getResourceColumn())) return;
+                        if("video".equals(mData.getResourceColumn())){
                             simpledraweeview.setImageResource(R.drawable.icon_default_video);
                         }else{
                             simpledraweeview.setImageResource(R.drawable.placeholder_img);
