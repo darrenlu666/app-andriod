@@ -74,7 +74,6 @@ public class LessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortE
                             }
                         })
                         .build();
-//                ImageFetcher.getInstance(rateTv.getContext()).fetchImage(headerImage, data.getSubjectPic());
                 headerImage.setController(controller);
                 break;
             case TeachingResearchBase.INTERAC_LESSON://互动听课

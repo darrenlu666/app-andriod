@@ -17,6 +17,8 @@ import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsNewActivity;
+import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
+import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.GSLessonsViewHold;
 import com.codyy.erpsportal.commons.controllers.viewholders.LessonsViewHold;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
@@ -44,6 +46,7 @@ import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
+import com.codyy.erpsportal.groups.controllers.activities.BlogPostDetailActivity;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.MoreLessonPlansActivity;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
@@ -142,27 +145,12 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
 
     @Override
     public void onSuccess(JSONObject response, boolean isRefreshing) {
-        /*if (null == mRecyclerView) return;
-        if (isRefreshing) mData.clear();
-        if (mRefreshLayout.isRefreshing()) {
-            mRefreshLayout.setRefreshing(false);
-        }
-        mRecyclerView.setEnabled(true);
-        mEmptyView.setLoading(false);*/
+
         AnnounceParse lp = new Gson().fromJson(response.toString(), AnnounceParse.class);
         if (null != lp) {
-            mData.clear();
             lp.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_INFO);
             mData.add(lp);
         }
-        /*mAdapter.setData(mData);
-        mAdapter.notifyDataSetChanged();
-        if (mData.size() <= 0) {
-            mEmptyView.setVisibility(View.VISIBLE);
-        } else {
-            mEmptyView.setVisibility(View.GONE);
-        }*/
-
         // 17-8-7 获取教研活动(集体备课)
         getNetTeach();
     }
@@ -186,6 +174,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
     @Override
     public void onViewLoadCompleted() {
         super.onViewLoadCompleted();
+
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
@@ -193,6 +182,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 requestData(true);
             }
         });
+
         //add divider item which only draw the space.
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
         mRecyclerView.addItemDecoration((new SimpleBisectDivider(divider
@@ -216,11 +206,15 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                 };
             }
         })));
+
         mRefreshLayout.setColorSchemeColors(UiMainUtils.getColor(R.color.main_color));
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mRecyclerView.setEnabled(false);
+                mData.clear();
+                mRecyclerView.getRecycledViewPool().clear();
+                mAdapter.notifyDataSetChanged();
                 requestData(true);
             }
         });
@@ -344,6 +338,13 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         Resource.gotoResDetails(getActivity(), UserInfoKeeper.obtainUserInfo(), bundle);
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST://名师推荐
+                        GreatTeacher teacher = (GreatTeacher) data;
+                        //1.自己的信息跳转到首页-"我的"
+                        if(teacher.getBaseUserId().equals(mUserInfo.getBaseUserId())){
+                            MainActivity.start(getActivity(), mUserInfo , 2);
+                        }else{//2.访客
+                            PublicUserActivity.start(getActivity(), teacher.getBaseUserId());
+                        }
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL://集团学校
                         //  do nothing .

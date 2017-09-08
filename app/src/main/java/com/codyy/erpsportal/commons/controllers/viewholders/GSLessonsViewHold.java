@@ -54,7 +54,7 @@ public class GSLessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShor
 
         String rate = rateTv.getContext().getString(R.string.f_score, data.getAverageScore());
         SpannableStringBuilder ssb = new SpannableStringBuilder(rate);
-        ssb.setSpan(new ForegroundColorSpan(UiMainUtils.getColor(R.color.main_color)), 0, String.valueOf(data.getAverageScore()).length()+1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        ssb.setSpan(new ForegroundColorSpan(UiMainUtils.getColor(R.color.main_color)), 0, String.valueOf(data.getAverageScore()).length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
 
         rateTv.setText(ssb);
         title.setText(data.getTitle());

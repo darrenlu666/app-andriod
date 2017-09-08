@@ -41,7 +41,7 @@
                 android:layout_below="@id/tv_lesson_title"
                 android:layout_marginLeft="3dp"
                 android:layout_marginTop="5dp"
-                android:text="主备老师"
+                android:text="主备教师"
                 android:textColor="#999999"/>
 
 
@@ -102,6 +102,7 @@
                 <TextView
                     android:id="@+id/tv_star"
                     style="@style/text_middle_size_style"
+                    android:textSize="14sp"
                     android:text="评分"/>
 
                 <RatingBar
@@ -115,6 +116,7 @@
                     android:numStars="5"
                     android:progressDrawable="@drawable/ratingbar_drawable"
                     android:rating="4.5"
+                    android:layout_alignBottom="@id/tv_star"
                     android:stepSize="0.5"/>
 
                 <TextView
@@ -125,6 +127,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_toEndOf="@id/rb_star"
                     android:layout_toRightOf="@id/rb_star"
+                    android:textSize="14sp"
                     tools:text="5.5分"/>
             </RelativeLayout>
 
