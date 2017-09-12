@@ -211,11 +211,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mRecyclerView.setEnabled(false);
-                mData.clear();
-                mRecyclerView.getRecycledViewPool().clear();
-                mAdapter.notifyDataSetChanged();
-                requestData(true);
+                refresh();
             }
         });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -355,6 +351,14 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    private void refresh() {
+        mRecyclerView.setEnabled(false);
+        mData.clear();
+        mRecyclerView.getRecycledViewPool().clear();
+        mAdapter.notifyDataSetChanged();
+        requestData(true);
+    }
+
 
     /**
      * 教研活动
@@ -367,10 +371,6 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_NET_PREPARE, data, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-//                if (mRefreshLayout.isRefreshing()) {
-//                    mRefreshLayout.setRefreshing(false);
-//                }
-
                 //parse data .
                 if ("success".equals(response.optString("result"))) {
                     FormatJsonParse<PrepareLessonsShortEntity> parse = new FormatJsonParse<PrepareLessonsShortEntity>().parse(response, PrepareLessonsShortEntity.class);
@@ -387,13 +387,6 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 }
 
-               /* mAdapter.notifyDataSetChanged();
-                if (mData.size() <= 0) {
-                    mEmptyView.setLoading(false);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                }*/
                 //  获取直播课堂
                 loadLiveClass();
             }
@@ -421,9 +414,6 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_LIVING_LESSON, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-//                if (mRefreshLayout.isRefreshing()) {
-//                    mRefreshLayout.setRefreshing(false);
-//                }
                 //parse data .
                 if ("success".equals(response.optString("result"))) {
                     FormatJsonParse<GroupLive> parse = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
@@ -440,13 +430,6 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                     mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 }
 
-               /* mAdapter.notifyDataSetChanged();
-                if (mData.size() <= 0) {
-                    mEmptyView.setLoading(false);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                }*/
                 //  获取校本资源
                 getRecommendSchedule();
             }
@@ -470,9 +453,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_HISTORY_LESSON, data, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-//                if (mRefreshLayout.isRefreshing()) {
-//                    mRefreshLayout.setRefreshing(false);
-//                }
+
                 FormatJsonParse<GroupLive> hcp = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
                 if (null != hcp) {
                     List<GroupLive> hcList = hcp.getData();
@@ -491,13 +472,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
-                /*mAdapter.notifyDataSetChanged();
-                if (mData.size() <= 0) {
-                    mEmptyView.setLoading(false);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                }*/
+
                 // 17-8-7 获取优课资源
                 getLessonResources();
             }
@@ -544,13 +519,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
-                /*mAdapter.notifyDataSetChanged();
-                if (mData.size() <= 0) {
-                    mEmptyView.setLoading(false);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                }*/
+
                 // 17-8-7 获取名师推荐
                 loadTeacherRecommended();
             }
@@ -680,8 +649,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         baseAreaId = config.getBaseAreaId();
         schoolId = config.getSchoolId();
         if (mRefreshLayout == null) return;//防止界面回收还有回调
-        mRefreshLayout.setRefreshing(true);
-        requestData(true);
+//        mRefreshLayout.setRefreshing(true);
+//        requestData(true);
+        refresh();
     }
 
     @Override
