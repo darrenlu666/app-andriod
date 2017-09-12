@@ -44,6 +44,16 @@ public class InfoDeleteActivity extends AppCompatActivity{
 
     private final static String TAG = "InfoDeleteActivity";
 
+    /**
+     * 资讯||通知公告，传入1、资讯2、通知公告
+     */
+    public final static String EXTRA_INFO = "EXTRA_INFO";
+
+    /**
+     * 1、资讯2、通知公告
+     */
+    private int mScope;
+
     @Bind(R.id.tb_info_title)
     protected TitleBar mTitleBar;
 
@@ -89,13 +99,19 @@ public class InfoDeleteActivity extends AppCompatActivity{
         setContentView(R.layout.activity_info_delete);
         ButterKnife.bind(this);
 
-        mTitleBar.setTitle(Titles.sWorkspaceInfo);
-        mSender = new RequestSender(this);
-        mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
+        initAttributes();
         mAdapter = new ChannelAdapter(this, getSupportFragmentManager(), mViewPager);
-        addTab(Titles.sWorkspaceInfoNew, Info.TYPE_NEWS);
-        addTab(Titles.sWorkspaceNoticeAnnouncementNotice, Info.TYPE_NOTICE);
-        addTab(Titles.sWorkspaceNoticeAnnouncementAnnouncement, Info.TYPE_ANNOUNCEMENT);
+        if (mScope == 0) {
+            mTitleBar.setTitle(Titles.sWorkspaceInfo);
+            addTab(Titles.sWorkspaceInfoNew, Info.TYPE_NEWS);
+            mSlidingTabLayout.setVisibility(View.GONE);
+        } else {
+            mTitleBar.setTitle(Titles.sWorkspaceNoticeAnnouncement);
+            addTab(Titles.sWorkspaceNoticeAnnouncementNotice, Info.TYPE_NOTICE);
+            addTab(Titles.sWorkspaceNoticeAnnouncementAnnouncement, Info.TYPE_ANNOUNCEMENT);
+            mSlidingTabLayout.setVisibility(View.VISIBLE);
+        }
+
         mSlidingTabLayout.setViewPager(mViewPager);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -114,6 +130,12 @@ public class InfoDeleteActivity extends AppCompatActivity{
         });
 
         mLoadingDialog = LoadingDialog.newInstance(R.string.deleting);
+    }
+
+    private void initAttributes() {
+        mSender = new RequestSender(this);
+        mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
+        mScope = getIntent().getIntExtra(EXTRA_INFO, 0);
     }
 
     private void addTab(String title, String type) {
@@ -150,6 +172,15 @@ public class InfoDeleteActivity extends AppCompatActivity{
         mEditBtn.setText(R.string.edit);
         mDeleteBarRl.setVisibility(View.GONE);
         setCurrTabSelecting(false);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mEditing) {
+            quitEditing();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void setCurrTabSelecting(boolean selecting) {

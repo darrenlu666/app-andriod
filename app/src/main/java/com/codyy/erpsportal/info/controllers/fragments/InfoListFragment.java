@@ -2,23 +2,24 @@ package com.codyy.erpsportal.info.controllers.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
-import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
-import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
-import com.codyy.erpsportal.info.controllers.fragments.InfoListFragment.InfoViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
+import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
+import com.codyy.erpsportal.info.controllers.fragments.InfoListFragment.InfoViewHolder;
 import com.codyy.erpsportal.info.utils.Info;
+import com.codyy.url.URLConfig;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONArray;
@@ -67,7 +68,7 @@ public class InfoListFragment extends LoadMoreFragment<Info, InfoViewHolder> {
     @Override
     protected void extraInitViewsStyles() {
         super.extraInitViewsStyles();
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
     }
 
     @Override

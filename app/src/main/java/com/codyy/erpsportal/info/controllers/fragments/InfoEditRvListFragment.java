@@ -2,7 +2,6 @@ package com.codyy.erpsportal.info.controllers.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +16,7 @@ import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
 import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
 import com.codyy.erpsportal.info.controllers.fragments.InfoEditRvListFragment.InfoView1Holder;
 import com.codyy.erpsportal.info.models.entities.InfoItem;
@@ -92,10 +92,9 @@ public class InfoEditRvListFragment extends LoadMoreFragment<InfoItem, InfoView1
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mRecyclerView.setBackgroundColor(
-                ResourcesCompat.getColor(getResources(), R.color.md_grey_300, null));
+    protected void extraInitViewsStyles() {
+        super.extraInitViewsStyles();
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
     }
 
     @Override
