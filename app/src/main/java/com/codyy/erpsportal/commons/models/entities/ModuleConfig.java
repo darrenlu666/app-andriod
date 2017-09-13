@@ -69,6 +69,11 @@ public class ModuleConfig {
     public final static String TEMPLATE_GROUP_SCHOOL = "index.template.jtx";
 
     /**
+     * 首页模板：海宁资源
+     */
+    public final static String TEMPLATE_HN_RES = "index.template.haiNing";
+
+    /**
      * 地区
      */
     public final static String VISIT_TYPE_AREA = "area";
@@ -110,9 +115,7 @@ public class ModuleConfig {
     /**
      * 首页模板
      */
-    private
-    @TemplateType
-    String indexTemplateId;
+    private String indexTemplateId;
 
     /**
      * 访问类型
@@ -199,15 +202,6 @@ public class ModuleConfig {
         this.schoolName = schoolName;
     }
 
-    @StringDef(value = {
-            TEMPLATE_COMPOSITE,
-            TEMPLATE_MONITOR,
-            TEMPLATE_RESOURCE,
-            TEMPLATE_PURE_MONITOR
-    })
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface TemplateType {
-    }
 
     @StringDef(value = {
             VISIT_TYPE_AREA,

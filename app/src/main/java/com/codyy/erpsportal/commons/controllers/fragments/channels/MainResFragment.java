@@ -569,6 +569,10 @@ public class MainResFragment extends Fragment {
                                 JSONObject teacherObj = teacherRecommendedArray.optJSONObject(i);
                                 addTeacher(teacherObj);
                             }
+                            if (teacherRecommendedArray.length() % 2 > 0) {
+                                View view = new View(getActivity());
+                                mTeachersGl.addView(view, createGridItemLp());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -620,12 +624,9 @@ public class MainResFragment extends Fragment {
             }
         }
 
-        final String userId = teacherObj.optString("baseUserId");
+        mTeachersGl.addView(view, createGridItemLp());
 
-        GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-        layoutParams.width = 0;
-        layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
-        mTeachersGl.addView(view, layoutParams);
+        final String userId = teacherObj.optString("baseUserId");
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -640,6 +641,17 @@ public class MainResFragment extends Fragment {
                 }
             }
         });
+    }
+
+    /**
+     * 创建一行两个项格子布局参数
+     * @return 布局参数
+     */
+    private GridLayout.LayoutParams createGridItemLp() {
+        GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+        layoutParams.width = 0;
+        layoutParams.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+        return layoutParams;
     }
 
     @Override

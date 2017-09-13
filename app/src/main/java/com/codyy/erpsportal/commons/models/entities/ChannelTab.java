@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter.ChannelTabInfo;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.InfoIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainCompositeFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainGroupSchoolFragment;
@@ -35,7 +36,8 @@ public class ChannelTab {
 
     private final static String TAG = "ChannelTab";
 
-    private static String[] sKnownIds = new String[]{"blogid", "classresourceid", "groupid","homepageid","informationid","netclassid","netteachid","onlineclassid"};
+    private static String[] sKnownIds = new String[]{"blogid", "classresourceid", "groupid","homepageid",
+            "indexcustomehaiNingperiod","informationid","netclassid","netteachid","onlineclassid"};
 
     private String id;
 
@@ -92,7 +94,7 @@ public class ChannelTab {
     }
 
     /**
-     * 根据传递的ｉｄ构建不同的Fragment的{@linkplain ChannelTabInfo}
+     * 根据传递的id，构建不同的Fragment的{@linkplain ChannelTabInfo}
      * @param indexTemplateId
      * @return
      */
@@ -124,13 +126,16 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_FX.equals(indexTemplateId)){//费县
                     clazz = FeiXianFragment.class;
                     tabId = 12;
-                } else if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){//苏州园区
+                } else if (ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){//苏州园区
                     clazz = SipHomeFragment.class;
                     tabId = 13;
-                }else if(ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)){//集团校
+                } else if (ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)) {//集团校
                     clazz = MainGroupSchoolFragment.class;
                     tabId = 14;
-                }else {
+                } else if (ModuleConfig.TEMPLATE_HN_RES.equals(indexTemplateId)) {//海宁资源
+                    clazz = HaiNingResFragment.class;
+                    tabId = 15;
+                } else {
                     clazz = FeiXianFragment.class;
                     tabId = 12;
                 }
@@ -141,18 +146,16 @@ public class ChannelTab {
                     bundle = new Bundle();
                     bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE,name);
                     clazz = SipCustomizedFragment.class;
-                    tabId = 3;
-                }else{
+                } else {
                     clazz = ChannelCustomizedFragment.class;
-                    tabId = 3;
                 }
+                tabId = 3;
                 break;
             case "netteachid"://网络教研
                 clazz = TeachingResearchFragment.class;
                 tabId = 4;
                 break;
             case "netclassid"://名校网络课堂
-//                clazz = EliteSchoolOnlineClassFragment.class;
                 clazz = ChannelLivingFragment.class;
                 tabId = 5;
                 break;
@@ -174,9 +177,6 @@ public class ChannelTab {
                 break;
             default:
                 throw new IllegalStateException("Unknown id!id=" + id);
-//                clazz  =OnlineDocumentsFragment.class;
-//                tabId = 8;
-//                break;
         }
         Cog.d(TAG, "createTabInfo clazz=", clazz );
         return new ChannelTabInfo(name, clazz, bundle, tabId);
