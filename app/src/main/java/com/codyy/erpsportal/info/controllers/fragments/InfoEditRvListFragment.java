@@ -95,6 +95,7 @@ public class InfoEditRvListFragment extends LoadMoreFragment<InfoItem, InfoView1
     protected void extraInitViewsStyles() {
         super.extraInitViewsStyles();
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
+        mRecyclerView.setBackgroundColor(0xf2f2f2);
     }
 
     @Override
