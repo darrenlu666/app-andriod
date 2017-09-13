@@ -126,6 +126,10 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                     resourceName = mResourceName + (mVideoNumber+1);
                 }
                 mResourceDetails.setResourceName(resourceName);
+                //设置缩略图.
+                if(!TextUtils.isEmpty(mVideoList.get(mVideoNumber).getThumbPath()))
+                mResourceDetails.setThumbPath(mVideoList.get(mVideoNumber).getThumbPath());
+                //下载.
                 VideoDownloadUtils.downloadVideo(mResourceDetails, mResourceDetails.getAttachPath(), mUserInfo.getBaseUserId());
             } else {
                 ToastUtil.showToast(ActivityThemeActivity.this, "抱歉，没有视频！");
