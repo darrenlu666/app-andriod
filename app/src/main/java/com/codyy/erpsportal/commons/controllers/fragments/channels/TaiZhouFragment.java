@@ -24,6 +24,7 @@ import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
+import com.codyy.erpsportal.commons.models.entities.mainpage.TaiZhouPanel;
 import com.codyy.erpsportal.commons.models.entities.mainpage.TianJinCoursesProfile;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -78,7 +79,7 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
     private OnModuleConfigListener mOnModuleConfigListener = new OnModuleConfigListener() {
         @Override
         public void onConfigLoaded(ModuleConfig config) {
-            loadAreaMapAndInfo(config.getBaseAreaId());
+            loadAreaMapAndInfo(config.getAreaCode());
         }
     };
 
@@ -173,15 +174,15 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
         Cog.d(TAG, "jumpIntoArea");
     }
 
-    private void loadAreaMapAndInfo(String areaId) {
+    private void loadAreaMapAndInfo(String areaCode) {
         Cog.d(TAG, "loadAreaMapAndInfo url=", URLConfig.URL_MAP_TZ);
         if (mMapView != null) {
             mMapView.loadUrl(URLConfig.URL_MAP_TZ);
         }
         WebApi webApi = RsGenerator.create(WebApi.class);
         Map<String, String> params = new HashMap<>();
-        params.put("baseAreaId",areaId);
-        webApi.post4Json(URLConfig.PANEL_DATA, params)
+        params.put("areaCode",areaCode);
+        webApi.post4Json(URLConfig.PANEL_DATA_TZ, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JSONObject>() {
@@ -190,13 +191,14 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
                         Cog.d(TAG, "loadHomePageCount:" + response);
                         if ("success".equals(response.optString("result"))) {
                             Gson gson = new Gson();
-                            TianJinCoursesProfile coursesProfile = gson.fromJson(response.toString(),
-                                    TianJinCoursesProfile.class);
+
+                            TaiZhouPanel coursesProfile = gson.fromJson(response.optJSONObject("data").toString(),
+                                    TaiZhouPanel.class);
                             if (mSchoolCountTv == null) return;
-                            mSchoolCountTv.setText(coursesProfile.getSchoolCount() + "");
-                            mClassroomCountTv.setText(coursesProfile.getClassroomCount() + "");
-                            mResourceCountTv.setText(coursesProfile.getTeacherCount() + "");
-                            mNetTeachCountTv.setText(coursesProfile.getStudentCount() + "");
+                            mSchoolCountTv.setText(coursesProfile.getScheduleCount() + "");
+                            mClassroomCountTv.setText(coursesProfile.getScheduleCount() + "");
+                            mResourceCountTv.setText(coursesProfile.getResourceCount() + "");
+                            mNetTeachCountTv.setText(coursesProfile.getNetTeachCount() + "");
                         }
                     }
                 }, new Consumer<Throwable>() {

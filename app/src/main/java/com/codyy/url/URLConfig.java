@@ -79,6 +79,13 @@ public class URLConfig {
     @UrlSuffix("map/getDataByAreaId.do")
     public static String PANEL_DATA;
 
+
+    /**
+     * 台州数据
+     */
+    @UrlSuffix("map/getTaizhouData.do")
+    public static String PANEL_DATA_TZ;
+
     /**
      * 费县数据
      */

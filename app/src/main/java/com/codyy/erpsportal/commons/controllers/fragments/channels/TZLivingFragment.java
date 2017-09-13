@@ -16,15 +16,21 @@ import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.HistoryRecommendViewHolder;
+import com.codyy.erpsportal.commons.controllers.viewholders.customized.LivingClassViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.customized.LivingRecordViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.onlineclass.PictureViewHolder;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClassParse;
+import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
+import com.codyy.erpsportal.commons.models.entities.customized.LivingParse;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingRecordLesson;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingRecordParse;
+import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
+import com.codyy.erpsportal.commons.models.listeners.MainLiveClickListener;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
@@ -56,6 +62,11 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
      */
     private static final int TYPE_ITEM_VIEW_HOLDER_BANNER = 0x000;
 
+    /**
+     * 近期课程
+     */
+    private static final int TYPE_ITEM_VIEW_HOLDER_LIVING = 0x001;
+
     @Bind(R.id.empty_view) EmptyView mEmptyView;
     @Bind(R.id.refresh_layout) RefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
@@ -85,7 +96,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
     public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
-        data.put("size", "4");
+        data.put("size", "5");
         data.put("schoolId", schoolId);
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
@@ -102,20 +113,20 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
         }
         mEmptyView.setLoading(false);
         mRecyclerView.setEnabled(true);
-        LivingRecordParse lrp = new Gson().fromJson(response.toString(),LivingRecordParse.class);
-        if(null != lrp) {
+        LivingParse lp = new Gson().fromJson(response.toString(), LivingParse.class);
+        if(null != lp) {
             mData.clear();
             //banner picture.
             mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexSipRecentClass, TYPE_ITEM_VIEW_HOLDER_BANNER));
             //1.living
-            List<LivingRecordLesson> liveList = lrp.getData();
+            List<LivingClass> liveList = lp.getData();
             if (null != liveList) {
                 if (liveList.size() == 0) {
                     mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeOlclass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 } else {
                     mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeOlclass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
-                    for (LivingRecordLesson lr : liveList) {
-                        lr.setBaseViewHoldType(LivingRecordViewHolder.ITEM_TYPE_LIVING);
+                    for (LivingClass lr : liveList) {
+                        lr.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LIVING);
                         mData.add(lr);
                     }
                 }
@@ -203,9 +214,11 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                         viewHolder = new PictureViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_picture_banner_sip, parent, false));
                         break;
-                    case LivingRecordViewHolder.ITEM_TYPE_LIVING:
-                        viewHolder =  new LivingRecordViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
-                                parent.getContext(), R.layout.item_channel_live_record));
+                    case TYPE_ITEM_VIEW_HOLDER_LIVING:
+                        /*viewHolder =  new LivingRecordViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
+                                parent.getContext(), R.layout.item_channel_live_record));*/
+                        viewHolder = new LivingClassViewHolder(LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_channel_interact_live, parent, false));
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                         viewHolder =  new HistoryRecommendViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
@@ -230,9 +243,16 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
             public void onItemClicked(View v, int position, BaseTitleItemBar data) {
                 if(null == data) return;
                 switch (mAdapter.getItemViewType(position)){
-                    case LivingRecordViewHolder.ITEM_TYPE_LIVING:
-                        LivingRecordLesson lc = (LivingRecordLesson) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,lc.getId(),ClassRoomContants.TYPE_LIVE_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                    case TYPE_ITEM_VIEW_HOLDER_LIVING:
+                        LivingClass live = (LivingClass) data;
+                        MainResClassroom room = new MainResClassroom();
+                        room.setId(live.getId());
+                        room.setType(MainResClassroom.TYPE_ONLINE_CLASS);
+                        room.setStatus(live.getStatus());
+                        room.setSubjectName(live.getSubjectName());
+                        new MainLiveClickListener(
+                                TZLivingFragment.this, UserInfoKeeper.obtainUserInfo())
+                                .onLiveClassroomClick(room);
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                         HistoryClass hc = (HistoryClass) data;
@@ -263,7 +283,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
     private void getRecommendLesson() {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
-        data.put("size", "7");
+        data.put("size", "5");
         data.put("schoolId", schoolId);
         data.put("uuid",mUserInfo.getUuid());
         requestData(URLConfig.GET_INDEX_LIVE_APPOINTMENT_RECOMMEND, data,false, new BaseHttpActivity.IRequest() {

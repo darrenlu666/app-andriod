@@ -37,7 +37,17 @@ public class ChannelTab {
 
     private final static String TAG = "ChannelTab";
 
-    private static String[] sKnownIds = new String[]{"blogid", "classresourceid", "groupid", "homepageid", "informationid", "netclassid", "netteachid", "onlineclassid"};
+    private static String[] sKnownIds = new String[]{
+            "blogid",
+            "classresourceid",
+            "groupid",
+            "homepageid",
+            "informationid",
+            "netclassid",
+            "netteachid",
+            "onlineclassid",
+            "indexcustometaizhouliveCls"
+        };
 
     private String id;
 
@@ -85,7 +95,7 @@ public class ChannelTab {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.optJSONObject(i);
             ChannelTab channelTab = parseJsonObject(jsonObject);
-            if (Arrays.binarySearch(sKnownIds, channelTab.getId()) < 0) {
+            if (!isValideId(channelTab.getId())) {
                 continue;
             }
             channelTabs.add(channelTab);
@@ -93,6 +103,14 @@ public class ChannelTab {
         return channelTabs;
     }
 
+
+    private static boolean isValideId(String id){
+        for(String s: sKnownIds){
+            if(s.equals(id)) return true;
+        }
+
+        return false;
+    }
     /**
      * 根据传递的ｉｄ构建不同的Fragment的{@linkplain ChannelTabInfo}
      *
@@ -165,6 +183,10 @@ public class ChannelTab {
                     clazz = ChannelLivingFragment.class;
                 }
                 tabId = 5;
+                break;
+            case "indexcustometaizhouliveCls"://台州-名校网络课堂
+                clazz = TZLivingFragment.class;
+                tabId = 20;
                 break;
             case "informationid"://资讯
                 clazz = InfoIntroFragment.class;

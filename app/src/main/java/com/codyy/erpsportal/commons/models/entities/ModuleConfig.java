@@ -66,7 +66,7 @@ public class ModuleConfig {
     /**
      * 首页模板：台州
      */
-    public final static String TEMPLATE_TZ = "index.template.tz";
+    public final static String TEMPLATE_TZ = "index.template.taizhou";
 
     /**
      * 首页模板：集团校

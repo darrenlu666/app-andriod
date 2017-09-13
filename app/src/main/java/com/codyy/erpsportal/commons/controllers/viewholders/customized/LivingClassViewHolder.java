@@ -52,7 +52,7 @@ public class LivingClassViewHolder extends BaseRecyclerViewHolder<LivingClass> {
 
         //开始时间
         String startTime = data.getBeginTime();
-        if("PROGRESS".equals(data.getStatus())){
+        if("PROGRESS".equals(data.getStatus())||TextUtils.isEmpty(startTime)){
             startTime = data.getStartTime();
         }
         if(!TextUtils.isEmpty(startTime)){
