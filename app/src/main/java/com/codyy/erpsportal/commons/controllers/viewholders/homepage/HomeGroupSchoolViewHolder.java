@@ -52,19 +52,10 @@ public class HomeGroupSchoolViewHolder extends BaseRecyclerViewHolder<GroupSchoo
         mTagTv.setText(data.getSchoolTypeName());
 
         //设置默认图片.
-//        ImageFetcher.getInstance(mSdv.getContext()).fetchSmall(mSdv, data.getCoverPic());
-        DraweeController controller = Fresco.newDraweeControllerBuilder()
-                .setUri(UriUtils.buildSmallImageUrl(data.getCoverPic()))
-                .setTapToRetryEnabled(true)
-                .setOldController(mSdv.getController())
-                .setControllerListener(new SimpleControllerListener() {
-                    @Override
-                    public void onFailure(String id, Throwable throwable) {
-                        mSdv.setImageResource(R.drawable.ic_group_school_default);
-                    }
-                })
-                .build();
-
-        mSdv.setController(controller);
+        ImageFetcher.getInstance(mSdv)
+                .fetchSmallWithDefault(mSdv
+                        ,data.getCoverPic()
+                        ,R.drawable.ic_group_school_default
+                        ,true);
     }
 }

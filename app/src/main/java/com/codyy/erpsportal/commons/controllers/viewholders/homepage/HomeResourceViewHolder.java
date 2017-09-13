@@ -41,29 +41,16 @@ public class HomeResourceViewHolder extends BaseRecyclerViewHolder<MainResource>
 
     @Override
     public void setData(int position, MainResource data) throws Throwable {
-        textview.setText(data.getResourceName());
-        //placeholder_img
-        //icon_default_video
+
         if(null == data) return;
-        DraweeController draweeController = Fresco.newDraweeControllerBuilder()
-                .setUri(UriUtils.buildSmallImageUrl(data.getThumbPath()))
-                .setTapToRetryEnabled(true)
-                .setOldController(simpledraweeview.getController())
-                .setAutoPlayAnimations((data.getThumbPath()!=null && data.getThumbPath().contains(".gif")))
-                .setControllerListener(new SimpleControllerListener() {
-                    @Override
-                    public void onFailure(String id, Throwable throwable) {
-
-                        if(TextUtils.isEmpty(mData.getResourceColumn())) return;
-                        if("video".equals(mData.getResourceColumn())){
-                            simpledraweeview.setImageResource(R.drawable.icon_default_video);
-                        }else{
-                            simpledraweeview.setImageResource(R.drawable.placeholder_img);
-                        }
-                    }
-                })
-                .build();
-
-        simpledraweeview.setController(draweeController);
+        textview.setText(data.getResourceName());
+        if(TextUtils.isEmpty(mData.getResourceColumn())) return;
+        int resId = R.drawable.icon_default_video;
+        if("video".equals(mData.getResourceColumn())){
+            resId = R.drawable.icon_default_video;
+        }else{
+            resId = R.drawable.placeholder_img;
+        }
+        ImageFetcher.getInstance(simpledraweeview).fetchSmallWithDefault(simpledraweeview,data.getThumbPath(),resId,true);
     }
 }

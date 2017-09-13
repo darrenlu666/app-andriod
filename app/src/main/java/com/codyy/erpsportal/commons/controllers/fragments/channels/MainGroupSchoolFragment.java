@@ -498,9 +498,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_RESOURCE, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-//                if (mRefreshLayout.isRefreshing()) {
-//                    mRefreshLayout.setRefreshing(false);
-//                }
+
                 FormatJsonParse<MainResource> hcp = new FormatJsonParse<MainResource>().parse(response, MainResource.class);
                 if (null != hcp) {
                     List<MainResource> hcList = hcp.getData();
@@ -548,9 +546,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         requestData(URLConfig.GET_GROUP_SCHOOL_TEACHER_RECOMMEND, params, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-//                if (mRefreshLayout.isRefreshing()) {
-//                    mRefreshLayout.setRefreshing(false);
-//                }
+
                 FormatJsonParse<GreatTeacher> hcp = new FormatJsonParse<GreatTeacher>().parse(response, GreatTeacher.class);
                 if (null != hcp) {
                     List<GreatTeacher> hcList = hcp.getData();
@@ -569,13 +565,6 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
-                /*mAdapter.notifyDataSetChanged();
-                if (mData.size() <= 0) {
-                    mEmptyView.setLoading(false);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                }*/
                 //  获取集团学校
                 getGroupSchool();
             }

@@ -3,10 +3,14 @@ package com.codyy.erpsportal.commons.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.SettingActivity;
+import com.codyy.erpsportal.commons.controllers.viewholders.homepage.SimpleControllerListener;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.UriUtils;
@@ -85,6 +89,40 @@ public class ImageFetcher {
             }
         }
         dv.setImageURI(null);
+    }
+
+    /**
+     * 加载失败自动设置默认图片
+     * @param dv
+     * @param imageUrl
+     * @param resId
+     * @param isLoadGif
+     */
+    public void fetchSmallWithDefault(final DraweeView dv, String imageUrl, @DrawableRes final int resId, boolean isLoadGif) {
+        if (dv == null) return;
+        if (mShowImage && imageUrl!=null && imageUrl.trim().length() > 0) {
+            if (isLoadGif && loadAnimatingGif(dv, imageUrl)) return;
+            String uriStr = UriUtils.buildSmallImageUrl(imageUrl);
+            if (!TextUtils.isEmpty(uriStr)) {
+                DraweeController draweeController = Fresco.newDraweeControllerBuilder()
+                        .setUri(uriStr)
+                        .setTapToRetryEnabled(true)
+                        .setOldController(dv.getController())
+                        .setAutoPlayAnimations(isLoadGif)
+                        .setControllerListener(new SimpleControllerListener() {
+                            @Override
+                            public void onFailure(String id, Throwable throwable) {
+                                dv.setImageResource(resId);
+                            }
+                        })
+                        .build();
+
+                dv.setController(draweeController);
+
+                return;
+            }
+        }
+        dv.setImageResource(resId);
     }
 
     /**

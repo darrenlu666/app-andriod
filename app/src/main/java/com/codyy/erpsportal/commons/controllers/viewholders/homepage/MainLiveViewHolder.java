@@ -40,7 +40,7 @@ public class MainLiveViewHolder extends BaseRecyclerViewHolder<GroupLive> {
     public void setData(int position, GroupLive data) {
         if(null == data) return;
         // 16-6-1 set data content .
-        ImageFetcher.getInstance(mSchoolTextView.getContext()).fetchSmall(mSDV,data.getImagePath());
+        ImageFetcher.getInstance(mSchoolTextView.getContext()).fetchImage(mSDV,data.getImagePath());
         mSchoolTextView.setText(data.getRealName());
         StringBuilder sb = new StringBuilder();
         if(!TextUtils.isEmpty(data.getBaseClasslevelName())) sb.append(data.getBaseClasslevelName());
