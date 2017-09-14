@@ -160,7 +160,7 @@ public class OnlineDocumentsFragment extends OnlineFragmentBase {
                     if(isRefresh){
                         mSwipeRefreshLayout.setRefreshing(false);
                     }else{
-                        mEmptyView.setVisibility(View.INVISIBLE);
+                        mEmptyView.setVisibility(View.GONE);
                         mEmptyView.setLoading(false);
                     }
                     JSONArray jsonArray = response.optJSONArray("list");
