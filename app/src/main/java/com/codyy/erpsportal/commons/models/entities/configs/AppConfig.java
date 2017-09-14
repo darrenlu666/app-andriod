@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.blogs.controllers.activities.AreaBlogActivity;
 import com.codyy.erpsportal.classroom.activity.ClassRecordedFilterActivity;
 import com.codyy.erpsportal.classroom.activity.ClassRecordedNoAreaActivity;
 import com.codyy.erpsportal.classroom.activity.ClassRoomListActivity;
@@ -94,6 +95,7 @@ public class AppConfig {
             R.drawable.ic_fun_school_tv,//校园电视台 19
             R.drawable.ic_fun_repair,//报修 20
             R.drawable.ic_fun_announcement,//通知公告 21
+            R.drawable.ic_fun_blog,//博文 22
     };
     /**
      * 二级菜单icon .
@@ -123,6 +125,7 @@ public class AppConfig {
             "tvProgram.id",//校园电视台 19
             "repairs.id",//报修 20
             "announcement.id",//通知公告 21
+            "blog.id",//博文 22
     };
 
     private HashMap<String, List<AppPriority>> mPriorityCollection = new HashMap<>();
@@ -463,6 +466,8 @@ public class AppConfig {
         mPriorityCollection.put(MENUS[20], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER));
         //通知公告
         mPriorityCollection.put(MENUS[21], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        //博文
+        mPriorityCollection.put(MENUS[22], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
 
         /** 二级应用列表-统计**/
         //统计－课堂统计/** 二级应用列表-统计**/
@@ -774,6 +779,18 @@ public class AppConfig {
                             intent.putExtra(InfoDeleteActivity.EXTRA_INFO, 1);
                         }
                     };
+
+                    break;
+                case 22://博文(非人角色)\
+                    // TODO: 17-9-14 跳转到博文列表.
+                    jumpable = new Jumpable() {
+                        @Override
+                        public void jump(Context context) {
+                            UserInfo userInfo = UserInfoKeeper.getInstance().getUserInfo();
+                            AreaBlogActivity.start(context, userInfo);
+                        }
+                    };
+                    break;
             }
             ai.setJumpable(jumpable);
         }

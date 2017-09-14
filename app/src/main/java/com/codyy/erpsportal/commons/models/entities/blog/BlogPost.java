@@ -15,6 +15,7 @@ public class BlogPost extends BaseTitleItemBar implements Serializable {
     @SerializedName("headPic")
     private String blogPicture;
     private String blogTitle;
+    @SerializedName(value="blogContent",alternate = {"blogTextContent"})
     private String blogContent;
     @SerializedName("blogTextContent")
     private String blogDesc;
@@ -31,12 +32,10 @@ public class BlogPost extends BaseTitleItemBar implements Serializable {
     private String baseUserId;
     private String baseUserName;
     private String createTime;
-    /**
-     * 博文分类id
-     */
-    private String blogCategoryId;
+    private String blogCategoryId;//博文分类id
     private String categoryName;
     private String realName;
+    private String userType;//用户角色AREA_USER,SCHOOL_USER,STUDENT,TEACHER,PARENT
 
     public BlogPost() {
     }
@@ -44,6 +43,14 @@ public class BlogPost extends BaseTitleItemBar implements Serializable {
     public BlogPost(String blogTitle,int viewHoldType) {
         setBaseViewHoldType(viewHoldType);
         setBaseTitle(blogTitle);
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public String getRealName() {
