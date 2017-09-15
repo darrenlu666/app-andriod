@@ -125,6 +125,39 @@ public class ImageFetcher {
         dv.setImageResource(resId);
     }
 
+
+    /**
+     * 带默认图片的获取sdv图片.
+     * @param dv
+     * @param imageUrl
+     * @param resId
+     * @param isLoadGif
+     */
+    public void fetchImageWithDefault(final DraweeView dv, String imageUrl, @DrawableRes final int resId, boolean isLoadGif) {
+        if (dv == null) return;
+        if (mShowImage && imageUrl!=null && imageUrl.trim().length() > 0) {
+            if (isLoadGif && loadAnimatingGif(dv, imageUrl)) return;
+            if (!TextUtils.isEmpty(imageUrl)) {
+                DraweeController draweeController = Fresco.newDraweeControllerBuilder()
+                        .setUri(imageUrl)
+                        .setTapToRetryEnabled(true)
+                        .setOldController(dv.getController())
+                        .setAutoPlayAnimations(isLoadGif)
+                        .setControllerListener(new SimpleControllerListener() {
+                            @Override
+                            public void onFailure(String id, Throwable throwable) {
+                                dv.setImageResource(resId);
+                            }
+                        })
+                        .build();
+
+                dv.setController(draweeController);
+
+                return;
+            }
+        }
+        dv.setImageResource(resId);
+    }
     /**
      * 抓取图片
      * @param dv 显示图片的DraweeView

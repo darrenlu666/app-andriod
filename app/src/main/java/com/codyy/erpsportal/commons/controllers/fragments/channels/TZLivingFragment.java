@@ -247,7 +247,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                         LivingClass live = (LivingClass) data;
                         MainResClassroom room = new MainResClassroom();
                         room.setId(live.getId());
-                        room.setType(MainResClassroom.TYPE_ONLINE_CLASS);
+                        room.setType(MainResClassroom.TYPE_LIVE);
                         room.setStatus(live.getStatus());
                         room.setSubjectName(live.getSubjectName());
                         new MainLiveClickListener(

@@ -37,7 +37,7 @@ public class HistoryRecommendViewHolder extends BaseRecyclerViewHolder<HistoryCl
         mData   =   data;
         if(null == data) return;
         ImageFetcher.getInstance(mSchoolTextView.getContext())
-                .fetchSmallWithDefault(mSDV,data.getThumb(),R.drawable.icon_default_video,true);
+                .fetchImageWithDefault(mSDV,data.getThumb(),R.drawable.icon_default_video,true);
         mSchoolTextView.setText(data.getSchoolName());
         mLevelSTTextView.setText(data.getClasslevelName()+"/"+data.getSubjectName()+"/"+data.getTeacherName());
     }
