@@ -258,7 +258,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                         ClassRoomDetailActivity.startActivity(getActivity(),
                                 mUserInfo,
                                 hc.getId(),
-                                ClassRoomContants.TYPE_LIVE_LIVE,
+                                ClassRoomContants.TYPE_LIVE_RECORD,
                                 hc.getSubjectName()
                                 );
                         break;
@@ -267,7 +267,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                         ClassRoomDetailActivity.startActivity(getActivity(),
                                 mUserInfo,
                                 lrc.getId(),
-                                ClassRoomContants.TYPE_LIVE_LIVE,
+                                ClassRoomContants.TYPE_LIVE_RECORD,
                                 lrc.getSubjectName());
                         break;
                 }
