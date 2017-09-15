@@ -68,9 +68,9 @@ public class URLConfig {
     public static String URL_MAP;
 
     /**
-     * 天津首页地图
+     * 台州首页地图
      */
-    @UrlSuffix("map/mapTJPage.html")
+    @UrlSuffix("map/mapPage.html")
     public static String URL_MAP_TZ;
 
     /**

@@ -16,7 +16,9 @@
         app:aspectRatio="0.5625"
         app:aspectRatioEnabled="true"
         app:dominantMeasurement="width"
-        app:placeholderImage="@drawable/icon_default_video"/>
+        app:placeholderImage="@drawable/icon_default_video"
+        app:actualImageScaleType="fitXY"
+        />
 
     <TextView
         android:id="@+id/tv_school"

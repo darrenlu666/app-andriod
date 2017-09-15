@@ -78,12 +78,11 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
         int viewType = parent.getAdapter().getItemViewType(position);
 
         if (null != mIGridLayoutViewHolder) {
-
             if (isContains(viewType, mIGridLayoutViewHolder.obtainMultiSingleLine())) {
-                isBigShow = true;
-                outRect.top = 0;
-                outRect.left = 0;
-                outRect.right = 0;
+//                isBigShow = true;
+                outRect.top = mSpace;
+                outRect.left = mSpace;
+                outRect.right = mSpace;
                 outRect.bottom = mSpace;
                 return;
             } else if (isContains(viewType, mIGridLayoutViewHolder.obtainMultiInLine())) {
@@ -91,11 +90,9 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 if (mLastPosition == 0
                         && parent.getAdapter().getItemViewType(0) != viewType) {
                     mLastPosition = position;
-//                    Log.i(TAG, " last Position : " + mLastPosition);
                 }
                 int count = gridLayoutManager.getSpanCount();
                 setSpace(outRect, position - mLastPosition, count);
-//                Log.i(TAG,"set space : left: "+outRect.left+" top: "+outRect.top +" right: "+outRect.right+" bottom: "+outRect.bottom);
                 return;
             }
         }
@@ -213,8 +210,8 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 int count = parent.getAdapter().getItemCount();
                 boolean isLastTitle = false;
                 boolean isNeedJump = false;
+                int viewType = parent.getAdapter().getItemViewType(i + firstVisiblePosition);
                 if ((i + firstVisiblePosition) < count) {
-                    int viewType = parent.getAdapter().getItemViewType(i + firstVisiblePosition);
                     isLastTitle = isLastTitleBar(parent, firstVisiblePosition, viewType, i);
                     if (needDivider(viewType) && !isLastTitle) {
                         isNeedJump = true;
@@ -228,11 +225,16 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 //过滤标题的下方divider 的 padding
                 int left = isLastTitle ? 0 : (parent.getPaddingLeft() + childView.getPaddingLeft());
                 int bottom = childView.getTop() - params.topMargin;
+                //如果当前是大图,则divider需要上移一个space
+                if (null != mIGridLayoutViewHolder&& isContains(viewType, mIGridLayoutViewHolder.obtainMultiSingleLine())) {
+                    // Log.i(TAG, " last Position : " + mLastPosition);
+                    bottom = bottom-mSpace;
+                }
                 int top = bottom - mDivider.getIntrinsicHeight();
                 int right = parent.getWidth() - childView.getPaddingRight();
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
-//                Log.i(TAG,"draw divider left padding :"+left);
+                Log.i(TAG,"draw divider left padding :"+left+" top padding:"+top);
             }
         } else if (orientation == LinearLayoutManager.HORIZONTAL) {
             for (int i = 0; i < childCount; i++) {

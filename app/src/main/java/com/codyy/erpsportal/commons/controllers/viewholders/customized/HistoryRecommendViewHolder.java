@@ -36,8 +36,8 @@ public class HistoryRecommendViewHolder extends BaseRecyclerViewHolder<HistoryCl
         mCurrentPosition = position;
         mData   =   data;
         if(null == data) return;
-        // TODO: 16-6-1 set data content .
-        ImageFetcher.getInstance(mSchoolTextView.getContext()).fetchImage(mSDV,data.getThumb());
+        ImageFetcher.getInstance(mSchoolTextView.getContext())
+                .fetchSmallWithDefault(mSDV,data.getThumb(),R.drawable.icon_default_video,true);
         mSchoolTextView.setText(data.getSchoolName());
         mLevelSTTextView.setText(data.getClasslevelName()+"/"+data.getSubjectName()+"/"+data.getTeacherName());
     }

@@ -212,7 +212,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_BANNER://banner picture .
                         viewHolder = new PictureViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.item_picture_banner_sip, parent, false));
+                                .inflate(R.layout.item_banner_tz, parent, false));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LIVING:
                         /*viewHolder =  new LivingRecordViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
