@@ -116,30 +116,23 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
         LivingParse lp = new Gson().fromJson(response.toString(), LivingParse.class);
         if(null != lp) {
             //banner picture.
-            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexSipRecentClass, TYPE_ITEM_VIEW_HOLDER_BANNER));
+            mData.add(new BaseTitleItemBar("直播课程", TYPE_ITEM_VIEW_HOLDER_BANNER));
             //1.living
             List<LivingClass> liveList = lp.getData();
             if (null != liveList) {
                 if (liveList.size() == 0) {
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeOlclass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    mData.add(new BaseTitleItemBar("直播课程", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                 } else {
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeOlclass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                    mData.add(new BaseTitleItemBar("直播课程", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
                     for (LivingClass lr : liveList) {
                         lr.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LIVING);
                         mData.add(lr);
                     }
                 }
             } else {
-                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeOlclass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                mData.add(new BaseTitleItemBar("直播课程", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
         }
-        /*mAdapter.setData(mData);
-        mAdapter.notifyDataSetChanged();
-        if (mData.size() <= 0) {
-            mEmptyView.setVisibility(View.VISIBLE);
-        } else {
-            mEmptyView.setVisibility(View.GONE);
-        }*/
         getRecommendLesson();
     }
 
@@ -223,8 +216,6 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                                 .inflate(R.layout.item_banner_tz, parent, false));
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_LIVING:
-                        /*viewHolder =  new LivingRecordViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
-                                parent.getContext(), R.layout.item_channel_live_record));*/
                         viewHolder = new LivingClassViewHolder(LayoutInflater.from(parent.getContext())
                                 .inflate(R.layout.item_channel_interact_live, parent, false));
                         break;
@@ -264,11 +255,20 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
                         HistoryClass hc = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,hc.getId(),ClassRoomContants.TYPE_LIVE_RECORD,hc.getSubjectName());// ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),
+                                mUserInfo,
+                                hc.getId(),
+                                ClassRoomContants.TYPE_LIVE_LIVE,
+                                hc.getSubjectName()
+                                );
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
                         HistoryClass lrc = (HistoryClass) data;
-                        ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,lrc.getId(),ClassRoomContants.TYPE_LIVE_RECORD,lrc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
+                        ClassRoomDetailActivity.startActivity(getActivity(),
+                                mUserInfo,
+                                lrc.getId(),
+                                ClassRoomContants.TYPE_LIVE_LIVE,
+                                lrc.getSubjectName());
                         break;
                 }
             }
@@ -281,8 +281,6 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
     public void onConfigLoaded(ModuleConfig config) {
         schoolId = config.getSchoolId();
         baseAreaId = config.getBaseAreaId();
-//        mRefreshLayout.setRefreshing(true);
-//        requestData(true);
         refresh();
     }
 
@@ -306,9 +304,9 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                     List<HistoryClass> hcList = hcp.getData();
                     if (null != hcList) {
                         if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                            mData.add(new BaseTitleItemBar("课程回放", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                         } else {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                            mData.add(new BaseTitleItemBar("课程回放", TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
                             for (HistoryClass hc : hcList) {
                                 //判断--奇数/偶数

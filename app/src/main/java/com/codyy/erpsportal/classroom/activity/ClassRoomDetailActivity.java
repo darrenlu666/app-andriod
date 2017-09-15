@@ -415,13 +415,30 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         List<Fragment> mFragmentList = new ArrayList<>();
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
             mTabLayout.addTab(mTabLayout.newTab().setText("课程详情"));
-            mFragmentList.add(ClassDetailFragment.newInstance(mFrom, mClassRoomDetail.getArea(), mClassRoomDetail.getClassPeriod(), mClassRoomDetail.getClassTime(),
-                    mClassRoomDetail.getGrade(), mClassRoomDetail.getSchoolName(), mClassRoomDetail.getTeacher(), mClassRoomDetail.getSubject(), getReceiveNameList()));
+            mFragmentList.add(
+                    ClassDetailFragment.newInstance(mFrom,
+                            mClassRoomDetail.getArea(),
+                            mClassRoomDetail.getClassPeriod(),
+                            mClassRoomDetail.getClassTime(),
+                            mClassRoomDetail.getGrade(),
+                            mClassRoomDetail.getSchoolName(),
+                            mClassRoomDetail.getTeacher(),
+                            mClassRoomDetail.getSubject(),
+                            getReceiveNameList()));
         } else {
             mTabLayout.addTab(mTabLayout.newTab().setText("课程详情"));
-            mFragmentList.add(ClassDetailFragment.newInstance(mFrom, mRecordRoomDetail.getArea(), mRecordRoomDetail.getClassPeriod(), mRecordRoomDetail.getClassTime(),
-                    mRecordRoomDetail.getGrade(), mRecordRoomDetail.getSchoolName(), mRecordRoomDetail.getTeacher(), mRecordRoomDetail.getSubject(), getReceiveNameList(),
-                    mRecordRoomDetail.getTimeLength(), mRecordRoomDetail.getPlayCount()));
+            mFragmentList.add(
+                    ClassDetailFragment.newInstance(mFrom,
+                            mRecordRoomDetail.getArea(),
+                            mRecordRoomDetail.getClassPeriod(),
+                            mRecordRoomDetail.getClassTime(),
+                            mRecordRoomDetail.getGrade(),
+                            mRecordRoomDetail.getSchoolName(),
+                            mRecordRoomDetail.getTeacher(),
+                            mRecordRoomDetail.getSubject(),
+                            getReceiveNameList(),
+                            mRecordRoomDetail.getTimeLength(),
+                            mRecordRoomDetail.getPlayCount()));
         }
         //添加最新评论fragment
         mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
