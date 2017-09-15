@@ -389,6 +389,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                         mTitleTv.setText(mClassRoomDetail.getSchoolName());
                     } else {
                         mRecordRoomDetail = RecordRoomDetail.parseResult(response);
+                        mRecordRoomDetail.setSubject(mSubject);
                         mTitleTv.setText(mRecordRoomDetail.getSchoolName());
                     }
                     initViews();
@@ -435,7 +436,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                             mRecordRoomDetail.getGrade(),
                             mRecordRoomDetail.getSchoolName(),
                             mRecordRoomDetail.getTeacher(),
-                            mRecordRoomDetail.getSubject(),
+                            mSubject,
                             getReceiveNameList(),
                             mRecordRoomDetail.getTimeLength(),
                             mRecordRoomDetail.getPlayCount()));
