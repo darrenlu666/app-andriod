@@ -107,15 +107,14 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
     @Override
     public void onSuccess(JSONObject response,boolean isRefreshing) {
         if(null == mRecyclerView ) return;
-        if(isRefreshing) mData.clear();
+        /*if(isRefreshing) mData.clear();
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
         mEmptyView.setLoading(false);
-        mRecyclerView.setEnabled(true);
+        mRecyclerView.setEnabled(true);*/
         LivingParse lp = new Gson().fromJson(response.toString(), LivingParse.class);
         if(null != lp) {
-            mData.clear();
             //banner picture.
             mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexSipRecentClass, TYPE_ITEM_VIEW_HOLDER_BANNER));
             //1.living
@@ -134,15 +133,24 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                 mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexCompositeOlclass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
         }
-        mAdapter.setData(mData);
+        /*mAdapter.setData(mData);
         mAdapter.notifyDataSetChanged();
         if (mData.size() <= 0) {
             mEmptyView.setVisibility(View.VISIBLE);
         } else {
             mEmptyView.setVisibility(View.GONE);
-        }
+        }*/
         getRecommendLesson();
     }
+
+    private void refresh() {
+        mRecyclerView.setEnabled(false);
+        mData.clear();
+        mRecyclerView.getRecycledViewPool().clear();
+        mAdapter.notifyDataSetChanged();
+        requestData(true);
+    }
+
 
     @Override
     public void onFailure(Throwable error) {
@@ -155,6 +163,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
             mEmptyView.setVisibility(View.VISIBLE);
             mEmptyView.setLoading(false);
         }else {
+            mAdapter.setData(mData);
             mEmptyView.setVisibility(View.GONE);
         }
     }
@@ -185,8 +194,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mRecyclerView.setEnabled(false);
-                requestData(false);
+                refresh();
             }
         });
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
@@ -273,8 +281,9 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
     public void onConfigLoaded(ModuleConfig config) {
         schoolId = config.getSchoolId();
         baseAreaId = config.getBaseAreaId();
-        mRefreshLayout.setRefreshing(true);
-        requestData(true);
+//        mRefreshLayout.setRefreshing(true);
+//        requestData(true);
+        refresh();
     }
 
     /**
@@ -289,6 +298,9 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
         requestData(URLConfig.GET_INDEX_LIVE_APPOINTMENT_RECOMMEND, data,false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
+                if (mRefreshLayout.isRefreshing()) {
+                    mRefreshLayout.setRefreshing(false);
+                }
                 HistoryClassParse hcp = new Gson().fromJson(response.toString(),HistoryClassParse.class);
                 if(null != hcp ) {
                     List<HistoryClass> hcList = hcp.getData();
@@ -317,7 +329,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                         mData.add(new BaseTitleItemBar(Titles.sPagetitleSpeclassReplay, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
                     }
                 }
-
+                mAdapter.setData(mData);
                 mAdapter.notifyDataSetChanged();
                 if (mData.size() <= 0) {
                     mEmptyView.setVisibility(View.VISIBLE);
