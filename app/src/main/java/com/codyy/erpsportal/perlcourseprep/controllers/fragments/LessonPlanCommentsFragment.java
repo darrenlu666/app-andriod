@@ -14,7 +14,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.resource.models.entities.ResourceComment;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
@@ -38,7 +38,7 @@ public class LessonPlanCommentsFragment extends LoadMoreFragment<ResourceComment
     }
 
     @Override
-    protected ViewHolderCreator<CommentViewHolder> newViewHolderCreator() {
+    protected AbsVhrCreator<CommentViewHolder> newViewHolderCreator() {
         return new EasyVhrCreator<>(CommentViewHolder.class);
     }
 

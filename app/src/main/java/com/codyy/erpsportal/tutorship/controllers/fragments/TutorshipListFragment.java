@@ -15,7 +15,7 @@ import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity.OnFilterObserver;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
@@ -74,8 +74,8 @@ public class TutorshipListFragment extends LoadMoreFragment<Tutorship, Tutorship
     }
 
     @Override
-    protected ViewHolderCreator<TutorshipViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<TutorshipViewHolder>() {
+    protected AbsVhrCreator<TutorshipViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<TutorshipViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_tutorship;

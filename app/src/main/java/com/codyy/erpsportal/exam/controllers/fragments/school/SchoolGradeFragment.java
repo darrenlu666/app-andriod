@@ -12,7 +12,7 @@ import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivit
 import com.codyy.erpsportal.exam.controllers.activities.school.SchoolGradeDetailActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.exam.models.entities.school.ExamSchoolGrade;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
@@ -40,8 +40,8 @@ public class SchoolGradeFragment extends LoadMoreFragment<ExamSchoolGrade, Schoo
     }
 
     @Override
-    protected ViewHolderCreator<ExamSchoolGradeViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamSchoolGradeViewHolder>() {
+    protected AbsVhrCreator<ExamSchoolGradeViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamSchoolGradeViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_school_grade;

@@ -16,7 +16,7 @@ import com.codyy.erpsportal.exam.controllers.activities.parent.ParentViewChecked
 import com.codyy.erpsportal.exam.controllers.activities.parent.ParentViewWaitActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.exam.models.entities.student.ExamStudentTask;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -53,8 +53,8 @@ public class ParentsTaskFragment extends LoadMoreFragment<ExamStudentTask, Paren
     }
 
     @Override
-    protected ViewHolderCreator<ParentsTaskFragment.ExamStudentTaskViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamStudentTaskViewHolder>() {
+    protected AbsVhrCreator<ExamStudentTaskViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamStudentTaskViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_student_task;

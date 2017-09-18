@@ -17,7 +17,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.tutorship.controllers.activities.TutorialTestActivity;
 import com.codyy.erpsportal.tutorship.controllers.fragments.TutorialsTestsFragment.TutorialTestViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.tutorship.models.entities.TutorialTest;
@@ -58,8 +58,8 @@ public class TutorialsTestsFragment extends LoadMoreFragment<TutorialTest, Tutor
     }
 
     @Override
-    protected ViewHolderCreator<TutorialTestViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<TutorialTestViewHolder>() {
+    protected AbsVhrCreator<TutorialTestViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<TutorialTestViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_tutorial_test;

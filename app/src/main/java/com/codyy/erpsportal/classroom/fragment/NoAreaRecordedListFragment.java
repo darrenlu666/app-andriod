@@ -17,7 +17,7 @@ import com.codyy.erpsportal.classroom.models.NoAreaRecordedDetail;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
@@ -97,8 +97,8 @@ public class NoAreaRecordedListFragment extends LoadMoreFragment<NoAreaRecordedD
     }
 
     @Override
-    protected ViewHolderCreator<NoAreaRecordedHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<NoAreaRecordedHolder>() {
+    protected AbsVhrCreator<NoAreaRecordedHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<NoAreaRecordedHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_recorded_list_school;

@@ -25,7 +25,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.RvLoader;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.Builder;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.ListExtractor;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
@@ -388,7 +388,7 @@ public class SchoolRepairsActivity extends AppCompatActivity implements ListExtr
     }
 
     @Override
-    public ViewHolderCreator<RepairRecordVh> newViewHolderCreator() {
+    public AbsVhrCreator<RepairRecordVh> newViewHolderCreator() {
         return new EasyVhrCreator<>(RepairRecordVh.class);
     }
 

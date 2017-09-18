@@ -34,7 +34,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.Builder;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.ListExtractor;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingCommonRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.Jumpable;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -352,7 +352,7 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
     }
 
     @Override
-    public ViewHolderCreator<ClassroomViewHolder> newViewHolderCreator() {
+    public AbsVhrCreator<ClassroomViewHolder> newViewHolderCreator() {
         return new EasyVhrCreator<>(ClassroomViewHolder.class);
     }
 

@@ -11,7 +11,7 @@ import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.exam.controllers.activities.classroom.ExamClassSpaceDetailActivity;
 import com.codyy.erpsportal.exam.models.entities.school.ExamSchoolClass;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -39,8 +39,8 @@ public class ClassSpaceExamFragment extends LoadMoreFragment<ExamSchoolClass, Cl
     }
 
     @Override
-    protected ViewHolderCreator<ExamSchoolClassViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamSchoolClassViewHolder>() {
+    protected AbsVhrCreator<ExamSchoolClassViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamSchoolClassViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_student_task;

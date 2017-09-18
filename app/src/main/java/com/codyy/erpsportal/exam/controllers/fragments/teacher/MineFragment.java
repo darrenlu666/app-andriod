@@ -14,7 +14,7 @@ import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivit
 import com.codyy.erpsportal.exam.controllers.activities.teacher.TeacherMineDetailActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.exam.models.entities.teacher.ExamTeacherMine;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -47,8 +47,8 @@ public class MineFragment extends LoadMoreFragment<ExamTeacherMine, MineFragment
     }
 
     @Override
-    protected ViewHolderCreator<ExamTeacherMineViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamTeacherMineViewHolder>() {
+    protected AbsVhrCreator<ExamTeacherMineViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamTeacherMineViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_teacher_mine;

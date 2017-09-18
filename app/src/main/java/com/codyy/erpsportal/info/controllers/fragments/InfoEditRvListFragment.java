@@ -12,7 +12,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.ShareDataVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -99,7 +99,7 @@ public class InfoEditRvListFragment extends LoadMoreFragment<InfoItem, InfoView1
     }
 
     @Override
-    protected ViewHolderCreator<InfoView1Holder> newViewHolderCreator() {
+    protected AbsVhrCreator<InfoView1Holder> newViewHolderCreator() {
         return new ShareDataVhrCreator<>(InfoView1Holder.class, SelectingFlag.class, mSelecting);
     }
 

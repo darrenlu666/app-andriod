@@ -23,7 +23,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.Builder;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.ListExtractor;
 import com.codyy.erpsportal.commons.controllers.viewholders.BindingCommonRvHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -112,7 +112,7 @@ public class SchoolRepairListFragment extends Fragment implements OnFilterObserv
     }
 
     @Override
-    public ViewHolderCreator<RepairSchoolVh> newViewHolderCreator() {
+    public AbsVhrCreator<RepairSchoolVh> newViewHolderCreator() {
         return new EasyVhrCreator<>(RepairSchoolVh.class);
     }
 

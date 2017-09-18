@@ -17,7 +17,7 @@ import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.perlcourseprep.controllers.fragments.SubjectMaterialFragment.SmViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.perlcourseprep.models.entities.SubjectMaterialPicture;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -62,7 +62,7 @@ public class SubjectMaterialFragment extends LoadMoreGridFragment<SubjectMateria
     }
 
     @Override
-    protected ViewHolderCreator<SmViewHolder> newViewHolderCreator() {
+    protected AbsVhrCreator<SmViewHolder> newViewHolderCreator() {
         return new EasyVhrCreator<>(SmViewHolder.class);
     }
 

@@ -18,7 +18,7 @@ import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnItemC
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnLoadMoreListener;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerCommonAdapter;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.models.network.Response;
@@ -119,7 +119,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
      *
      * @return
      */
-    protected ViewHolderCreator<VH> newViewHolderCreator() {
+    protected AbsVhrCreator<VH> newViewHolderCreator() {
         if (mListExtractor == null) return null;
         return mListExtractor.newViewHolderCreator();
     }
@@ -446,7 +446,7 @@ public class RvLoader<T, VH extends RecyclerViewHolder<T>, INFO> implements OnRe
          *
          * @return
          */
-        ViewHolderCreator<VH> newViewHolderCreator();
+        AbsVhrCreator<VH> newViewHolderCreator();
     }
 
     /**

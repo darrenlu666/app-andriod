@@ -1,38 +1,37 @@
+/*
+ * 阔地教育科技有限公司版权所有（codyy.com/codyy.cn）
+ * Copyright (c) 2017, Codyy and/or its affiliates. All rights reserved.
+ */
+
 package com.codyy.erpsportal.commons.controllers.viewholders;
 
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
-
-import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
-import com.codyy.erpsportal.commons.utils.Cog;
 
 import java.lang.reflect.Constructor;
 
 /**
- * 配合{@link LayoutId}注解设置布局id的ViewHolder创建器
- * Created by gujiajia on 2016/6/2.
+ * 一般的组持者创建者
+ * Created by gujiajia on 2017/9/15.
  */
-public class EasyVhrCreator<VH extends ViewHolder> extends AbsVhrCreator<VH> {
 
-    private static final String TAG = "EasyVhrCreator";
+public class OrdinaryVhrCreator<VH extends ViewHolder> extends AbsVhrCreator<VH> {
 
     private Constructor<VH> mConstructor;
 
-    private int mLayoutId;
+    private @LayoutRes int mLayoutId;
 
-    public EasyVhrCreator(Class<VH> vhClass) {
+    public OrdinaryVhrCreator(Class<VH> vhClass, @LayoutRes int layoutId) {
         try {
             mConstructor = vhClass.getConstructor(View.class);
         } catch (NoSuchMethodException e) {
-            Cog.e(TAG, "No constructor with argument View!");
             e.printStackTrace();
         }
         if (mConstructor == null) {
             throw new RuntimeException("No constructor with argument View!");
         }
-        LayoutId layoutId = vhClass.getAnnotation(LayoutId.class);
-        if (layoutId == null) throw new RuntimeException("Please use LayoutId set layout id!");
-        mLayoutId = layoutId.value();
+        mLayoutId = layoutId;
     }
 
     @Override
@@ -46,10 +45,8 @@ public class EasyVhrCreator<VH extends ViewHolder> extends AbsVhrCreator<VH> {
         try {
             viewHolder = mConstructor.newInstance(view);
         } catch (Exception e) {
-            Cog.e(TAG, e.getMessage());
             e.printStackTrace();
         }
         return viewHolder;
     }
-
 }

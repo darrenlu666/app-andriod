@@ -13,7 +13,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.info.controllers.activities.InfoDetailActivity;
@@ -61,7 +61,7 @@ public class InfoListFragment extends LoadMoreFragment<Info, InfoViewHolder> {
     }
 
     @Override
-    protected ViewHolderCreator<InfoViewHolder> newViewHolderCreator() {
+    protected AbsVhrCreator<InfoViewHolder> newViewHolderCreator() {
         return new EasyVhrCreator<>(InfoViewHolder.class);
     }
 

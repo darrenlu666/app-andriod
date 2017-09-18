@@ -10,7 +10,7 @@ import android.view.ViewGroup;
  * 视图保持器创建者
  * Created by gujiajia on 2015/12/21.
  */
-public abstract class ViewHolderCreator<VH extends ViewHolder> {
+public abstract class AbsVhrCreator<VH extends ViewHolder> {
 
     final public VH createViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(obtainLayoutId(), parent, false);

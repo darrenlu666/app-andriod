@@ -16,7 +16,7 @@ import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -63,8 +63,8 @@ public class AreaRecordListFragment extends LoadMoreFragment<AreaRecordedDetail.
     }
 
     @Override
-    protected ViewHolderCreator<AreaRecordedListHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<AreaRecordedListHolder>() {
+    protected AbsVhrCreator<AreaRecordedListHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<AreaRecordedListHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_recorded_list_area;

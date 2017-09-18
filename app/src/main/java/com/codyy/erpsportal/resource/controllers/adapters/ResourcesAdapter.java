@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.resource.controllers.viewholders.AudioViewHolder;
 import com.codyy.erpsportal.resource.controllers.viewholders.DocumentViewHolder;
 import com.codyy.erpsportal.resource.controllers.viewholders.ImageViewHolder;
@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class ResourcesAdapter<VH extends RecyclerViewHolder<?>> extends RecyclerView.Adapter {
 
-    private SparseArray<ViewHolderCreator<?>> mSparseArray;
+    private SparseArray<AbsVhrCreator<?>> mSparseArray;
 
     private final static int TYPE_VIDEO = 1;
 

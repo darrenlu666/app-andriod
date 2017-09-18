@@ -15,7 +15,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
@@ -52,8 +52,8 @@ public class WorkListTeacherFragment extends LoadMoreFragment<WorkListTeacherCla
     }
 
     @Override
-    protected ViewHolderCreator<TeacherViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<TeacherViewHolder>() {
+    protected AbsVhrCreator<TeacherViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<TeacherViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_work_list;

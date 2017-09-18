@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.models.entities.MoreComments;
 import com.codyy.erpsportal.commons.models.entities.MoreRelies;
@@ -65,7 +65,7 @@ public class PcpCommentsAdapter extends Adapter<RecyclerViewHolder> {
 
     private boolean mHasMoreComments;
 
-    private ViewHolderCreator<HeaderHolder> mVhrCreator;
+    private AbsVhrCreator<HeaderHolder> mVhrCreator;
 
     private CommentsHeader mCommentsHeader;
 

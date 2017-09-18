@@ -14,7 +14,7 @@ import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivit
 import com.codyy.erpsportal.exam.controllers.activities.school.SchoolGradeDetailActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.exam.models.entities.teacher.ExamTeacherReal;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
@@ -46,8 +46,8 @@ public class RealFragment extends LoadMoreFragment<ExamTeacherReal, RealFragment
     }
 
     @Override
-    protected ViewHolderCreator<ExamTeacherRealViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamTeacherRealViewHolder>() {
+    protected AbsVhrCreator<ExamTeacherRealViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamTeacherRealViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_teacher_real;

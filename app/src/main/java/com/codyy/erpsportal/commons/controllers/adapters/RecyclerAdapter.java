@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,16 +46,16 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    private ViewHolderCreator<VH> mViewHolderCreator;
+    private AbsVhrCreator<VH> mVhrCreator;
 
     private RecyclerView mRecyclerView;
 
     protected OnItemClickListener<T> mOnItemClickListener;
 
-    public RecyclerAdapter(RecyclerView recyclerView, OnLoadMoreListener onLoadMoreListener, ViewHolderCreator<VH> viewHolderCreator) {
+    public RecyclerAdapter(RecyclerView recyclerView, OnLoadMoreListener onLoadMoreListener, AbsVhrCreator<VH> vhrCreator) {
         mRecyclerView = recyclerView;
         mOnLoadMoreListener = onLoadMoreListener;
-        mViewHolderCreator = viewHolderCreator;
+        mVhrCreator = vhrCreator;
         if (updateSpanSizeLookup()) {
             addOnScrollListenerToRecyclerView(recyclerView);
         } else if (recyclerView.getLayoutManager() instanceof LinearLayoutManager){
@@ -164,7 +164,7 @@ public class RecyclerAdapter<T, VH extends RecyclerViewHolder<T>> extends Recycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            return mViewHolderCreator.createViewHolder(parent);
+            return mVhrCreator.createViewHolder(parent);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_last, parent, false);
             return new LastItemHolder(view);

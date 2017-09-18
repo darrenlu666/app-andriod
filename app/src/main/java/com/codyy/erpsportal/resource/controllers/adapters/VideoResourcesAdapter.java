@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.resource.controllers.viewholders.VideoViewHolder;
 import com.codyy.erpsportal.resource.models.entities.Video;
 
@@ -26,7 +26,7 @@ import java.util.List;
  */
 public class VideoResourcesAdapter extends RecyclerView.Adapter {
 
-    private ViewHolderCreator<?> mViewHolderCreator;
+    private AbsVhrCreator<?> mVhrCreator;
 
     private final static int TYPE_VIDEO = 1;
 
@@ -53,7 +53,7 @@ public class VideoResourcesAdapter extends RecyclerView.Adapter {
 
     public VideoResourcesAdapter(RecyclerView recyclerView, OnLoadMoreListener onLoadMoreListener) {
         mRecyclerView = recyclerView;
-        mViewHolderCreator = new EasyVhrCreator<>(VideoViewHolder.class);
+        mVhrCreator = new EasyVhrCreator<>(VideoViewHolder.class);
         mOnLoadMoreListener = onLoadMoreListener;
         if (updateSpanSizeLookup()) {
             addOnScrollListenerToRecyclerView(recyclerView);
@@ -142,7 +142,7 @@ public class VideoResourcesAdapter extends RecyclerView.Adapter {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_VIDEO) {
-            return mViewHolderCreator.createViewHolder(parent);
+            return mVhrCreator.createViewHolder(parent);
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_last, parent, false);
             return new LastItemHolder(view);

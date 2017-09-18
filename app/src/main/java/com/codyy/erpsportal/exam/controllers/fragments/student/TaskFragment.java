@@ -14,7 +14,7 @@ import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.exam.controllers.activities.student.StudentAnswerDetailActivity;
 import com.codyy.erpsportal.exam.controllers.activities.student.StudentPracticeDetailActivity;
 import com.codyy.erpsportal.exam.controllers.activities.student.StudentViewCheckedActivity;
@@ -73,8 +73,8 @@ public class TaskFragment extends LoadMoreFragment<ExamStudentTask, TaskFragment
     }
 
     @Override
-    protected ViewHolderCreator<ExamStudentTaskViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamStudentTaskViewHolder>() {
+    protected AbsVhrCreator<ExamStudentTaskViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamStudentTaskViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_student_task;

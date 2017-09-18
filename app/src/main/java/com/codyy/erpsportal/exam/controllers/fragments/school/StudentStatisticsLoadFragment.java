@@ -26,7 +26,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnLoadMoreListener;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -135,7 +135,7 @@ public abstract class StudentStatisticsLoadFragment<T, VH extends RecyclerViewHo
      *
      * @return
      */
-    protected abstract ViewHolderCreator<VH> newViewHolderCreator();
+    protected abstract AbsVhrCreator<VH> newViewHolderCreator();
 
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
