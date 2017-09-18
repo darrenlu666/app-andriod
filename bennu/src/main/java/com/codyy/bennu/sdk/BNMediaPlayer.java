@@ -1,12 +1,13 @@
 package com.codyy.bennu.sdk;
 
-import android.nfc.Tag;
-import android.util.Log;
 import android.view.Surface;
 import android.util.Log;
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
 import com.codyy.bennu.sdk.impl.BNClassroomInfo;
 import com.codyy.bennu.sdk.impl.BNPlayerImpl;
+
+import java.io.Closeable;
+
 
 public class BNMediaPlayer {
     private BNPlayerImpl mPlayback;
@@ -48,7 +49,6 @@ public class BNMediaPlayer {
      * [FIXME]It's not a good code architecture. It may confuse the user.
      */
     public void setPublisher(BNPublisher publisher) {
-        Log.i("BNMediaPlayer","mplayback :"+mPlayback + " publisher:"+publisher);
         mPlayback.setPublisher(publisher);
     }
 
@@ -61,7 +61,7 @@ public class BNMediaPlayer {
      * Audio mixer with software.
      * Most of Android device support hardware audio mixer.
      * If the device you use not support hardware audio mixer, try to use it.
-    */
+     */
     public void playWithAudioMix(BNClassroomInfo info) { mPlayback.playWithAudioMix(info);}
 
     /**
@@ -316,6 +316,26 @@ public class BNMediaPlayer {
     public void onEndOfStream() {
         if (endOfStreamListener != null) {
             endOfStreamListener.endOfStream(this);
+        }
+    }
+
+    public static interface UnsupportedHWListener {
+        abstract void unsupportedHW(BNMediaPlayer player);
+    }
+
+    private UnsupportedHWListener unsupportedHWListener;
+    /**
+     * call {@code setUnsupportedHWListener} to set unsupported hardware decode listener.
+     * It can set before playing.
+     * @param listener  the UnsupportedHWListener listener inform that use hardware video decoder failed
+     */
+    public void setUnsupportedHWListener(UnsupportedHWListener listener) {
+        unsupportedHWListener = listener;
+    }
+
+    public void onUnsupportedHW() {
+        if (unsupportedHWListener != null) {
+            unsupportedHWListener.unsupportedHW(this);
         }
     }
 
