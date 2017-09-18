@@ -1,3 +1,10 @@
+/*
+ *
+ * 阔地教育科技有限公司版权所有(codyy.com/codyy.cn)
+ * Copyright (c)  2017, Codyy and/or its affiliates. All rights reserved.
+ *
+ */
+
 package com.codyy.erpsportal.commons.controllers.fragments.filters;
 
 import android.graphics.drawable.Drawable;
@@ -8,36 +15,38 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.groups.controllers.viewholders.SimpleTextViewHolder;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
 import com.codyy.erpsportal.commons.models.entities.my.MyBaseTitle;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.codyy.erpsportal.groups.controllers.viewholders.SimpleTextViewHolder;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * 单个recyclerView列表筛选
+ * 宽度match_parent.
  * 选中提供回调{@link BaseRecyclerAdapter.OnItemClickListener}
  * 只要实现此接口的Activity都可以回调
  * Created by poe on 2016/1/25 .
  */
-public  class SimpleListFilterFragment extends Fragment {
+public  class SimpleListFragment extends Fragment {
     private static final String TAG = "SimpleListFilterFragment";
     public static final String EXTRA_FILTER_CONDITION = "com.group.filter.selected";//选中的筛选条件
     public static final String EXTRA_FILTER_TITLES = "com.group.filter.titles";//选项
     public static final String STR_ALL = "全部";
     @Bind(R.id.rcl_condition) RecyclerView mConditionRecyclerView;
-    @Bind(R.id.rcl_choice) RecyclerView mChoiceRecyclerView;
     private BaseRecyclerAdapter.OnItemClickListener mOnItemClickListener;//点击事件
     private List<FilterEntity> mBottom = new ArrayList<>();
     private List<MyBaseTitle> mTitles = new ArrayList<>();
@@ -57,11 +66,11 @@ public  class SimpleListFilterFragment extends Fragment {
      * @param titles
      * @return
      */
-    public static SimpleListFilterFragment newInstance(ArrayList<MyBaseTitle> titles){
+    public static SimpleListFragment newInstance(ArrayList<MyBaseTitle> titles){
 
-        SimpleListFilterFragment fragment = new SimpleListFilterFragment();
+        SimpleListFragment fragment = new SimpleListFragment();
         Bundle bd = new Bundle();
-        bd.putParcelableArrayList(SimpleListFilterFragment.EXTRA_FILTER_TITLES, titles);
+        bd.putParcelableArrayList(SimpleListFragment.EXTRA_FILTER_TITLES, titles);
         fragment.setArguments(bd);
 
         return fragment;
@@ -71,7 +80,6 @@ public  class SimpleListFilterFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
-        mOnItemClickListener = (BaseRecyclerAdapter.OnItemClickListener) getActivity();
         if(null != getArguments()){
             mTitles =   getArguments().getParcelableArrayList(EXTRA_FILTER_TITLES);
         }
@@ -79,7 +87,7 @@ public  class SimpleListFilterFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_group_filter, container, false);
+        View view = inflater.inflate(R.layout.fragment_simple_text_filter, container, false);
         ButterKnife.bind(this,view);
         return view;
     }
@@ -102,8 +110,6 @@ public  class SimpleListFilterFragment extends Fragment {
     private void initView() {
         Cog.e(TAG, "Filter Fragment initView()");
         mConditionRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mChoiceRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mChoiceRecyclerView.setVisibility(View.GONE);
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
         mConditionRecyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
         setAdapter();
@@ -124,6 +130,10 @@ public  class SimpleListFilterFragment extends Fragment {
         mConditionAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<FilterEntity>() {
             @Override
             public void onItemClicked(View v, int position, FilterEntity data) {
+                //update click position .
+                mRightClickPosition =   getConditionPosition(data,mData);
+                updateItemBackground();
+
                 if(null != mOnItemClickListener){
                     try {
                         mOnItemClickListener.onItemClicked(v ,position , data);
@@ -131,9 +141,6 @@ public  class SimpleListFilterFragment extends Fragment {
                         e.printStackTrace();
                     }
                 }
-                //update click position .
-                mRightClickPosition =   getConditionPosition(data,mData);
-                updateItemBackground();
             }
         });
         mConditionRecyclerView.setAdapter(mConditionAdapter);
@@ -145,6 +152,10 @@ public  class SimpleListFilterFragment extends Fragment {
         if(mData.size() > 0){
             mConditionAdapter.setData(mData);
         }
+    }
+
+    public void setOnItemClickListener(BaseRecyclerAdapter.OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
     }
 
     /**
