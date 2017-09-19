@@ -7,6 +7,8 @@ import android.widget.TextView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.entities.customized.LivingClass;
 import com.codyy.erpsportal.commons.utils.DateUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
@@ -56,7 +58,11 @@ public class LivingClassViewHolder extends BaseRecyclerViewHolder<LivingClass> {
             startTime = data.getStartTime();
         }
         if(!TextUtils.isEmpty(startTime)){
-            mStartTimeTextView.setText(DateUtil.getDateStr(Long.parseLong(startTime),"HH:mm"));
+            if(UIUtils.isInteger(startTime)){
+                mStartTimeTextView.setText(DateUtil.getDateStr(Long.parseLong(startTime),"HH:mm"));
+            }else{
+                mStartTimeTextView.setText(startTime);
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public final class UIUtils {
 
@@ -84,6 +85,17 @@ public final class UIUtils {
         }
 
         return  result ;
+    }
+
+
+    /**
+     * 判断字符串是否为时间戳.
+     * @param str
+     * @return
+     */
+    public static boolean isInteger(String str) {
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(str).matches();
     }
 
     public static void showToastMessage(Context context, String message, int duration) {
