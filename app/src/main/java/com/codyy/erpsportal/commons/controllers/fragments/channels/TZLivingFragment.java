@@ -89,7 +89,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
 
     @Override
     public String obtainAPI() {
-        return URLConfig.GET_INDEX_LIVE_APPOINTMENT;
+        return URLConfig.GET_TZ_LIVE_APPOINTMENT;
     }
 
     @Override
