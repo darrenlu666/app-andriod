@@ -18,6 +18,7 @@ import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.Assessment;
 import com.codyy.erpsportal.commons.models.entities.EmumIndex;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -51,7 +52,11 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
     public void onBindView(RecyclerView.ViewHolder holder, int position, Assessment entity) {
         switch (getItemViewType(position)) {
             case Assessment.TYPE_ASSESSMENT:
-                ((AssessmentViewHolder) holder).setData(entity);
+                try {
+                    ((AssessmentViewHolder) holder).setData(entity);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -82,7 +87,8 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
             ratingBar = (RatingBar) convertView.findViewById(R.id.assessment_item_text_rating);
         }
 
-        public void setData(final Assessment assessment) {
+        public void setData(final Assessment assessment) throws Exception{
+            if(null == assessment) return;
             if ("INIT".equals(assessment.getStatus())) {
                 headerImage.setImageDrawable(context.getResources().getDrawable(R.drawable.unstart));
             } else if ("PROGRESS".equals(assessment.getStatus())) {
@@ -119,7 +125,13 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
             } else {
                 date.setVisibility(View.VISIBLE);
                 ratingBar.setVisibility(View.GONE);
-                date.setText("排课日期 " + DateUtil.getDateStr(Long.valueOf(assessment.getScheduleDate()),DateUtil.YEAR_MONTH_DAY));
+                if(!TextUtils.isEmpty(assessment.getScheduleDate()) && UIUtils.isInteger(assessment.getScheduleDate())){
+                    if(UIUtils.isInteger(assessment.getScheduleDate())){
+                        date.setText("排课日期 " + DateUtil.getDateStr(Long.valueOf(assessment.getScheduleDate()),DateUtil.YEAR_MONTH_DAY));
+                    }
+                }else{
+                    date.setText("排课日期 "+assessment.getScheduleDate());
+                }
             }
             subjectName.setText("学科 "+Html.fromHtml(assessment.getSubjectName()));
             //set the lesson sequence

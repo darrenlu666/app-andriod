@@ -8,6 +8,7 @@ import android.support.annotation.StringRes;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
@@ -94,6 +95,7 @@ public final class UIUtils {
      * @return
      */
     public static boolean isInteger(String str) {
+        if(TextUtils.isEmpty(str)) return false;
         Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
         return pattern.matcher(str).matches();
     }
