@@ -107,12 +107,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
     @Override
     public void onSuccess(JSONObject response,boolean isRefreshing) {
         if(null == mRecyclerView ) return;
-        /*if(isRefreshing) mData.clear();
-        if (mRefreshLayout.isRefreshing()) {
-            mRefreshLayout.setRefreshing(false);
-        }
-        mEmptyView.setLoading(false);
-        mRecyclerView.setEnabled(true);*/
+
         LivingParse lp = new Gson().fromJson(response.toString(), LivingParse.class);
         if(null != lp) {
             //banner picture.

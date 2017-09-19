@@ -155,7 +155,7 @@ public class ChannelTab {
                     clazz = TaiZhouFragment.class;
                     tabId = 15;
                 } else {
-                    clazz = FeiXianFragment.class;
+                    clazz = MainResFragment.class;
                     tabId = 12;
                 }
 
