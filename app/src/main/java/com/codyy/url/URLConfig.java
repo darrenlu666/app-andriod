@@ -1267,14 +1267,14 @@ public class URLConfig {
     public static String GET_INDEX_LIVE_APPOINTMENT;
 
     /**
-     *台州首页(v5.3.7)-直录播(名校网络课堂)-正在直播
+     *台州首页(v5.3.7)-直录播(名校网络课堂)-推荐课程
      * baseAreaId
      * schoolId
      * size
      * uuid
      */
     @UrlSuffix("mobile/home/live/getIndexRecommendLiveAppointmentListTopN.do")
-    public static String GET_TZ_LIVE_APPOINTMENT;
+    public static String GET_TZ_LIVE_APPOINTMENT_RECOMMEND;
 
     /**
      * 首页-直录播(名校网络课堂)-推荐课程

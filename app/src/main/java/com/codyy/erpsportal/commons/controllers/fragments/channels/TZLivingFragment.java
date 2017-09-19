@@ -89,7 +89,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
 
     @Override
     public String obtainAPI() {
-        return URLConfig.GET_TZ_LIVE_APPOINTMENT;
+        return URLConfig.GET_INDEX_LIVE_APPOINTMENT;
     }
 
     @Override
@@ -288,7 +288,7 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
         data.put("size", "5");
         data.put("schoolId", schoolId);
         data.put("uuid",mUserInfo.getUuid());
-        requestData(URLConfig.GET_INDEX_LIVE_APPOINTMENT_RECOMMEND, data,false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_TZ_LIVE_APPOINTMENT_RECOMMEND, data,false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response,boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {
