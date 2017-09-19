@@ -74,7 +74,7 @@ import butterknife.ButterKnife;
  * 专递课堂 -直播
  * Created by ldh on 2016/6/29.
  */
-public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener, PeopleTreeFragment.ISyncCount, IFragmentMangerInterface {
+public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener, PeopleTreeFragment.ISyncCount, IFragmentMangerInterface, ClassRoomCommentFragment.SoftInputOpenListener {
     private static final String TAG = CustomLiveDetailActivity.class.getSimpleName();
     private static final int MSG_UPDATE_WATCH_COUNT = 0x001;//update the count of people mount sea .
     private static final int MAX_COUNT = 10 * 10000;
@@ -408,6 +408,23 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         }
     }
 
+    @Override
+    public void open() {
+        hideVideoList();
+    }
+
+    @Override
+    public void close() {
+        showVideoList();
+    }
+
+    private void showVideoList(){
+        mRlVideoList = (RelativeLayout) findViewById(R.id.rl_videolist);
+        if (mRlVideoList != null && mRecordRoomDetail.getVideoInfoList().size() > 1) {
+            mRlVideoList.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * 播放指定的视频资源
      *
@@ -494,7 +511,9 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         }
         //添加最新评论fragment
         mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
-        mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
+        ClassRoomCommentFragment classRoomCommentFragment = ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom);
+        classRoomCommentFragment.setOnSoftInputOpenListener(this);
+        mFragmentList.add(classRoomCommentFragment);
         //v5.3.3 共xxx人观看
         mTabLayout.addTab(mTabLayout.newTab().setText("0人观看"));
         mFragmentList.add(PeopleTreeFragment.newInstance(mUserInfo, mScheduleDetailId));

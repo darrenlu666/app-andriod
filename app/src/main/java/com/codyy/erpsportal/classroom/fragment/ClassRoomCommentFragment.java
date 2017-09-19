@@ -227,6 +227,8 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
 
     private void onSoftKeyboardOpened() {
         if (mSoftInputOpenListener != null) mSoftInputOpenListener.open();
+        //通知activity已经弹出键盘，需要将视频列表隐藏
+
         mEmojiView.postDelayed(new Runnable() {
             @Override
             public void run() {

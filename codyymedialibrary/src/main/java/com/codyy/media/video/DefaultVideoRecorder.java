@@ -109,7 +109,7 @@ public class DefaultVideoRecorder extends VideoBaseRecorder {
         preparing = true;
         recorder = null;
         recorder = new MediaRecorder();
-
+        recorder.setOrientationHint(90);
         recorder.setOnInfoListener(new MediaRecorder.OnInfoListener() {
 
             @Override

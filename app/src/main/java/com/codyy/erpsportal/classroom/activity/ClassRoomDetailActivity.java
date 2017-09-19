@@ -324,6 +324,13 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         }
     }
 
+    private void showVideoList(){
+        mRlVideoList = (RelativeLayout) findViewById(R.id.rl_videolist);
+        if (mRlVideoList != null && mRecordRoomDetail.getVideoInfoList().size() > 1) {
+            mRlVideoList.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * 是否继续播放标记位 ： default : false 可以继续播放直播  true: 视图已经销毁，阻止继续播放{@link #mPlayLiveRunnable}
      */
@@ -427,7 +434,9 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         }
         //添加最新评论fragment
         mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
-        mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
+        ClassRoomCommentFragment classRoomCommentFragment = ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom);
+        classRoomCommentFragment.setOnSoftInputOpenListener(this);
+        mFragmentList.add(classRoomCommentFragment);
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
                 mFragmentList, new String[]{getString(R.string.class_detail),getString(R.string.newest_comment)});
         mViewPager.setAdapter(mViewPagerAdapter);
@@ -574,12 +583,14 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     public void open() {
 //        mTabLine.setVisibility(View.GONE);
 //        mTabLineBottom.setVisibility(View.GONE);
+        hideVideoList();
     }
 
     @Override
     public void close() {
 //        mTabLine.setVisibility(View.VISIBLE);
 //        mTabLineBottom.setVisibility(View.VISIBLE);
+        showVideoList();
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
