@@ -78,6 +78,7 @@ public class ResourceIntroFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mCompositeDisposable.dispose();
         ConfigBus.unregister(mOnModuleConfigListener);
     }
 
@@ -122,12 +123,6 @@ public class ResourceIntroFragment extends Fragment{
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mCompositeDisposable.dispose();
-    }
-
     private void initEmptyView() {
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
@@ -140,6 +135,7 @@ public class ResourceIntroFragment extends Fragment{
 
     private void loadData(String baseAreaId, String schoolId) {
         onLoadingStart();
+        mOnLoadingCount = 0;
         loadSlides( baseAreaId, schoolId);
         loadSemesterResData( baseAreaId, schoolId);
     }
@@ -154,8 +150,8 @@ public class ResourceIntroFragment extends Fragment{
         if (!TextUtils.isEmpty(areaId)) params.put("baseAreaId" ,areaId);
         if (!TextUtils.isEmpty(schoolId)) params.put("schoolId", schoolId);
         mOnLoadingCount++;
-        Cog.d(TAG, "loadSlides url=" + URLConfig.SLIDE_RESOURCES + params);
-        Disposable disposable = mWebApi.post4Json(URLConfig.SLIDE_RESOURCES, params)
+        Cog.d(TAG, "loadSlides url=" + URLConfig.SLIDE_CHANNEL_RESOURCES + params);
+        Disposable disposable = mWebApi.post4Json(URLConfig.SLIDE_CHANNEL_RESOURCES, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JSONObject>() {

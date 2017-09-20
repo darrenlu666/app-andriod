@@ -117,11 +117,11 @@ public class VideoMeetingActivity extends BaseHttpActivity{
 
                 listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_LAUNCH,mUserInfo));
                 listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_ATTEND ,mUserInfo));
-                if(mUserInfo.isAdmin()){
+//                if(mUserInfo.isAdmin()){
                     mDivider.setVisibility(View.GONE);
                     mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceVidmeetManage));//本级会议管理
                     listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_AREA,mUserInfo));
-                }
+//                }
                 break;
             case UserInfo.USER_TYPE_SCHOOL_USER://学校管理员
                 mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceVidmeetLaunch));//我发起的
@@ -129,11 +129,11 @@ public class VideoMeetingActivity extends BaseHttpActivity{
 
                 listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_LAUNCH,mUserInfo));
                 listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_ATTEND,mUserInfo));
-                if(mUserInfo.isAdmin()){
+//                if(mUserInfo.isAdmin()){
                     mDivider.setVisibility(View.GONE);
                     mTabLayout.addTab(mTabLayout.newTab().setText(Titles.sWorkspaceVidmeetManage));//本级会议管理
                     listFragments.add(VideoMeetingFragment.newInstance(VideoMeetingFragment.TYPE_FOR_SCHOOL,mUserInfo));
-                }
+//                }
                 break;
             case UserInfo.USER_TYPE_TEACHER://教师
                 if("Y".equals(mUserInfo.getVideoConferenceFlag())){

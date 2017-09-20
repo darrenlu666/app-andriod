@@ -1,12 +1,14 @@
 package com.codyy.erpsportal.commons.controllers.viewholders.customized;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import butterknife.Bind;
@@ -36,9 +38,23 @@ public class HistoryRecommendViewHolder extends BaseRecyclerViewHolder<HistoryCl
         mCurrentPosition = position;
         mData   =   data;
         if(null == data) return;
-        // TODO: 16-6-1 set data content .
-        ImageFetcher.getInstance(mSchoolTextView.getContext()).fetchImage(mSDV,data.getThumb());
+        ImageFetcher.getInstance(mSchoolTextView.getContext())
+                .fetchImageWithDefault(mSDV,data.getThumb(),R.drawable.icon_default_video,true);
         mSchoolTextView.setText(data.getSchoolName());
-        mLevelSTTextView.setText(data.getClasslevelName()+"/"+data.getSubjectName()+"/"+data.getTeacherName());
+        StringBuilder jpsb = new StringBuilder("");
+
+        //年級
+        if(!TextUtils.isEmpty(data.getClasslevelName())) jpsb.append(data.getClasslevelName());
+        //學科
+        if(!TextUtils.isEmpty(data.getSubjectName())) {
+            if(jpsb.toString().length()>0) jpsb.append("/");
+            jpsb.append(data.getSubjectName());
+        }
+        //姓名
+        if(!TextUtils.isEmpty(data.getTeacherName())){
+            if(jpsb.toString().length()>0) jpsb.append("/");
+            jpsb.append(data.getTeacherName());
+        }
+        mLevelSTTextView.setText(UiMainUtils.combineStrs(data.getClasslevelName(),data.getSubjectName(),data.getTeacherName()));
     }
 }

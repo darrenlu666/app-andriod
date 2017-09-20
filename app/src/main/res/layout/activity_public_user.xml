@@ -9,6 +9,7 @@
     android:orientation="vertical"
     android:scrollbars="none">
     <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/layout_forbidden"/>
     <com.codyy.erpsportal.commons.widgets.EmptyView
         android:id="@+id/empty_view"
         android:layout_width="match_parent"

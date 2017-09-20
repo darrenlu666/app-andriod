@@ -35,7 +35,7 @@ import butterknife.Bind;
  * Created by kmdai on 16-4-11.
  */
 public class GroupCollectiveActivityDetail extends ToolbarActivity implements View.OnClickListener {
-    private Integer mHashTag = this.hashCode();
+
     public final static String COLLECTIVE_ID = "collective_id";
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -102,7 +102,7 @@ public class GroupCollectiveActivityDetail extends ToolbarActivity implements Vi
             public void onErrorResponse(Throwable error) {
                 mLoadingDialog.dismiss();
             }
-        }, mHashTag));
+        }));
     }
 
     private void setData() {
@@ -154,7 +154,7 @@ public class GroupCollectiveActivityDetail extends ToolbarActivity implements Vi
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

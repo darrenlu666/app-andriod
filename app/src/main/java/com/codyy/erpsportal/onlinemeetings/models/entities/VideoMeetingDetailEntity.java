@@ -1,8 +1,8 @@
 package com.codyy.erpsportal.onlinemeetings.models.entities;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.utils.StringUtils;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

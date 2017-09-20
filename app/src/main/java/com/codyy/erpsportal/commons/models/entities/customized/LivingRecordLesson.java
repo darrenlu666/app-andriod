@@ -2,7 +2,7 @@ package com.codyy.erpsportal.commons.models.entities.customized;
 
 import android.text.TextUtils;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 
 import java.io.Serializable;
 
@@ -21,6 +21,15 @@ public class LivingRecordLesson extends BaseTitleItemBar implements Serializable
     private String serverAddress;
     private String watchCount;
     private String session;//节次 “一” ～ “八”
+    private String realBeginTime;//开始时间.
+
+    public String getRealBeginTime() {
+        return realBeginTime;
+    }
+
+    public void setRealBeginTime(String realBeginTime) {
+        this.realBeginTime = realBeginTime;
+    }
 
     public String getId() {
         return id;

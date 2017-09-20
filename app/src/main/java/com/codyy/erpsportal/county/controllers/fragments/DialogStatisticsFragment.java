@@ -43,7 +43,7 @@ import java.util.Map;
  * Created by kmdai on 16-10-19.
  */
 public class DialogStatisticsFragment extends AppCompatDialogFragment {
-    private final static Object REQUEST_TAG = new Object();
+
     /**
      * 主讲教室开课详情
      */
@@ -377,12 +377,12 @@ public class DialogStatisticsFragment extends AppCompatDialogFragment {
                 }
                 ToastUtil.showToast(getContext(), getString(R.string.net_error));
             }
-        }, REQUEST_TAG));
+        }));
     }
 
     @Override
     public void onDestroyView() {
-        mRequestSender.stop(REQUEST_TAG);
+        mRequestSender.stop();
         super.onDestroyView();
     }
 

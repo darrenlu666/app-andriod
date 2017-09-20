@@ -4,10 +4,15 @@ import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.viewholders.homepage.SimpleControllerListener;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
+import com.codyy.erpsportal.commons.utils.UriUtils;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import org.joda.time.format.DateTimeFormat;
 import butterknife.Bind;
@@ -44,7 +49,7 @@ public class LessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortE
     @Override
     public void setData(int position, PrepareLessonsShortEntity data) throws Throwable {
         switch (mFromType) {
-            case TeachingResearchBase.EVALUATION_LESSON:
+            case TeachingResearchBase.EVALUATION_LESSON://评课议课
                 teacherTitle.setText(Titles.sMasterTeacher);//"主讲教师");
                 if ("SCORE".equals(data.getScoreType())) {
                     rateTv.setVisibility(View.GONE);
@@ -56,11 +61,25 @@ public class LessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortE
                     scoreTv.setText("评分");
                     ratingBar.setRating(data.getAverageScore() / 2f);
                 }
-                break;
-            case TeachingResearchBase.INTERAC_LESSON:
-                teacherTitle.setText(Titles.sMasterTeacher);//"主讲教师");
-            case TeachingResearchBase.PREPARE_LESSON:
 
+                //icon_direct_video_default
+                DraweeController controller = Fresco.newDraweeControllerBuilder()
+                        .setUri(data.getSubjectPic())
+                        .setTapToRetryEnabled(true)
+                        .setOldController(headerImage.getController())
+                        .setControllerListener(new SimpleControllerListener() {
+                            @Override
+                            public void onFailure(String id, Throwable throwable) {
+                                headerImage.setImageResource(R.drawable.ic_group_school_default);
+                            }
+                        })
+                        .build();
+                headerImage.setController(controller);
+                break;
+            case TeachingResearchBase.INTERAC_LESSON://互动听课
+                teacherTitle.setText(Titles.sMasterTeacher);//"主讲教师");
+            case TeachingResearchBase.PREPARE_LESSON://集体备课
+                ImageFetcher.getInstance(rateTv.getContext()).fetchSmall(headerImage, data.getSubjectPic());
                 break;
         }
         rateTv.setText(rateTv.getContext().getString(R.string.f_score, data.getAverageScore()));
@@ -69,6 +88,5 @@ public class LessonsViewHold extends BaseRecyclerViewHolder<PrepareLessonsShortE
         date.setText(DateTimeFormat.forPattern("yyyy-MM-dd").print(data.getStartTime()));
         clickCount.setText(String.valueOf(data.getViewCount()));
         ratingBar.setProgress((int)data.getAverageScore());
-        ImageFetcher.getInstance(rateTv.getContext()).fetchImage(headerImage, data.getSubjectPic());
     }
 }

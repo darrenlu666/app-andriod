@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.utils.UserFragmentUtils;
 import com.codyy.erpsportal.commons.widgets.MyBottomSheet;
@@ -65,6 +67,7 @@ public class PublicUserActivity extends BaseHttpActivity {
     private List<Student> mStudents;//孩子信息　
     private List<ClassCont> mClassList = new ArrayList<>();//老师下面的班级.
     private StudentParse mStudentParse;
+    @Bind(R.id.forbidden_frame_layout)FrameLayout mForbiddenFrameLayout;//禁止访问提示TextView .
 
     @Override
     public int obtainLayoutId() {
@@ -91,6 +94,9 @@ public class PublicUserActivity extends BaseHttpActivity {
         UserInfo userInfo = UserInfo.parseJson(response);
         if (null != userInfo) {
             mNativeUserInfo = userInfo;
+            if(null != mUserInfo){
+                mNativeUserInfo.setUuid(mUserInfo.getUuid());
+            }
             refreshUI();
             mEmptyView.setVisibility(View.GONE);
             if(mNativeUserInfo.getUserType().equals(UserInfo.USER_TYPE_PARENT)){
@@ -213,6 +219,7 @@ public class PublicUserActivity extends BaseHttpActivity {
 
     @Override
     public void init() {
+        mForbiddenFrameLayout.setVisibility(View.GONE);
         mUserId = getIntent().getStringExtra(EXTRA_ID);
         initToolbar(mToolBar);
         mTitleTextView.setText("详细信息");
@@ -227,7 +234,36 @@ public class PublicUserActivity extends BaseHttpActivity {
         mClassSpaceLinearLayout.setEnabled(false);
         mEmptyView.setVisibility(View.VISIBLE);
         mEmptyView.setLoading(true);
-        requestData(true);
+        checkForbidden();
+    }
+
+    private void checkForbidden() {
+        HashMap<String,String> param = new HashMap<>();
+        param.put("accountId",mUserId);
+        param.put("accountType","USER");
+
+        requestData(URLConfig.CHECK_USER_FORBIDDEN, param, true, new IRequest() {
+            @Override
+            public void onRequestSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+                if(!TextUtils.isEmpty(response.toString())&&"true".equals(response.optString("result"))){
+                    mForbiddenFrameLayout.setVisibility(View.GONE);
+                    requestData(true);
+                }else{
+                    mForbiddenFrameLayout.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onRequestFailure(Throwable error) {
+//                mForbiddenFrameLayout.setVisibility(View.VISIBLE);
+                if (null == mEmptyView) return;
+                if (null != mNativeUserInfo) {
+                    mEmptyView.setVisibility(View.GONE);
+                } else {
+                    mEmptyView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     /**
@@ -251,7 +287,7 @@ public class PublicUserActivity extends BaseHttpActivity {
         if (UserInfo.USER_TYPE_STUDENT.equals(mNativeUserInfo.getUserType())) {
             List<ClassCont> contList = new ArrayList<>();
             contList.add(new ClassCont(mNativeUserInfo.getBaseClassId(), mNativeUserInfo.getBaseClassName(), mNativeUserInfo.getClasslevelName()));
-            ClassSpaceActivity.start(PublicUserActivity.this, "班级空间", mNativeUserInfo.getBaseClassId(), contList);
+            ClassSpaceActivity.start(PublicUserActivity.this, "班级空间", mNativeUserInfo.getBaseClassId(), contList,mNativeUserInfo);
         } else {
             showClassDialog();
         }
@@ -267,13 +303,13 @@ public class PublicUserActivity extends BaseHttpActivity {
                 public void onItemClicked(View v, int position, String data) {
                     if (mNativeUserInfo.isTeacher()) {
                         if (position < mClassList.size()) {
-                            ClassSpaceActivity.start(PublicUserActivity.this, "班级空间", mClassList.get(position).getBaseClassId(), mClassList);
+                            ClassSpaceActivity.start(PublicUserActivity.this, "班级空间", mClassList.get(position).getBaseClassId(), mClassList,mNativeUserInfo);
                         } else {
                             LogUtils.log(TAG + " :" + "班级index越界 {@link PersonActivity: line 148");
                         }
                     } else if (mNativeUserInfo.isParent()) {
                         if (position < mStudents.size()) {
-                            ClassSpaceActivity.start(PublicUserActivity.this, "班级空间", mStudents.get(position).getClassId(), UserFragmentUtils.constructClassListInfo(mStudents));
+                            ClassSpaceActivity.start(PublicUserActivity.this, "班级空间", mStudents.get(position).getClassId(), UserFragmentUtils.constructClassListInfo(mStudents),mNativeUserInfo);
                         } else {
                             LogUtils.log(TAG + " :" + "班级index越界 {@link PersonActivity: line 148");
                         }
@@ -320,7 +356,28 @@ public class PublicUserActivity extends BaseHttpActivity {
         }
     }
 
-    public static void start(Activity activity, String baseUserId) {
+    /**
+     *
+     * @param activity
+     * @param userInfo
+     * @param baseUserId
+     */
+    public static void start(Activity activity,UserInfo userInfo,  String baseUserId) {
+        Intent intent = new Intent(activity, PublicUserActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+        intent.putExtra(Constants.USER_INFO,userInfo);
+        intent.putExtra(EXTRA_ID, baseUserId);
+        activity.startActivity(intent);
+        UIUtils.addEnterAnim(activity);
+    }
+
+
+    /**
+     *
+     * @param activity
+     * @param baseUserId
+     */
+    public static void start(Activity activity,  String baseUserId) {
         Intent intent = new Intent(activity, PublicUserActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         intent.putExtra(EXTRA_ID, baseUserId);

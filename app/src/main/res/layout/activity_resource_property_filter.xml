@@ -13,7 +13,7 @@
 
         <Button
             android:id="@+id/btn_confirm"
-            style="@style/TextButtonInLeftOfTitleBar"
+            style="@style/TextButtonInEndOfTitleBar"
             android:text="@string/confirm"/>
 
     </com.codyy.erpsportal.commons.widgets.TitleBar>

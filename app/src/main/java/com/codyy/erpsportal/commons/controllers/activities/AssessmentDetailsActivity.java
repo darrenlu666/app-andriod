@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationsFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.ParticipateSchoolViewHolder;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -22,9 +21,11 @@ import com.codyy.erpsportal.commons.models.entities.SchoolTeacher;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.utils.DialogUtil;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.FixedRecyclerView;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
@@ -130,14 +131,18 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
         mTitleTextView.setText(Titles.sWorkspaceDisucss+"详情");
         mLaunchTv.setText(assessmentDetails.getSponsorName());
         if(!TextUtils.isEmpty(assessmentDetails.getSponsorDate())){
-            mTimeTv.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getSponsorDate()),DateUtil.DEF_FORMAT));
+            if(UIUtils.isInteger(assessmentDetails.getSponsorDate())){
+                mTimeTv.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getSponsorDate()),DateUtil.DEF_FORMAT));
+            }
         }
         mActiveNameTv.setText(Html.fromHtml(assessmentDetails.getTitle()));
         if(!TextUtils.isEmpty(assessmentDetails.getStartDate())){
             mReserveStartTimeTv.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getStartDate()),DateUtil.DEF_FORMAT));
         }
         if(!TextUtils.isEmpty(assessmentDetails.getEndDate())){
-            mReserveEndTimeTv.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getEndDate()),DateUtil.DEF_FORMAT));
+            if(UIUtils.isInteger(assessmentDetails.getEndDate())){
+                mReserveEndTimeTv.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getEndDate()),DateUtil.DEF_FORMAT));
+            }
         }
         mProfileTextView.setText(Html.fromHtml(assessmentDetails.getDescription()));
         mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
@@ -146,10 +151,14 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
         mSubjectNameTv.setText(Html.fromHtml(assessmentDetails.getSubjectName()));
         if(!TextUtils.isEmpty(assessmentDetails.getScheduleDate())){
             //排课日期：　2015-1-1 星期五　第五节
-            String date = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.YEAR_MONTH_DAY);
-            String week = DateUtil.getWeek(date);
-            String sequence = "第"+ EmumIndex.getIndex(Integer.valueOf(assessmentDetails.getClassSeq()))+"节";
 
+            String date ="";
+            String week ="";
+            if(UIUtils.isInteger(assessmentDetails.getScheduleDate())){
+                date = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.YEAR_MONTH_DAY);
+                week = DateUtil.getWeek(date);
+            }
+            String sequence = "第"+ EmumIndex.getIndex(Integer.valueOf(assessmentDetails.getClassSeq()))+"节";
             mScheduleTime.setText(date+" "+week+" "+sequence);
         }
         if(!TextUtils.isEmpty(assessmentDetails.getRealBeginTime())){

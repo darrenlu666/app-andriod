@@ -1,8 +1,17 @@
+/*
+ * 阔地教育科技有限公司版权所有（codyy.com/codyy.cn）
+ * Copyright (c) 2017, Codyy and/or its affiliates. All rights reserved.
+ */
+
 package com.codyy.erpsportal.repairs.controllers.activities;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -17,6 +26,7 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Extra;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.repairs.models.engines.RepairApi;
 import com.codyy.erpsportal.repairs.models.entities.ClassroomSelectItem;
@@ -30,6 +40,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import me.dm7.barcodescanner.core.BarcodeScannerView.NoCameraListener;
 import me.dm7.barcodescanner.zxing.CustomZXingScannerView;
 
 public class ScanSerialActivity extends AppCompatActivity implements CustomZXingScannerView.ResultHandler {
@@ -37,6 +48,8 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
     private final static String TAG = "ScanSerialActivity";
 
     public final static String EXTRA_CLASSROOM = "com.codyy.erpsportal.EXTRA_CLASSROOM";
+
+    private final static int REQUEST_CAMERA = 4190;
 
     private CustomZXingScannerView mZBarScannerView;
 
@@ -48,27 +61,62 @@ public class ScanSerialActivity extends AppCompatActivity implements CustomZXing
 
     private LoadingDialog mLoadingDialog;
 
+    private boolean mInited;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_serial);
         mUserInfo = getIntent().getParcelableExtra(Extra.USER_INFO);
         mZBarScannerView = (CustomZXingScannerView) findViewById(R.id.fl_content);
+        mZBarScannerView.setNoCameraListener(new NoCameraListener() {
+            @Override
+            public void onNoCamera() {
+                ToastUtil.showToast(ScanSerialActivity.this, "请在设置中打开摄像头权限");
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mZBarScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+        int cameraGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (cameraGranted == PackageManager.PERMISSION_GRANTED) {
+            startCamera();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startCamera();
+            } else {
+                ToastUtil.showToast(ScanSerialActivity.this, "请在设置中打开摄像头权限");
+            }
+        }
+    }
+
+    private void startCamera() {
+        mInited = true;
+        mZBarScannerView.setResultHandler(ScanSerialActivity.this); // Register ourselves as a handler for scan results.
         mZBarScannerView.startCamera();          // Start camera on resume
         // If you would like to resume scanning, call this method below:
-        mZBarScannerView.resumeCameraPreview(this);
+        mZBarScannerView.resumeCameraPreview(ScanSerialActivity.this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mZBarScannerView.stopCamera();           // Stop camera on pause
+        if (mInited) {
+            mZBarScannerView.stopCamera();           // Stop camera on pause
+            mInited = false;
+        }
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.codyy.erpsportal.homework.controllers.fragments.WorkItemIndexDialog;
 import com.codyy.erpsportal.homework.models.entities.ItemInfoClass;
 import com.codyy.erpsportal.homework.utils.WorkUtils;
 import com.codyy.erpsportal.homework.widgets.AudioBar;
+import com.codyy.erpsportal.homework.widgets.MyViewPager;
 import com.codyy.erpsportal.homework.widgets.PressBar;
 import com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView;
 import com.codyy.erpsportal.homework.widgets.WorkAnswerMediaPlayer;
@@ -51,7 +52,7 @@ public abstract class TaskReadByItemActivity extends ToolbarActivity implements 
     protected Toolbar mToolbar;
 
     @Bind(R.id.viewpager_item_info)
-    protected ViewPager mItemInfoViewPager;//习题信息滑动部分
+    protected MyViewPager mItemInfoViewPager;//习题信息滑动部分
     protected TabsAdapter mTabsAdapter;
     protected RequestSender mRequestSender;
     private Map<String, String> mParams;

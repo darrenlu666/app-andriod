@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.interfaces.SimpleRecyclerDelegate;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.groups.controllers.activities.GroupSpaceActivity;
 import com.codyy.erpsportal.groups.controllers.activities.GroupSpaceDetailManagerActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.CategoryFilterFragment;
 import com.codyy.erpsportal.groups.controllers.viewholders.GroupManagerViewHolder;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -152,7 +152,7 @@ public class GroupManagerListFragment extends SimpleRecyclerFragment<Group> {
             }
 
             @Override
-            public BaseRecyclerViewHolder<Group> getViewHolder(ViewGroup parent,int viewType) {
+            public BaseRecyclerViewHolder<Group> getViewHolder(ViewGroup parent, int viewType) {
                 return new GroupManagerViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_group_manager,parent,false));
             }

@@ -641,9 +641,6 @@ public class ResCommentsFragment extends Fragment implements IFragmentManagerPro
     }
 
     private void hideEmojiView() {
-//        LinearLayout.LayoutParams localLayoutParams = (LinearLayout.LayoutParams) mContentFl.getLayoutParams();
-//        localLayoutParams.height = mContentFl.getHeight() - mVirtualKeyboardHeight;
-//        localLayoutParams.weight = 0.0F;
         lockContentLayoutHeight(mContentFl.getHeight() - mVirtualKeyboardHeight);
         postUnlockContentLayoutHeight(false);
     }

@@ -125,7 +125,8 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case SearchBase.RESOURCE_CONT:
                 final SearchResource searchResource = (SearchResource) searchBases.get(position);
                 ResourceContHolder resourceContHolder = (ResourceContHolder) holder;
-                if (!"null".equals(searchResource.getThumb())) {
+                String thumbUrl = searchResource.getThumb();
+                if (!TextUtils.isEmpty(thumbUrl) && !"null".equals(thumbUrl)) {
                     resourceContHolder.mSimpledraweeview.setVisibility(View.VISIBLE);
                     resourceContHolder.mSimpledraweeview.setImageURI(Uri.parse(searchResource.getThumb()));
                 } else {

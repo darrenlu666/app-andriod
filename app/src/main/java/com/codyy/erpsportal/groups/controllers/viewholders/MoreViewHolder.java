@@ -3,10 +3,9 @@ package com.codyy.erpsportal.groups.controllers.viewholders;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,7 +17,7 @@ import butterknife.ButterKnife;
  * 在recyclerView的底部工多使用 .
  * Created by poe on 16-1-19.
  */
-public class MoreViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar>{
+public class MoreViewHolder extends BaseRecyclerViewHolder<BaseTitleItemBar> {
 
     @Bind(R.id.content)TextView mTitleTextView;
 

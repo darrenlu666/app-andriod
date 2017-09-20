@@ -2,8 +2,10 @@ package com.codyy.erpsportal.commons.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import com.codyy.erpsportal.EApplication;
+import com.codyy.erpsportal.commons.controllers.activities.BarCodeActivity;
 import com.codyy.erpsportal.commons.models.dao.DownloadDao;
 
 import java.io.BufferedInputStream;
@@ -19,6 +21,37 @@ public final class FileUtils {
 
     private FileUtils() {
     }
+
+    /**
+     * 清除二维码.
+     * @param context
+     */
+    public static void clearBarCode(Context context){
+        FileUtils.deleteSingleFile(getBarCodePath(0 , context));
+        FileUtils.deleteSingleFile(getBarCodePath(1 , context));
+    }
+    /**
+     * 删除二维码.
+     * @param position
+     * @param context
+     * @return
+     */
+    public static String getBarCodePath(int position , Context context) {
+        return getFileRoot(context.getApplicationContext()) + File.separator
+                + "qr_" +position + ".jpg";
+    }
+
+    //文件存储根目录
+    public static String getFileRoot(Context context) {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            File external = context.getExternalFilesDir(null);
+            if (external != null) {
+                return external.getAbsolutePath();
+            }
+        }
+        return context.getFilesDir().getAbsolutePath();
+    }
+
 
     /**
      * @param parentDir
@@ -69,6 +102,16 @@ public final class FileUtils {
 		}
 	}
 
+    /**
+     * 删除文件.
+     * @param file
+     */
+	public static void deleteSingleFile(String file ){
+        File dFile = new File(file);
+        if(dFile != null && dFile.exists()){
+            dFile.delete();
+        }
+    }
     /**
      * 清楚所有下载文件
      * @param folder

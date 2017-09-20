@@ -39,10 +39,6 @@ public class RequestSender {
 
     private final static String TAG = "RequestSender";
 
-    private final static int DEFAULT_TIMEOUT_MS = 15000;
-
-//    private RequestQueue mRequestQueue;
-
     private WebApi mWebApi;
 
     private CompositeDisposable mCompositeDisposable;
@@ -57,7 +53,6 @@ public class RequestSender {
 
     public RequestSender(Context context) {
         mContext = context;
-//        mRequestQueue = RequestManager.getRequestQueue();
         mWebApi = RsGenerator.create(WebApi.class);
         mHandler = new Handler();
         mCompositeDisposable = new CompositeDisposable();
@@ -149,6 +144,7 @@ public class RequestSender {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Cog.e(TAG, "+onErrorResponse:" + throwable);
+                        throwable.printStackTrace();
                         requestData.getErrorListener().onErrorResponse(throwable);
                     }
                 });
@@ -164,17 +160,9 @@ public class RequestSender {
      * 取消所有请求
      */
     public void stop() {
-        mCompositeDisposable.dispose();
+        mCompositeDisposable.clear();
     }
 
-    /**
-     * 取消对应tag的请求
-     *
-     * @param tag
-     */
-    public void stop(Object tag) {
-        stop();
-    }
 
     /**
      * 发送登录请求
@@ -247,7 +235,6 @@ public class RequestSender {
         private Response.Listener<JSONObject> mListener;
         private Response.ErrorListener mErrorListener;
         private volatile int mSendCount;
-        private Object mTag;
 
         /**
          * 显示内容加载中
@@ -255,40 +242,9 @@ public class RequestSender {
         private boolean mIsToShowLoading;
         private long mStartTime;
 
-        /**
-         * 请求是否需要重试。
-         */
-        private boolean mNeedRetry = true;
-
-        private int mTimeout = -1;
-
         public RequestData(String url, Map<String, String> param,
                            Response.Listener<JSONObject> listener, Response.ErrorListener errorListener) {
-            this(url, param, listener, errorListener, true, true);
-        }
-
-        public RequestData(String url, Map<String, String> param,
-                           Response.Listener<JSONObject> listener, Response.ErrorListener errorListener,
-                           Object tag) {
-            this(url, param, listener, errorListener, true, true);
-            this.mTag = tag;
-        }
-
-        public RequestData(String url, Map<String, String> param, Response.Listener<JSONObject> listener,
-                           Response.ErrorListener errorListener, boolean isToShowLoading, boolean needRetry) {
-            this.mUrl = url;
-            this.mParam = param;
-            this.setListener(listener);
-            this.setErrorListener(errorListener);
-            this.setIsToShowLoading(isToShowLoading);
-            this.mNeedRetry = needRetry;
-        }
-
-        public RequestData(String url, Map<String, String> param, Response.Listener<JSONObject> listener,
-                           Response.ErrorListener errorListener, boolean needRetry,
-                           Object tag) {
-            this(url, param, listener, errorListener, true, needRetry);
-            this.mTag = tag;
+            this(url, param, listener, errorListener, true);
         }
 
         public RequestData(String url, Map<String, String> param,
@@ -378,35 +334,10 @@ public class RequestSender {
             this.mIsToShowLoading = isToShowLoading;
         }
 
-        public Object getTag() {
-            return mTag;
-        }
-
-        public RequestData setTag(Object tag) {
-            this.mTag = tag;
-            return this;
-        }
-
         public void setStartTime() {
             if (this.mStartTime == 0L) {//未设置开始时间时设置请求时间
                 this.mStartTime = System.currentTimeMillis();
             }
-        }
-
-        public boolean isNeedRetry() {
-            return mNeedRetry;
-        }
-
-        public void setNeedRetry(boolean needRetry) {
-            this.mNeedRetry = needRetry;
-        }
-
-        public int getTimeout() {
-            return mTimeout;
-        }
-
-        public void setTimeout(int timeout) {
-            mTimeout = timeout;
         }
 
         @Override

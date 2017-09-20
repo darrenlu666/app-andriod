@@ -546,7 +546,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
             public void onErrorResponse(Throwable error) {
                 ToastUtil.showToast(EvaluationActivity.this, getResources().getString(R.string.net_error));
             }
-        }, this.toString()));
+        }));
     }
 
     private void playVideo(String playUrl) {
@@ -575,6 +575,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        if(isFinishing()) return;
         if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             RelativeLayout.LayoutParams lparam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
             mBnVideoView.setLayoutParams(lparam);
@@ -828,7 +829,7 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
         if (null != mWiFiBroadCastUtils) {
             mWiFiBroadCastUtils.destroy();
         }
-        mSender.stop(this.toString());
+        mSender.stop();
         super.onDestroy();
     }
 

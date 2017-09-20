@@ -1,15 +1,12 @@
 package com.codyy.erpsportal.groups.controllers.viewholders;
 
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.entities.UserClassGroups;
-import com.codyy.erpsportal.commons.models.entities.UserClassTeacher;
-import com.codyy.erpsportal.commons.models.entities.my.ClassCont;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

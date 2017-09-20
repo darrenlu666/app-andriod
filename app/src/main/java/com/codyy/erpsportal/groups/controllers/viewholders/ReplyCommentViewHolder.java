@@ -11,10 +11,11 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.TextView;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.widgets.SuperTextView;
 import com.codyy.erpsportal.commons.models.entities.comment.BaseComment;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+
 import java.net.URLDecoder;
 import butterknife.Bind;
 import butterknife.ButterKnife;

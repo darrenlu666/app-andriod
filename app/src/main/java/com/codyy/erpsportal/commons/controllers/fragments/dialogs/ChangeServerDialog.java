@@ -1,3 +1,8 @@
+/*
+ * 阔地教育科技有限公司版权所有（codyy.com/codyy.cn）
+ * Copyright (c) 2017, Codyy and/or its affiliates. All rights reserved.
+ */
+
 package com.codyy.erpsportal.commons.controllers.fragments.dialogs;
 
 import android.content.Context;
@@ -61,9 +66,11 @@ public class ChangeServerDialog extends DialogFragment {
     public void onStart() {
         super.onStart();
         Window window = getDialog().getWindow();
-        window.setLayout((int) (0.8f * getResources().getDisplayMetrics().widthPixels + 0.5f),
-                LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
+        if (window != null) {
+            window.setLayout((int) (0.8f * getResources().getDisplayMetrics().widthPixels + 0.5f),
+                    LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+        }
     }
 
     @Nullable

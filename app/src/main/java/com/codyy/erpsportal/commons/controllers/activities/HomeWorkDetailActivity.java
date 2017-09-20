@@ -49,7 +49,7 @@ import butterknife.Bind;
  * 课堂作业详情
  */
 public class HomeWorkDetailActivity extends ToolbarActivity {
-    private Integer mHashTag = this.hashCode();
+
     private static final String TAG = "HomeWorkDetailActivity---";
     public static final int REQUEST_IMAGE = 1000;
     /**
@@ -161,7 +161,7 @@ public class HomeWorkDetailActivity extends ToolbarActivity {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        }));
     }
 
     public void onUploadHomeworkClick(View view) {
@@ -283,7 +283,7 @@ public class HomeWorkDetailActivity extends ToolbarActivity {
                 ToastUtil.showToast(HomeWorkDetailActivity.this, "获取数据失败");
 
             }
-        }, mHashTag));
+        }));
     }
 
     private void initHead(FamousClassBean famousClassBean) {
@@ -399,7 +399,7 @@ public class HomeWorkDetailActivity extends ToolbarActivity {
 
     @Override
     protected void onDestroy() {
-        mSender.stop(mHashTag);
+        mSender.stop();
         super.onDestroy();
     }
 

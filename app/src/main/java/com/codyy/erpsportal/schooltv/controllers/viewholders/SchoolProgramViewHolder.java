@@ -4,11 +4,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView;
 import com.codyy.erpsportal.schooltv.models.SchoolProgram;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 /**
  * 校园电视台-节目单-viewHolder

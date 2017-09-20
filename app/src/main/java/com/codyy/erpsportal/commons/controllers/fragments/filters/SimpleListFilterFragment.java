@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.groups.controllers.viewholders.SimpleTextViewHolder;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -17,7 +16,9 @@ import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
 import com.codyy.erpsportal.commons.models.entities.my.MyBaseTitle;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.codyy.erpsportal.commons.models.entities.customized;
 
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -19,7 +19,34 @@ public class LivingClass extends BaseTitleItemBar implements Serializable {
     private String teacherName;//教师名
     @SerializedName("realBeginTime")
     private String startTime;//开始时间
+    private String beginTime;//预备开课时间
+    private String status;//状态是否开课了 INIT/PROGRESS/END.
     private String liveType;//无用数据
+    private boolean canView;//是否可以观看
+
+    public String getBeginTime() {
+        return beginTime;
+    }
+
+    public void setBeginTime(String beginTime) {
+        this.beginTime = beginTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean isCanView() {
+        return canView;
+    }
+
+    public void setCanView(boolean canView) {
+        this.canView = canView;
+    }
 
     public String getClasslevelName() {
         return classlevelName;

@@ -235,8 +235,7 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
                             }
                         });
                     }
-                }, 1
-                )
+                })
         );
     }
 

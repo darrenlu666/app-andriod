@@ -118,18 +118,6 @@ public class EmotionInputDetector {
         mEditText = editText;
         mEditText.requestFocus();
         mLengthFilter = new LengthFilter(COMMENT_MAX_LENGTH);
-//        mHeaderFilter = new HeaderFilter();
-//        mHeaderFilter.setOnHeaderChangingListener(new OnHeaderChangingListener() {
-//            @Override
-//            public void onTryingToChangeHeader() {
-//                mEditText.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        moveCommentEditTextSelectionToEnd();
-//                    }
-//                });
-//            }
-//        });
         mEditText.setFilters(new InputFilter[]{mLengthFilter});
         mEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -146,10 +134,6 @@ public class EmotionInputDetector {
         });
         return this;
     }
-
-//    private void moveCommentEditTextSelectionToEnd() {
-//        mEditText.setSelection(mEditText.length());
-//    }
 
     /**
      * 绑定到表情切换按钮
@@ -379,53 +363,4 @@ public class EmotionInputDetector {
             this.mMax = max;
         }
     }
-
-//    /**
-//     * 输入框保持头有“回复某某”的输入过滤器
-//     */
-//    public static class HeaderFilter implements InputFilter {
-//
-//        private int mHeaderLength;
-//
-//        private OnHeaderChangingListener mOnHeaderChangingListener;
-//
-//        public HeaderFilter() {
-//        }
-//
-//        public HeaderFilter(int headerLength) {
-//            mHeaderLength = headerLength;
-//        }
-//
-//        @Override
-//        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-//            if (mHeaderLength == 0) return null;
-//            if (dstart < mHeaderLength) {
-//                if (mOnHeaderChangingListener != null) {
-//                    mOnHeaderChangingListener.onTryingToChangeHeader();
-//                }
-//                return dest.subSequence(dstart, dend);
-//            }
-//            return null;
-//        }
-//
-//        public int getHeaderLength() {
-//            return mHeaderLength;
-//        }
-//
-//        public void setHeaderLength(int headerLength) {
-//            mHeaderLength = headerLength;
-//        }
-//
-//        public OnHeaderChangingListener getOnHeaderChangingListener() {
-//            return mOnHeaderChangingListener;
-//        }
-//
-//        public void setOnHeaderChangingListener(OnHeaderChangingListener onHeaderChangingListener) {
-//            mOnHeaderChangingListener = onHeaderChangingListener;
-//        }
-//    }
-//
-//    interface OnHeaderChangingListener {
-//        void onTryingToChangeHeader();
-//    }
 }

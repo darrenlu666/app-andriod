@@ -2,10 +2,14 @@ package com.codyy.erpsportal.homework.controllers.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ScrollView;
 
 import com.codyy.erpsportal.homework.controllers.activities.WorkItemDetailActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.TaskFragment;
 import com.codyy.erpsportal.homework.widgets.PressBar;
+import com.codyy.erpsportal.homework.widgets.SlidingFloatScrollView;
 
 /**
  * 按习题批阅界面 习题内容fragment

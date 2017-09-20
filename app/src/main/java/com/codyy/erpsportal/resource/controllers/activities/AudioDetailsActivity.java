@@ -650,7 +650,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
         stopUpdateProgressBar();
         mAudioHandler.post(new Runnable() {
             @Override

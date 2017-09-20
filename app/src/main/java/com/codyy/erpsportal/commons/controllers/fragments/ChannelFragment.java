@@ -21,6 +21,8 @@ import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.LoadingHandler;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.ChannelTab;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -166,6 +168,8 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
      */
     private void initViewsWithConfig(ModuleConfig config) {
         if(isDetached()) return;
+        Cog.d(TAG,"title:"+Titles.sHomepageSysTitle);
+        mTitleTv.setText(Titles.sHomepageSysTitle);
         mEmptyView.setVisibility(View.GONE);
         mViewPager.setVisibility(View.VISIBLE);
         initializeTabs(config.getChannelTabs(), config.getIndexTemplateId());
@@ -191,7 +195,7 @@ public class ChannelFragment extends Fragment implements OnModuleConfigListener,
         if (mSearchFlag > 0) {
             mSearchIb.setVisibility(View.VISIBLE);
         } else {
-            mSearchIb.setVisibility(View.GONE);
+            mSearchIb.setVisibility(View.INVISIBLE);
         }
     }
 

@@ -19,7 +19,6 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
@@ -31,20 +30,21 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.erpsportal.rethink.controllers.activities.SubjectMaterialPicturesActivity;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.CommentUtils;
 import com.codyy.erpsportal.commons.utils.HtmlUtils;
 import com.codyy.erpsportal.groups.controllers.viewholders.BlogCommentChildViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.CommentMoreViewHolder;
 import com.codyy.erpsportal.groups.controllers.viewholders.BlogCommentViewHolder;
 import com.codyy.erpsportal.commons.exception.LogUtils;
-import com.codyy.erpsportal.commons.models.entities.BaseTitleItemBar;
 import com.codyy.erpsportal.perlcourseprep.models.entities.SubjectMaterialPicture;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.blog.BlogDetail;
@@ -58,7 +58,6 @@ import com.codyy.erpsportal.commons.utils.WebViewUtils;
 import com.codyy.erpsportal.commons.widgets.BlogComposeView;
 import com.codyy.erpsportal.commons.widgets.EmojiconEditText;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.models.entities.comment.BaseComment;
 import com.codyy.erpsportal.commons.models.entities.comment.BaseCommentParse;
 import com.google.gson.Gson;
@@ -77,7 +76,7 @@ import butterknife.Bind;
  * Created by poe on 16-1-18.
  */
 public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComposeView.OnComposeOperationDelegate
-            , IFragmentMangerInterface{
+    , IFragmentMangerInterface{
     private final static String TAG = "BlogPostDetailActivity";
     /** 来自门户*/
     public final static String FROM_TYPE_SHARE = "SHARE";
@@ -132,7 +131,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
 //    private Button mSendComment;
     private CommentButton mSendComment;
     private EmojiconEditText mInputEditText;
-    private BaseRecyclerAdapter<BaseTitleItemBar , BaseRecyclerViewHolder<BaseComment>> mAdapter ;
+    private BaseRecyclerAdapter<BaseTitleItemBar, BaseRecyclerViewHolder<BaseComment>> mAdapter ;
     private LinkedList<BaseTitleItemBar> mData = new LinkedList<>();
     private InputMethodManager mInputManager ;
     private boolean mIsSecondReply = false ;//是否回复某条评论 .

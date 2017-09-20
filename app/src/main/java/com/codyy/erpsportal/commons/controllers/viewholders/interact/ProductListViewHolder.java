@@ -2,10 +2,8 @@ package com.codyy.erpsportal.commons.controllers.viewholders.interact;
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -14,7 +12,7 @@ import butterknife.ButterKnife;
  * 集体备课/-详情-备课成果/相关文档
  * Created by poe on 16-6-23.
  */
-public class ProductListViewHolder extends BaseRecyclerViewHolder<Object>{
+public class ProductListViewHolder extends BaseRecyclerViewHolder<Object> {
 
     @Bind(R.id.tv_resource_name) TextView mSchoolTextView;
 

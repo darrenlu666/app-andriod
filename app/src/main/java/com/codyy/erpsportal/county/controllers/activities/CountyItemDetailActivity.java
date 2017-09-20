@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CountyItemDetailActivity extends AppCompatActivity {
-    private Integer mHashTag = this.hashCode();
+
     public final static String EXTRA_DATA = "extra_data";
     private final static int CONTY_GET_PLAN_DETAIL = 0x001;
     private final static int CONTY_GET_SELF_DETAIL = 0x002;
@@ -170,6 +171,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
      * @param view
      */
     public void enterClass(View view) {
+        Log.i("poe","ClassTourPagerActivity.start() ");
         TourClassroom tourClassroom = new TourClassroom();
         tourClassroom.setClassRoomId(mContyListItemDetial.getClassroomId());
         tourClassroom.setId(mContyListItemDetial.getScheduleDetailId());
@@ -213,7 +215,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
             public void onErrorResponse(Throwable error) {
 
             }
-        }, mHashTag));
+        } ));
     }
 
     public static void start(Context context, int type) {
@@ -224,7 +226,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

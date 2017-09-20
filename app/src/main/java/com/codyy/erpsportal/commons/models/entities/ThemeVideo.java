@@ -14,6 +14,24 @@ public class ThemeVideo {
     private String id;
     private String videoPath;
     private String downloadUrl;
+    private String videoName;
+    private String thumbPath;
+
+    public String getThumbPath() {
+        return thumbPath;
+    }
+
+    public void setThumbPath(String thumbPath) {
+        this.thumbPath = thumbPath;
+    }
+
+    public String getVideoName() {
+        return videoName;
+    }
+
+    public void setVideoName(String videoName) {
+        this.videoName = videoName;
+    }
 
     public String getDownloadUrl() {
         return downloadUrl;
@@ -99,6 +117,8 @@ public class ThemeVideo {
             themeVideo.setStoreServer(jsonObject.optString("sort"));
             themeVideo.setFilePath(jsonObject.optString("filePath"));
             themeVideo.setDownloadUrl(jsonObject.optString("downloadUrl"));
+            themeVideo.setVideoName(jsonObject.optString("videoName"));
+            themeVideo.setThumbPath(jsonObject.optString("thumbPath"));
             videoList.add(themeVideo);
         }
         return videoList;

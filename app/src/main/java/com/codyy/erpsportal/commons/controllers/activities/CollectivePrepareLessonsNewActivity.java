@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.FilterGradeSubject;
 import com.codyy.erpsportal.commons.controllers.viewholders.LessonsViewHold;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -27,10 +26,11 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleRecyclerView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.commons.widgets.UpOrDownButton;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 import com.codyy.url.URLConfig;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -170,7 +170,8 @@ public class CollectivePrepareLessonsNewActivity extends BaseHttpActivity implem
         mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<LessonsViewHold>() {
             @Override
             public LessonsViewHold createViewHolder(ViewGroup parent, int viewType) {
-                return new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare_lessons),mFromType);
+                return new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare_lessons)
+                        ,mFromType);
             }
 
             @Override

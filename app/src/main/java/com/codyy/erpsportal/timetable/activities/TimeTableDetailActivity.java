@@ -61,7 +61,7 @@ import java.util.Map;
  * @author kmdai
  */
 public class TimeTableDetailActivity extends AppCompatActivity implements View.OnClickListener {
-    private Integer mHashTag = this.hashCode();
+
     private final static String TAG = "TimeTableDetailActivity------:";
     /**
      * school id
@@ -565,12 +565,12 @@ public class TimeTableDetailActivity extends AppCompatActivity implements View.O
                 mCanChangeDate = false;
                 ToastUtil.showToast(TimeTableDetailActivity.this, R.string.net_error);
             }
-        }, mHashTag));
+        }));
     }
 
     @Override
     protected void onDestroy() {
-        mRequestSender.stop(mHashTag);
+        mRequestSender.stop();
         super.onDestroy();
     }
 

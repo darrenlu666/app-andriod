@@ -11,16 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codyy.erpsportal.R;
+import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
+import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
-import com.codyy.erpsportal.commons.controllers.adapters.BaseRecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.BaseHttpFragment;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
-import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleHorizonDivider;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.groups.controllers.activities.GroupSpaceActivity;
 import com.codyy.erpsportal.groups.controllers.activities.MoreGroupListActivity;
@@ -62,7 +62,7 @@ public class GroupFragment extends BaseHttpFragment implements ConfigBus.OnModul
         return R.layout.fragment_single_recycleview;
     }
 
-    // TODO: 16-1-8  获取数据获取的api
+    //  16-1-8  获取数据获取的api
     @Override
     public String obtainAPI() {
         return URLConfig.GET_HOME_GROUP;

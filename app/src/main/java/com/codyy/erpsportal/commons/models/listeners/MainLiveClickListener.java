@@ -62,26 +62,30 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
                             ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
                                     liveClassroom.getId(), ClassRoomContants.TYPE_LIVE_LIVE,liveClassroom.getSubjectName());
                         } else {
-                            CustomLiveDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
-                                    liveClassroom.getId(), ClassRoomContants.TYPE_CUSTOM_LIVE,liveClassroom.getSubjectName());
+                            CustomLiveDetailActivity.startActivity(mFragment.getActivity()
+                                    ,mUserInfo
+                                    ,liveClassroom.getId()
+                                    , ClassRoomContants.TYPE_CUSTOM_LIVE
+                                    ,liveClassroom.getStatus()
+                                    ,liveClassroom.getSubjectName());
                         }
                     } else {
                         String msg = response.optString("msg");
                         if (TextUtils.isEmpty(msg)) {
-                            Toast.makeText(mFragment.getContext(), "获取权限失败！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mFragment.getContext(), "您没有权限查看该课堂直播！", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(mFragment.getContext(), msg, Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    Toast.makeText(mFragment.getContext(), "获取权限失败！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mFragment.getContext(), "您没有权限查看该课堂直播！", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new ErrorListener() {
             @Override
             public void onErrorResponse(Throwable error) {
                 Cog.d(TAG, "onLiveClassroomClick error=", error);
-                Toast.makeText(mFragment.getContext(), "获取权限失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mFragment.getContext(), "您没有权限查看该课堂直播！", Toast.LENGTH_SHORT).show();
             }
         }));
     }

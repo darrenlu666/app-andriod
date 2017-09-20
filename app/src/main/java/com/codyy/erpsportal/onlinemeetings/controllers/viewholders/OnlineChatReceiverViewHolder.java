@@ -2,14 +2,14 @@ package com.codyy.erpsportal.onlinemeetings.controllers.viewholders;
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.controllers.viewholders.BaseRecyclerViewHolder;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.widgets.AsyncTextView;
 import com.codyy.erpsportal.commons.widgets.AvatarView;
 import com.codyy.erpsportal.commons.widgets.SuperTextView;
 import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
+import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 

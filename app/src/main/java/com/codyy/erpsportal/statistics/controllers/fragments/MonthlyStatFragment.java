@@ -74,8 +74,6 @@ public class MonthlyStatFragment extends Fragment implements OnItemClickListener
 
     private ObjectsAdapter<CoursesProportion, CoursesProportionViewHolder> mMonthlyProportionAdapter;
 
-    private Object mRequestTag = new Object();
-
     public static MonthlyStatFragment newInstance(UserInfo userInfo, int type) {
         MonthlyStatFragment monthlyStatFragment = new MonthlyStatFragment();
         Bundle bundle = new Bundle();
@@ -191,8 +189,7 @@ public class MonthlyStatFragment extends Fragment implements OnItemClickListener
                 Cog.d(TAG, "setScopes error=", error);
                 mLoadingDialog.dismiss();
             }
-        }, mRequestTag);
-        requestData.setTimeout(60000);
+        });
         mRequestSender.sendGetRequest( requestData);
     }
 
@@ -200,7 +197,7 @@ public class MonthlyStatFragment extends Fragment implements OnItemClickListener
     public void onDestroy() {
         super.onDestroy();
         Cog.d(TAG, "onDestroy called");
-        mRequestSender.stop(mRequestTag);
+        mRequestSender.stop();
     }
 
     @Override

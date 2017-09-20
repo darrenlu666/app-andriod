@@ -357,6 +357,6 @@ public class StudentPracticeDetailActivity extends TaskActivity implements View.
                 ToastUtil.showToast(getString(R.string.exam_submit_fail));
 
             }
-        },false,false));
+        },false));
     }
 }

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.utils.UiMainUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -175,12 +176,13 @@ public class ClassDetailFragment extends Fragment {
         mTvClassRoomAreaValue.setText(mArea);
         mTvClassRoomMainInfoTitle.setText(Titles.sMaster + ":");
         mTvClassRoomReceiveInfoTitle.setText(Titles.sReceiver + ":");
-        mTvClassRoomMainInfoValue.setText(getString(R.string.main_info, mSchoolName, mGrade + "\\", mSubject + "\\", mTeacher));
+//        mTvClassRoomMainInfoValue.setText(getString(R.string.main_info, mSchoolName, mGrade + "\\", mSubject + "\\", mTeacher));
+        mTvClassRoomMainInfoValue.setText(UiMainUtils.combineStrs(mSchoolName,mGrade,mSubject,mTeacher));
         mTvClassRoomReceiveInfoValue.setText(mReceiveSchoolList.size() == 0 ? "" : getReceiveSchoolName(mReceiveSchoolList));
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_RECORD) || mFrom.equals(ClassRoomContants.TYPE_LIVE_RECORD)) {
             mLengthLayout.setVisibility(View.VISIBLE);
             mPlayCountLayout.setVisibility(View.VISIBLE);
-            mClassLengthTv.setText(getTimeMinite(mLength));
+            mClassLengthTv.setText(getTimeMinite(TextUtils.isEmpty(mLength)?"0":mLength));
             mPlayCountTv.setText(mPlayCount + "");
         }
         if (ClassRoomContants.TYPE_LIVE_LIVE.equals(mFrom)) {
