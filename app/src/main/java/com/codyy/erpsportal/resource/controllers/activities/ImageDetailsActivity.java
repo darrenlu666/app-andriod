@@ -3,7 +3,9 @@ package com.codyy.erpsportal.resource.controllers.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +14,10 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -93,6 +99,9 @@ public class ImageDetailsActivity extends FragmentActivity {
     @Bind(R.id.dv_image)
     SimpleDraweeView mImageDv;
 
+    @Bind(R.id.view_space)
+    View mSpaceView;
+
     private Uri mImageUri;
 
     private TabsAdapter mTabsAdapter;
@@ -108,6 +117,8 @@ public class ImageDetailsActivity extends FragmentActivity {
     private ResourceDetails mResourceDetails;
 
     private Handler mHandler;
+
+    private boolean mKeyboardOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +147,8 @@ public class ImageDetailsActivity extends FragmentActivity {
 
         addResourceDetailsFragment();
         addResourceCommentsFragment();
+
+        addKeyboardVisibleListener();
     }
 
     /**
@@ -169,24 +182,68 @@ public class ImageDetailsActivity extends FragmentActivity {
     private ZoomOutAnimator mZoomOutAnimator;
 
     @OnClick(R.id.dv_image)
-    public void onImageClick(View view) {
-        if (mResourceDetails != null) {
-            if (mZoomOutAnimator == null) {
-                mZoomOutAnimator = new ZoomOutAnimator();
-                mZoomOutAnimator.setAnimatorListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        String url = mResourceDetails.getThumbPath();
-                        List<String> urlList = new ArrayList<>(1);
-                        urlList.add(url);
-                        PicturesActivity.start(ImageDetailsActivity.this, urlList, 0);
-                    }
-                });
-            }
-            if (mZoomOutAnimator.isOver()) {
-                mZoomOutAnimator.zoomImageFromThumb(this, view);
-            }
+    public void onImageClick(final View view) {
+        boolean keyboardVisible = mKeyboardOpen;
+        Cog.d(TAG, "onImageClick keyboardVisible=", keyboardVisible);
+        if (keyboardVisible) {
+            closeVirtualKeyboard();
         }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mResourceDetails != null) {
+                    if (mZoomOutAnimator == null) {
+                        mZoomOutAnimator = new ZoomOutAnimator();
+                        mZoomOutAnimator.setAnimatorListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                String url = mResourceDetails.getThumbPath();
+                                List<String> urlList = new ArrayList<>(1);
+                                urlList.add(url);
+                                PicturesActivity.start(ImageDetailsActivity.this, urlList, 0);
+                            }
+                        });
+                    }
+                    if (mZoomOutAnimator.isOver()) {
+                        mZoomOutAnimator.zoomImageFromThumb(ImageDetailsActivity.this, view);
+                        mSpaceView.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        }, keyboardVisible ? 300: 0);
+    }
+
+    private void addKeyboardVisibleListener() {
+        final View activityRootView = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                //r will be populated with the coordinates of your view that area still visible.
+                activityRootView.getWindowVisibleDisplayFrame(r);
+
+                int rootViewHeight = activityRootView.getRootView().getHeight();
+                int heightDiff = rootViewHeight - (r.bottom - r.top);
+                Cog.d(TAG, "heightDiff=", heightDiff);
+                if (heightDiff > rootViewHeight / 4 && !mKeyboardOpen) { // if more than 100 pixels, its probably a keyboard...
+                    mKeyboardOpen = true;
+                } else {
+                    mKeyboardOpen = false;
+                }
+            }
+        });
+    }
+
+    /**
+     * 关闭虚拟键盘
+     */
+    private void closeVirtualKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
