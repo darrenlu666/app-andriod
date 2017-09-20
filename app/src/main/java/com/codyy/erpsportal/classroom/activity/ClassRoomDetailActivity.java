@@ -3,6 +3,7 @@ package com.codyy.erpsportal.classroom.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
@@ -322,6 +324,13 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         }
     }
 
+    private void showVideoList(){
+        mRlVideoList = (RelativeLayout) findViewById(R.id.rl_videolist);
+        if (mRlVideoList != null && mRecordRoomDetail.getVideoInfoList().size() > 1) {
+            mRlVideoList.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * 是否继续播放标记位 ： default : false 可以继续播放直播  true: 视图已经销毁，阻止继续播放{@link #mPlayLiveRunnable}
      */
@@ -389,7 +398,6 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                         mTitleTv.setText(mClassRoomDetail.getSchoolName());
                     } else {
                         mRecordRoomDetail = RecordRoomDetail.parseResult(response);
-                        mRecordRoomDetail.setSubject(mSubject);
                         mTitleTv.setText(mRecordRoomDetail.getSchoolName());
                     }
                     initViews();
@@ -403,7 +411,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                     handleRequestFailure();
                 }
             }
-        }));
+        },TAG));
     }
 
     private void addViewPager() {
@@ -416,38 +424,39 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         List<Fragment> mFragmentList = new ArrayList<>();
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
             mTabLayout.addTab(mTabLayout.newTab().setText("课程详情"));
-            mFragmentList.add(
-                    ClassDetailFragment.newInstance(mFrom,
-                            mClassRoomDetail.getArea(),
-                            mClassRoomDetail.getClassPeriod(),
-                            mClassRoomDetail.getClassTime(),
-                            mClassRoomDetail.getGrade(),
-                            mClassRoomDetail.getSchoolName(),
-                            mClassRoomDetail.getTeacher(),
-                            mClassRoomDetail.getSubject(),
-                            getReceiveNameList()));
+            mFragmentList.add(ClassDetailFragment.newInstance(mFrom, mClassRoomDetail.getArea(), mClassRoomDetail.getClassPeriod(), mClassRoomDetail.getClassTime(),
+                    mClassRoomDetail.getGrade(), mClassRoomDetail.getSchoolName(), mClassRoomDetail.getTeacher(), mClassRoomDetail.getSubject(), getReceiveNameList()));
         } else {
             mTabLayout.addTab(mTabLayout.newTab().setText("课程详情"));
-            mFragmentList.add(
-                    ClassDetailFragment.newInstance(mFrom,
-                            mRecordRoomDetail.getArea(),
-                            mRecordRoomDetail.getClassPeriod(),
-                            mRecordRoomDetail.getClassTime(),
-                            mRecordRoomDetail.getGrade(),
-                            mRecordRoomDetail.getSchoolName(),
-                            mRecordRoomDetail.getTeacher(),
-                            mSubject,
-                            getReceiveNameList(),
-                            mRecordRoomDetail.getTimeLength(),
-                            mRecordRoomDetail.getPlayCount()));
+            mFragmentList.add(ClassDetailFragment.newInstance(mFrom, mRecordRoomDetail.getArea(), mRecordRoomDetail.getClassPeriod(), mRecordRoomDetail.getClassTime(),
+                    mRecordRoomDetail.getGrade(), mRecordRoomDetail.getSchoolName(), mRecordRoomDetail.getTeacher(), mRecordRoomDetail.getSubject(), getReceiveNameList(),
+                    mRecordRoomDetail.getTimeLength(), mRecordRoomDetail.getPlayCount()));
         }
         //添加最新评论fragment
         mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
-        mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
+        ClassRoomCommentFragment classRoomCommentFragment = ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom);
+        classRoomCommentFragment.setOnSoftInputOpenListener(this);
+        mFragmentList.add(classRoomCommentFragment);
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(),
                 mFragmentList, new String[]{getString(R.string.class_detail),getString(R.string.newest_comment)});
         mViewPager.setAdapter(mViewPagerAdapter);
-        mTabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mViewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
     }
 
     @Override
@@ -571,10 +580,18 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     }
 
     @Override
-    public void open() {}
+    public void open() {
+//        mTabLine.setVisibility(View.GONE);
+//        mTabLineBottom.setVisibility(View.GONE);
+        hideVideoList();
+    }
 
     @Override
-    public void close() {}
+    public void close() {
+//        mTabLine.setVisibility(View.VISIBLE);
+//        mTabLineBottom.setVisibility(View.VISIBLE);
+        showVideoList();
+    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> fragmentList;
@@ -716,7 +733,6 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if(isFinishing()) return;
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_RECORD) || mFrom.equals(ClassRoomContants.TYPE_LIVE_RECORD)) {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                 int height = UIUtils.dip2px(this, 180f);
@@ -743,7 +759,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         super.onDestroy();
         if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
         if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy(ClassRoomDetailActivity.this);
-        if(null != mRequestSender) mRequestSender.stop();
+        if(null != mRequestSender) mRequestSender.stop(TAG);
         mHandler.removeCallbacks(mPlayLiveRunnable);
     }
 }

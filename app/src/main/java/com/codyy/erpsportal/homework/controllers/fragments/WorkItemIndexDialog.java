@@ -96,7 +96,10 @@ public class WorkItemIndexDialog extends DialogFragment implements View.OnClickL
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return CharUtils.strIsEnglish(mData.get(position).getWorkItemType().replace("_", "")) ? 1 : gridLayoutManager.getSpanCount();
+                if (mData.get(position).getWorkItemType() != null) {
+                    return CharUtils.strIsEnglish(mData.get(position).getWorkItemType().replace("_", "")) ? 1 : gridLayoutManager.getSpanCount();
+                }
+                return 0;
             }
         });
         mRecyclerView.setLayoutManager(gridLayoutManager);
@@ -130,7 +133,10 @@ public class WorkItemIndexDialog extends DialogFragment implements View.OnClickL
 
         @Override
         public int getItemType(int position) {
-            return CharUtils.strIsEnglish(mData.get(position).getWorkItemType().replace("_", "")) ? TYPE_CONTENT : TYPE_TITLE;
+            if (mData.get(position).getWorkItemType() != null) {
+                return CharUtils.strIsEnglish(mData.get(position).getWorkItemType().replace("_", "")) ? TYPE_CONTENT : TYPE_TITLE;
+            }
+            return 0;
         }
 
         @Override
@@ -176,7 +182,7 @@ public class WorkItemIndexDialog extends DialogFragment implements View.OnClickL
 
         @Override
         public void setDataToView(final ItemInfoClass data) {
-            button.setText(data.getWorkItemIndex()+"");
+            button.setText(data.getWorkItemIndex() + "");
             if (data.getColor() != 0) {
                 button.setBackgroundColor(data.getColor());
             } else {
