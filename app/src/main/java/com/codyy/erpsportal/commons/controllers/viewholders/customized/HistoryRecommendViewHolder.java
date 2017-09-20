@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.customized.HistoryClass;
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,6 +27,7 @@ public class HistoryRecommendViewHolder extends BaseRecyclerViewHolder<HistoryCl
 
     public HistoryRecommendViewHolder(View itemView) {
         super(itemView);
+        Cog.i("history:"+itemView.getTop()+"/"+itemView.getLeft()+"/"+itemView.getRight());
         ButterKnife.bind(this,itemView);
     }
     @Override

@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/tv_class_room_main_info"
-                    tools:text="adfasdfasf"/>
+                    tools:text="adfasdfasfadfasdfasfadfasdfasfadfasdfasfadfasdfasf"/>
             </RelativeLayout>
 
             <RelativeLayout
