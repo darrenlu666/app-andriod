@@ -411,7 +411,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                     handleRequestFailure();
                 }
             }
-        },TAG));
+        }));
     }
 
     private void addViewPager() {
@@ -759,7 +759,6 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
         super.onDestroy();
         if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
         if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy(ClassRoomDetailActivity.this);
-        if(null != mRequestSender) mRequestSender.stop(TAG);
         mHandler.removeCallbacks(mPlayLiveRunnable);
     }
 }
