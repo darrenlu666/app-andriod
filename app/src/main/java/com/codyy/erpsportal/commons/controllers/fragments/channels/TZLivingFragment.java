@@ -215,12 +215,12 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
                                 .inflate(R.layout.item_channel_interact_live, parent, false));
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充
-                        viewHolder =  new HistoryRecommendViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
-                                parent.getContext(), R.layout.item_customized_history_class));
+                        viewHolder =  new HistoryRecommendViewHolder(LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_customized_history_class,parent,false));
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE://多行
-                        viewHolder =  new HistoryRecommendViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(
-                                parent.getContext(), R.layout.item_customized_history_class));
+                        viewHolder =  new HistoryRecommendViewHolder(LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.item_customized_history_class,parent,false));
                         break;
                 }
                 return viewHolder;

@@ -47,7 +47,8 @@ public class HistoryClassViewHolder extends BaseRecyclerViewHolder<HistoryClass>
         mData   =   data;
         if(null == data) return;
         // 16-6-1 set data content .
-        ImageFetcher.getInstance(mSchoolTextView.getContext()).fetchSmall(mSDV,data.getThumb());
+        ImageFetcher.getInstance(mSchoolTextView.getContext())
+                .fetchSmallWithDefault(mSDV,data.getThumb(),R.drawable.icon_default_video,true);
         mSchoolTextView.setText(data.getSchoolName());
         StringBuilder sb = new StringBuilder();
         if(!TextUtils.isEmpty(data.getClasslevelName())) sb.append(data.getClasslevelName());

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
 
 import java.util.ArrayList;
@@ -84,6 +85,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 outRect.left = mSpace;
                 outRect.right = mSpace;
                 outRect.bottom = mSpace;
+//                Cog.i(TAG,position+"::t/l/r/b==>"+mSpace);
                 return;
             } else if (isContains(viewType, mIGridLayoutViewHolder.obtainMultiInLine())) {
                 //记录初始位置,仅当第一位ｉｔｅｍ不是{@link HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE}记录下开始的位置.
@@ -166,6 +168,8 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
             outRect.left = mSpace / 2;
             outRect.right = mSpace;
         }
+
+//        Cog.i(TAG,position+"::t/l/r/b==>"+outRect.top+"/"+outRect.left+"/"+outRect.right+"/"+outRect.bottom);
     }
 
     /**
