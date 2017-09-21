@@ -85,12 +85,19 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 outRect.left = mSpace;
                 outRect.right = mSpace;
                 outRect.bottom = mSpace;
-//                Cog.i(TAG,position+"::t/l/r/b==>"+mSpace);
+                Cog.i(TAG,position+"::t/l/r/b==>"+mSpace);
                 return;
             } else if (isContains(viewType, mIGridLayoutViewHolder.obtainMultiInLine())) {
+                LinearLayoutManager layoutManager = getLinearLayoutManger(parent);
+                if (layoutManager == null) {
+                    return;
+                }
+
+                int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
                 //记录初始位置,仅当第一位ｉｔｅｍ不是{@link HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE}记录下开始的位置.
-                if (mLastPosition == 0
+                if (isLastTitleBar(parent,firstVisiblePosition,viewType,position)
                         && parent.getAdapter().getItemViewType(0) != viewType) {
+                    Cog.i(TAG,position+"::setLastPosition==>"+position);
                     mLastPosition = position;
                 }
                 int count = gridLayoutManager.getSpanCount();
@@ -156,7 +163,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
         }
         outRect.bottom = mSpace;
         int pos = position % count;
-//        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count);
+        Log.i(TAG, "lastPosition: "+mLastPosition+" pos : " + position + " real pos in column: " + pos + " count:" + count);
         //起始位置 .
         if (pos == 0) {
             outRect.left = mSpace;
@@ -169,7 +176,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
             outRect.right = mSpace;
         }
 
-//        Cog.i(TAG,position+"::t/l/r/b==>"+outRect.top+"/"+outRect.left+"/"+outRect.right+"/"+outRect.bottom);
+        Cog.i(TAG,position+"::t/l/r/b==>"+outRect.top+"/"+outRect.left+"/"+outRect.right+"/"+outRect.bottom);
     }
 
     /**
@@ -215,30 +222,34 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 boolean isLastTitle = false;
                 boolean isNeedJump = false;
                 int viewType = parent.getAdapter().getItemViewType(i + firstVisiblePosition);
+                //过滤特殊情况,多合一排序如果上一个为标题栏则需要继续绘制divider.
                 if ((i + firstVisiblePosition) < count) {
                     isLastTitle = isLastTitleBar(parent, firstVisiblePosition, viewType, i);
                     if (needDivider(viewType) && !isLastTitle) {
                         isNeedJump = true;
                     }
                 }
-
-                //continue to next loop .
                 if (isNeedJump) continue;
+
+                //处理王琦录播的奇数/偶数排列化县文体
                 View childView = parent.getChildAt(i);
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) childView.getLayoutParams();
                 //过滤标题的下方divider 的 padding
                 int left = isLastTitle ? 0 : (parent.getPaddingLeft() + childView.getPaddingLeft());
                 int bottom = childView.getTop() - params.topMargin;
                 //如果当前是大图,则divider需要上移一个space
-                if (null != mIGridLayoutViewHolder&& isContains(viewType, mIGridLayoutViewHolder.obtainMultiSingleLine())) {
+                if (null != mIGridLayoutViewHolder&&isLastTitle) {
                     // Log.i(TAG, " last Position : " + mLastPosition);
-                    bottom = bottom-mSpace;
+                    if(isContains(viewType, mIGridLayoutViewHolder.obtainMultiSingleLine())||
+                            isContains(viewType, mIGridLayoutViewHolder.obtainMultiInLine())){
+                        bottom = bottom-mSpace;
+                    }
                 }
                 int top = bottom - mDivider.getIntrinsicHeight();
                 int right = parent.getWidth() - childView.getPaddingRight();
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
-                Log.i(TAG,"draw divider left padding :"+left+" top padding:"+top);
+                Log.i(TAG,"onDrawOver divider:: left padding :"+left+" top padding:"+top);
             }
         } else if (orientation == LinearLayoutManager.HORIZONTAL) {
             for (int i = 0; i < childCount; i++) {

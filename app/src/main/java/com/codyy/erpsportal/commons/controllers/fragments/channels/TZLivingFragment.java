@@ -89,15 +89,15 @@ public class TZLivingFragment extends BaseHttpFragment implements ConfigBus.OnMo
 
     @Override
     public String obtainAPI() {
-        return URLConfig.GET_INDEX_LIVE_APPOINTMENT;
+        return URLConfig.GET_TZ_LIVE_APPOINTMENT;
     }
 
     @Override
     public HashMap<String, String> getParam(boolean isRefreshing) {
         HashMap<String, String> data = new HashMap<>();
         data.put("baseAreaId", baseAreaId);
-        data.put("size", "5");
         data.put("schoolId", schoolId);
+        data.put("size", "5");
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
         }

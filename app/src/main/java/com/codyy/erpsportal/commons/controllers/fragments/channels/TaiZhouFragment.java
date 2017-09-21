@@ -198,7 +198,7 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener {
     private void setCountDataToViews(TaiZhouPanel coursesProfile) {
         if (mPanelTitleTv == null) return;//界面没初始化好，防止fc
         mPanelTitleTv.setText(coursesProfile.getAreaName());
-        mSchoolCountTv.setText(coursesProfile.getScheduleCount() + "");
+        mSchoolCountTv.setText(coursesProfile.getShoolCount() + "");
         mClassroomCountTv.setText(coursesProfile.getScheduleCount() + "");
         mResourceCountTv.setText(coursesProfile.getResourceCount() + "");
         mNetTeachCountTv.setText(coursesProfile.getNetTeachCount() + "");
