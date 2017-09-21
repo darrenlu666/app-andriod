@@ -26,6 +26,7 @@ import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
@@ -314,6 +315,7 @@ public class VideoDetailsActivity extends FragmentActivity {
     }
 
     public void onBackClick(View view) {
+        DeviceUtils.hideSoftKeyboard(view);
         finish();
         UIUtils.addExitTranAnim(this);
     }

@@ -35,6 +35,7 @@ import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DateUtil;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.SystemUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -523,6 +524,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
     }
 
     public void onBackClick(View view) {
+        DeviceUtils.hideSoftKeyboard(mViewPager);
         finish();
         UIUtils.addExitTranAnim(this);
     }

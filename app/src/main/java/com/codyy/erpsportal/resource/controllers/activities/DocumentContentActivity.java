@@ -32,6 +32,7 @@ import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Constants;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -187,6 +188,7 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
     }
 
     public void onBackClick(View view) {
+        DeviceUtils.hideSoftKeyboard(view);
         finish();
         UIUtils.addExitTranAnim(this);
     }

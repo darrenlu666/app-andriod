@@ -22,6 +22,7 @@ import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
@@ -329,6 +330,7 @@ public class CollectivePrepareLessonsNewActivity extends BaseHttpActivity implem
                 }
                 break;
             case R.id.btn_back:
+                DeviceUtils.hideSoftKeyboard(mEmptyView);
                 this.finish();
                 overridePendingTransition(R.anim.layout_show, R.anim.slidemenu_hide);
                 break;
