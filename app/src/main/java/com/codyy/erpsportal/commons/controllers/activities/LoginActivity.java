@@ -231,7 +231,7 @@ public class LoginActivity extends AppCompatActivity {
                     hideSoftKeyboard();
                 }
             });
-            mVersionChecker.checkNewVersion(this);
+//            mVersionChecker.checkNewVersion(this);
         }
     }
 

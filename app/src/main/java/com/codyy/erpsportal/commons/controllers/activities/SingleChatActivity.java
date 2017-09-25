@@ -19,7 +19,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.ContactsFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.OnLineChatMessageFragment;
-import com.codyy.erpsportal.commons.services.BackService;
+import com.codyy.erpsportal.commons.services.ChatService;
 import com.codyy.erpsportal.commons.services.IMeeting;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 
@@ -74,7 +74,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         mTitle = (TextView) findViewById(R.id.tv_title);
         mTitle.setText(getIntent().getStringExtra(USER_NAME));
 
-        mIntent = new Intent(this, BackService.class);
+        mIntent = new Intent(this, ChatService.class);
         bindService(mIntent, mMeetingServiceConn, BIND_AUTO_CREATE);
         OnLineChatMessageFragment onLineChatMessageFragment = new OnLineChatMessageFragment();
         Bundle bundle = new Bundle();

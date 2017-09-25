@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
         boolean noNeedToCheck = getIntent().getBooleanExtra(EXTRA_NO_NEED_TO_CHECK_UPDATE, false);
         if (!noNeedToCheck) {
             mVersionChecker = VersionChecker.getInstance();
-            mVersionChecker.checkNewVersion(this);
+//            mVersionChecker.checkNewVersion(this);
         }
     }
 

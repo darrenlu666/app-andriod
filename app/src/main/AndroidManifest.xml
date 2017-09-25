@@ -49,7 +49,7 @@
                 <action android:name="com.yourcompany.yourapp.uploadservice.action.upload" />
             </intent-filter>
         </service>
-        <service android:name="com.codyy.erpsportal.commons.services.BackService" />
+        <service android:name="com.codyy.erpsportal.commons.services.ChatService" />
         <service
             android:name="com.codyy.erpsportal.exam.services.PollingService"
             android:enabled="true"

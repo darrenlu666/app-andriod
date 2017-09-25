@@ -274,6 +274,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
 
     private void tryLoadPdf(final MeetingShow meetingShow, boolean isNewOpen) {
         Cog.d(TAG, "tryLoadPdf...");
+        if(null == mDrawerLayout) return;
         if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mDrawerLayout.closeDrawer(Gravity.RIGHT);
         }

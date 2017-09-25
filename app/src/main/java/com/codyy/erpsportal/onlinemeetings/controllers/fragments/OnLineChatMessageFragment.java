@@ -38,6 +38,7 @@ import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
 import com.codyy.erpsportal.commons.widgets.ComposeView;
+import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -296,7 +297,7 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
         }
         ChatMessage chatMessage = new ChatMessage();
         //替换表情
-        String replaceMsg = PullXmlUtils.replaceMsg(receiveMsg);
+        String replaceMsg = EmojiUtils.replaceMsg(receiveMsg);
         //url encode
         String sendMsg = StringUtils.urlEncode(receiveMsg);
         Cog.i(TAG,"sendMsg: "+sendMsg);

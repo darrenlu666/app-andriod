@@ -24,6 +24,7 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineChatReceiverViewHolder;
+import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 import java.net.URLDecoder;
@@ -182,7 +183,7 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setBaseViewHoldType(TYPE_CHAT_GROUP_SEND);
         //替换表情
-        String replaceMsg = PullXmlUtils.replaceMsg(receiveMsg);
+        String replaceMsg = EmojiUtils.replaceMsg(receiveMsg);
         //url encode
         String sendMsg = StringUtils.urlEncode(receiveMsg);
         Cog.i(TAG,"sendMsg: "+sendMsg);
@@ -250,16 +251,16 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      */
     public void onEventMainThread(ChatMessage msg) throws RemoteException {
         if(null == mRecyclerView) return;
-        String userId = null;
+       /* String userId = null;
         if (msg.getChatType() == ChatMessage.GROUP_CHAT) {
             //群聊的话就取coco消息中的 to=475487329537895387 作为发送此消息者的ID
             userId = msg.getTo();
         } else {
             //单聊的话就取coco消息中的 from=475487329537895387 作为发送此消息者的ID
             userId = msg.getFrom();
-        }
+        }*/
         //如果是当前会话的消息，刷新聊天页面
-        if (userId.equals(mToUserId) && !msg.getFrom().equals(mUserInfo.getBaseUserId())) {
+        if (!msg.getFrom().equals(mUserInfo.getBaseUserId())) {
 //            if (msg.getChatType() == Ty) {
             final ChatMessage cm = msg ;
             cm.setBaseViewHoldType(TYPE_CHAT_GROUP_RECEIVER);
