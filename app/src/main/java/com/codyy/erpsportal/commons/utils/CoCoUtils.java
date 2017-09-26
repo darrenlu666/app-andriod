@@ -119,16 +119,16 @@ public class CoCoUtils {
                             String cmd = obtainCMD(content);
                             switch (cmd){
                                 case MeetingCommand.INFO_AGREE_SPEAKER_BACK://设置发言人(web)
-
+                                    parsParse(content,cmd,from,object.optString("receivedUserId"),object.optString("sendUserName"));
                                     break;
                                 case MeetingCommand.INFO_CANCEL_SPEAKER://取消发言人(web)
-
+                                    parsParse(content,cmd,from,object.optString("receivedUserId"),object.optString("sendUserName"));
                                     break;
                                 case MeetingCommand.WEB_CANCEL_SPEAKER_ALL://同意发言人取消发言申请(client)
-
+                                    parsParse(content,cmd,from,object.optString("receivedUserId"),object.optString("sendUserName"));
                                     break;
                                 case MeetingCommand.INFO_AGREE_SPEAKER_BACK＿ALL://同意客户端的发言人申请(client)
-
+                                    parsParse(content,cmd,from,object.optString("receivedUserId"),object.optString("sendUserName"));
                                     break;
                                 case MeetingCommand.WEB_SWITCH_MODE://视频/文档切换
                                     //获取细分的命令tag "video"/"show"
@@ -168,25 +168,25 @@ public class CoCoUtils {
 
                             switch (cmd){
                                 case MeetingCommand.WEB_STOP_AUDIO://参会者禁言(web)
-
+                                    parsParse(content2,cmd,sendUserId,receivedUserId,object.optString("sendUserName"));
                                     break;
                                 case MeetingCommand.WEB_PUBLISH_AUDIO://取消参会者禁言(web)
-
+                                    parsParse(content2,cmd,sendUserId,receivedUserId,object.optString("sendUserName"));
                                     break;
                                 case MeetingCommand.WEB_STOP_VIDEO://设置参会者禁画面(web)
-
+                                    parsParse(content2,cmd,sendUserId,receivedUserId,object.optString("sendUserName"));
                                     break;
                                 case MeetingCommand.WEB_PUBLISH_VIDEO://取消参会者禁画面
-
+                                    parsParse(content2,cmd,sendUserId,receivedUserId,object.optString("sendUserName"));
                                     break;
                                 case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK://禁止参会者文本聊天(web)
-
-                                    String tag = obtainCMDValueNoQuote(content2);
+                                    parsParse(content2,cmd,sendUserId,receivedUserId,object.optString("sendUserName"));
+                                    /*String tag = obtainCMDValueNoQuote(content2);
                                     if("true".equals(tag)){//禁止参会者文本聊天
 
                                     }else if("false".equals(tag)){//取消禁止参会者文本聊天
 
-                                    }
+                                    }*/
                                     break;
 //                                    case
                             }
@@ -212,30 +212,10 @@ public class CoCoUtils {
      * @return "turnMode"
      * @throws IndexOutOfBoundsException
      */
-    private static String  obtainCMD(String content) throws IndexOutOfBoundsException{
-        int i = 0;
-        int pos = 0;
-        while (i <2){
-            pos = content.indexOf("[");
-            if(pos>0){
-                i++;
-            }
-        }
-
-        int firstQuote = pos+1;
-
-        //"cmd"前一个双引号的位置.
-        int nextQuote = firstQuote+1;
-        while (nextQuote<(content.length()-1)){
-            if(content.charAt(nextQuote) == '\"'){
-                ++nextQuote;
-                break;
-            }
-            ++nextQuote;//向下移动一位
-        }
-
-        //获取命令.
-        return content.substring(firstQuote,nextQuote).replaceAll("\"","");
+    private static String  obtainCMD(String content) throws IndexOutOfBoundsException,JSONException {
+        JSONArray array = new JSONArray(content);
+        if(array.length()<5) return "";
+        return array.optJSONArray(5).optString(0);
     }
 
     /**
@@ -244,41 +224,10 @@ public class CoCoUtils {
      * @return "video"
      * @throws IndexOutOfBoundsException
      */
-    private static String  obtainCMDValue(String content) throws IndexOutOfBoundsException{
-        int i = 0;
-        int pos = 0;
-        while (i <2){
-            pos = content.indexOf("[");
-            if(pos>0){
-                i++;
-            }
-        }
-
-        int firstQuote = pos+1;
-
-        //"cmd"前一个双引号的位置.
-        int nextQuote = firstQuote+1;
-        while (nextQuote<(content.length()-1)){
-            if(content.charAt(nextQuote) == '\"'){
-                //要到后面双引号的下一个位置.
-                ++nextQuote;
-                break;
-            }
-            ++nextQuote;//向下移动一位
-        }
-
-        int tagFirstQuote = nextQuote+1;
-        int tagNextQuote = tagFirstQuote+1;
-        while (tagFirstQuote<content.length()){
-            if(content.charAt(tagNextQuote) == '\"'){
-                ++tagNextQuote;
-                break;
-            }
-            ++tagNextQuote;
-        }
-
-        //获取命令.
-        return content.substring(tagFirstQuote,tagNextQuote).replaceAll("\"","");
+    private static String  obtainCMDValue(String content) throws IndexOutOfBoundsException, JSONException {
+        JSONArray array = new JSONArray(content);
+        if(array.length()<5) return "";
+        return array.optJSONArray(5).optString(1);
     }
 
     /**
@@ -413,6 +362,10 @@ public class CoCoUtils {
         JSONArray jsonArray = null;
         if (!DEF.equals(pars)) {
             jsonArray = new JSONArray(pars);
+            //过滤当前数据.
+            if(jsonArray.length()>5){
+                jsonArray = jsonArray.optJSONArray(5);
+            }
         }
         switch (tag) {
             case MeetingCommand.WEB_NO_SPEAKER://禁止发言（开启免打扰）

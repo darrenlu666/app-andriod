@@ -25,7 +25,7 @@ import java.util.Map;
 public class SendCMDUtils {
     private static final String TAG = "SendCMDUtils";
     /** test token by poe **/
-    private static String mToken="tuRbha4Fz9rKjjStOcv8MTi9lrm1OknGwAneJBCVO1ABhlP3QXQYZ2PYLH+nhJp8";
+    private static String mToken="tuRbha4Fz9rKjjStOcv8MTi9lrm1OknGwAneJBCVO1AgItaCJ5MiR33ZmHod84WK";
     /**
      * 基本参数
      */
