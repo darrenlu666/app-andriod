@@ -15,18 +15,17 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
-import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
 import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.GSLessonsViewHold;
-import com.codyy.erpsportal.commons.controllers.viewholders.LessonsViewHold;
 import com.codyy.erpsportal.commons.controllers.viewholders.TitleItemViewHolderBuilder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.AnnounceViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.HomeGroupSchoolViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.HomeResourceViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.HomeTeacherViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.homepage.MainLiveViewHolder;
+import com.codyy.erpsportal.commons.exception.LogUtils;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -41,12 +40,15 @@ import com.codyy.erpsportal.commons.models.entities.mainpage.GroupSchool;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResource;
 import com.codyy.erpsportal.commons.models.listeners.MainLiveClickListener;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
-import com.codyy.erpsportal.groups.controllers.activities.BlogPostDetailActivity;
 import com.codyy.erpsportal.perlcourseprep.controllers.activities.MoreLessonPlansActivity;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
@@ -63,6 +65,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.exceptions.Exceptions;
 
 /**
  * 频道页 首页（集团校）
@@ -145,14 +150,46 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
 
     @Override
     public void onSuccess(JSONObject response, boolean isRefreshing) {
+        Cog.i(TAG,"onSuccess =>"+response.toString());
 
-        AnnounceParse lp = new Gson().fromJson(response.toString(), AnnounceParse.class);
-        if (null != lp) {
-            lp.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_INFO);
-            mData.add(lp);
+        if(response!=null && null != response.optString("seq")){
+            switch (response.optString("seq")){
+                case "0"://公告
+                    parseAnnounce(response);
+                    break;
+                case "1"://网络教研
+                    parseNetTeach(response);
+                    break;
+                case "2"://直播
+                    parseLive(response);
+                    break;
+                case "3"://校本
+                    parseSchoolResource(response);
+                    break;
+                case "4"://优客资源
+                    parseLessonResource(response);
+                    break;
+                case "5"://名师推荐
+                    parseTeacher(response);
+                    break;
+                case "6"://集团学校
+                    parseGroupSchool(response);
+                    if (mRefreshLayout.isRefreshing()) {
+                        mRefreshLayout.setRefreshing(false);
+                    }
+                    mAdapter.setData(mData);
+                    mAdapter.notifyDataSetChanged();
+                    if (mData.size() <= 0) {
+                        mEmptyView.setLoading(false);
+                        mEmptyView.setVisibility(View.VISIBLE);
+                    } else {
+                        mEmptyView.setVisibility(View.GONE);
+                    }
+                    break;
+            }
         }
         // 17-8-7 获取教研活动(集体备课)
-        getNetTeach();
+//        getNetTeach();
     }
 
     @Override
@@ -179,7 +216,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
             @Override
             public void onReloadClick() {
                 mEmptyView.setLoading(true);
-                requestData(true);
+                refresh();
             }
         });
 
@@ -351,284 +388,311 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    private Disposable mDisposable ;
+
     private void refresh() {
+        //停止网络请求.
+        if(null != mDisposable){
+            try {
+                mDisposable.dispose();
+            } catch (Throwable ex) {
+                Exceptions.throwIfFatal(ex);
+            }
+        }
+
         mRecyclerView.setEnabled(false);
         mData.clear();
         mRecyclerView.getRecycledViewPool().clear();
         mAdapter.notifyDataSetChanged();
-        requestData(true);
+        //公告
+        Observable<JSONObject> gonggao = getAnnounce();
+        //教研活动
+        Observable<JSONObject> netteach = getNetTeach();
+        //直播课堂
+        Observable<JSONObject> living = getLiveClass();
+        //校本资源
+        Observable<JSONObject> schoolresource = getSchoolResource();
+        //优客资源
+        Observable<JSONObject> goodlesson = getLessonResources();
+        //名师推荐
+        Observable<JSONObject> teacherrec = getTeacherRecommended();
+        //集团学校
+        Observable<JSONObject> groupschool = getGroupSchool();
+
+        mDisposable = getSender().sendCombineRequest(new RequestSender.RequestData(
+                obtainAPI(),
+                getParam(true),
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            onSuccess(response,true);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            LogUtils.log(e);
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(Throwable error) {
+                onFailure(error);
+                ToastUtil.showToast(getString(R.string.net_connect_error));
+                LogUtils.log(error);
+            }
+        }
+        ),gonggao,netteach,living,schoolresource,goodlesson,teacherrec,groupschool);
+    }
+
+    private Observable<JSONObject> getAnnounce() {
+        return getSender().constructObservable(new RequestSender.RequestData(
+                obtainAPI(), getParam(true), new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                parseAnnounce(response);
+            }
+        }, null));
+    }
+
+    private void parseAnnounce(JSONObject response) {
+        AnnounceParse lp = new Gson().fromJson(response.toString(), AnnounceParse.class);
+        if (null != lp) {
+            lp.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_INFO);
+            mData.add(lp);
+        }
     }
 
 
     /**
      * 教研活动
      */
-    private void getNetTeach() {
+    private Observable<JSONObject> getNetTeach() {
         HashMap<String, String> data = new HashMap<>();
         data.put("clsSchoolId", schoolId);
         data.put("uuid", mUserInfo.getUuid());
-
-        requestData(URLConfig.GET_GROUP_SCHOOL_NET_PREPARE, data, false, new BaseHttpActivity.IRequest() {
+        return getSender().constructObservable(new RequestSender.RequestData(
+                URLConfig.GET_GROUP_SCHOOL_NET_PREPARE, data, new Response.Listener<JSONObject>() {
             @Override
-            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                //parse data .
-                if ("success".equals(response.optString("result"))) {
-                    FormatJsonParse<PrepareLessonsShortEntity> parse = new FormatJsonParse<PrepareLessonsShortEntity>().parse(response, PrepareLessonsShortEntity.class);
-                    if (null != parse && parse.getData() != null && parse.getData().size() > 0) {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
-                        for (PrepareLessonsShortEntity entity : parse.getData()) {
-                            entity.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_NET_TEACH);
-                            mData.add(entity);
-                        }
-                    } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                    }
-                } else {
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            public void onResponse(JSONObject response) {
+                parseNetTeach(response);
+            }
+        }, null
+        ));
+    }
+
+    private void parseNetTeach(JSONObject response) {
+        if ("success".equals(response.optString("result"))) {
+            FormatJsonParse<PrepareLessonsShortEntity> parse = new FormatJsonParse<PrepareLessonsShortEntity>().parse(response, PrepareLessonsShortEntity.class);
+            if (null != parse && parse.getData() != null && parse.getData().size() > 0) {
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                for (PrepareLessonsShortEntity entity : parse.getData()) {
+                    entity.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_NET_TEACH);
+                    mData.add(entity);
                 }
-
-                //  获取直播课堂
-                loadLiveClass();
+            } else {
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
-
-            @Override
-            public void onRequestFailure(Throwable error) {
-                onFailure(error);
-                // 获取直播课堂
-                loadLiveClass();
-            }
-        });
+        } else {
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeachingActivity, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+        }
     }
 
 
     /**
      * 加载直播课堂
      */
-    private void loadLiveClass() {
+    private Observable<JSONObject> getLiveClass() {
         HashMap<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("clsSchoolId", schoolId);
         }
         params.put("uuid", mUserInfo.getUuid());
 
-        requestData(URLConfig.GET_GROUP_SCHOOL_LIVING_LESSON, params, false, new BaseHttpActivity.IRequest() {
+        return getSender().constructObservable(new RequestSender.RequestData(
+                URLConfig.GET_GROUP_SCHOOL_LIVING_LESSON, params, new Response.Listener<JSONObject>() {
             @Override
-            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                //parse data .
-                if ("success".equals(response.optString("result"))) {
-                    FormatJsonParse<GroupLive> parse = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
-                    if (null != parse && parse.getData().size() > 0) {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
-                        for (GroupLive room : parse.getData()) {
-                            room.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS);
-                            mData.add(room);
-                        }
-                    } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                    }
-                } else {
-                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+            public void onResponse(JSONObject response) {
+                parseLive(response);
+            }
+        }, null
+        ));
+    }
+
+    private void parseLive(JSONObject response) {
+        if ("success".equals(response.optString("result"))) {
+            FormatJsonParse<GroupLive> parse = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
+            if (null != parse && parse.getData().size() > 0) {
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+                for (GroupLive room : parse.getData()) {
+                    room.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS);
+                    mData.add(room);
                 }
-
-                //  获取校本资源
-                getRecommendSchedule();
+            } else {
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
-
-            @Override
-            public void onRequestFailure(Throwable error) {
-                onFailure(error);
-                //  获取校本资源
-                getRecommendSchedule();
-            }
-        });
+        } else {
+            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolLiveClass, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+        }
     }
 
     /**
      * 校本资源
      */
-    private void getRecommendSchedule() {
+    private Observable<JSONObject> getSchoolResource() {
         HashMap<String, String> data = new HashMap<>();
         data.put("clsSchoolId", schoolId);
-
-        requestData(URLConfig.GET_GROUP_SCHOOL_HISTORY_LESSON, data, false, new BaseHttpActivity.IRequest() {
+        return getSender().constructObservable(new RequestSender.RequestData(
+                URLConfig.GET_GROUP_SCHOOL_HISTORY_LESSON, data, new Response.Listener<JSONObject>() {
             @Override
-            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
+            public void onResponse(JSONObject response) {
+                parseSchoolResource(response);
+            }
+        }, null
+        ));
+    }
 
-                FormatJsonParse<GroupLive> hcp = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
-                if (null != hcp) {
-                    List<GroupLive> hcList = hcp.getData();
-                    if (null != hcList) {
-                        if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                        } else {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+    private void parseSchoolResource(JSONObject response) {
+        FormatJsonParse<GroupLive> hcp = new FormatJsonParse<GroupLive>().parse(response, GroupLive.class);
+        if (null != hcp) {
+            List<GroupLive> hcList = hcp.getData();
+            if (null != hcList) {
+                if (hcList.size() == 0) {
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                } else {
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
-                            for (GroupLive hc : hcList) {
-                                hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE);
-                                mData.add(hc);
-                            }
-                        }
-                    } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    for (GroupLive hc : hcList) {
+                        hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE);
+                        mData.add(hc);
                     }
                 }
-
-                // 17-8-7 获取优课资源
-                getLessonResources();
+            } else {
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
-
-            @Override
-            public void onRequestFailure(Throwable error) {
-                onFailure(error);
-                // 17-8-7 获取优课资源
-                getLessonResources();
-            }
-        });
+        }
     }
 
     /**
      * 优课资源
      */
-    private void getLessonResources() {
+    private Observable<JSONObject> getLessonResources() {
         HashMap<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("schoolId", schoolId);
         }
 
-        requestData(URLConfig.GET_GROUP_SCHOOL_RESOURCE, params, false, new BaseHttpActivity.IRequest() {
+        return getSender().constructObservable(new RequestSender.RequestData(
+                URLConfig.GET_GROUP_SCHOOL_RESOURCE, params, new Response.Listener<JSONObject>() {
             @Override
-            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
+            public void onResponse(JSONObject response) {
+                parseLessonResource(response);
+            }
+        }, null
+        ));
+    }
 
-                FormatJsonParse<MainResource> hcp = new FormatJsonParse<MainResource>().parse(response, MainResource.class);
-                if (null != hcp) {
-                    List<MainResource> hcList = hcp.getData();
-                    if (null != hcList) {
-                        if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                        } else {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+    private void parseLessonResource(JSONObject response) {
+        FormatJsonParse<MainResource> hcp = new FormatJsonParse<MainResource>().parse(response, MainResource.class);
+        if (null != hcp) {
+            List<MainResource> hcList = hcp.getData();
+            if (null != hcList) {
+                if (hcList.size() == 0) {
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                } else {
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
-                            for (MainResource hc : hcList) {
-                                hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE);
-                                mData.add(hc);
-                            }
-                        }
-                    } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    for (MainResource hc : hcList) {
+                        hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE);
+                        mData.add(hc);
                     }
                 }
-
-                // 17-8-7 获取名师推荐
-                loadTeacherRecommended();
+            } else {
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolResource, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
-
-            @Override
-            public void onRequestFailure(Throwable error) {
-                onFailure(error);
-                // 17-8-7 获取名师推荐
-                loadTeacherRecommended();
-            }
-        });
+        }
     }
 
 
     /**
      * 加载名师推荐数据
      */
-    private void loadTeacherRecommended() {
+    private Observable<JSONObject> getTeacherRecommended() {
         HashMap<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("schoolId", schoolId);
         }
         params.put("size", "4");//请求4个数据
         params.put("type", "composite");
-
-        requestData(URLConfig.GET_GROUP_SCHOOL_TEACHER_RECOMMEND, params, false, new BaseHttpActivity.IRequest() {
+        return getSender().constructObservable(new RequestSender.RequestData(
+                URLConfig.GET_GROUP_SCHOOL_TEACHER_RECOMMEND, params, new Response.Listener<JSONObject>() {
             @Override
-            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
+            public void onResponse(JSONObject response) {
+                parseTeacher(response);
+            }
+        }, null
+        ));
+    }
 
-                FormatJsonParse<GreatTeacher> hcp = new FormatJsonParse<GreatTeacher>().parse(response, GreatTeacher.class);
-                if (null != hcp) {
-                    List<GreatTeacher> hcList = hcp.getData();
-                    if (null != hcList) {
-                        if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                        } else {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+    private void parseTeacher(JSONObject response) {
+        FormatJsonParse<GreatTeacher> hcp = new FormatJsonParse<GreatTeacher>().parse(response, GreatTeacher.class);
+        if (null != hcp) {
+            List<GreatTeacher> hcList = hcp.getData();
+            if (null != hcList) {
+                if (hcList.size() == 0) {
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                } else {
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
 
-                            for (GreatTeacher hc : hcList) {
-                                hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST);
-                                mData.add(hc);
-                            }
-                        }
-                    } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                    for (GreatTeacher hc : hcList) {
+                        hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST);
+                        mData.add(hc);
                     }
                 }
-                //  获取集团学校
-                getGroupSchool();
+            } else {
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchoolTeacherSuggest, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
-
-            @Override
-            public void onRequestFailure(Throwable error) {
-                onFailure(error);
-                // 获取集团学校
-                getGroupSchool();
-
-            }
-        });
+        }
     }
 
     /**
      * 获取集团校列表
      */
-    private void getGroupSchool() {
+    private Observable<JSONObject> getGroupSchool() {
         HashMap<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("clsSchoolId", schoolId);
         }
         params.put("size", "4");
-
-        requestData(URLConfig.GET_GROUP_SCHOOL_LIST, params, false, new BaseHttpActivity.IRequest() {
+        return getSender().constructObservable(new RequestSender.RequestData(
+                URLConfig.GET_GROUP_SCHOOL_LIST, params, new Response.Listener<JSONObject>() {
             @Override
-            public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
-                if (mRefreshLayout.isRefreshing()) {
-                    mRefreshLayout.setRefreshing(false);
-                }
-//                ResourceParse hcp = new Gson().fromJson(response.toString(), ResourceParse.class);
-                FormatJsonParse<GroupSchool> hcp = new FormatJsonParse<GroupSchool>().parse(response, GroupSchool.class);
-                if (null != hcp) {
-                    List<GroupSchool> hcList = hcp.getData();
-                    if (null != hcList) {
-                        if (hcList.size() == 0) {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
-                        } else {
-                            mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+            public void onResponse(JSONObject response) {
+                parseGroupSchool(response);
+            }
+        }, null
+        ));
+    }
 
-                            for (GroupSchool hc : hcList) {
-                                hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL);
-                                mData.add(hc);
-                            }
-                        }
-                    } else {
-                        mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+    private void parseGroupSchool(JSONObject response) {
+        FormatJsonParse<GroupSchool> hcp = new FormatJsonParse<GroupSchool>().parse(response, GroupSchool.class);
+        if (null != hcp) {
+            List<GroupSchool> hcList = hcp.getData();
+            if (null != hcList) {
+                if (hcList.size() == 0) {
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
+                } else {
+                    mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE));
+
+                    for (GroupSchool hc : hcList) {
+                        hc.setBaseViewHoldType(TYPE_ITEM_VIEW_HOLDER_GROUP_SCHOOL);
+                        mData.add(hc);
                     }
                 }
-                mAdapter.setData(mData);
-                mAdapter.notifyDataSetChanged();
-                if (mData.size() <= 0) {
-                    mEmptyView.setLoading(false);
-                    mEmptyView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyView.setVisibility(View.GONE);
-                }
+            } else {
+                mData.add(new BaseTitleItemBar(Titles.sPagetitleIndexClubSchool, TitleItemViewHolder.ITEM_TYPE_TITLE_SIMPLE_NO_DATA));
             }
-
-            @Override
-            public void onRequestFailure(Throwable error) {
-                onFailure(error);
-            }
-        });
+        }
     }
 
 
@@ -638,8 +702,6 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
         baseAreaId = config.getBaseAreaId();
         schoolId = config.getSchoolId();
         if (mRefreshLayout == null) return;//防止界面回收还有回调
-//        mRefreshLayout.setRefreshing(true);
-//        requestData(true);
         refresh();
     }
 

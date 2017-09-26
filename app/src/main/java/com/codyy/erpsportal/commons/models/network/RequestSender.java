@@ -29,6 +29,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -84,6 +85,118 @@ public class RequestSender {
         mCompositeDisposable.add( disposable);
         return true;
     }
+
+    /**
+     * 制造Observable.
+     * @param requestData
+     * @return
+     */
+    public Observable<JSONObject> constructObservable(final RequestData requestData){
+        return requestData.getParam() != null?
+                mWebApi.post4Json(requestData.getUrl(), requestData.getParam()):
+                mWebApi.post4Json(requestData.getUrl())
+                        .doOnNext(new Consumer<JSONObject>() {
+                    @Override
+                    public void accept(final JSONObject response) throws Exception {
+                        Cog.d(TAG, "+onResponse:" + response);
+                        String result = response.optString("result");
+                        if ("forbidden".equals(result)) {//登录超时
+                            if (requestData.getSendCount() > 1) {//已经尝试登录失败
+                                UIUtils.toast(R.string.login_invalid, Toast.LENGTH_SHORT);
+                                clearLoginData();
+                                gotoLoginActivity();
+                            } else {
+                                sendLoginRequest(requestData, false);
+                            }
+                        } else {
+                            if (requestData.isToShowLoading()) {
+                                long spendTime = System.currentTimeMillis() - requestData.getStartTime();
+                                if (spendTime > 500) {
+                                    requestData.getListener().onResponse(response);
+                                } else {
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            requestData.getListener().onResponse(response);
+                                        }
+                                    }, 500 - spendTime);
+                                }
+                            } else {
+                                requestData.getListener().onResponse(response);
+                            }
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 多合并的发射顺序index的返回结果见json字符串seq.
+     */
+    int mIndex = 0;
+    /**
+     * 合并多个Observer 顺序执行.
+     * 顺序由返回结果 "seq":"0" 确定.
+     * @param observables
+     */
+    public Disposable sendCombineRequest(final RequestData requestData,Observable<JSONObject> ...observables){
+            mIndex = 0;
+            Disposable disposable = Observable.concatArray(observables)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map(new Function<JSONObject, JSONObject>() {
+                        @Override
+                        public JSONObject apply(JSONObject jsonObject) throws Exception {
+                            jsonObject.put("seq",String.valueOf(mIndex));
+                            mIndex++;
+                            return jsonObject;
+                        }
+                    })
+                    .subscribe(new Consumer<JSONObject>() {
+                        @Override
+                        public void accept(final JSONObject response) throws Exception {
+                            Cog.d(TAG, "+onResponse:" + response);
+                            String result = response.optString("result");
+                            if ("forbidden".equals(result)) {//登录超时
+                                if (requestData.getSendCount() > 1) {//已经尝试登录失败
+                                    UIUtils.toast(R.string.login_invalid, Toast.LENGTH_SHORT);
+                                    clearLoginData();
+                                    gotoLoginActivity();
+                                } else {
+                                    sendLoginRequest(requestData, false);
+                                }
+                            } else {
+                                if (requestData.isToShowLoading()) {
+                                    long spendTime = System.currentTimeMillis() - requestData.getStartTime();
+                                    if (spendTime > 500) {
+                                        requestData.getListener().onResponse(response);
+                                    } else {
+                                        mHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                requestData.getListener().onResponse(response);
+                                            }
+                                        }, 500 - spendTime);
+                                    }
+                                } else {
+                                    requestData.getListener().onResponse(response);
+                                }
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            Cog.e(TAG, "+onErrorResponse:" + throwable);
+                            throwable.printStackTrace();
+                            requestData.getErrorListener().onErrorResponse(throwable);
+                        }
+                    });
+
+
+        mCompositeDisposable.add( disposable);
+
+        return disposable;
+    }
+
 
     /**
      * 发送一般GET请求
