@@ -16,8 +16,6 @@ public class BlogPost extends BaseTitleItemBar implements Serializable {
     private String blogPicture;
     private String blogTitle;
     @SerializedName(value="blogContent",alternate = {"blogTextContent"})
-    private String blogContent;
-    @SerializedName("blogTextContent")
     private String blogDesc;
     private String blogLabel;
     private String publicFlag;
@@ -91,14 +89,6 @@ public class BlogPost extends BaseTitleItemBar implements Serializable {
 
     public void setBlogTitle(String blogTitle) {
         this.blogTitle = blogTitle;
-    }
-
-    public String getBlogContent() {
-        return blogContent;
-    }
-
-    public void setBlogContent(String blogContent) {
-        this.blogContent = blogContent;
     }
 
     public String getBlogDesc() {

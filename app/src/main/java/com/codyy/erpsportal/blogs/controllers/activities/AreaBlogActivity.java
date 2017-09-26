@@ -32,6 +32,7 @@ import com.codyy.erpsportal.commons.controllers.activities.PublicUserActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.CategoryFilterFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.filters.SimpleListFragment;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.entities.blog.AreaBlogPostList;
 import com.codyy.erpsportal.commons.models.entities.blog.BlogPost;
 import com.codyy.erpsportal.commons.models.entities.blog.MyBlogPostList;
 import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
@@ -188,7 +189,7 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
                     case ChannelBlogViewHolder.ITEM_TYPE_TOP://置顶博文
                     case ChannelBlogViewHolder.ITEM_TYPE_HOT://热门博文
                     case ChannelBlogViewHolder.ITEM_TYPE_ALL://全部博文
-                        viewHolder = new MyBlogViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my_blog_post, parent, false));
+                        viewHolder = new MyBlogViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_area_blog_post, parent, false));
                         break;
                 }
                 return viewHolder;
@@ -206,7 +207,7 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
                 switch (mAdapter.getItemViewType(position)) {
                     case BaseRecyclerAdapter.TYPE_FOOTER://加载更多
 //                        showMore();
-//                        requestData();
+//                        requestData(false);
                         break;
                     default:
                         if (v.getId() == R.id.sdv_pic) {
@@ -255,9 +256,9 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
         //推荐
         mRecommends.clear();
         mRecommends.add(new MyBaseTitle("", "全部"));
-        mRecommends.add(new MyBaseTitle("", "已推送到门户"));
-        mRecommends.add(new MyBaseTitle("", "已推送到上级"));
-        mRecommends.add(new MyBaseTitle("", "未推送"));
+        mRecommends.add(new MyBaseTitle("HOME", "已推送到门户"));
+        mRecommends.add(new MyBaseTitle("HIGHER", "已推送到上级"));
+        mRecommends.add(new MyBaseTitle("NONE", "未推送"));
     }
 
     private void initCategoryFilter() {
@@ -304,6 +305,9 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
     }
 
 
+    /**
+     * 展示顶部筛选
+     */
     private void showHeadFilter() {
 
         if (mSortFragment == null) {
@@ -325,7 +329,9 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
             mRoleFragment.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<FilterEntity>() {
                 @Override
                 public void onItemClicked(View v, int position, FilterEntity data) throws Exception {
-                    mTvRole.setText(data.getName());
+                    String txt = data.getName();
+                    if(position == 0) txt = "角色("+txt+")";
+                    mTvRole.setText(txt);
                     mRoleType = data.getId();
                     hideHeadFilter();
                     //refresh
@@ -336,10 +342,12 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
 
         if (mReCommendFragment == null) {
             mReCommendFragment = SimpleListFragment.newInstance(mRecommends);
-            mRoleFragment.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<FilterEntity>() {
+            mReCommendFragment.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<FilterEntity>() {
                 @Override
                 public void onItemClicked(View v, int position, FilterEntity data) throws Exception {
-                    mTvRecommend.setText(data.getName());
+                    String txt = data.getName();
+                    if(position == 0) txt = "推送("+txt+")";
+                    mTvRecommend.setText(txt);
                     mRecommendType = data.getId();
                     hideHeadFilter();
                     //refresh
@@ -368,22 +376,22 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
 
     }
 
+    /**|
+     * 隐藏上一个dialog.
+     */
     private void hideHeadFilter() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch (mSortIndex) {
             case 0:
-//                ft.replace(R.id.fl_filter, mSortFragment);
                 ft.remove(mSortFragment);
                 ft.commit();
                 break;
             case 1:
                 ft.remove(mRoleFragment);
-//                ft.replace(R.id.fl_filter, mRoleFragment);
                 ft.commit();
                 break;
             case 2:
                 ft.remove(mReCommendFragment);
-//                ft.replace(R.id.fl_filter, mReCommendFragment);
                 ft.commit();
                 break;
         }
@@ -406,21 +414,15 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
-        MyBlogPostList blogPostList = new Gson().fromJson(response.toString(), MyBlogPostList.class);
+        AreaBlogPostList blogPostList = new Gson().fromJson(response.toString(), AreaBlogPostList.class);
         if (null != blogPostList) {
-            if (blogPostList.getBlogList() != null && blogPostList.getBlogList().size() > 0) {
+            if (blogPostList.getData() != null && blogPostList.getData().size() > 0) {
                 List<BlogPost> topList = new ArrayList<>();
                 List<BlogPost> allList = new ArrayList<>();
-                for (BlogPost blogPost : blogPostList.getBlogList()) {
-                    if ("Y".equals(blogPost.getTopFlag())) {
-                        //置顶博文
-                        blogPost.setBaseViewHoldType(ChannelBlogViewHolder.ITEM_TYPE_TOP);
-                        blogPost.setBaseTitle(blogPost.getBlogTitle());
-                        topList.add(blogPost);
-                    } else {
-                        blogPost.setBaseViewHoldType(ChannelBlogViewHolder.ITEM_TYPE_ALL);
-                        allList.add(blogPost);
-                    }
+                for (BlogPost blogPost : blogPostList.getData()) {
+                    //应用博文没有置顶效果.
+                    blogPost.setBaseViewHoldType(ChannelBlogViewHolder.ITEM_TYPE_ALL);
+                    allList.add(blogPost);
                 }
                 if (topList.size() > 0) mDataList.addAll(topList);
                 if (allList.size() > 0) mDataList.addAll(allList);
@@ -487,6 +489,7 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
     @Override
     public void onItemClicked(View v, int position, Object data) {
         if (null == data) return;
+        hideHeadFilter();
         FilterEntity fe = (FilterEntity) data;
         mTitleTextView.setText(fe.getName());
         if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
@@ -502,28 +505,15 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
         switch (v.getId()) {
             case R.id.tv_sort:
                 mSortIndex = 0;
-
                 break;
             case R.id.tv_role:
                 mSortIndex = 1;
-
                 break;
             case R.id.tv_recommend:
                 mSortIndex = 2;
-
                 break;
 
         }
-        ToastUtil.showToast("select index : " + mSortIndex);
-//        mSortFragment
-        // TODO: 17-9-14 展示筛选的Fragment.
         showHeadFilter();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }
