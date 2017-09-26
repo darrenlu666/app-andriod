@@ -3,21 +3,23 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.os.Bundle;
 
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter.ChannelTabInfo;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelCustomizedFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelLivingFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.HistoryCoursesFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.InfoIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainCompositeFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainGroupSchoolFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ManagementFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipHomeFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TeachingResearchFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
 import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelCustomizedFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelLivingFragment;
 import com.codyy.erpsportal.groups.controllers.fragments.ChannelBlogPostFragment;
 import com.codyy.erpsportal.groups.controllers.fragments.GroupFragment;
 
@@ -132,7 +134,7 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)) {//集团校
                     clazz = MainGroupSchoolFragment.class;
                     tabId = 14;
-                } else if (ModuleConfig.TEMPLATE_HN_RES.equals(indexTemplateId)) {//海宁资源
+                } else if (ModuleConfig.TEMPLATE_HN_RES.equals(indexTemplateId)) {//海宁资源首页
                     clazz = HaiNingResFragment.class;
                     tabId = 15;
                 } else {
@@ -148,6 +150,7 @@ public class ChannelTab {
                     clazz = SipCustomizedFragment.class;
                 } else {
                     clazz = ChannelCustomizedFragment.class;
+                    clazz = HaiNingCustomizedFragment.class;
                 }
                 tabId = 3;
                 break;
@@ -174,6 +177,10 @@ public class ChannelTab {
             case "groupid"://圈组
                 clazz = GroupFragment.class;
                 tabId = 9;
+                break;
+            case "indexcustomehaiNingperiod"://往期录播（海宁定制）
+                clazz = HistoryCoursesFragment.class;
+                tabId = 91;
                 break;
             default:
                 throw new IllegalStateException("Unknown id!id=" + id);

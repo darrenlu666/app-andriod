@@ -19,6 +19,9 @@
         android:id="@+id/dv_icon"
         android:layout_width="125dp"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        app:placeholderImage="@drawable/video_holder"
+        app:placeholderImageScaleType="centerCrop"
         app:viewAspectRatio="1.78" />
 
     <TextView

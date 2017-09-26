@@ -13,6 +13,7 @@ import com.codyy.erpsportal.commons.models.entities.Flesh;
 import butterknife.ButterKnife;
 
 /**
+ * 抽象骨架组持者
  * Created by gujiajia on 2017/9/14.
  */
 

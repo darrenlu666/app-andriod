@@ -129,10 +129,6 @@ public class MainResFragment extends Fragment {
     @Bind(R.id.tv_teacher_empty)
     TextView mNoTeacherTv;
 
-//    private RequestQueue mRequestQueue;
-//
-//    private Object mRequestTag = new Object();
-
     private WebApi mWebApi;
 
     private CompositeDisposable mCompositeDisposable;

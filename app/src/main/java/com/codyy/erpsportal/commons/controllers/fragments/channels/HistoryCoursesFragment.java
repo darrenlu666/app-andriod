@@ -9,7 +9,7 @@ package com.codyy.erpsportal.commons.controllers.fragments.channels;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,21 +18,26 @@ import android.view.ViewGroup;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter;
+import com.codyy.erpsportal.commons.controllers.viewholders.PastRecordingFlesh;
 import com.codyy.erpsportal.commons.controllers.viewholders.PastRecordingFleshVhr;
 import com.codyy.erpsportal.commons.controllers.viewholders.VhrFactory;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
+import com.codyy.erpsportal.commons.models.entities.Flesh;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,11 +47,11 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * 频道页骨架碎片
+ * 频道页精品课程（海宁定制）碎片
  */
-public class ChannelSkeletonFragment extends Fragment{
+public class HistoryCoursesFragment extends Fragment{
 
-    private final static String TAG = "ChannelSkeletonFragment";
+    private final static String TAG = "HistoryCoursesFragment";
 
     private View mRootView;
 
@@ -62,7 +67,7 @@ public class ChannelSkeletonFragment extends Fragment{
 
     private CompositeDisposable mCompositeDisposable;
 
-    public ChannelSkeletonFragment() { }
+    public HistoryCoursesFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,8 +97,9 @@ public class ChannelSkeletonFragment extends Fragment{
             mEmptyView = (EmptyView) mRootView.findViewById(R.id.empty_view);
 
             initEmptyView();
-            GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             mRecyclerView.setLayoutManager(layoutManager);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.dot_gray));
             VhrFactory vhrFactory = new VhrFactory();
             vhrFactory.addViewHolder(PastRecordingFleshVhr.class);
             mAdapter = new SkeletonAdapter(vhrFactory);
@@ -145,7 +151,7 @@ public class ChannelSkeletonFragment extends Fragment{
                         mRefreshLayout.setRefreshing(false);
                         String result = response.optString("result");
                         if ("success".equals(result)) {
-
+                            mAdapter.setFleshes(createPastRecodingFleshes());
                         }
                         mRefreshLayout.setRefreshing(false);
                         onLoadingFinish();
@@ -168,6 +174,18 @@ public class ChannelSkeletonFragment extends Fragment{
                 mRefreshLayout.setRefreshing(true);
             }
         });
+    }
+
+    private List<Flesh> createPastRecodingFleshes() {
+        List<Flesh> pastRecordingFleshes = new ArrayList<>(10);
+        for (int i=0; i<10; i++) {
+            PastRecordingFlesh pastRecordingFlesh = new PastRecordingFlesh();
+            pastRecordingFlesh.setName("精品课程" + i);
+            pastRecordingFlesh.setSchoolName("第" + i + "小学");
+            pastRecordingFlesh.setScope( i + "学科");
+            pastRecordingFleshes.add(pastRecordingFlesh);
+        }
+        return pastRecordingFleshes;
     }
 
     /**
