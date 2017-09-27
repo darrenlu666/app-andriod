@@ -44,7 +44,7 @@ public class DMSEntity implements Parcelable{
      * 如果serverType ==0 需要dmc二次请求网址
      * @return
      */
-    public void   getServer(Activity act , MeetingBase meetingBase , ICallBack callBack){
+    public void   getServer(Activity act , MeetingBase meetingBase,String areaId , ICallBack callBack){
 //        this.mCallBack  =   callBack;
         synchronized(EApplication.instance()){
             mRegisters.add(callBack);
@@ -54,7 +54,7 @@ public class DMSEntity implements Parcelable{
                 }
             }else{
                 if(mRegisters.size()<= 1){//阻止多次调用此方法
-                    getDirectURL(act , meetingBase);
+                    getDirectURL(act , meetingBase , areaId);
                 }
             }
         }
@@ -75,10 +75,10 @@ public class DMSEntity implements Parcelable{
         mRegisters.clear();
     }
 
-    private void getDirectURL(Activity act ,MeetingBase meetingBase ) {
+    private void getDirectURL(Activity act ,MeetingBase meetingBase ,String areaId) {
         Cog.i(TAG ,"开始获取DMS地址.....");
         if(this.dmsServerType!=null && dmsServerType.equals("0")){
-            getMediaPlayAddress(act , meetingBase);
+            getMediaPlayAddress(act , meetingBase , areaId);
         }else{
             this.directURL = this.pmsAddress;
            /* if(null != mCallBack){
@@ -180,28 +180,58 @@ public class DMSEntity implements Parcelable{
     /**
      * 获取媒体服务器的实际地址 .
      */
-    private void getMediaPlayAddress(Activity act ,MeetingBase meetingBase) {
+    private void getMediaPlayAddress(Activity act ,MeetingBase meetingBase,String areaId) {
 
         Map<String, String> params = new HashMap<>();
         params.put("method", "play");
-        params.put("config", meetingBase.getBaseMeetID());
+        params.put("protocal", "rtmp");
+        params.put("group", meetingBase.getBaseMeetID());
         params.put("stream", UiOnlineMeetingUtils.getStream(meetingBase, meetingBase.getBaseDMS().getDmsMainSpeakID()));
+        params.put("domain",areaId);
+        //action 互动为1，观摩为2
+        if(MeetingBase.BASE_MEET_ROLE_3 == meetingBase.getBaseRole()){//观摩
+            params.put("action",String.valueOf(2));
+        }else{//互动.
+            params.put("action",String.valueOf(1));
+        }
 
         RequestSender requestSender = new RequestSender(act);
+        /**
+         * {
+         result: "Success",
+         code: 200,
+         dms: {
+         internal: [
+         {
+         rtmpUrl: "10.5.230.22:1935",
+         socketUrl: "10.5.230.22:1984"
+         }
+         ],
+         external: [
+         {
+         rtmpUrl: "58.210.137.44:19354",
+         socketUrl: "58.210.137.44:19842"
+         }
+         ]
+         }
+         }
+         */
         requestSender.sendGetRequest(new RequestSender.RequestData(dmsAddress, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Cog.d(TAG, "onResponse:" + response);
-                if (!TextUtils.isEmpty(response.optString("result"))) {//默认：外网dms
-                    directURL   =    response.optString("result");
+                //优先获取内网的dmsip,如果不存在内网ip则使用外网ip.
+                JSONObject dms = response.optJSONObject("dms");
+                if(dms == null) return;
+                JSONObject internal = dms.optJSONArray("internal").optJSONObject(0);
+                JSONObject external = dms.optJSONArray("external").optJSONObject(0);
+                if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
+                    directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
                     notifyDataUpdate();
-                }else if(!TextUtils.isEmpty(response.optString("dms"))){//外网dms rtmp://dms.needu.cn:1938/dms
-                    directURL   =    response.optString("dms");
+                }else if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
+                    directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
                     notifyDataUpdate();
-                } else if(!TextUtils.isEmpty(response.optString("internaldms"))){//内网dms
-                    directURL   =    response.optString("internaldms");
-                    notifyDataUpdate();
-                } else {
+                }else{
                     ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
                 }
             }
