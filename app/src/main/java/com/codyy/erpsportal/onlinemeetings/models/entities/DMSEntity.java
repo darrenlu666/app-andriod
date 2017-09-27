@@ -9,6 +9,7 @@ import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 
@@ -180,7 +181,7 @@ public class DMSEntity implements Parcelable{
     /**
      * 获取媒体服务器的实际地址 .
      */
-    private void getMediaPlayAddress(Activity act ,MeetingBase meetingBase,String areaId) {
+    private void getMediaPlayAddress(final Activity act , MeetingBase meetingBase, String areaId) {
 
         Map<String, String> params = new HashMap<>();
         params.put("method", "play");
@@ -195,27 +196,7 @@ public class DMSEntity implements Parcelable{
             params.put("action",String.valueOf(1));
         }
 
-        RequestSender requestSender = new RequestSender(act);
-        /**
-         * {
-         result: "Success",
-         code: 200,
-         dms: {
-         internal: [
-         {
-         rtmpUrl: "10.5.230.22:1935",
-         socketUrl: "10.5.230.22:1984"
-         }
-         ],
-         external: [
-         {
-         rtmpUrl: "58.210.137.44:19354",
-         socketUrl: "58.210.137.44:19842"
-         }
-         ]
-         }
-         }
-         */
+        RequestSender requestSender = new RequestSender(act.getApplicationContext());
         requestSender.sendGetRequest(new RequestSender.RequestData(dmsAddress, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -225,14 +206,28 @@ public class DMSEntity implements Parcelable{
                 if(dms == null) return;
                 JSONObject internal = dms.optJSONArray("internal").optJSONObject(0);
                 JSONObject external = dms.optJSONArray("external").optJSONObject(0);
-                if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
-                    directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
-                    notifyDataUpdate();
-                }else if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
-                    directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
-                    notifyDataUpdate();
-                }else{
-                    ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+
+                //判断网络类型
+                if(NetworkUtils.isNetWorkTypeWifi(act.getApplication())){//wifi . 优先内网dms方便演示.
+                    if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
+                        directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
+                        notifyDataUpdate();
+                    }else if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
+                        directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
+                        notifyDataUpdate();
+                    }else{
+                        ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                    }
+                }else{//4G . 有限外网dms
+                    if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
+                        directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
+                        notifyDataUpdate();
+                    }else if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
+                        directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
+                        notifyDataUpdate();
+                    }else{
+                        ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                    }
                 }
             }
         }, new Response.ErrorListener() {
