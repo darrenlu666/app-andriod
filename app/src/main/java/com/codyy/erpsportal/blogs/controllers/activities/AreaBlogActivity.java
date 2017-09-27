@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -98,7 +99,7 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
     //筛选
     private CategoryFilterFragment mFilterFragment;
     private SimpleListFragment mSortFragment, mRoleFragment, mReCommendFragment;
-    private int mSortIndex = 0;// 0 : 排序 1:角色排序 2: 推荐类型.
+    private int mSortIndex = -1;// 0 : 排序 1:角色排序 2: 推荐类型.
 
     private String mFilterType = CategoryFilterFragment.CATEGORY_TYPE_PERSON;
     private String mCategory;//分类.
@@ -200,7 +201,13 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
                 return mDataList.get(position).getBaseViewHoldType();
             }
         });
-
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideHeadFilter();
+                return false;
+            }
+        });
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener<BlogPost>() {
             @Override
             public void onItemClicked(View v, int position, BlogPost data) {
@@ -222,12 +229,14 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
                         }
                         break;
                 }
+                hideHeadFilter();
 
             }
         });
         mAdapter.setOnLoadMoreClickListener(new BaseRecyclerAdapter.OnLoadMoreClickListener() {
             @Override
             public void onMoreData() {
+                hideHeadFilter();
                 mAdapter.setRefreshing(true);
                 requestData(false);
             }
@@ -395,6 +404,8 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
                 ft.commit();
                 break;
         }
+        //-1 表示隐藏.
+        mSortIndex = -1;
     }
 
     @Override
@@ -502,18 +513,40 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
 
     @OnClick({R.id.tv_sort, R.id.tv_role, R.id.tv_recommend})
     void headFilterClick(View v) {
+        boolean show = false;
         switch (v.getId()) {
             case R.id.tv_sort:
-                mSortIndex = 0;
+                if(mSortIndex != 0){
+                    mSortIndex = 0;
+                    show = true;
+                }
                 break;
             case R.id.tv_role:
-                mSortIndex = 1;
+                if(mSortIndex != 1){
+                    mSortIndex = 1;
+                    show = true;
+                }
                 break;
             case R.id.tv_recommend:
-                mSortIndex = 2;
+                if(mSortIndex != 2){
+                    mSortIndex = 2;
+                    show = true;
+                }
                 break;
 
         }
-        showHeadFilter();
+        showHeadFilter(show);
+    }
+
+    /**
+     * 是否显示dialog
+     * @param show true 弹出dialog / false 隐藏dialog .
+     */
+    private void showHeadFilter(boolean show){
+        if(show){
+            showHeadFilter();
+        }else{
+            hideHeadFilter();
+        }
     }
 }
