@@ -17,6 +17,7 @@
         app:dominantMeasurement="width"
         app:placeholderImage="@drawable/ic_group_school_default"
         app:actualImageScaleType="fitXY"
+        app:placeholderImageScaleType="fitXY"
         />
     <TextView
         android:id="@+id/tv_school"

@@ -16,6 +16,7 @@
         app:aspectRatioEnabled="true"
         app:dominantMeasurement="width"
         app:placeholderImage="@drawable/icon_default_video"
+        app:placeholderImageScaleType="fitXY"
         app:actualImageScaleType="fitXY"
         />
 

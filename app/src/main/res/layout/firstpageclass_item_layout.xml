@@ -13,7 +13,9 @@
         android:layout_width="150dp"
         android:layout_height="90dp"
         android:layout_centerHorizontal="true"
-        app:placeholderImage="@drawable/placeholder_img"/>
+        app:placeholderImage="@drawable/placeholder_img"
+        app:placeholderImageScaleType="fitXY"
+        />
 
     <TextView
         android:id="@+id/firstpageclass_item_textview"

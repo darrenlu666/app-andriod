@@ -228,7 +228,7 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
             @Override
             public int[] obtainMultiInLine() {
                 return new int[]{
-                        TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS
+                          TYPE_ITEM_VIEW_HOLDER_LIVING_CLASS
                         , TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE
                         , TYPE_ITEM_VIEW_HOLDER_LESSON_RESOURCE
                         , TYPE_ITEM_VIEW_HOLDER_TEACHER_SUGGEST

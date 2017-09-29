@@ -185,6 +185,42 @@ public class DMSEntity implements Parcelable{
 
         Map<String, String> params = new HashMap<>();
         params.put("method", "play");
+        params.put("config", meetingBase.getBaseMeetID());
+        params.put("stream", UiOnlineMeetingUtils.getStream(meetingBase, meetingBase.getBaseDMS().getDmsMainSpeakID()));
+
+        RequestSender requestSender = new RequestSender(act);
+        requestSender.sendGetRequest(new RequestSender.RequestData(dmsAddress, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Cog.d(TAG, "onResponse:" + response);
+                if (!TextUtils.isEmpty(response.optString("result"))) {//默认：外网dms
+                    directURL   =    response.optString("result");
+                    notifyDataUpdate();
+                }else if(!TextUtils.isEmpty(response.optString("dms"))){//外网dms rtmp://dms.needu.cn:1938/dms
+                    directURL   =    response.optString("dms");
+                    notifyDataUpdate();
+                } else if(!TextUtils.isEmpty(response.optString("internaldms"))){//内网dms
+                    directURL   =    response.optString("internaldms");
+                    notifyDataUpdate();
+                } else {
+                    ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(Throwable error) {
+                Cog.e(TAG, "onErrorResponse:" + error);
+                ToastUtil.showToast("获取DMC失败!");
+                /*if(null != mCallBack){
+                    mCallBack.onError(error);
+                }*/
+                mRegisters.clear();
+                notifyDataUpdate();
+            }
+        }));
+
+        /*Map<String, String> params = new HashMap<>();
+        params.put("method", "play");
         params.put("protocal", "rtmp");
         params.put("group", meetingBase.getBaseMeetID());
         params.put("stream", UiOnlineMeetingUtils.getStream(meetingBase, meetingBase.getBaseDMS().getDmsMainSpeakID()));
@@ -235,13 +271,13 @@ public class DMSEntity implements Parcelable{
             public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
                 ToastUtil.showToast("获取DMC失败!");
-                /*if(null != mCallBack){
+                *//*if(null != mCallBack){
                     mCallBack.onError(error);
-                }*/
+                }*//*
                 mRegisters.clear();
                 notifyDataUpdate();
             }
-        }));
+        }));*/
     }
 
     public interface ICallBack{
