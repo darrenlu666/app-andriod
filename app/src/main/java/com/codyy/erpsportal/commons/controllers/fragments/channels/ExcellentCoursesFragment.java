@@ -11,27 +11,31 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter;
-import com.codyy.erpsportal.commons.controllers.viewholders.PastRecordingFlesh;
-import com.codyy.erpsportal.commons.controllers.viewholders.PastRecordingFleshVhr;
+import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter.OnFetchMoreListener;
+import com.codyy.erpsportal.commons.controllers.viewholders.ExcellentCourseFlesh;
+import com.codyy.erpsportal.commons.controllers.viewholders.ExcellentCourseFleshVhr;
 import com.codyy.erpsportal.commons.controllers.viewholders.VhrFactory;
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
-import com.codyy.erpsportal.commons.models.entities.Flesh;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.url.URLConfig;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
 
@@ -39,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,9 +54,9 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * 频道页精品课程（海宁定制）碎片
  */
-public class HistoryCoursesFragment extends Fragment{
+public class ExcellentCoursesFragment extends Fragment{
 
-    private final static String TAG = "HistoryCoursesFragment";
+    private final static String TAG = "ExcellentCoursesFragment";
 
     private View mRootView;
 
@@ -67,7 +72,11 @@ public class HistoryCoursesFragment extends Fragment{
 
     private CompositeDisposable mCompositeDisposable;
 
-    public HistoryCoursesFragment() { }
+    private int mStart;
+
+    private static final int LOAD_COUNT = 10;
+
+    public ExcellentCoursesFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,7 +97,7 @@ public class HistoryCoursesFragment extends Fragment{
     private void initViews(){
         if (mRootView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            mRootView = inflater.inflate(R.layout.fragment_resource_intro, null);
+            mRootView = inflater.inflate(R.layout.fragment_skeleton_rv, null);
             mRefreshLayout = (RefreshLayout) mRootView.findViewById(R.id.rl_resource_intro);
             mRefreshLayout.setOnRefreshListener(mOnRefreshListener);
             mRefreshLayout.setColorSchemeResources(R.color.main_color);
@@ -101,8 +110,13 @@ public class HistoryCoursesFragment extends Fragment{
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), R.drawable.dot_gray));
             VhrFactory vhrFactory = new VhrFactory();
-            vhrFactory.addViewHolder(PastRecordingFleshVhr.class);
-            mAdapter = new SkeletonAdapter(vhrFactory);
+            vhrFactory.addViewHolder(ExcellentCourseFleshVhr.class);
+            mAdapter = new SkeletonAdapter(vhrFactory, new OnFetchMoreListener() {
+                @Override
+                public void onLoadMore() {
+                    loadExcellentCoursesData(false);
+                }
+            });
             mRecyclerView.setAdapter(mAdapter);
         }
     }
@@ -117,41 +131,73 @@ public class HistoryCoursesFragment extends Fragment{
         mEmptyView.setOnReloadClickListener(new EmptyView.OnReloadClickListener() {
             @Override
             public void onReloadClick() {
-                ModuleConfig moduleConfig = ConfigBus.getInstance().getModuleConfig();
-                loadData(moduleConfig.getBaseAreaId(), moduleConfig.getSchoolId());
+                loadData();
             }
         });
     }
 
-    private void loadData(String baseAreaId, String schoolId) {
+    private void loadData() {
         onLoadingStart();
-        loadSemesterResData( baseAreaId, schoolId);
+        loadExcellentCoursesData(true);
     }
 
     /**
      * 获取以学段分类的资源
-     * @param areaId 地区id
-     * @param schoolId 学校id
      */
-    private void loadSemesterResData(String areaId, String schoolId) {
-        Map<String, String> map = new HashMap<>();
-        map.put("baseAreaId", areaId);
-        if (!TextUtils.isEmpty(schoolId)) {
-            map.put("schoolId", schoolId);
+    private void loadExcellentCoursesData(final boolean refresh) {
+        Map<String, String> params = new HashMap<>();
+        params.put("uuid", UserInfoKeeper.obtainUserInfo().getUuid());
+        if (refresh) {
+            mStart = 0;
         }
-//        final long start = System.currentTimeMillis();
-        Cog.d(TAG, "@loadData url=" + URLConfig.RESOURCE_INTRO + map);
-        Disposable disposable = mWebApi.post4Json(URLConfig.RESOURCE_INTRO, map)
+        int start = mStart;
+        int end = start + LOAD_COUNT;
+        params.put("start", "" + start);
+        params.put("end", "" + (end - 1));
+        Cog.d(TAG, "@loadData url=" + URLConfig.GET_REPLY_LIST_FOR_HAI_NING + params);
+        Disposable disposable = mWebApi.post4Json(URLConfig.GET_REPLY_LIST_FOR_HAI_NING, params)
                 .subscribeOn(Schedulers.io())
+                .delay(1, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "onResponse response=" + response);
+                        mAdapter.setFetchingMore(false);
                         mRefreshLayout.setRefreshing(false);
                         String result = response.optString("result");
                         if ("success".equals(result)) {
-                            mAdapter.setFleshes(createPastRecodingFleshes());
+//                            mAdapter.setFleshes(createPastRecodingFleshes());
+//                            List<ExcellentCourseFlesh> list = createExcellentCourseFleshes();
+                            List<ExcellentCourseFlesh> list = new Gson()
+                                    .fromJson(response.optString("data"), new TypeToken<List<ExcellentCourseFlesh>>(){}.getType());
+                            if (list.size() == 0) {
+                                if (refresh) {
+                                    handleEmpty();//
+                                } else {
+                                    //删除加载更多项
+                                    mAdapter.removeFetching();
+                                }
+                            } else {
+                                if (refresh) {
+                                    mEmptyView.setVisibility(View.GONE);
+                                    mAdapter.setFleshes(list);
+                                    mAdapter.notifyItemRangeInserted(0, list.size());
+                                } else {
+                                    //删除加载更多项
+                                    mAdapter.removeFetching();
+                                    mAdapter.addItems(list);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            }
+                            //如果已经加载所有，下拉更多关闭
+                            if (checkHasMore(response, mAdapter.getItemCount())) {
+                                mAdapter.enableFetchMore();
+                            } else {
+                                mAdapter.disableFetchMore();
+                            }
+                            mAdapter.notifyDataSetChanged();
+                            mStart = mAdapter.getItemCount();
                         }
                         mRefreshLayout.setRefreshing(false);
                         onLoadingFinish();
@@ -160,11 +206,43 @@ public class HistoryCoursesFragment extends Fragment{
                     @Override
                     public void accept(Throwable error) throws Exception {
                         Cog.d(TAG, "onErrorResponse error=" + error);
-                        mRefreshLayout.setRefreshing(false);
-                        onLoadingFinish();
+                        if (!refresh) {
+                            mAdapter.removeItem(mAdapter.getItemCount() - 1);
+                            mAdapter.notifyItemRemoved(mAdapter.getItemCount());
+                        } else {
+                            setNotRefreshing();
+                        }
+                        mAdapter.setFetchingMore(false);
+                        if (mAdapter.isEmpty()) {
+                            mEmptyView.setVisibility(View.VISIBLE);
+                        }
+
+                        UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
                     }
                 });
         mCompositeDisposable.add(disposable);
+    }
+
+    private void setNotRefreshing() {
+        mRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    private boolean checkHasMore(JSONObject response, int itemCount) {
+        return response.optInt("total") > itemCount;
+    }
+
+    /**
+     * 处理空情况
+     */
+    protected void handleEmpty() {
+        mAdapter.clearItems();
+        mAdapter.notifyDataSetChanged();
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     private void onLoadingStart(){
@@ -176,14 +254,14 @@ public class HistoryCoursesFragment extends Fragment{
         });
     }
 
-    private List<Flesh> createPastRecodingFleshes() {
-        List<Flesh> pastRecordingFleshes = new ArrayList<>(10);
+    private List<ExcellentCourseFlesh> createExcellentCourseFleshes() {
+        List<ExcellentCourseFlesh> pastRecordingFleshes = new ArrayList<>(10);
         for (int i=0; i<10; i++) {
-            PastRecordingFlesh pastRecordingFlesh = new PastRecordingFlesh();
-            pastRecordingFlesh.setName("精品课程" + i);
-            pastRecordingFlesh.setSchoolName("第" + i + "小学");
-            pastRecordingFlesh.setScope( i + "学科");
-            pastRecordingFleshes.add(pastRecordingFlesh);
+            ExcellentCourseFlesh excellentCourseFlesh = new ExcellentCourseFlesh();
+            excellentCourseFlesh.setTitle("精品课程" + i);
+            excellentCourseFlesh.setSchoolName("第" + i + "小学");
+            excellentCourseFlesh.setSubjectName( i + "学科");
+            pastRecordingFleshes.add(excellentCourseFlesh);
         }
         return pastRecordingFleshes;
     }
@@ -207,7 +285,7 @@ public class HistoryCoursesFragment extends Fragment{
         @Override
         public void onConfigLoaded(ModuleConfig config) {
             if (mRootView != null) {//判断下视图是否在
-                loadData(config.getBaseAreaId(), config.getSchoolId());
+                loadData();
             }
         }
     };
@@ -215,8 +293,7 @@ public class HistoryCoursesFragment extends Fragment{
     private OnRefreshListener mOnRefreshListener = new OnRefreshListener() {
         @Override
         public void onRefresh() {
-            ModuleConfig config = ConfigBus.getInstance().getModuleConfig();
-            loadData(config.getBaseAreaId(), config.getSchoolId());
+            loadData();
         }
     };
 }

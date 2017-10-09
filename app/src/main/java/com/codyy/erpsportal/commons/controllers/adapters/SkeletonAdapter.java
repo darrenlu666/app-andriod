@@ -6,6 +6,7 @@
 package com.codyy.erpsportal.commons.controllers.adapters;
 
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
@@ -13,9 +14,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.codyy.erpsportal.commons.controllers.viewholders.AbsSkeletonVhr;
+import com.codyy.erpsportal.commons.controllers.viewholders.LoadMoreFleshVhr;
 import com.codyy.erpsportal.commons.controllers.viewholders.VhrFactory;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
 import com.codyy.erpsportal.commons.models.entities.Flesh;
+import com.codyy.erpsportal.commons.models.entities.LoadMoreFlesh;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,9 +37,42 @@ public class SkeletonAdapter extends RecyclerView.Adapter<AbsSkeletonVhr<Flesh>>
 
     private OnFleshStabbedListener mOnFleshStabbedListener;
 
+
+    private int mVisibleThreshold = 2;
+
+    private int mLastVisibleItem;
+
+    /**
+     * 已绑定到RecyclerView的项目个数。从LayoutManager中获取。
+     */
+    private int mTotalItemCount;
+
+    private boolean mFetchingMore;
+
+    private boolean mFetchMoreEnabled = false;
+
+    private LoadMoreFlesh mLoadMoreFlesh;
+
+    private OnFetchMoreListener mOnFetchMoreListener;
+
     public SkeletonAdapter(VhrFactory vhrFactory) {
         mFleshes = new ArrayList<>();
         mVhrFactory = vhrFactory;
+    }
+
+    /**
+     *
+     * @param vhrFactory 组持者工厂
+     * @param onFetchMoreListener 加载更多监听
+     */
+    public SkeletonAdapter(VhrFactory vhrFactory, OnFetchMoreListener onFetchMoreListener) {
+        this(vhrFactory);
+        if (onFetchMoreListener != null) {
+            mFetchMoreEnabled = true;
+            mOnFetchMoreListener = onFetchMoreListener;
+            mVhrFactory.addViewHolder(LoadMoreFleshVhr.class);
+            mLoadMoreFlesh = new LoadMoreFlesh();
+        }
     }
 
     public void setOnFleshStabbedListener(OnFleshStabbedListener onFleshStabbedListener) {
@@ -51,6 +87,39 @@ public class SkeletonAdapter extends RecyclerView.Adapter<AbsSkeletonVhr<Flesh>>
             GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
             gridLayoutManager.setSpanSizeLookup(new TitleSpanSizeLookup(mFleshes, gridLayoutManager.getSpanCount()));
         }
+        if (mFetchMoreEnabled)
+            addOnScrollListenerToRecyclerView(recyclerView);
+    }
+
+    /**
+     * 添加滑动监听
+     * @param recyclerView 回收器组件
+     */
+    private void addOnScrollListenerToRecyclerView(RecyclerView recyclerView) {
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (!mFetchMoreEnabled) return;
+                mTotalItemCount = linearLayoutManager.getItemCount();
+                mLastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                if (!mFetchingMore && mTotalItemCount <= (mLastVisibleItem + mVisibleThreshold)) {
+                    if (mOnFetchMoreListener != null) {
+                        addItem(mLoadMoreFlesh);
+                        recyclerView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                notifyItemInserted(getItemCount() - 1);
+                            }
+                        });
+                        mFetchingMore = true;
+                        mOnFetchMoreListener.onLoadMore();
+                    }
+                    mFetchingMore = true;
+                }
+            }
+        });
     }
 
     @Override
@@ -104,6 +173,15 @@ public class SkeletonAdapter extends RecyclerView.Adapter<AbsSkeletonVhr<Flesh>>
         mFleshes.remove(i);
     }
 
+    /**
+     * 删除加载更多项
+     */
+    public void removeFetching() {
+        if (mFleshes.size() > 0 && mFleshes.remove(mFleshes.size() - 1) != mLoadMoreFlesh) {
+            throw new IllegalStateException("Last item is not fetching more item,please check!");
+        }
+    }
+
     public void clearItems() {
         mFleshes.clear();
     }
@@ -116,6 +194,22 @@ public class SkeletonAdapter extends RecyclerView.Adapter<AbsSkeletonVhr<Flesh>>
 
     public void addItems(Collection<? extends Flesh> fleshes) {
         mFleshes.addAll(fleshes);
+    }
+
+    public void disableFetchMore() {
+        if (mFetchMoreEnabled) {
+            mFetchMoreEnabled = false;
+        }
+    }
+
+    public void enableFetchMore() {
+        if (!mFetchMoreEnabled) {
+            mFetchMoreEnabled = true;
+        }
+    }
+
+    public boolean isEmpty() {
+        return getItemCount() == 0;
     }
 
     public static class TitleSpanSizeLookup extends GridLayoutManager.SpanSizeLookup{
@@ -138,7 +232,18 @@ public class SkeletonAdapter extends RecyclerView.Adapter<AbsSkeletonVhr<Flesh>>
         }
     }
 
+    public void setFetchingMore(boolean isFetchingMore) {
+        mFetchingMore = isFetchingMore;
+    }
+
+    /**
+     * 被点击事件
+     */
     public interface OnFleshStabbedListener{
         void onStabbed(Flesh flesh);
+    }
+
+    public interface OnFetchMoreListener {
+        void onLoadMore();
     }
 }

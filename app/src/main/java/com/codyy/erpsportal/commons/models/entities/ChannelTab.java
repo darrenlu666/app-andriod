@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter.ChannelTabInfo;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelLivingFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.HistoryCoursesFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ExcellentCoursesFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingResFragment;
@@ -179,7 +179,7 @@ public class ChannelTab {
                 tabId = 9;
                 break;
             case "indexcustomehaiNingperiod"://往期录播（海宁定制）
-                clazz = HistoryCoursesFragment.class;
+                clazz = ExcellentCoursesFragment.class;
                 tabId = 91;
                 break;
             default:

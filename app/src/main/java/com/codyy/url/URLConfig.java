@@ -1118,6 +1118,9 @@ public class URLConfig {
     @UrlSuffix("mobile/home/onlineclass/getAllSemesterRecordScheduleList.do")
     public static String GET_SIP_ONLINE_CLASS;
 
+    @UrlSuffix("onlineclass/getReplyListForHaiNing.do")
+    public static String GET_REPLY_LIST_FOR_HAI_NING;
+
     /**
      * 更多- 同步课堂（专递课堂）(sip园区首页)
      * baseAreaId	行政区ID	string	与学校参数互斥
