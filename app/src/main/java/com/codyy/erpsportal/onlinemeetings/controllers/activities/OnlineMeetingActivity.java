@@ -436,7 +436,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 mMeetingBase.setBaseLoopPatrol(lp);
 
                 printLog("开始获取DMS地址.....");
-                mMeetingBase.getBaseDMS().getServer(OnlineMeetingActivity.this, mMeetingBase, new DMSEntity.ICallBack() {
+                mMeetingBase.getBaseDMS().getServer(OnlineMeetingActivity.this, mMeetingBase,mUserInfo.getBaseAreaId(), new DMSEntity.ICallBack() {
                     @Override
                     public void onSuccess(String serverURL) {
                         Cog.i(TAG, "checkShare：开始获取视频地址～返回成功～" + serverURL);
@@ -1205,7 +1205,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     mMeetingBase.getBaseVideoShare().setVideoID(videoId);
                 }
 
-                mMeetingBase.getBaseDMS().getServer(OnlineMeetingActivity.this, mMeetingBase, new DMSEntity.ICallBack() {
+                mMeetingBase.getBaseDMS().getServer(OnlineMeetingActivity.this, mMeetingBase,mUserInfo.getBaseAreaId(), new DMSEntity.ICallBack() {
                     @Override
                     public void onSuccess(String serverURL) {
                         String playUrl = serverURL + "/" + UiOnlineMeetingUtils.getShareVideoStream(mMeetingBase, mMeetingBase.getBaseVideoShare().getVideoID());

@@ -333,7 +333,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
             }
         }
 
-        mMeetingBase.getBaseDMS().getServer(getParentActivity(), mMeetingBase, new DMSEntity.ICallBack() {
+        mMeetingBase.getBaseDMS().getServer(getParentActivity(), mMeetingBase, mUserInfo.getBaseAreaId(),new DMSEntity.ICallBack() {
             @Override
             public void onSuccess(String serverURL) {
                 Cog.i(TAG ,"视频模式：视频地址～返回成功～" + serverURL);

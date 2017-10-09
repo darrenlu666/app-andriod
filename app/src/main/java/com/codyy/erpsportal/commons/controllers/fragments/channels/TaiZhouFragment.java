@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
-import com.codyy.erpsportal.commons.models.entities.mainpage.TianJinCoursesProfile;
+import com.codyy.erpsportal.commons.models.entities.mainpage.TaiZhouPanel;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -46,7 +47,7 @@ import io.reactivex.schedulers.Schedulers;
  * (v5.3.7)台州首页
  * Created by poe on 2017/9/1.
  */
-public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
+public class TaiZhouFragment extends Fragment implements TitleBarRiseListener {
 
     private final static String TAG = "TaiZhouFragment";
 
@@ -78,7 +79,8 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
     private OnModuleConfigListener mOnModuleConfigListener = new OnModuleConfigListener() {
         @Override
         public void onConfigLoaded(ModuleConfig config) {
-            loadAreaMapAndInfo(config.getBaseAreaId());
+            loadAreaMapAndInfo(config.getAreaCode());
+            loadHomePageCount(config.getAreaCode());
         }
     };
 
@@ -99,8 +101,8 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
             ButterKnife.bind(this, mRootView);
             initWebView();
         } else {
-            mPanelTitleTv.setTranslationY( -mVerticalOffset);
-            mDataPanelGl.setTranslationY( -mVerticalOffset);
+            mPanelTitleTv.setTranslationY(-mVerticalOffset);
+            mDataPanelGl.setTranslationY(-mVerticalOffset);
         }
         return mRootView;
     }
@@ -116,6 +118,7 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
         mPanelTitleTv.setTranslationY(-verticalOffset);
         mDataPanelGl.setTranslationY(-verticalOffset);
     }
+
 
     @Override
     public void onDestroy() {
@@ -147,41 +150,13 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
      * 加载统计数据
      */
     @JavascriptInterface
-    public void loadHomePageCount(String areaId) {
-        Cog.d(TAG, "+loadHomePageCount areaId=", areaId);
-        if (areaId.matches("^\\d+$")) {//非天津的传入的是数字地区码，
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mPanelTitleTv.setVisibility(View.GONE);
-                    mDataPanelGl.setVisibility(View.GONE);
-                }
-            });
-        } else {//回到天津时传入areaId为undefined
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mPanelTitleTv.setVisibility(View.VISIBLE);
-                    mDataPanelGl.setVisibility(View.VISIBLE);
-                }
-            });
-        }
-    }
-
-    @JavascriptInterface
-    public void jumpIntoArea() {
-        Cog.d(TAG, "jumpIntoArea");
-    }
-
-    private void loadAreaMapAndInfo(String areaId) {
-        Cog.d(TAG, "loadAreaMapAndInfo url=", URLConfig.URL_MAP_TZ);
-        if (mMapView != null) {
-            mMapView.loadUrl(URLConfig.URL_MAP_TZ);
-        }
+    public void loadHomePageCount(String areaCode) {
+        Cog.d(TAG, "+loadHomePageCount areaCode=" + areaCode);
+        if (TextUtils.isEmpty(areaCode)) return;
         WebApi webApi = RsGenerator.create(WebApi.class);
         Map<String, String> params = new HashMap<>();
-        params.put("baseAreaId",areaId);
-        webApi.post4Json(URLConfig.PANEL_DATA, params)
+        params.put("areaCode", areaCode);
+        webApi.post4Json(URLConfig.PANEL_DATA_TZ, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<JSONObject>() {
@@ -189,14 +164,9 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadHomePageCount:" + response);
                         if ("success".equals(response.optString("result"))) {
-                            Gson gson = new Gson();
-                            TianJinCoursesProfile coursesProfile = gson.fromJson(response.toString(),
-                                    TianJinCoursesProfile.class);
-                            if (mSchoolCountTv == null) return;
-                            mSchoolCountTv.setText(coursesProfile.getSchoolCount() + "");
-                            mClassroomCountTv.setText(coursesProfile.getClassroomCount() + "");
-                            mResourceCountTv.setText(coursesProfile.getTeacherCount() + "");
-                            mNetTeachCountTv.setText(coursesProfile.getStudentCount() + "");
+                            TaiZhouPanel coursesProfile = new Gson().fromJson(response.optJSONObject("data").toString(),
+                                    TaiZhouPanel.class);
+                            setCountDataToViews(coursesProfile);
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -206,5 +176,31 @@ public class TaiZhouFragment extends Fragment implements TitleBarRiseListener{
                         UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
                     }
                 });
+    }
+
+    @JavascriptInterface
+    public void jumpIntoArea() {
+        Cog.d(TAG, "jumpIntoArea");
+    }
+
+    private void loadAreaMapAndInfo(String areaCode) {
+        Cog.d(TAG, "loadAreaMapAndInfo url=", URLConfig.URL_MAP_TZ);
+        if (mMapView != null) {
+            mMapView.loadUrl(URLConfig.URL_MAP_TZ+"?areaCode="+areaCode);
+        }
+    }
+
+    /**
+     * 将统计数据设置到
+     *
+     * @param coursesProfile 统计数据
+     */
+    private void setCountDataToViews(TaiZhouPanel coursesProfile) {
+        if (mPanelTitleTv == null) return;//界面没初始化好，防止fc
+        mPanelTitleTv.setText(coursesProfile.getAreaName());
+        mSchoolCountTv.setText(coursesProfile.getShoolCount() + "");
+        mClassroomCountTv.setText(coursesProfile.getScheduleCount() + "");
+        mResourceCountTv.setText(coursesProfile.getResourceCount() + "");
+        mNetTeachCountTv.setText(coursesProfile.getNetTeachCount() + "");
     }
 }

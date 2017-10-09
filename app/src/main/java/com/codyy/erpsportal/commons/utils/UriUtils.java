@@ -34,7 +34,14 @@ public class UriUtils {
         }
     }
 
+    /**
+     * 过滤gif 增加xxxx.small.xxx
+     * @param imageUrl
+     * @return
+     */
     public static String buildSmallImageUrl(String imageUrl) {
+        //过滤gif
+        if(imageUrl!=null && imageUrl.contains(".gif")) return imageUrl;
         int dotIndex = imageUrl.lastIndexOf('.');
         if (dotIndex > 0) {
             String suffix = imageUrl.substring(dotIndex);//like .jpg .png

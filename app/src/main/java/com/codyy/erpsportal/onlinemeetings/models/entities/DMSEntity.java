@@ -9,6 +9,7 @@ import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 
@@ -44,7 +45,7 @@ public class DMSEntity implements Parcelable{
      * 如果serverType ==0 需要dmc二次请求网址
      * @return
      */
-    public void   getServer(Activity act , MeetingBase meetingBase , ICallBack callBack){
+    public void   getServer(Activity act , MeetingBase meetingBase,String areaId , ICallBack callBack){
 //        this.mCallBack  =   callBack;
         synchronized(EApplication.instance()){
             mRegisters.add(callBack);
@@ -54,7 +55,7 @@ public class DMSEntity implements Parcelable{
                 }
             }else{
                 if(mRegisters.size()<= 1){//阻止多次调用此方法
-                    getDirectURL(act , meetingBase);
+                    getDirectURL(act , meetingBase , areaId);
                 }
             }
         }
@@ -75,10 +76,10 @@ public class DMSEntity implements Parcelable{
         mRegisters.clear();
     }
 
-    private void getDirectURL(Activity act ,MeetingBase meetingBase ) {
+    private void getDirectURL(Activity act ,MeetingBase meetingBase ,String areaId) {
         Cog.i(TAG ,"开始获取DMS地址.....");
         if(this.dmsServerType!=null && dmsServerType.equals("0")){
-            getMediaPlayAddress(act , meetingBase);
+            getMediaPlayAddress(act , meetingBase , areaId);
         }else{
             this.directURL = this.pmsAddress;
            /* if(null != mCallBack){
@@ -180,7 +181,7 @@ public class DMSEntity implements Parcelable{
     /**
      * 获取媒体服务器的实际地址 .
      */
-    private void getMediaPlayAddress(Activity act ,MeetingBase meetingBase) {
+    private void getMediaPlayAddress(final Activity act , MeetingBase meetingBase, String areaId) {
 
         Map<String, String> params = new HashMap<>();
         params.put("method", "play");
@@ -217,6 +218,66 @@ public class DMSEntity implements Parcelable{
                 notifyDataUpdate();
             }
         }));
+
+        /*Map<String, String> params = new HashMap<>();
+        params.put("method", "play");
+        params.put("protocal", "rtmp");
+        params.put("group", meetingBase.getBaseMeetID());
+        params.put("stream", UiOnlineMeetingUtils.getStream(meetingBase, meetingBase.getBaseDMS().getDmsMainSpeakID()));
+        params.put("domain",areaId);
+        //action 互动为1，观摩为2
+        if(MeetingBase.BASE_MEET_ROLE_3 == meetingBase.getBaseRole()){//观摩
+            params.put("action",String.valueOf(2));
+        }else{//互动.
+            params.put("action",String.valueOf(1));
+        }
+
+        RequestSender requestSender = new RequestSender(act.getApplicationContext());
+        requestSender.sendGetRequest(new RequestSender.RequestData(dmsAddress, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Cog.d(TAG, "onResponse:" + response);
+                //优先获取内网的dmsip,如果不存在内网ip则使用外网ip.
+                JSONObject dms = response.optJSONObject("dms");
+                if(dms == null) return;
+                JSONObject internal = dms.optJSONArray("internal").optJSONObject(0);
+                JSONObject external = dms.optJSONArray("external").optJSONObject(0);
+
+                //判断网络类型
+                if(NetworkUtils.isNetWorkTypeWifi(act.getApplication())){//wifi . 优先内网dms方便演示.
+                    if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
+                        directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
+                        notifyDataUpdate();
+                    }else if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
+                        directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
+                        notifyDataUpdate();
+                    }else{
+                        ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                    }
+                }else{//4G . 有限外网dms
+                    if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
+                        directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
+                        notifyDataUpdate();
+                    }else if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
+                        directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
+                        notifyDataUpdate();
+                    }else{
+                        ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(Throwable error) {
+                Cog.e(TAG, "onErrorResponse:" + error);
+                ToastUtil.showToast("获取DMC失败!");
+                *//*if(null != mCallBack){
+                    mCallBack.onError(error);
+                }*//*
+                mRegisters.clear();
+                notifyDataUpdate();
+            }
+        }));*/
     }
 
     public interface ICallBack{

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -34,6 +35,7 @@ import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.services.FileDownloadService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DateUtil;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.SystemUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -120,7 +122,15 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
         @Override
         public void onClick(View v) {
             if (mResourceDetails != null && mResourceDetails.getId() != null) {
-                mResourceDetails.setResourceName(mResourceName + (mVideoNumber + 1));
+                String resourceName = mVideoList.get(mVideoNumber).getVideoName();
+                if(TextUtils.isEmpty(resourceName)){
+                    resourceName = mResourceName + (mVideoNumber+1);
+                }
+                mResourceDetails.setResourceName(resourceName);
+                //设置缩略图.
+                if(!TextUtils.isEmpty(mVideoList.get(mVideoNumber).getThumbPath()))
+                mResourceDetails.setThumbPath(mVideoList.get(mVideoNumber).getThumbPath());
+                //下载.
                 VideoDownloadUtils.downloadVideo(mResourceDetails, mResourceDetails.getAttachPath(), mUserInfo.getBaseUserId());
             } else {
                 ToastUtil.showToast(ActivityThemeActivity.this, "抱歉，没有视频！");
@@ -271,10 +281,19 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
         });
     }
 
+    /**
+     * 设置下载必要的条件.
+     * @param position
+     */
     private void setSelectVideo(int position) {
         mResourceDetails.setId(mVideoList.get(position).getId());
         mResourceDetails.setAttachPath(mVideoList.get(mVideoNumber).getDownloadUrl());
-        mResourceDetails.setResourceName(mResourceName + mVideoNumber);
+        mResourceDetails.setThumbPath(mVideoList.get(position).getThumbPath());
+        String resourceName = mVideoList.get(position).getVideoName();
+        if(TextUtils.isEmpty(resourceName)){
+            resourceName = mResourceName + mVideoNumber;
+        }
+        mResourceDetails.setResourceName(resourceName);
     }
 
     private void loadData() {
@@ -369,9 +388,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                     setVideo(null, response);
                     break;
             }
-//            if (detailsJsonObject != null) {
-//                mMeetDetail = MeetDetail.parseJson(detailsJsonObject);
-//            }
+
             if (mMeetDetail != null) {
                 VideoIntroductionFragment videoIntroductionFragment = (VideoIntroductionFragment) getSupportFragmentManager().findFragmentByTag(UIUtils.obtainFragmentTag(mViewPager.getId(), 0));
                 if (videoIntroductionFragment != null) {
@@ -443,6 +460,8 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                         themeVideo.setId(object1.optString("meetVideoId"));
                         themeVideo.setDownloadUrl(object1.optString("downloadPath"));
                         themeVideo.setFilePath(object1.optString("filePath"));
+                        themeVideo.setVideoName(object1.optString("videoName"));
+                        themeVideo.setThumbPath(object1.optString("thumbPath"));
                         videos.add(themeVideo);
                     }
                     return videos;
@@ -505,6 +524,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
     }
 
     public void onBackClick(View view) {
+        DeviceUtils.hideSoftKeyboard(mViewPager);
         finish();
         UIUtils.addExitTranAnim(this);
     }

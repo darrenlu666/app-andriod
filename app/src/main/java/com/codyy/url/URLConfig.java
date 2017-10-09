@@ -68,9 +68,9 @@ public class URLConfig {
     public static String URL_MAP;
 
     /**
-     * 天津首页地图
+     * 台州首页地图
      */
-    @UrlSuffix("map/mapTJPage.html")
+    @UrlSuffix("map/mapPage.html")
     public static String URL_MAP_TZ;
 
     /**
@@ -78,6 +78,13 @@ public class URLConfig {
      */
     @UrlSuffix("map/getDataByAreaId.do")
     public static String PANEL_DATA;
+
+
+    /**
+     * 台州数据
+     */
+    @UrlSuffix("map/getTaizhouData.do")
+    public static String PANEL_DATA_TZ;
 
     /**
      * 费县数据
@@ -1258,6 +1265,27 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/home/live/getIndexLiveAppointmentList.do")
     public static String GET_INDEX_LIVE_APPOINTMENT;
+
+
+    /**
+     * 台州首页-直录播(名校网络课堂)-正在直播(v5.3.7)
+     * baseAreaId
+     * schoolId
+     * size
+     * uuid
+     */
+    @UrlSuffix("mobile/home/live/getIndexLiveAppointmentListByAreaSetting.do")
+    public static String GET_TZ_LIVE_APPOINTMENT;
+
+    /**
+     *台州首页(v5.3.7)-直录播(名校网络课堂)-推荐课程
+     * baseAreaId
+     * schoolId
+     * size
+     * uuid
+     */
+    @UrlSuffix("mobile/home/live/getIndexRecommendLiveAppointmentListTopN.do")
+    public static String GET_TZ_LIVE_APPOINTMENT_RECOMMEND;
 
     /**
      * 首页-直录播(名校网络课堂)-推荐课程
