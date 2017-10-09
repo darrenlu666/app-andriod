@@ -7,7 +7,6 @@ import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelCustom
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelLivingFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ExcellentCoursesFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.InfoIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainCompositeFragment;
@@ -19,8 +18,6 @@ import com.codyy.erpsportal.commons.controllers.fragments.channels.SipCustomized
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipHomeFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TZLivingFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TaiZhouFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TeachingResearchFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -47,9 +44,9 @@ public class ChannelTab {
             "classresourceid",
             "groupid",
             "homepageid",
-            "informationid",
             "indexcustomehaiNingperiod",
             "indexcustometaizhouliveCls",
+            "informationid",
             "netclassid",
             "netteachid",
             "onlineclassid"
@@ -156,7 +153,7 @@ public class ChannelTab {
                     tabId = 16;
                 } else {
                     clazz = MainResFragment.class;
-                    tabId = 12;
+                    tabId = 2;
                 }
 
                 break;
