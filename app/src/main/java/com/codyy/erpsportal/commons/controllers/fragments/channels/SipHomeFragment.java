@@ -314,15 +314,6 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_RECENT_CLASS://近期课程
                         LivingClass live = (LivingClass) data;
-                        /*if(lc.isCanView()){
-                            CustomLiveDetailActivity.startActivity(getActivity(),
-                                    mUserInfo, lc.getId(),
-                                    ClassRoomContants.TYPE_CUSTOM_LIVE,
-                                    lc.getStatus(),
-                                    lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
-                        }else{
-                            ToastUtil.showToast("权限不足!");
-                        }*/
                         MainResClassroom room = new MainResClassroom();
                         room.setId(live.getId());
                         room.setType(MainResClassroom.TYPE_ONLINE_CLASS);
@@ -391,7 +382,7 @@ public class SipHomeFragment extends BaseHttpFragment implements ConfigBus.OnMod
         data.put("size", String.valueOf(4));
         data.put("uuid", mUserInfo.getUuid());
 
-        requestData(URLConfig.GET_RECOMMEND_SCHEDULE, data, false, new BaseHttpActivity.IRequest() {
+        requestData(URLConfig.GET_SIP_RECOMMEND_SCHEDULE, data, false, new BaseHttpActivity.IRequest() {
             @Override
             public void onRequestSuccess(JSONObject response, boolean isRefreshing) {
                 if (mRefreshLayout.isRefreshing()) {

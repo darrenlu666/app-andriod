@@ -17,6 +17,10 @@ import com.codyy.erpsportal.commons.controllers.fragments.channels.ManagementFra
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipHomeFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TZLivingFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TaiZhouFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TeachingResearchFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -38,8 +42,18 @@ public class ChannelTab {
 
     private final static String TAG = "ChannelTab";
 
-    private static String[] sKnownIds = new String[]{"blogid", "classresourceid", "groupid","homepageid",
-            "indexcustomehaiNingperiod","informationid","netclassid","netteachid","onlineclassid"};
+    private static String[] sKnownIds = new String[]{
+            "blogid",
+            "classresourceid",
+            "groupid",
+            "homepageid",
+            "informationid",
+            "indexcustomehaiNingperiod",
+            "indexcustometaizhouliveCls",
+            "netclassid",
+            "netteachid",
+            "onlineclassid"
+        };
 
     private String id;
 
@@ -90,7 +104,7 @@ public class ChannelTab {
             if (Arrays.binarySearch(sKnownIds, channelTab.getId()) < 0) {
                 continue;
             }
-            channelTabs.add( channelTab);
+            channelTabs.add(channelTab);
         }
         return channelTabs;
     }
@@ -114,7 +128,7 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_COMPOSITE.equals(indexTemplateId)) {
                     clazz = MainCompositeFragment.class;
                     tabId = 1;
-                } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)){
+                } else if (ModuleConfig.TEMPLATE_RESOURCE.equals(indexTemplateId)) {
                     clazz = MainResFragment.class;
                     tabId = 2;
                 } else if (ModuleConfig.TEMPLATE_RESOURCE_NO_LIVE.equals(indexTemplateId)) {
@@ -122,35 +136,37 @@ public class ChannelTab {
                     bundle.putBoolean(MainResFragment.ARG_NO_LIVE, true);
                     clazz = MainResFragment.class;
                     tabId = 10;
-                } else if (ModuleConfig.TEMPLATE_TJ.equals(indexTemplateId)){
+                } else if (ModuleConfig.TEMPLATE_TJ.equals(indexTemplateId)) {
                     clazz = TianJinFragment.class;
                     tabId = 11;
-                } else if (ModuleConfig.TEMPLATE_FX.equals(indexTemplateId)){//费县
+                } else if (ModuleConfig.TEMPLATE_FX.equals(indexTemplateId)) {//费县
                     clazz = FeiXianFragment.class;
                     tabId = 12;
-                } else if (ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){//苏州园区
+                } else if (ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)) {//苏州园区
                     clazz = SipHomeFragment.class;
                     tabId = 13;
                 } else if (ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)) {//集团校
                     clazz = MainGroupSchoolFragment.class;
                     tabId = 14;
+                } else if (ModuleConfig.TEMPLATE_TZ.equals(indexTemplateId)) {
+                    clazz = TaiZhouFragment.class;
+                    tabId = 15;
                 } else if (ModuleConfig.TEMPLATE_HN_RES.equals(indexTemplateId)) {//海宁资源首页
                     clazz = HaiNingResFragment.class;
-                    tabId = 15;
+                    tabId = 16;
                 } else {
-                    clazz = FeiXianFragment.class;
+                    clazz = MainResFragment.class;
                     tabId = 12;
                 }
 
                 break;
             case "onlineclassid"://专递课堂
-                if(ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)){
+                if (ModuleConfig.TEMPLATE_SIP.equals(indexTemplateId)) {
                     bundle = new Bundle();
-                    bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE,name);
+                    bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE, name);
                     clazz = SipCustomizedFragment.class;
                 } else {
                     clazz = ChannelCustomizedFragment.class;
-                    clazz = HaiNingCustomizedFragment.class;
                 }
                 tabId = 3;
                 break;
@@ -159,8 +175,17 @@ public class ChannelTab {
                 tabId = 4;
                 break;
             case "netclassid"://名校网络课堂
-                clazz = ChannelLivingFragment.class;
+//                clazz = EliteSchoolOnlineClassFragment.class;
+                if (ModuleConfig.TEMPLATE_TZ.equals(indexTemplateId)) {
+                    clazz = TZLivingFragment.class;
+                } else {
+                    clazz = ChannelLivingFragment.class;
+                }
                 tabId = 5;
+                break;
+            case "indexcustometaizhouliveCls"://台州-名校网络课堂
+                clazz = TZLivingFragment.class;
+                tabId = 20;
                 break;
             case "informationid"://资讯
                 clazz = InfoIntroFragment.class;
@@ -185,7 +210,7 @@ public class ChannelTab {
             default:
                 throw new IllegalStateException("Unknown id!id=" + id);
         }
-        Cog.d(TAG, "createTabInfo clazz=", clazz );
+        Cog.d(TAG, "createTabInfo clazz=", clazz);
         return new ChannelTabInfo(name, clazz, bundle, tabId);
     }
 }

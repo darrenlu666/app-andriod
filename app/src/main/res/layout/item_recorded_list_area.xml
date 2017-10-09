@@ -8,27 +8,32 @@
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:orientation="vertical"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                >
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
         android:id="@+id/sd_record_list_pic"
-        android:layout_width="@dimen/list_image_length"
-        android:layout_height="@dimen/list_image_length"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        fresco:failureImage="@drawable/school_holder"
-        fresco:placeholderImage="@drawable/school_holder"/>
+        android:layout_width="@dimen/rect_image_size_width"
+        android:layout_height="0dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="16dp"
+        fresco:aspectRatio="0.5625"
+        fresco:aspectRatioEnabled="true"
+        fresco:dominantMeasurement="width"
+        fresco:failureImage="@drawable/ic_group_school_default"
+        fresco:placeholderImage="@drawable/ic_group_school_default"
+        />
 
     <TextView
         android:id="@+id/tv_school_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/sd_record_list_pic"
         android:textSize="@dimen/list_item_title"
-        tools:text="*********中心小学"
-        android:singleLine="true"
+        tools:text="*********中心小学*"
+        android:maxLines="2"
+        android:ellipsize="end"
         style="@style/ListItemTitle"/>
 
     <TextView
@@ -47,7 +52,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.05dp"
-        android:layout_below="@+id/tv_area"
+        android:layout_below="@+id/sd_record_list_pic"
         android:layout_marginTop="10dp"
         android:background="@color/user_item_line"/>
 </RelativeLayout>

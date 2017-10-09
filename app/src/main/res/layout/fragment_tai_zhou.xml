@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/gl_data_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="66dp"
+        android:background="@drawable/bg_map_data_panel"
+        android:layout_alignParentBottom="true"
+        android:padding="16dp"
+        app:columnCount="5">
+
+        <TextView
+            android:text="学校总数"
+            app:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/tv_school_count"
+            android:gravity="end"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            app:layout_columnWeight="1" />
+
+        <Space android:layout_width="24dp"/>
+
+        <TextView
+            android:text="排课总数"
+            app:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/tv_classroom_count"
+            android:gravity="end"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            app:layout_columnWeight="1"/>
+
+        <Space
+            android:layout_height="12dp"
+            app:layout_columnSpan="5"/>
+
+        <TextView
+            android:text="资源总数"
+            app:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/tv_resource_count"
+            android:gravity="end"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            app:layout_columnWeight="1" />
+
+        <Space/>
+
+        <TextView
+            android:text="网络教研数"
+            app:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/tv_net_teach_count"
+            android:gravity="end"
+            android:textColor="@color/main_color"
+            android:textSize="20sp"
+            app:layout_columnWeight="1"/>
+    </android.support.v7.widget.GridLayout>
+
+    <TextView
+        android:id="@+id/tv_panel_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/gl_data_panel"
+        android:layout_marginBottom="16dp"
+        android:textColor="#424242"
+        android:text="台州市"
+        android:layout_marginTop="16dp" />
+
+    <WebView
+        android:id="@+id/wv_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/tv_panel_title"
+        android:layout_alignWithParentIfMissing="true"/>
+</RelativeLayout>

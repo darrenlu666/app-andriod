@@ -68,10 +68,23 @@ public class URLConfig {
     public static String URL_MAP;
 
     /**
+     * 台州首页地图
+     */
+    @UrlSuffix("map/mapPage.html")
+    public static String URL_MAP_TZ;
+
+    /**
      * 天津数据
      */
     @UrlSuffix("map/getDataByAreaId.do")
     public static String PANEL_DATA;
+
+
+    /**
+     * 台州数据
+     */
+    @UrlSuffix("map/getTaizhouData.do")
+    public static String PANEL_DATA_TZ;
 
     /**
      * 费县数据
@@ -1081,6 +1094,12 @@ public class URLConfig {
     public static String GET_RECOMMEND_SCHEDULE;
 
     /**
+     * 专递课堂课堂回放(sip:v5.3.6)
+     * http://172.17.53.6:8080/index/getRecommendSchedule.do?size=7&baseAreaId=3268c4982fbd47b996de356d00d8adcc&schoolId=
+     */
+    @UrlSuffix("mobile/home/onlineclass/getIndexRecordScheduleListForSIP.do")
+    public static String GET_SIP_RECOMMEND_SCHEDULE;
+    /**
      * 首页- 近期课程(sip园区首页)
      * baseAreaId	区域id	string
      * schoolId	学校id	string
@@ -1249,6 +1268,27 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/home/live/getIndexLiveAppointmentList.do")
     public static String GET_INDEX_LIVE_APPOINTMENT;
+
+
+    /**
+     * 台州首页-直录播(名校网络课堂)-正在直播(v5.3.7)
+     * baseAreaId
+     * schoolId
+     * size
+     * uuid
+     */
+    @UrlSuffix("mobile/home/live/getIndexLiveAppointmentListByAreaSetting.do")
+    public static String GET_TZ_LIVE_APPOINTMENT;
+
+    /**
+     *台州首页(v5.3.7)-直录播(名校网络课堂)-推荐课程
+     * baseAreaId
+     * schoolId
+     * size
+     * uuid
+     */
+    @UrlSuffix("mobile/home/live/getIndexRecommendLiveAppointmentListTopN.do")
+    public static String GET_TZ_LIVE_APPOINTMENT_RECOMMEND;
 
     /**
      * 首页-直录播(名校网络课堂)-推荐课程

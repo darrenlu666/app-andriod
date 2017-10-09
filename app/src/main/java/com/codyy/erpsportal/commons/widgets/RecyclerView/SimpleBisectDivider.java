@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.tpmp.filterlibrary.viewholders.TitleItemViewHolder;
 
 import java.util.ArrayList;
@@ -78,24 +79,26 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
         int viewType = parent.getAdapter().getItemViewType(position);
 
         if (null != mIGridLayoutViewHolder) {
-
             if (isContains(viewType, mIGridLayoutViewHolder.obtainMultiSingleLine())) {
-                isBigShow = true;
-                outRect.top = 0;
-                outRect.left = 0;
-                outRect.right = 0;
+//                isBigShow = true;
+                outRect.top = mSpace;
+                outRect.left = mSpace;
+                outRect.right = mSpace;
                 outRect.bottom = mSpace;
+                Cog.i(TAG,position+"::t/l/r/b==>"+mSpace);
                 return;
             } else if (isContains(viewType, mIGridLayoutViewHolder.obtainMultiInLine())) {
-                //记录初始位置,仅当第一位ｉｔｅｍ不是{@link HistoryClassViewHolder.ITEM_TYPE_DOUBLE_IN_LINE}记录下开始的位置.
-                if (mLastPosition == 0
-                        && parent.getAdapter().getItemViewType(0) != viewType) {
+                LinearLayoutManager layoutManager = getLinearLayoutManger(parent);
+                if (layoutManager == null) {
+                    return;
+                }
+                //上一个为item类型,且不和当前的viewType一样.
+                if (isLastTitleBar(parent,viewType,position)){
+                    Cog.i(TAG,position+"::setLastPosition==>"+position);
                     mLastPosition = position;
-//                    Log.i(TAG, " last Position : " + mLastPosition);
                 }
                 int count = gridLayoutManager.getSpanCount();
                 setSpace(outRect, position - mLastPosition, count);
-//                Log.i(TAG,"set space : left: "+outRect.left+" top: "+outRect.top +" right: "+outRect.right+" bottom: "+outRect.bottom);
                 return;
             }
         }
@@ -157,7 +160,7 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
         }
         outRect.bottom = mSpace;
         int pos = position % count;
-//        Log.i(TAG, " pos : " + position + " real pos : " + pos + " count:" + count);
+        Log.i(TAG, "lastPosition: "+mLastPosition+" pos : " + position + " real pos in column: " + pos + " count:" + count);
         //起始位置 .
         if (pos == 0) {
             outRect.left = mSpace;
@@ -169,6 +172,8 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
             outRect.left = mSpace / 2;
             outRect.right = mSpace;
         }
+
+        Cog.i(TAG,position+"setSpace::t/l/r/b==>"+outRect.top+"/"+outRect.left+"/"+outRect.right+"/"+outRect.bottom);
     }
 
     /**
@@ -213,26 +218,35 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
                 int count = parent.getAdapter().getItemCount();
                 boolean isLastTitle = false;
                 boolean isNeedJump = false;
+                int viewType = parent.getAdapter().getItemViewType(i + firstVisiblePosition);
+                //过滤特殊情况,多合一排序如果上一个为标题栏则需要继续绘制divider.
                 if ((i + firstVisiblePosition) < count) {
-                    int viewType = parent.getAdapter().getItemViewType(i + firstVisiblePosition);
-                    isLastTitle = isLastTitleBar(parent, firstVisiblePosition, viewType, i);
+                    isLastTitle = isLastTitleBar(parent, viewType, firstVisiblePosition+i);
                     if (needDivider(viewType) && !isLastTitle) {
                         isNeedJump = true;
                     }
                 }
-
-                //continue to next loop .
                 if (isNeedJump) continue;
+
+                //处理王琦录播的奇数/偶数排列化县文体
                 View childView = parent.getChildAt(i);
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) childView.getLayoutParams();
                 //过滤标题的下方divider 的 padding
                 int left = isLastTitle ? 0 : (parent.getPaddingLeft() + childView.getPaddingLeft());
                 int bottom = childView.getTop() - params.topMargin;
+                //如果当前是大图,则divider需要上移一个space
+                if (null != mIGridLayoutViewHolder&&isLastTitle) {
+                    // Log.i(TAG, " last Position : " + mLastPosition);
+                    if(isContains(viewType, mIGridLayoutViewHolder.obtainMultiSingleLine())||
+                            isContains(viewType, mIGridLayoutViewHolder.obtainMultiInLine())){
+                        bottom = bottom-mSpace;
+                    }
+                }
                 int top = bottom - mDivider.getIntrinsicHeight();
                 int right = parent.getWidth() - childView.getPaddingRight();
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
-//                Log.i(TAG,"draw divider left padding :"+left);
+//                Log.i(TAG,"onDrawOver divider:: left padding :"+left+" top padding:"+top);
             }
         } else if (orientation == LinearLayoutManager.HORIZONTAL) {
             for (int i = 0; i < childCount; i++) {
@@ -256,23 +270,23 @@ public class SimpleBisectDivider extends RecyclerView.ItemDecoration {
      * 判断上一个viewType是否为标题项.
      *
      * @param parent
-     * @param firstVisiblePosition
      * @param currentViewType      当前的viewType
-     * @param i
+     * @param abstractPos 当前路径的绝对位置.
      * @return
      */
-    private boolean isLastTitleBar(RecyclerView parent, int firstVisiblePosition, int currentViewType, int i) {
+    private boolean isLastTitleBar(RecyclerView parent , int currentViewType, int abstractPos) {
         boolean isNeeded = false;
-        int lastPosition = (i - 1);
+        int lastPosition = (abstractPos - 1);
         if (lastPosition > 0) {
-            int lastViewType = parent.getAdapter().getItemViewType(lastPosition + firstVisiblePosition);
+            int lastViewType = parent.getAdapter().getItemViewType(lastPosition );
 //            Log.i(TAG,"lastViewType: "+lastViewType+" / currentViewType: "+currentViewType);
             if (isTitleItem(lastViewType) && lastViewType != currentViewType) {
                 //draw divider in the middle of two no divider item which last is a titleBar and current is other item view type .
                 isNeeded = true;
             }
+            Log.i(TAG,"isLastTitleBar : "+isNeeded+" lastPosition: "+lastPosition+": type : "+lastViewType +" nowType: "+currentViewType);
         }
-//        Log.i(TAG,"isLastTitleBar : "+isNeeded);
+
         return isNeeded;
     }
 

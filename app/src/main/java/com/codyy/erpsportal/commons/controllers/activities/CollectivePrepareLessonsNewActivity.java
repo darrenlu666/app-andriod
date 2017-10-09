@@ -22,6 +22,7 @@ import com.codyy.erpsportal.commons.models.entities.PrepareLessonsShortEntity;
 import com.codyy.erpsportal.commons.models.entities.TeachingResearchBase;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.ConfirmTextFilterListener;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
@@ -170,7 +171,8 @@ public class CollectivePrepareLessonsNewActivity extends BaseHttpActivity implem
         mAdapter = new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<LessonsViewHold>() {
             @Override
             public LessonsViewHold createViewHolder(ViewGroup parent, int viewType) {
-                return new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare_lessons),mFromType);
+                return new LessonsViewHold(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.item_collective_prepare_lessons)
+                        ,mFromType);
             }
 
             @Override
@@ -328,6 +330,7 @@ public class CollectivePrepareLessonsNewActivity extends BaseHttpActivity implem
                 }
                 break;
             case R.id.btn_back:
+                DeviceUtils.hideSoftKeyboard(mEmptyView);
                 this.finish();
                 overridePendingTransition(R.anim.layout_show, R.anim.slidemenu_hide);
                 break;

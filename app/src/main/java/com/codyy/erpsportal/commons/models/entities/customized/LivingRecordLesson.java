@@ -21,6 +21,15 @@ public class LivingRecordLesson extends BaseTitleItemBar implements Serializable
     private String serverAddress;
     private String watchCount;
     private String session;//节次 “一” ～ “八”
+    private String realBeginTime;//开始时间.
+
+    public String getRealBeginTime() {
+        return realBeginTime;
+    }
+
+    public void setRealBeginTime(String realBeginTime) {
+        this.realBeginTime = realBeginTime;
+    }
 
     public String getId() {
         return id;

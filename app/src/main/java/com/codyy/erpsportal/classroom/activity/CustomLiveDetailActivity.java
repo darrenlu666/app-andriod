@@ -49,6 +49,7 @@ import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.AutoHideUtils;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.WiFiBroadCastUtils;
@@ -72,7 +73,7 @@ import butterknife.ButterKnife;
  * 专递课堂 -直播
  * Created by ldh on 2016/6/29.
  */
-public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener, PeopleTreeFragment.ISyncCount, IFragmentMangerInterface {
+public class CustomLiveDetailActivity extends AppCompatActivity implements View.OnClickListener, PeopleTreeFragment.ISyncCount, IFragmentMangerInterface, ClassRoomCommentFragment.SoftInputOpenListener {
     private static final String TAG = CustomLiveDetailActivity.class.getSimpleName();
     private static final int MSG_UPDATE_WATCH_COUNT = 0x001;//update the count of people mount sea .
     private static final int MAX_COUNT = 10 * 10000;
@@ -406,6 +407,23 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         }
     }
 
+    @Override
+    public void open() {
+        hideVideoList();
+    }
+
+    @Override
+    public void close() {
+        showVideoList();
+    }
+
+    private void showVideoList(){
+        mRlVideoList = (RelativeLayout) findViewById(R.id.rl_videolist);
+        if (mRlVideoList != null && mRecordRoomDetail.getVideoInfoList().size() > 1) {
+            mRlVideoList.setVisibility(View.VISIBLE);
+        }
+    }
+
     /**
      * 播放指定的视频资源
      *
@@ -492,7 +510,9 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         }
         //添加最新评论fragment
         mTabLayout.addTab(mTabLayout.newTab().setText("最新评论"));
-        mFragmentList.add(ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom));
+        ClassRoomCommentFragment classRoomCommentFragment = ClassRoomCommentFragment.newInstance(mUserInfo, mScheduleDetailId, mFrom);
+        classRoomCommentFragment.setOnSoftInputOpenListener(this);
+        mFragmentList.add(classRoomCommentFragment);
         //v5.3.3 共xxx人观看
         mTabLayout.addTab(mTabLayout.newTab().setText("0人观看"));
         mFragmentList.add(PeopleTreeFragment.newInstance(mUserInfo, mScheduleDetailId));
@@ -527,6 +547,7 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_back:
+                DeviceUtils.hideSoftKeyboard(mViewPager);
                 if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {//直播：全屏状态下点击返回按钮时，返回竖屏
                     if (mIsExpanable) {
                         switchWindowOrientation();

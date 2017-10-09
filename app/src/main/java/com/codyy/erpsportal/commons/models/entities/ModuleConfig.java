@@ -64,6 +64,11 @@ public class ModuleConfig {
     public final static String TEMPLATE_SIP = "index.template.sipstl";
 
     /**
+     * 首页模板：台州
+     */
+    public final static String TEMPLATE_TZ = "index.template.taizhou";
+
+    /**
      * 首页模板：集团校
      */
     public final static String TEMPLATE_GROUP_SCHOOL = "index.template.jtx";

@@ -1,6 +1,8 @@
 package com.codyy.erpsportal.commons.utils;
 
 
+import android.text.TextUtils;
+
 import com.codyy.url.URLConfig;
 
 /**
@@ -32,7 +34,14 @@ public class UriUtils {
         }
     }
 
+    /**
+     * 过滤gif 增加xxxx.small.xxx
+     * @param imageUrl
+     * @return
+     */
     public static String buildSmallImageUrl(String imageUrl) {
+        //过滤gif
+        if(imageUrl!=null && imageUrl.contains(".gif")) return imageUrl;
         int dotIndex = imageUrl.lastIndexOf('.');
         if (dotIndex > 0) {
             String suffix = imageUrl.substring(dotIndex);//like .jpg .png
@@ -51,7 +60,13 @@ public class UriUtils {
         return pic;
     }
 
+    /**
+     * 防止多吃传递基础base_url .
+     * @param name
+     * @return
+     */
     public static String getImageUrl(String name) {
+        if(!TextUtils.isEmpty(name) && name.contains("http://")) return name;
         return URLConfig.IMAGE_URL + name;
     }
 }

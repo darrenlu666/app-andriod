@@ -26,6 +26,8 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
     protected OnItemClickListener<T> mOnItemClickListener;
     protected OnLoadMoreClickListener mOnLoadMoreClickListener;
     protected int mSelectedPosition = 0 ;//默认选中的位置
+    private static final long MIN_CLICK_TIME = 1*1000L;
+    private long mLastClickTimeMillions = -1;
 
     public BaseRecyclerAdapter(ViewCreator<VH> mCreator) {
         this.mCreator = mCreator;
@@ -140,10 +142,19 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mOnItemClickListener != null && mEnable){
+                //防止多次点击.
+                boolean isDoubleClick = false;
+                long currentTime = System.currentTimeMillis();
+                if(currentTime - mLastClickTimeMillions < MIN_CLICK_TIME){
+                    isDoubleClick = true;
+                    mLastClickTimeMillions = currentTime;
+                }else{
+                    mLastClickTimeMillions = currentTime;
+                }
+                if (mOnItemClickListener != null && mEnable && !isDoubleClick) {
                     try {
                         setSelectedPosition(viewHolder.getCurrentPosition());
-                        mOnItemClickListener.onItemClicked(v , viewHolder.getCurrentPosition(),viewHolder.getData());
+                        mOnItemClickListener.onItemClicked(v, viewHolder.getCurrentPosition(), viewHolder.getData());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -163,8 +174,17 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
             if (position == getBasicItemCount() && mHasMoreData) {
                 return TYPE_FOOTER;
             }
+
+            if(position>= getBasicItemCount()){
+                return 0;
+            }
             //USER INTERFACE
-            return  mCreator.getItemViewType(position);
+            try{
+                return  mCreator.getItemViewType(position);
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                return 0;
+            }
         }else{
             return super.getItemViewType(position);
         }
