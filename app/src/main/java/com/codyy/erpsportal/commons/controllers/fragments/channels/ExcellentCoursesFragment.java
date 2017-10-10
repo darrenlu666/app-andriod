@@ -17,8 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
+import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter.OnFetchMoreListener;
+import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter.OnFleshStabbedListener;
 import com.codyy.erpsportal.commons.controllers.viewholders.ExcellentCourseFlesh;
 import com.codyy.erpsportal.commons.controllers.viewholders.ExcellentCourseFleshVhr;
 import com.codyy.erpsportal.commons.controllers.viewholders.VhrFactory;
@@ -26,6 +29,7 @@ import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.Flesh;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -115,6 +119,20 @@ public class ExcellentCoursesFragment extends Fragment{
                 @Override
                 public void onLoadMore() {
                     loadExcellentCoursesData(false);
+                }
+            });
+            mAdapter.setOnFleshStabbedListener(new OnFleshStabbedListener() {
+                @Override
+                public void onStabbed(Flesh flesh) {
+                    if (flesh instanceof ExcellentCourseFlesh) {
+                        ExcellentCourseFlesh excellentCourse = (ExcellentCourseFlesh) flesh;
+                        ClassRoomDetailActivity.startActivity(
+                                getActivity(),
+                                UserInfoKeeper.obtainUserInfo(),
+                                excellentCourse.getScheduleDetailId(),
+                                ClassRoomContants.TYPE_CUSTOM_RECORD,
+                                excellentCourse.getSubjectName());
+                    }
                 }
             });
             mRecyclerView.setAdapter(mAdapter);
