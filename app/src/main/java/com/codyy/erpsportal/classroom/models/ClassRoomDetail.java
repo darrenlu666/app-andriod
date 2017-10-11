@@ -2,6 +2,11 @@ package com.codyy.erpsportal.classroom.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import com.codyy.erpsportal.EApplication;
+import com.codyy.erpsportal.commons.utils.NetworkUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,7 +74,27 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
         classRoomDetail.setClassTime(response.isNull("classTime") ? "" : response.optString("classTime"));
         classRoomDetail.setGrade(response.isNull("grade") ? "" : response.optString("grade"));
         classRoomDetail.setUrlType(response.isNull("urlType") ? "" : response.optString("urlType"));
-        classRoomDetail.setMainUrl(response.isNull("url") ? "" : response.optString("url"));
+
+        String directURL = response.optString("url");
+        //17-10-11 根据网络情况返回不通的dmc
+        JSONObject internal = response.optJSONArray("internal").optJSONObject(0);
+        JSONObject external = response.optJSONArray("external").optJSONObject(0);
+        //判断网络类型
+        if(NetworkUtils.isNetWorkTypeWifi(EApplication.instance())){//wifi . 优先内网dms方便演示.
+            if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
+                directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
+            }else if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
+                directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
+            }
+        }else{//4G . 有限外网dms
+            if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
+                directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
+            }else if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
+                directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
+            }
+        }
+        classRoomDetail.setMainUrl(!TextUtils.isEmpty(directURL) ? "" : directURL);
+
         classRoomDetail.setStream(response.isNull("stream") ? "" : response.optString("stream"));
         classRoomDetail.setSchoolName(response.isNull("schoolName") ? "" : response.optString("schoolName"));
         classRoomDetail.setTeacher(response.isNull("teacher") ? "" : response.optString("teacher"));
