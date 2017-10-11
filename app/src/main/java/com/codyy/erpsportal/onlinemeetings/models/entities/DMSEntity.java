@@ -24,7 +24,7 @@ import java.util.Map;
  * Created by poe on 15-8-14.
  */
 public class DMSEntity implements Parcelable{
-    private static final String TAG = DMSEntity.class.getSimpleName();
+    private static final String TAG = "DMSEntity";
     private String dmsCode;
     private String dmsMainSpeakID;//main speaker uuid
     private String dmsAddress;//http://url.cn/dmc

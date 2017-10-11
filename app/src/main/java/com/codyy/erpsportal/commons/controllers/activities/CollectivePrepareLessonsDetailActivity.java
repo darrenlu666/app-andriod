@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoInfo;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
@@ -370,15 +371,30 @@ public class CollectivePrepareLessonsDetailActivity extends BaseHttpActivity imp
         UiOnlineMeetingUtils.loadMeetingBaseData(getSupportFragmentManager(), this, mUserInfo.getUuid(), mPreparationId, role, new UiOnlineMeetingUtils.ICallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                final JSONObject jsonObject = response;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MeetingBase meetingBase = MeetingBase.parseJson(jsonObject);
-                        OnlineMeetingActivity.startForResult(CollectivePrepareLessonsDetailActivity.this, mPreparationId, mUserInfo, meetingBase, REQUEST_PREPARE_LESSON_CODE);
-                        mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
-                    }
-                }).start();
+               final MeetingBase meetingBase = MeetingBase.parseJson(response);
+                UiOnlineMeetingUtils.loadCocoInfo(CollectivePrepareLessonsDetailActivity.this, meetingBase.getBaseMeetID(),
+                        mUserInfo.getUuid(), new UiOnlineMeetingUtils.ICallback() {
+                            @Override
+                            public void onSuccess(JSONObject response) {
+                                JSONObject server = response.optJSONObject("server");
+                                meetingBase.setToken(server.optString("token"));
+                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                OnlineMeetingActivity.startForResult(CollectivePrepareLessonsDetailActivity.this, mPreparationId, mUserInfo, meetingBase, REQUEST_PREPARE_LESSON_CODE);
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
+                            }
+
+                            @Override
+                            public void onFailure(JSONObject response) {
+
+                            }
+
+                            @Override
+                            public void onNetError() {
+
+                            }
+                        });
+
             }
 
             @Override

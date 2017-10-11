@@ -136,7 +136,7 @@ public class MeetingConfig implements Parcelable {
 
     public static MeetingConfig getSimulateConfig(MeetingBase meetingBase, UserInfo userInfo){
         MeetingConfig meetingConfig = new MeetingConfig();
-        meetingConfig.setCipher(meetingBase.getBaseCoco().getCocoCiper());
+        meetingConfig.setCipher(meetingBase.getToken());
         if (meetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3) {
             meetingConfig.setFrom("watcher_"+userInfo.getBaseUserId());
         }else {

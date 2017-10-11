@@ -221,7 +221,7 @@ public class GroupCollectiveActivityDetail extends ToolbarActivity implements Vi
             @Override
             public void onSuccess(JSONObject response) {
 
-                final JSONObject jsonObject = response;
+                /*final JSONObject jsonObject = response;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -247,7 +247,34 @@ public class GroupCollectiveActivityDetail extends ToolbarActivity implements Vi
                     }
                 }).start();
 
-                mLoadingDialog.dismiss();
+                mLoadingDialog.dismiss();*/
+
+                final MeetingBase meetingBase = MeetingBase.parseJson(response);
+                UiOnlineMeetingUtils.loadCocoInfo(GroupCollectiveActivityDetail.this, meetingBase.getBaseMeetID(),
+                        mUserInfo.getUuid(), new UiOnlineMeetingUtils.ICallback() {
+                            @Override
+                            public void onSuccess(JSONObject response) {
+                                JSONObject server = response.optJSONObject("server");
+                                meetingBase.setToken(server.optString("token"));
+                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                OnlineMeetingActivity.startForResult(GroupCollectiveActivityDetail.this,
+                                        mPreparationId, mUserInfo,
+                                        meetingBase, 101);
+//                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
+                                mLoadingDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onFailure(JSONObject response) {
+
+                            }
+
+                            @Override
+                            public void onNetError() {
+
+                            }
+                        });
             }
 
             @Override

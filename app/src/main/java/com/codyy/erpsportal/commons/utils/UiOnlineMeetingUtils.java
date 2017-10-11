@@ -28,6 +28,7 @@ import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoInfo;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
 import com.codyy.url.URLConfig;
 
@@ -375,7 +376,6 @@ public class UiOnlineMeetingUtils {
                     //toast error messages .
                     if(!TextUtils.isEmpty(response.optString("message"))){
                         //ToastUtil.showToast(EApplication.instance(), response.optString("message"));
-
                         TipProgressFragment fragment = TipProgressFragment.newInstance(TipProgressFragment.UNSTART_STATUS_TIP);
                         fragment.show(fragmentManager, "showtips");
                     }
@@ -392,6 +392,27 @@ public class UiOnlineMeetingUtils {
         }));
     }
 
+
+    /**
+     * 获取coco信息.
+     * @param act
+     * @param meetingId
+     * @param uuid
+     * @param callback
+     */
+    public static void loadCocoInfo(Activity act ,String meetingId,String uuid, final ICallback callback){
+        HashMap<String,String> params = new HashMap<>();
+        params.put("mid",meetingId);
+        params.put("uuid",uuid);
+
+        RequestSender requestSender = new RequestSender(act);
+        requestSender.sendGetRequest(new RequestSender.RequestData(URLConfig.GET_COCO_TOKEN, params, response -> {
+            if(null != callback) callback.onSuccess(response);
+        }, error -> {
+            Cog.e(TAG, "onErrorResponse:" + error);
+            ToastUtil.showToast("获取DMC失败!");
+        }));
+    }
     /**
      * 获取视频 基本数据
      * @param act  activity object .

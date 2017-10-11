@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.activities.ListenDetailsActivity;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -361,7 +362,7 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
         UiOnlineMeetingUtils.loadMeetingBaseData(getSupportFragmentManager(), this, mUserInfo.getUuid(), mPreparationId, role, new UiOnlineMeetingUtils.ICallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                final JSONObject jsonObject = response;
+                /*final JSONObject jsonObject = response;
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -369,7 +370,34 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
                         OnlineMeetingActivity.startForResult(OnlineTeachDetailActivity.this, mPreparationId,mUserInfo,meetingBase,REQUEST_LISTEN_LESSON_CODE);
                         mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                     }
-                }).start();
+                }).start();*/
+
+                final MeetingBase meetingBase = MeetingBase.parseJson(response);
+                UiOnlineMeetingUtils.loadCocoInfo(OnlineTeachDetailActivity.this, meetingBase.getBaseMeetID(),
+                        mUserInfo.getUuid(), new UiOnlineMeetingUtils.ICallback() {
+                            @Override
+                            public void onSuccess(JSONObject response) {
+                                JSONObject server = response.optJSONObject("server");
+                                meetingBase.setToken(server.optString("token"));
+                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                OnlineMeetingActivity.startForResult(OnlineTeachDetailActivity.this,
+                                        mPreparationId, mUserInfo, meetingBase,
+                                        REQUEST_LISTEN_LESSON_CODE);
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
+                            }
+
+                            @Override
+                            public void onFailure(JSONObject response) {
+
+                            }
+
+                            @Override
+                            public void onNetError() {
+
+                            }
+                        });
+
             }
 
             @Override

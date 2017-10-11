@@ -67,6 +67,7 @@ public class MeetingBase implements Parcelable {
     private int baseNoDisturbing;//0:正常状态 1:免打扰 .
     private String  white_board;//是否拥有 "白板标注权限" 0:没有　１：拥有白板标注权限　
     private String baseChat = "1";//文本聊天功能　．　０　：　无法说话　１：可以说话
+    private String token ;//token信息
 
     private DMSEntity baseDMS; //DMS info about video meeting services .
     private CocoEntity baseCoco;//coco services info for messages .
@@ -91,6 +92,7 @@ public class MeetingBase implements Parcelable {
         baseNoDisturbing    =   in.readInt();
         white_board = in.readString();
         baseChat = in.readString();
+        token = in.readString();
 
         //嵌套实体类读取
         baseDMS         =   in.readParcelable(DMSEntity.class.getClassLoader());
@@ -120,6 +122,7 @@ public class MeetingBase implements Parcelable {
         dest.writeInt(baseNoDisturbing);
         dest.writeString(white_board);
         dest.writeString(baseChat);
+        dest.writeString(token);
 
         dest.writeParcelable(baseDMS, flags);
         dest.writeParcelable(baseCoco, flags);
@@ -129,6 +132,14 @@ public class MeetingBase implements Parcelable {
 
         //写入数据集合
         dest.writeTypedList(baseSpeakers);
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getBaseChat() {
@@ -241,6 +252,7 @@ public class MeetingBase implements Parcelable {
     public void setBaseLoopPatrol(LoopPatrol baseLoopPatrol) {
         this.baseLoopPatrol = baseLoopPatrol;
     }
+
 
     public DMSEntity getBaseDMS() {
         return baseDMS;

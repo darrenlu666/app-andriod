@@ -52,12 +52,15 @@ import com.codyy.erpsportal.commons.models.entities.MeetingConfig;
 import com.codyy.erpsportal.commons.models.entities.MeetingShow;
 import com.codyy.erpsportal.commons.models.entities.SystemMessage;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.services.ChatService;
 import com.codyy.erpsportal.commons.services.IMeeting;
 import com.codyy.erpsportal.commons.services.OnlineMeetingService;
 import com.codyy.erpsportal.commons.utils.CoCoUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DeviceUtils;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
@@ -81,6 +84,7 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.TabInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoShare;
 import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoCommand;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
@@ -90,6 +94,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -283,6 +288,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         } else {
             startPublishService();
         }
+
         //connect to coco .
         connectToCoco();
         //检测共享模式
@@ -1414,8 +1420,8 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             try {
                 mMeetingConfig = MeetingConfig.getSimulateConfig(mMeetingBase, mUserInfo);
                 //test start ======
-                mMeetingConfig.setIp("10.5.52.101");
-                mMeetingConfig.setPort(1981);
+//                mMeetingConfig.setIp("10.5.52.101");
+//                mMeetingConfig.setPort(1981);
                 //test end =====
                 mIMeetingService.bindConfig(mMeetingConfig);
             } catch (RemoteException e) {

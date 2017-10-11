@@ -25,7 +25,7 @@ import java.util.Map;
 public class SendCMDUtils {
     private static final String TAG = "SendCMDUtils";
     /** test token by poe **/
-    private static String mToken="tuRbha4Fz9rKjjStOcv8MTi9lrm1OknGwAneJBCVO1AgItaCJ5MiR33ZmHod84WK";
+    private static String mToken="tuRbha4Fz9rKjjStOcv8MTi9lrm1OknGwAneJBCVO1A8JzF5uaoc99HAbMsPYv6h";
     /**
      * 基本参数
      */
@@ -54,7 +54,7 @@ public class SendCMDUtils {
         return "{" +
                 "\"command\":\"" +CoCoCommand.TYPE_ONLINE+"\"," +
                 "\"body\":{" +
-                "\"userToken\":\"" +mToken+"\"," +
+                "\"userToken\":\"" +meetingConfig.getCipher()+"\"," +
                 "\"clientType\":\"mobile\"," +
                 "\"deviceName\":\"" + DeviceUtils.getDeviceName()+"\"" +
                 "}" +
