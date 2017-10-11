@@ -93,7 +93,7 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
                 directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
             }
         }
-        classRoomDetail.setMainUrl(!TextUtils.isEmpty(directURL) ? "" : directURL);
+        classRoomDetail.setMainUrl(TextUtils.isEmpty(directURL) ? "" : directURL);
 
         classRoomDetail.setStream(response.isNull("stream") ? "" : response.optString("stream"));
         classRoomDetail.setSchoolName(response.isNull("schoolName") ? "" : response.optString("schoolName"));
