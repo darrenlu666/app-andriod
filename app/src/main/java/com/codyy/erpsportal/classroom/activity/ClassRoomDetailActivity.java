@@ -42,8 +42,11 @@ import com.codyy.erpsportal.classroom.fragment.ClassRoomCommentFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
+import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity;
+import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
+import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
@@ -396,7 +399,7 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                     if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
                         ClassRoomDetail.parseResult(response, new ClassRoomDetail.ISocketTestCallBack() {
                             @Override
-                            public void omComplete(ClassRoomDetail data) {
+                            public void onComplete(ClassRoomDetail data) {
                                 mClassRoomDetail = data;
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -506,7 +509,18 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
                 }
                 break;
             case R.id.iv_full_screen:
-                setScreenLandScape();
+                if(UserInfo.USER_TYPE_PARENT.equals(mUserInfo.getUserType())){
+                    //跳转到实时轮训页面
+                    TourClassroom classroom = new TourClassroom();
+                    classroom.setSchoolName(mClassRoomDetail.getSchoolName());
+                    classroom.setType("main");
+                    classroom.setId(mScheduleDetailId);
+                    classroom.setVideoUrl(mClassRoomDetail.getMainUrl() + "/" + mClassRoomDetail.getStream());
+
+                    ClassTourPagerActivity.start(this, classroom, mUserInfo, ClassTourNewActivity.TYPE_SCHOOL_NET);
+                }else{
+                    setScreenLandScape();
+                }
                 break;
         }
     }

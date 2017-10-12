@@ -2,7 +2,6 @@ package com.codyy.erpsportal.classroom.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.koushikdutta.async.http.AsyncHttpClient;
@@ -102,11 +101,9 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
         classRoomDetail.setTeacher(response.isNull("teacher") ? "" : response.optString("teacher"));
         classRoomDetail.setSubject(response.isNull("subject") ? "" : response.optString("subject"));
 
-//        return classRoomDetail;
-
         //1. 判断内网的服务器是否可用
         if(null != internal && null != external){
-            String socketUrl = external.optString("socketUrl");
+            String socketUrl = internal.optString("socketUrl");
             Log.i("socket","test socket start !!!------------------"+socketUrl);
 
             AsyncHttpGet get = new AsyncHttpGet("http://"+socketUrl);
@@ -119,11 +116,11 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
                     if (ex != null) {
                         ex.printStackTrace();
                         classRoomDetail.setMainUrl("rtmp://"+external.optString("rtmpUrl")+"/dms");
-                        callBack.omComplete(classRoomDetail);
+                        callBack.onComplete(classRoomDetail);
                         return;
                     }
                     classRoomDetail.setMainUrl("rtmp://"+internal.optString("rtmpUrl")+"/dms");
-                    callBack.omComplete(classRoomDetail);
+                    callBack.onComplete(classRoomDetail);
 
                     String ping ="{method: \"ping\", data: \"1111111111111\"}";
                     webSocket.send(ping);
@@ -136,7 +133,7 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
                 }
             });
         }else{
-            callBack.omComplete(classRoomDetail);
+            callBack.onComplete(classRoomDetail);
         }
 
     }
@@ -195,6 +192,6 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
          * 测速完返回详情.
          * @return
          */
-        void omComplete(ClassRoomDetail data);
+        void onComplete(ClassRoomDetail data);
     }
 }
