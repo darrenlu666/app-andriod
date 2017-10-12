@@ -78,22 +78,6 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
         classRoomDetail.setClassTime(response.isNull("classTime") ? "" : response.optString("classTime"));
         classRoomDetail.setGrade(response.isNull("grade") ? "" : response.optString("grade"));
         classRoomDetail.setUrlType(response.isNull("urlType") ? "" : response.optString("urlType"));
-
-        //17-10-11 根据网络情况返回不通的dmc
-        final JSONObject internal = response.optJSONArray("internal").optJSONObject(0);
-        final JSONObject external = response.optJSONArray("external").optJSONObject(0);
-
-        DMS indms = new DMS();
-        indms.setSocketUrl(internal.optString("socketUrl"));
-        indms.setRtmpUrl(internal.optString("rtmpUrl"));
-
-        DMS exdms = new DMS();
-        exdms.setSocketUrl(external.optString("socketUrl"));
-        exdms.setRtmpUrl(external.optString("rtmpUrl"));
-
-        classRoomDetail.setExternal(exdms);
-        classRoomDetail.setInternal(indms);
-
         classRoomDetail.setMainUrl(response.optString("url"));
 
         classRoomDetail.setStream(response.isNull("stream") ? "" : response.optString("stream"));
@@ -101,41 +85,55 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
         classRoomDetail.setTeacher(response.isNull("teacher") ? "" : response.optString("teacher"));
         classRoomDetail.setSubject(response.isNull("subject") ? "" : response.optString("subject"));
 
-        //1. 判断内网的服务器是否可用
-        if(null != internal && null != external){
-            String socketUrl = internal.optString("socketUrl");
-            Log.i("socket","test socket start !!!------------------"+socketUrl);
+        //17-10-11 根据网络情况返回不通的dmc
+        if(null != response.optJSONArray("internal")){
+            final JSONObject internal = response.optJSONArray("internal").optJSONObject(0);
+            final JSONObject external = response.optJSONArray("external").optJSONObject(0);
 
-            AsyncHttpGet get = new AsyncHttpGet("http://"+socketUrl);
-            get.setTimeout(500);
+            DMS indms = new DMS();
+            indms.setSocketUrl(internal.optString("socketUrl"));
+            indms.setRtmpUrl(internal.optString("rtmpUrl"));
 
-            AsyncHttpClient.getDefaultInstance().websocket(get, "http", new AsyncHttpClient.WebSocketConnectCallback() {
-                @Override
-                public void onCompleted(Exception ex, WebSocket webSocket) {
-                    Log.i("socket","test socket end !!!-----------------error: "+ex);
-                    if (ex != null) {
-                        ex.printStackTrace();
-                        classRoomDetail.setMainUrl("rtmp://"+external.optString("rtmpUrl")+"/dms");
-                        callBack.onComplete(classRoomDetail);
-                        return;
-                    }
-                    classRoomDetail.setMainUrl("rtmp://"+internal.optString("rtmpUrl")+"/dms");
-                    callBack.onComplete(classRoomDetail);
+            DMS exdms = new DMS();
+            exdms.setSocketUrl(external.optString("socketUrl"));
+            exdms.setRtmpUrl(external.optString("rtmpUrl"));
 
-                    String ping ="{method: \"ping\", data: \"1111111111111\"}";
-                    webSocket.send(ping);
+            classRoomDetail.setExternal(exdms);
+            classRoomDetail.setInternal(indms);
 
-                    webSocket.setStringCallback(new WebSocket.StringCallback() {
-                        public void onStringAvailable(String s) {
-                            System.out.println("I got a string: " + s);
+            //1. 判断内网的服务器是否可用
+                String socketUrl = internal.optString("socketUrl");
+                Log.i("socket","test socket start !!!------------------"+socketUrl);
+
+                AsyncHttpGet get = new AsyncHttpGet("http://"+socketUrl);
+                get.setTimeout(500);
+
+                AsyncHttpClient.getDefaultInstance().websocket(get, "http", new AsyncHttpClient.WebSocketConnectCallback() {
+                    @Override
+                    public void onCompleted(Exception ex, WebSocket webSocket) {
+                        Log.i("socket","test socket end !!!-----------------error: "+ex);
+                        if (ex != null) {
+                            ex.printStackTrace();
+                            classRoomDetail.setMainUrl("rtmp://"+external.optString("rtmpUrl")+"/dms");
+                            callBack.onComplete(classRoomDetail);
+                            return;
                         }
-                    });
-                }
-            });
-        }else{
-            callBack.onComplete(classRoomDetail);
-        }
+                        classRoomDetail.setMainUrl("rtmp://"+internal.optString("rtmpUrl")+"/dms");
+                        callBack.onComplete(classRoomDetail);
 
+                        String ping ="{method: \"ping\", data: \"1111111111111\"}";
+                        webSocket.send(ping);
+
+                        webSocket.setStringCallback(new WebSocket.StringCallback() {
+                            public void onStringAvailable(String s) {
+                                System.out.println("I got a string: " + s);
+                            }
+                        });
+                    }
+                });
+            }else{
+                callBack.onComplete(classRoomDetail);
+            }
     }
 
     public DMS getExternal() {
