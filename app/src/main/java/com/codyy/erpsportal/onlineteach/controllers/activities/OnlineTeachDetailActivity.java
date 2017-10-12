@@ -362,16 +362,6 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
         UiOnlineMeetingUtils.loadMeetingBaseData(getSupportFragmentManager(), this, mUserInfo.getUuid(), mPreparationId, role, new UiOnlineMeetingUtils.ICallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                /*final JSONObject jsonObject = response;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MeetingBase meetingBase = MeetingBase.parseJson(jsonObject);
-                        OnlineMeetingActivity.startForResult(OnlineTeachDetailActivity.this, mPreparationId,mUserInfo,meetingBase,REQUEST_LISTEN_LESSON_CODE);
-                        mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
-                    }
-                }).start();*/
-
                 final MeetingBase meetingBase = MeetingBase.parseJson(response);
                 UiOnlineMeetingUtils.loadCocoInfo(OnlineTeachDetailActivity.this, meetingBase.getBaseMeetID(),
                         mUserInfo.getUuid(), new UiOnlineMeetingUtils.ICallback() {
@@ -389,12 +379,12 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
 
                             @Override
                             public void onFailure(JSONObject response) {
-
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                             }
 
                             @Override
                             public void onNetError() {
-
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                             }
                         });
 

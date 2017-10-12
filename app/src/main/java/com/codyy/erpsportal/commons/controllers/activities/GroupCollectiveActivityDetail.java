@@ -221,34 +221,6 @@ public class GroupCollectiveActivityDetail extends ToolbarActivity implements Vi
             @Override
             public void onSuccess(JSONObject response) {
 
-                /*final JSONObject jsonObject = response;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        long start = System.currentTimeMillis();
-                        MeetingBase meetingBase = MeetingBase.parseJson(jsonObject);
-                        // go to meeting page .
-                        //OnlineMeetingActivity.start(CollectivePrepareLessonsDetailActivity.this, mPreparationId, meetingBase);
-                        OnlineMeetingActivity.startForResult(GroupCollectiveActivityDetail.this, mPreparationId, mUserInfo ,meetingBase, 101);
-                        long end = System.currentTimeMillis();
-
-                        long period = end - start;
-
-                        if (period < 1 * 1000) {
-                            try {
-                                Thread.sleep(1000 - period);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                        mLoadingDialog.dismiss();
-                    }
-                }).start();
-
-                mLoadingDialog.dismiss();*/
-
                 final MeetingBase meetingBase = MeetingBase.parseJson(response);
                 UiOnlineMeetingUtils.loadCocoInfo(GroupCollectiveActivityDetail.this, meetingBase.getBaseMeetID(),
                         mUserInfo.getUuid(), new UiOnlineMeetingUtils.ICallback() {
@@ -267,12 +239,12 @@ public class GroupCollectiveActivityDetail extends ToolbarActivity implements Vi
 
                             @Override
                             public void onFailure(JSONObject response) {
-
+                                mLoadingDialog.dismiss();
                             }
 
                             @Override
                             public void onNetError() {
-
+                                mLoadingDialog.dismiss();
                             }
                         });
             }

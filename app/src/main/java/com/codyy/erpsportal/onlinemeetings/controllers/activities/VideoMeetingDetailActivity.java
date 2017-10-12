@@ -258,73 +258,61 @@ public class VideoMeetingDetailActivity extends BaseHttpActivity {
         UiOnlineMeetingUtils.loadMeetingBaseData(getSupportFragmentManager(), this, mUserInfo.getUuid(), mMeetingID, role, new UiOnlineMeetingUtils.ICallback() {
             @Override
             public void onSuccess(JSONObject response) {
+                final MeetingBase meetingBase = MeetingBase.parseJson(response);
+                UiOnlineMeetingUtils.loadCocoInfo(VideoMeetingDetailActivity.this, meetingBase.getBaseMeetID(),
+                        mUserInfo.getUuid(), new UiOnlineMeetingUtils.ICallback() {
+                            @Override
+                            public void onSuccess(JSONObject response) {
+                                JSONObject server = response.optJSONObject("server");
+                                meetingBase.setToken(server.optString("token"));
+                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
 
-                final JSONObject jsonObject = response ;
-                mProgressBar.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        mProgressBar.setOnDismissListener(null);
-//                        MeetingBase meetingBase = MeetingBase.parseJson(jsonObject);
-                        // go to meeting page .
-//                        OnlineMeetingActivity.startForResult(VideoMeetingDetailActivity.this, mMeetingID, mUserInfo ,meetingBase, REQUEST_ONLINE_MEETING_CODE);
+                                OnlineMeetingActivity.startForResult(
+                                        VideoMeetingDetailActivity.this,
+                                        mMeetingID,
+                                        mUserInfo,
+                                        meetingBase,
+                                        REQUEST_ONLINE_MEETING_CODE
+                                );
 
-                        final MeetingBase meetingBase = MeetingBase.parseJson(response);
-                        UiOnlineMeetingUtils.loadCocoInfo(VideoMeetingDetailActivity.this, meetingBase.getBaseMeetID(),
-                                mUserInfo.getUuid(), new UiOnlineMeetingUtils.ICallback() {
-                                    @Override
-                                    public void onSuccess(JSONObject response) {
-                                        JSONObject server = response.optJSONObject("server");
-                                        meetingBase.setToken(server.optString("token"));
-                                        meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
-                                        meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
-                                        OnlineMeetingActivity.startForResult(VideoMeetingDetailActivity.this,
-                                                mMeetingID, mUserInfo, meetingBase,
-                                                REQUEST_ONLINE_MEETING_CODE);
-                                        if (null != mProgressBar && mProgressBar.isShowing()){
-                                            mProgressBar.dismiss();
-                                        }
-                                        if(null != mStateRelativeLayout){
-                                            mStateRelativeLayout.setEnabled(true);
-                                        }
-                                    }
+                                dismissProgress();
 
-                                    @Override
-                                    public void onFailure(JSONObject response) {
+                            }
 
-                                    }
+                            @Override
+                            public void onFailure(JSONObject response) {
+                                dismissProgress();
+                            }
 
-                                    @Override
-                                    public void onNetError() {
-
-                                    }
-                                });
-
-                    }
-                });
-
+                            @Override
+                            public void onNetError() {
+                                dismissProgress();
+                            }
+                        });
             }
 
             @Override
             public void onFailure(JSONObject response) {
-                if (null != mProgressBar && mProgressBar.isShowing()){
-                    mProgressBar.dismiss();
-                }
-                if(null != mStateRelativeLayout){
-                    mStateRelativeLayout.setEnabled(true);
-                }
+                dismissProgress();
 
             }
 
             @Override
             public void onNetError() {
-                if (null != mProgressBar && mProgressBar.isShowing()){
-                    mProgressBar.dismiss();
-                }
-                if(null != mStateRelativeLayout){
-                    mStateRelativeLayout.setEnabled(true);
-                }
+                dismissProgress();
             }
         });
+    }
+
+    private void dismissProgress() {
+        if (null != mProgressBar && mProgressBar.isShowing()){
+            mProgressBar.dismiss();
+        }
+
+        if(null != mStateRelativeLayout){
+            mStateRelativeLayout.setEnabled(true);
+        }
     }
 
     public void init() {

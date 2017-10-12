@@ -107,7 +107,7 @@ public class CoCoUtils {
                     String type = object.optString("type");
                     //群聊的控制命令
                     String content = object.optString("content");
-                    Cog.i(TAG,"groupChat cmd: ===>> "+content);
+                    Cog.i(TAG,"groupChat content: ===>> "+content);
                     String from = object.optString("from");
                     //判断控制类型
                     if (ACTION_TYPE_CHAT.equals(type)) {//群聊

@@ -386,12 +386,12 @@ public class CollectivePrepareLessonsDetailActivity extends BaseHttpActivity imp
 
                             @Override
                             public void onFailure(JSONObject response) {
-
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                             }
 
                             @Override
                             public void onNetError() {
-
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                             }
                         });
 
