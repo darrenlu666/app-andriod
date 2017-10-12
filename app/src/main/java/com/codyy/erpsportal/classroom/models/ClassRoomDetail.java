@@ -3,10 +3,11 @@ package com.codyy.erpsportal.classroom.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.codyy.erpsportal.EApplication;
-import com.codyy.erpsportal.commons.utils.NetworkUtils;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.AsyncHttpGet;
+import com.koushikdutta.async.http.WebSocket;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,6 +25,10 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
     private String stream;
 
     private String urlType;
+
+    private DMS external;
+
+    private DMS internal;
 
     public String getUrlType() {
         return urlType;
@@ -56,8 +61,8 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
      * @param response
      * @return
      */
-    public static ClassRoomDetail parseResult(JSONObject response) {
-        ClassRoomDetail classRoomDetail = new ClassRoomDetail();
+    public static void parseResult(JSONObject response , final ISocketTestCallBack callBack) {
+        final ClassRoomDetail classRoomDetail = new ClassRoomDetail();
         List<ReceiveInfoEntity> receiveInfoEntityList = new ArrayList<>();
         JSONArray jsonArray = response.optJSONArray("receiveInfoList");
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -75,32 +80,81 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
         classRoomDetail.setGrade(response.isNull("grade") ? "" : response.optString("grade"));
         classRoomDetail.setUrlType(response.isNull("urlType") ? "" : response.optString("urlType"));
 
-        String directURL = response.optString("url");
         //17-10-11 根据网络情况返回不通的dmc
-        JSONObject internal = response.optJSONArray("internal").optJSONObject(0);
-        JSONObject external = response.optJSONArray("external").optJSONObject(0);
-        //判断网络类型
-        if(NetworkUtils.isNetWorkTypeWifi(EApplication.instance())){//wifi . 优先内网dms方便演示.
-            if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
-                directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
-            }else if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
-                directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
-            }
-        }else{//4G . 有限外网dms
-            if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
-                directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
-            }else if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
-                directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
-            }
-        }
-        classRoomDetail.setMainUrl(TextUtils.isEmpty(directURL) ? "" : directURL);
+        final JSONObject internal = response.optJSONArray("internal").optJSONObject(0);
+        final JSONObject external = response.optJSONArray("external").optJSONObject(0);
+
+        DMS indms = new DMS();
+        indms.setSocketUrl(internal.optString("socketUrl"));
+        indms.setRtmpUrl(internal.optString("rtmpUrl"));
+
+        DMS exdms = new DMS();
+        exdms.setSocketUrl(external.optString("socketUrl"));
+        exdms.setRtmpUrl(external.optString("rtmpUrl"));
+
+        classRoomDetail.setExternal(exdms);
+        classRoomDetail.setInternal(indms);
+
+        classRoomDetail.setMainUrl(response.optString("url"));
 
         classRoomDetail.setStream(response.isNull("stream") ? "" : response.optString("stream"));
         classRoomDetail.setSchoolName(response.isNull("schoolName") ? "" : response.optString("schoolName"));
         classRoomDetail.setTeacher(response.isNull("teacher") ? "" : response.optString("teacher"));
         classRoomDetail.setSubject(response.isNull("subject") ? "" : response.optString("subject"));
 
-        return classRoomDetail;
+//        return classRoomDetail;
+
+        //1. 判断内网的服务器是否可用
+        if(null != internal && null != external){
+            String socketUrl = external.optString("socketUrl");
+            Log.i("socket","test socket start !!!------------------"+socketUrl);
+
+            AsyncHttpGet get = new AsyncHttpGet("http://"+socketUrl);
+            get.setTimeout(500);
+
+            AsyncHttpClient.getDefaultInstance().websocket(get, "http", new AsyncHttpClient.WebSocketConnectCallback() {
+                @Override
+                public void onCompleted(Exception ex, WebSocket webSocket) {
+                    Log.i("socket","test socket end !!!-----------------error: "+ex);
+                    if (ex != null) {
+                        ex.printStackTrace();
+                        classRoomDetail.setMainUrl("rtmp://"+external.optString("rtmpUrl")+"/dms");
+                        callBack.omComplete(classRoomDetail);
+                        return;
+                    }
+                    classRoomDetail.setMainUrl("rtmp://"+internal.optString("rtmpUrl")+"/dms");
+                    callBack.omComplete(classRoomDetail);
+
+                    String ping ="{method: \"ping\", data: \"1111111111111\"}";
+                    webSocket.send(ping);
+
+                    webSocket.setStringCallback(new WebSocket.StringCallback() {
+                        public void onStringAvailable(String s) {
+                            System.out.println("I got a string: " + s);
+                        }
+                    });
+                }
+            });
+        }else{
+            callBack.omComplete(classRoomDetail);
+        }
+
+    }
+
+    public DMS getExternal() {
+        return external;
+    }
+
+    public void setExternal(DMS external) {
+        this.external = external;
+    }
+
+    public DMS getInternal() {
+        return internal;
+    }
+
+    public void setInternal(DMS internal) {
+        this.internal = internal;
     }
 
     @Override
@@ -133,5 +187,14 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
 
     public ClassRoomDetail(){
 
+    }
+
+
+    public interface ISocketTestCallBack{
+        /**
+         * 测速完返回详情.
+         * @return
+         */
+        void omComplete(ClassRoomDetail data);
     }
 }

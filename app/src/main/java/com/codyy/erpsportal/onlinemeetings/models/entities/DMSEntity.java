@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -12,6 +13,9 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.AsyncHttpGet;
+import com.koushikdutta.async.http.WebSocket;
 
 import org.json.JSONObject;
 
@@ -198,32 +202,56 @@ public class DMSEntity implements Parcelable{
                 Cog.d(TAG, "onResponse:" + response);
                 //优先获取内网的dmsip,如果不存在内网ip则使用外网ip.
                 JSONObject dms = response.optJSONObject("dms");
-                if(dms == null) return;
-                JSONObject internal = dms.optJSONArray("internal").optJSONObject(0);
-                JSONObject external = dms.optJSONArray("external").optJSONObject(0);
+                if(dms == null) {
+                    ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                    return;
+                }
+                final JSONObject internal = dms.optJSONArray("internal").optJSONObject(0);
+                final JSONObject external = dms.optJSONArray("external").optJSONObject(0);
 
                 //判断网络类型
-                if(NetworkUtils.isNetWorkTypeWifi(act.getApplication())){//wifi . 优先内网dms方便演示.
-                    if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
+
+                //1. 判断内网的服务器是否可用
+                String socketUrl = internal.optString("socketUrl");
+                Log.i("socket","test socket start !!!------------------"+socketUrl);
+
+                AsyncHttpGet get = new AsyncHttpGet("http://"+socketUrl);
+                get.setTimeout(500);
+
+                AsyncHttpClient.getDefaultInstance().websocket(get, "http", new AsyncHttpClient.WebSocketConnectCallback() {
+                    @Override
+                    public void onCompleted(Exception ex, WebSocket webSocket) {
+                        Log.i("socket","test socket end !!!-----------------error: "+ex);
+                        if (ex != null) {
+                            ex.printStackTrace();
+                            directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
+                            act.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    notifyDataUpdate();
+                                }
+                            });
+                            return;
+                        }
                         directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
-                        notifyDataUpdate();
-                    }else if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
-                        directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
-                        notifyDataUpdate();
-                    }else{
-                        ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                        act.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                notifyDataUpdate();
+                            }
+                        });
+
+                        String ping ="{method: \"ping\", data: \"1111111111111\"}";
+                        webSocket.send(ping);
+
+                        webSocket.setStringCallback(new WebSocket.StringCallback() {
+                            public void onStringAvailable(String s) {
+                                System.out.println("I got a string: " + s);
+                            }
+                        });
                     }
-                }else{//4G . 有限外网dms
-                    if(null != external && !TextUtils.isEmpty(external.optString("rtmpUrl"))){
-                        directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
-                        notifyDataUpdate();
-                    }else if(null != internal && !TextUtils.isEmpty(internal.optString("rtmpUrl"))){
-                        directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
-                        notifyDataUpdate();
-                    }else{
-                        ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
-                    }
-                }
+                });
+
             }
         }, new Response.ErrorListener() {
             @Override

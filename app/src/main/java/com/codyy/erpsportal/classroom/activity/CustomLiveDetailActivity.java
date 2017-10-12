@@ -469,15 +469,24 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
             public void onResponse(JSONObject response) {
                 if ("success".equals(response.optString("result"))) {
                     if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
-                        mClassRoomDetail = ClassRoomDetail.parseResult(response);
-                        mClassRoomDetail.setSubject(mSubject);
-                        mTitleTv.setText(mClassRoomDetail.getSchoolName());
+                        ClassRoomDetail.parseResult(response, new ClassRoomDetail.ISocketTestCallBack() {
+                            @Override
+                            public void omComplete(ClassRoomDetail data) {
+                                mClassRoomDetail = data;
+                                mClassRoomDetail.setSubject(mSubject);
+                                mTitleTv.setText(mClassRoomDetail.getSchoolName());
+                                initViews();
+                                addViewPager();
+                            }
+                        });
+
                     } else {
                         mRecordRoomDetail = RecordRoomDetail.parseResult(response);
                         mTitleTv.setText(mRecordRoomDetail.getSchoolName());
+                        initViews();
+                        addViewPager();
                     }
-                    initViews();
-                    addViewPager();
+
                 }
             }
         }, new Response.ErrorListener() {
