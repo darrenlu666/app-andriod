@@ -31,6 +31,7 @@ import java.util.Map;
  */
 public class DMSEntity implements Parcelable{
     private static final String TAG = DMSEntity.class.getSimpleName();
+    private static final String DMS_ERROR= "dms_error";
     private String dmsCode;
     private String dmsMainSpeakID;//main speaker uuid
     private String dmsAddress;//http://url.cn/dmc
@@ -52,7 +53,7 @@ public class DMSEntity implements Parcelable{
     public void  getServer(Activity act , MeetingBase meetingBase,String areaId , ICallBack callBack){
         synchronized(EApplication.instance()){
             mRegisters.add(callBack);
-            if(!TextUtils.isEmpty(directURL)){
+            if(!TextUtils.isEmpty(directURL) && !DMS_ERROR.equals(directURL)){
                 if(null != callBack && mRegisters.size()<= 1){
                     notifyDataUpdate();
                 }
@@ -231,12 +232,12 @@ public class DMSEntity implements Parcelable{
         }));*/
         String url = dmsAddress+ getParams(params);
         Cog.d(TAG, "sendRequest: AsyncHttpClient :" + url);
-        AsyncHttpClient.getDefaultInstance().executeJSONObject(new AsyncHttpGet(url), new AsyncHttpClient.JSONObjectCallback() {
+        AsyncHttpClient.getDefaultInstance().executeJSONObject(new AsyncHttpGet(url).setTimeout(10*1000), new AsyncHttpClient.JSONObjectCallback() {
             @Override
             public void onCompleted(Exception error, AsyncHttpResponse source, JSONObject result) {
                 if (error != null) {
                     error.printStackTrace();
-                    onError(error);
+                    onError(error,act);
                     return;
                 }
                 onSuccess(result, act);
@@ -244,11 +245,17 @@ public class DMSEntity implements Parcelable{
         });
     }
 
-    private void onError(Throwable error) {
+    private void onError(Throwable error,final Activity act) {
         Cog.e(TAG, "onErrorResponse:" + error);
-        ToastUtil.showToast("获取DMC失败!");
-        mRegisters.clear();
-        notifyDataUpdate();
+        act.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+//                ToastUtil.showToast("获取DMC失败!");
+//                mRegisters.clear();
+                directURL = DMS_ERROR;
+                notifyDataUpdate();
+            }
+        });
     }
 
     private void onSuccess(JSONObject response, final Activity act) {
@@ -256,7 +263,13 @@ public class DMSEntity implements Parcelable{
         //优先获取内网的dmsip,如果不存在内网ip则使用外网ip.
         JSONObject dms = response.optJSONObject("dms");
         if(dms == null) {
-            ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                }
+            });
+
             return;
         }
         final JSONObject internal = dms.optJSONArray("internal").optJSONObject(0);

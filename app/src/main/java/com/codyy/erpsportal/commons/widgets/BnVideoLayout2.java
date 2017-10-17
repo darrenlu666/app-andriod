@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
     private BnVideoView2.OnBNErrorListener mOnErrorListener;
     private BnVideoView2.OnPlayingListener mOnPlayingListener;
     private ITextClickListener mTextClickListener;
+    private ILoadingListener mLoadingListener;
     private int mTimeOut = MIN_TIME_OUT;
 
     public BnVideoLayout2(Context context) {
@@ -93,6 +95,11 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
                             //reset the timeout .
                             if(mTimeOut > MIN_TIME_OUT){
                                 mBnVideoView.setTimeOut(mTimeOut);
+                            }
+
+                            if(null!= mBnVideoView.getUrl() && !mBnVideoView.getUrl().contains("rtmp")){
+                                //dms 不合法
+                                if(null != mLoadingListener) mLoadingListener.onClick(v);
                             }
                         }
                     }
@@ -199,6 +206,10 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
         this.mTextClickListener = textClickListener;
     }
 
+    public void setLoadingListener(ILoadingListener mLoadingListener) {
+        this.mLoadingListener = mLoadingListener;
+    }
+
     /**
      * 设置混音器
      *
@@ -293,6 +304,10 @@ public class BnVideoLayout2 extends FrameLayout implements BnVideoView2.OnPlayin
     }
 
     public interface ITextClickListener {
+        void onClick(View v);
+    }
+
+    public interface ILoadingListener {
         void onClick(View v);
     }
 }
