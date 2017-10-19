@@ -24,7 +24,6 @@ import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -52,15 +51,11 @@ import com.codyy.erpsportal.commons.models.entities.MeetingConfig;
 import com.codyy.erpsportal.commons.models.entities.MeetingShow;
 import com.codyy.erpsportal.commons.models.entities.SystemMessage;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RequestSender;
-import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.services.ChatService;
 import com.codyy.erpsportal.commons.services.IMeeting;
 import com.codyy.erpsportal.commons.services.OnlineMeetingService;
-import com.codyy.erpsportal.commons.utils.CoCoUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DeviceUtils;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
@@ -83,9 +78,8 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.TabInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoShare;
-import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoCommand;
-import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
+import com.codyy.erpsportal.onlinemeetings.utils.MockChatCommand;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
@@ -94,7 +88,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -295,6 +288,11 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         checkShare();
         //同步申请的文字信息
         setPromptTab();
+
+        //测试.
+//        mHandler.postDelayed(()->{
+//            MockChatCommand.test();
+//            },2*1000);
     }
 
     private void startPublishService() {
@@ -918,7 +916,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         }
 
         if (null != mChatService) mChatService.stop();
-        mChatService = null;
     }
 
     public static void start(Context context, String mid, MeetingBase meetingBase) {
@@ -1146,7 +1143,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     setPromptTab();
                 }
                 break;
-//            case MeetingCommand.CANCEL_SPEAKER://取消发言人
             case MeetingCommand.INFO_CANCEL_SPEAKER://取消发言人
             case MeetingCommand.WEB_CANCEL_SPEAKER_ALL://取消发言人
                 mStartPrompt = -1;
@@ -1419,10 +1415,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             mIMeetingService = IMeetingService.Stub.asInterface(service);
             try {
                 mMeetingConfig = MeetingConfig.getSimulateConfig(mMeetingBase, mUserInfo);
-                //test start ======
-//                mMeetingConfig.setIp("10.5.52.101");
-//                mMeetingConfig.setPort(1981);
-                //test end =====
                 mIMeetingService.bindConfig(mMeetingConfig);
             } catch (RemoteException e) {
                 e.printStackTrace();

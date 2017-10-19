@@ -30,6 +30,7 @@ import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.commons.models.entities.MeetingAction;
 import com.codyy.erpsportal.commons.models.entities.SpeakerEntity;
 import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
+import com.codyy.erpsportal.commons.utils.CoCoUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.PullXmlUtils;
@@ -47,6 +48,8 @@ import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingA
 import com.codyy.erpsportal.onlinemeetings.models.entities.DMSEntity;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoCommand;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -691,7 +694,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
      */
     public void onEventMainThread(CoCoAction action) throws RemoteException {
         switch (action.getActionType()) {
-            case PullXmlUtils.TYPE_LOGIN://某人上线了
+            case CoCoCommand.TYPE_ONLINE://某人上线了
                 String userID  =  action.getActionResult();
                 String nickName = action.getNickName();
                 OnlineUserInfo comer = UiOnlineMeetingUtils.getOnlineUserByID(userID, mAllUsers);
@@ -729,8 +732,8 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                     }
                 }
                 break;
-            case PullXmlUtils.AGREE_SPEAKER_BACK: //把你设为发言人
-            case PullXmlUtils.AGREE_SPEAKER_BACK＿ALL://设置其他人为发言人,同意某人的发言申请.
+            case MeetingCommand.INFO_AGREE_SPEAKER_BACK: //把你设为发言人
+            case MeetingCommand.INFO_AGREE_SPEAKER_BACK＿ALL://设置其他人为发言人,同意某人的发言申请.
                 //增加发言人的个数
                 final OnlineUserInfo newSpeaker = UiOnlineMeetingUtils.getOnlineUserByID(action.getByOperationObject(),mAllUsers);
                 if(null != newSpeaker){
@@ -747,7 +750,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                 }
                 break;
             //has implemented on {@link OnlineMeetingActivity}
-            case PullXmlUtils.COMMAND_WHITE_BOARD_MARK: //授予-白板标注权限
+            case MeetingCommand.WEB_WHITE_BOARD_MARK: //授予-白板标注权限
                 /*String result = action.getActionResult();
                 mMeetingBase.setWhiteBoardManager(Boolean.valueOf(result));
                 if(mMeetingBase.isWhiteBoardManager()){
@@ -758,9 +761,8 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                     // TODO: 16-8-24 不再可以演示／删除文档 ...
                 }*/
                 break;
-            case PullXmlUtils.CANCEL_SPEAKER://取消发言人
-            case PullXmlUtils.WEB_CANCEL_SPEAKER://取消发言人
-            case PullXmlUtils.WEB_CANCEL_SPEAKER_ALL://取消发言人
+            case MeetingCommand.INFO_CANCEL_SPEAKER://取消发言人
+            case MeetingCommand.WEB_CANCEL_SPEAKER_ALL://取消发言人
                 //如果当前含有需要减少发言者 .
                 OnlineUserInfo deleteUser = UiOnlineMeetingUtils.getOnlineUserByID(action.getByOperationObject(),mSpeakers);
                 //更新我的发言人状态 .0

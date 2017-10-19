@@ -1,18 +1,13 @@
 package com.codyy.erpsportal.onlinemeetings.utils;
 
 
-import com.codyy.cocolibrary.COCO;
 import com.codyy.erpsportal.commons.models.entities.MeetingConfig;
 import com.codyy.erpsportal.commons.models.entities.RemoteDirectorConfig;
-import com.codyy.erpsportal.commons.utils.CoCoUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DeviceUtils;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoCommand;
 import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,8 +19,7 @@ import java.util.Map;
  */
 public class SendCMDUtils {
     private static final String TAG = "SendCMDUtils";
-    /** test token by poe **/
-    private static String mToken="tuRbha4Fz9rKjjStOcv8MTi9lrm1OknGwAneJBCVO1A8JzF5uaoc99HAbMsPYv6h";
+
     /**
      * 基本参数
      */
@@ -124,9 +118,10 @@ public class SendCMDUtils {
      */
     public static String setProposerSpeak(MeetingConfig meetingConfig, String id,String to) {
         return appendBaseVal(CoCoCommand.SINGLE_CHAT,
-                constructMeetingCMD(MeetingCommand.CMD_APPLY_SPEAKER,
+                constructMeetingCMD(
+                        MeetingCommand.CMD_APPLY_SPEAKER,
                         id,
-                        id,
+                        to,
                         meetingConfig.getuName()
                 )).toString();
     }
@@ -157,9 +152,9 @@ public class SendCMDUtils {
 
     /**
      * 切演示模式
+     * @deprecated 移动端无切换权限.
      */
     public static String setDemonstrationMode(MeetingConfig meetingConfig) {
-
         /*return appendBaseVal(CoCoCommand.SINGLE_CHAT,
                 constructMeetingCMD(MeetingCommand.CMD_CANCEL_SPEAKER,
                         meetingConfig.getUserId(),
@@ -171,6 +166,7 @@ public class SendCMDUtils {
 
     /**
      * 切视频模式
+     * @deprecated 移动端无切换权限.
      */
     public static String setVideoMode(MeetingConfig meetingConfig) {
         /*return appendBaseVal(CoCoCommand.SINGLE_CHAT,
@@ -182,83 +178,86 @@ public class SendCMDUtils {
         return "";
     }
 
+
+    /**
+     * 创建table 返回tableId演示文档用.
+     * @param groupId
+     * @param tableName
+     * @return
+     */
+    public static String createTableJson(String groupId, String tableName) {
+
+        String docs = "\"data\":{" +
+                            "\"tabName\":\"" +tableName+"\"," +
+                            "\"groupId\":\"" +groupId+"\"" +
+                            "    }," +
+                        "\"type\": \"" +MeetingCommand.WHITE_PAD_ADD+"\"," +
+                        "\"userType\":\"all\"," +
+                        "\"clientIds\":[]," +
+                        "\"groupId\":\"" +groupId+"\"";
+
+        return appendBaseVal(CoCoCommand.CONTROL_COMMAND,docs).toString();
+    }
+
     /**
      * 演示文档
      * @param meetingConfig
-     * @param to
      * @param current
-     * @param from_null
      * @param url
      * @param id
      * @param filename
      * @return
      */
-    public static String setDemonstrationDoc(MeetingConfig meetingConfig,String to,String current,String from_null,String url,String id,String filename ) {
-        HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("send_nick",URLEncoder.encode(meetingConfig.getuName()));
-        hashMap.put("time",System.currentTimeMillis()+"");
-        hashMap.put("enterpriseId",meetingConfig.getEnterpriseId());
-        hashMap.put("serverType",meetingConfig.getServerType());
-        hashMap.put("cipher",meetingConfig.getCipher());
-        hashMap.put("from",meetingConfig.getFrom());
-        hashMap.put("group", meetingConfig.getGroup());
-        hashMap.put("to",meetingConfig.getGroup());
-        hashMap.put("api","callAll");
-        hashMap.put("call",PullXmlUtils.COMMAND_DO＿WRITE);
-        hashMap.put("type", "meet");
-        //extra start
-        // TODO: 16-8-26 ｐａｒｓ＝　｛xxx｝
-        StringBuilder parsBuild = new StringBuilder();
-        parsBuild.append("[{");
-        parsBuild.append("\"url\":\""+url+"\",");
-        parsBuild.append("\"o\":\"wp\",");
-        parsBuild.append("\"send_nick\":\""+URLEncoder.encode(meetingConfig.getuName())+"\",");
-        parsBuild.append("\"isDynamicPPT\":\"N\",");
-        parsBuild.append("\"id\":\""+id+"\",");
-        parsBuild.append("\"to\":\""+meetingConfig.getMid()+"\",");
-        parsBuild.append("\"filename\":\""+URLEncoder.encode(URLEncoder.encode(filename))+"\",");
-        parsBuild.append("\"act\":\"ShowDoc\",");
-        parsBuild.append("\"type\":\"group\",");
-        parsBuild.append("\"p2p\":\"1\",");
-        parsBuild.append("\"current\":\""+current+"\",");
-        parsBuild.append("\"from\":\""+meetingConfig.getFrom()+"\"");
-        parsBuild.append("}]");
-        hashMap.put("pars",parsBuild.toString());
-        return  buildMsg(hashMap);
+    public static String setDemonstrationDoc(MeetingConfig meetingConfig,String url,String current,String id,String filename ) {
+
+        String docs = "\"data\": {" +
+                "\"to\": \"" +meetingConfig.getMid()+"\"," +
+                "\"tabId\": \"" +"tableId"+"\"," +
+                "\"tabName\": \"白板\"," +
+                "\"o\": \"wp\"," +
+                "\"from\": \"" +meetingConfig.getFrom()+"\"," +
+                "\"type\": \"group\"," +
+                "\"p2p\": \"1\"," +
+                "\"url\": \"" +url+"\"," +
+                "\"isDynamicPPT\": \"N\"," +
+                "\"id\": \"" +id+"\"," +
+                "\"groupId\": \"" +meetingConfig.getGid()+"\"," +
+                "\"current\": \"" +current+"\"," +
+                "\"filename\": \"" +filename+"\"," +
+                "\"send_nick\": \"" +meetingConfig.getuName()+"\"," +
+                "\"key\": \"doc_" +id+"\"," +
+                "\"act\": \"" +MeetingCommand.SHOW_DOC+"\"" +
+                "}," +
+                "\"groupId\": \"" +meetingConfig.getGid()+"\"," +
+                "\"type\": \"" +MeetingCommand.WHITE_PAD_ADD+"\"," +
+                "\"userType\": \"all\"";
+
+        return appendBaseVal(CoCoCommand.CONTROL_COMMAND,docs).toString();
     }
 
     /**
      * 文档翻页
      */
-    public static String setChangeDoc(MeetingConfig meetingConfig ,String to,String current,String owner) {
-        HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("time",System.currentTimeMillis()+"");
-        hashMap.put("from",meetingConfig.getFrom());
-        hashMap.put("to",meetingConfig.getGroup());
-        hashMap.put("group", meetingConfig.getGroup());
-        hashMap.put("send_nick",URLEncoder.encode(meetingConfig.getuName()));
-        hashMap.put("serverType",meetingConfig.getServerType());
-        hashMap.put("cipher",meetingConfig.getCipher());
-        hashMap.put("enterpriseId",meetingConfig.getEnterpriseId());
-        hashMap.put("api","callAll");
-        hashMap.put("call",PullXmlUtils.COMMAND_DO＿WRITE);
-        hashMap.put("type", "meet");
+    public static String setChangeDoc(MeetingConfig meetingConfig ,String tableId,String current,String resId) {
 
-        // TODO: 16-8-26 ｐａｒｓ＝　｛xxx｝
-        StringBuilder parsBuild = new StringBuilder();
-        parsBuild.append("[{");
-        parsBuild.append("\"owner\":\""+("doc_" + owner)+"\",");
-        parsBuild.append("\"act\":\"changeDoc\",");
-        parsBuild.append("\"o\":\"wp\",");
-        parsBuild.append("\"p2p\":\"1\",");
-        parsBuild.append("\"send_nick\":\""+URLEncoder.encode(meetingConfig.getuName())+"\",");
-        parsBuild.append("\"current\":\""+current+"\",");
-        parsBuild.append("\"to\":\""+meetingConfig.getMid()+"\",");
-        parsBuild.append("\"type\":\"group\",");
-        parsBuild.append("\"from\":\""+meetingConfig.getFrom()+"\"");
-        parsBuild.append("}]");
-        hashMap.put("pars",parsBuild.toString());
-        return buildMsg(hashMap);
+        String docs = "\"data\": {" +
+                                "\"to\": \"" +meetingConfig.getMid()+"\"," +
+                                "\"current\": \"" +current+"\"," +
+                                "\"owner\": \"doc_" +resId+"\"," +
+                                "\"o\": \"wp\"," +
+                                "\"send_nick\": \"" +meetingConfig.getuName()+"\"," +
+                                "\"from\": \"" +meetingConfig.getFrom()+"\"," +
+                                "\"act\": \"" +MeetingCommand.WHITE_CHANGE_DOC+"\"" +
+                                "\"type\": \"group\"," +
+                                "\"p2p\": \"1\"," +
+                                "}," +
+                        "\"groupId\": \"" +meetingConfig.getGid()+"\"," +
+                        "\"tabId\": \"" +tableId+"\"," +
+                        "\"sequence\": 1," +
+                        "\"type\": \"" +MeetingCommand.WHITE_CHANGE_DOC+"\"," +
+                        "\"clientId\": \"123213213\"";
+
+        return appendBaseVal(MeetingCommand.WHITE_PAD_DOC,docs).toString();
     }
 
     /**
@@ -272,40 +271,39 @@ public class SendCMDUtils {
      */
     public static String setDocZoom(MeetingConfig meetingConfig ,String to,String index,String from_null,String owner){
         return appendBaseVal(CoCoCommand.SINGLE_CHAT,
-                constructMeetingCMD(MeetingCommand.CMD_CANCEL_SPEAKER,
+                constructMeetingCMD(MeetingCommand.ZOOM,
                         meetingConfig.getUserId(),
                         meetingConfig.getUserId(),
                         meetingConfig.getuName()
                 )).toString();
     }
 
-    public static String setDelectDoc(MeetingConfig meetingConfig ,String to,String id ) {
-        HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("send_nick",URLEncoder.encode(meetingConfig.getuName()));
-        hashMap.put("time",System.currentTimeMillis()+"");
-        hashMap.put("enterpriseId",meetingConfig.getEnterpriseId());
-        hashMap.put("serverType",meetingConfig.getServerType());
-        hashMap.put("cipher",meetingConfig.getCipher());
-        hashMap.put("from",meetingConfig.getFrom());
-        hashMap.put("to",meetingConfig.getGroup());
-        hashMap.put("group", meetingConfig.getGroup());
-        hashMap.put("api","callAll");
-        hashMap.put("call",PullXmlUtils.COMMAND_DO＿WRITE);
-        hashMap.put("type", "meet");
-        // TODO: 16-8-26 ｐａｒｓ＝　｛xxx｝
-        StringBuilder parsBuild = new StringBuilder();
-        parsBuild.append("[{");
-        parsBuild.append("\"key\":\""+("doc_" + id)+"\",");
-        parsBuild.append("\"act\":\"DeleteDoc\",");
-        parsBuild.append("\"o\":\"wp\",");
-        parsBuild.append("\"p2p\":\"1\",");
-        parsBuild.append("\"send_nick\":\""+URLEncoder.encode(meetingConfig.getuName())+"\",");
-        parsBuild.append("\"to\":\""+meetingConfig.getMid()+"\",");
-        parsBuild.append("\"type\":\"group\",");
-        parsBuild.append("\"from\":\""+meetingConfig.getFrom()+"\"");
-        parsBuild.append("}]");
-        hashMap.put("pars",parsBuild.toString());
-        return buildMsg(hashMap);
+    /**
+     * 关闭演示
+     * @param meetingConfig
+     * @param tableId 文档所属的tableId
+     * @param id
+     * @return
+     */
+    public static String setDelectDoc(MeetingConfig meetingConfig ,String tableId,String id ) {
+        String docs = "\"data\": {" +
+                "\"to\": \"" +meetingConfig.getMid()+"\"," +
+                "\"groupId\": \"" +meetingConfig.getGid()+"\"," +
+                "\"tabId\": \"" +tableId+"\"," +
+                "\"tabName\": \"白板\"," +
+                "\"o\": \"wp\"," +
+                "\"send_nick\": \"" +meetingConfig.getuName()+"\"," +
+                "\"from\": \"" +meetingConfig.getFrom()+"\"," +
+                "\"act\": \"" +MeetingCommand.DELETE_DOC+"\"" +
+                "\"type\": \"group\"," +
+                "\"p2p\": \"1\"," +
+                "\"key\": \"doc_" +id+"\"," +
+                "}," +
+                "\"groupId\": \"" +meetingConfig.getGid()+"\"," +
+                "\"type\": \"" +MeetingCommand.WHITE_PAD_REMOVE+"\"," +
+                "\"userType\": \"all\"";
+
+        return appendBaseVal(CoCoCommand.CONTROL_COMMAND,docs).toString();
     }
 
     /**
@@ -401,6 +399,7 @@ public class SendCMDUtils {
         return  jpsb.toString();
     }
 
+
     /**
      * 构建web命令1.
      * @param cmd
@@ -452,7 +451,7 @@ public class SendCMDUtils {
                 "0," +
                 "\"\"," +
                 "[\"" +cmd+"\"," +
-                "\"" +toUserId+"\", " +
+                "\"" +sendUserId+"\", " +
                 "2, " +
                 "[\"" +sendUserId+"\"," +
                 "\"\"," +

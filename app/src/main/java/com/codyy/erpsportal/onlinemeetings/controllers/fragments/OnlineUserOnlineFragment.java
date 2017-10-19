@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.SingleChatActivity;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.commons.models.entities.LoginOut;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
@@ -24,6 +23,8 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoCommand;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 
@@ -131,14 +132,14 @@ public class OnlineUserOnlineFragment extends OnlineFragmentBase {
     private void goVideo(OnlineUserInfo data) {
         EventBus.getDefault().post(OnlineInteractVideoFragment.ACTION_CHOOSE_SPEAKER_END);
         CoCoAction action = new CoCoAction();
-        action.setActionType(PullXmlUtils.SWITCH_MODE);
+        action.setActionType(MeetingCommand.WEB_SWITCH_MODE);
         action.setActionResult(OnlineInteractFragment.ACTION_SHOW_DOCUMENT);
         EventBus.getDefault().post(action);
         EventBus.getDefault().post(data);
     }
 
     private void goMessage(OnlineUserInfo data) {
-        Cog.i(TAG,"login user role :"+data.getRole());
+        Cog.i(TAG,"login user role :"+String.valueOf(data.getRole()));
         if(mMeetingBase.getBaseRole()> -1 && mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3) return;
         if(null != mUserInfo && data.isOnline() && !mUserInfo.getBaseUserId().equals(data.getId())){
             //开始聊天
@@ -209,16 +210,16 @@ public class OnlineUserOnlineFragment extends OnlineFragmentBase {
      */
     public void onEventMainThread(CoCoAction action) throws RemoteException {
         switch (action.getActionType()) {
-            case PullXmlUtils.TYPE_LOGIN://某人上线了
-            case PullXmlUtils.TYPE_LOGIN_OUT://某人下线了
+            case CoCoCommand.TYPE_ONLINE://某人上线了
+            case CoCoCommand.INFO_LEAVE_MEETING://某人下线了
                 Cog.e(TAG,"onEventMainThread(CoCoAction action) Refresh 在线用户列表～ "+action.getActionType());
                 //更新用户的在线数据状态.
                 if(getParentActivity() != null){
                     loadData();
                 }
                 break;
-            case PullXmlUtils.AGREE_SPEAKER_BACK: //把你设为发言人
-            case PullXmlUtils.AGREE_SPEAKER_BACK＿ALL://设置其他人为发言人,同意某人的发言申请.
+            case MeetingCommand.INFO_AGREE_SPEAKER_BACK: //把你设为发言人
+            case MeetingCommand.INFO_AGREE_SPEAKER_BACK＿ALL://设置其他人为发言人,同意某人的发言申请.
                 String id = action.getByOperationObject();
                 for(int i = 0; i< mData.size();i++){
                     if(mData.get(i).getId().equals(id)){
@@ -227,9 +228,8 @@ public class OnlineUserOnlineFragment extends OnlineFragmentBase {
                 }
                 mAdapter.notifyDataSetChanged();
                 break;
-            case PullXmlUtils.CANCEL_SPEAKER://取消发言人
-            case PullXmlUtils.WEB_CANCEL_SPEAKER://取消发言人
-            case PullXmlUtils.WEB_CANCEL_SPEAKER_ALL://取消发言人
+            case MeetingCommand.INFO_CANCEL_SPEAKER://取消发言人
+            case MeetingCommand.WEB_CANCEL_SPEAKER_ALL://取消发言人
                 Cog.e(TAG,"onEventMainThread(CoCoAction action) Refresh 在线用户列表～ "+action.getActionType());
                 String id2 = action.getByOperationObject();
                 for(int i = 0; i< mData.size();i++){

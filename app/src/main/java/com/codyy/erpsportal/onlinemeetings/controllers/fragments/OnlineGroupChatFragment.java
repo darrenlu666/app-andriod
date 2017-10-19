@@ -24,6 +24,7 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineChatReceiverViewHolder;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
@@ -215,7 +216,7 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      */
     public void onEventMainThread(CoCoAction action) {
         switch (action.getActionType()) {
-            case PullXmlUtils.CHAT_IS_CLOSE_BACK:
+            case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
                     canSay(false);
                 } else {

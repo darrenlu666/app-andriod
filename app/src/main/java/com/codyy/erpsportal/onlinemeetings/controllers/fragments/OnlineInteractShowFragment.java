@@ -32,6 +32,7 @@ import com.artifex.mupdfdemo.ReaderView;
 import com.artifex.mupdfdemo.SearchTaskResult;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
@@ -538,7 +539,9 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                         public void onSuccess(JSONObject response) {
                             //http服务器数据删除成功
                             try {
-                                getCocoService().setDelectDoc(mMeetID, doc.getShowResID());
+                                // TODO: 17-10-13 等待生成一个tableId.
+                                String tableId = mMeetID;
+                                getCocoService().setDelectDoc(tableId, doc.getShowResID());
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
@@ -716,7 +719,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
     public void onEventMainThread(CoCoAction action) throws RemoteException {
         //发言人的变更/更新文档列表
         switch (action.getActionType()) {
-            case PullXmlUtils.COMMAND_WHITE_BOARD_MARK: //授予-白板标注权限
+            case MeetingCommand.WEB_WHITE_BOARD_MARK: //授予-白板标注权限
                 String result = action.getActionResult();
                 mMeetingBase.setWhiteBoardManager(Boolean.valueOf(result) ? "1" : "0");
                 updateDataRole();// TODO: 16-8-24 文档显示ＵＩ变化，可以演示，可以删除 ...
@@ -789,15 +792,15 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
     public void onEventMainThread(DocControl action) throws RemoteException {
         Cog.e(TAG, "DocControl: " + action.getActionType());
 
-        if (action.getFrom().equals(mUserInfo.getBaseUserId())) {
+        if (null != action.getFrom() && action.getFrom().equals(mUserInfo.getBaseUserId())) {
             //如果命令是自己的
             return;
         }
 
         switch (action.getActionType()) {
-            case PullXmlUtils.CHANGE_DOC_PAD://演示白板
-                break;
-            case PullXmlUtils.SHOW_DOC://演示文档
+            /*case PullXmlUtils.CHANGE_DOC_PAD://演示白板
+                break;*/
+            case MeetingCommand.SHOW_DOC://演示文档
                 mIsFromServerChooseTab = true;
                 int index = UiOnlineMeetingUtils.getResourceIndex(action.getId(), mList);
                 if (index > -1) {
@@ -807,7 +810,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                     loadData();
                 }
                 break;
-            case PullXmlUtils.CHANGE_DOC:// 翻页
+            case MeetingCommand.WHITE_CHANGE_DOC:// 翻页
                 //过滤掉自己发送的命令
                 if (!action.getFrom().equals(mUserInfo.getBaseUserId())) {
                     mIsFromServerPagerChange = true;
@@ -838,9 +841,9 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                     }
                 }
                 break;
-            case PullXmlUtils.ZOOM://缩放
+            case MeetingCommand.ZOOM://缩放
                 break;
-            case PullXmlUtils.DELETE_DOC://关闭文档
+            case MeetingCommand.DELETE_DOC://关闭文档
                 String key = action.getKey();
                 if (key != null && key.contains("_")) {
                     mIsFromServerCloseTab = true;

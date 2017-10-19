@@ -1,28 +1,25 @@
 package com.codyy.erpsportal.onlinemeetings.controllers.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
-import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
-import com.codyy.erpsportal.groups.controllers.adapters.OnlineMeetingInteractAdapter;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.commons.models.entities.MeetingAction;
-import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
-import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
 import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
+import com.codyy.erpsportal.commons.utils.ScreenBroadCastUtils;
 import com.codyy.erpsportal.commons.widgets.CodyyViewPager;
+import com.codyy.erpsportal.groups.controllers.adapters.OnlineMeetingInteractAdapter;
+import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
+import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
+
 import butterknife.Bind;
 import de.greenrobot.event.EventBus;
 
@@ -213,7 +210,7 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
     public void onEventMainThread(CoCoAction action) throws RemoteException {
 
         switch (action.getActionType()) {
-            case PullXmlUtils.SWITCH_MODE :
+            case MeetingCommand.WEB_SWITCH_MODE :
                 //跟随wen切换模式 .
                 Cog.e(TAG,action.getByOperationObject()+","+action.getActionResult());
                  if(action.getActionResult().equals(ACTION_SHOW_VIDEO)){//演示模式
@@ -240,17 +237,6 @@ public class OnlineInteractFragment extends OnlineFragmentBase {
                          }
                      }
                 }
-                break;
-            case PullXmlUtils.CHAT_IS_CLOSE_BACK :
-                 /*
-                 * setActionResult = [true] 设置某人禁言
-                 * setActionResult = [false] 取消某人禁言
-                 */
-                break;
-            case PullXmlUtils.REFUSE_SPEAKER_BACK :
-                /**
-                 * setActionResult = ["3d43ac9f912e48299d10293213a75400"]  主持人拒绝某人申请发言
-                 */
                 break;
             default:
                 break;

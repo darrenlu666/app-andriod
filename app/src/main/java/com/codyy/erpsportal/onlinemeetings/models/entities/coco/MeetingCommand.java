@@ -8,17 +8,42 @@ package com.codyy.erpsportal.onlinemeetings.models.entities.coco;
 public class MeetingCommand {
 
     /**
-     * 翻页
+     * 文档演示.
+     */
+    public final static String WHITE_PAD_ADD = "whitePadAddTab";
+
+    /**
+     * 创建新的白板成功.
+     */
+    public final static String WHITE_PAD_NEW = "whitePadCreateTab";
+
+    /**
+     * 关闭文档演示
+     *"type": "whitePadRemoveTab",
+     */
+    public final static String WHITE_PAD_REMOVE = "whitePadRemoveTab";
+    /**
+     * 文档操作-翻页/滚动.
+     */
+    public final static String WHITE_PAD_DOC = "whitePad";
+
+
+    /**
+     * 文档-翻页
      **/
-    public final static String CHANGE_DOC = "changeDoc";
+    public final static String WHITE_CHANGE_DOC = "changeDoc";
+
+    /**
+     * 文档-滚动.
+     */
+    public final static String WHITE_SCROLL_DOC = "scroll";
+
+
     /**
      * 切换到白板.
      */
     public final static String CHANGE_DOC_PAD = "ChangeDoc";
-    /**
-     * 文档操作：翻页，
-     **/
-    public final static String COMMAND_DO＿WRITE = "communication.doWrite";//操作文档
+
     /**
      * 缩放文档
      **/
@@ -35,11 +60,11 @@ public class MeetingCommand {
     /**
      * 上传文档
      */
-    public final static String WEB_ADD_DOCUMENT = "communication.addDocItem";
+    public final static String WEB_ADD_DOCUMENT = "addDocItem";
     /**
      * 刷新文档列表
      */
-    public final static String COMMAND_REFRESH_DOC = "communication.showDocList";
+    public final static String COMMAND_REFRESH_DOC = "showDocList";
 
 
     /**
@@ -129,6 +154,7 @@ public class MeetingCommand {
      * 切换模式
      **/
     public final static String WEB_SWITCH_MODE = "turnMode";
+
     /**
      * web主持人-禁止参会者文本聊天["noChat", true/false]
      **/
@@ -151,6 +177,7 @@ public class MeetingCommand {
     public final static String WEB_COMMAND_UN_PUBLISH = "unPublish";
 
     public final static String COMMON_RECEIVE_PLAY = "commonReceivePlay";
+
     public final static String LOCATION_RELOAD = "location.reload";
 
     /**

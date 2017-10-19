@@ -19,25 +19,25 @@ import android.widget.Toast;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.commons.controllers.activities.SingleChatActivity;
-import com.codyy.erpsportal.onlinemeetings.controllers.adapters.MessageAdapter;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
-import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
-import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.commons.models.entities.UpdateCantacts;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.services.IMeeting;
-import com.codyy.erpsportal.onlinemeetings.models.dao.ChatDataHelper;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NotifyUtils;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
 import com.codyy.erpsportal.commons.widgets.ComposeView;
+import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
+import com.codyy.erpsportal.onlinemeetings.controllers.adapters.MessageAdapter;
+import com.codyy.erpsportal.onlinemeetings.models.dao.ChatDataHelper;
+import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
+import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 
 import java.net.URLDecoder;
@@ -351,7 +351,7 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
      */
     public void onEventMainThread(CoCoAction action) {
         switch (action.getActionType()) {
-            case PullXmlUtils.CHAT_IS_CLOSE_BACK:
+            case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
                     canSay(false);
                 } else {

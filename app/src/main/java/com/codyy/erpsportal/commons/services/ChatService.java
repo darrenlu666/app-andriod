@@ -197,12 +197,17 @@ public class ChatService extends Service {
             new InitSocketThread().start();
         }
 
+        @Override
+        public void createTable(String groupId, String tableName) throws RemoteException {
+            sendMsgs(SendCMDUtils.createTableJson(groupId,tableName));
+        }
+
         /**
          *演示文档 （白板的COCO消息比较特殊）,发送文档演示前，先发一条切换演示模式的消息
          */
         @Override
         public void setDemonstrationDoc(String to, String current, String from_null, String url, String id, String filename) {
-            sendMsgs(SendCMDUtils.setDemonstrationDoc(mMeetingConfig, to, current, from_null, url, id, filename));
+            sendMsgs(SendCMDUtils.setDemonstrationDoc(mMeetingConfig, url,current, id, filename));
         }
 
         /**
