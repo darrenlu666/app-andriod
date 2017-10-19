@@ -562,7 +562,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
     //打开或关闭本地摄像头 .
     @OnClick(R.id.iv_video_control_online_interact_video)
     void openOrCloseLocalVideo() {
-        // TODO: 16-9-5 挡住５００ｍｓ之内的连续点击
+        // 16-9-5 挡住５００ｍｓ之内的连续点击
         mHandler.removeCallbacks(mOpenOrCloseRunnable);
         mHandler.postDelayed(mOpenOrCloseRunnable,PERIOD_DELAY);
     }
@@ -749,18 +749,6 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                     }
                 }
                 break;
-            //has implemented on {@link OnlineMeetingActivity}
-            case MeetingCommand.WEB_WHITE_BOARD_MARK: //授予-白板标注权限
-                /*String result = action.getActionResult();
-                mMeetingBase.setWhiteBoardManager(Boolean.valueOf(result));
-                if(mMeetingBase.isWhiteBoardManager()){
-                    //拥有了白板标注权限
-                    // TODO: 16-8-24 文档表西餐形式变化，可以演示，可以删除 ...
-                }else{
-                    //被取消了白板标注权限
-                    // TODO: 16-8-24 不再可以演示／删除文档 ...
-                }*/
-                break;
             case MeetingCommand.INFO_CANCEL_SPEAKER://取消发言人
             case MeetingCommand.WEB_CANCEL_SPEAKER_ALL://取消发言人
                 //如果当前含有需要减少发言者 .
@@ -782,6 +770,31 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                         startAllSpeaker();
                     }
                 }
+                break;
+            case MeetingCommand.WEB_STOP_AUDIO://参会者禁言(web)
+                mAudioControlImageView.setEnabled(false);
+                isAudioOn = true;
+                mHandler.removeCallbacks(mOpenOrCloseAudioRunnable);
+                mHandler.postDelayed(mOpenOrCloseAudioRunnable,PERIOD_DELAY);
+                break;
+            case MeetingCommand.WEB_PUBLISH_AUDIO://取消参会者禁言(web)
+                mAudioControlImageView.setEnabled(true);
+                isAudioOn = false;
+                mHandler.removeCallbacks(mOpenOrCloseAudioRunnable);
+                mHandler.postDelayed(mOpenOrCloseAudioRunnable,PERIOD_DELAY);
+                break;
+            case MeetingCommand.WEB_STOP_VIDEO://设置参会者禁画面(web)
+                //本地视频控制disable.并设置当前当前为打开状态.
+                mVideoControlImageView.setEnabled(false);
+                isVideoOn = true;
+                mHandler.removeCallbacks(mOpenOrCloseRunnable);
+                mHandler.postDelayed(mOpenOrCloseRunnable,PERIOD_DELAY);
+                break;
+            case MeetingCommand.WEB_PUBLISH_VIDEO://取消参会者禁画面
+                mVideoControlImageView.setEnabled(true);
+                isVideoOn = false;
+                mHandler.removeCallbacks(mOpenOrCloseRunnable);
+                mHandler.postDelayed(mOpenOrCloseRunnable,PERIOD_DELAY);
                 break;
             /*case PullXmlUtils.COMMON_RECEIVE_PLAY://开启轮巡 {#手机端暂时不参与轮巡}
                *//* if(mMeetingBase.getBaseRole()<MeetingBase.BASE_MEET_ROLE_3){

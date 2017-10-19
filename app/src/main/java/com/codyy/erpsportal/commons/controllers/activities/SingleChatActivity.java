@@ -32,6 +32,10 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
     public static String CHAT_TYPE = "chat_type";
     public static String HAS_UNREAD = "has_unread";
     public static String CHAT_MESSAGE = "chat_message";
+
+    public static String EXTRA_FLAG_ALL_SAY = "chat_message";//全局禁止聊天 0:正常 1:禁止.
+
+
     public static int CHAT_TYPE_SINGLE = 0x01;
     public static final String KEY_TO_CHAT_ID = "key_to_chat_id";
     public static final String USER_NAME = "user_name";
@@ -41,6 +45,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
     private Intent mIntent;
     private TextView mTitle;
     private Button mBtnBack;
+    private int mCanSay = 0;
    //private ChatMessage mChatMessage;
 
     private ServiceConnection mMeetingServiceConn = new ServiceConnection() {
@@ -84,6 +89,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         bundle.putString(USER_NAME, getIntent().getStringExtra(USER_NAME));
         bundle.putString(USER_HEAD_URL, getIntent().getStringExtra(USER_HEAD_URL));
         bundle.putString(MEETING_ID, getIntent().getStringExtra(MEETING_ID));
+        bundle.putInt(EXTRA_FLAG_ALL_SAY,getIntent().getIntExtra(EXTRA_FLAG_ALL_SAY,0));
         onLineChatMessageFragment.setArguments(bundle);
         FragmentTransaction trans = getSupportFragmentManager()
                 .beginTransaction();
@@ -141,7 +147,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         context.startActivity(intent);
     }
 
-    public static void start(Activity context,String meetId , ChatMessage message){
+    public static void start(Activity context,String meetId , ChatMessage message,int canSay){
         Intent intent = new Intent(context, SingleChatActivity.class);
         intent.putExtra(SingleChatActivity.CHAT_TYPE, SingleChatActivity.CHAT_TYPE_SINGLE);
         intent.putExtra(SingleChatActivity.KEY_TO_CHAT_ID, message.getFrom());

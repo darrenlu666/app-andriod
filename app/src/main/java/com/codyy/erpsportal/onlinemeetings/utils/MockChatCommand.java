@@ -1,5 +1,6 @@
 package com.codyy.erpsportal.onlinemeetings.utils;
 
+import com.codyy.erpsportal.commons.models.entities.MeetingConfig;
 import com.codyy.erpsportal.commons.utils.CoCoUtils;
 
 import java.util.ArrayList;
@@ -217,7 +218,7 @@ public class MockChatCommand {
         new Thread(()->{
             for(String cmd : commands){
                 try {
-                    CoCoUtils.parseJson(cmd);
+                    CoCoUtils.parseJson(cmd,new MeetingConfig());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -244,7 +245,7 @@ public class MockChatCommand {
 
             for(String cmd : commands){
                 try {
-                    CoCoUtils.parseJson(cmd);
+                    CoCoUtils.parseJson(cmd,new MeetingConfig());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

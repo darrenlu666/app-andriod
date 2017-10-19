@@ -1177,7 +1177,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 break;
             case MeetingCommand.WEB_ACTION_KICK_OUT://踢出会议
 
-                String userid = action.getByOperationObject();
+                String userid = action.getActionResult();
 
                 Cog.e(TAG, "踢出会议～～～：" + (userid != null ? userid : "null"));
 
@@ -1292,6 +1292,13 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     mMeetingBase.setBaseChat("1");
                 } else {
                     mMeetingBase.setBaseChat("0");
+                }
+                break;
+            case MeetingCommand.WEB_CHAT_CONTROL://全局禁止聊天.
+                if (action.getActionResult().equals("true")) {
+                    mMeetingBase.setBaseSay(1);
+                } else {
+                    mMeetingBase.setBaseSay(0);
                 }
                 break;
             case MeetingCommand.INFO_END_MEET://会议结束 .

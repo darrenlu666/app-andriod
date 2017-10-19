@@ -208,11 +208,11 @@ public class SendCMDUtils {
      * @param filename
      * @return
      */
-    public static String setDemonstrationDoc(MeetingConfig meetingConfig,String url,String current,String id,String filename ) {
+    public static String setDemonstrationDoc(MeetingConfig meetingConfig,String url,String current,String id,String filename,String tableId ) {
 
         String docs = "\"data\": {" +
                 "\"to\": \"" +meetingConfig.getMid()+"\"," +
-                "\"tabId\": \"" +"tableId"+"\"," +
+                "\"tabId\": \"" +tableId+"\"," +
                 "\"tabName\": \"白板\"," +
                 "\"o\": \"wp\"," +
                 "\"from\": \"" +meetingConfig.getFrom()+"\"," +
@@ -240,22 +240,29 @@ public class SendCMDUtils {
      */
     public static String setChangeDoc(MeetingConfig meetingConfig ,String tableId,String current,String resId) {
 
-        String docs = "\"data\": {" +
-                                "\"to\": \"" +meetingConfig.getMid()+"\"," +
-                                "\"current\": \"" +current+"\"," +
-                                "\"owner\": \"doc_" +resId+"\"," +
-                                "\"o\": \"wp\"," +
-                                "\"send_nick\": \"" +meetingConfig.getuName()+"\"," +
-                                "\"from\": \"" +meetingConfig.getFrom()+"\"," +
-                                "\"act\": \"" +MeetingCommand.WHITE_CHANGE_DOC+"\"" +
-                                "\"type\": \"group\"," +
-                                "\"p2p\": \"1\"," +
-                                "}," +
+        String docs = "\"data\": [" +
+                        "{" +
+                        "\"content\": {" +
+                        "\"to\": \"" +meetingConfig.getMid()+"\"," +
+                        "\"current\": \"" +current+"\"," +
+                        "\"owner\": \"doc_" +resId+"\"," +
+                        "\"o\": \"wp\"," +
+                        "\"send_nick\": \"" +meetingConfig.getuName()+"\"," +
+                        "\"from\": \"" +meetingConfig.getFrom()+"\"," +
+                        "\"act\": \"" +MeetingCommand.WHITE_CHANGE_DOC+"\"," +
+                        "\"type\": \"group\"," +
+                        "\"p2p\": \"1\"" +
+                        "}," +
                         "\"groupId\": \"" +meetingConfig.getGid()+"\"," +
                         "\"tabId\": \"" +tableId+"\"," +
                         "\"sequence\": 1," +
                         "\"type\": \"" +MeetingCommand.WHITE_CHANGE_DOC+"\"," +
-                        "\"clientId\": \"123213213\"";
+                        "\"clientId\": \"" +meetingConfig.getClientId()+"\"" +
+                        "}" +
+                        "]," +
+                        "\"groupId\":\"" +meetingConfig.getGid()+"\"," +
+                        "\"tabId\":\"" +tableId+"\"," +
+                        "\"sendChannelId\": \"" +meetingConfig.getClientId()+"\"";
 
         return appendBaseVal(MeetingCommand.WHITE_PAD_DOC,docs).toString();
     }
@@ -294,10 +301,10 @@ public class SendCMDUtils {
                 "\"o\": \"wp\"," +
                 "\"send_nick\": \"" +meetingConfig.getuName()+"\"," +
                 "\"from\": \"" +meetingConfig.getFrom()+"\"," +
-                "\"act\": \"" +MeetingCommand.DELETE_DOC+"\"" +
+                "\"act\": \"" +MeetingCommand.DELETE_DOC+"\"," +
                 "\"type\": \"group\"," +
                 "\"p2p\": \"1\"," +
-                "\"key\": \"doc_" +id+"\"," +
+                "\"key\": \"doc_" +id+"\"" +
                 "}," +
                 "\"groupId\": \"" +meetingConfig.getGid()+"\"," +
                 "\"type\": \"" +MeetingCommand.WHITE_PAD_REMOVE+"\"," +

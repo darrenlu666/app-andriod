@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
+import com.codyy.erpsportal.commons.models.entities.MeetingConfig;
 import com.codyy.erpsportal.commons.models.entities.SystemMessage;
 import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
 import com.codyy.erpsportal.onlinemeetings.models.entities.DocControl;
@@ -51,7 +52,7 @@ public class CoCoUtils {
      *
      * @throws Exception
      */
-    public static void parseJson(String jsonString) throws Exception {
+    public static void parseJson(String jsonString, MeetingConfig config) throws Exception {
         if (jsonString == null) {
             return;
         }
@@ -71,6 +72,8 @@ public class CoCoUtils {
                     Cog.i(TAG, "登录成功");
                     if ("C200".equals(body.optString("code"))) {
                         Cog.i(TAG, "online成功");
+                        String clientId = body.optString("clientId");
+                        if(null != clientId) config.setClientId(clientId);
                         EventBus.getDefault().post(new String(Constants.LOGIN_COCO_SUCCESS));
                     }
                     break;
@@ -151,6 +154,9 @@ public class CoCoUtils {
 //                                    parseDocData(content,cmd,from);
                                     parsParse(content,cmd,from,"","");
                                     break;
+                                case MeetingCommand.WEB_CHAT_CONTROL://主持人－禁止聊天（所有人不能发消息）
+                                    parsParse(content,cmd,from,body.optString("receivedUserId"),body.optString("sendUserName"));
+                                    break;
                             }
                         }
                     }
@@ -190,12 +196,10 @@ public class CoCoUtils {
                                     break;
                                 case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK://禁止参会者文本聊天(web)
                                     parsParse(content2,cmd,sendUserId,receivedUserId,body.optString("sendUserName"));
-                                    /*String tag = obtainCMDValueNoQuote(content2);
-                                    if("true".equals(tag)){//禁止参会者文本聊天
-                                    }else if("false".equals(tag)){//取消禁止参会者文本聊天
-                                    }*/
                                     break;
-//                                    case
+                                case MeetingCommand.WEB_WHITE_BOARD_MARK://白板标注权限
+                                    parsParse(content2,cmd,sendUserId,receivedUserId,body.optString("sendUserName"));
+                                    break;
                             }
                         }
                     }
@@ -219,17 +223,34 @@ public class CoCoUtils {
                     }
                     break;
                 case MeetingCommand.WHITE_PAD_DOC://翻页/滚动文档
-                    String tableId = response.optString("tabId");
+                    String tableId = body.optString("tabId");
                     if(!TextUtils.isEmpty(tableId)){//创建白板成功.
-                        CoCoAction coCoAction = new CoCoAction();//CoCo消息动作
+                        Cog.i(TAG,MeetingCommand.WHITE_PAD_DOC+":tableId: "+tableId);
+                        /*CoCoAction coCoAction = new CoCoAction();//CoCo消息动作
                         coCoAction.setActionType(MeetingCommand.WHITE_PAD_NEW);
                         coCoAction.setActionResult(tableId);
-                        EventBus.getDefault().post(coCoAction);
+                        EventBus.getDefault().post(coCoAction);*/
+                        JSONArray datarr = body.optJSONArray("data");
+                        if(null != datarr){
+                            JSONObject cell = datarr.optJSONObject(0);
+                            if(null == cell) return;
+                            JSONObject nestContent = cell.optJSONObject("content");
+                            if(null == nestContent) return;
+                            String docAction = nestContent.optString("act");
+
+                            switch (docAction){
+                                case MeetingCommand.WHITE_SCROLL_DOC://文档-滚动
+                                    parseDocData(nestContent.toString(),docAction,nestContent.optString("from"));
+                                    break;
+                                case MeetingCommand.WHITE_CHANGE_DOC://文档-翻页
+                                    parseDocData(nestContent.toString(),docAction,nestContent.optString("from"));
+                                    break;
+                            }
+                        }
                     }else{
                         JSONObject doc = body.optJSONArray("data").optJSONObject(0);
                         String doc_command = doc.optString("type");
                         JSONObject docContent = doc.optJSONObject("content");
-
                         switch (doc_command){
                             case MeetingCommand.WHITE_SCROLL_DOC://文档-滚动
                                 parseDocData(docContent.toString(),doc_command,docContent.optString("from"));
@@ -326,9 +347,9 @@ public class CoCoUtils {
             case MeetingCommand.WEB_ACTION_KICK_OUT://被请出对象
                 Log.i(TAG, "eventBus post action : " + MeetingCommand.WEB_ACTION_KICK_OUT + ":" + jsonArray.get(0).toString());
                 coCoAction.setActionType(MeetingCommand.WEB_ACTION_KICK_OUT);
-                coCoAction.setByOperationObject(jsonArray.get(0).toString());
+                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
-                postSystemMsg(jsonArray.get(0).toString(), "被请出会议", nickName);
+                postSystemMsg(jsonArray.get(1).toString(), "被请出会议", nickName);
                 break;
             case MeetingCommand.WEB_SWITCH_MODE://**setActionResult = showMode 演示模式  setActionResult = videoMode 视频模式 */
                 coCoAction.setActionType(MeetingCommand.WEB_SWITCH_MODE);
@@ -340,17 +361,17 @@ public class CoCoUtils {
                 coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
                 if (jsonArray.get(1).toString().equals("true")) {
-                    postSystemMsg(from, "被禁言", nickName);
+                    postSystemMsg(to, "被禁止文本聊天", nickName);
                 } else {
-                    postSystemMsg(from, "被取消禁言", nickName);
+                    postSystemMsg(to, "被允许文本聊天", nickName);
                 }
                 break;
-            case MeetingCommand.REFUSE_SPEAKER_BACK://现在拒绝了就收不到消息了
+            case MeetingCommand.REFUSE_SPEAKER_BACK://主持人拒绝某人申请发言 (现在拒绝了就收不到消息了)
                 /**setActionResult = ["3d43ac9f912e48299d10293213a75400"] 主持人拒绝某人申请发言 */
-                coCoAction.setActionType(MeetingCommand.REFUSE_SPEAKER_BACK);
+                /*coCoAction.setActionType(MeetingCommand.REFUSE_SPEAKER_BACK);
                 coCoAction.setByOperationObject(jsonArray.get(0).toString());
                 EventBus.getDefault().post(coCoAction);
-                postSystemMsg(jsonArray.get(0).toString(), "被主持人拒绝发言", nickName);
+                postSystemMsg(jsonArray.get(0).toString(), "被主持人拒绝发言", nickName);*/
                 break;
             case MeetingCommand.COMPLATE_UPLOAD_FILE: /** 上传文件结束 setByOperationObject 指的是哪个用户上传结束了*/
                 coCoAction.setActionType(MeetingCommand.COMPLATE_UPLOAD_FILE);
@@ -381,7 +402,7 @@ public class CoCoUtils {
             case MeetingCommand.INFO_VIDEO_SHARE_OPEN:/**开始共享视频 setActionResult = "meeting_1d26f517c14d41e78ad741bae3a0dc48_64d9ab5e2a1f439c8e0c54f57af47e9c_vs" */
                 Cog.d("--------------xxd---------", "开始共享视频");
                 coCoAction.setActionType(MeetingCommand.INFO_VIDEO_SHARE_OPEN);
-                coCoAction.setActionResult(jsonArray.get(0).toString());
+                coCoAction.setActionResult(from);
                 EventBus.getDefault().post(coCoAction);
                 break;
             case MeetingCommand.INFO_VIDEO_SHARE_CLOSE:/**结束共享视频*/
@@ -416,33 +437,37 @@ public class CoCoUtils {
             case MeetingCommand.WEB_WHITE_BOARD_MARK://白板标注权限
                 Cog.d("WEB_WHITE_BOARD_MARK", "----------------post----SET White Board Mark Permission !");
                 coCoAction.setActionType(MeetingCommand.WEB_WHITE_BOARD_MARK);
-                coCoAction.setActionResult(jsonArray.get(0).toString());
+                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
                 break;
             case MeetingCommand.WEB_CHAT_CONTROL://主持人－禁止聊天（所有人不能发消息）
                 coCoAction.setActionType(MeetingCommand.WEB_CHAT_CONTROL);
-                coCoAction.setActionResult(jsonArray.get(0).toString());
+                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
                 break;
             case MeetingCommand.WEB_STOP_VIDEO://主持人-禁止视频画面(单个人)
                 coCoAction.setActionType(MeetingCommand.WEB_STOP_VIDEO);
-                coCoAction.setActionResult(jsonArray.get(0).toString());
+                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
+                postSystemMsg(to, "被禁止画面", nickName);
                 break;
             case MeetingCommand.WEB_PUBLISH_VIDEO://主持人-取消某人的画面禁止(单人)
                 coCoAction.setActionType(MeetingCommand.WEB_PUBLISH_VIDEO);
-                coCoAction.setActionResult(jsonArray.get(0).toString());
+                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
+                postSystemMsg(to, "被取消禁止画面", nickName);
                 break;
             case MeetingCommand.WEB_STOP_AUDIO://主持人-禁止音频发送(单人)
                 coCoAction.setActionType(MeetingCommand.WEB_STOP_AUDIO);
-                coCoAction.setActionResult(jsonArray.get(0).toString());
+                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
+                postSystemMsg(to, "被禁言", nickName);
                 break;
             case MeetingCommand.WEB_PUBLISH_AUDIO://主持人-取消禁止音频发送(单人)
                 coCoAction.setActionType(MeetingCommand.WEB_PUBLISH_AUDIO);
-                coCoAction.setActionResult(jsonArray.get(0).toString());
+                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
+                postSystemMsg(to, "被取消禁言", nickName);
                 break;
             default:
                 break;
@@ -471,6 +496,7 @@ public class CoCoUtils {
                     docControl.setId(docJson.optString("id"));
                     docControl.setFrom(docJson.optString("from"));
                     docControl.setTo(docJson.optString("to"));
+                    docControl.setTabId(docJson.optString("tabId"));
                     try {
                         docControl.setFilename(new String(docJson.optString("filename").getBytes(), UTF));
                     } catch (UnsupportedEncodingException e) {

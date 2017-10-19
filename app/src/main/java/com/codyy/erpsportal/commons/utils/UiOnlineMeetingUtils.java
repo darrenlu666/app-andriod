@@ -119,15 +119,15 @@ public class UiOnlineMeetingUtils {
     /**
      * 获取共享视频播放stream
      * @param meetingBase
-     * @param userId　共享视频的人的ｉｄ .
+     * @param videoId　共享视频的人的ｉｄ .
      * var shareDeskStreamName = mid + "_" + userId + "_" + "desk",
      * Var shareVideoStreamName = mid + "_" + userId + "_" + "video";
      * @return
      */
-    public static String  getShareVideoStream(MeetingBase meetingBase , String userId){
-        if(meetingBase == null || userId == null) return null;
+    public static String  getShareVideoStream(MeetingBase meetingBase , String videoId){
+        if(meetingBase == null || videoId == null) return null;
 
-        return  meetingBase.getBaseMeetID() + "_" + userId+"_video";
+        return  meetingBase.getBaseMeetID() + "_" + videoId+"_video";
     }
 
     /**

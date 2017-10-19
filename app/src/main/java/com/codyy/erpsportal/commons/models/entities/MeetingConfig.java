@@ -22,6 +22,19 @@ public class MeetingConfig implements Parcelable {
     private String license;
     private String mid;//会议ｉｄ
     private String userId;//当前用户的id.
+    private String clientId;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public static Creator<MeetingConfig> getCREATOR() {
+        return CREATOR;
+    }
 
     public String getUserId() {
         return userId;

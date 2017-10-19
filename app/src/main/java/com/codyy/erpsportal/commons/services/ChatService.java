@@ -199,23 +199,23 @@ public class ChatService extends Service {
 
         @Override
         public void createTable(String groupId, String tableName) throws RemoteException {
-            sendMsgs(SendCMDUtils.createTableJson(groupId,tableName));
+            sendMsgs(SendCMDUtils.createTableJson(mMeetingConfig.getGid(),tableName));
         }
 
         /**
          *演示文档 （白板的COCO消息比较特殊）,发送文档演示前，先发一条切换演示模式的消息
          */
         @Override
-        public void setDemonstrationDoc(String to, String current, String from_null, String url, String id, String filename) {
-            sendMsgs(SendCMDUtils.setDemonstrationDoc(mMeetingConfig, url,current, id, filename));
+        public void setDemonstrationDoc(String tableId, String current, String url, String id, String filename) {
+            sendMsgs(SendCMDUtils.setDemonstrationDoc(mMeetingConfig, url,current, id, filename,tableId));
         }
 
         /**
          *文档翻页
          */
         @Override
-        public void setChangeDoc(String to, String current, String owner) {
-            sendMsgs(SendCMDUtils.setChangeDoc(mMeetingConfig, to, current, owner));
+        public void setChangeDoc(String tableId, String current, String owner) {
+            sendMsgs(SendCMDUtils.setChangeDoc(mMeetingConfig, tableId, current, owner));
         }
 
         /**
@@ -302,7 +302,7 @@ public class ChatService extends Service {
         public void onMessage(String message) {
             Log.i(TAG, "onMessage==>" + message);
             try {
-                CoCoUtils.parseJson(message);
+                CoCoUtils.parseJson(message,mMeetingConfig);
             } catch (Exception e) {
                 e.printStackTrace();
             }

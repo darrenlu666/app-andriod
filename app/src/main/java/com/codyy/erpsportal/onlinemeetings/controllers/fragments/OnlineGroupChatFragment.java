@@ -223,6 +223,17 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
                     canSay(true);
                 }
                 break;
+            case MeetingCommand.WEB_CHAT_CONTROL://全局控制是否可以聊天.
+                if (action.getActionResult().equals("true")) {
+                    if(null != mMeetingBase)
+                        mMeetingBase.setBaseSay(1);
+                    canSay(false);
+                } else {
+                    if(null != mMeetingBase)
+                        mMeetingBase.setBaseSay(0);
+                    canSay(true);
+                }
+                break;
         }
     }
 
@@ -232,7 +243,8 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      * @param b
      */
     private void canSay(boolean b) {
-        if (b) {
+        if(null == mMeetingBase) return;
+        if (b&& mMeetingBase.getBaseSay()==0) {
             mMeetingBase.setBaseChat("1");
             mInputView.setVisibility(View.VISIBLE);
             UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
@@ -252,17 +264,9 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      */
     public void onEventMainThread(ChatMessage msg) throws RemoteException {
         if(null == mRecyclerView) return;
-       /* String userId = null;
-        if (msg.getChatType() == ChatMessage.GROUP_CHAT) {
-            //群聊的话就取coco消息中的 to=475487329537895387 作为发送此消息者的ID
-            userId = msg.getTo();
-        } else {
-            //单聊的话就取coco消息中的 from=475487329537895387 作为发送此消息者的ID
-            userId = msg.getFrom();
-        }*/
         //如果是当前会话的消息，刷新聊天页面
-        if (!msg.getFrom().equals(mUserInfo.getBaseUserId())) {
-//            if (msg.getChatType() == Ty) {
+        if (!msg.getFrom().equals(mUserInfo.getBaseUserId())
+                &&msg.getChatType() == ChatMessage.GROUP_CHAT) {
             final ChatMessage cm = msg ;
             cm.setBaseViewHoldType(TYPE_CHAT_GROUP_RECEIVER);
             getParentActivity().getUsers(new OnlineMeetingActivity.ILoader() {
