@@ -160,7 +160,7 @@ public class ExcellentCoursesFragment extends Fragment{
     }
 
     /**
-     * 获取以学段分类的资源
+     * 获取精品课程数据
      */
     private void loadExcellentCoursesData(final boolean refresh) {
         Map<String, String> params = new HashMap<>();
@@ -182,7 +182,7 @@ public class ExcellentCoursesFragment extends Fragment{
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "onResponse response=" + response);
                         mAdapter.setFetchingMore(false);
-                        mRefreshLayout.setRefreshing(false);
+                        setNotRefreshing();
                         String result = response.optString("result");
                         if ("success".equals(result)) {
 //                            mAdapter.setFleshes(createPastRecodingFleshes());
@@ -217,7 +217,6 @@ public class ExcellentCoursesFragment extends Fragment{
                             mAdapter.notifyDataSetChanged();
                             mStart = mAdapter.getItemCount();
                         }
-                        mRefreshLayout.setRefreshing(false);
                         onLoadingFinish();
                     }
                 }, new Consumer<Throwable>() {

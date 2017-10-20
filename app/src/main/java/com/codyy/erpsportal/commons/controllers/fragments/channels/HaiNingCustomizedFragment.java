@@ -173,7 +173,7 @@ public class HaiNingCustomizedFragment extends Fragment{
         Observable.just(1);
         List<Observable<JSONObject>> observables = new ArrayList<>();
         observables.add(loadLatestLesson(baseAreaId, schoolId));
-        observables.add(loadLatestLesson("", ""));
+//        observables.add(loadLatestLesson("", ""));
         observables.add(loadHistoryCourses(baseAreaId, schoolId));
         Observable.concat(observables)
                 .doOnSubscribe(new Consumer<Disposable>() {
@@ -218,7 +218,7 @@ public class HaiNingCustomizedFragment extends Fragment{
         if (!TextUtils.isEmpty(schoolId)) {
             map.put("schoolId", schoolId);
         }
-        map.put("size", "6");
+        map.put("size", "4");
         map.put("uuid", UserInfoKeeper.obtainUserInfo().getUuid());
 
         Cog.d(TAG, "@loadData url=" + URLConfig.GET_SIP_RECENT_LESSON + map);
@@ -274,7 +274,7 @@ public class HaiNingCustomizedFragment extends Fragment{
         if (!TextUtils.isEmpty(schoolId)) {
             map.put("schoolId", schoolId);
         }
-        map.put("size", "8");
+        map.put("size", "5");
         map.put("uuid", UserInfoKeeper.obtainUserInfo().getUuid());
 
         Cog.d(TAG, "@loadData url=" + URLConfig.GET_RECOMMEND_SCHEDULE + map);

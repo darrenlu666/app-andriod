@@ -7,6 +7,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelCustom
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelLivingFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ExcellentCoursesFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.InfoIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainCompositeFragment;
@@ -162,6 +163,8 @@ public class ChannelTab {
                     bundle = new Bundle();
                     bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE, name);
                     clazz = SipCustomizedFragment.class;
+                } else if (ModuleConfig.TEMPLATE_HN_RES.equals(indexTemplateId)) {
+                    clazz = HaiNingCustomizedFragment.class;
                 } else {
                     clazz = ChannelCustomizedFragment.class;
                 }

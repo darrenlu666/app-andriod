@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
+import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import butterknife.Bind;
@@ -40,7 +41,11 @@ public class ExcellentCourseFleshVhr extends AbsSkeletonVhr<ExcellentCourseFlesh
 
     @Override
     public void bind(ExcellentCourseFlesh excellentCourse) {
-        mTitleTv.setText(excellentCourse.getTitle());
+        if (!TextUtils.isEmpty(excellentCourse.getTitle())) {
+            mTitleTv.setText(excellentCourse.getTitle());
+        } else {
+            mTitleTv.setText(excellentCourse.getRealName());
+        }
         StringBuilder sb = new StringBuilder();
         if (!TextUtils.isEmpty(excellentCourse.getClasslevelName())) {
             sb.append(excellentCourse.getClasslevelName()).append('/');
@@ -59,5 +64,7 @@ public class ExcellentCourseFleshVhr extends AbsSkeletonVhr<ExcellentCourseFlesh
         }
         mScopeTv.setText(sb.toString());
         mSchoolTv.setText(excellentCourse.getSchoolName());
+        ImageFetcher.getInstance(mIconDv)
+                .fetchSmall(mIconDv, excellentCourse.getThumb());
     }
 }
