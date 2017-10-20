@@ -34,6 +34,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
     public static String CHAT_MESSAGE = "chat_message";
 
     public static String EXTRA_FLAG_ALL_SAY = "chat_message";//全局禁止聊天 0:正常 1:禁止.
+    public static String EXTRA_FLAG_BASE_CHAT = "base_chat";//全局禁止聊天 0:禁言 1:允许发言.
 
 
     public static int CHAT_TYPE_SINGLE = 0x01;
@@ -90,6 +91,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         bundle.putString(USER_HEAD_URL, getIntent().getStringExtra(USER_HEAD_URL));
         bundle.putString(MEETING_ID, getIntent().getStringExtra(MEETING_ID));
         bundle.putInt(EXTRA_FLAG_ALL_SAY,getIntent().getIntExtra(EXTRA_FLAG_ALL_SAY,0));
+        bundle.putString(EXTRA_FLAG_BASE_CHAT,getIntent().getStringExtra(EXTRA_FLAG_BASE_CHAT));
         onLineChatMessageFragment.setArguments(bundle);
         FragmentTransaction trans = getSupportFragmentManager()
                 .beginTransaction();
@@ -147,7 +149,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         context.startActivity(intent);
     }
 
-    public static void start(Activity context,String meetId , ChatMessage message,int canSay){
+    public static void start(Activity context,String meetId , ChatMessage message,int canAllSay,String baseChat){
         Intent intent = new Intent(context, SingleChatActivity.class);
         intent.putExtra(SingleChatActivity.CHAT_TYPE, SingleChatActivity.CHAT_TYPE_SINGLE);
         intent.putExtra(SingleChatActivity.KEY_TO_CHAT_ID, message.getFrom());
@@ -155,6 +157,8 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         intent.putExtra(SingleChatActivity.USER_HEAD_URL, message.getHeadUrl());
         intent.putExtra(SingleChatActivity.MEETING_ID, meetId);
         intent.putExtra(SingleChatActivity.HAS_UNREAD, message.isHasUnReadMsg());
+        intent.putExtra(SingleChatActivity.EXTRA_FLAG_ALL_SAY,canAllSay);
+        intent.putExtra(SingleChatActivity.EXTRA_FLAG_BASE_CHAT,baseChat);
         context.startActivity(intent);
         UIUtils.addEnterAnim(context);
     }

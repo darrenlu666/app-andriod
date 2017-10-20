@@ -86,8 +86,12 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         mToUserId = Integer.valueOf(mMeetingBase.getBaseMeetID().substring(0,6),16)+"";
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mInputView.setOperationDelegate(this);
-        if (mMeetingBase != null && mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3) {
-            mInputView.setVisibility(View.GONE);//观摩者隐藏消息输入框
+        if (mMeetingBase != null) {
+            if(mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3){
+                mInputView.setVisibility(View.GONE);//观摩者隐藏消息输入框
+            }
+            //初始化输入框.
+            canSay(true);
         }
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -143,13 +147,13 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
 
     @Override
     public void onEmojiPanOpen() {
-        // TODO: 08/05/17 打开表情输入框.
+        //  08/05/17 打开表情输入框.
         if(null != mSoftListener) mSoftListener.onKeyOpen();
     }
 
     @Override
     public void onEmojiPanClose() {
-        // TODO: 08/05/17 关闭表情输入框.
+        // 08/05/17 关闭表情输入框.
         if(null != mSoftListener) mSoftListener.onKeyClose();
     }
 
@@ -218,20 +222,20 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         switch (action.getActionType()) {
             case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
+                    if(null != mMeetingBase)mMeetingBase.setBaseChat("0");
                     canSay(false);
                 } else {
-                    canSay(true);
+                    if(null != mMeetingBase)mMeetingBase.setBaseChat("1");
+                    canSay(false);
                 }
                 break;
             case MeetingCommand.WEB_CHAT_CONTROL://全局控制是否可以聊天.
                 if (action.getActionResult().equals("true")) {
-                    if(null != mMeetingBase)
-                        mMeetingBase.setBaseSay(1);
+                    if(null != mMeetingBase) mMeetingBase.setBaseSay(1);
                     canSay(false);
                 } else {
-                    if(null != mMeetingBase)
-                        mMeetingBase.setBaseSay(0);
-                    canSay(true);
+                    if(null != mMeetingBase) mMeetingBase.setBaseSay(0);
+                    canSay(false);
                 }
                 break;
         }
@@ -240,20 +244,19 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
     /**
      * 判断用户是否被禁言了
      *
-     * @param b
+     * @param isInit
      */
-    private void canSay(boolean b) {
+    private void canSay(boolean isInit) {
         if(null == mMeetingBase) return;
-        if (b&& mMeetingBase.getBaseSay()==0) {
-            mMeetingBase.setBaseChat("1");
+        if (mMeetingBase.getBaseChat().equals("1")&& mMeetingBase.getBaseSay()==0) {
+
             mInputView.setVisibility(View.VISIBLE);
-            UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
+            if(!isInit)UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
         } else {
             mMeetingBase.setBaseChat("0");
             mInputView.setVisibility(View.GONE);
-            UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
+            if(!isInit)UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
         }
-
     }
 
 

@@ -189,8 +189,44 @@ public class MockChatCommand {
                                     "  \"command\": \"groupChat\"" +
                                     "}";
 
+    public static final String SHARE_VIDEO ="{" +
+            "\"body\":{" +
+            "\"content\":[" +
+            "\"receive\"," +
+            "\"\"," +
+            "S," +
+            "0," +
+            "\"\"," +
+            "[" +
+            "\"receiveShareVideo\"," +
+            "\"434deef8c7a44a4687f0ee403ce15060\"" +
+            "]" +
+            "]," +
+            "    \"from\": \"434deef8c7a44a4687f0ee403ce15060\"," +
+            "    \"type\": \"control\"" +
+            "  }," +
+            "    \"command\" = \"groupChat\"" +
+            "}";
 
+    public static final String STOP_SHARE_VIDEO = "{" +
+            "\"body\":{" +
+            "\"content\":[" +
+            "\"receive\"," +
+            "\"\"," +
+            "S," +
+            "0," +
+            "\"\"," +
+            "[" +
+            "\"stopReceiveShareVideo\"" +
+            "]" +
+            "]," +
+            "    \"from\": \"434deef8c7a44a4687f0ee403ce15060\"," +
+            "    \"type\": \"control\"" +
+            "  }," +
+            "    \"command\" = \"groupChat\"" +
+            "}";;
     private static ArrayList<String> commands = new ArrayList<>();
+
     static {
         commands.clear();
         commands.add(TURN_VIDEO.replaceAll(" ",""));
@@ -200,6 +236,33 @@ public class MockChatCommand {
         commands.add(CLOSE_DOC.replaceAll(" ",""));
         commands.add(SHOW_DOC_LIST.replaceAll(" ",""));
         commands.add(ADD_DOC_ITEM.replaceAll(" ",""));
+    }
+
+
+    /**
+     * 测试演示模式切换
+     */
+    public static void testVideoShare(){
+        new Thread(()->{
+            commands.clear();
+            commands.add(SHARE_VIDEO.replaceAll(" ",""));
+            commands.add(STOP_SHARE_VIDEO.replaceAll(" ",""));
+
+            for(String cmd : commands){
+                try {
+                    CoCoUtils.parseJson(cmd,new MeetingConfig());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    Thread.sleep(2*1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }).start();
     }
 
     /**

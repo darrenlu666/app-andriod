@@ -525,6 +525,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                     mMainHandler.sendEmptyMessage(MSG_CLOSE_MY_AUDIO);
                 }
             }else{
+                if(null != mPartnerSurfaceView)
                 SnackToastUtils.toastShort(mPartnerSurfaceView,"我的视频采集失败！");
             }
         }
@@ -772,13 +773,13 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                 }
                 break;
             case MeetingCommand.WEB_STOP_AUDIO://参会者禁言(web)
-                mAudioControlImageView.setEnabled(false);
+                mAudioControlImageView.setClickable(false);
                 isAudioOn = true;
                 mHandler.removeCallbacks(mOpenOrCloseAudioRunnable);
                 mHandler.postDelayed(mOpenOrCloseAudioRunnable,PERIOD_DELAY);
                 break;
             case MeetingCommand.WEB_PUBLISH_AUDIO://取消参会者禁言(web)
-                mAudioControlImageView.setEnabled(true);
+                mAudioControlImageView.setClickable(true);
                 isAudioOn = false;
                 mHandler.removeCallbacks(mOpenOrCloseAudioRunnable);
                 mHandler.postDelayed(mOpenOrCloseAudioRunnable,PERIOD_DELAY);

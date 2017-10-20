@@ -11,6 +11,10 @@ public class MeetingCommand {
      * 文档演示.
      */
     public final static String WHITE_PAD_ADD = "whitePadAddTab";
+    /**
+     * table切换.
+     */
+    public final static String WHITE_PAD_CHANGE = "whitePadChangeTab";
 
     /**
      * 创建新的白板成功.
@@ -147,7 +151,7 @@ public class MeetingCommand {
 
     public final static String INFO_DESK_SHARE_OPEN = "receiveShareDesk";//开始桌面共享
     public final static String INFO_DESK_SHARE_CLOSE = "stopReceiveShareDesk";//结束桌面共享
-    public final static String INFO_VIDEO_SHARE_OPEN = "videoTransfer";//开始视频共享
+    public final static String INFO_VIDEO_SHARE_OPEN = "receiveShareVideo";//开始视频共享
     public final static String INFO_VIDEO_SHARE_CLOSE = "stopReceiveShareVideo";//结束视频共享
 
     /**

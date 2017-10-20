@@ -99,6 +99,12 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
             }else{
                 isAllCanSay = false;
             }
+            String baseChat = getArguments().getString(SingleChatActivity.EXTRA_FLAG_BASE_CHAT);
+            if(baseChat!=null && baseChat.equals("1")){
+                isCanSay = true;
+            }else{
+                isCanSay = false;
+            }
         }
         if (null == mUserInfo) {
             mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
@@ -173,6 +179,8 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
             mComposeView.setVisibility(View.GONE);//观摩者隐藏消息输入框
         }
         initData();
+        //判断聊天权限.
+        canSay(true);
     }
 
     /**
@@ -361,19 +369,19 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
         switch (action.getActionType()) {
             case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
-                    canSay(false);
+                    isCanSay = false;
                 } else {
-                    canSay(true);
+                    isCanSay = true;
                 }
+                canSay(false);
                 break;
             case MeetingCommand.WEB_CHAT_CONTROL://全局控制是否可以聊天.
                 if (action.getActionResult().equals("true")) {
                     isAllCanSay = false;
-                    canSay(isCanSay);
                 } else {
                     isAllCanSay = true;
-                    canSay(isCanSay);
                 }
+                canSay(false);
                 break;
         }
     }
@@ -418,17 +426,16 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
     /**
      * 判断用户是否被禁言了
      *
-     * @param b
      */
-    private void canSay(boolean b) {
-        isCanSay = b;
-        if (b && isAllCanSay) {
+    private void canSay(boolean isInit) {
+
+        if (isCanSay && isAllCanSay) {
             mComposeView.setVisibility(View.VISIBLE);
-            UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
+            if(!isInit) UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
         } else {
-            isCanSay = false;
+
             mComposeView.setVisibility(View.GONE);
-            UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
+            if(!isInit) UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
         }
 
     }

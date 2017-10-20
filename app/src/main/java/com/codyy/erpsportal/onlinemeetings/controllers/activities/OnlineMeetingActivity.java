@@ -291,7 +291,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
         //测试.
 //        mHandler.postDelayed(()->{
-//            MockChatCommand.test();
+//            MockChatCommand.testVideoShare();
 //            },2*1000);
     }
 

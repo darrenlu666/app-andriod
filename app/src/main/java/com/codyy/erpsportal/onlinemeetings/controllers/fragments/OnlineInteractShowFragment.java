@@ -818,6 +818,11 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
         }
     };
 
+    /**
+     * 同步文档内容.
+     * @param show
+     * @param isNewOpen
+     */
     private void syncLoadContent(MeetingShow show, boolean isNewOpen) {
         mHandler.removeCallbacks(mLoadMeetingShowRunnable);
         if (null == show) return;
@@ -835,8 +840,6 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
         }
 
         switch (action.getActionType()) {
-            /*case PullXmlUtils.CHANGE_DOC_PAD://演示白板
-                break;*/
             case MeetingCommand.SHOW_DOC://演示文档
                 mIsFromServerChooseTab = true;
                 int index = UiOnlineMeetingUtils.getResourceIndex(action.getId(), mList);
@@ -890,9 +893,37 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                     deleteDoc(resID3);
                 }
                 break;
+            case MeetingCommand.CHANGE_DOC_PAD://切换文档tab.
+                String key2 = action.getKey();
+                if (key2 != null && key2.contains("_")) {
+                    mIsFromServerCloseTab = true;
+                    String resID = key2.substring(key2.indexOf("_") + 1);
+                    switchTab(resID);
+                }
+                break;
         }
     }
 
+
+    /**
+     * 切换tab
+     * @param resId
+     */
+    private void switchTab(String resId){
+        MeetingShow meetingShow = null;
+        if(null!= mList && mList.size()>0){
+            for(int i=0;i<mList.size();i++){
+                if(resId.equals(mList.get(i).getShowResID())){
+                    meetingShow = mList.get(i);
+                    break;
+                }
+            }
+        }
+
+        if(null != meetingShow) {
+            syncLoadContent(meetingShow,false);
+        }
+    }
     /**
      * 删除本地文件 .
      *

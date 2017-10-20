@@ -157,6 +157,12 @@ public class CoCoUtils {
                                 case MeetingCommand.WEB_CHAT_CONTROL://主持人－禁止聊天（所有人不能发消息）
                                     parsParse(content,cmd,from,body.optString("receivedUserId"),body.optString("sendUserName"));
                                     break;
+                                case MeetingCommand.INFO_VIDEO_SHARE_OPEN:
+                                    parsParse(content,cmd,from,body.optString("receivedUserId"),body.optString("sendUserName"));
+                                    break;
+                                case MeetingCommand.INFO_VIDEO_SHARE_CLOSE:
+                                    parsParse(content,cmd,from,body.optString("receivedUserId"),body.optString("sendUserName"));
+                                    break;
                             }
                         }
                     }
@@ -220,16 +226,15 @@ public class CoCoUtils {
                         case MeetingCommand.WHITE_PAD_REMOVE://关闭演示文档
                             parseDocData(data.toString(),data.optString("act"),data.optString("from"));
                             break;
+                        case MeetingCommand.WHITE_PAD_CHANGE://table切换.
+                            parseDocData(data.toString(),data.optString("act"),data.optString("from"));
+                            break;
                     }
                     break;
                 case MeetingCommand.WHITE_PAD_DOC://翻页/滚动文档
                     String tableId = body.optString("tabId");
                     if(!TextUtils.isEmpty(tableId)){//创建白板成功.
                         Cog.i(TAG,MeetingCommand.WHITE_PAD_DOC+":tableId: "+tableId);
-                        /*CoCoAction coCoAction = new CoCoAction();//CoCo消息动作
-                        coCoAction.setActionType(MeetingCommand.WHITE_PAD_NEW);
-                        coCoAction.setActionResult(tableId);
-                        EventBus.getDefault().post(coCoAction);*/
                         JSONArray datarr = body.optJSONArray("data");
                         if(null != datarr){
                             JSONObject cell = datarr.optJSONObject(0);
@@ -447,25 +452,21 @@ public class CoCoUtils {
                 break;
             case MeetingCommand.WEB_STOP_VIDEO://主持人-禁止视频画面(单个人)
                 coCoAction.setActionType(MeetingCommand.WEB_STOP_VIDEO);
-                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
                 postSystemMsg(to, "被禁止画面", nickName);
                 break;
             case MeetingCommand.WEB_PUBLISH_VIDEO://主持人-取消某人的画面禁止(单人)
                 coCoAction.setActionType(MeetingCommand.WEB_PUBLISH_VIDEO);
-                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
                 postSystemMsg(to, "被取消禁止画面", nickName);
                 break;
             case MeetingCommand.WEB_STOP_AUDIO://主持人-禁止音频发送(单人)
                 coCoAction.setActionType(MeetingCommand.WEB_STOP_AUDIO);
-                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
                 postSystemMsg(to, "被禁言", nickName);
                 break;
             case MeetingCommand.WEB_PUBLISH_AUDIO://主持人-取消禁止音频发送(单人)
                 coCoAction.setActionType(MeetingCommand.WEB_PUBLISH_AUDIO);
-                coCoAction.setActionResult(jsonArray.get(1).toString());
                 EventBus.getDefault().post(coCoAction);
                 postSystemMsg(to, "被取消禁言", nickName);
                 break;
@@ -527,9 +528,11 @@ public class CoCoUtils {
                     docControl.setFrom(docJson.optString("from"));
                     docControl.setTo(docJson.optString("to"));
                     break;
-                case MeetingCommand.CHANGE_DOC_PAD://切换到白板.
-                    break;
-                case MeetingCommand.COMMAND_REFRESH_DOC://刷新文档列表
+                case MeetingCommand.CHANGE_DOC_PAD://切换tab.
+                    docJson = new JSONObject(data);
+                    docControl.setKey(docJson.optString("key"));
+                    docControl.setFrom(docJson.optString("from"));
+                    docControl.setTo(docJson.optString("to"));
                     break;
         }
 
