@@ -47,6 +47,21 @@ public class UiMainUtils {
 
         return jpsb.toString();
     }
+
+    public static String combineStr(String ...strs){
+        StringBuilder jpsb = new StringBuilder("");
+
+        for (String str: strs){
+
+            if(!TextUtils.isEmpty(str)) {
+                if(jpsb.toString().length()>0) jpsb.append("\\");
+                jpsb.append(str);
+            }
+        }
+
+        return jpsb.toString();
+    }
+
     /**
      * 替换旧的api res.getColor(int color)
      * @param color

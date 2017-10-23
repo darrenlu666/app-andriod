@@ -177,13 +177,13 @@ public class ClassDetailFragment extends Fragment {
         mTvClassRoomMainInfoTitle.setText(Titles.sMaster + ":");
         mTvClassRoomReceiveInfoTitle.setText(Titles.sReceiver + ":");
 //        mTvClassRoomMainInfoValue.setText(getString(R.string.main_info, mSchoolName, mGrade + "\\", mSubject + "\\", mTeacher));
-        mTvClassRoomMainInfoValue.setText(mSchoolName+"\n"+UiMainUtils.combineStrs(mGrade,mSubject,mTeacher));
+        mTvClassRoomMainInfoValue.setText(mSchoolName+"\n"+UiMainUtils.combineStr(mGrade,mSubject,mTeacher));
         mTvClassRoomReceiveInfoValue.setText(mReceiveSchoolList.size() == 0 ? "" : getReceiveSchoolName(mReceiveSchoolList));
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_RECORD) || mFrom.equals(ClassRoomContants.TYPE_LIVE_RECORD)) {
             mLengthLayout.setVisibility(View.VISIBLE);
             mPlayCountLayout.setVisibility(View.VISIBLE);
             mClassLengthTv.setText(getTimeMinite(TextUtils.isEmpty(mLength)?"0":mLength));
-            mPlayCountTv.setText(mPlayCount + "");
+            mPlayCountTv.setText(mPlayCount + "次");
         }
         if (ClassRoomContants.TYPE_LIVE_LIVE.equals(mFrom)) {
             mTvClassRoomTimesTitle.setText(getString(R.string.class_period));
@@ -199,7 +199,7 @@ public class ClassDetailFragment extends Fragment {
         try {
             long timeInt = Long.valueOf(time);
             if (timeInt >= 60 * 1000) {
-                return timeInt / 1000 / 60 + "分" + timeInt / 1000 % 60 + "秒";
+                return timeInt / 1000 / 60 + "分钟" + timeInt / 1000 % 60 + "秒";
             } else {
                 return timeInt / 1000 + "秒";
             }
