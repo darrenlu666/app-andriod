@@ -196,4 +196,5 @@ dependencies {
     compile project(path: ':zxing')
     compile project(path: ':frameworklibrary')
     compile project(':umenglibrary')
+    implementation project(':coco3.0')
 }
