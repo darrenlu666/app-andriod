@@ -163,6 +163,9 @@ public class CoCoUtils {
                                 case MeetingCommand.INFO_VIDEO_SHARE_CLOSE:
                                     parsParse(content,cmd,from,body.optString("receivedUserId"),body.optString("sendUserName"));
                                     break;
+                                case MeetingCommand.WEB_ACTION_KICK_OUT:
+                                    parsParse(content,cmd,from,body.optString("receivedUserId"),body.optString("sendUserName"));
+                                    break;
                             }
                         }
                     }

@@ -168,7 +168,7 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
             UIUtils.toast(EApplication.instance(), "抱歉,您只可观摩无法发言", Toast.LENGTH_SHORT);
             return;
         }
-        if (!mMeetingBase.getBaseChat().equals("1")) {
+        if (mMeetingBase.getBaseChat()==1) {
             UIUtils.toast(EApplication.instance(), "您目前无权发话", Toast.LENGTH_SHORT);
             return;
         }
@@ -222,10 +222,10 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         switch (action.getActionType()) {
             case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
-                    if(null != mMeetingBase)mMeetingBase.setBaseChat("0");
+                    if(null != mMeetingBase)mMeetingBase.setBaseChat(1);
                     canSay(false);
                 } else {
-                    if(null != mMeetingBase)mMeetingBase.setBaseChat("1");
+                    if(null != mMeetingBase)mMeetingBase.setBaseChat(0);
                     canSay(false);
                 }
                 break;
@@ -247,13 +247,11 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      * @param isInit
      */
     private void canSay(boolean isInit) {
-        if(null == mMeetingBase) return;
-        if (mMeetingBase.getBaseChat().equals("1")&& mMeetingBase.getBaseSay()==0) {
-
+        if(null == mMeetingBase || null == mInputView) return;
+        if (mMeetingBase.getBaseChat() == 0 && mMeetingBase.getBaseSay()== 0) {
             mInputView.setVisibility(View.VISIBLE);
             if(!isInit)UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
         } else {
-            mMeetingBase.setBaseChat("0");
             mInputView.setVisibility(View.GONE);
             if(!isInit)UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
         }

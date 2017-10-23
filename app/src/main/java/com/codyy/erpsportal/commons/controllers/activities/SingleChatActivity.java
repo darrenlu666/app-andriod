@@ -91,7 +91,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         bundle.putString(USER_HEAD_URL, getIntent().getStringExtra(USER_HEAD_URL));
         bundle.putString(MEETING_ID, getIntent().getStringExtra(MEETING_ID));
         bundle.putInt(EXTRA_FLAG_ALL_SAY,getIntent().getIntExtra(EXTRA_FLAG_ALL_SAY,0));
-        bundle.putString(EXTRA_FLAG_BASE_CHAT,getIntent().getStringExtra(EXTRA_FLAG_BASE_CHAT));
+        bundle.putInt(EXTRA_FLAG_BASE_CHAT,getIntent().getIntExtra(EXTRA_FLAG_BASE_CHAT,0));
         onLineChatMessageFragment.setArguments(bundle);
         FragmentTransaction trans = getSupportFragmentManager()
                 .beginTransaction();
@@ -149,7 +149,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         context.startActivity(intent);
     }
 
-    public static void start(Activity context,String meetId , ChatMessage message,int canAllSay,String baseChat){
+    public static void start(Activity context,String meetId , ChatMessage message,int canAllSay,int baseChat){
         Intent intent = new Intent(context, SingleChatActivity.class);
         intent.putExtra(SingleChatActivity.CHAT_TYPE, SingleChatActivity.CHAT_TYPE_SINGLE);
         intent.putExtra(SingleChatActivity.KEY_TO_CHAT_ID, message.getFrom());

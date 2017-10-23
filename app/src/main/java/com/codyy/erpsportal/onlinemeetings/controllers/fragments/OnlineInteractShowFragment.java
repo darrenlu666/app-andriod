@@ -858,6 +858,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                     mIsFromServerPagerChange = true;
                     int currentPage = Integer.parseInt(action.getCurrent());
                     String resID2 = action.getOwner().substring(action.getOwner().indexOf("_") + 1);
+                    if(null == resID2 || mCurrentShow ==null) return;
 
                     Cog.i(TAG, "pdf翻页 " + currentPage + " :resid :" + resID2);
 

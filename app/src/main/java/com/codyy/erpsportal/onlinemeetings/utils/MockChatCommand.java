@@ -224,7 +224,13 @@ public class MockChatCommand {
             "    \"type\": \"control\"" +
             "  }," +
             "    \"command\" = \"groupChat\"" +
-            "}";;
+            "}";
+
+    public static final String CHAT_CONTROL_OPEN = "{\"body\":{\"content\":[\"receive\",\"\",\"S\",0,\"\",[\"chatControl\",true]],\"from\":\"434deef8c7a44a4687f0ee403ce15060\",\"type\":\"control\"},\"command\":\"groupChat\"}";
+    public static final String CHAT_CONTROL_CLOSE = "{\"body\":{\"content\":[\"receive\",\"\",\"S\",0,\"\",[\"chatControl\",false]],\"from\":\"434deef8c7a44a4687f0ee403ce15060\",\"type\":\"control\"},\"command\":\"groupChat\"}";
+
+
+
     private static ArrayList<String> commands = new ArrayList<>();
 
     static {
@@ -270,25 +276,18 @@ public class MockChatCommand {
      */
     public static void test(){
         commands.clear();
-        commands.add(ADD_DOC_ITEM.replaceAll(" ",""));
-        commands.add(TURN_VIDEO.replaceAll(" ",""));
-        commands.add(TURN_SHOW.replaceAll(" ",""));
-        commands.add(SHOW_DOC.replaceAll(" ",""));
-        commands.add(CHANGE_PAGE_INDEX.replaceAll(" ",""));
-//        commands.add(CLOSE_DOC.replaceAll(" ",""));
-//        commands.add(SHOW_DOC_LIST.replaceAll(" ",""));
-
+        commands.add(CHAT_CONTROL_OPEN.replaceAll(" ",""));
+        commands.add(CHAT_CONTROL_CLOSE.replaceAll(" ",""));
         new Thread(()->{
             for(String cmd : commands){
                 try {
-                    CoCoUtils.parseJson(cmd,new MeetingConfig());
-                } catch (Exception e) {
+                    Thread.sleep(5*1000);
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
                 try {
-                    Thread.sleep(2*1000);
-                } catch (InterruptedException e) {
+                    CoCoUtils.parseJson(cmd,new MeetingConfig());
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

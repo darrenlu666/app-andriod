@@ -291,7 +291,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
 
         //测试.
 //        mHandler.postDelayed(()->{
-//            MockChatCommand.testVideoShare();
+//            MockChatCommand.test();
 //            },2*1000);
     }
 
@@ -1289,9 +1289,9 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 break;
             case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
-                    mMeetingBase.setBaseChat("1");
+                    mMeetingBase.setBaseChat(1);
                 } else {
-                    mMeetingBase.setBaseChat("0");
+                    mMeetingBase.setBaseChat(0);
                 }
                 break;
             case MeetingCommand.WEB_CHAT_CONTROL://全局禁止聊天.

@@ -99,8 +99,8 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
             }else{
                 isAllCanSay = false;
             }
-            String baseChat = getArguments().getString(SingleChatActivity.EXTRA_FLAG_BASE_CHAT);
-            if(baseChat!=null && baseChat.equals("1")){
+            int baseChat = getArguments().getInt(SingleChatActivity.EXTRA_FLAG_BASE_CHAT);
+            if(baseChat == 0){
                 isCanSay = true;
             }else{
                 isCanSay = false;
@@ -433,7 +433,6 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
             mComposeView.setVisibility(View.VISIBLE);
             if(!isInit) UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
         } else {
-
             mComposeView.setVisibility(View.GONE);
             if(!isInit) UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
         }
