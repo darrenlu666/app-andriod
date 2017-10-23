@@ -79,7 +79,6 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.TabInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoShare;
 import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
-import com.codyy.erpsportal.onlinemeetings.utils.MockChatCommand;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
@@ -543,7 +542,13 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         mIntent = new Intent(this, ChatService.class);
         mIntent.putExtra("ip", mMeetingBase.getBaseCoco().getCocoIP());
         mIntent.putExtra("port", mMeetingBase.getBaseCoco().getCocoPort());
-        new Thread(()-> bindService(mIntent, mMeetingServiceConn, BIND_AUTO_CREATE)).start();
+//        new Thread(()-> bindService(mIntent, mMeetingServiceConn, BIND_AUTO_CREATE)).start();
+        new Thread() {
+            @Override
+            public void run() {
+                bindService(mIntent, mMeetingServiceConn, BIND_AUTO_CREATE);
+            }
+        }.start();
     }
 
 

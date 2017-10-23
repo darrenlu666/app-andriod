@@ -95,10 +95,6 @@ android {
         // Configure only for each module that uses Java 8
         // language features (either in its source code or
         // through dependencies).
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
 
         javaCompileOptions{
             annotationProcessorOptions{
@@ -197,5 +193,5 @@ dependencies {
     compile project(path: ':zxing')
     compile project(path: ':frameworklibrary')
     compile project(':umenglibrary')
-    implementation project(':coco3.0')
+    compile project(':coco3.0')
 }
