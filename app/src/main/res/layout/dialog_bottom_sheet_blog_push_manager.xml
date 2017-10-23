@@ -8,7 +8,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/divider"
         android:background="@color/white"
         android:padding="8dp">
 
@@ -46,7 +45,7 @@
             android:layout_below="@id/divider2"
             android:text="推送给上级" />
         <View
-            android:id="@+id/tv_divider3"
+            android:id="@+id/divider3"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_below="@id/tv_upper"
@@ -57,7 +56,7 @@
             style="@style/style_menu_item_text_no_rectangle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_divider3"
+            android:layout_below="@id/divider3"
             android:text="取消" />
     </RelativeLayout>
 </LinearLayout>
