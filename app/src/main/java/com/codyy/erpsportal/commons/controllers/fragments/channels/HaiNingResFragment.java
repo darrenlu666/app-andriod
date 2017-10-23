@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -27,8 +28,6 @@ import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.commons.models.engine.ItemFillerUtil;
-import com.codyy.erpsportal.commons.models.engine.ViewStuffer;
 import com.codyy.erpsportal.commons.models.entities.MainPageConfig;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
@@ -36,6 +35,8 @@ import com.codyy.erpsportal.commons.models.parsers.JsonParseUtil;
 import com.codyy.erpsportal.commons.models.parsers.JsonParser;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.EmptyView;
+import com.codyy.erpsportal.commons.widgets.EmptyView.OnReloadClickListener;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.resource.controllers.viewholders.VideoItemViewHolder;
 import com.codyy.erpsportal.resource.models.entities.Resource;
@@ -66,6 +67,12 @@ public class HaiNingResFragment extends Fragment {
 
     private View mRootView;
 
+    @Bind(R.id.iv_banner)
+    ImageView mBannerIv;
+
+    @Bind(R.id.empty_view)
+    EmptyView mEmptyView;
+
     @Bind(R.id.ll_container)
     LinearLayout mContainerLl;
 
@@ -86,11 +93,8 @@ public class HaiNingResFragment extends Fragment {
     private CompositeDisposable mCompositeDisposable;
 
     private LayoutInflater mInflater;
-
-    /**
-     * 正在加载中的任务个数
-     */
-    private volatile int mOnLoadingCount;
+    private String mBaseAreaId;
+    private String mSchoolId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,18 @@ public class HaiNingResFragment extends Fragment {
                 }
             });
             mRefreshLayout.setColorSchemeResources(R.color.main_color);
+            mEmptyView.setOnReloadClickListener(new OnReloadClickListener() {
+                @Override
+                public void onReloadClick() {
+                    mRefreshLayout.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRefreshLayout.setRefreshing(true);
+                        }
+                    });
+                    loadMainResources(mBaseAreaId, mSchoolId);
+                }
+            });
         }
     }
 
@@ -126,7 +142,6 @@ public class HaiNingResFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.dispose();
-        mOnLoadingCount = 0;
         ConfigBus.unregister(mOnModuleConfigListener);
     }
 
@@ -136,11 +151,13 @@ public class HaiNingResFragment extends Fragment {
         return mRootView;
     }
 
-    private void minusLoadingCount() {
-        mOnLoadingCount--;
-        if (mOnLoadingCount == 0) {
-            mRefreshLayout.setRefreshing(false);
-        }
+    private void stopRefreshing() {
+        mRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     /**
@@ -157,7 +174,6 @@ public class HaiNingResFragment extends Fragment {
         params.put("baseAreaId", areaId);
         params.put("categorySize", "3");
         params.put("resourceSize", "4");
-        mOnLoadingCount++;
         Cog.d(TAG, "Url:", URLConfig.MAIN_RESOURCES, params);
         Disposable disposable = mWebApi.post4Json(URLConfig.MAIN_RESOURCES, params)
                 .subscribeOn(Schedulers.io())
@@ -166,65 +182,82 @@ public class HaiNingResFragment extends Fragment {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadMainResources response=", response);
-                        minusLoadingCount();
+                        stopRefreshing();
+                        for (ViewGroup ll : mResourceGvs) {//清空原来的资源
+                            ll.removeAllViews();
+                        }
                         if ("success".equals(response.optString("result"))) {
                             JSONArray resourceGroups = response.optJSONArray("data");
-                            for (ViewGroup ll : mResourceGvs) {//清空原来的资源
-                                ll.removeAllViews();
-                            }
-                            for (int i = 0; i < mTitleTvs.length; i++ ) {
-                                if (i >= resourceGroups.length()) {
-                                    mTitleFls[i].setVisibility(View.GONE);
-                                    mResourceGvs[i].removeAllViews();
-                                    mResourceGvs[i].setVisibility(View.GONE);
-                                } else {
-                                    mTitleFls[i].setVisibility(View.VISIBLE);
-                                    mResourceGvs[i].setVisibility(View.VISIBLE);
-
-                                    JSONObject resourceGroup = resourceGroups.optJSONObject(i);
-                                    mTitleTvs[i].setText(resourceGroup.optString("categoryName"));
-                                    JSONArray resourceArray = resourceGroup.optJSONArray("resources");
-                                    List<Resource> resources = JsonParseUtil.parseArray(resourceArray, mResourceParser);
-
-                                    if (resources != null && resources.size() > 0) {
-                                        for (final Resource resource : resources) {
-                                            VideoItemViewHolder videoItemViewHolder = new VideoItemViewHolder();
-                                            View view = mInflater.inflate(videoItemViewHolder.obtainLayoutId(), mResourceGvs[i], false);
-                                            videoItemViewHolder.mapFromView(view);
-                                            videoItemViewHolder.setDataToView(resource, getActivity());
-                                            mResourceGvs[i].addView(view, createGridItemLp());
-                                            view.setOnClickListener(new OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    Resource.gotoResDetails(getActivity(), UserInfoKeeper.obtainUserInfo(), resource);
-                                                }
-                                            });
-                                        }
-                                        if (resources.size() == 1) {
-                                            mResourceGvs[i].addView(new View(getActivity()), createGridItemLp());
-                                        }
+                            if (resourceGroups != null && resourceGroups.length() > 0) {
+                                mBannerIv.setVisibility(View.VISIBLE);
+                                mEmptyView.setVisibility(View.GONE);
+                                for (int i = 0; i < mTitleTvs.length; i++) {
+                                    if (i >= resourceGroups.length()) {
+                                        mTitleFls[i].setVisibility(View.GONE);
+                                        mResourceGvs[i].removeAllViews();
+                                        mResourceGvs[i].setVisibility(View.GONE);
                                     } else {
-                                        TextView noContentsTv = new TextView(getActivity());
-                                        noContentsTv.setText(R.string.sorry_for_no_contents);
-                                        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                                        layoutParams.gravity = Gravity.CENTER;
-                                        noContentsTv.setGravity(Gravity.CENTER);
-                                        int padding = UIUtils.dip2px(getContext(), 8);
-                                        noContentsTv.setPadding(0, padding, 0, padding);
-                                        mResourceGvs[i].addView(noContentsTv, layoutParams);
+                                        mTitleFls[i].setVisibility(View.VISIBLE);
+                                        mResourceGvs[i].setVisibility(View.VISIBLE);
+
+                                        JSONObject resourceGroup = resourceGroups.optJSONObject(i);
+                                        mTitleTvs[i].setText(resourceGroup.optString("categoryName"));
+                                        JSONArray resourceArray = resourceGroup.optJSONArray("resources");
+                                        List<Resource> resources = JsonParseUtil.parseArray(resourceArray, mResourceParser);
+
+                                        if (resources != null && resources.size() > 0) {
+                                            for (final Resource resource : resources) {
+                                                VideoItemViewHolder videoItemViewHolder = new VideoItemViewHolder();
+                                                View view = mInflater.inflate(videoItemViewHolder.obtainLayoutId(), mResourceGvs[i], false);
+                                                videoItemViewHolder.mapFromView(view);
+                                                videoItemViewHolder.setDataToView(resource, getActivity());
+                                                mResourceGvs[i].addView(view, createGridItemLp());
+                                                view.setOnClickListener(new OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        Resource.gotoResDetails(getActivity(), UserInfoKeeper.obtainUserInfo(), resource);
+                                                    }
+                                                });
+                                            }
+                                            if (resources.size() == 1) {
+                                                mResourceGvs[i].addView(new View(getActivity()), createGridItemLp());
+                                            }
+                                        } else {
+                                            TextView noContentsTv = new TextView(getActivity());
+                                            noContentsTv.setText(R.string.sorry_for_no_contents);
+                                            LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                                            layoutParams.gravity = Gravity.CENTER;
+                                            noContentsTv.setGravity(Gravity.CENTER);
+                                            int padding = UIUtils.dip2px(getContext(), 8);
+                                            noContentsTv.setPadding(0, padding, 0, padding);
+                                            mResourceGvs[i].addView(noContentsTv, layoutParams);
+                                        }
                                     }
                                 }
+                            } else {
+                                handlerEmpty();
                             }
+                        } else {
+                            String message = response.optString("message");
+                            if (!TextUtils.isEmpty(message)) {
+                                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            }
+                            handlerEmpty();
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
-                        minusLoadingCount();
+                        stopRefreshing();
                     }
                 });
         mCompositeDisposable.add(disposable);
+    }
+
+    private void handlerEmpty() {
+        mBannerIv.setVisibility(View.GONE);
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -253,21 +286,6 @@ public class HaiNingResFragment extends Fragment {
         }
     };
 
-
-    /**
-     * 在container的head与tail之间插入布局id为layoutId的view
-     * @param container 容器
-     * @param titleView 标题
-     * @param emptyView 空提示view
-     * @param list 实体列表
-     * @param viewStuffer 视图组件数据填充器
-     * @param <T> 实体类型
-     */
-    private <T> void addItemsBetween(LinearLayout container, View titleView, View emptyView,
-            List<T> list, ViewStuffer<T> viewStuffer) {
-        ItemFillerUtil.addItems(container, titleView, emptyView, list, viewStuffer);
-    }
-
     private OnModuleConfigListener mOnModuleConfigListener = new OnModuleConfigListener() {
         @Override
         public void onConfigLoaded(ModuleConfig config) {
@@ -276,7 +294,9 @@ public class HaiNingResFragment extends Fragment {
             MainPageConfig mainPageConfig = config.getMainPageConfig();
 
             if (mainPageConfig.hasResource()) {
-                loadMainResources(config.getBaseAreaId(), config.getSchoolId());
+                mBaseAreaId = config.getBaseAreaId();
+                mSchoolId = config.getSchoolId();
+                loadMainResources(mBaseAreaId, mSchoolId);
             }
         }
     };

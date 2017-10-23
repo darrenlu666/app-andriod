@@ -58,7 +58,7 @@
             android:paddingLeft="16dp"
             android:paddingStart="16dp"
             android:text="全选"
-            android:textColor="@color/main_green" />
+            android:textColor="@color/list_item_label" />
 
         <Button
             android:id="@+id/btn_delete"
@@ -69,13 +69,13 @@
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:background="@null"
-            android:drawableLeft="@drawable/xxhdpi_trash_nor"
-            android:drawableStart="@drawable/xxhdpi_trash_nor"
+            android:drawableLeft="@drawable/ic_trash"
+            android:drawableStart="@drawable/ic_trash"
             android:gravity="center"
             android:minWidth="0dp"
             android:drawablePadding="16dp"
             android:text="删除"
-            android:textColor="@color/main_green" />
+            android:textColor="@color/list_item_label" />
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager

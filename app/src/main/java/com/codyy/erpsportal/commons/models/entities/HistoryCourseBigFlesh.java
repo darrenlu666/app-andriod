@@ -12,7 +12,7 @@ import com.codyy.erpsportal.commons.controllers.viewholders.annotation.LayoutId;
  * 门户-直播课堂（海宁定制）-课程回放
  * Created by gujiajia on 2017/9/20.
  */
-@LayoutId(R.layout.item_customized_history_class)
+@LayoutId(R.layout.item_history_course_flesh_big)
 public class HistoryCourseBigFlesh extends HistoryCourseFlesh {
 
     public HistoryCourseBigFlesh() {}

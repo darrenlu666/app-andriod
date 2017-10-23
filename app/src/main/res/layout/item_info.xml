@@ -17,7 +17,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:background="@color/white"
-        app:placeholderImage="@drawable/ic_load_failed"/>
+        app:placeholderImageScaleType="centerCrop"
+        app:placeholderImage="@drawable/ic_info_default"/>
 
     <TextView
         android:id="@+id/tv_title"

@@ -21,7 +21,7 @@ import butterknife.Bind;
  * 门户-直播课堂（海宁定制）-大课程回放 组持者
  * Created by gujiajia on 2017/9/21.
  */
-@LayoutId(R.layout.item_customized_history_class)
+@LayoutId(R.layout.item_history_course_flesh_big)
 public class HistoryCourseFleshBigVhr extends AbsSkeletonVhr<HistoryCourseBigFlesh> {
 
     @Bind(R.id.sdv)

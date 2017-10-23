@@ -69,7 +69,7 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * 频道页骨架碎片
+ * 海宁直播课堂
  */
 public class HaiNingCustomizedFragment extends Fragment{
 
@@ -103,7 +103,11 @@ public class HaiNingCustomizedFragment extends Fragment{
                         .onLiveClassroomClick(room);
             } else if (flesh instanceof HistoryCourseFlesh) {
                 HistoryCourseFlesh historyCourseFlesh = (HistoryCourseFlesh) flesh;
-                ClassRoomDetailActivity.startActivity(getActivity(),UserInfoKeeper.obtainUserInfo(), historyCourseFlesh.getId(), ClassRoomContants.TYPE_CUSTOM_RECORD,historyCourseFlesh.getSubjectName());
+                ClassRoomDetailActivity.startActivity(getActivity(),
+                        UserInfoKeeper.obtainUserInfo(),
+                        historyCourseFlesh.getId(),
+                        ClassRoomContants.TYPE_CUSTOM_RECORD,
+                        historyCourseFlesh.getSubjectName());
             }
         }
     };
