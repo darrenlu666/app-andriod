@@ -313,6 +313,14 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
         Cog.i(TAG ,"用户数据：" + (mAllUsers != null ? mAllUsers.size() : 0));
         if(mAllUsers == null) return;
         if(null == mMainBNLiveControlView) return;
+
+        mMainBnVideoView.setLoadingListener(new BnVideoLayout2.ILoadingListener() {
+            @Override
+            public void onClick(View v) {
+                //重新获取dms
+                tryDMSLiving();
+            }
+        });
         //设置主播的名字
         for (OnlineUserInfo user : mAllUsers) {
             if (user.getRole() == MeetingBase.BASE_MEET_ROLE_0) {//主讲人
@@ -335,8 +343,14 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                 }
             }
         }
+        tryDMSLiving();
+    }
 
-        mMeetingBase.getBaseDMS().getServer(getParentActivity(), mMeetingBase, new DMSEntity.ICallBack() {
+    /**
+     * 尝试获取dms后重新加载...
+     */
+    private void tryDMSLiving() {
+        mMeetingBase.getBaseDMS().getServer(getParentActivity(), mMeetingBase, mUserInfo.getBaseAreaId(),new DMSEntity.ICallBack() {
             @Override
             public void onSuccess(String serverURL) {
                 Cog.i(TAG ,"视频模式：视频地址～返回成功～" + serverURL);

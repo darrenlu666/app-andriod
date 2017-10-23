@@ -1,14 +1,21 @@
 package com.codyy.erpsportal.commons.controllers.viewholders.homepage;
 
+import android.graphics.drawable.Animatable;
 import android.view.View;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.entities.mainpage.GroupSchool;
+import com.codyy.erpsportal.commons.utils.UriUtils;
 import com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.controller.ControllerListener;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.image.ImageInfo;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,9 +47,15 @@ public class HomeGroupSchoolViewHolder extends BaseRecyclerViewHolder<GroupSchoo
 
     @Override
     public void setData(int position, GroupSchool data) throws Throwable {
-        ImageFetcher.getInstance(mSdv.getContext()).fetchSmall(mSdv, data.getCoverPic());
+
         mTvSchool.setText(data.getClsSchoolName());
-        // TODO: 17-8-8 to get the tag name !
         mTagTv.setText(data.getSchoolTypeName());
+
+        //设置默认图片.
+        ImageFetcher.getInstance(mSdv)
+                .fetchSmallWithDefault(mSdv
+                        ,data.getCoverPic()
+                        ,R.drawable.ic_group_school_default
+                        ,true);
     }
 }

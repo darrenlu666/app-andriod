@@ -5,7 +5,6 @@
     android:id="@+id/rlt_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
     android:background="?selectableItemBackground">
 
     <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
@@ -16,7 +15,10 @@
         app:aspectRatio="0.5625"
         app:aspectRatioEnabled="true"
         app:dominantMeasurement="width"
-        app:placeholderImage="@drawable/icon_default_video" />
+        app:placeholderImage="@drawable/icon_default_video"
+        app:placeholderImageScaleType="fitXY"
+        app:actualImageScaleType="fitXY"
+        />
 
     <TextView
         android:id="@+id/tv_school"

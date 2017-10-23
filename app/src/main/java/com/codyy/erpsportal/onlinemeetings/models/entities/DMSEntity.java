@@ -1,9 +1,11 @@
 package com.codyy.erpsportal.onlinemeetings.models.entities;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
@@ -11,6 +13,10 @@ import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+import com.koushikdutta.async.http.AsyncHttpClient;
+import com.koushikdutta.async.http.AsyncHttpGet;
+import com.koushikdutta.async.http.AsyncHttpResponse;
+import com.koushikdutta.async.http.WebSocket;
 
 import org.json.JSONObject;
 
@@ -24,7 +30,8 @@ import java.util.Map;
  * Created by poe on 15-8-14.
  */
 public class DMSEntity implements Parcelable{
-    private static final String TAG = "DMSEntity";
+    private static final String TAG = DMSEntity.class.getSimpleName();
+    private static final String DMS_ERROR= "dms_error";
     private String dmsCode;
     private String dmsMainSpeakID;//main speaker uuid
     private String dmsAddress;//http://url.cn/dmc
@@ -34,7 +41,6 @@ public class DMSEntity implements Parcelable{
     private String directURL ;//直接使用的url 。
 
     public static List<ICallBack> mRegisters = new ArrayList<>();
-//    private ICallBack mCallBack;
 
     public DMSEntity() {
     }
@@ -44,17 +50,16 @@ public class DMSEntity implements Parcelable{
      * 如果serverType ==0 需要dmc二次请求网址
      * @return
      */
-    public void   getServer(Activity act , MeetingBase meetingBase , ICallBack callBack){
-//        this.mCallBack  =   callBack;
+    public void  getServer(Activity act , MeetingBase meetingBase,String areaId , ICallBack callBack){
         synchronized(EApplication.instance()){
             mRegisters.add(callBack);
-            if(!TextUtils.isEmpty(directURL)){
+            if(!TextUtils.isEmpty(directURL) && !DMS_ERROR.equals(directURL)){
                 if(null != callBack && mRegisters.size()<= 1){
                     notifyDataUpdate();
                 }
             }else{
                 if(mRegisters.size()<= 1){//阻止多次调用此方法
-                    getDirectURL(act , meetingBase);
+                    getDirectURL(act , meetingBase , areaId);
                 }
             }
         }
@@ -75,15 +80,12 @@ public class DMSEntity implements Parcelable{
         mRegisters.clear();
     }
 
-    private void getDirectURL(Activity act ,MeetingBase meetingBase ) {
+    private void getDirectURL(Activity act ,MeetingBase meetingBase ,String areaId) {
         Cog.i(TAG ,"开始获取DMS地址.....");
         if(this.dmsServerType!=null && dmsServerType.equals("0")){
-            getMediaPlayAddress(act , meetingBase);
+            getMediaPlayAddress(act , meetingBase , areaId);
         }else{
             this.directURL = this.pmsAddress;
-           /* if(null != mCallBack){
-                mCallBack.onSuccess(this.directURL);
-            }*/
             notifyDataUpdate();
         }
     }
@@ -178,45 +180,143 @@ public class DMSEntity implements Parcelable{
 
 
     /**
+     * 返回GET拼接参数  ？mid=xxxx&uid=xxxx
+     *
+     * @return
+     */
+    public String getParams(Map<String, String> params) {
+        if (null != params && params.size() > 0) {
+            StringBuilder result = new StringBuilder("?");
+            Object[] keys = params.keySet().toArray();
+            for (int i = 0; i < keys.length; i++) {
+                if (i > 0) {
+                    result.append("&");
+                }
+                result.append(keys[i]).append("=").append(params.get(keys[i]));
+            }
+            return result.toString();
+        } else {
+            return "";
+        }
+    }
+
+    /**
      * 获取媒体服务器的实际地址 .
      */
-    private void getMediaPlayAddress(Activity act ,MeetingBase meetingBase) {
+    private void getMediaPlayAddress(final Activity act , MeetingBase meetingBase, String areaId) {
 
         Map<String, String> params = new HashMap<>();
         params.put("method", "play");
-        params.put("config", meetingBase.getBaseMeetID());
+        params.put("protocal", "rtmp");
+        params.put("group", meetingBase.getBaseMeetID());
         params.put("stream", UiOnlineMeetingUtils.getStream(meetingBase, meetingBase.getBaseDMS().getDmsMainSpeakID()));
+        params.put("domain",areaId);
+        //action 互动为1，观摩为2
+        if(MeetingBase.BASE_MEET_ROLE_3 == meetingBase.getBaseRole()){//观摩
+            params.put("action",String.valueOf(2));
+        }else{//互动.
+            params.put("action",String.valueOf(1));
+        }
 
-        RequestSender requestSender = new RequestSender(act);
+       /* RequestSender requestSender = new RequestSender(act.getApplicationContext());
         requestSender.sendGetRequest(new RequestSender.RequestData(dmsAddress, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Cog.d(TAG, "onResponse:" + response);
-                if (!TextUtils.isEmpty(response.optString("result"))) {//默认：外网dms
-                    directURL   =    response.optString("result");
-                    notifyDataUpdate();
-                }else if(!TextUtils.isEmpty(response.optString("dms"))){//外网dms rtmp://dms.needu.cn:1938/dms
-                    directURL   =    response.optString("dms");
-                    notifyDataUpdate();
-                } else if(!TextUtils.isEmpty(response.optString("internaldms"))){//内网dms
-                    directURL   =    response.optString("internaldms");
-                    notifyDataUpdate();
-                } else {
-                    ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
-                }
+                onSuccess(response, act);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(Throwable error) {
-                Cog.e(TAG, "onErrorResponse:" + error);
-                ToastUtil.showToast("获取DMC失败!");
-                /*if(null != mCallBack){
-                    mCallBack.onError(error);
-                }*/
-                mRegisters.clear();
+                onError(error);
+            }
+        }));*/
+        String url = dmsAddress+ getParams(params);
+        Cog.d(TAG, "sendRequest: AsyncHttpClient :" + url);
+        AsyncHttpClient.getDefaultInstance().executeJSONObject(new AsyncHttpGet(url).setTimeout(10*1000), new AsyncHttpClient.JSONObjectCallback() {
+            @Override
+            public void onCompleted(Exception error, AsyncHttpResponse source, JSONObject result) {
+                if (error != null) {
+                    error.printStackTrace();
+                    onError(error,act);
+                    return;
+                }
+                onSuccess(result, act);
+            }
+        });
+    }
+
+    private void onError(Throwable error,final Activity act) {
+        Cog.e(TAG, "onErrorResponse:" + error);
+        act.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+//                ToastUtil.showToast("获取DMC失败!");
+//                mRegisters.clear();
+                directURL = DMS_ERROR;
                 notifyDataUpdate();
             }
-        }));
+        });
+    }
+
+    private void onSuccess(JSONObject response, final Activity act) {
+        Cog.d(TAG, "onResponse:" + response);
+        //优先获取内网的dmsip,如果不存在内网ip则使用外网ip.
+        JSONObject dms = response.optJSONObject("dms");
+        if(dms == null) {
+            act.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtil.showToast(EApplication.instance(), "dms没有合适的服务器可用了,请稍后再试!");
+                }
+            });
+
+            return;
+        }
+        final JSONObject internal = dms.optJSONArray("internal").optJSONObject(0);
+        final JSONObject external = dms.optJSONArray("external").optJSONObject(0);
+
+        //判断网络类型
+
+        //1. 判断内网的服务器是否可用
+        String socketUrl = internal.optString("socketUrl");
+        Log.i("socket","test socket start !!!------------------"+socketUrl);
+
+        AsyncHttpGet get = new AsyncHttpGet("http://"+socketUrl);
+        get.setTimeout(500);
+
+        AsyncHttpClient.getDefaultInstance().websocket(get, "http", new AsyncHttpClient.WebSocketConnectCallback() {
+            @Override
+            public void onCompleted(Exception ex, WebSocket webSocket) {
+                Log.i("socket","test socket end !!!-----------------error: "+ex);
+                if (ex != null) {
+                    ex.printStackTrace();
+                    directURL = "rtmp://"+external.optString("rtmpUrl")+"/dms";
+                    act.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataUpdate();
+                        }
+                    });
+                    return;
+                }
+                directURL = "rtmp://"+internal.optString("rtmpUrl")+"/dms";
+                act.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataUpdate();
+                    }
+                });
+
+                String ping ="{method: \"ping\", data: \"1111111111111\"}";
+                webSocket.send(ping);
+
+                webSocket.setStringCallback(new WebSocket.StringCallback() {
+                    public void onStringAvailable(String s) {
+                        System.out.println("I got a string: " + s);
+                    }
+                });
+            }
+        });
     }
 
     public interface ICallBack{

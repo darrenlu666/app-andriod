@@ -21,7 +21,11 @@
         app:columnCount="5">
 
         <TextView
+            android:id="@+id/lb_master_classroom"
             android:text="主讲教室"
+            android:lines="1"
+            android:ellipsize="end"
+            android:maxEms="4"
             app:layout_gravity="center_vertical" />
 
         <TextView
@@ -35,7 +39,11 @@
         <Space android:layout_width="24dp" />
 
         <TextView
+            android:id="@+id/lb_receive_classroom"
             android:text="接收教室"
+            android:lines="1"
+            android:ellipsize="end"
+            android:maxEms="4"
             app:layout_gravity="center_vertical" />
 
         <TextView

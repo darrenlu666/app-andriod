@@ -9,6 +9,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,25 @@ import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
  */
 public class UiMainUtils {
 
+    /**
+     * 合並N个字符串
+     * str1,str2,str3 => str1/str2/str3
+     * @param strs
+     * @return
+     */
+    public static String combineStrs(String ...strs){
+        StringBuilder jpsb = new StringBuilder("");
+
+        for (String str: strs){
+
+            if(!TextUtils.isEmpty(str)) {
+                if(jpsb.toString().length()>0) jpsb.append("/");
+                jpsb.append(str);
+            }
+        }
+
+        return jpsb.toString();
+    }
     /**
      * 替换旧的api res.getColor(int color)
      * @param color

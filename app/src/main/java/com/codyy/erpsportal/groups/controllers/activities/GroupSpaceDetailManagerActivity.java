@@ -214,7 +214,9 @@ public class GroupSpaceDetailManagerActivity extends BaseHttpActivity implements
         ImageFetcher.getInstance(EApplication.instance()).fetchSmall(mSimpleDraweeView,mGroupSpace.getPic());
         mGroupTitleTv.setText(UIUtils.filterNull(mGroupSpace.getGroupName()));
         mCreatorTv.setText(UIUtils.filterNull(mGroupSpace.getGroupCreator()));
-        mCreateTimeTv.setText(DateUtil.getDateStr(Long.valueOf(mGroupSpace.getCreateTime()),DateUtil.DEF_FORMAT));
+        if(UIUtils.isInteger(mGroupSpace.getCreateTime())){
+            mCreateTimeTv.setText(DateUtil.getDateStr(Long.valueOf(mGroupSpace.getCreateTime()),DateUtil.DEF_FORMAT));
+        }
 //        mSubjectTv.setText(UIUtils.filterNull(mGroupSpace.getSubjectName()));
         String teamName = "教研组";
         if(Group.TYPE_INTEREST.equals(mGroupSpace.getGroupType())){

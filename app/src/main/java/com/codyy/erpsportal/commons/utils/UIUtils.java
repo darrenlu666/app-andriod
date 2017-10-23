@@ -8,6 +8,7 @@ import android.support.annotation.StringRes;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public final class UIUtils {
 
@@ -84,6 +86,18 @@ public final class UIUtils {
         }
 
         return  result ;
+    }
+
+
+    /**
+     * 判断字符串是否为时间戳.
+     * @param str
+     * @return
+     */
+    public static boolean isInteger(String str) {
+        if(TextUtils.isEmpty(str)) return false;
+        Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
+        return pattern.matcher(str).matches();
     }
 
     public static void showToastMessage(Context context, String message, int duration) {

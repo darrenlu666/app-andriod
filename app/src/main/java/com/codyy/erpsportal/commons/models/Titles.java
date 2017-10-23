@@ -557,7 +557,7 @@ public class Titles {
         sPagetitleIndexClubSchoolLiveClass = jsonObject.optString("front.pagetitle.index.clubschool.liveclass", "直播课堂");
         sPagetitleIndexClubSchoolSchoolResource = jsonObject.optString("front.pagetitle.index.clubschool.schoolres", "优课资源");
         sPagetitleIndexClubSchoolResource = jsonObject.optString("front.pagetitle.index.clubschool.resource", "优课资源");
-        sPagetitleIndexClubSchool = jsonObject.optString("front.pagetitle.index.clubschool.clubschoo", "集团学校");
+        sPagetitleIndexClubSchool = jsonObject.optString("front.pagetitle.index.clubschool.clubschool", "集团学校");
     }
 
     /**

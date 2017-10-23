@@ -38,6 +38,8 @@ public class ZoomOutAnimator {
         final Rect finalBounds = new Rect();
         final Point globalOffset = new Point();
 
+//        thumbView.bringToFront();
+
         // The start bounds are the global visible rectangle of the thumbnail, and the
         // final bounds are the global visible rectangle of the container view. Also
         // set the container view's offset as the origin for the bounds, since that's
@@ -84,6 +86,7 @@ public class ZoomOutAnimator {
         // Construct and run the parallel animation of the four translation and scale properties
         // (X, Y, SCALE_X, and SCALE_Y).
         AnimatorSet set = new AnimatorSet();
+
         set
                 .play(ObjectAnimator.ofFloat(thumbView, View.X, startBounds.left,
                         finalBounds.left))

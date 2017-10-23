@@ -212,6 +212,10 @@ public abstract class BaseHttpFragment extends Fragment {
         }));
     }
 
+    public RequestSender getSender() {
+        return mSender;
+    }
+
     private void notifyEndlessLoadMoreFailed(boolean isRefreshing) {
         if(!isRefreshing && mPageListEnable){
             if(mCurrentPageIndex>1)  mCurrentPageIndex--;
