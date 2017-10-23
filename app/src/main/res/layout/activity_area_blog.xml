@@ -59,7 +59,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="推荐(全部)"
+                    android:text="推送(全部)"
                     android:drawableRight="@drawable/pull_arrow"
                     android:drawablePadding="5dp"
                     android:padding="5dp"
@@ -91,6 +91,7 @@
             </com.codyy.erpsportal.commons.widgets.RefreshLayout>
             <com.codyy.erpsportal.commons.widgets.EmptyView
                 android:id="@+id/empty_view"
+                android:layout_below="@id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"

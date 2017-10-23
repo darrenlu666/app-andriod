@@ -2,15 +2,22 @@ package com.codyy.erpsportal.groups.controllers.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.StringDef;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +35,10 @@ import android.widget.TextView;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
+import com.codyy.erpsportal.commons.widgets.MyBottomSheet;
 import com.codyy.erpsportal.commons.widgets.RefreshLayout;
 import com.codyy.erpsportal.commons.widgets.blog.CommentButton;
+import com.codyy.erpsportal.groups.utils.BlogUtil;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
@@ -141,6 +150,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     private List<String> mImageList = new ArrayList<>();//博文详情中的图片详情 !
     private String mFromType = FROM_TYPE_SHARE;//默认来自门户的详情 .
     private String mGroupId = "";
+    private BlogDetail mBlogDetail;
 
     @Override
     public int obtainLayoutId() {
@@ -157,6 +167,13 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
+            //应用-博文v5.3.8 add.
+            if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())){
+                data.put("baseAreaId",mUserInfo.getBaseAreaId());
+            }
+            if(UserInfo.USER_TYPE_SCHOOL_USER.equals(mUserInfo.getUserType())){
+                data.put("schoolId", UIUtils.filterNull(mUserInfo.getSchoolId()));
+            }
         }
         if(null != mBlogId) data.put("blogId",mBlogId);
         data.put("categoryType", mFromType);
@@ -175,40 +192,70 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         Cog.d(TAG , response.toString());
         if(null == mAllCommentCountTv ) return;
         if(mRefreshLayout.isRefreshing())mRefreshLayout.setRefreshing(false);
-//        if(isRefreshing) mData.clear();
-        BlogDetail blogDetail = new Gson().fromJson(response.toString() , BlogDetail.class);
-        mImageList = HtmlUtils.filterImages(blogDetail.getBlogContent());
-        refreshUI(blogDetail);
+        mBlogDetail = new Gson().fromJson(response.toString() , BlogDetail.class);
+        mImageList = HtmlUtils.filterImages(mBlogDetail.getBlogContent());
+        refreshUI();
         loadCommentMore();
     }
 
-    private void refreshUI(BlogDetail blogDetail) {
+    private void refreshUI() {
         if(null != mAllCommentCountTv) {
             //1.详情
-            if (null != blogDetail) {
+            if (null != mBlogDetail) {
                 //1.1 title
-                mBlogTitleTv.setText(Html.fromHtml(UIUtils.filterCharacter(blogDetail.getBlogTitle())));
-                mBlogCreatorTv.setText(blogDetail.getCreatorName());
-                mCategoryTextView.setText(TextUtils.isEmpty(blogDetail.getBlogCategory()) ? "未分类" : blogDetail.getBlogCategory());//分类
-                if(blogDetail.getViewCount() != null){
-                    mBlogReadCountTv.setText(String.valueOf(Integer.valueOf(blogDetail.getViewCount()) + 1));
+                mBlogTitleTv.setText(Html.fromHtml(UIUtils.filterCharacter(mBlogDetail.getBlogTitle())));
+                mBlogCreatorTv.setText(mBlogDetail.getCreatorName());
+                mCategoryTextView.setText(TextUtils.isEmpty(mBlogDetail.getBlogCategory()) ? "未分类" : mBlogDetail.getBlogCategory());//分类
+                if(mBlogDetail.getViewCount() != null){
+                    mBlogReadCountTv.setText(String.valueOf(Integer.valueOf(mBlogDetail.getViewCount()) + 1));
                 }
                 //create time
-                String time = DateUtil.getDateStr(Long.parseLong(blogDetail.getCreateTime()), "yyyy-MM-dd HH:mm");
+                String time = DateUtil.getDateStr(Long.parseLong(mBlogDetail.getCreateTime()), "yyyy-MM-dd HH:mm");
                 mCreateTimeTv.setText(time);
                 //1.2 内容
-                if (null != blogDetail.getBlogContent()) {
+                if (null != mBlogDetail.getBlogContent()) {
                     //加载内容...
                     if (mImageList != null && mImageList.size() > 0) {
-                        WebViewUtils.setContentToWebView(mWebView, HtmlUtils.constructExecActionJs(blogDetail.getBlogContent()));
+                        WebViewUtils.setContentToWebView(mWebView, HtmlUtils.constructExecActionJs(mBlogDetail.getBlogContent()));
                     } else {
-                        WebViewUtils.setContentToWebView(mWebView, HtmlUtils.constructWordBreakJs(blogDetail.getBlogContent()));
+                        WebViewUtils.setContentToWebView(mWebView, HtmlUtils.constructWordBreakJs(mBlogDetail.getBlogContent()));
                     }
                 }
                 //平均分
-                mScoreTextView.setText(blogDetail.getShowAverage()+"分");
+                mScoreTextView.setText(mBlogDetail.getShowAverage()+"分");
                 mRatingBar.setMax(10);
-                mRatingBar.setRating(blogDetail.getRatingAverage()/2);
+                mRatingBar.setRating(mBlogDetail.getRatingAverage()/2);
+
+                //判断是否可以推送.
+                if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())||
+                        UserInfo.USER_TYPE_SCHOOL_USER.equals(mUserInfo.getUserType())){
+                    //推送按钮。
+                    this.setFilterListener(new IFilterListener() {
+                        @Override
+                        public void onFilterClick(MenuItem item) {
+                            showPushMenu();
+                        }
+
+                        @Override
+                        public void onPreFilterCreate(Menu menu) {
+                            menu.getItem(0).setActionView(R.layout.textview_filter_confirm_button);
+                            TextView tv = (TextView) menu.getItem(0).getActionView().findViewById(R.id.tv_title);
+                            tv.setText("推送");
+                            tv.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    showPushMenu();
+                                }
+                            });
+                            //学校管理员文字更改。
+                            if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())&&
+                                    (mBlogDetail.isRecommendHomeFlag()||
+                                            mBlogDetail.isRecommendSideFlag())){
+                                tv.setText("编辑推送");
+                            }
+                        }
+                    });
+                }
             }
         }
     }
@@ -296,6 +343,198 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
                 return false;
             }
         });
+    }
+
+    private TextView mPushDoorTv,mPushSlideTv,mPushUpperTv;
+    /**
+     * 推送选择Menu.
+     */
+    private void showPushMenu() {
+        if (mDialog == null) {
+            mDialog = new MyBottomSheet(BlogPostDetailActivity.this);
+            View contentView = LayoutInflater.from(BlogPostDetailActivity.this).inflate(R.layout.dialog_bottom_sheet_blog_push_manager, null);
+            mPushDoorTv = (TextView) contentView.findViewById(R.id.tv_door);
+            mPushSlideTv = (TextView) contentView.findViewById(R.id.tv_slide);
+            mPushUpperTv = (TextView) contentView.findViewById(R.id.tv_upper);
+            TextView exitTv = (TextView) contentView.findViewById(R.id.tv_cancel);
+            mPushDoorTv.setOnClickListener(mDialogListener);
+            mPushSlideTv.setOnClickListener(mDialogListener);
+            mPushUpperTv.setOnClickListener(mDialogListener);
+            exitTv.setOnClickListener(mDialogListener);
+            mDialog.setContentView(contentView);
+            initPushState();
+            View parent = (View) contentView.getParent();
+            int displayHeight = getResources().getDisplayMetrics().heightPixels;
+            Cog.i(TAG, "displayHeight : " + displayHeight);
+            final BottomSheetBehavior behavior = BottomSheetBehavior.from(parent);
+
+            contentView.measure(0, 0);
+            behavior.setPeekHeight(contentView.getMeasuredHeight());
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) parent.getLayoutParams();
+            layoutParams.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+            parent.setLayoutParams(layoutParams);
+            mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+            });
+        }else{
+            initPushState();
+        }
+        mDialog.show();
+    }
+
+    /**
+     * 初始化选择状态
+     */
+    private void initPushState() {
+        if(null == mPushDoorTv) return;
+        switch (mUserInfo.getUserType()){
+            case UserInfo.USER_TYPE_AREA_USER:
+                mPushUpperTv.setVisibility(View.GONE);
+                break;
+            case UserInfo.USER_TYPE_SCHOOL_USER://学校
+                mPushUpperTv.setVisibility(View.VISIBLE);
+                break;
+        }
+
+        if(mBlogDetail.isRecommendHomeFlag()) {
+            mPushDoorTv.setText("取消门户博文库的推送");
+        }else{
+            mPushDoorTv.setText("推送到门户博文库");
+        }
+        if(mBlogDetail.isRecommendSideFlag()) {
+            mPushSlideTv.setText(" 取消侧边栏的推送");
+        }else{
+            mPushSlideTv.setText("推送到侧边栏");
+        }
+        if(mBlogDetail.isShareUplevelFlag()) {
+            mPushUpperTv.setText("已推送给上级");
+            mPushUpperTv.setTextColor(UiMainUtils.getColor(R.color.main_color));
+        }else{
+            mPushUpperTv.setTextColor(UiMainUtils.getColor(R.color.md_grey_700));
+        }
+    }
+
+    /**
+     * 更换头像Dialog
+     */
+    private MyBottomSheet mDialog;
+    private View.OnClickListener mDialogListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.tv_door://推送到门户博文库
+                    pushToDoor();
+                    mDialog.dismiss();
+                    break;
+                case R.id.tv_slide://推送到侧边栏
+                    pushToSlide();
+                    mDialog.dismiss();
+                    break;
+                case R.id.tv_upper://
+                    if(!mBlogDetail.isShareUplevelFlag()){
+                        pushToUpper();
+                    }
+                    mDialog.dismiss();
+                    break;
+                case R.id.tv_cancel:
+                    mDialog.dismiss();
+                    break;
+            }
+        }
+    };
+
+    //推送到门户
+    private final String PUSH_TYPE_HOME = "HOME";
+    //推送到侧边栏
+    private final String PUSH_TYPE_SIDE = "SIDE";
+
+    /**
+     * 推送到门户.
+     */
+    private void pushToDoor() {
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("uuid",mUserInfo.getUuid());
+        params.put("blogId",mBlogId);
+        params.put("recAction",mBlogDetail.isRecommendHomeFlag()?"0":"1");
+        params.put("recType",PUSH_TYPE_HOME);
+
+        requestData(URLConfig.PUSH_BLOG_DOOR_OR_SLIDE, params, false,
+                new IRequest() {
+                    @Override
+                    public void onRequestSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+                        if(null == response ) return;
+                        if("success".equals(response.optString("result"))){
+                            mBlogDetail.setRecommendHomeFlag(!mBlogDetail.isRecommendHomeFlag());
+                            invalidateOptionsMenu();
+                        }
+                        ToastUtil.showToast(response.optString("message"));
+
+                    }
+
+                    @Override
+                    public void onRequestFailure(Throwable error) {
+
+                    }
+                });
+    }
+
+    //推送到侧边栏
+    private void pushToSlide() {
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("uuid",mUserInfo.getUuid());
+        params.put("blogId",mBlogId);
+        params.put("recAction",mBlogDetail.isRecommendSideFlag()?"0":"1");
+        params.put("recType",PUSH_TYPE_SIDE);
+
+        requestData(URLConfig.PUSH_BLOG_DOOR_OR_SLIDE, params, false,
+                new IRequest() {
+                    @Override
+                    public void onRequestSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+                        if(null == response ) return;
+                        if("success".equals(response.optString("result"))){
+                            mBlogDetail.setRecommendSideFlag(!mBlogDetail.isRecommendSideFlag());
+                            invalidateOptionsMenu();
+                        }
+                        ToastUtil.showToast(response.optString("message"));
+                    }
+
+                    @Override
+                    public void onRequestFailure(Throwable error) {
+
+                    }
+                });
+    }
+
+    //推送到上级
+    private void pushToUpper() {
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put("uuid",mUserInfo.getUuid());
+        params.put("blogId",mBlogId);
+        params.put("blogShareId",mBlogDetail.getBlogShareId());
+
+        requestData(URLConfig.PUSH_BLOG_HEADER_SCOPE, params, false,
+                new IRequest() {
+                    @Override
+                    public void onRequestSuccess(JSONObject response, boolean isRefreshing) throws Exception {
+                        if(null == response ) return;
+                        if("success".equals(response.optString("result"))){
+                            mBlogDetail.setShareUplevelFlag(true);
+                            invalidateOptionsMenu();
+                        }
+                        ToastUtil.showToast(response.optString("message"));
+                    }
+
+                    @Override
+                    public void onRequestFailure(Throwable error) {
+
+                    }
+                });
     }
 
     public class JsInteraction {
