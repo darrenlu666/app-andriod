@@ -157,6 +157,10 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         HashMap<String, String> data = new HashMap<>();
         if (mUserInfo != null) {
             data.put("uuid", mUserInfo.getUuid());
+            //应用-博文v5.3.8 add.
+            if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())){
+                data.put("baseAreaId",mUserInfo.getBaseAreaId());
+            }
         }
         if(null != mBlogId) data.put("blogId",mBlogId);
         data.put("categoryType", mFromType);

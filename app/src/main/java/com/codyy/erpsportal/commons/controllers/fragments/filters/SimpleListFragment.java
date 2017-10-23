@@ -119,7 +119,7 @@ public  class SimpleListFragment extends Fragment {
         mConditionAdapter   =   new BaseRecyclerAdapter<>(new BaseRecyclerAdapter.ViewCreator<SimpleTextViewHolder>() {
             @Override
             public SimpleTextViewHolder createViewHolder(ViewGroup parent, int viewType) {
-                return new SimpleTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_filter_simple_text, null));
+                return new SimpleTextViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_blog_simple_text, null));
             }
 
             @Override
@@ -152,6 +152,7 @@ public  class SimpleListFragment extends Fragment {
         if(mData.size() > 0){
             mConditionAdapter.setData(mData);
         }
+        updateItemBackground();
     }
 
     public void setOnItemClickListener(BaseRecyclerAdapter.OnItemClickListener mOnItemClickListener) {

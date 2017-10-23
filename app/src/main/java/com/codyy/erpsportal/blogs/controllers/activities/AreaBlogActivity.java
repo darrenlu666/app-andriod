@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,11 +34,9 @@ import com.codyy.erpsportal.commons.controllers.fragments.filters.SimpleListFrag
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.blog.AreaBlogPostList;
 import com.codyy.erpsportal.commons.models.entities.blog.BlogPost;
-import com.codyy.erpsportal.commons.models.entities.blog.MyBlogPostList;
 import com.codyy.erpsportal.commons.models.entities.filter.FilterEntity;
 import com.codyy.erpsportal.commons.models.entities.my.MyBaseTitle;
 import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
@@ -53,15 +50,11 @@ import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
-
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -225,7 +218,8 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
                                 PublicUserActivity.start(AreaBlogActivity.this, data.getBaseUserId());
                             }
                         } else {
-                            BlogPostDetailActivity.start(AreaBlogActivity.this, data.getBlogId(), BlogPostDetailActivity.FROM_TYPE_PERSON);
+                            BlogPostDetailActivity.start(AreaBlogActivity.this, data.getBlogId(),
+                                    BlogPostDetailActivity.FROM_TYPE_PERSON);
                         }
                         break;
                 }
