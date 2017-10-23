@@ -51,37 +51,55 @@
             >
             <TextView
                 android:id="@+id/tv_door"
-                style="@style/style_menu_item_text"
+                style="@style/style_menu_item_text_no_rectangle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="推送到门户博文库"
                 />
+            <view
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divide_color"
+                android:layout_below="@id/tv_door"
+                />
             <TextView
                 android:id="@+id/tv_slide"
-                style="@style/style_menu_item_text"
+                style="@style/style_menu_item_text_no_rectangle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_door"
+                android:layout_below="@id/divider1"
                 android:text="推送到侧边栏"
-                android:layout_marginTop="20dp"
+                />
+            <view
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divide_color"
+                android:layout_below="@id/tv_slide"
                 />
             <TextView
                 android:id="@+id/tv_upper"
-                style="@style/style_menu_item_text"
+                style="@style/style_menu_item_text_no_rectangle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_slide"
+                android:layout_below="@id/divider2"
                 android:text="推送给上级"
-                android:layout_marginTop="20dp"
+                />
+            <view
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divide_color"
+                android:layout_below="@id/tv_upper"
                 />
             <TextView
                 android:id="@+id/tv_cancel"
-                style="@style/style_menu_item_text"
+                style="@style/style_menu_item_text_no_rectangle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_upper"
+                android:layout_below="@id/divider3"
                 android:text="取消"
-                android:layout_marginTop="20dp"
                 />
         </RelativeLayout>
     </LinearLayout>
