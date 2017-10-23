@@ -30,6 +30,7 @@ import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.commons.models.entities.MeetingAction;
 import com.codyy.erpsportal.commons.models.entities.SpeakerEntity;
 import com.codyy.erpsportal.commons.receivers.ScreenBroadcastReceiver;
+import com.codyy.erpsportal.commons.utils.CoCoUtils;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NetworkUtils;
 import com.codyy.erpsportal.commons.utils.PullXmlUtils;
@@ -47,6 +48,8 @@ import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingA
 import com.codyy.erpsportal.onlinemeetings.models.entities.DMSEntity;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoCommand;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -536,6 +539,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                     mMainHandler.sendEmptyMessage(MSG_CLOSE_MY_AUDIO);
                 }
             }else{
+                if(null != mPartnerSurfaceView)
                 SnackToastUtils.toastShort(mPartnerSurfaceView,"我的视频采集失败！");
             }
         }
@@ -573,7 +577,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
     //打开或关闭本地摄像头 .
     @OnClick(R.id.iv_video_control_online_interact_video)
     void openOrCloseLocalVideo() {
-        // TODO: 16-9-5 挡住５００ｍｓ之内的连续点击
+        // 16-9-5 挡住５００ｍｓ之内的连续点击
         mHandler.removeCallbacks(mOpenOrCloseRunnable);
         mHandler.postDelayed(mOpenOrCloseRunnable,PERIOD_DELAY);
     }
@@ -705,7 +709,7 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
      */
     public void onEventMainThread(CoCoAction action) throws RemoteException {
         switch (action.getActionType()) {
-            case PullXmlUtils.TYPE_LOGIN://某人上线了
+            case CoCoCommand.TYPE_ONLINE://某人上线了
                 String userID  =  action.getActionResult();
                 String nickName = action.getNickName();
                 OnlineUserInfo comer = UiOnlineMeetingUtils.getOnlineUserByID(userID, mAllUsers);
@@ -743,8 +747,8 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                     }
                 }
                 break;
-            case PullXmlUtils.AGREE_SPEAKER_BACK: //把你设为发言人
-            case PullXmlUtils.AGREE_SPEAKER_BACK＿ALL://设置其他人为发言人,同意某人的发言申请.
+            case MeetingCommand.INFO_AGREE_SPEAKER_BACK: //把你设为发言人
+            case MeetingCommand.INFO_AGREE_SPEAKER_BACK＿ALL://设置其他人为发言人,同意某人的发言申请.
                 //增加发言人的个数
                 final OnlineUserInfo newSpeaker = UiOnlineMeetingUtils.getOnlineUserByID(action.getByOperationObject(),mAllUsers);
                 if(null != newSpeaker){
@@ -760,21 +764,8 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                     }
                 }
                 break;
-            //has implemented on {@link OnlineMeetingActivity}
-            case PullXmlUtils.COMMAND_WHITE_BOARD_MARK: //授予-白板标注权限
-                /*String result = action.getActionResult();
-                mMeetingBase.setWhiteBoardManager(Boolean.valueOf(result));
-                if(mMeetingBase.isWhiteBoardManager()){
-                    //拥有了白板标注权限
-                    // TODO: 16-8-24 文档表西餐形式变化，可以演示，可以删除 ...
-                }else{
-                    //被取消了白板标注权限
-                    // TODO: 16-8-24 不再可以演示／删除文档 ...
-                }*/
-                break;
-            case PullXmlUtils.CANCEL_SPEAKER://取消发言人
-            case PullXmlUtils.WEB_CANCEL_SPEAKER://取消发言人
-            case PullXmlUtils.WEB_CANCEL_SPEAKER_ALL://取消发言人
+            case MeetingCommand.INFO_CANCEL_SPEAKER://取消发言人
+            case MeetingCommand.WEB_CANCEL_SPEAKER_ALL://取消发言人
                 //如果当前含有需要减少发言者 .
                 OnlineUserInfo deleteUser = UiOnlineMeetingUtils.getOnlineUserByID(action.getByOperationObject(),mSpeakers);
                 //更新我的发言人状态 .0
@@ -794,6 +785,31 @@ public class OnlineInteractVideoFragment extends OnlineFragmentBase implements H
                         startAllSpeaker();
                     }
                 }
+                break;
+            case MeetingCommand.WEB_STOP_AUDIO://参会者禁言(web)
+                mAudioControlImageView.setClickable(false);
+                isAudioOn = true;
+                mHandler.removeCallbacks(mOpenOrCloseAudioRunnable);
+                mHandler.postDelayed(mOpenOrCloseAudioRunnable,PERIOD_DELAY);
+                break;
+            case MeetingCommand.WEB_PUBLISH_AUDIO://取消参会者禁言(web)
+                mAudioControlImageView.setClickable(true);
+                isAudioOn = false;
+                mHandler.removeCallbacks(mOpenOrCloseAudioRunnable);
+                mHandler.postDelayed(mOpenOrCloseAudioRunnable,PERIOD_DELAY);
+                break;
+            case MeetingCommand.WEB_STOP_VIDEO://设置参会者禁画面(web)
+                //本地视频控制disable.并设置当前当前为打开状态.
+                mVideoControlImageView.setEnabled(false);
+                isVideoOn = true;
+                mHandler.removeCallbacks(mOpenOrCloseRunnable);
+                mHandler.postDelayed(mOpenOrCloseRunnable,PERIOD_DELAY);
+                break;
+            case MeetingCommand.WEB_PUBLISH_VIDEO://取消参会者禁画面
+                mVideoControlImageView.setEnabled(true);
+                isVideoOn = false;
+                mHandler.removeCallbacks(mOpenOrCloseRunnable);
+                mHandler.postDelayed(mOpenOrCloseRunnable,PERIOD_DELAY);
                 break;
             /*case PullXmlUtils.COMMON_RECEIVE_PLAY://开启轮巡 {#手机端暂时不参与轮巡}
                *//* if(mMeetingBase.getBaseRole()<MeetingBase.BASE_MEET_ROLE_3){

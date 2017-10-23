@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.artifex.mupdfdemo.FilePicker;
 import com.artifex.mupdfdemo.Hit;
 import com.artifex.mupdfdemo.MuPDFCore;
@@ -32,6 +33,8 @@ import com.artifex.mupdfdemo.ReaderView;
 import com.artifex.mupdfdemo.SearchTaskResult;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoCommand;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
@@ -41,9 +44,10 @@ import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.onlinemeetings.models.entities.DocControl;
 import com.codyy.erpsportal.commons.models.entities.MeetingShow;
 import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
+
 import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -54,6 +58,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
@@ -65,7 +70,9 @@ import de.greenrobot.event.EventBus;
  */
 public class OnlineInteractShowFragment extends OnlineFragmentBase {
     private static final String TAG = "OnlineInteractShowFragment";
-    /** 加载文档指令**/
+    /**
+     * 加载文档指令
+     **/
     private static final int MSG_LOAD_DOCUMENT = 0x0110;
     /**
      * 判断是否来自服务器端的命令/滚动pdf文档
@@ -105,6 +112,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
     private String mFileName;
     private boolean mIsShowFromUser = false; //用户演示文档
     private Handler mHandler = new Handler();
+    private int mCurrentDocCount = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -208,7 +216,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
      */
     private void loadContent(MeetingShow meetingShow, boolean isNewOpen) {
         if (null == mTitleTextView) return;
-        if(mProgressBar.getVisibility() == View.GONE) mProgressBar.setVisibility(View.VISIBLE);
+        if (mProgressBar.getVisibility() == View.GONE) mProgressBar.setVisibility(View.VISIBLE);
         Cog.i(TAG, "loadContent:" + (meetingShow != null ? meetingShow.getShowTitle() : null) + " :isNewopen : " + isNewOpen);
         mCurrentShow = meetingShow;
         //图片和文档使用MUPdf
@@ -238,13 +246,26 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                 @Override
                 public void onSuccess(JSONObject response) {
                     Cog.i(TAG, "");
-                    //http服务器数据删除成功
-                    String url = mCurrentShow.getShowResID() + "//," + (mCurrentShow.getShowCount() > 0 ? mCurrentShow.getShowCount() : pageCount);
-                    try {
-                        getCocoService().setDemonstrationDoc(mMeetID, "0", mUserInfo.getBaseUserId(), url, mCurrentShow.getShowResID(), mCurrentShow.getShowTitle());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
+                    mCurrentDocCount = pageCount;
+                    /*//1. 如果没有存在当前文档,则创建table (tableId未生效,以后看web端什么时候启动白板上面绘制文档功能.)
+                    if (isNewOpen) {
+                        try {
+                            getCocoService().createTable(null, mCurrentShow.getShowTitle());
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        //2. 演示文档.
+                        CoCoAction coCoAction = new CoCoAction();//CoCo消息动作
+                        coCoAction.setActionType(MeetingCommand.WHITE_PAD_NEW);
+                        coCoAction.setActionResult(mCurrentShow.getTabId() == null ? "tableId" : mCurrentShow.getTabId());
+                        EventBus.getDefault().post(coCoAction);
+                    }*/
+                    //2. 演示文档.
+                    CoCoAction coCoAction = new CoCoAction();//CoCo消息动作
+                    coCoAction.setActionType(MeetingCommand.WHITE_PAD_NEW);
+                    coCoAction.setActionResult(mCurrentShow.getTabId() == null ? "tableId" : mCurrentShow.getTabId());
+                    EventBus.getDefault().post(coCoAction);
                 }
 
                 @Override
@@ -274,6 +295,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
 
     private void tryLoadPdf(final MeetingShow meetingShow, boolean isNewOpen) {
         Cog.d(TAG, "tryLoadPdf...");
+        if (null == mDrawerLayout) return;
         if (mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mDrawerLayout.closeDrawer(Gravity.RIGHT);
         }
@@ -287,15 +309,17 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
     }
 
     private boolean mIsLoading = false;//是否在加载文档 ，default: false ;
+
     /**
      * 打开pdf （mupdf)
+     *
      * @param meetingShow
      */
     private void loadPdf(MeetingShow meetingShow, boolean isNewOpen) {
         if (null == mTitleTextView) return;
         //禁止点击显示文档列表了
         mIsLoading = true;
-        try{
+        try {
             mTitleTextView.setText(meetingShow.getShowTitle());
             cleanPdfCache();
             if (mMuPDFCore == null) {
@@ -336,9 +360,9 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                 return;
             }
             createUI(meetingShow, isNewOpen);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             mIsLoading = false;
             mProgressBar.setVisibility(View.GONE);
         }
@@ -430,7 +454,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                 public void onSuccess(JSONObject response) {
                     Cog.e(TAG, "asyncServerDocPageIndex setDocument success, send coco ~");
                     try {
-                        getCocoService().setChangeDoc(mMeetID, index, mCurrentShow.getShowResID() + "");
+                        getCocoService().setChangeDoc(mCurrentShow.getTabId(), index, mCurrentShow.getShowResID() + "");
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -537,7 +561,9 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                         public void onSuccess(JSONObject response) {
                             //http服务器数据删除成功
                             try {
-                                getCocoService().setDelectDoc(mMeetID, doc.getShowResID());
+                                // TODO: 17-10-13 等待生成一个tableId.
+                                String tableId = mMeetID;
+                                getCocoService().setDelectDoc(tableId, doc.getShowResID());
                             } catch (RemoteException e) {
                                 e.printStackTrace();
                             }
@@ -558,7 +584,7 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
 
     @OnClick(R.id.text_btn_more)
     public void showOrHideList() {
-        if(mIsLoading) return;
+        if (mIsLoading) return;
         if (!mDrawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             mDrawerLayout.openDrawer(Gravity.RIGHT);
         } else {
@@ -715,10 +741,24 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
     public void onEventMainThread(CoCoAction action) throws RemoteException {
         //发言人的变更/更新文档列表
         switch (action.getActionType()) {
-            case PullXmlUtils.COMMAND_WHITE_BOARD_MARK: //授予-白板标注权限
+            case MeetingCommand.WEB_WHITE_BOARD_MARK: //授予-白板标注权限
                 String result = action.getActionResult();
                 mMeetingBase.setWhiteBoardManager(Boolean.valueOf(result) ? "1" : "0");
-                updateDataRole();// TODO: 16-8-24 文档显示ＵＩ变化，可以演示，可以删除 ...
+                updateDataRole();
+                break;
+            case MeetingCommand.WHITE_PAD_NEW://开始演示文档(创建table成功返回了tableId)
+                String tableId = action.getActionResult();
+                if (TextUtils.isEmpty(tableId)) {
+                    tableId = "tableId";
+                }
+                //show doc .
+                //http服务器数据删除成功
+                String url = mCurrentShow.getShowResID() + "//," + (mCurrentShow.getShowCount() > 0 ? mCurrentShow.getShowCount() : mCurrentDocCount);
+                try {
+                    getCocoService().setDemonstrationDoc(tableId, "0", url, mCurrentShow.getShowResID(), mCurrentShow.getShowTitle());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -767,51 +807,58 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
         syncLoadContent(mList.get(index), isNewOpen);
     }
 
-    private MeetingShow mTempMeetingShow = null ;//临时需要加载的文档缓存
+    private MeetingShow mTempMeetingShow = null;//临时需要加载的文档缓存
     private boolean mTempShowTag = false;//是否新打开文档缓存副本
     private Runnable mLoadMeetingShowRunnable = new Runnable() {
         @Override
         public void run() {
             mHandler.removeCallbacks(mLoadMeetingShowRunnable);
-            if(null != mTempMeetingShow)
-            loadContent(mTempMeetingShow,mTempShowTag);
+            if (null != mTempMeetingShow)
+                loadContent(mTempMeetingShow, mTempShowTag);
         }
     };
 
-    private void syncLoadContent(MeetingShow show , boolean isNewOpen){
+    /**
+     * 同步文档内容.
+     * @param show
+     * @param isNewOpen
+     */
+    private void syncLoadContent(MeetingShow show, boolean isNewOpen) {
         mHandler.removeCallbacks(mLoadMeetingShowRunnable);
-        if(null == show) return;
+        if (null == show) return;
         mTempMeetingShow = show;
         mTempShowTag = isNewOpen;
-        mHandler.postDelayed(mLoadMeetingShowRunnable,500);
+        mHandler.postDelayed(mLoadMeetingShowRunnable, 500);
     }
+
     public void onEventMainThread(DocControl action) throws RemoteException {
         Cog.e(TAG, "DocControl: " + action.getActionType());
 
-        if (action.getFrom().equals(mUserInfo.getBaseUserId())) {
+        if (null != action.getFrom() && action.getFrom().equals(mUserInfo.getBaseUserId())) {
             //如果命令是自己的
             return;
         }
 
         switch (action.getActionType()) {
-            case PullXmlUtils.CHANGE_DOC_PAD://演示白板
-                break;
-            case PullXmlUtils.SHOW_DOC://演示文档
+            case MeetingCommand.SHOW_DOC://演示文档
                 mIsFromServerChooseTab = true;
                 int index = UiOnlineMeetingUtils.getResourceIndex(action.getId(), mList);
                 if (index > -1) {
+                    //更新tableId.
+                    mList.get(index).setTabId(action.getTabId());
                     syncLoadContent(mList.get(index), false);
                 } else {
                     //刷新数据
                     loadData();
                 }
                 break;
-            case PullXmlUtils.CHANGE_DOC:// 翻页
+            case MeetingCommand.WHITE_CHANGE_DOC:// 翻页
                 //过滤掉自己发送的命令
                 if (!action.getFrom().equals(mUserInfo.getBaseUserId())) {
                     mIsFromServerPagerChange = true;
                     int currentPage = Integer.parseInt(action.getCurrent());
                     String resID2 = action.getOwner().substring(action.getOwner().indexOf("_") + 1);
+                    if(null == resID2 || mCurrentShow ==null) return;
 
                     Cog.i(TAG, "pdf翻页 " + currentPage + " :resid :" + resID2);
 
@@ -837,9 +884,9 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                     }
                 }
                 break;
-            case PullXmlUtils.ZOOM://缩放
+            case MeetingCommand.ZOOM://缩放
                 break;
-            case PullXmlUtils.DELETE_DOC://关闭文档
+            case MeetingCommand.DELETE_DOC://关闭文档
                 String key = action.getKey();
                 if (key != null && key.contains("_")) {
                     mIsFromServerCloseTab = true;
@@ -847,9 +894,37 @@ public class OnlineInteractShowFragment extends OnlineFragmentBase {
                     deleteDoc(resID3);
                 }
                 break;
+            case MeetingCommand.CHANGE_DOC_PAD://切换文档tab.
+                String key2 = action.getKey();
+                if (key2 != null && key2.contains("_")) {
+                    mIsFromServerCloseTab = true;
+                    String resID = key2.substring(key2.indexOf("_") + 1);
+                    switchTab(resID);
+                }
+                break;
         }
     }
 
+
+    /**
+     * 切换tab
+     * @param resId
+     */
+    private void switchTab(String resId){
+        MeetingShow meetingShow = null;
+        if(null!= mList && mList.size()>0){
+            for(int i=0;i<mList.size();i++){
+                if(resId.equals(mList.get(i).getShowResID())){
+                    meetingShow = mList.get(i);
+                    break;
+                }
+            }
+        }
+
+        if(null != meetingShow) {
+            syncLoadContent(meetingShow,false);
+        }
+    }
     /**
      * 删除本地文件 .
      *

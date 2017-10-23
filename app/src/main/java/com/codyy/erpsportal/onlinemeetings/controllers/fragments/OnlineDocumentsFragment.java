@@ -23,6 +23,7 @@ import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineDocumentViewHolder;
 import com.codyy.erpsportal.onlinemeetings.models.entities.DocumentDetailEntity;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleHorizonDivider;
 import com.codyy.url.URLConfig;
@@ -184,14 +185,14 @@ public class OnlineDocumentsFragment extends OnlineFragmentBase {
     public void onEventMainThread(CoCoAction action) throws RemoteException {
         //发言人的变更/更新文档列表
         switch (action.getActionType()) {
-            case PullXmlUtils.COMMAND_WHITE_BOARD_MARK: //授予-白板标注权限
+            case MeetingCommand.WEB_WHITE_BOARD_MARK: //授予-白板标注权限
                 Cog.e(TAG,"获取白板标注权限："+action.getActionResult());
                 String result = action.getActionResult();
                 mMeetingBase.setWhiteBoardManager(Boolean.valueOf(result)?"1":"0");
                 mAdapter.notifyDataSetChanged();
                 break;
-            case PullXmlUtils.WEB_ADD_DOCUMENT://新增文档
-            case PullXmlUtils.COMMAND_REFRESH_DOC://删除文档后执行
+            case MeetingCommand.WEB_ADD_DOCUMENT://新增文档
+            case MeetingCommand.COMMAND_REFRESH_DOC://删除文档后执行
                 Cog.e(TAG,"添加文档！");
                 loadData(true);
                 break;

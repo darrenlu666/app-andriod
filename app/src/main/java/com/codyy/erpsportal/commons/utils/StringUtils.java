@@ -169,7 +169,8 @@ public class StringUtils {
             return s1+StringUtils.replaceHtml2(tag)+s2 ;
         }
 
-        return  URLEncoder.encode(str1);
+//        return  URLEncoder.encode(str1);
+        return  str1;
     }
 
     /**

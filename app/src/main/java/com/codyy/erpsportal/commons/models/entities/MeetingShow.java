@@ -42,6 +42,16 @@ public class MeetingShow {
      */
     private String showDocPath ;
 
+    private String tabId;
+
+    public String getTabId() {
+        return tabId;
+    }
+
+    public void setTabId(String tabId) {
+        this.tabId = tabId;
+    }
+
     public MeetingShow() {
     }
 

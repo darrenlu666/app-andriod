@@ -19,6 +19,7 @@ import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.comment.BaseComment;
+import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import java.net.URLDecoder;
@@ -53,7 +54,7 @@ public class FirstCommentViewHolder extends BaseRecyclerViewHolder<BaseComment> 
         mCurrentPosition    =   pos ;
         mData   =   data ;
         String message = data.getCommentContent();
-        message = PullXmlUtils.replaceMsg(message);
+        message = EmojiUtils.replaceMsg(message);
         message = URLDecoder.decode(message);
         Spannable spannable = new SpannableString(data.getRealName()+":"+message);
         spannable.setSpan(new StyleSpan(Typeface.BOLD),0,data.getRealName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);

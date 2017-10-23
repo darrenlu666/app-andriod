@@ -13,19 +13,19 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 
 public class BNPlayerImpl {
-    private static native boolean nativeClassInit(); // Initialize native class: cache Method IDs for callbacks
+	private static native boolean nativeClassInit(); // Initialize native class: cache Method IDs for callbacks
 	private native boolean nativeInit();
 	private native void nativeRelease();
 	private native void nativeSetAttribute(int type, Object value);
 	private native void nativeSetUris(String[] classroomUris);
 	private native void nativePlay();      // Set pipeline to PLAYING
 
-    private native void nativePause();    // Set pipeline to PAUSED
-    private native void nativeStop();    // Set pipeline to STOP
-    private native void nativeSeek(long milliseconds); // Seek
+	private native void nativePause();    // Set pipeline to PAUSED
+	private native void nativeStop();    // Set pipeline to STOP
+	private native void nativeSeek(long milliseconds); // Seek
 	private native long nativeGetPosition();
 
-    private long _CFJ_native_custom_data;
+	private long _CFJ_native_custom_data;
 
 	public static int CHAT_SOFTWARE = 1;
 	public static int CHAT_HARDWARE = 2;
@@ -46,9 +46,9 @@ public class BNPlayerImpl {
 	private static int PLAYER_ATTR_TYPE_RECEIVE_VIDEO = 11;
 
 	private WebRtcVAD mVAD = null;
-    private BNPublisher mPublisher;
-    private String mUri;
-    private Surface mSurface;
+	private BNPublisher mPublisher;
+	private String mUri;
+	private Surface mSurface;
 	private boolean mMute;
 	private int mVolume;
 	private boolean mForceAspectRatio;
@@ -119,11 +119,11 @@ public class BNPlayerImpl {
 	public void setDecodeType(boolean isUseHardware) {
 		isUseHwDecoder = isUseHardware;
 	}
- 
+
 	public void setUri(String uri) {
 		mUri = uri;
 		nativeSetAttribute(PLAYER_ATTR_TYPE_URI, uri);
-    }
+	}
 
 	public String getUri() {
 		return mUri;
@@ -225,9 +225,9 @@ public class BNPlayerImpl {
 	}
 
 	public void setPublisher(BNPublisher publisher) {
-		//if (null != mAudioMixer) {
-			//mAudioMixer.setPublisher(publisher);
-		//}
+		if (null != mAudioMixer) {
+			mAudioMixer.setPublisher(publisher);
+		}
 	}
 
 	private BNAudioMixer mAudioMixer;
@@ -296,7 +296,7 @@ public class BNPlayerImpl {
 		nativeSeek(position);
 	}
 
-	
+
 	private void CFJ_PositionUpdated(final long position)  {
 		if (mMediaPlayer != null) {
 			mPosition = position;
@@ -322,31 +322,36 @@ public class BNPlayerImpl {
 			mMediaPlayer.onBuffering(present);
 		}
 	}
-	
-    private void CFJ_EOS () {
+
+	private void CFJ_EOS () {
 		if (mMediaPlayer != null) {
 			mMediaPlayer.onEndOfStream();
-    	}
-    }
+		}
+	}
 
-    private void CFJ_Error(final int errorCode, final String errorMsg) {
+	private void CFJ_Error(final int errorCode, final String errorMsg) {
 		if (mMediaPlayer != null) {
 			mMediaPlayer.onError(errorCode, errorMsg);
 		}
-    }
+	}
 
-    private void CFJ_VideoDimensionsChanged (final int width, final int height) {
+	private void CFJ_VideoDimensionsChanged (final int width, final int height) {
 		if (mMediaPlayer != null) {
 			mMediaPlayer.onVideoDimensionsChanged(width, height);
 		}
-    }
-    
-    private void CFJ_Message (final String message) {
+	}
+	private void CFJ_UnsupportedHW() {
+		if (mMediaPlayer != null) {
+			mMediaPlayer.onUnsupportedHW();
+		}
+	}
 
-    }
-    
-    private void CFJ_SendPcm (byte[] pcmData) {
-//    	Log.i("Bennu", "pcmData " + pcmData.length);
+	private void CFJ_Message (final String message) {
+
+	}
+
+	private void CFJ_SendPcm (byte[] pcmData) {
+		//Log.i("Bennu", "pcmData " + pcmData.length);
 		short[] pcmAsShorts = shortMe(pcmData);
 
 		if (null != mAudioMixer && mAudioMixer.isRunning()) {
@@ -357,9 +362,9 @@ public class BNPlayerImpl {
 			//Log.d("Bennu", "CFJ_SendPcm len "+ pcmAsShorts.length +",vad active " + activeData);
 
 			//if (activeData == 1)
-				mAudioMixer.addNewAudioData(audioId, pcmAsShorts);
+			mAudioMixer.addNewAudioData(audioId, pcmAsShorts);
 		}
-    }
+	}
 
 	public static short[] shortMe(byte[] bytes) {
 		short[] out = new short[bytes.length / 2]; // will drop last byte if odd number
@@ -376,8 +381,8 @@ public class BNPlayerImpl {
 		return audioDataAsShort;
 	}
 
-    static {
-    	System.loadLibrary("bennu_player");
-        nativeClassInit();
-    }
+	static {
+		System.loadLibrary("bennu_player");
+		nativeClassInit();
+	}
 }

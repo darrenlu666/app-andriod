@@ -19,7 +19,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.ContactsFragment;
 import com.codyy.erpsportal.onlinemeetings.controllers.fragments.OnLineChatMessageFragment;
-import com.codyy.erpsportal.commons.services.BackService;
+import com.codyy.erpsportal.commons.services.ChatService;
 import com.codyy.erpsportal.commons.services.IMeeting;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 
@@ -32,6 +32,11 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
     public static String CHAT_TYPE = "chat_type";
     public static String HAS_UNREAD = "has_unread";
     public static String CHAT_MESSAGE = "chat_message";
+
+    public static String EXTRA_FLAG_ALL_SAY = "chat_message";//全局禁止聊天 0:正常 1:禁止.
+    public static String EXTRA_FLAG_BASE_CHAT = "base_chat";//全局禁止聊天 0:禁言 1:允许发言.
+
+
     public static int CHAT_TYPE_SINGLE = 0x01;
     public static final String KEY_TO_CHAT_ID = "key_to_chat_id";
     public static final String USER_NAME = "user_name";
@@ -41,6 +46,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
     private Intent mIntent;
     private TextView mTitle;
     private Button mBtnBack;
+    private int mCanSay = 0;
    //private ChatMessage mChatMessage;
 
     private ServiceConnection mMeetingServiceConn = new ServiceConnection() {
@@ -74,7 +80,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         mTitle = (TextView) findViewById(R.id.tv_title);
         mTitle.setText(getIntent().getStringExtra(USER_NAME));
 
-        mIntent = new Intent(this, BackService.class);
+        mIntent = new Intent(this, ChatService.class);
         bindService(mIntent, mMeetingServiceConn, BIND_AUTO_CREATE);
         OnLineChatMessageFragment onLineChatMessageFragment = new OnLineChatMessageFragment();
         Bundle bundle = new Bundle();
@@ -84,6 +90,8 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         bundle.putString(USER_NAME, getIntent().getStringExtra(USER_NAME));
         bundle.putString(USER_HEAD_URL, getIntent().getStringExtra(USER_HEAD_URL));
         bundle.putString(MEETING_ID, getIntent().getStringExtra(MEETING_ID));
+        bundle.putInt(EXTRA_FLAG_ALL_SAY,getIntent().getIntExtra(EXTRA_FLAG_ALL_SAY,0));
+        bundle.putInt(EXTRA_FLAG_BASE_CHAT,getIntent().getIntExtra(EXTRA_FLAG_BASE_CHAT,0));
         onLineChatMessageFragment.setArguments(bundle);
         FragmentTransaction trans = getSupportFragmentManager()
                 .beginTransaction();
@@ -141,7 +149,7 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         context.startActivity(intent);
     }
 
-    public static void start(Activity context,String meetId , ChatMessage message){
+    public static void start(Activity context,String meetId , ChatMessage message,int canAllSay,int baseChat){
         Intent intent = new Intent(context, SingleChatActivity.class);
         intent.putExtra(SingleChatActivity.CHAT_TYPE, SingleChatActivity.CHAT_TYPE_SINGLE);
         intent.putExtra(SingleChatActivity.KEY_TO_CHAT_ID, message.getFrom());
@@ -149,6 +157,8 @@ public class SingleChatActivity extends AppCompatActivity implements IMeeting {
         intent.putExtra(SingleChatActivity.USER_HEAD_URL, message.getHeadUrl());
         intent.putExtra(SingleChatActivity.MEETING_ID, meetId);
         intent.putExtra(SingleChatActivity.HAS_UNREAD, message.isHasUnReadMsg());
+        intent.putExtra(SingleChatActivity.EXTRA_FLAG_ALL_SAY,canAllSay);
+        intent.putExtra(SingleChatActivity.EXTRA_FLAG_BASE_CHAT,baseChat);
         context.startActivity(intent);
         UIUtils.addEnterAnim(context);
     }

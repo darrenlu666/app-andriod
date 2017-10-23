@@ -15,6 +15,7 @@ import com.codyy.erpsportal.commons.utils.DateUtils;
 import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.widgets.SuperTextView;
 import com.codyy.erpsportal.commons.models.entities.comment.BaseComment;
+import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 import com.codyy.tpmp.filterlibrary.viewholders.BaseRecyclerViewHolder;
 
 import java.net.URLDecoder;
@@ -45,7 +46,7 @@ public class BlogCommentChildViewHolder extends BaseRecyclerViewHolder<BaseComme
         mCurrentPosition    =   position;
         mData   =   data ;
         String message = data.getCommentContent();
-        message = PullXmlUtils.replaceMsg(message);
+        message = EmojiUtils.replaceMsg(message);
         try{
             message = URLDecoder.decode(message);
         }catch (IllegalArgumentException e){

@@ -1387,6 +1387,13 @@ public class URLConfig {
     public static String GET_ONLINE_MEETING_RESOURCE;
 
     /**
+     * 获取coco和token(v5.3.8 coco3.0)
+     * mid		string
+     * uuid		string
+     */
+    @UrlSuffix("mobile/remote/coco-server/cms.do")
+    public static String GET_COCO_TOKEN ;
+    /**
      * 获取共享桌面信息 / 视频共享/桌面共享
      */
     @UrlSuffix("mobile/remote/getMeetingInfo.do")
