@@ -236,7 +236,7 @@ public class BNLiveControlView extends RelativeLayout implements AutoHide, OnSur
                 }
 
                 if (1 == errorCode) {//不支持硬解　
-                    Cog.e(TAG, "部支持硬解，尝试软解！！！");
+                    Cog.e(TAG, "不支持硬解，尝试软解！！！");
                     start(false);
                 }
 

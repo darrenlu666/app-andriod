@@ -10,7 +10,7 @@ public class EvaluationVideo {
      * classroomId : aa95e3dcb18e450bb31a0f28b3e937a9
      * roomType : main
      * schoolName : 移动端测试学校
-     * streamAddress : rtmp://dms.needu.cn:1938/dms/class_aa95e3dcb18e450bb31a0f28b3e937a9_u_97cd4bb1a03d47678676aee63b362717__main
+     * streamAddress : rtmp://DMS.needu.cn:1938/DMS/class_aa95e3dcb18e450bb31a0f28b3e937a9_u_97cd4bb1a03d47678676aee63b362717__main
      */
     private String classroomId;
     private String roomType;
