@@ -192,7 +192,11 @@ public class ContactsFragment extends OnlineFragmentBase {
                 }
                 mChatId = mMessages.get(position).getFrom();
                 index = position;
-                SingleChatActivity.start(getActivity(),((OnlineMeetingActivity) getActivity()).getMeetingID(),mMessages.get(position) );
+                SingleChatActivity.start(getActivity(),
+                        ((OnlineMeetingActivity) getActivity()).getMeetingID(),
+                        mMessages.get(position),
+                        mMeetingBase.getBaseSay(),
+                        mMeetingBase.getBaseChat());
             }
         });
 

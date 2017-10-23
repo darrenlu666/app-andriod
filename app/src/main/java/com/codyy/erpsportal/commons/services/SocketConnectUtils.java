@@ -20,7 +20,7 @@ import java.net.UnknownHostException;
  */
 public class SocketConnectUtils {
     public static SocketConnectUtils mSocUtils = null;
-    private static final String TAG = "BackService";
+    private static final String TAG = "ChatService";
     private static final long HEART_BEAT_RATE = 30 * 1000;
     public static final String HOST = "coco.ppmeeting.com";
     public static final int PORT = 1888;

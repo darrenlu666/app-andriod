@@ -21,6 +21,28 @@ public class MeetingConfig implements Parcelable {
     private String gid;
     private String license;
     private String mid;//会议ｉｄ
+    private String userId;//当前用户的id.
+    private String clientId;
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public static Creator<MeetingConfig> getCREATOR() {
+        return CREATOR;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getMid() {
         return mid;
@@ -127,7 +149,7 @@ public class MeetingConfig implements Parcelable {
 
     public static MeetingConfig getSimulateConfig(MeetingBase meetingBase, UserInfo userInfo){
         MeetingConfig meetingConfig = new MeetingConfig();
-        meetingConfig.setCipher(meetingBase.getBaseCoco().getCocoCiper());
+        meetingConfig.setCipher(meetingBase.getToken());
         if (meetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3) {
             meetingConfig.setFrom("watcher_"+userInfo.getBaseUserId());
         }else {
@@ -149,6 +171,7 @@ public class MeetingConfig implements Parcelable {
         meetingConfig.setPort(port);
         meetingConfig.setGid(Integer.valueOf(meetingBase.getBaseMeetID().substring(0,6),16)+"");
         meetingConfig.setLicense(meetingBase.getBaseCoco().getCocoLicense());
+        meetingConfig.setUserId(userInfo.getBaseUserId());//add by poe v5.3.8 20170921.
         return meetingConfig;
     }
 
@@ -173,6 +196,7 @@ public class MeetingConfig implements Parcelable {
         dest.writeString(this.gid);
         dest.writeString(this.license);
         dest.writeString(this.mid);
+        dest.writeString(this.userId);
     }
 
     protected MeetingConfig(Parcel in) {
@@ -187,6 +211,7 @@ public class MeetingConfig implements Parcelable {
         this.gid = in.readString();
         this.license = in.readString();
         this.mid = in.readString();
+        this.userId=in.readString();
     }
 
     public static final Creator<MeetingConfig> CREATOR = new Creator<MeetingConfig>() {

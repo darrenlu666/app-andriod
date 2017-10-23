@@ -64,10 +64,14 @@ interface IMeetingService {
                      *绑定参数并连接coco服务器
                     */
                      void bindConfig(in MeetingConfig config);
+                     /**
+                     * 创建新的白版table(返回tableId)
+                     */
+                     void createTable(String groupId, String tableName);
                     /**
                      *演示文档 （白板的COCO消息比较特殊）,发送文档演示前，先发一条切换演示模式的消息
                     */
-                     void setDemonstrationDoc(String to,String current,String from_null,String url,String id,String fileName );
+                     void setDemonstrationDoc(String tableId,String current,String url,String id,String fileName );
                     /**
                      *文档翻页
                     */

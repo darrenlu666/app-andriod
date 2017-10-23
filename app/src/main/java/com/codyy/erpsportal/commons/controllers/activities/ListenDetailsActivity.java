@@ -359,17 +359,31 @@ public class ListenDetailsActivity extends BaseHttpActivity implements View.OnCl
         UiOnlineMeetingUtils.loadMeetingBaseData(getSupportFragmentManager(), this, mUserInfo.getUuid(), mPreparationId, role, new UiOnlineMeetingUtils.ICallback() {
             @Override
             public void onSuccess(JSONObject response) {
-                final JSONObject jsonObject = response;
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        MeetingBase meetingBase = MeetingBase.parseJson(jsonObject);
-                        // go to meeting page .
-                        //OnlineMeetingActivity.start(ListenDetailsActivity.this, mPreparationId, meetingBase);
-                        OnlineMeetingActivity.startForResult(ListenDetailsActivity.this, mPreparationId, mUserInfo, meetingBase, REQUEST_LISTEN_LESSON_CODE);
-                        mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
-                    }
-                }).start();
+                final MeetingBase meetingBase = MeetingBase.parseJson(response);
+                UiOnlineMeetingUtils.loadCocoInfo(ListenDetailsActivity.this, meetingBase.getBaseMeetID(),
+                        mUserInfo.getUuid(), new UiOnlineMeetingUtils.ICallback() {
+                            @Override
+                            public void onSuccess(JSONObject response) {
+                                JSONObject server = response.optJSONObject("server");
+                                meetingBase.setToken(server.optString("token"));
+                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                OnlineMeetingActivity.startForResult(ListenDetailsActivity.this,
+                                        mPreparationId, mUserInfo, meetingBase,
+                                        REQUEST_LISTEN_LESSON_CODE);
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
+                            }
+
+                            @Override
+                            public void onFailure(JSONObject response) {
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
+                            }
+
+                            @Override
+                            public void onNetError() {
+                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
+                            }
+                        });
             }
 
             @Override

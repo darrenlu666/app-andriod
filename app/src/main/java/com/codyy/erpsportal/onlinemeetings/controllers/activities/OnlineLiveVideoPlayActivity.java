@@ -17,12 +17,14 @@ import com.codyy.erpsportal.commons.models.entities.CoCoAction;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.BNLiveControlView;
 import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoLayout2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoCommand;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
@@ -165,11 +167,11 @@ public class OnlineLiveVideoPlayActivity extends AppCompatActivity implements IF
      */
     public void onEventMainThread(CoCoAction action) throws RemoteException {
         switch (action.getActionType()) {
-            case PullXmlUtils.VS_CALL_STOP:
+            case MeetingCommand.INFO_VIDEO_SHARE_CLOSE:
                 Cog.e(TAG,"结束共享视频: ~");
                 finish();
                 break;
-            case PullXmlUtils.RD_CALL_STOP:
+            case MeetingCommand.INFO_DESK_SHARE_CLOSE:
                 Cog.e(TAG,"结束共享桌面: ~");
                 finish();
                 break;

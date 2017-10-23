@@ -63,10 +63,11 @@ public class MeetingBase implements Parcelable {
     private String baseModel;//会议当前的视频模式 0:视频模式 1： 演示模式
     private String baseMeetingPersist;//会议持续时间 ms (123123)
     private int baseRole;//我在会议中扮演的较色 //0:主讲人 1:发言者  2:参会者 3:观摩者
-    private int baseSay;//0:正常状态 1:禁言(禁止聊天)
+    private int baseSay = 0;//0:正常状态 1:禁言(禁止聊天)-全局.
     private int baseNoDisturbing;//0:正常状态 1:免打扰 .
     private String  white_board;//是否拥有 "白板标注权限" 0:没有　１：拥有白板标注权限　
-    private String baseChat = "1";//文本聊天功能　．　０　：　无法说话　１：可以说话
+    private int baseChat = 0;//文本聊天功能　．　0:正常状态 1:禁言(禁止聊天) -单独控制.
+    private String token ;//token信息
 
     private DMSEntity baseDMS; //DMS info about video meeting services .
     private CocoEntity baseCoco;//coco services info for messages .
@@ -90,7 +91,8 @@ public class MeetingBase implements Parcelable {
         baseSay     =   in.readInt();
         baseNoDisturbing    =   in.readInt();
         white_board = in.readString();
-        baseChat = in.readString();
+        baseChat = in.readInt();
+        token = in.readString();
 
         //嵌套实体类读取
         baseDMS         =   in.readParcelable(DMSEntity.class.getClassLoader());
@@ -119,7 +121,8 @@ public class MeetingBase implements Parcelable {
         dest.writeInt(baseSay);
         dest.writeInt(baseNoDisturbing);
         dest.writeString(white_board);
-        dest.writeString(baseChat);
+        dest.writeInt(baseChat);
+        dest.writeString(token);
 
         dest.writeParcelable(baseDMS, flags);
         dest.writeParcelable(baseCoco, flags);
@@ -131,13 +134,19 @@ public class MeetingBase implements Parcelable {
         dest.writeTypedList(baseSpeakers);
     }
 
-    public String getBaseChat() {
-        if(null == baseChat)
-            baseChat = "";
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public int getBaseChat() {
         return baseChat;
     }
 
-    public void setBaseChat(String baseChat) {
+    public void setBaseChat(int baseChat) {
         this.baseChat = baseChat;
     }
 
@@ -241,6 +250,7 @@ public class MeetingBase implements Parcelable {
     public void setBaseLoopPatrol(LoopPatrol baseLoopPatrol) {
         this.baseLoopPatrol = baseLoopPatrol;
     }
+
 
     public DMSEntity getBaseDMS() {
         return baseDMS;
