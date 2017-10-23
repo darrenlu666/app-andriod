@@ -2191,6 +2191,26 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/blog/selectCommentPageList.do")
     public static String GET_BLOG_COMMENT_LIST;
+
+    /**
+     * poe add v5.3.8 2017/10/23 博文详情推送
+     * blogId	博文Id	string	必传
+     * recAction	推荐或取消推荐	string	值为1推荐，值为0取消推荐，其他值不可取
+     * recType	区分推荐到门户还是侧边栏	string	值为HOME推荐到门户，值为SIDE推荐到侧边栏， 其他值不可取
+     * uuid	用户uuid	string	必传
+     */
+    @UrlSuffix("mobile/blog/addHomeRecommend.do")
+    public static String PUSH_BLOG_DOOR_OR_SLIDE;
+
+    /**
+     * poe add v5.3.8 2017/10/23 博文分享到上级
+     * blogId	博文ID	string	必传
+     * blogShareId	博文分享ID	string	必传
+     * uuid	uuid	string	必传
+     */
+    @UrlSuffix("mobile/blog/addAreaShareBlog.do")
+    public static String PUSH_BLOG_HEADER_SCOPE;
+
     /**
      * poe add
      * 博文评论-二级评论列表及更多

@@ -539,13 +539,13 @@ public class UserFragment extends BaseHttpFragment implements Handler.Callback {
     }
 
     /**
-     * 更换头像Dialog
-     */
-    private MyBottomSheet mDialog;
-    /**
      * 选择班级Dialog
      */
     private MyBottomSheet mClassDialog;
+    /**
+     * 更换头像Dialog
+     */
+    private MyBottomSheet mDialog;
     private View.OnClickListener mDialogListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
