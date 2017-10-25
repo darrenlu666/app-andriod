@@ -61,7 +61,8 @@ import butterknife.OnClick;
  * 应用-博文列表(v5.3.8)
  * Created by poe on 17-09-14.
  */
-public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAdapter.OnItemClickListener {
+public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAdapter.OnItemClickListener ,
+        SimpleListFragment.IOutSideTouchListner{
     private static final String TAG = "AreaBlogActivity";
     private static final String EXTRA_DATA = "extra.data";
     @Bind(R.id.tv_sort)
@@ -359,7 +360,6 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
             });
         }
 
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
         switch (mSortIndex) {
@@ -542,5 +542,10 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
         }else{
             hideHeadFilter();
         }
+    }
+
+    @Override
+    public void onOutSideTouch() {
+        hideHeadFilter();
     }
 }
