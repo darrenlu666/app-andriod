@@ -257,9 +257,11 @@ public class UserTimeTableActivity extends Activity {
      */
     private void getData(ClassCont classCont) {
         Map<String, String> data = new HashMap<>();
+        if (!TextUtils.isEmpty(mUserID)) {
+            data.put("userId", mUserID);
+        }
         switch (mUserType) {
             case UserInfo.USER_TYPE_TEACHER:
-                data.put("userId", mUserID);
                 if (classCont == null) {
                     data.put("type", "Personal");
                 } else {
@@ -274,7 +276,6 @@ public class UserTimeTableActivity extends Activity {
             case UserInfo.USER_TYPE_PARENT:
                 data.put("baseClassId", mClassID);
                 data.put("type", "class");
-
                 break;
         }
         httpConnect(URLConfig.GET_TEACHER_TIMETABLE, data, GET_TIMETABLE);
