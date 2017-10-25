@@ -250,7 +250,7 @@ public class AreaBlogActivity extends BaseHttpActivity implements BaseRecyclerAd
         mTimes.add(new MyBaseTitle("READDESC", "阅读量高到低"));
         mTimes.add(new MyBaseTitle("READASC", "阅读量低到高"));
         mTimes.add(new MyBaseTitle("COMMENTDESC", "评论数高到低"));
-        mTimes.add(new MyBaseTitle("COMMENTDESC", "评论数低到高"));
+        mTimes.add(new MyBaseTitle("COMMENTASC", "评论数低到高"));
         //角色
         mRoles.clear();
         mRoles.add(new MyBaseTitle("", "全部"));
