@@ -377,6 +377,11 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                 case PREPARE_LESSON:
                 case INTERACT_LESSON:
                     mMeetDetail = new Gson().fromJson(response.optJSONObject("data").toString(), MeetDetail.class);
+                    JSONObject mschool = response.optJSONObject("masterSchool");
+                    if(null != mschool){
+                        if(!TextUtils.isEmpty(mschool.optString("masterteacher")))
+                        mMeetDetail.setMainTeacher(mschool.optString("masterteacher"));
+                    }
                     setVideo(null, response);
                     break;
                 case EVALUATION_LESSON:
