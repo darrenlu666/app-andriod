@@ -248,8 +248,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
                                 }
                             });
                             //学校管理员文字更改。
-                            if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())&&
-                                    (mBlogDetail.isRecommendHomeFlag()||
+                            if((mBlogDetail.isRecommendHomeFlag()||
                                             mBlogDetail.isRecommendSideFlag())){
                                 tv.setText("编辑推送");
                             }
@@ -854,7 +853,9 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
      */
     private String filterEndEmoji(String comment) {
         if(null != comment && comment.length()>=145){
-            comment = comment.substring(0,comment.lastIndexOf("["));
+            if(comment.contains("[")&&comment.lastIndexOf("[")>145){
+                comment = comment.substring(0,comment.lastIndexOf("["));
+            }
         }
         return comment;
     }
