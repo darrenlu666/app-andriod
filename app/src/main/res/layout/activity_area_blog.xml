@@ -99,8 +99,9 @@
             <FrameLayout
                 android:id="@+id/fl_sort"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="match_parent"
                 android:layout_below="@id/rlt_header"
+                android:background="@color/transparent"
                 />
         </RelativeLayout>
         <FrameLayout

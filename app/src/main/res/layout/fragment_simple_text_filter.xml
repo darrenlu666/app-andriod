@@ -6,18 +6,21 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/transparent_half"
+    >
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcl_condition"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#fff"
         android:choiceMode="singleChoice"
         android:divider="@drawable/divider_horizontal_line"
         android:scrollbars="none"
-        tools:listitem="@layout/item_filter_simple_text"
+        tools:listitem="@layout/item_blog_simple_text"
         />
 </LinearLayout>
