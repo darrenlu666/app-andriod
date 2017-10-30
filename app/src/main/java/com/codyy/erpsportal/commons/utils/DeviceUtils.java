@@ -1,6 +1,7 @@
 package com.codyy.erpsportal.commons.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
@@ -14,6 +15,14 @@ import java.lang.reflect.Field;
  * Created by yangxinwu on 2015/8/3.
  */
 public class DeviceUtils {
+
+    /**
+     * 获取设备名如oppol R9s .
+     * @return
+     */
+    public static String getDeviceName(){
+        return android.os.Build.BRAND+ Build.MODEL;
+    }
 
     public static int getStatusBarHeight() {
         Class<?> c = null;

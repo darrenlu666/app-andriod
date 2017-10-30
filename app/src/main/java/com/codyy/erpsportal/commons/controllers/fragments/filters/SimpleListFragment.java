@@ -13,8 +13,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
@@ -47,7 +49,9 @@ public  class SimpleListFragment extends Fragment {
     public static final String EXTRA_FILTER_TITLES = "com.group.filter.titles";//选项
     public static final String STR_ALL = "全部";
     @Bind(R.id.rcl_condition) RecyclerView mConditionRecyclerView;
+    @Bind(R.id.content) LinearLayout mContentView;
     private BaseRecyclerAdapter.OnItemClickListener mOnItemClickListener;//点击事件
+    private IOutSideTouchListner mCancelOutSideListner;
     private List<FilterEntity> mBottom = new ArrayList<>();
     private List<MyBaseTitle> mTitles = new ArrayList<>();
     private BaseRecyclerAdapter<FilterEntity,SimpleTextViewHolder> mConditionAdapter;
@@ -83,6 +87,10 @@ public  class SimpleListFragment extends Fragment {
         if(null != getArguments()){
             mTitles =   getArguments().getParcelableArrayList(EXTRA_FILTER_TITLES);
         }
+
+        if(null != getActivity() && getActivity() instanceof IOutSideTouchListner){
+            mCancelOutSideListner = (IOutSideTouchListner) getActivity();
+        }
     }
 
     @Override
@@ -112,6 +120,12 @@ public  class SimpleListFragment extends Fragment {
         mConditionRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Drawable divider = UiOnlineMeetingUtils.loadDrawable(R.drawable.divider_online_meeting);
         mConditionRecyclerView.addItemDecoration(new SimpleHorizonDivider(divider));
+        mContentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(null != mCancelOutSideListner) mCancelOutSideListner.onOutSideTouch();
+            }
+        });
         setAdapter();
     }
 
@@ -228,6 +242,17 @@ public  class SimpleListFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_FILTER_CONDITION,mData.get(mRightClickPosition).getName());//选中的数据
         return bundle;
+    }
+
+
+    /**
+     * listview 之外的弗雷view点击监听.
+     */
+    public interface IOutSideTouchListner{
+        /**
+         * 点击取消
+         */
+        void onOutSideTouch();
     }
 }
 

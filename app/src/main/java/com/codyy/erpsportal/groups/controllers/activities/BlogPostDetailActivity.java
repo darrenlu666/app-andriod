@@ -248,8 +248,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
                                 }
                             });
                             //学校管理员文字更改。
-                            if(UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())&&
-                                    (mBlogDetail.isRecommendHomeFlag()||
+                            if((mBlogDetail.isRecommendHomeFlag()||
                                             mBlogDetail.isRecommendSideFlag())){
                                 tv.setText("编辑推送");
                             }
@@ -346,6 +345,7 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
     }
 
     private TextView mPushDoorTv,mPushSlideTv,mPushUpperTv;
+    private View mPushDivider;
     /**
      * 推送选择Menu.
      */
@@ -356,6 +356,8 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
             mPushDoorTv = (TextView) contentView.findViewById(R.id.tv_door);
             mPushSlideTv = (TextView) contentView.findViewById(R.id.tv_slide);
             mPushUpperTv = (TextView) contentView.findViewById(R.id.tv_upper);
+            mPushDivider = contentView.findViewById(R.id.divider3);
+
             TextView exitTv = (TextView) contentView.findViewById(R.id.tv_cancel);
             mPushDoorTv.setOnClickListener(mDialogListener);
             mPushSlideTv.setOnClickListener(mDialogListener);
@@ -393,9 +395,11 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
         switch (mUserInfo.getUserType()){
             case UserInfo.USER_TYPE_AREA_USER:
                 mPushUpperTv.setVisibility(View.GONE);
+                mPushDivider.setVisibility(View.GONE);
                 break;
             case UserInfo.USER_TYPE_SCHOOL_USER://学校
                 mPushUpperTv.setVisibility(View.VISIBLE);
+                mPushDivider.setVisibility(View.VISIBLE);
                 break;
         }
 
@@ -849,7 +853,9 @@ public class BlogPostDetailActivity extends BaseHttpActivity implements BlogComp
      */
     private String filterEndEmoji(String comment) {
         if(null != comment && comment.length()>=145){
-            comment = comment.substring(0,comment.lastIndexOf("["));
+            if(comment.contains("[")&&comment.lastIndexOf("[")>145){
+                comment = comment.substring(0,comment.lastIndexOf("["));
+            }
         }
         return comment;
     }

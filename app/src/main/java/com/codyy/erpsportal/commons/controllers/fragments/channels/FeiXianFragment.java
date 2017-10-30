@@ -22,6 +22,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.ChannelFragment.TitleB
 import com.codyy.erpsportal.commons.data.source.remote.WebApi;
 import com.codyy.erpsportal.commons.models.ConfigBus;
 import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
+import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -58,8 +59,14 @@ public class FeiXianFragment extends Fragment implements TitleBarRiseListener {
     @Bind(R.id.gl_data_panel)
     GridLayout mDataPanelGl;
 
+    @Bind(R.id.lb_master_classroom)
+    TextView mMasterClassroomLbTv;
+
     @Bind(R.id.tv_school_count)
     TextView mMasterClassroomCountTv;
+
+    @Bind(R.id.lb_receive_classroom)
+    TextView mReceiveClassroomLbTv;
 
     @Bind(R.id.tv_classroom_count)
     TextView mReceiveClassroomCountTv;
@@ -73,6 +80,7 @@ public class FeiXianFragment extends Fragment implements TitleBarRiseListener {
     private OnModuleConfigListener mOnModuleConfigListener = new OnModuleConfigListener() {
         @Override
         public void onConfigLoaded(ModuleConfig config) {
+            loadCustomLabelNames();
             loadAreaMapAndInfo(config.getBaseAreaId(), config.getAreaCode());
         }
     };
@@ -155,6 +163,19 @@ public class FeiXianFragment extends Fragment implements TitleBarRiseListener {
      */
     private String mLoadedAreaCode;
 
+    /**
+     * 加载自定义字段
+     */
+    private void loadCustomLabelNames() {
+        mMasterClassroomLbTv.setText(Titles.sMasterRoom);
+        mReceiveClassroomLbTv.setText(Titles.sReceiveRoom);
+    }
+
+    /**
+     * 加载并显示地区地图及统计数据
+     * @param areaId 地区
+     * @param areaCode 地区编码
+     */
     private void loadAreaMapAndInfo(String areaId, String areaCode) {
         Cog.d(TAG, "loadAreaMapAndInfo areaCode=", areaCode);
         if (areaCode != null && !areaCode.equals(mLoadedAreaCode) && mMapView != null) {

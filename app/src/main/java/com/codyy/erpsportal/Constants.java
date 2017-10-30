@@ -63,6 +63,12 @@ public class Constants {
      * 登录coco服务器成功
      */
     public static final String LOGIN_COCO_SUCCESS = "LOGIN_COCO_SUCCESS";
+
+    /**
+     * 加入组成功.
+     */
+    public static final String ADD_GROUP_SUCCESS = "ADD_COCO_GROUP_SUCCESS";
+
     /**
      * 密文cipher验证失败
      */

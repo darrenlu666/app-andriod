@@ -36,28 +36,28 @@
             android:layout_marginTop="10dp"
             />
         <TextView
-            android:id="@+id/tv_category"
+            android:id="@+id/tv_create_time"
             style="@style/txt_group_txt_desc"
-            android:layout_width="130dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/sdv_pic"
             android:layout_below="@id/tv_name"
             android:singleLine="true"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
-            tools:text="分类分类分类分类分类分类"
+            tools:text="2016-04-08 12:00:00"
             />
         <TextView
-            android:id="@+id/tv_create_time"
-            tools:text="2016-04-08 12:00:00"
+            android:id="@+id/tv_category"
             style="@style/txt_group_txt_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tv_category"
-            android:layout_alignBottom="@id/tv_category"
+            android:layout_toRightOf="@id/tv_create_time"
+            android:layout_alignBottom="@id/tv_create_time"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:singleLine="true"
+            tools:text="分类分类分类分类分类分类"
             />
     </RelativeLayout>
     <TextView

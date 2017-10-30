@@ -24,7 +24,6 @@ import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -52,12 +51,11 @@ import com.codyy.erpsportal.commons.models.entities.MeetingConfig;
 import com.codyy.erpsportal.commons.models.entities.MeetingShow;
 import com.codyy.erpsportal.commons.models.entities.SystemMessage;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.services.BackService;
+import com.codyy.erpsportal.commons.services.ChatService;
 import com.codyy.erpsportal.commons.services.IMeeting;
 import com.codyy.erpsportal.commons.services.OnlineMeetingService;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DeviceUtils;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
 import com.codyy.erpsportal.commons.widgets.MyDialog;
@@ -80,13 +78,13 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.TabInfo;
 import com.codyy.erpsportal.onlinemeetings.models.entities.VideoShare;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -106,7 +104,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         , Handler.Callback
         , IFragmentMangerInterface
         , OnlineGroupChatFragment.onSoftKeyListener {
-    private final static String TAG = OnlineMeetingActivity.class.getSimpleName();
+    private final static String TAG = "OnlineMeetingActivity";
     /**
      * jump to video meeting pager .
      */
@@ -143,7 +141,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     private View mPromptView;//tab view on the last one for prompt .
     private OnlineMeetingTabViewHolder mTabViewHolder;
     private IMeetingService mIMeetingService;
-    private Intent mIntent;//coco service BackService .
+    private Intent mIntent;//coco service ChatService .
     private MeetingBase mMeetingBase;
     private MeetingConfig mMeetingConfig;
     private View mView;
@@ -282,12 +280,18 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         } else {
             startPublishService();
         }
+
         //connect to coco .
         connectToCoco();
         //检测共享模式
         checkShare();
         //同步申请的文字信息
         setPromptTab();
+
+        //测试.
+//        mHandler.postDelayed(()->{
+//            MockChatCommand.test();
+//            },2*1000);
     }
 
     private void startPublishService() {
@@ -535,16 +539,19 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         //如果数据解析有问题,结束本次会议 .
         if (mMeetingBase == null)
             this.finish();
-        mIntent = new Intent(this, BackService.class);
+        mIntent = new Intent(this, ChatService.class);
         mIntent.putExtra("ip", mMeetingBase.getBaseCoco().getCocoIP());
         mIntent.putExtra("port", mMeetingBase.getBaseCoco().getCocoPort());
-        new Thread(new Runnable() {
+//        new Thread(()-> bindService(mIntent, mMeetingServiceConn, BIND_AUTO_CREATE)).start();
+        new Thread() {
             @Override
             public void run() {
                 bindService(mIntent, mMeetingServiceConn, BIND_AUTO_CREATE);
             }
-        }).start();
+        }.start();
     }
+
+
 
     /**
      * 时间控制 每15s只能申请发言一次 .
@@ -807,12 +814,12 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         Cog.e(TAG, "onDestroy~");
         ExitMeetingPre();
         this.unregisterReceiver(mNoticeBroadCast);
-//        if(null != mIMeetingService){
-        unbindService(mMeetingServiceConn);
-//        }
-//        if(null != getChatService()){
-        unbindService(mChatServiceConnection);
-//        }
+        if (null != mIMeetingService) {
+            unbindService(mMeetingServiceConn);
+        }
+        if (null != getChatService()) {
+            unbindService(mChatServiceConnection);
+        }
         OnlineMeetingActivity.mFirstEnter = true;
         OnlineMeetingActivity.mShowMyViewState = false;
         clearOnlineUserLoaders();
@@ -914,7 +921,6 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         }
 
         if (null != mChatService) mChatService.stop();
-        mChatService = null;
     }
 
     public static void start(Context context, String mid, MeetingBase meetingBase) {
@@ -993,7 +999,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
         setTabIndex(1);
 
         CoCoAction action = new CoCoAction();
-        action.setActionType(PullXmlUtils.SWITCH_MODE);
+        action.setActionType(MeetingCommand.WEB_SWITCH_MODE);
         action.setActionResult(OnlineInteractFragment.ACTION_SHOW_VIDEO);
         EventBus.getDefault().post(action);
 
@@ -1082,13 +1088,14 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
             case Constants.CONNECT_COCO:
                 mIMeetingService.login();
                 break;
-            case Constants.LOGIN_COCO_SUCCESS:
+            case Constants.LOGIN_COCO_SUCCESS://登录coco成功后获取当前用户列表.
                 mIMeetingService.noticeOnLine();
+                break;
+            case Constants.ADD_GROUP_SUCCESS:
                 mIMeetingService.getGroupOnlineUser();
                 break;
             case OnlineInteractVideoFragment.ACTION_CHOOSE_SPEAKER_START://选择发言人-跳转到用户列表
                 mTabHost.setCurrentTab(3);
-
                 break;
             case OnlineInteractVideoFragment.ACTION_CHOOSE_SPEAKER_END://结束选择跳转回来
                 mTabHost.setCurrentTab(0);
@@ -1106,10 +1113,10 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
     public void onEventMainThread(CoCoAction action) throws RemoteException {
         Log.i(TAG, "action : " + action.getActionType() + ":" + action.getActionResult() + ":" + action.getByOperationObject());
         switch (action.getActionType()) {
-            case PullXmlUtils.TYPE_LOGIN://某人上线了
-//                String userID  =  action.getActionResult();
-                break;
-            case PullXmlUtils.WEB_NO_SPEAKER://开启－免打扰
+//            case MeetingCommand.TYPE_LOGIN://某人上线了
+////                String userID  =  action.getActionResult();
+//                break;
+            case MeetingCommand.WEB_NO_SPEAKER://开启－免打扰
                 //重新计时，15s
                 mStartPrompt = -1;
                 if (null != mMeetingBase) {
@@ -1117,7 +1124,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 }
                 setPromptTab();
                 break;
-            case PullXmlUtils.WEB_ALLOW_SPEAKER://关闭－免打扰
+            case MeetingCommand.WEB_ALLOW_SPEAKER://关闭－免打扰
                 //重新计时，15s
                 mStartPrompt = -1;
                 //恢复申请/取消发言状态 .
@@ -1126,8 +1133,8 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 }
                 setPromptTab();
                 break;
-            case PullXmlUtils.AGREE_SPEAKER_BACK://设为发言人
-            case PullXmlUtils.AGREE_SPEAKER_BACK＿ALL://主持人同意某人为主讲人
+//            case MeetingCommand.INFO_AGREE_SPEAKER_BACK://设为发言人
+            case MeetingCommand.INFO_AGREE_SPEAKER_BACK＿ALL://主持人同意某人为主讲人
                 Cog.e(TAG, "设置发言!" + action.getByOperationObject());
                 //设为发言人
                 if (mUserInfo.getBaseUserId().equals(action.getByOperationObject())) {
@@ -1141,9 +1148,8 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     setPromptTab();
                 }
                 break;
-            case PullXmlUtils.CANCEL_SPEAKER://取消发言人
-            case PullXmlUtils.WEB_CANCEL_SPEAKER://取消发言人
-            case PullXmlUtils.WEB_CANCEL_SPEAKER_ALL://取消发言人
+            case MeetingCommand.INFO_CANCEL_SPEAKER://取消发言人
+            case MeetingCommand.WEB_CANCEL_SPEAKER_ALL://取消发言人
                 mStartPrompt = -1;
                 Cog.e(TAG, "取消发言:" + action.getTo());
                 if (mUserInfo.getBaseUserId().equals(action.getTo())) {
@@ -1159,7 +1165,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     }
                 }
                 break;
-            case PullXmlUtils.COMMAND_WHITE_BOARD_MARK: //授予-白板标注权限
+           /* case MeetingCommand.COMMAND_WHITE_BOARD_MARK: //授予-白板标注权限
                 // TODO: 16-8-22 判断ｐａｒｓ　ｔｒｕｅ　ｏｒ　ｆａｌｓｅ　
                 String result = action.getActionResult();
                 if (TextUtils.isEmpty(result)) {
@@ -1168,15 +1174,15 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     boolean mark = Boolean.valueOf(result);
                     mMeetingBase.setWhiteBoardManager(mark ? "1" : "0");
                 }
-                break;
-            case PullXmlUtils.APPLY_SPEAKER://申请发言
+                break;*/
+            case MeetingCommand.CMD_APPLY_SPEAKER://手机-申请发言
                 /**
                  * setActionResult = "["4f45dd805db04cf683124a223de4e35b"]" 某人申请发言
                  */
                 break;
-            case PullXmlUtils.KICK_MEET://踢出会议
+            case MeetingCommand.WEB_ACTION_KICK_OUT://踢出会议
 
-                String userid = action.getByOperationObject();
+                String userid = action.getActionResult();
 
                 Cog.e(TAG, "踢出会议～～～：" + (userid != null ? userid : "null"));
 
@@ -1190,7 +1196,7 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 }
 
                 break;
-            case PullXmlUtils.VS_CREATE_PLAYER://开始共享视频
+            case MeetingCommand.INFO_VIDEO_SHARE_OPEN://开始共享视频
                 mStartPrompt = -1;
                 String videoId = action.getActionResult();
 
@@ -1220,14 +1226,14 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     }
                 });
                 break;
-            case PullXmlUtils.VS_CALL_STOP://结束视频共享
+            case MeetingCommand.INFO_VIDEO_SHARE_CLOSE://结束视频共享
                 Cog.e(TAG, "结束共享视频");
                 mStartPrompt = -1;
                 if (null != mMeetingBase.getBaseVideoShare()) {
                     mMeetingBase.getBaseVideoShare().setVideoSwitch(0);
                 }
                 break;
-            /*case PullXmlUtils.RD_CALL_PLAY://开始共享桌面
+            /*case PullXmlUtils.INFO_DESK_SHARE_OPEN://开始共享桌面
                 mStartPrompt    =   -1;
                 String id = action.getActionResult();
                 if(null == mMeetingBase.getBaseDeskShare()){
@@ -1257,15 +1263,15 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                 });
 
                 break;
-            case PullXmlUtils.RD_CALL_STOP:
+            case PullXmlUtils.INFO_DESK_SHARE_CLOSE:
                 Cog.e(TAG, "结束共享桌面");
                 mStartPrompt    =   -1;
                 if(null != mMeetingBase.getBaseDeskShare()){
                     mMeetingBase.getBaseDeskShare().setDeskSwitch(0);
                 }
                 break;*/
-            case PullXmlUtils.WEB_COMMAND_PUBLISH:  //开启轮巡
-                Cog.i(TAG, "开启轮巡：：" + PullXmlUtils.WEB_COMMAND_PUBLISH);
+            case MeetingCommand.WEB_COMMAND_PUBLISH:  //开启轮巡
+                Cog.i(TAG, "开启轮巡：：" + MeetingCommand.WEB_COMMAND_PUBLISH);
                 mStartPrompt = -1;
                 if (null == mMeetingBase.getBaseLoopPatrol()) {
                     LoopPatrol lp = new LoopPatrol();
@@ -1275,8 +1281,8 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     mMeetingBase.getBaseLoopPatrol().setLoopSwitch(1);
                 }
                 break;
-            case PullXmlUtils.WEB_COMMAND_UN_PUBLISH://结束轮巡
-                Cog.i(TAG, "关闭轮巡：：" + PullXmlUtils.WEB_COMMAND_UN_PUBLISH);
+            case MeetingCommand.WEB_COMMAND_UN_PUBLISH://结束轮巡
+                Cog.i(TAG, "关闭轮巡：：" + MeetingCommand.WEB_COMMAND_UN_PUBLISH);
                 mStartPrompt = -1;
                 if (mMeetingBase.getBaseLoopPatrol() == null) {
                     LoopPatrol lp2 = new LoopPatrol();
@@ -1286,15 +1292,22 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
                     mMeetingBase.getBaseLoopPatrol().setLoopSwitch(0);
                 }
                 break;
-            case PullXmlUtils.CHAT_IS_CLOSE_BACK:
+            case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
-                    mMeetingBase.setBaseChat("1");
+                    mMeetingBase.setBaseChat(1);
                 } else {
-                    mMeetingBase.setBaseChat("0");
+                    mMeetingBase.setBaseChat(0);
                 }
                 break;
-            case PullXmlUtils.END_MEET://会议结束 .
-                Cog.i(TAG, "会议结束　：　" + PullXmlUtils.END_MEET);
+            case MeetingCommand.WEB_CHAT_CONTROL://全局禁止聊天.
+                if (action.getActionResult().equals("true")) {
+                    mMeetingBase.setBaseSay(1);
+                } else {
+                    mMeetingBase.setBaseSay(0);
+                }
+                break;
+            case MeetingCommand.INFO_END_MEET://会议结束 .
+                Cog.i(TAG, "会议结束　：　" + MeetingCommand.INFO_END_MEET);
                 ExitByAction(TipProgressFragment.END_STATUS_TIP);
                 break;
             default:
@@ -1446,16 +1459,16 @@ public class OnlineMeetingActivity extends AppCompatActivity implements MyTabWid
      * @throws RemoteException
      */
     public void onEventMainThread(ChatMessage msg) throws RemoteException {
-        String userId = null;
+        /*String userId = null;
         if (msg.getChatType() == ChatMessage.GROUP_CHAT) {
             //群聊的话就取coco消息中的 to=475487329537895387 作为发送此消息者的ID
             userId = msg.getTo();
         } else if (msg.getChatType() == ChatMessage.SINGLE_CHAT) {
             //单聊的话就取coco消息中的 from=475487329537895387 作为发送此消息者的ID
             userId = msg.getFrom();
-        }
+        }*/
         //如果是当前会话的消息，刷新聊天页面
-        if (userId.equals(mToUserId) && !msg.getFrom().equals(mUserInfo.getBaseUserId())) {
+        if (!msg.getFrom().equals(mUserInfo.getBaseUserId())) {
 //            if (msg.getChatType() == Ty) {
             final ChatMessage cm = msg;
             cm.setBaseViewHoldType(OnlineGroupChatFragment.TYPE_CHAT_GROUP_RECEIVER);

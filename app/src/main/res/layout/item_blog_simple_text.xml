@@ -25,8 +25,8 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text="New Text"
-        android:textSize="17sp"
-        android:padding="16dp"
+        android:textSize="@dimen/tab"
+        android:padding="10dp"
         android:gravity="center_vertical"
         />
 </RelativeLayout>

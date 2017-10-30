@@ -92,6 +92,10 @@ android {
             abiFilters 'armeabi-v7a', 'armeabi'
         }
 
+        // Configure only for each module that uses Java 8
+        // language features (either in its source code or
+        // through dependencies).
+
         javaCompileOptions{
             annotationProcessorOptions{
                 includeCompileClasspath=true
@@ -185,7 +189,9 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
     compile 'cn.aigestudio.datepicker:DatePicker:2.2.0'
     compile 'com.google.android:flexbox:0.2.5'
+    compile 'com.koushikdutta.async:androidasync:2.+'
     compile project(path: ':zxing')
     compile project(path: ':frameworklibrary')
     compile project(':umenglibrary')
+    compile project(path: ':coco3.0')
 }

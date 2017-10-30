@@ -19,25 +19,26 @@ import android.widget.Toast;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
-import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.commons.controllers.activities.SingleChatActivity;
-import com.codyy.erpsportal.onlinemeetings.controllers.adapters.MessageAdapter;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
-import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
 import com.codyy.erpsportal.commons.models.entities.CoCoAction;
-import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
-import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.commons.models.entities.UpdateCantacts;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.services.IMeeting;
-import com.codyy.erpsportal.onlinemeetings.models.dao.ChatDataHelper;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.NotifyUtils;
-import com.codyy.erpsportal.commons.utils.PullXmlUtils;
 import com.codyy.erpsportal.commons.utils.StringUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
 import com.codyy.erpsportal.commons.widgets.ComposeView;
+import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
+import com.codyy.erpsportal.onlinemeetings.controllers.adapters.MessageAdapter;
+import com.codyy.erpsportal.onlinemeetings.models.dao.ChatDataHelper;
+import com.codyy.erpsportal.onlinemeetings.models.entities.ChatMessage;
+import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
+import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
+import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
     private int mChatType = CHAT_TYPE_GROUP;//聊天类型
     private int mChatCount;
     private boolean isCanSay = true;//是否可以说话
+    private boolean isAllCanSay = true;//是否禁止发言.
     private String mCurUserId;//发言人ID
     private String mToChatUserId;//发送给那个人的ID
     private String mName;//发言人的名字
@@ -89,12 +91,25 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
-        if(null != getArguments()){
+        if (null != getArguments()) {
             mUserInfo = getArguments().getParcelable(Constants.USER_INFO);
+            int canSay = getArguments().getInt(SingleChatActivity.EXTRA_FLAG_ALL_SAY);
+            if(canSay == 0){
+                isAllCanSay = true;
+            }else{
+                isAllCanSay = false;
+            }
+            int baseChat = getArguments().getInt(SingleChatActivity.EXTRA_FLAG_BASE_CHAT);
+            if(baseChat == 0){
+                isCanSay = true;
+            }else{
+                isCanSay = false;
+            }
         }
-        if(null == mUserInfo){
-            mUserInfo   = UserInfoKeeper.getInstance().getUserInfo();
+        if (null == mUserInfo) {
+            mUserInfo = UserInfoKeeper.getInstance().getUserInfo();
         }
+
     }
 
     @Nullable
@@ -141,7 +156,7 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
 
             mMyMeetingID = getActivity().getIntent().getStringExtra(OnlineMeetingActivity.EXTRA_MEETING_ID);//当前会议ID
             mCurUserId = mUserInfo.getBaseUserId();//当前自己的ID
-            mToChatUserId = Integer.valueOf(mMyMeetingID.substring(0,6),16)+"";
+            mToChatUserId = Integer.valueOf(mMyMeetingID.substring(0, 6), 16) + "";
             mDbKey = mDbKey.append(mMyMeetingID);//当前key，用于查询数据库中的聊天信息记录 以会议ID作为查询数据库的key
             mGetViewPager = (GetViewPager) getParentFragment();//获得ViewPager，用来指出当前Tab在哪个标签下，主要是为了通知未读消息的数量（红色小点）
             mViewPager = mGetViewPager.getViewPager();
@@ -164,6 +179,8 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
             mComposeView.setVisibility(View.GONE);//观摩者隐藏消息输入框
         }
         initData();
+        //判断聊天权限.
+        canSay(true);
     }
 
     /**
@@ -188,12 +205,12 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
         ((OnlineMeetingActivity) getActivity()).getUsers(new OnlineMeetingActivity.ILoader() {
             @Override
             public void onLoadUserSuccess(List<OnlineUserInfo> users) {
-                if(null != users){
+                if (null != users) {
                     mUsers.clear();
                     mUsers.addAll(users);
                 }
             }
-        }, false,true);
+        }, false, true);
     }
 
     /**
@@ -296,10 +313,10 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
         }
         ChatMessage chatMessage = new ChatMessage();
         //替换表情
-        String replaceMsg = PullXmlUtils.replaceMsg(receiveMsg);
+        String replaceMsg = EmojiUtils.replaceMsg(receiveMsg);
         //url encode
         String sendMsg = StringUtils.urlEncode(receiveMsg);
-        Cog.i(TAG,"sendMsg: "+sendMsg);
+        Cog.i(TAG, "sendMsg: " + sendMsg);
         chatMessage.setMsg(replaceMsg);
         chatMessage.setHeadUrl(mUserInfo.getHeadPic());
         chatMessage.setName(mUserInfo.getUserName());
@@ -350,12 +367,21 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
      */
     public void onEventMainThread(CoCoAction action) {
         switch (action.getActionType()) {
-            case PullXmlUtils.CHAT_IS_CLOSE_BACK:
+            case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
-                    canSay(false);
+                    isCanSay = false;
                 } else {
-                    canSay(true);
+                    isCanSay = true;
                 }
+                canSay(false);
+                break;
+            case MeetingCommand.WEB_CHAT_CONTROL://全局控制是否可以聊天.
+                if (action.getActionResult().equals("true")) {
+                    isAllCanSay = false;
+                } else {
+                    isAllCanSay = true;
+                }
+                canSay(false);
                 break;
         }
     }
@@ -400,17 +426,15 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
     /**
      * 判断用户是否被禁言了
      *
-     * @param b
      */
-    private void canSay(boolean b) {
-        if (b) {
-            isCanSay = true;
+    private void canSay(boolean isInit) {
+
+        if (isCanSay && isAllCanSay) {
             mComposeView.setVisibility(View.VISIBLE);
-            UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
+            if(!isInit) UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
         } else {
-            isCanSay = false;
             mComposeView.setVisibility(View.GONE);
-            UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
+            if(!isInit) UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
         }
 
     }
@@ -433,6 +457,7 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
             refreshUIWithNewMessage();
         }
     }
+
     //往数据库中插入最新的消息
     public class InsertChatMessageTask extends AsyncTask<String, Void, Void> {
 
@@ -447,6 +472,5 @@ public class OnLineChatMessageFragment extends Fragment implements ComposeView.O
         }
 
     }
-
 }
 

@@ -24,6 +24,8 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.controllers.activities.OnlineMeetingActivity;
 import com.codyy.erpsportal.onlinemeetings.controllers.viewholders.OnlineChatReceiverViewHolder;
+import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
+import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
 import java.net.URLDecoder;
@@ -84,8 +86,12 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         mToUserId = Integer.valueOf(mMeetingBase.getBaseMeetID().substring(0,6),16)+"";
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mInputView.setOperationDelegate(this);
-        if (mMeetingBase != null && mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3) {
-            mInputView.setVisibility(View.GONE);//观摩者隐藏消息输入框
+        if (mMeetingBase != null) {
+            if(mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3){
+                mInputView.setVisibility(View.GONE);//观摩者隐藏消息输入框
+            }
+            //初始化输入框.
+            canSay(true);
         }
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -141,13 +147,13 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
 
     @Override
     public void onEmojiPanOpen() {
-        // TODO: 08/05/17 打开表情输入框.
+        //  08/05/17 打开表情输入框.
         if(null != mSoftListener) mSoftListener.onKeyOpen();
     }
 
     @Override
     public void onEmojiPanClose() {
-        // TODO: 08/05/17 关闭表情输入框.
+        // 08/05/17 关闭表情输入框.
         if(null != mSoftListener) mSoftListener.onKeyClose();
     }
 
@@ -162,7 +168,7 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
             UIUtils.toast(EApplication.instance(), "抱歉,您只可观摩无法发言", Toast.LENGTH_SHORT);
             return;
         }
-        if (!mMeetingBase.getBaseChat().equals("1")) {
+        if (mMeetingBase.getBaseChat()==1) {
             UIUtils.toast(EApplication.instance(), "您目前无权发话", Toast.LENGTH_SHORT);
             return;
         }
@@ -182,7 +188,7 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setBaseViewHoldType(TYPE_CHAT_GROUP_SEND);
         //替换表情
-        String replaceMsg = PullXmlUtils.replaceMsg(receiveMsg);
+        String replaceMsg = EmojiUtils.replaceMsg(receiveMsg);
         //url encode
         String sendMsg = StringUtils.urlEncode(receiveMsg);
         Cog.i(TAG,"sendMsg: "+sendMsg);
@@ -214,11 +220,22 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      */
     public void onEventMainThread(CoCoAction action) {
         switch (action.getActionType()) {
-            case PullXmlUtils.CHAT_IS_CLOSE_BACK:
+            case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
+                    if(null != mMeetingBase)mMeetingBase.setBaseChat(1);
                     canSay(false);
                 } else {
-                    canSay(true);
+                    if(null != mMeetingBase)mMeetingBase.setBaseChat(0);
+                    canSay(false);
+                }
+                break;
+            case MeetingCommand.WEB_CHAT_CONTROL://全局控制是否可以聊天.
+                if (action.getActionResult().equals("true")) {
+                    if(null != mMeetingBase) mMeetingBase.setBaseSay(1);
+                    canSay(false);
+                } else {
+                    if(null != mMeetingBase) mMeetingBase.setBaseSay(0);
+                    canSay(false);
                 }
                 break;
         }
@@ -227,19 +244,17 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
     /**
      * 判断用户是否被禁言了
      *
-     * @param b
+     * @param isInit
      */
-    private void canSay(boolean b) {
-        if (b) {
-            mMeetingBase.setBaseChat("1");
+    private void canSay(boolean isInit) {
+        if(null == mMeetingBase || null == mInputView) return;
+        if (mMeetingBase.getBaseChat() == 0 && mMeetingBase.getBaseSay()== 0) {
             mInputView.setVisibility(View.VISIBLE);
-            UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
+            if(!isInit)UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
         } else {
-            mMeetingBase.setBaseChat("0");
             mInputView.setVisibility(View.GONE);
-            UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
+            if(!isInit)UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
         }
-
     }
 
 
@@ -250,17 +265,9 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      */
     public void onEventMainThread(ChatMessage msg) throws RemoteException {
         if(null == mRecyclerView) return;
-        String userId = null;
-        if (msg.getChatType() == ChatMessage.GROUP_CHAT) {
-            //群聊的话就取coco消息中的 to=475487329537895387 作为发送此消息者的ID
-            userId = msg.getTo();
-        } else {
-            //单聊的话就取coco消息中的 from=475487329537895387 作为发送此消息者的ID
-            userId = msg.getFrom();
-        }
         //如果是当前会话的消息，刷新聊天页面
-        if (userId.equals(mToUserId) && !msg.getFrom().equals(mUserInfo.getBaseUserId())) {
-//            if (msg.getChatType() == Ty) {
+        if (!msg.getFrom().equals(mUserInfo.getBaseUserId())
+                &&msg.getChatType() == ChatMessage.GROUP_CHAT) {
             final ChatMessage cm = msg ;
             cm.setBaseViewHoldType(TYPE_CHAT_GROUP_RECEIVER);
             getParentActivity().getUsers(new OnlineMeetingActivity.ILoader() {

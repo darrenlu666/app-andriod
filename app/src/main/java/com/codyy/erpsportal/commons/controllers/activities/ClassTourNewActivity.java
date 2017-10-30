@@ -309,10 +309,14 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
 
         if (!TextUtils.isEmpty(classLevelId)) {
             mLoader.addParam("baseClasslevelId", classLevelId);
+        } else {
+            mLoader.removeParam("baseClasslevelId");
         }
 
         if (!TextUtils.isEmpty(subjectId)) {
             mLoader.addParam("baseSubjectId", subjectId);
+        } else {
+            mLoader.removeParam("baseSubjectId");
         }
         if (!hasDirect) {
             mLoader.addParam("directly", "false");

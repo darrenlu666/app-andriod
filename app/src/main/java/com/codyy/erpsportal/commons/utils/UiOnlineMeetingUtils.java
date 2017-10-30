@@ -26,6 +26,8 @@ import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.models.entities.MeetingShow;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
@@ -118,15 +120,15 @@ public class UiOnlineMeetingUtils {
     /**
      * 获取共享视频播放stream
      * @param meetingBase
-     * @param userId　共享视频的人的ｉｄ .
+     * @param videoId　共享视频的人的ｉｄ .
      * var shareDeskStreamName = mid + "_" + userId + "_" + "desk",
      * Var shareVideoStreamName = mid + "_" + userId + "_" + "video";
      * @return
      */
-    public static String  getShareVideoStream(MeetingBase meetingBase , String userId){
-        if(meetingBase == null || userId == null) return null;
+    public static String  getShareVideoStream(MeetingBase meetingBase , String videoId){
+        if(meetingBase == null || videoId == null) return null;
 
-        return  meetingBase.getBaseMeetID() + "_" + userId+"_video";
+        return  meetingBase.getBaseMeetID() + "_" + videoId+"_video";
     }
 
     /**
@@ -375,7 +377,6 @@ public class UiOnlineMeetingUtils {
                     //toast error messages .
                     if(!TextUtils.isEmpty(response.optString("message"))){
                         //ToastUtil.showToast(EApplication.instance(), response.optString("message"));
-
                         TipProgressFragment fragment = TipProgressFragment.newInstance(TipProgressFragment.UNSTART_STATUS_TIP);
                         fragment.show(fragmentManager, "showtips");
                     }
@@ -392,6 +393,39 @@ public class UiOnlineMeetingUtils {
         }));
     }
 
+
+    /**
+     * 获取coco信息.
+     * @param act
+     * @param meetingId
+     * @param uuid
+     * @param callback
+     */
+    public static void loadCocoInfo(Activity act ,String meetingId,String uuid, final ICallback callback){
+        HashMap<String,String> params = new HashMap<>();
+        params.put("mid",meetingId);
+        params.put("uuid",uuid);
+
+        RequestSender requestSender = new RequestSender(act);
+//        requestSender.sendGetRequest(new RequestSender.RequestData(URLConfig.GET_COCO_TOKEN, params, response -> {
+//            if(null != callback) callback.onSuccess(response);
+//        }, error -> {
+//            Cog.e(TAG, "onErrorResponse:" + error);
+//            ToastUtil.showToast("获取DMC失败!");
+//        }));
+        requestSender.sendGetRequest(new RequestSender.RequestData(URLConfig.GET_COCO_TOKEN, params, new Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (null != callback) callback.onSuccess(response);
+            }
+        }, new ErrorListener() {
+            @Override
+            public void onErrorResponse(Throwable error) {
+                Cog.e(TAG, "onErrorResponse:" + error);
+                ToastUtil.showToast("获取DMC失败!");
+            }
+        }));
+    }
     /**
      * 获取视频 基本数据
      * @param act  activity object .

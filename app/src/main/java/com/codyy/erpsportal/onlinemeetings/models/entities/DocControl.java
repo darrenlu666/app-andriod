@@ -16,6 +16,15 @@ public class DocControl {
     private String filename;
     private String index;
     private String key;
+    private String tabId;
+
+    public String getTabId() {
+        return tabId;
+    }
+
+    public void setTabId(String tabId) {
+        this.tabId = tabId;
+    }
 
     public String getKey() {
         return key;
