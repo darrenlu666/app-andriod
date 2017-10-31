@@ -124,7 +124,7 @@ public class WorkListParFragment extends LoadMoreFragment<WorkListParentClass, W
             subjectIcon.setImageURI(Uri.parse(URLConfig.IMAGE_URL + data.getSubjectPic()));
             workNameTv.setText(data.getWorkName());
             workItemFinishCountTv.setText(WorkUtils.switchStr(data.getItemFinishedCount(), mContext.getResources().getColor(R.color.work_statistic_circle_color_2)));
-            workAccurcyTv.setText(data.getWorkAccuracy());
+            workAccurcyTv.setText(WorkUtils.roundFloat(data.getWorkAccuracy()));
             workAssignTimeTv.setText(data.geworkAssignTime());
             switch (data.getWorkState()) {
                 case STATUS_PROGRESS://未完成
