@@ -1,6 +1,7 @@
 package com.codyy.tpmp.filterlibrary.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
     protected OnItemClickListener<T> mOnItemClickListener;
     protected OnLoadMoreClickListener mOnLoadMoreClickListener;
     protected int mSelectedPosition = 0 ;//默认选中的位置
-    private static final long MIN_CLICK_TIME = 1*1000L;
+    private static final long MIN_CLICK_TIME = 300L;
     private long mLastClickTimeMillions = -1;
 
     public BaseRecyclerAdapter(ViewCreator<VH> mCreator) {
@@ -117,13 +118,13 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
 
     private void setChildListener(View view , View.OnClickListener clickListener) {
         if(view instanceof ViewGroup ){
-//            Log.i(TAG , " itemView is an ViewGroup !");
+            Log.i(TAG , " itemView is an ViewGroup !");
             ViewGroup viewGroup = (ViewGroup) view;
-//            Log.i(TAG,"item view count is : " + viewGroup.getChildCount() );
+            Log.i(TAG,"item view count is : " + viewGroup.getChildCount() );
             if(viewGroup.getChildCount()==0) return;
             for(int i = 0 ; i < viewGroup.getChildCount() ; i++ ){
                 final View v = viewGroup.getChildAt(i);
-//                Log.i(TAG , " view [ "+i+" ] id :@"+v);
+                Log.i(TAG , " view [ "+i+" ] id :@"+v);
                 if(v instanceof ViewGroup ){
                     setChildListener(v , clickListener);
                 }else{
@@ -142,6 +143,7 @@ public  class BaseRecyclerAdapter<T,VH extends BaseRecyclerViewHolder> extends R
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i(TAG,"onClick v: "+v);
                 //防止多次点击.
                 boolean isDoubleClick = false;
                 long currentTime = System.currentTimeMillis();
