@@ -64,7 +64,7 @@ public class MoreLessonPlansFragment extends LessonPlanListFragment {
 
     @Override
     protected boolean checkHasMore(JSONObject response, int itemCount) {
-        return response.optInt("total") <= itemCount;
+        return response.optInt("total") > itemCount;
     }
 
     @Override

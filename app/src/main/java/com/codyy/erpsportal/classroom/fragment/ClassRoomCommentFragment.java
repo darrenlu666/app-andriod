@@ -199,7 +199,7 @@ public class ClassRoomCommentFragment extends Fragment implements IFragmentManag
             @Override
             public void onGlobalLayout() {
                 mVirtualKeyboardHeight = activityRootView.getRootView().getHeight() - activityRootView.getHeight()
-                        - InputUtils.getStatusBarHeight(getActivity());
+                        - InputUtils.getStatusBarHeight(getActivity()) - InputUtils.getNavigationBarHeight(getActivity());
                 if (mVirtualKeyboardHeight > 100) { // 99%情况下高度差是键盘导致的。
                     //实际情况中，键盘弹出时输入框换行时高度变化也会跑这里，
                     //因为键盘弹出时高度差超过100了，而输入框高度变化时会触发全局布局监听器

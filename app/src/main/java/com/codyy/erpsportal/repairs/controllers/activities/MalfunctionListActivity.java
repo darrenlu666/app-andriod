@@ -17,7 +17,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.RvLoader;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.Builder;
 import com.codyy.erpsportal.commons.controllers.fragments.RvLoader.ListExtractor;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -158,7 +158,7 @@ public class MalfunctionListActivity extends AppCompatActivity implements ListEx
     }
 
     @Override
-    public ViewHolderCreator<MalfunctionVh> newViewHolderCreator() {
+    public AbsVhrCreator<MalfunctionVh> newViewHolderCreator() {
         return new EasyVhrCreator<>(MalfunctionVh.class);
     }
 

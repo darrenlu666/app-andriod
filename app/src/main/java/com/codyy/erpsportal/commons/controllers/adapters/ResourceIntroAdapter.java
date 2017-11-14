@@ -42,8 +42,6 @@ public class ResourceIntroAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private final Context mContext;
 
-    private GridLayoutManager mGridLayoutManager;
-
     public ResourceIntroAdapter(Context context, GridLayoutManager layoutManager) {
         mContext = context;
         mItems = new ArrayList<>();

@@ -14,7 +14,7 @@ import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.exam.controllers.activities.student.StudentAnswerDetailActivity;
 import com.codyy.erpsportal.exam.controllers.activities.student.StudentViewCheckedActivity;
 import com.codyy.erpsportal.exam.models.entities.student.ExamStudentSelfTask;
@@ -66,8 +66,8 @@ public class SelfTaskFragment extends LoadMoreFragment<ExamStudentSelfTask, Self
     }
 
     @Override
-    protected ViewHolderCreator<ExamStudentSelfTaskViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamStudentSelfTaskViewHolder>() {
+    protected AbsVhrCreator<ExamStudentSelfTaskViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamStudentSelfTaskViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_student_self;

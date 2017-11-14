@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="?selectableItemBackground"
-              android:orientation="vertical"
-              android:paddingBottom="8dp"
-              android:paddingLeft="4dp"
-              android:paddingRight="4dp"
-              android:paddingTop="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="8dp">
 
-    <com.codyy.erpsportal.commons.widgets.AspectRatioDraweeView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/res_icon"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        app:aspectRatioEnabled="true"
-        app:aspectRatio="0.5625"
-        app:dominantMeasurement="width"
-        app:placeholderImage="@drawable/icon_default_video"/>
+        app:actualImageScaleType="centerCrop"
+        app:placeholderImage="@drawable/icon_default_video"
+        app:viewAspectRatio="1.7777" />
 
     <TextView
         android:id="@+id/title"
@@ -28,5 +27,5 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text="Video"
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 </LinearLayout>

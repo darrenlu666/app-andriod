@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.codyy.erpsportal.commons.controllers.activities.ToolbarActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.ContextUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
@@ -46,7 +46,7 @@ public class RepairImageAdapter extends Adapter {
 
     private static final String EXTRA_DATA = ToolbarActivity.class.getPackage() + ".EXTRA_DATA";
 
-    private final SparseArray<ViewHolderCreator> mVhCreators = new SparseArray<>(2);
+    private final SparseArray<AbsVhrCreator> mVhCreators = new SparseArray<>(2);
 
     private List<UploadingImage> mItems;
 

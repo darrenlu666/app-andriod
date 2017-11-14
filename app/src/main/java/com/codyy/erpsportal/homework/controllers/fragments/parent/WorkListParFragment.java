@@ -17,7 +17,7 @@ import com.codyy.erpsportal.homework.controllers.activities.WorkItemDetailActivi
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.homework.controllers.fragments.WorkItemDetailFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.homework.models.entities.parent.WorkListParentClass;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -48,8 +48,8 @@ public class WorkListParFragment extends LoadMoreFragment<WorkListParentClass, W
     }
 
     @Override
-    protected ViewHolderCreator<ParWorkViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ParWorkViewHolder>() {
+    protected AbsVhrCreator<ParWorkViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ParWorkViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_work_list_student;
@@ -124,7 +124,7 @@ public class WorkListParFragment extends LoadMoreFragment<WorkListParentClass, W
             subjectIcon.setImageURI(Uri.parse(URLConfig.IMAGE_URL + data.getSubjectPic()));
             workNameTv.setText(data.getWorkName());
             workItemFinishCountTv.setText(WorkUtils.switchStr(data.getItemFinishedCount(), mContext.getResources().getColor(R.color.work_statistic_circle_color_2)));
-            workAccurcyTv.setText(data.getWorkAccuracy());
+            workAccurcyTv.setText(WorkUtils.roundFloat(data.getWorkAccuracy()));
             workAssignTimeTv.setText(data.geworkAssignTime());
             switch (data.getWorkState()) {
                 case STATUS_PROGRESS://未完成

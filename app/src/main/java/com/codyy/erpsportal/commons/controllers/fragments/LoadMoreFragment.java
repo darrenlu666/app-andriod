@@ -27,7 +27,7 @@ import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnItemClickListener;
 import com.codyy.erpsportal.commons.controllers.adapters.RecyclerAdapter.OnLoadMoreListener;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RequestSender.RequestData;
 import com.codyy.erpsportal.commons.models.network.Response;
@@ -138,7 +138,7 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
      *
      * @return
      */
-    protected abstract ViewHolderCreator<VH> newViewHolderCreator();
+    protected abstract AbsVhrCreator<VH> newViewHolderCreator();
 
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
@@ -286,6 +286,7 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
                 if (isRefreshing) {
                     handleEmpty();//
                 } else {
+                    //删除加载更多项
                     mAdapter.removeItem(mAdapter.getItemCount() - 1);
                 }
             } else {
@@ -295,6 +296,7 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
                     mAdapter.notifyItemRangeInserted(0, list.size());
                     loadedFrag = 1;
                 } else {
+                    //删除加载更多项
                     mAdapter.removeItem(mAdapter.getItemCount() - 1);
                     mAdapter.addData(list);
                     mAdapter.notifyDataSetChanged();
@@ -303,9 +305,9 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
             }
             //如果已经加载所有，下拉更多关闭
             if (checkHasMore(response, mAdapter.getItemCount())) {
-                mAdapter.disableLoadMore();
-            } else {
                 mAdapter.enableLoadMore();
+            } else {
+                mAdapter.disableLoadMore();
             }
             mAdapter.notifyDataSetChanged();
             mStart = mAdapter.getItemCount();
@@ -357,7 +359,7 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
      * @return
      */
     protected boolean checkHasMore(JSONObject response, int itemCount) {
-        return response.optInt("total") <= itemCount;
+        return response.optInt("total") > itemCount;
     }
 
     /**

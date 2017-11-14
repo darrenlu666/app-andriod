@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~
+  ~ 阔地教育科技有限公司版权所有(codyy.com/codyy.cn)
+  ~ Copyright (c)  2017, Codyy and/or its affiliates. All rights reserved.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlt_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    >
+    <RelativeLayout
+        android:id="@+id/rlt_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/sdv_pic"
+            style="@style/sdv_item_style"
+            android:layout_width="@dimen/poe_head_pic_size_middle"
+            android:layout_height="@dimen/poe_head_pic_size_middle"
+            app:placeholderImage="@drawable/default_person_head"
+            />
+        <TextView
+            android:id="@+id/tv_name"
+            tools:text="title"
+            style="@style/txt_group_txt_Title"
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/sdv_pic"
+            android:layout_marginTop="10dp"
+            />
+        <TextView
+            android:id="@+id/tv_create_time"
+            style="@style/txt_group_txt_desc"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/sdv_pic"
+            android:layout_below="@id/tv_name"
+            android:singleLine="true"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            tools:text="2016-04-08 12:00:00"
+            />
+        <TextView
+            android:id="@+id/tv_category"
+            style="@style/txt_group_txt_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_create_time"
+            android:layout_alignBottom="@id/tv_create_time"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:singleLine="true"
+            tools:text="分类分类分类分类分类分类"
+            />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/et_desc"
+        tools:text="blog detail desc ..blog detail desc blog detail desc ..blog detail desc .blog detail desc ...blog detail desc ..blog detail desc ..blog detail desc .....blog detail desc ..........blog detail desc ..........blog detail desc .blog detail desc ..blog detail desc"
+        style="@style/txt_group_txt_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rlt_top"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:lineSpacingMultiplier="1.3"
+        android:maxLines="2"
+        android:minLines="1"
+        />
+</RelativeLayout>

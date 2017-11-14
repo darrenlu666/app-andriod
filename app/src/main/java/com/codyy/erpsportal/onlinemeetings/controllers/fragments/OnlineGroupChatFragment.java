@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.services.IMeeting;
@@ -28,9 +29,11 @@ import com.codyy.erpsportal.onlinemeetings.models.entities.coco.MeetingCommand;
 import com.codyy.erpsportal.onlinemeetings.utils.EmojiUtils;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView;
+
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.Bind;
 import de.greenrobot.event.EventBus;
 
@@ -53,13 +56,13 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      */
     public static final int TYPE_CHAT_GROUP_SEND = 0x010;
     /**
-     * 群聊－接收　
+     * 群聊－接收
      */
     public static final int TYPE_CHAT_GROUP_RECEIVER = 0x011;
 
-    private BaseRecyclerAdapter<ChatMessage,OnlineChatReceiverViewHolder> mAdapter ;
+    private BaseRecyclerAdapter<ChatMessage, OnlineChatReceiverViewHolder> mAdapter;
     private List<ChatMessage> mData = new ArrayList<>();//本地数据缓存
-    private String mToUserId ;//视频会议id
+    private String mToUserId;//视频会议id
     private onSoftKeyListener mSoftListener;
 
     @Override
@@ -83,11 +86,11 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
     @Override
     public void viewLoadCompleted() {
         super.viewLoadCompleted();
-        mToUserId = Integer.valueOf(mMeetingBase.getBaseMeetID().substring(0,6),16)+"";
+        mToUserId = Integer.valueOf(mMeetingBase.getBaseMeetID().substring(0, 6), 16) + "";
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mInputView.setOperationDelegate(this);
         if (mMeetingBase != null) {
-            if(mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3){
+            if (mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3) {
                 mInputView.setVisibility(View.GONE);//观摩者隐藏消息输入框
             }
             //初始化输入框.
@@ -103,9 +106,9 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         mAdapter = new BaseRecyclerAdapter(new BaseRecyclerAdapter.ViewCreator<OnlineChatReceiverViewHolder>() {
             @Override
             public OnlineChatReceiverViewHolder createViewHolder(ViewGroup parent, int viewType) {
-                OnlineChatReceiverViewHolder viewHolder = new OnlineChatReceiverViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.row_received_message),mUserInfo.getBaseUserId());
-                if(viewType == TYPE_CHAT_GROUP_SEND){
-                    viewHolder = new OnlineChatReceiverViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(),R.layout.row_sent_message),mUserInfo.getBaseUserId());
+                OnlineChatReceiverViewHolder viewHolder = new OnlineChatReceiverViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(), R.layout.row_received_message), mUserInfo.getBaseUserId());
+                if (viewType == TYPE_CHAT_GROUP_SEND) {
+                    viewHolder = new OnlineChatReceiverViewHolder(UiMainUtils.setMatchWidthAndWrapHeight(parent.getContext(), R.layout.row_sent_message), mUserInfo.getBaseUserId());
                 }
                 viewHolder.setAdapter(mAdapter);
                 return viewHolder;
@@ -120,8 +123,8 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         //get data .
         List<ChatMessage> data = getParentActivity().getGroupMessageCache();
 
-        if(data.size()>0){
-            for(ChatMessage cm : data){
+        if (data.size() > 0) {
+            for (ChatMessage cm : data) {
                 mData.add(cm);
             }
         }
@@ -136,25 +139,25 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
     @Override
     public void onSoftWareKeyOpen() {
         //打开软件盘，隐藏底部导航栏.
-        if(null != mSoftListener) mSoftListener.onKeyOpen();
+        if (null != mSoftListener) mSoftListener.onKeyOpen();
     }
 
     @Override
     public void onSoftWareKeyClose() {
         //关闭软件盘,展示底部导航栏
-        if(null != mSoftListener) mSoftListener.onKeyClose();
+        if (null != mSoftListener) mSoftListener.onKeyClose();
     }
 
     @Override
     public void onEmojiPanOpen() {
         //  08/05/17 打开表情输入框.
-        if(null != mSoftListener) mSoftListener.onKeyOpen();
+        if (null != mSoftListener) mSoftListener.onKeyOpen();
     }
 
     @Override
     public void onEmojiPanClose() {
         // 08/05/17 关闭表情输入框.
-        if(null != mSoftListener) mSoftListener.onKeyClose();
+        if (null != mSoftListener) mSoftListener.onKeyClose();
     }
 
     /**
@@ -163,12 +166,12 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      * @param text
      */
     private void sendTextMessage(String text) {
-        if(null == mRecyclerView) return;
+        if (null == mRecyclerView) return;
         if (mMeetingBase != null && (mMeetingBase.getBaseRole() == MeetingBase.BASE_MEET_ROLE_3)) {
             UIUtils.toast(EApplication.instance(), "抱歉,您只可观摩无法发言", Toast.LENGTH_SHORT);
             return;
         }
-        if (mMeetingBase.getBaseChat()==1) {
+        if (mMeetingBase.getBaseChat() == 1) {
             UIUtils.toast(EApplication.instance(), "您目前无权发话", Toast.LENGTH_SHORT);
             return;
         }
@@ -191,27 +194,20 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         String replaceMsg = EmojiUtils.replaceMsg(receiveMsg);
         //url encode
         String sendMsg = StringUtils.urlEncode(receiveMsg);
-        Cog.i(TAG,"sendMsg: "+sendMsg);
+        Cog.i(TAG, "sendMsg: " + sendMsg);
         chatMessage.setMsg(replaceMsg);
         chatMessage.setHeadUrl(mUserInfo.getHeadPic());
         chatMessage.setName(mUserInfo.getUserName());
         chatMessage.setFrom(mUserInfo.getBaseUserId());
         chatMessage.setTo(mToUserId);
         chatMessage.setTime(System.currentTimeMillis() + "");
-//        if (mChatType == CHAT_TYPE_GROUP) {
-            chatMessage.setChatType(ChatMessage.GROUP_CHAT);
-            mData.add(chatMessage);
-            mAdapter.notifyDataSetChanged();
-        if(null != mRecyclerView){
-            mRecyclerView.scrollToPosition(mData.size()-1);
+        chatMessage.setChatType(ChatMessage.GROUP_CHAT);
+        mData.add(chatMessage);
+        mAdapter.notifyDataSetChanged();
+        if (null != mRecyclerView) {
+            mRecyclerView.scrollToPosition(mData.size() - 1);
         }
         mIMeeting.sendMsg(sendMsg);//发送群聊消息
-      /*  } else {
-            chatMessage.setChatType(ChatMessage.SINGLE_CHAT);
-            mAdapter.addData(chatMessage);
-            refreshUIWithNewMessage();
-            mIMeeting.sendSignalMsg(sendMsg, mToChatUserId);//发送单聊消息
-        }*/
     }
 
 
@@ -222,19 +218,19 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
         switch (action.getActionType()) {
             case MeetingCommand.WEB_CHAT_IS_CLOSE_BACK:
                 if (action.getActionResult().equals("true")) {
-                    if(null != mMeetingBase)mMeetingBase.setBaseChat(1);
+                    if (null != mMeetingBase) mMeetingBase.setBaseChat(1);
                     canSay(false);
                 } else {
-                    if(null != mMeetingBase)mMeetingBase.setBaseChat(0);
+                    if (null != mMeetingBase) mMeetingBase.setBaseChat(0);
                     canSay(false);
                 }
                 break;
             case MeetingCommand.WEB_CHAT_CONTROL://全局控制是否可以聊天.
                 if (action.getActionResult().equals("true")) {
-                    if(null != mMeetingBase) mMeetingBase.setBaseSay(1);
+                    if (null != mMeetingBase) mMeetingBase.setBaseSay(1);
                     canSay(false);
                 } else {
-                    if(null != mMeetingBase) mMeetingBase.setBaseSay(0);
+                    if (null != mMeetingBase) mMeetingBase.setBaseSay(0);
                     canSay(false);
                 }
                 break;
@@ -247,13 +243,13 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      * @param isInit
      */
     private void canSay(boolean isInit) {
-        if(null == mMeetingBase || null == mInputView) return;
-        if (mMeetingBase.getBaseChat() == 0 && mMeetingBase.getBaseSay()== 0) {
+        if (null == mMeetingBase || null == mInputView) return;
+        if (mMeetingBase.getBaseChat() == 0 && mMeetingBase.getBaseSay() == 0) {
             mInputView.setVisibility(View.VISIBLE);
-            if(!isInit)UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
+            if (!isInit) UIUtils.toast(EApplication.instance(), "呵呵,您被允许发言了", Toast.LENGTH_SHORT);
         } else {
             mInputView.setVisibility(View.GONE);
-            if(!isInit)UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
+            if (!isInit) UIUtils.toast(EApplication.instance(), "呜呜,您被禁言了", Toast.LENGTH_SHORT);
         }
     }
 
@@ -264,17 +260,17 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
      * @throws RemoteException
      */
     public void onEventMainThread(ChatMessage msg) throws RemoteException {
-        if(null == mRecyclerView) return;
+        if (null == mRecyclerView) return;
         //如果是当前会话的消息，刷新聊天页面
         if (!msg.getFrom().equals(mUserInfo.getBaseUserId())
-                &&msg.getChatType() == ChatMessage.GROUP_CHAT) {
-            final ChatMessage cm = msg ;
+                && msg.getChatType() == ChatMessage.GROUP_CHAT) {
+            final ChatMessage cm = msg;
             cm.setBaseViewHoldType(TYPE_CHAT_GROUP_RECEIVER);
             getParentActivity().getUsers(new OnlineMeetingActivity.ILoader() {
                 @Override
                 public void onLoadUserSuccess(List<OnlineUserInfo> users) {
 
-                    if(users !=null && users.size()>0) {
+                    if (users != null && users.size() > 0) {
                         for (int i = 0; i < users.size(); i++) {
                             if (cm.getFrom().equals(users.get(i).getId())) {
                                 cm.setName(users.get(i).getName());
@@ -285,21 +281,16 @@ public class OnlineGroupChatFragment extends OnlineFragmentBase implements BlogC
 
                         mData.add(cm);
                         mAdapter.notifyDataSetChanged();
-                        if(null != mRecyclerView){
-                            mRecyclerView.scrollToPosition(mData.size()-1);
+                        if (null != mRecyclerView) {
+                            mRecyclerView.scrollToPosition(mData.size() - 1);
                         }
                     }
                 }
-            },false,true);
-
-        } /*else {
-                mAdapter.addData(findSingleMessageFromWho(msg));
-            }*/
-            /*mNotifyUtils.onNewMsg(msg);//铃声通知消息到了
-            refreshUIWithNewMessage();//刷新界面*/
+            }, false, true);
+        }
     }
 
-    public interface onSoftKeyListener{
+    public interface onSoftKeyListener {
         /**
          * 打开软件盘
          */

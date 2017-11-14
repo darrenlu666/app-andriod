@@ -182,12 +182,13 @@ public class OnlineTeachActivity extends BaseHttpActivity implements HttpGetInte
         mTabLayout.setSelectedTabIndicatorHeight((int) (getResources().getDimension(R.dimen.tab_layout_select_indicator_height)));
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mViewPager.setPagingEnabled(true);
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mTabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Cog.i(TAG, "onTabSelected : " + mTabLayout.getSelectedTabPosition());
                 Cog.i(TAG, "onTabSelected : tab.getPosition :" + tab.getPosition());
-                mViewPager.setCurrentItem(tab.getPosition());
+//                mViewPager.setCurrentItem(tab.getPosition());
+                super.onTabSelected(tab);
                 supportInvalidateOptionsMenu();
                 if (UserInfo.USER_TYPE_AREA_USER.equals(mUserInfo.getUserType())) {
                     if (0 == mTabLayout.getSelectedTabPosition()) {
@@ -196,14 +197,6 @@ public class OnlineTeachActivity extends BaseHttpActivity implements HttpGetInte
                         createAreaFilter();
                     }
                 }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
             }
         });
 

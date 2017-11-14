@@ -34,6 +34,42 @@ public class BlogDetail {
     private String  blogContent;
     private float   ratingAverage;//平均分 浮点
     private String  showAverage;//平均分 str
+    private boolean shareUplevelFlag;//推送到上级v5.3.8
+    private boolean recommendHomeFlag;//推送到门户v5.3.8
+    private boolean recommendSideFlag;//推送到侧边栏.v5.3.8
+    private String blogShareId;//分享到上级需要v5.3.8
+
+    public String getBlogShareId() {
+        return blogShareId;
+    }
+
+    public void setBlogShareId(String blogShareId) {
+        this.blogShareId = blogShareId;
+    }
+
+    public boolean isShareUplevelFlag() {
+        return shareUplevelFlag;
+    }
+
+    public void setShareUplevelFlag(boolean shareUplevelFlag) {
+        this.shareUplevelFlag = shareUplevelFlag;
+    }
+
+    public boolean isRecommendHomeFlag() {
+        return recommendHomeFlag;
+    }
+
+    public void setRecommendHomeFlag(boolean recommendHomeFlag) {
+        this.recommendHomeFlag = recommendHomeFlag;
+    }
+
+    public boolean isRecommendSideFlag() {
+        return recommendSideFlag;
+    }
+
+    public void setRecommendSideFlag(boolean recommendSideFlag) {
+        this.recommendSideFlag = recommendSideFlag;
+    }
 
     public String getMessage() {
         return message;

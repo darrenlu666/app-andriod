@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.resource.controllers.viewholders.CommentViewHolder;
 import com.codyy.erpsportal.resource.controllers.viewholders.MoreCommentsViewHolder;
@@ -58,7 +58,7 @@ public class ResourceCommentsAdapter extends Adapter<ViewHolder> {
 
     private List<Object> mCommentBaseList = new ArrayList<>();
 
-    private SparseArray<ViewHolderCreator<?>> mViewHolderCreators;
+    private SparseArray<AbsVhrCreator<?>> mViewHolderCreators;
 
     private MoreComments mMoreComments;
 
@@ -67,7 +67,7 @@ public class ResourceCommentsAdapter extends Adapter<ViewHolder> {
     public ResourceCommentsAdapter() {
         mMoreComments = new MoreComments();
 
-        mViewHolderCreators = new SparseArray<>(3);
+        mViewHolderCreators = new SparseArray<>(4);
         mViewHolderCreators.put(TYPE_COMMENT, new EasyVhrCreator<>(CommentViewHolder.class));
         mViewHolderCreators.put(TYPE_REPLY, new EasyVhrCreator<>(ReplyViewHolder.class));
         mViewHolderCreators.put(TYPE_MORE_REPLIES, new EasyVhrCreator<>(MoreReliesViewHolder.class));
@@ -76,7 +76,7 @@ public class ResourceCommentsAdapter extends Adapter<ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewHolderCreator<?> creator = mViewHolderCreators.get(viewType);
+        AbsVhrCreator<?> creator = mViewHolderCreators.get(viewType);
         return creator.createViewHolder(parent);
     }
 

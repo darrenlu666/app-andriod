@@ -3,22 +3,25 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.os.Bundle;
 
 import com.codyy.erpsportal.commons.controllers.adapters.ChannelPagerAdapter.ChannelTabInfo;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelCustomizedFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelLivingFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ExcellentCoursesFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.FeiXianFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingCustomizedFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.HaiNingResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.InfoIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainCompositeFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainGroupSchoolFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.MainResFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.ManagementFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipCustomizedFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipHomeFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TZLivingFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TaiZhouFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.ResourceIntroFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TeachingResearchFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
 import com.codyy.erpsportal.commons.utils.Cog;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelCustomizedFragment;
-import com.codyy.erpsportal.commons.controllers.fragments.channels.ChannelLivingFragment;
 import com.codyy.erpsportal.groups.controllers.fragments.ChannelBlogPostFragment;
 import com.codyy.erpsportal.groups.controllers.fragments.GroupFragment;
 
@@ -42,11 +45,12 @@ public class ChannelTab {
             "classresourceid",
             "groupid",
             "homepageid",
+            "indexcustomehaiNingperiod",
+            "indexcustometaizhouliveCls",
             "informationid",
             "netclassid",
             "netteachid",
-            "onlineclassid",
-            "indexcustometaizhouliveCls"
+            "onlineclassid"
         };
 
     private String id;
@@ -95,7 +99,7 @@ public class ChannelTab {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.optJSONObject(i);
             ChannelTab channelTab = parseJsonObject(jsonObject);
-            if (!isValideId(channelTab.getId())) {
+            if (Arrays.binarySearch(sKnownIds, channelTab.getId()) < 0) {
                 continue;
             }
             channelTabs.add(channelTab);
@@ -103,17 +107,8 @@ public class ChannelTab {
         return channelTabs;
     }
 
-
-    private static boolean isValideId(String id){
-        for(String s: sKnownIds){
-            if(s.equals(id)) return true;
-        }
-
-        return false;
-    }
     /**
-     * 根据传递的ｉｄ构建不同的Fragment的{@linkplain ChannelTabInfo}
-     *
+     * 根据传递的id，构建不同的Fragment的{@linkplain ChannelTabInfo}
      * @param indexTemplateId
      * @return
      */
@@ -154,9 +149,12 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_TZ.equals(indexTemplateId)) {
                     clazz = TaiZhouFragment.class;
                     tabId = 15;
+                } else if (ModuleConfig.TEMPLATE_HN_RES.equals(indexTemplateId)) {//海宁资源首页
+                    clazz = HaiNingResFragment.class;
+                    tabId = 16;
                 } else {
                     clazz = MainResFragment.class;
-                    tabId = 12;
+                    tabId = 2;
                 }
 
                 break;
@@ -165,11 +163,12 @@ public class ChannelTab {
                     bundle = new Bundle();
                     bundle.putString(SipCustomizedFragment.EXTRA_ARG_TITLE, name);
                     clazz = SipCustomizedFragment.class;
-                    tabId = 3;
+                } else if (ModuleConfig.TEMPLATE_HN_RES.equals(indexTemplateId)) {
+                    clazz = HaiNingCustomizedFragment.class;
                 } else {
                     clazz = ChannelCustomizedFragment.class;
-                    tabId = 3;
                 }
+                tabId = 3;
                 break;
             case "netteachid"://网络教研
                 clazz = TeachingResearchFragment.class;
@@ -204,11 +203,12 @@ public class ChannelTab {
                 clazz = GroupFragment.class;
                 tabId = 9;
                 break;
+            case "indexcustomehaiNingperiod"://往期录播（海宁定制）
+                clazz = ExcellentCoursesFragment.class;
+                tabId = 91;
+                break;
             default:
                 throw new IllegalStateException("Unknown id!id=" + id);
-//                clazz  =OnlineDocumentsFragment.class;
-//                tabId = 8;
-//                break;
         }
         Cog.d(TAG, "createTabInfo clazz=", clazz);
         return new ChannelTabInfo(name, clazz, bundle, tabId);

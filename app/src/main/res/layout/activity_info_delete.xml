@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="#f2f2f2"
     android:orientation="vertical">
 
     <com.codyy.erpsportal.commons.widgets.TitleBar
@@ -15,9 +15,7 @@
 
         <Button
             android:id="@+id/btn_edit"
-            style="@style/title_bar_button"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
+            style="@style/TitleBarEndBtn"
             android:text="@string/edit" />
     </com.codyy.erpsportal.commons.widgets.TitleBar>
 
@@ -42,46 +40,49 @@
         <View
             android:id="@+id/separator"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="0.5dp"
             android:layout_alignParentTop="true"
-            android:background="@color/user_item_line"/>
+            android:background="@color/user_item_line" />
 
         <CheckBox
             android:id="@+id/cb_select_all"
             style="@style/NewsDeleteCheckBg"
             android:layout_width="wrap_content"
-            android:layout_height="39dp"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/separator"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:drawablePadding="4dp"
+            android:paddingLeft="16dp"
+            android:paddingStart="16dp"
             android:text="全选"
-            android:textColor="@color/main_green"/>
+            android:textColor="@color/list_item_label" />
 
         <Button
             android:id="@+id/btn_delete"
             android:layout_width="wrap_content"
-            android:layout_height="39dp"
-            android:layout_alignParentRight="true"
+            android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
             android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
             android:background="@null"
-            android:drawableLeft="@drawable/xxhdpi_trash_nor"
-            android:drawableStart="@drawable/xxhdpi_trash_nor"
+            android:drawableLeft="@drawable/ic_trash"
+            android:drawableStart="@drawable/ic_trash"
             android:gravity="center"
+            android:minWidth="0dp"
+            android:drawablePadding="16dp"
             android:text="删除"
-            android:textColor="@color/main_green"/>
+            android:textColor="@color/list_item_label" />
     </RelativeLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/sliding_tabs"
-        android:layout_above="@id/bar_delete"/>
+        android:layout_above="@id/bar_delete"
+        android:layout_below="@id/sliding_tabs"/>
 
 </RelativeLayout>

@@ -15,7 +15,7 @@ import com.codyy.erpsportal.exam.controllers.activities.school.SchoolGradeDetail
 import com.codyy.erpsportal.exam.controllers.activities.student.StudentReadActivity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.exam.models.entities.teacher.ExamTeacherExam;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
@@ -44,8 +44,8 @@ public class ExamFragment extends LoadMoreFragment<ExamTeacherExam, ExamFragment
     }
 
     @Override
-    protected ViewHolderCreator<ExamTeacherExamViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamTeacherExamViewHolder>() {
+    protected AbsVhrCreator<ExamTeacherExamViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamTeacherExamViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_teacher_exam;

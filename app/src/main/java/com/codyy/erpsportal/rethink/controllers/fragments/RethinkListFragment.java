@@ -15,7 +15,7 @@ import com.codyy.erpsportal.rethink.controllers.activities.RethinkDetailsActivit
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity.OnFilterObserver;
 import com.codyy.erpsportal.rethink.controllers.fragments.RethinkListFragment.RethinkViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.rethink.models.entities.Rethink;
@@ -55,8 +55,8 @@ public class RethinkListFragment extends LoadMoreFragment<Rethink ,RethinkViewHo
     private String mSchoolId;
 
     @Override
-    protected ViewHolderCreator<RethinkViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<RethinkViewHolder>() {
+    protected AbsVhrCreator<RethinkViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<RethinkViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_rethink;

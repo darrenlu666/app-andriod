@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~
+  ~ 阔地教育科技有限公司版权所有(codyy.com/codyy.cn)
+  ~ Copyright (c)  2017, Codyy and/or its affiliates. All rights reserved.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    >
+    <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/layout_forbidden" android:visibility="gone"/>
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/rlt_header"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                >
+                <TextView
+                    android:id="@+id/tv_sort"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="时间倒序  "
+                    android:drawableRight="@drawable/pull_arrow"
+                    android:drawablePadding="5dp"
+                    android:padding="5dp"
+                    android:textSize="@dimen/tab"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    />
+                <TextView
+                    android:id="@+id/tv_role"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="角色(全部)"
+                    android:drawableRight="@drawable/pull_arrow"
+                    android:drawablePadding="5dp"
+                    android:padding="5dp"
+                    android:textSize="@dimen/tab"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    />
+                <TextView
+                    android:id="@+id/tv_recommend"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="推送(全部)"
+                    android:drawableRight="@drawable/pull_arrow"
+                    android:drawablePadding="5dp"
+                    android:padding="5dp"
+                    android:textSize="@dimen/tab"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    />
+            </LinearLayout>
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/divide_color"
+                android:layout_below="@id/rlt_header"
+                />
+
+            <com.codyy.erpsportal.commons.widgets.RefreshLayout
+                android:id="@+id/refresh_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/divider"
+                >
+                <com.codyy.tpmp.filterlibrary.widgets.recyclerviews.SimpleRecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="#fff"
+                    />
+            </com.codyy.erpsportal.commons.widgets.RefreshLayout>
+            <com.codyy.erpsportal.commons.widgets.EmptyView
+                android:id="@+id/empty_view"
+                android:layout_below="@id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                />
+            <FrameLayout
+                android:id="@+id/fl_sort"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/rlt_header"
+                android:background="@color/transparent"
+                />
+        </RelativeLayout>
+        <FrameLayout
+            android:id="@+id/fl_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            />
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

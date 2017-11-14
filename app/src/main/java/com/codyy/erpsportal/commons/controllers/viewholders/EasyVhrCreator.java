@@ -12,7 +12,7 @@ import java.lang.reflect.Constructor;
  * 配合{@link LayoutId}注解设置布局id的ViewHolder创建器
  * Created by gujiajia on 2016/6/2.
  */
-public class EasyVhrCreator<VH extends ViewHolder> extends ViewHolderCreator<VH> {
+public class EasyVhrCreator<VH extends ViewHolder> extends AbsVhrCreator<VH> {
 
     private static final String TAG = "EasyVhrCreator";
 

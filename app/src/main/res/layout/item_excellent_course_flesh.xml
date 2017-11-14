@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ 阔地教育科技有限公司版权所有（codyy.com/codyy.cn）
+  ~ Copyright (c) 2017, Codyy and/or its affiliates. All rights reserved.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="20dp"
+    android:paddingEnd="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingStart="10dp"
+    android:paddingTop="20dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/dv_icon"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        app:placeholderImage="@drawable/video_holder"
+        app:placeholderImageScaleType="centerCrop"
+        app:viewAspectRatio="1.78" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/dv_icon"
+        android:layout_toRightOf="@id/dv_icon"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/list_item_body"
+        android:textSize="15sp"
+        tools:text="往期录播往期录播往期录播往期录播" />
+
+    <TextView
+        android:id="@+id/tv_scope"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_title"
+        android:layout_alignStart="@id/tv_title"
+        android:layout_below="@id/tv_title"
+        android:layout_marginTop="17.5dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/list_item_label"
+        android:textSize="12sp"
+        tools:text="六年级/英语/人教版/上上" />
+
+    <TextView
+        android:id="@+id/tv_school"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/tv_title"
+        android:layout_alignStart="@id/tv_title"
+        android:layout_below="@id/tv_scope"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="#888888"
+        android:textSize="12sp"
+        tools:text="苏州第一高级中学" />
+</RelativeLayout>

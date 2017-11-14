@@ -249,26 +249,28 @@ public class MockChatCommand {
      * 测试演示模式切换
      */
     public static void testVideoShare(){
-        new Thread(()->{
-            commands.clear();
-            commands.add(SHARE_VIDEO.replaceAll(" ",""));
-            commands.add(STOP_SHARE_VIDEO.replaceAll(" ",""));
+        new Thread(){
+            @Override
+            public void run() {
+                commands.clear();
+                commands.add(SHARE_VIDEO.replaceAll(" ",""));
+                commands.add(STOP_SHARE_VIDEO.replaceAll(" ",""));
 
-            for(String cmd : commands){
-                try {
-                    CoCoUtils.parseJson(cmd,new MeetingConfig());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                for(String cmd : commands){
+                    try {
+                        CoCoUtils.parseJson(cmd,new MeetingConfig());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                try {
-                    Thread.sleep(2*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        Thread.sleep(2*1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
-        }).start();
+        }.start();
     }
 
     /**
@@ -278,48 +280,51 @@ public class MockChatCommand {
         commands.clear();
         commands.add(CHAT_CONTROL_OPEN.replaceAll(" ",""));
         commands.add(CHAT_CONTROL_CLOSE.replaceAll(" ",""));
-        new Thread(()->{
-            for(String cmd : commands){
-                try {
-                    Thread.sleep(5*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    CoCoUtils.parseJson(cmd,new MeetingConfig());
-                } catch (Exception e) {
-                    e.printStackTrace();
+        new Thread() {
+            @Override
+            public void run() {
+                for(String cmd : commands){
+                    try {
+                        Thread.sleep(5*1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        CoCoUtils.parseJson(cmd,new MeetingConfig());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
-        }).start();
+        }.start();
     }
 
     /**
      * 测试演示模式切换
      */
     public static void testTurnMode(){
+        new Thread(){
+            @Override
+            public void run() {
+                commands.clear();
+                commands.add(TURN_VIDEO.replaceAll(" ",""));
+                commands.add(TURN_SHOW.replaceAll(" ",""));
 
-        new Thread(()->{
-            commands.clear();
-            commands.add(TURN_VIDEO.replaceAll(" ",""));
-            commands.add(TURN_SHOW.replaceAll(" ",""));
+                for(String cmd : commands){
+                    try {
+                        CoCoUtils.parseJson(cmd,new MeetingConfig());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-            for(String cmd : commands){
-                try {
-                    CoCoUtils.parseJson(cmd,new MeetingConfig());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    Thread.sleep(2*1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        Thread.sleep(2*1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
-        }).start();
+        }.start();
     }
 
 }

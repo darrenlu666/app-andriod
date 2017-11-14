@@ -17,7 +17,7 @@ import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.exam.controllers.activities.school.SchoolStatisticsDetailActivity;
 import com.codyy.erpsportal.exam.controllers.fragments.school.StudentStatisticsLoadFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.exam.models.entities.school.ExamStudentStatistics;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
@@ -228,8 +228,8 @@ public class StudentStatisticsFragment extends StudentStatisticsLoadFragment<Exa
     }
 
     @Override
-    protected ViewHolderCreator<ExamStudentStatisticsViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamStudentStatisticsViewHolder>() {
+    protected AbsVhrCreator<ExamStudentStatisticsViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamStudentStatisticsViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_student_statistics;

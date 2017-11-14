@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.viewholders.EasyVhrCreator;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.repairs.controllers.viewholders.InquiryReplyVh;
 import com.codyy.erpsportal.repairs.controllers.viewholders.InquiryVh;
 import com.codyy.erpsportal.repairs.models.entities.InquiryItem;
@@ -53,7 +53,7 @@ public class InquiriesAdapter extends RecyclerView.Adapter {
 
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    private SparseArray<ViewHolderCreator<?>> mVhCreators;
+    private SparseArray<AbsVhrCreator<?>> mVhCreators;
 
     private RecyclerView mRecyclerView;
 

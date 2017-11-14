@@ -41,8 +41,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * 首页（监管）
- * A simple {@link Fragment} subclass.
+ * 首页（监管）,有地图的
  */
 public class ManagementFragment extends Fragment{
 

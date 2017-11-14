@@ -60,10 +60,12 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -193,17 +195,24 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
     /**
      * 加载幻灯片新闻
      */
-    private void loadSlideNews(String schoolId, String areaId) {
+    private Observable<JSONObject> loadSlideNews(String schoolId, String areaId) {
         Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(areaId)) params.put("baseAreaId" ,areaId);
         if (!TextUtils.isEmpty(schoolId)) params.put("schoolId", schoolId);
         params.put("size", "4");
         mOnLoadingCount++;
         Cog.d(TAG, "loadSlideNews url=", URLConfig.HOME_NEWS_SLIDE, params);
-        Disposable disposable = mWebApi.post4Json(URLConfig.HOME_NEWS_SLIDE, params)
+
+        return mWebApi.post4Json(URLConfig.HOME_NEWS_SLIDE, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<JSONObject>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mCompositeDisposable.add(disposable);
+                    }
+                })
+                .doOnNext(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadSlideNews response = " + response);
@@ -237,14 +246,14 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                             Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }, new Consumer<Throwable>() {
+                })
+                .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Toast.makeText(getActivity(), "获取推荐的资讯出错!", Toast.LENGTH_SHORT).show();
                         minusLoadingCount();
                     }
                 });
-        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -290,9 +299,9 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
 
     private void minusLoadingCount() {
         mOnLoadingCount--;
-        if (mOnLoadingCount == 0) {
-            mRefreshLayout.setRefreshing(false);
-        }
+//        if (mOnLoadingCount == 0) {
+//            mRefreshLayout.setRefreshing(false);
+//        }
     }
 
     /**
@@ -300,7 +309,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
      * @param areaId 地区id
      * @param schoolId 学校id
      */
-    private void loadInfoSwitches(String areaId, String schoolId) {
+    private Observable<JSONObject> loadInfoSwitches(String areaId, String schoolId) {
         Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
             params.put("schoolId", schoolId);
@@ -310,10 +319,16 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("baseAreaId", areaId);
         mOnLoadingCount++;
         Cog.d(TAG, "loadInfoSwitches url=", URLConfig.GET_MIXINFORMATION, params);
-        Disposable disposable = mWebApi.post4Json(URLConfig.GET_MIXINFORMATION, params)
+        return mWebApi.post4Json(URLConfig.GET_MIXINFORMATION, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<JSONObject>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mCompositeDisposable.add(disposable);
+                    }
+                })
+                .doOnNext(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadInfoSwitches response=", response);
@@ -329,14 +344,14 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                             }
                         }
                     }
-                }, new Consumer<Throwable>() {
+                })
+                .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
                         minusLoadingCount();
                     }
                 });
-        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -344,7 +359,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
      * @param areaId 地区id
      * @param schoolId 学校id
      */
-    private void loadMainResources(String areaId, String schoolId) {
+    private Observable<JSONObject> loadMainResources(String areaId, String schoolId) {
         Cog.d(TAG, "loadMainResources areaId=",areaId,",schoolId=",schoolId);
         Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
@@ -354,10 +369,16 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("size", "4");
         mOnLoadingCount++;
         Cog.d(TAG, "Url:", URLConfig.GET_RECOMMEND_RESOURCE, params);
-        Disposable disposable = mWebApi.post4Json(URLConfig.GET_RECOMMEND_RESOURCE, params)
+        return mWebApi.post4Json(URLConfig.GET_RECOMMEND_RESOURCE, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<JSONObject>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mCompositeDisposable.add(disposable);
+                    }
+                })
+                .doOnNext(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadMainResources response=", response);
@@ -378,14 +399,14 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                         }
                         updateNoResourceTv();
                     }
-                }, new Consumer<Throwable>() {
+                })
+                .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
                         minusLoadingCount();
                     }
                 });
-        mCompositeDisposable.add(disposable);
     }
 
     private void updateNoResourceTv() {
@@ -439,7 +460,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
      * @param areaId 地区id
      * @param schoolId 学校id
      */
-    private void loadLiveClass(String areaId, String schoolId) {
+    private Observable<JSONObject> loadLiveClass(String areaId, String schoolId) {
         Cog.d(TAG, "loadLiveClass areaId=", areaId, ",schoolId=", schoolId);
         Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
@@ -448,10 +469,16 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("baseAreaId", areaId);
         params.put("size", "3");
         mOnLoadingCount++;
-        Disposable disposable = mWebApi.post4Json(URLConfig.MAIN_LIVE_CLASSROOM, params)
+        return mWebApi.post4Json(URLConfig.MAIN_LIVE_CLASSROOM, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<JSONObject>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mCompositeDisposable.add(disposable);
+                    }
+                })
+                .doOnNext(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadLiveClass response=", response);
@@ -467,14 +494,14 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                                             MainCompositeFragment.this,UserInfoKeeper.obtainUserInfo())));
                         }
                     }
-                }, new Consumer<Throwable>() {
+                })
+                .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
                         minusLoadingCount();
                     }
                 });
-        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -482,7 +509,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
      * @param baseAreaId 地区
      * @param schoolId 学校id
      */
-    private void loadBlog(String baseAreaId, String schoolId) {
+    private Observable<JSONObject> loadBlog(String baseAreaId, String schoolId) {
         Cog.d(TAG, "loadBlog areaId=", baseAreaId, ",schoolId=", schoolId);
         Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
@@ -492,10 +519,16 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("size", "3");
         mOnLoadingCount++;
         Cog.d(TAG, "loadBlog url:", URLConfig.MAIN_BLOG, params);
-        Disposable disposable = mWebApi.post4Json(URLConfig.MAIN_BLOG, params)
+        return mWebApi.post4Json(URLConfig.MAIN_BLOG, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<JSONObject>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mCompositeDisposable.add(disposable);
+                    }
+                })
+                .doOnNext(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadBlog response=", response);
@@ -518,7 +551,8 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                             }
                         }
                     }
-                }, new Consumer<Throwable>() {
+                })
+                .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
@@ -530,7 +564,6 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                         }
                     }
                 });
-        mCompositeDisposable.add(disposable);
     }
 
     /**
@@ -550,11 +583,12 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         MainPageConfig mainPageConfig = config.getMainPageConfig();
         initTitles();
 
+        List<Observable<JSONObject>> pawList = new ArrayList<>();
         if (mainPageConfig.hasInformation()) {
             mInfoSheetRl.setVisibility(View.VISIBLE);
             mSlideView.setVisibility(View.VISIBLE);
-            loadSlideNews(config.getSchoolId(), config.getBaseAreaId());
-            loadInfoSwitches(config.getBaseAreaId(), config.getSchoolId());
+            pawList.add(loadSlideNews(config.getSchoolId(), config.getBaseAreaId()));
+            pawList.add(loadInfoSwitches(config.getBaseAreaId(), config.getSchoolId()));
         } else {
             mInfoSheetRl.setVisibility(View.GONE);
             mSlideView.setVisibility(View.GONE);
@@ -563,7 +597,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         if (mainPageConfig.hasResource()) {
             mResourceBar.setVisibility(View.VISIBLE);
             mResourcesGl.setVisibility(View.VISIBLE);
-            loadMainResources(config.getBaseAreaId(), config.getSchoolId());
+            pawList.add(loadMainResources(config.getBaseAreaId(), config.getSchoolId()));
         } else {
             mResourceBar.setVisibility(View.GONE);
             mResourcesGl.setVisibility(View.GONE);
@@ -571,19 +605,44 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         }
         if (mainPageConfig.hasOnlineClass() || mainPageConfig.hasLiveClass()) {
             mLiveClassroomBar.setVisibility(View.VISIBLE);
-            loadLiveClass(config.getBaseAreaId(), config.getSchoolId());
+            pawList.add(loadLiveClass(config.getBaseAreaId(), config.getSchoolId()));
         } else {
             mLiveClassroomBar.setVisibility(View.GONE);
             mNoClassroomTv.setVisibility(View.GONE);
         }
         if (mainPageConfig.hasBlog()) {
             mBlogBar.setVisibility(View.VISIBLE);
-            loadBlog(config.getBaseAreaId(), config.getSchoolId());
+            pawList.add(loadBlog(config.getBaseAreaId(), config.getSchoolId()));
         } else {
             mBlogBar.setVisibility(View.GONE);
             mNoBlogTv.setVisibility(View.GONE);
         }
-        loadTeacherRecommended(config.getBaseAreaId(), config.getSchoolId());
+        pawList.add(loadTeacherRecommended(config.getBaseAreaId(), config.getSchoolId()));
+        Observable
+                .zip(pawList, new Function<Object[], String>() {
+                    @Override
+                    public String apply(Object[] objects) throws Exception {
+                        if (objects == null || objects.length == 0) return "";
+                        StringBuilder sb = new StringBuilder();
+                        for (Object obj: objects) {
+                            sb.append(obj);
+                        }
+                        return sb.toString();
+                    }
+                })
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mCompositeDisposable.add(disposable);
+                    }
+                })
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Cog.d(TAG, "zip:", Thread.currentThread(), s);
+                        mRefreshLayout.setRefreshing(false);
+                    }
+                });
     }
 
     /**
@@ -601,7 +660,7 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
      * @param areaId 地区id
      * @param schoolId 学校id
      */
-    private void loadTeacherRecommended(String areaId, String schoolId) {
+    private Observable<JSONObject> loadTeacherRecommended(String areaId, String schoolId) {
         Cog.d(TAG, "loadTeacherRecommended areaId=",areaId,",schoolId=",schoolId);
         Map<String, String> params = new HashMap<>();
         if (!TextUtils.isEmpty(schoolId)) {
@@ -612,10 +671,16 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
         params.put("type", "composite");
         mOnLoadingCount++;
         Cog.d(TAG, "loadTeacherRecommended url=", URLConfig.MAIN_TEACHER_RECOMMENDED, params);
-        Disposable disposable = mWebApi.post4Json(URLConfig.MAIN_TEACHER_RECOMMENDED, params)
+        return mWebApi.post4Json(URLConfig.MAIN_TEACHER_RECOMMENDED, params)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<JSONObject>() {
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mCompositeDisposable.add(disposable);
+                    }
+                })
+                .doOnNext(new Consumer<JSONObject>() {
                     @Override
                     public void accept(JSONObject response) throws Exception {
                         Cog.d(TAG, "loadTeacherRecommended response=", response);
@@ -641,14 +706,15 @@ public class MainCompositeFragment extends Fragment implements OnModuleConfigLis
                             }
                         }
                     }
-                }, new Consumer<Throwable>() {
+                })
+                .doOnError(new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Toast.makeText(getActivity(), R.string.net_error, Toast.LENGTH_SHORT).show();
                         minusLoadingCount();
                     }
                 });
-        mCompositeDisposable.add(disposable);
+
     }
 
     /**

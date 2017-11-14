@@ -1137,6 +1137,9 @@ public class URLConfig {
     @UrlSuffix("mobile/home/onlineclass/getAllSemesterRecordScheduleList.do")
     public static String GET_SIP_ONLINE_CLASS;
 
+    @UrlSuffix("onlineclass/getReplyListForHaiNing.do")
+    public static String GET_REPLY_LIST_FOR_HAI_NING;
+
     /**
      * 更多- 同步课堂（专递课堂）(sip园区首页)
      * baseAreaId	行政区ID	string	与学校参数互斥
@@ -2195,6 +2198,26 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/blog/selectCommentPageList.do")
     public static String GET_BLOG_COMMENT_LIST;
+
+    /**
+     * poe add v5.3.8 2017/10/23 博文详情推送
+     * blogId	博文Id	string	必传
+     * recAction	推荐或取消推荐	string	值为1推荐，值为0取消推荐，其他值不可取
+     * recType	区分推荐到门户还是侧边栏	string	值为HOME推荐到门户，值为SIDE推荐到侧边栏， 其他值不可取
+     * uuid	用户uuid	string	必传
+     */
+    @UrlSuffix("mobile/blog/addHomeRecommend.do")
+    public static String PUSH_BLOG_DOOR_OR_SLIDE;
+
+    /**
+     * poe add v5.3.8 2017/10/23 博文分享到上级
+     * blogId	博文ID	string	必传
+     * blogShareId	博文分享ID	string	必传
+     * uuid	uuid	string	必传
+     */
+    @UrlSuffix("mobile/blog/addAreaShareBlog.do")
+    public static String PUSH_BLOG_HEADER_SCOPE;
+
     /**
      * poe add
      * 博文评论-二级评论列表及更多
@@ -2324,6 +2347,38 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/blog/getPublicPersonBlog.do")
     public static String GET_PUBLIC_PERSONAL_BLOG_LIST;
+
+    /**
+     * poe add at v5.3.8
+     * 区域博文列表
+     * 参数名称	类型	说明
+     * baseAreaId	区域id	string	查询区域博文列表时必传
+     * end	分页结束	number	必传
+     * rank	时间顺序、阅读量高低、评论高低	string	TIMEASC、READDESC、READASC、COMMENTDESC、COMMENTDESC、默认为时间降序，不需要传值
+     * schoolId	学校id	string	查询学校博文列表时必传
+     * sortRecommend	推送类型	string	全部、已推送到门户(HOME)、已推送到上级(HIGHER)、未推送(NONE)
+     * sortRole	角色	string	全部、老师(TEACHER)、学生(STUDENT)、家长(PARENT)
+     * start	分页起始	number	必传
+     * uuid	用户uuid	string	必传
+     */
+    @UrlSuffix("mobile/blog/getAreaBlogList.do")
+    public static String GET_APP_AREA_BLOG_LIST;
+
+    /**
+     * poe add at v5.3.8
+     * 学校博文列表
+     * 参数名称	类型	说明
+     * baseAreaId	区域id	string	查询区域博文列表时必传
+     * end	分页结束	number	必传
+     * rank	时间顺序、阅读量高低、评论高低	string	TIMEASC、READDESC、READASC、COMMENTDESC、COMMENTDESC、默认为时间降序，不需要传值
+     * schoolId	学校id	string	查询学校博文列表时必传
+     * sortRecommend	推送类型	string	全部、已推送到门户(HOME)、已推送到上级(HIGHER)、未推送(NONE)
+     * sortRole	角色	string	全部、老师(TEACHER)、学生(STUDENT)、家长(PARENT)
+     * start	分页起始	number	必传
+     * uuid	用户uuid	string	必传
+     */
+    @UrlSuffix("mobile/blog/getSchoolBlogList.do")
+    public static String GET_APP_SCHOOL_BLOG_LIST;
 
     /**
      * poe add

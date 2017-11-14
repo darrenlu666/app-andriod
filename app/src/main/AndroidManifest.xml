@@ -351,6 +351,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme" />
         <activity
+            android:name="com.codyy.erpsportal.blogs.controllers.activities.AreaBlogActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullscreenTheme" />
+        <activity
             android:name="com.codyy.erpsportal.groups.controllers.activities.ClassBlogActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_main"

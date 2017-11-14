@@ -52,6 +52,21 @@ public  class SimpleListFilterFragment extends Fragment {
      */
     private int mRightClickPosition = 0;
 
+    /**
+     * 实例化
+     * @param titles
+     * @return
+     */
+    public static SimpleListFilterFragment newInstance(ArrayList<MyBaseTitle> titles){
+
+        SimpleListFilterFragment fragment = new SimpleListFilterFragment();
+        Bundle bd = new Bundle();
+        bd.putParcelableArrayList(SimpleListFilterFragment.EXTRA_FILTER_TITLES, titles);
+        fragment.setArguments(bd);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

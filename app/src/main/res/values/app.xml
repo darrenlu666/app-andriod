@@ -41,15 +41,15 @@
         <item>@string/title_function_analysis</item>
     </string-array>
 
-    <!--items:专递课堂-->
+    <!--fleshes:专递课堂-->
 
-    <!--items:直录播课堂-->
+    <!--fleshes:直录播课堂-->
     <!--<string name="item_function_live">直播课堂</string>-->
     <!--<string name="item_function_mxwl_ktxs">课堂巡视</string>-->
     <!--<string name="item_function_mxwl_ktzy">课堂作业</string>-->
     <!--<string name="item_function_mxwl_ycdb">远程导播</string>-->
 
-    <!--items:统计-->
+    <!--fleshes:统计-->
     <string name="item_function_resource_statistic">资源统计</string>
 
 

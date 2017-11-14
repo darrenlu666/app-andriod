@@ -3,6 +3,7 @@ package com.codyy.erpsportal.commons.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -187,6 +188,13 @@ public class InputUtils {
         paramActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(localRect);
         return localRect.top;
 
+    }
+
+    public static int getNavigationBarHeight(Activity paramActivity) {
+        Resources resources = paramActivity.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height","dimen", "android");
+        int height = resources.getDimensionPixelSize(resourceId);
+        return height;
     }
 
     public static int getAppContentHeight(Activity paramActivity) {

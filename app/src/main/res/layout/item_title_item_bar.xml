@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ 阔地教育科技有限公司版权所有（codyy.com/codyy.cn）
+  ~ Copyright (c) 2017, Codyy and/or its affiliates. All rights reserved.
+  -->
+
+<com.codyy.erpsportal.commons.widgets.TitleItemBar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/title_item_bar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/title_item_bar_height" />

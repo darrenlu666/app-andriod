@@ -26,9 +26,10 @@ import com.codyy.erpsportal.commons.controllers.fragments.TipProgressFragment;
 import com.codyy.erpsportal.commons.models.entities.MeetingShow;
 import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.models.network.Response.ErrorListener;
+import com.codyy.erpsportal.commons.models.network.Response.Listener;
 import com.codyy.erpsportal.onlinemeetings.models.entities.MeetingBase;
 import com.codyy.erpsportal.onlinemeetings.models.entities.OnlineUserInfo;
-import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoInfo;
 import com.codyy.erpsportal.onlinemeetings.widgets.BGABadgeTextView;
 import com.codyy.url.URLConfig;
 
@@ -406,11 +407,23 @@ public class UiOnlineMeetingUtils {
         params.put("uuid",uuid);
 
         RequestSender requestSender = new RequestSender(act);
-        requestSender.sendGetRequest(new RequestSender.RequestData(URLConfig.GET_COCO_TOKEN, params, response -> {
-            if(null != callback) callback.onSuccess(response);
-        }, error -> {
-            Cog.e(TAG, "onErrorResponse:" + error);
-            ToastUtil.showToast("获取DMC失败!");
+//        requestSender.sendGetRequest(new RequestSender.RequestData(URLConfig.GET_COCO_TOKEN, params, response -> {
+//            if(null != callback) callback.onSuccess(response);
+//        }, error -> {
+//            Cog.e(TAG, "onErrorResponse:" + error);
+//            ToastUtil.showToast("获取DMC失败!");
+//        }));
+        requestSender.sendGetRequest(new RequestSender.RequestData(URLConfig.GET_COCO_TOKEN, params, new Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (null != callback) callback.onSuccess(response);
+            }
+        }, new ErrorListener() {
+            @Override
+            public void onErrorResponse(Throwable error) {
+                Cog.e(TAG, "onErrorResponse:" + error);
+                ToastUtil.showToast("获取DMC失败!");
+            }
         }));
     }
     /**

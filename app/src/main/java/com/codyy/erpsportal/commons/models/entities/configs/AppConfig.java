@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.blogs.controllers.activities.AreaBlogActivity;
 import com.codyy.erpsportal.classroom.activity.ClassRecordedFilterActivity;
 import com.codyy.erpsportal.classroom.activity.ClassRecordedNoAreaActivity;
 import com.codyy.erpsportal.classroom.activity.ClassRoomListActivity;
@@ -19,6 +20,7 @@ import com.codyy.erpsportal.commons.controllers.activities.HomeWorkNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.RemoteDirectorNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.UserTimeTableActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.ApplicationViewHold;
+import com.codyy.erpsportal.commons.models.BearJumper;
 import com.codyy.erpsportal.commons.models.DirectJumper;
 import com.codyy.erpsportal.commons.models.Jumpable;
 import com.codyy.erpsportal.commons.models.Titles;
@@ -40,8 +42,6 @@ import com.codyy.erpsportal.reservation.controllers.activities.ReservationClassA
 import com.codyy.erpsportal.reservation.controllers.activities.ReservationClassDetailActivity;
 import com.codyy.erpsportal.resource.controllers.activities.ResourcesNewActivity;
 import com.codyy.erpsportal.rethink.controllers.activities.RethinkListActivity;
-import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvHistoryActivity;
-import com.codyy.erpsportal.schooltv.controllers.activities.SchoolTvProgramListActivity;
 import com.codyy.erpsportal.statistics.controllers.activities.CoursesStatisticsActivity;
 import com.codyy.erpsportal.statistics.controllers.activities.StatisticalActivity;
 import com.codyy.erpsportal.timetable.activities.TimeTableDetailActivity;
@@ -66,7 +66,7 @@ public class AppConfig {
     /**
      * 完整的应用信息集合
      */
-    private List<AppInfo> mAppData = new ArrayList();
+    private List<AppInfo> mAppData = new ArrayList<>();
     private static HashMap<String, List<AppInfo>> mChildItem = new HashMap<>();
     /**
      * icons for first level
@@ -93,7 +93,9 @@ public class AppConfig {
             R.drawable.ic_fun_analysis,//统计 17
             R.drawable.ic_fun_net_teach,//网络授课 18
             R.drawable.ic_fun_school_tv,//校园电视台 19
-            R.drawable.ic_fun_repair,//报修
+            R.drawable.ic_fun_repair,//报修 20
+            R.drawable.ic_fun_announcement,//通知公告 21
+            R.drawable.ic_fun_blog,//博文 22
     };
     /**
      * 二级菜单icon .
@@ -122,6 +124,8 @@ public class AppConfig {
             "netteach.id",//网络授课 18
             "tvProgram.id",//校园电视台 19
             "repairs.id",//报修 20
+            "announcement.id",//通知公告 21
+            "blog.id",//博文 22
     };
 
     private HashMap<String, List<AppPriority>> mPriorityCollection = new HashMap<>();
@@ -151,10 +155,10 @@ public class AppConfig {
         initPriority();
         initChildIcon();
         mChildItem.clear();
-        List<AppInfo> list1 = new ArrayList();//专递课堂
-        List<AppInfo> list2 = new ArrayList();//名校网络课堂
-        List<AppInfo> list3 = new ArrayList();//统计
-        List<AppInfo> schoolBroadList = new ArrayList();//校园电视台
+        List<AppInfo> list1 = new ArrayList<>();//专递课堂
+        List<AppInfo> list2 = new ArrayList<>();//名校网络课堂
+        List<AppInfo> list3 = new ArrayList<>();//统计
+        List<AppInfo> schoolBroadList = new ArrayList<>();//校园电视台
 
 
         //1.专递课堂 及 权限配置
@@ -460,6 +464,10 @@ public class AppConfig {
         mPriorityCollection.put(MENUS[19], AppPriority.createCollections(AppPriority.SCHOOL, AppPriority.TEACHER, AppPriority.STUDENT, AppPriority.PARENT));
         //权限
         mPriorityCollection.put(MENUS[20], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL, AppPriority.TEACHER));
+        //通知公告
+        mPriorityCollection.put(MENUS[21], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
+        //博文
+        mPriorityCollection.put(MENUS[22], AppPriority.createCollections(AppPriority.AREA, AppPriority.SCHOOL));
 
         /** 二级应用列表-统计**/
         //统计－课堂统计/** 二级应用列表-统计**/
@@ -731,8 +739,13 @@ public class AppConfig {
                     jumpable = null;
                     break;
                 case 13://资讯
-//                    jumpable = new DirectJumper(InfoActivity.class);
-                    jumpable = new DirectJumper(InfoDeleteActivity.class);
+                    jumpable = new BearJumper(InfoDeleteActivity.class) {
+                        @Override
+                        protected void bearData(Intent intent) {
+                            intent.putExtra(Constants.USER_INFO, UserInfoKeeper.getInstance().getUserInfo());
+                            intent.putExtra(InfoDeleteActivity.EXTRA_INFO, 0);
+                        }
+                    };
                     break;
                 case 14://辅导
                     jumpable = new DirectJumper(TutorshipActivity.class);
@@ -755,6 +768,26 @@ public class AppConfig {
                         public void jump(Context context) {
                             UserInfo userInfo = UserInfoKeeper.getInstance().getUserInfo();
                             RepairEntranceRoute.start(context, userInfo);
+                        }
+                    };
+                    break;
+                case 21://通知公告
+                    jumpable = new BearJumper(InfoDeleteActivity.class) {
+                        @Override
+                        protected void bearData(Intent intent) {
+                            intent.putExtra(Constants.USER_INFO, UserInfoKeeper.getInstance().getUserInfo());
+                            intent.putExtra(InfoDeleteActivity.EXTRA_INFO, 1);
+                        }
+                    };
+
+                    break;
+                case 22://博文(非人角色)\
+                    // TODO: 17-9-14 跳转到博文列表.
+                    jumpable = new Jumpable() {
+                        @Override
+                        public void jump(Context context) {
+                            UserInfo userInfo = UserInfoKeeper.getInstance().getUserInfo();
+                            AreaBlogActivity.start(context, userInfo);
                         }
                     };
                     break;

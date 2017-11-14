@@ -14,7 +14,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.exam.models.entities.school.ExamOverallStatistics;
 import com.codyy.erpsportal.exam.widgets.AnalysisProgress;
@@ -39,8 +39,8 @@ public class OverallStatisticsFragment extends LoadMoreFragment<ExamOverallStati
     public static final String ARG_EXAM_TASK_ID = "examTaskId";
 
     @Override
-    protected ViewHolderCreator<ExamOverallStatisticsViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ExamOverallStatisticsViewHolder>() {
+    protected AbsVhrCreator<ExamOverallStatisticsViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ExamOverallStatisticsViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_exam_overall_statistics;

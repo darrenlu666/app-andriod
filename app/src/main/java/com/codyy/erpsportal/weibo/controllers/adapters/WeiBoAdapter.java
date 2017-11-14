@@ -30,6 +30,7 @@ import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.services.WeiBoMediaService;
 import com.codyy.erpsportal.commons.utils.DateUtil;
+import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.weibo.controllers.activities.WeiBoActivity;
 import com.codyy.erpsportal.weibo.controllers.activities.WeiBoCommentActivity;
 import com.codyy.erpsportal.weibo.models.entities.WeiBoListInfo;
@@ -134,7 +135,7 @@ public class WeiBoAdapter extends RefreshBaseAdapter<WeiBoListInfo> implements W
             mediaView.setOnMediaPlay(this);
         } else if (!TextUtils.isEmpty(weiBoListInfo.getVideoName())) {
             mediaView.setVisibility(View.VISIBLE);
-            mediaView.setVideo(weiBoListInfo.getVideoName(), weiBoListInfo.getThumb(), false, weiBoListInfo.getTransFlag());
+            mediaView.setVideo(weiBoListInfo.getVideoName(), UIUtils.getSmallImage(weiBoListInfo.getThumb()), false, weiBoListInfo.getTransFlag());
         } else {
             mediaView.setVisibility(View.GONE);
         }

@@ -15,7 +15,7 @@ import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomInfoEntity;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.utils.DateUtil;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -69,8 +69,8 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
     }
 
     @Override
-    protected ViewHolderCreator<ClassRoomViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<ClassRoomViewHolder>() {
+    protected AbsVhrCreator<ClassRoomViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<ClassRoomViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_class_room;

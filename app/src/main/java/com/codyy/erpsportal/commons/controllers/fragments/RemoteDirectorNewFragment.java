@@ -18,7 +18,7 @@ import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.RemoteDirectorActivity;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.ClassRoomItem;
@@ -55,8 +55,8 @@ public class RemoteDirectorNewFragment extends LoadMoreFragment<ClassRoomItem, R
     }
 
     @Override
-    protected ViewHolderCreator<RemoteDirectorHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<RemoteDirectorHolder>() {
+    protected AbsVhrCreator<RemoteDirectorHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<RemoteDirectorHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_remote_director;

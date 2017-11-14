@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView.ViewHolder;
 
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerCommonViewHolder;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 
 /**
  * 需要统一信息来变化所有item的适配器
@@ -15,8 +15,8 @@ public class RecyclerCommonAdapter<T, VH extends RecyclerViewHolder<T>, INFO> ex
 
     private INFO mInfo;
 
-    public RecyclerCommonAdapter(RecyclerView recyclerView, OnLoadMoreListener onLoadMoreListener, ViewHolderCreator<VH> viewHolderCreator) {
-        super(recyclerView, onLoadMoreListener, viewHolderCreator);
+    public RecyclerCommonAdapter(RecyclerView recyclerView, OnLoadMoreListener onLoadMoreListener, AbsVhrCreator<VH> vhrCreator) {
+        super(recyclerView, onLoadMoreListener, vhrCreator);
     }
 
     @Override

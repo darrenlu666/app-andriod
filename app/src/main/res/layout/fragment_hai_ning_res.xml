@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ 阔地教育科技有限公司版权所有（codyy.com/codyy.cn）
+  ~ Copyright (c) 2017, Codyy and/or its affiliates. All rights reserved.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:appBarLayoutId="@id/app_bar_layout">
+
+    <com.codyy.erpsportal.commons.widgets.RefreshLayout
+        android:id="@+id/rl_main_res"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:appBarLayoutId="@id/app_bar_layout">
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/ll_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iv_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/banner"
+                    android:visibility="gone" />
+
+                <FrameLayout
+                    android:id="@+id/fl_title1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#f2f2f2"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_title1"
+                        style="@style/title_above_line_point_line"
+                        android:layout_gravity="center"
+                        tools:text="精品课" />
+                </FrameLayout>
+
+                <android.support.v7.widget.GridLayout
+                    android:id="@+id/gv_resource1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:columnCount="2" />
+
+                <FrameLayout
+                    android:id="@+id/fl_title2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#f2f2f2"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_title2"
+                        style="@style/title_above_line_point_line"
+                        android:layout_gravity="center"
+                        tools:text="微课" />
+                </FrameLayout>
+
+                <android.support.v7.widget.GridLayout
+                    android:id="@+id/gv_resource2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:columnCount="2" />
+
+                <FrameLayout
+                    android:id="@+id/fl_title3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#f2f2f2"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_title3"
+                        style="@style/title_above_line_point_line"
+                        android:layout_gravity="center"
+                        tools:text="一师一优课" />
+                </FrameLayout>
+
+                <android.support.v7.widget.GridLayout
+                    android:id="@+id/gv_resource3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:columnCount="2" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+    </com.codyy.erpsportal.commons.widgets.RefreshLayout>
+
+    <com.codyy.erpsportal.commons.widgets.EmptyView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+</FrameLayout>

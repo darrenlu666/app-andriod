@@ -14,7 +14,7 @@ import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity.OnFilterObserver;
 import com.codyy.erpsportal.commons.controllers.fragments.LoadMoreFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
@@ -53,8 +53,8 @@ public class LessonPlanListFragment extends LoadMoreFragment<LessonPlan, LessonP
     }
 
     @Override
-    protected ViewHolderCreator<LessonPlanViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<LessonPlanViewHolder>() {
+    protected AbsVhrCreator<LessonPlanViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<LessonPlanViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 if (mUserInfo != null && mUserInfo.isTeacher()) {
@@ -101,7 +101,7 @@ public class LessonPlanListFragment extends LoadMoreFragment<LessonPlan, LessonP
 
     @Override
     protected boolean checkHasMore(JSONObject response, int itemCount) {
-        return response.optJSONObject("personalPreparation").optInt("total") <= itemCount;
+        return response.optJSONObject("personalPreparation").optInt("total") > itemCount;
     }
 
     @Override

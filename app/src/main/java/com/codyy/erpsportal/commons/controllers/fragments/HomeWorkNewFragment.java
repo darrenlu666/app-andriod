@@ -15,7 +15,7 @@ import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.commons.controllers.activities.HomeWorkDetailActivity;
 import com.codyy.erpsportal.commons.controllers.activities.TabsWithFilterActivity;
 import com.codyy.erpsportal.commons.controllers.viewholders.RecyclerViewHolder;
-import com.codyy.erpsportal.commons.controllers.viewholders.ViewHolderCreator;
+import com.codyy.erpsportal.commons.controllers.viewholders.AbsVhrCreator;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
@@ -43,8 +43,8 @@ public class HomeWorkNewFragment extends LoadMoreFragment<FamousClassBean, HomeW
     }
 
     @Override
-    protected ViewHolderCreator<HomeWorkViewHolder> newViewHolderCreator() {
-        return new ViewHolderCreator<HomeWorkViewHolder>() {
+    protected AbsVhrCreator<HomeWorkViewHolder> newViewHolderCreator() {
+        return new AbsVhrCreator<HomeWorkViewHolder>() {
             @Override
             protected int obtainLayoutId() {
                 return R.layout.item_task;
