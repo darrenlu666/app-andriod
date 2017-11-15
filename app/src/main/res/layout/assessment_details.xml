@@ -183,15 +183,30 @@
                         android:layout_marginLeft="10dp"
                         />
                     <TextView
-                        android:id="@+id/tv_main_speaker_desc"
+                        android:id="@+id/tv_main_group_desc"
                         style="@style/collective_prepare_lesson_detail_title_text"
                         android:layout_below="@+id/tv_main_school_name"
+                        android:text="机构"
+                        android:visibility="gone"
+                        />
+                    <TextView
+                        android:id="@+id/tv_main_group"
+                        style="@style/collective_prepare_lesson_detail_value_text"
+                        android:layout_below="@+id/tv_main_school_name"
+                        android:layout_toRightOf="@+id/tv_main_speaker_desc"
+                        android:text="安徽省合肥市肥东县第一中心小学"
+                        android:visibility="gone"
+                        />
+                    <TextView
+                        android:id="@+id/tv_main_speaker_desc"
+                        style="@style/collective_prepare_lesson_detail_title_text"
+                        android:layout_below="@+id/tv_main_group_desc"
                         android:text="主讲教师"
                         />
                     <TextView
                         android:id="@+id/tv_main_speaker"
                         style="@style/collective_prepare_lesson_detail_value_text"
-                        android:layout_below="@+id/tv_main_school_name"
+                        android:layout_below="@+id/tv_main_group_desc"
                         android:layout_toRightOf="@+id/tv_main_speaker_desc"
                         android:text="王老师"
                         />
@@ -263,7 +278,7 @@
                         style="@style/collective_prepare_lesson_detail_value_text"
                         android:layout_below="@+id/tv_real_start_time"
                         android:layout_toRightOf="@+id/tv_view_type_desc"
-                        tools:text="直播课堂/录播课堂"
+                        tools:text="直播课堂/录播课堂/优课资源"
                         />
                     <View
                         android:id="@+id/divider4"

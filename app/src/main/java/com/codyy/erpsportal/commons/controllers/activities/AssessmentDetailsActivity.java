@@ -65,6 +65,8 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
     @Bind(R.id.assessment_details_bottom_divider)View mVerticalDivider;
     @Bind(R.id.assessment_details_bottom_set_teacher)TextView mSetTeacherTv;
     @Bind(R.id.tv_main_speaker_desc)TextView mMasterTeacherTitleTv;//标题－主讲教师
+    @Bind(R.id.tv_main_group_desc)TextView mOrganizationTvDesc;//机构描述文本
+    @Bind(R.id.tv_main_group) TextView mOrganizationTv;//机构
 
 
     private int type;
