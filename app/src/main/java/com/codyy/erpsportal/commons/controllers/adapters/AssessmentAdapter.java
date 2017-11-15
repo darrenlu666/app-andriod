@@ -125,6 +125,9 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
             } else {
                 date.setVisibility(View.VISIBLE);
                 ratingBar.setVisibility(View.GONE);
+                // TODO: 17-11-15 v5.3.9 按照类型显示不同的文字：
+
+                //1. 直播课堂：排课日期
                 if(!TextUtils.isEmpty(assessment.getScheduleDate()) && UIUtils.isInteger(assessment.getScheduleDate())){
                     if(UIUtils.isInteger(assessment.getScheduleDate())){
                         date.setText("排课日期 " + DateUtil.getDateStr(Long.valueOf(assessment.getScheduleDate()),DateUtil.YEAR_MONTH_DAY));
@@ -132,6 +135,9 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
                 }else{
                     date.setText("排课日期 "+assessment.getScheduleDate());
                 }
+
+                // TODO: 17-11-15 录播课堂:上课时间2015-1-1 9:00 
+                // TODO: 17-11-15 优课资源：发布时间：2015-1-1 9:00  
             }
             subjectName.setText("学科 "+Html.fromHtml(assessment.getSubjectName()));
             //set the lesson sequence
@@ -146,28 +152,6 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
                     }
                 }
             });
-        }
-
-        private String getClassNB(int a) {
-            switch (a) {
-                case 1:
-                    return "第一节课";
-                case 2:
-                    return "第二节课";
-                case 3:
-                    return "第三节课";
-                case 4:
-                    return "第四节课";
-                case 5:
-                    return "第五节课";
-                case 6:
-                    return "第六节课";
-                case 7:
-                    return "第七节课";
-                case 8:
-                    return "第八节课";
-            }
-            return null;
         }
     }
 
