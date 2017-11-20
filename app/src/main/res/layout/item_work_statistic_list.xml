@@ -23,7 +23,7 @@
         android:id="@+id/tv_done_percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="80dp"
+        android:layout_marginLeft="20dp"
         tools:text="9/12"
         android:layout_toRightOf="@+id/tv_name"/>
 
@@ -39,7 +39,7 @@
         android:id="@+id/tv_objective_right_percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
+        android:layout_marginLeft="20dp"
         android:layout_toLeftOf="@id/tv_submit_time"
         android:layout_toRightOf="@id/tv_done_percent"
         android:singleLine="true"/>
