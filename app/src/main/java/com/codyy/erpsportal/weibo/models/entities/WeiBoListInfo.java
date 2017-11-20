@@ -382,7 +382,7 @@ public class WeiBoListInfo extends RefreshEntity {
                 imageListEntity.setMiblogId(object.optString("miblogId"));
                 imageListEntity.setMiblogImageId(object.optString("miblogImageId"));
                 imageListEntity.setSort(object.optInt("sort"));
-                imageListEntity.setImage(object.optString("image"));
+                imageListEntity.setImage(object.optString("imagepath"));//修改字段为imagepath
             }
             return imageListEntity;
         }
