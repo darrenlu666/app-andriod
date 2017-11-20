@@ -138,7 +138,7 @@ android {
         codyyTest {
             dimension "mode"
             applicationId "com.codyy.erpsportal.ct"
-            buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com:85/\"")
+            buildConfigField("String", "API_HOST", "\"http://mobile.9itest.com/\"")
         }
 
         train {
