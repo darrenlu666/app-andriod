@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.activities.ListenDetailsActivity;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
+import com.codyy.erpsportal.onlinemeetings.controllers.activities.VideoMeetingDetailActivity;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.commons.controllers.activities.BaseHttpActivity;
@@ -368,12 +370,16 @@ public class OnlineTeachDetailActivity extends BaseHttpActivity implements View.
                             @Override
                             public void onSuccess(JSONObject response) {
                                 JSONObject server = response.optJSONObject("server");
-                                meetingBase.setToken(server.optString("token"));
-                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
-                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
-                                OnlineMeetingActivity.startForResult(OnlineTeachDetailActivity.this,
-                                        mPreparationId, mUserInfo, meetingBase,
-                                        REQUEST_LISTEN_LESSON_CODE);
+                                if(null != server){
+                                    meetingBase.setToken(server.optString("token"));
+                                    meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                    meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                    OnlineMeetingActivity.startForResult(OnlineTeachDetailActivity.this,
+                                            mPreparationId, mUserInfo, meetingBase,
+                                            REQUEST_LISTEN_LESSON_CODE);
+                                }else{
+                                    ToastUtil.showToast(OnlineTeachDetailActivity.this,"无法连接通讯服务器!");
+                                }
                                 mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                             }
 
