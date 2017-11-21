@@ -27,6 +27,7 @@ import com.codyy.erpsportal.commons.models.Titles;
 import com.codyy.erpsportal.commons.models.entities.PrepareLessonsDetailEntity;
 import com.codyy.erpsportal.commons.models.entities.interact.RecordPriority;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.utils.UiMainUtils;
 import com.codyy.erpsportal.commons.utils.UiOnlineMeetingUtils;
@@ -365,12 +366,18 @@ public class ListenDetailsActivity extends BaseHttpActivity implements View.OnCl
                             @Override
                             public void onSuccess(JSONObject response) {
                                 JSONObject server = response.optJSONObject("server");
-                                meetingBase.setToken(server.optString("token"));
-                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
-                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
-                                OnlineMeetingActivity.startForResult(ListenDetailsActivity.this,
-                                        mPreparationId, mUserInfo, meetingBase,
-                                        REQUEST_LISTEN_LESSON_CODE);
+                                if(null != server){
+
+                                    meetingBase.setToken(server.optString("token"));
+                                    meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                    meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                    OnlineMeetingActivity.startForResult(ListenDetailsActivity.this,
+                                            mPreparationId, mUserInfo, meetingBase,
+                                            REQUEST_LISTEN_LESSON_CODE);
+                                }else{
+                                    ToastUtil.showToast(ListenDetailsActivity.this,"无法连接通讯服务器!");
+                                }
+
                                 mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                             }
 
