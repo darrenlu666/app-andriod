@@ -15,17 +15,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
-        tools:text="陈晓sadfasdfsadf"
+        android:ellipsize="end"
         android:maxLength="10"
-        android:ellipsize="end"/>
-
-    <TextView
-        android:id="@+id/tv_done_percent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="80dp"
-        tools:text="9/12"
-        android:layout_toRightOf="@+id/tv_name"/>
+        android:singleLine="true"
+        tools:text="陈晓sadfasdfsadf"/>
 
     <TextView
         android:id="@+id/tv_submit_time"
@@ -39,10 +32,18 @@
         android:id="@+id/tv_objective_right_percent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
+        android:layout_marginRight="20dp"
         android:layout_toLeftOf="@id/tv_submit_time"
-        android:layout_toRightOf="@id/tv_done_percent"
-        android:singleLine="true"/>
+        android:singleLine="true"
+        tools:text="50%"/>
+
+    <TextView
+        android:id="@+id/tv_done_percent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/tv_objective_right_percent"
+        tools:text="9/12"/>
 
     <View
         android:layout_width="match_parent"

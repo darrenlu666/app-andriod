@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.onlinemeetings.models.entities.coco.CoCoInfo;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.url.URLConfig;
@@ -377,10 +378,14 @@ public class CollectivePrepareLessonsDetailActivity extends BaseHttpActivity imp
                             @Override
                             public void onSuccess(JSONObject response) {
                                 JSONObject server = response.optJSONObject("server");
-                                meetingBase.setToken(server.optString("token"));
-                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
-                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
-                                OnlineMeetingActivity.startForResult(CollectivePrepareLessonsDetailActivity.this, mPreparationId, mUserInfo, meetingBase, REQUEST_PREPARE_LESSON_CODE);
+                                if(null != server){
+                                    meetingBase.setToken(server.optString("token"));
+                                    meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                    meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                    OnlineMeetingActivity.startForResult(CollectivePrepareLessonsDetailActivity.this, mPreparationId, mUserInfo, meetingBase, REQUEST_PREPARE_LESSON_CODE);
+                                }else{
+                                    ToastUtil.showToast(CollectivePrepareLessonsDetailActivity.this,"无法连接通讯服务器!");
+                                }
                                 mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                             }
 
