@@ -194,4 +194,5 @@ dependencies {
     compile project(path: ':frameworklibrary')
     compile project(':umenglibrary')
     compile project(path: ':coco3.0')
+    implementation project(':baidumobilestatistics')
 }

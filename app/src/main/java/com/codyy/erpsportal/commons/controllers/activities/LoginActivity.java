@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mobstat.StatService;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog;
 import com.codyy.erpsportal.commons.controllers.fragments.dialogs.ChangeServerDialog.ServerChangedListener;
@@ -128,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
         InputUtils.getKeyboardHeight(this);
         loadLoginToken();
         checkNewVersion(false);
+        StatService.start(this);
     }
 
     private void initAttributes() {

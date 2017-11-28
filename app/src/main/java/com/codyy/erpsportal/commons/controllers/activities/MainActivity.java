@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.debug.hv.ViewServer;
+import com.baidu.mobstat.StatService;
 import com.codyy.erpsportal.BuildConfig;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.EApplication;
@@ -36,8 +37,8 @@ import com.codyy.erpsportal.commons.models.entities.LocationBean;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
 import com.codyy.erpsportal.commons.models.entities.UpdatePortalEvent;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
-import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.models.entities.configs.AppConfig;
+import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver;
 import com.codyy.erpsportal.commons.receivers.WifiBroadCastReceiver.WifiChangeListener;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements MyTabWidget.OnTab
             mTabHost.setCurrentTab(savedInstanceState.getInt("tab"));
         }
         checkNewVersion();
+        StatService.start(this);
     }
 
     /**
