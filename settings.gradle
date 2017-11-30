@@ -1,4 +1,3 @@
 include ':app', ':bennu', ':codyymedialibrary', ':albumlibrary', ':CalendarListviewLibrary', ':mupdf', ':url-builder-compiler', ':url-builder-annotations', ':frameworklibrary', ':umenglibrary', ':baidumobilestatistics'
 include ':library-viewpager-indicator'
 include ':zxing'
-include ':coco3.0'
