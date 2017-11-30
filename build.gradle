@@ -13,8 +13,6 @@ buildscript {
 
 allprojects {
     repositories {
-//        jcenter()
-//        mavenCentral()
         maven {
             url 'http://10.5.52.101:8081/nexus/content/groups/mobile/'
         }
