@@ -125,25 +125,38 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
             } else {
                 date.setVisibility(View.VISIBLE);
                 ratingBar.setVisibility(View.GONE);
-                // TODO: 17-11-15 v5.3.9 按照类型显示不同的文字：
 
                 //1. 直播课堂：排课日期
+                String strDate = "";
                 if(!TextUtils.isEmpty(assessment.getScheduleDate()) && UIUtils.isInteger(assessment.getScheduleDate())){
                     if(UIUtils.isInteger(assessment.getScheduleDate())){
-                        date.setText("排课日期 " + DateUtil.getDateStr(Long.valueOf(assessment.getScheduleDate()),DateUtil.YEAR_MONTH_DAY));
+                        strDate =DateUtil.getDateStr(Long.valueOf(assessment.getScheduleDate()),DateUtil.YEAR_MONTH_DAY);
                     }
                 }else{
-                    date.setText("排课日期 "+assessment.getScheduleDate());
+                    strDate = assessment.getScheduleDate();
                 }
 
-                // TODO: 17-11-15 录播课堂:上课时间2015-1-1 9:00 
-                // TODO: 17-11-15 优课资源：发布时间：2015-1-1 9:00  
+                if(!TextUtils.isEmpty(assessment.getEvaType())){
+                    if(Assessment.TYPE_LIVE.equals(assessment.getEvaType())){//直播课堂
+                        date.setText("直播课堂 "+strDate);
+                        //set the lesson sequence
+                        if(!TextUtils.isEmpty(assessment.getClassSeq())){
+                            seqTextView.setText("第"+ EmumIndex.getIndex(Integer.valueOf(assessment.getClassSeq()))+"节");
+                        }
+                    }else if(Assessment.TYPE_VIDEO.equals(assessment.getEvaType())) {//录播课堂
+                        date.setText("录播课堂 "+strDate);
+
+                    }else if(Assessment.TYPE_RESOURCE.equals(assessment.getEvaType())){//优客资源
+                        date.setText("优课资源 "+strDate);
+                    }else{
+                        date.setText("直播课堂 "+strDate);
+                    }
+                }else{
+                    date.setText("直播课堂 "+strDate);
+                }
             }
             subjectName.setText("学科 "+Html.fromHtml(assessment.getSubjectName()));
-            //set the lesson sequence
-            if(!TextUtils.isEmpty(assessment.getClassSeq())){
-                seqTextView.setText("第"+ EmumIndex.getIndex(Integer.valueOf(assessment.getClassSeq()))+"节课");
-            }
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

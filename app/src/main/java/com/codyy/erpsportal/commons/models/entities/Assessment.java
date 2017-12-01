@@ -26,6 +26,9 @@ public class Assessment extends RefreshEntity {
     public final static String END = "END";
     public final static int TYPE_ASSESSMENT = REFRESH_TYPE_LASTVIEW + 1;
 
+    public final static String TYPE_LIVE = "LIVE";
+    public final static String TYPE_VIDEO = "VIDEO";
+    public final static String TYPE_RESOURCE = "RESOURCE";
     /**
      * 评课id
      */
@@ -68,6 +71,17 @@ public class Assessment extends RefreshEntity {
     private String status;
 
     private String scoreType;
+
+    /**LIVE/直播,VIDEO/录播，RESOURCE/优课资源**/
+    private String evaType;//评课类型 RESOURCE/VIDEO/
+
+    public String getEvaType() {
+        return evaType;
+    }
+
+    public void setEvaType(String evaType) {
+        this.evaType = evaType;
+    }
 
     public String getScoreType() {
         return scoreType;
@@ -179,6 +193,7 @@ public class Assessment extends RefreshEntity {
                 assessment.setStatus(jsonObject.optString("status"));
                 assessment.setScoreType(jsonObject.optString("scoreType"));
                 assessment.setmHolderType(TYPE_ASSESSMENT);
+                assessment.setEvaType(jsonObject.optString("eva_type"));
                 assessments.add(assessment);
             }
         }

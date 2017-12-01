@@ -26,6 +26,8 @@ public class EmumIndex {
         if(pos <16){
             if(pos>0){
                 pos --;
+            }else{
+                pos = 0;
             }
 
             result  =   indexs[pos] ;
