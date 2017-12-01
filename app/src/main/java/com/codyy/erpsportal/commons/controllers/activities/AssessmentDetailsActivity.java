@@ -15,6 +15,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.controllers.fragments.EvaluationsFragment;
 import com.codyy.erpsportal.commons.controllers.viewholders.interact.ParticipateSchoolViewHolder;
 import com.codyy.erpsportal.commons.models.Titles;
+import com.codyy.erpsportal.commons.models.entities.Assessment;
 import com.codyy.erpsportal.commons.models.entities.AssessmentDetails;
 import com.codyy.erpsportal.commons.models.entities.EmumIndex;
 import com.codyy.erpsportal.commons.models.entities.SchoolTeacher;
@@ -57,8 +58,9 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
     @Bind(R.id.tv_main_speaker)TextView mMainSpeakerTv ;//主讲老师
     @Bind(R.id.tv_grade_name)TextView mGradeNameTv;//年级
     @Bind(R.id.tv_subject_name)TextView mSubjectNameTv;//学科
+    @Bind(R.id.tv_schedule_time)TextView mScheduleTimeDescTv;
     @Bind(R.id.tv_schedule_name)TextView mScheduleTime;//排课日期
-    @Bind(R.id.tv_real_start_time)TextView mRealStartTimeTv;//开始时间
+//    @Bind(R.id.tv_real_start_time)TextView mRealStartTimeTv;//开始时间
     @Bind(R.id.tv_view_type)TextView mViewTypeTextView;//观摩方式
     @Bind(R.id.lv_participate)FixedRecyclerView mRecyclerView;//参与范围
     @Bind(R.id.assessment_details_bottom_text)TextView mStateTextView;
@@ -147,31 +149,61 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
             }
         }
         mProfileTextView.setText(Html.fromHtml(assessmentDetails.getDescription()));
-        mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
-        mMainSpeakerTv.setText(Html.fromHtml(assessmentDetails.getMasterTeacherName()));
         mGradeNameTv.setText(Html.fromHtml(assessmentDetails.getClassLevelName()));
         mSubjectNameTv.setText(Html.fromHtml(assessmentDetails.getSubjectName()));
-        if(!TextUtils.isEmpty(assessmentDetails.getScheduleDate())){
-            //排课日期：　2015-1-1 星期五　第五节
 
-            String date ="";
-            String week ="";
-            if(UIUtils.isInteger(assessmentDetails.getScheduleDate())){
-                date = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.YEAR_MONTH_DAY);
-                week = DateUtil.getWeek(date);
-            }
-            String sequence = "第"+ EmumIndex.getIndex(Integer.valueOf(assessmentDetails.getClassSeq()))+"节";
-            mScheduleTime.setText(date+" "+week+" "+sequence);
-        }
-        if(!TextUtils.isEmpty(assessmentDetails.getRealBeginTime())){
+        /*if(!TextUtils.isEmpty(assessmentDetails.getRealBeginTime())){
             mRealStartTimeTv.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getRealBeginTime()),DateUtil.DEF_FORMAT));
         }else{
             mRealStartTimeTv.setText("无");
+        }*/
+
+        String dateH ="";
+        if(UIUtils.isInteger(assessmentDetails.getScheduleDate())){
+            dateH = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.DEF_FORMAT);
         }
-        if ("LIVE".equals(assessmentDetails.getEvaType())) {
+
+        if (Assessment.TYPE_LIVE.equals(assessmentDetails.getEvaType())) {
+            mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
+            mScheduleTimeDescTv.setText("排课日期");
             mViewTypeTextView.setText("直播课堂");
-        } else if ("VIDEO".equals(assessmentDetails.getEvaType())) {
+            //主讲人
+            mMainSpeakerTv.setText(Html.fromHtml(assessmentDetails.getMasterTeacherName()));
+            if(!TextUtils.isEmpty(assessmentDetails.getScheduleDate())){
+                //排课日期：　2015-1-1 星期五　第五节
+
+                String date ="";
+                String week ="";
+                if(UIUtils.isInteger(assessmentDetails.getScheduleDate())){
+                    date = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.YEAR_MONTH_DAY);
+                    week = DateUtil.getWeek(date);
+                }
+                String sequence = "第"+ EmumIndex.getIndex(Integer.valueOf(assessmentDetails.getClassSeq()))+"节";
+                mScheduleTime.setText(date+" "+week+" "+sequence);
+            }
+        } else if (Assessment.TYPE_VIDEO.equals(assessmentDetails.getEvaType())) {
+            mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
+            mScheduleTimeDescTv.setText("上课时间");
             mViewTypeTextView.setText("录播课堂");
+            //主讲人
+            mMainSpeakerTv.setText(Html.fromHtml(assessmentDetails.getMasterTeacherName()));
+            mScheduleTime.setText(dateH);
+        }else if(Assessment.TYPE_RESOURCE.equals(assessmentDetails.getEvaType())){
+            //名称
+            mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getDescription()));
+            //机构
+            mOrganizationTvDesc.setVisibility(View.VISIBLE);
+            mOrganizationTv.setVisibility(View.VISIBLE);
+            //机构
+            mOrganizationTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
+
+            mMasterTeacherTitleTv.setText("发布人");
+            //发布人
+            mMainSpeakerTv.setText(Html.fromHtml(assessmentDetails.getSponsorName()));
+
+            mScheduleTimeDescTv.setText("发布时间");
+            mViewTypeTextView.setText("优课资源");
+            mScheduleTime.setText(dateH);
         }
         mVerticalDivider.setVisibility(View.GONE);
         mSetTeacherTv.setVisibility(View.GONE);

@@ -241,20 +241,8 @@
                         tools:text="语文"
                         />
 
-                    <TextView
-                        android:id="@+id/tv_schedule_time"
-                        style="@style/collective_prepare_lesson_detail_title_text"
-                        android:layout_below="@+id/tv_subject_text"
-                        android:text="@string/time_schedule_lesson"
-                        />
-                    <TextView
-                        android:id="@+id/tv_schedule_name"
-                        style="@style/collective_prepare_lesson_detail_value_text"
-                        android:layout_below="@+id/tv_subject_text"
-                        android:layout_toRightOf="@+id/tv_schedule_time"
-                        tools:text="2016-04-06 10:44"
-                        />
-                    <TextView
+
+                    <!--<TextView
                         android:id="@+id/tv_real_start_time_desc"
                         style="@style/collective_prepare_lesson_detail_title_text"
                         android:layout_below="@+id/tv_schedule_time"
@@ -266,25 +254,38 @@
                         android:layout_below="@+id/tv_schedule_time"
                         android:layout_toRightOf="@+id/tv_real_start_time_desc"
                         tools:text="2016-04-06 10:44"
-                        />
+                        />-->
                     <TextView
                         android:id="@+id/tv_view_type_desc"
                         style="@style/collective_prepare_lesson_detail_title_text"
-                        android:layout_below="@+id/tv_real_start_time"
+                        android:layout_below="@+id/tv_subject_name"
                         android:text="@string/lesson_view_type"
                         />
                     <TextView
                         android:id="@+id/tv_view_type"
                         style="@style/collective_prepare_lesson_detail_value_text"
-                        android:layout_below="@+id/tv_real_start_time"
+                        android:layout_below="@+id/tv_subject_name"
                         android:layout_toRightOf="@+id/tv_view_type_desc"
                         tools:text="直播课堂/录播课堂/优课资源"
+                        />
+                    <TextView
+                        android:id="@+id/tv_schedule_time"
+                        style="@style/collective_prepare_lesson_detail_title_text"
+                        android:layout_below="@+id/tv_view_type_desc"
+                        android:text="@string/time_schedule_lesson"
+                        />
+                    <TextView
+                        android:id="@+id/tv_schedule_name"
+                        style="@style/collective_prepare_lesson_detail_value_text"
+                        android:layout_below="@+id/tv_view_type_desc"
+                        android:layout_toRightOf="@+id/tv_schedule_time"
+                        tools:text="2016-04-06 10:44"
                         />
                     <View
                         android:id="@+id/divider4"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_below="@id/tv_view_type_desc"
+                        android:layout_below="@id/tv_schedule_time"
                         android:background="@color/divide_color"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
