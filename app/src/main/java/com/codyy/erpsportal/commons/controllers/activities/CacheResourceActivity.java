@@ -333,11 +333,6 @@ public class CacheResourceActivity extends BaseHttpActivity implements Handler.C
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
     public static void start(Context from){
         Intent intent = new Intent(from, CacheResourceActivity.class);
         from.startActivity(intent);

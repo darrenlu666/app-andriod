@@ -4,16 +4,27 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -29,10 +40,9 @@ import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.Extra;
 import com.codyy.erpsportal.commons.utils.UIUtils;
-import com.codyy.erpsportal.commons.utils.VideoDownloadUtils;
-import com.codyy.erpsportal.commons.widgets.BNVideoControlView;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.erpsportal.commons.widgets.BnVideoView2.OnPlayingListener;
+import com.codyy.erpsportal.commons.widgets.ResVideoControlView;
 import com.codyy.erpsportal.resource.controllers.adapters.TabsAdapter;
 import com.codyy.erpsportal.resource.controllers.fragments.ResCommentsFragment;
 import com.codyy.erpsportal.resource.controllers.fragments.ResourceDetailsFragment;
@@ -67,13 +77,17 @@ public class VideoDetailsActivity extends FragmentActivity {
 
     private BnVideoView2 mVideoView;
 
-    private FrameLayout mFrameLayout;
+    private FrameLayout mVideoAreaFl;
 
-    private BNVideoControlView mVideoControl;
+    private DrawerLayout mVideoAreaDl;
+
+    private ListView mClarityLv;
+
+    private ResVideoControlView mVideoControl;
 
     private RelativeLayout mTitleRl;
 
-    private Button mDownloadBtn;
+    private View mDownloadBtn;
 
     private RequestSender mRequestSender;
 
@@ -91,7 +105,6 @@ public class VideoDetailsActivity extends FragmentActivity {
         setContentView(R.layout.activity_video_details);
         initAttributes();
         initViews(savedInstanceState);
-
         loadData();
     }
 
@@ -106,19 +119,21 @@ public class VideoDetailsActivity extends FragmentActivity {
         mTitleTv = (TextView) findViewById(R.id.title);
         mPager = (ViewPager) findViewById(R.id.pager);
         mVideoView = (BnVideoView2) findViewById(R.id.video_view);
-        mFrameLayout = (FrameLayout) findViewById(R.id.video_area);
+        mVideoAreaDl = (DrawerLayout) findViewById(R.id.dl_video_area);
+        mClarityLv = (ListView) findViewById(R.id.lv_clarity);
+        mVideoAreaFl = (FrameLayout) findViewById(R.id.video_area);
 
         mTitleRl = (RelativeLayout) findViewById(R.id.rltControlTitle);
         mTitleRl.setVisibility(View.GONE);
 
-        mVideoControl = (BNVideoControlView) findViewById(R.id.videoControl);
+        mVideoControl = (ResVideoControlView) findViewById(R.id.videoControl);
         mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
             @Override
             public FragmentManager getNewFragmentManager() {
                 return getSupportFragmentManager();
             }
         });
-        mVideoControl.setDisplayListener(new BNVideoControlView.DisplayListener() {
+        mVideoControl.setDisplayListener(new ResVideoControlView.DisplayListener() {
 
             @Override
             public void show() {
@@ -144,15 +159,52 @@ public class VideoDetailsActivity extends FragmentActivity {
             }
         });
 
-        mDownloadBtn = (Button) findViewById(R.id.btn_download);
+        mVideoAreaDl.addDrawerListener(new SimpleDrawerListener() {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                mVideoControl.disallowHide();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                mVideoControl.allowHide();
+            }
+        });
+
+        mVideoControl.setOnClarityClickListener(new OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                mVideoAreaDl.openDrawer(GravityCompat.END);
+            }
+        });
+
+        mDownloadBtn = findViewById(R.id.btn_download);
         mDownloadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mResourceDetails == null) return;//详情没有加载就不下载
-                if (VideoDownloadUtils.downloadVideo(mResourceDetails, mResourceDetails.getAttachPath(),
-                        mUserInfo.getBaseUserId())) {
-                    CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
-                }
+//                if (VideoDownloadUtils.downloadVideo(mResourceDetails, mResourceDetails.getAttachPath(),
+//                        mUserInfo.getBaseUserId())) {
+//                    CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
+//                }
+                final BottomSheetDialog dialog = new BottomSheetDialog(v.getContext());
+                ListView listView = new ListView(v.getContext());
+                String[] clarityArr = new String[]{"普清", "高清"};
+                ArrayAdapter<String> clarityAdapter = new ArrayAdapter<>(v.getContext(),
+                        R.layout.item_clarity,
+                        clarityArr);
+                listView.setAdapter(clarityAdapter);
+                listView.setDivider(ContextCompat.getDrawable(v.getContext(), R.drawable.dv_h_dp05));
+                listView.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setContentView(listView,
+                        new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+                dialog.show();
             }
         });
 
@@ -195,14 +247,39 @@ public class VideoDetailsActivity extends FragmentActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if(isFinishing()) return;
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (isLandscape()) {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            mFrameLayout.setLayoutParams(layoutParams);
+            mVideoAreaDl.setLayoutParams(layoutParams);
+            mDownloadBtn.setVisibility(View.GONE);
+            mTitleTv.setGravity(GravityCompat.START);
+            hideSystemUI();
         } else {
             int height = UIUtils.dip2px(this, 180);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, height);
-            mFrameLayout.setLayoutParams(layoutParams);
+            mDownloadBtn.setVisibility(View.VISIBLE);
+            mTitleTv.setGravity(Gravity.CENTER);
+            mVideoAreaDl.setLayoutParams(layoutParams);
+            showSystemUI();
         }
+    }
+
+    private boolean isLandscape() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    private void hideSystemUI() {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LOW_PROFILE
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    private void showSystemUI() {
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
 
     /**
@@ -260,6 +337,7 @@ public class VideoDetailsActivity extends FragmentActivity {
                 UIUtils.toast(R.string.net_error, Toast.LENGTH_SHORT);
             }
         }));
+        loadPlayingClarity();
     }
 
     private void updateDownloadBtn() {
@@ -315,9 +393,28 @@ public class VideoDetailsActivity extends FragmentActivity {
     }
 
     public void onBackClick(View view) {
-        DeviceUtils.hideSoftKeyboard(view);
-        finish();
-        UIUtils.addExitTranAnim(this);
+        if (isLandscape()) {
+            UIUtils.setPortrait(this);
+        } else {
+            DeviceUtils.hideSoftKeyboard(view);
+            finish();
+            UIUtils.addExitTranAnim(this);
+        }
+    }
+
+    private void loadPlayingClarity() {
+        String[] clarityArr = new String[]{"普清", "高清"};
+        ArrayAdapter<String> clarityAdapter = new ArrayAdapter<>(this,
+                R.layout.item_play_clarity,
+                clarityArr);
+        mClarityLv.setAdapter(clarityAdapter);
+        mClarityLv.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cog.d(TAG, "onItemClick position=", position);
+            }
+        });
+        mClarityLv.setSelection(0);
     }
 
     @Override
@@ -344,7 +441,9 @@ public class VideoDetailsActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        mVideoControl.start();
+        if (isLandscape()){
+            hideSystemUI();
+        }
     }
 
     @Override

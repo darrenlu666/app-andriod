@@ -39,6 +39,7 @@ import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.resource.models.entities.Document;
 import com.codyy.erpsportal.resource.models.entities.Resource;
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
+import com.codyy.erpsportal.resource.utils.CountIncreaser;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
@@ -274,7 +275,7 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     getClass().getName());
-            mWakeLock.acquire();
+            mWakeLock.acquire(60 * 1000);
             mDownloadingPb.setVisibility(View.VISIBLE);
         }
 
@@ -286,6 +287,7 @@ public class DocumentContentActivity extends FragmentActivity implements View.On
                 UIUtils.toast(context, "加载失败", Toast.LENGTH_SHORT);
             } else {
                 UIUtils.toast(context, "加载完成", Toast.LENGTH_SHORT);
+                CountIncreaser.increaseViewCount(mSender, mUserInfo.getUuid(), mResourceDetails.getId());
                 displayPdf(result);
             }
 

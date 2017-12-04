@@ -2,7 +2,7 @@
     <declare-styleable name="BnVideoView">
         <attr name="shouldDrawError" format="boolean" />
     </declare-styleable>
-    <declare-styleable name="VideoControlView">
+    <declare-styleable name="BNVideoControlView">
         <attr name="videoControlViewStyle" format="reference"/>
         <attr name="play_mode" format="integer"/>
     </declare-styleable>
