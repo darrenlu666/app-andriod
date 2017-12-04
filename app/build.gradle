@@ -166,7 +166,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${SUPPORT_VERSION}"
     compile "com.android.support:gridlayout-v7:${SUPPORT_VERSION}"
     compile project(':library-viewpager-indicator')
-    compile project(':albumlibrary')
+    api "com.codyy.mobile:albumlibrary:1.0.0"
     compile project(':CalendarListviewLibrary')
     compile project(':bennu')
     compile project(':mupdf')
