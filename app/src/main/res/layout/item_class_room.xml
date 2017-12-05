@@ -64,11 +64,22 @@
         android:textColor="@color/white"
         android:textSize="12sp"
         tools:text="正在直播"/>
-
+    <TextView
+        android:id="@+id/tv_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_class_detail"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@+id/division_line"
+        android:layout_toLeftOf="@+id/tv_status"
+        tools:text="江苏省-苏州市-工业园区"
+        android:singleLine="true"
+        android:visibility="gone"
+        />
     <View
         android:layout_width="match_parent"
         android:layout_height="0.05dp"
-        android:layout_below="@id/tv_class_detail"
+        android:layout_below="@id/tv_area"
         android:layout_marginTop="10dp"
         android:background="@color/video_item_press"/>
 

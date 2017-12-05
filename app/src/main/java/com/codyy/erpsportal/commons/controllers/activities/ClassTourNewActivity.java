@@ -395,6 +395,9 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
         @Bind(R.id.tv_school_name)
         TextView mSchoolNameTv;
 
+        @Bind(R.id.tv_area)
+        TextView mAreaTv;
+
         @Bind(R.id.tv_scope)
         TextView mScopeTv;
 
@@ -417,6 +420,8 @@ public class ClassTourNewActivity extends AppCompatActivity implements ListExtra
                 mSchoolNameTv.setText(classroom.getTeacherName());
             }else{
                 mSchoolNameTv.setText(classroom.getSchoolName());
+                mAreaTv.setVisibility(View.VISIBLE);
+                mAreaTv.setText(classroom.getAreaPath());
             }
             Status status = (Status) info;
             if (status.showThumb) {

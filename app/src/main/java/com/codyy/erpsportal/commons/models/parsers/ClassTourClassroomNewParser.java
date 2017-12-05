@@ -23,6 +23,8 @@ public class ClassTourClassroomNewParser implements JsonParsable<TourClassroom> 
 //        classroom.setId(jsonObject.optString("id"));
 //        classroom.setClassRoomId(jsonObject.isNull("classroomId") ? jsonObject.optString("classRoomId") : jsonObject.optString("classroomId"));
         classroom.setSchoolName(jsonObject.optString("schoolName"));
+        classroom.setClassroomName(jsonObject.optString("classroomName",""));
+        classroom.setShowClassRoomName(jsonObject.optBoolean("showClassRoomName",false));
 //        classroom.setPmsServerHost(jsonObject.optString("serverAddress"));
         classroom.setVideoUrl(jsonObject.optString("streamAddress"));
 //        classroom.setDmsServerHost(jsonObject.optString("dmsServerHost"));

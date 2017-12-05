@@ -24,6 +24,7 @@ public class SchoolNetClassroomParser extends JsonParser<TourClassroom> {
         classroom.setTeacherName(jsonObject.optString("teacherName"));
         classroom.setSubjectName(jsonObject.isNull("subject")?jsonObject.optString("subjectName"):jsonObject.optString("subject"));
         classroom.setType(jsonObject.optString("classroomType"));
+        classroom.setAreaPath(jsonObject.optString("areaPath",""));
         if ("PMS".equals(classroom.getStreamingServerType())) {
             classroom.setVideoUrl(classroom.getPmsServerHost() + "/class_" + classroom.getClassRoomId() + "_u_" + classroom.getId() + "__main");
         }

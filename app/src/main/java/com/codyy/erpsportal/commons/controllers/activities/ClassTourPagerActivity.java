@@ -192,7 +192,13 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             public void onPageSelected(int position) {
                 Cog.d(TAG, "onPageSelected position=" + position);
                 TourClassroom tourClassroom = mClassroomList.get(position);
-                mSchoolNameTv.setText(tourClassroom.getSchoolName());
+                StringBuffer sb = new StringBuffer(tourClassroom.getSchoolName());
+                if(!TextUtils.isEmpty(tourClassroom.getClassroomName())
+                        &&tourClassroom.isShowClassRoomName()){
+                    if(!TextUtils.isEmpty(sb))sb.append("_");
+                    sb.append(tourClassroom.getClassroomName());
+                }
+                mSchoolNameTv.setText(sb.toString());
                 playCurrent();
             }
 
@@ -439,7 +445,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
     }
 
 
-    // TODO: 18/05/17 锁屏处理视频播放暂停.
+    //  18/05/17 锁屏处理视频播放暂停.
     private class ClassroomsPagerAdapter extends PagerAdapter {
 
         private LayoutInflater mLayoutInflater;

@@ -52,6 +52,36 @@ public class TourClassroom implements Parcelable {
 
     private String captureUrl;
 
+    private String areaPath;//路径
+
+    private String classroomName;//教室名
+
+    private boolean showClassRoomName;//是否有多间教室
+
+    public String getClassroomName() {
+        return classroomName;
+    }
+
+    public void setClassroomName(String classroomName) {
+        this.classroomName = classroomName;
+    }
+
+    public boolean isShowClassRoomName() {
+        return showClassRoomName;
+    }
+
+    public void setShowClassRoomName(boolean showClassRoomName) {
+        this.showClassRoomName = showClassRoomName;
+    }
+
+    public String getAreaPath() {
+        return areaPath;
+    }
+
+    public void setAreaPath(String areaPath) {
+        this.areaPath = areaPath;
+    }
+
     public TourClassroom() {
     }
 
