@@ -24,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.codyy.erpsportal.EApplication;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
 import com.codyy.erpsportal.commons.utils.Check3GUtil;
@@ -140,8 +139,8 @@ public class BNVideoControlView extends RelativeLayout implements AutoHide, Hand
     }
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
-        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.VideoControlView, defStyle, 0);
-        mPlayMode = ta.getInteger(R.styleable.VideoControlView_play_mode, MODE_RECORD);
+        TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.BNVideoControlView, defStyle, 0);
+        mPlayMode = ta.getInteger(R.styleable.BNVideoControlView_play_mode, MODE_RECORD);
         ta.recycle();
 
         View rootView = LayoutInflater.from(context).inflate(R.layout.video_control_view, this, true);

@@ -227,12 +227,16 @@ public class GroupCollectiveActivityDetail extends ToolbarActivity implements Vi
                             @Override
                             public void onSuccess(JSONObject response) {
                                 JSONObject server = response.optJSONObject("server");
-                                meetingBase.setToken(server.optString("token"));
-                                meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
-                                meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
-                                OnlineMeetingActivity.startForResult(GroupCollectiveActivityDetail.this,
-                                        mPreparationId, mUserInfo,
-                                        meetingBase, 101);
+                                if(null != server){
+                                    meetingBase.setToken(server.optString("token"));
+                                    meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                    meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                    OnlineMeetingActivity.startForResult(GroupCollectiveActivityDetail.this,
+                                            mPreparationId, mUserInfo,
+                                            meetingBase, 101);
+                                }else{
+                                    ToastUtil.showToast(GroupCollectiveActivityDetail.this,"无法连接通讯服务器!");
+                                }
 //                                mHandler.sendEmptyMessage(MSG_PROGRESS_DISMISS);
                                 mLoadingDialog.dismiss();
                             }

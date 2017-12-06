@@ -19,6 +19,7 @@ import com.codyy.erpsportal.commons.controllers.fragments.channels.SipCustomized
 import com.codyy.erpsportal.commons.controllers.fragments.channels.SipHomeFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TZLivingFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TaiZhouFragment;
+import com.codyy.erpsportal.commons.controllers.fragments.channels.TaiZhouSchoolFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TeachingResearchFragment;
 import com.codyy.erpsportal.commons.controllers.fragments.channels.TianJinFragment;
 import com.codyy.erpsportal.commons.utils.Cog;
@@ -146,12 +147,15 @@ public class ChannelTab {
                 } else if (ModuleConfig.TEMPLATE_GROUP_SCHOOL.equals(indexTemplateId)) {//集团校
                     clazz = MainGroupSchoolFragment.class;
                     tabId = 14;
-                } else if (ModuleConfig.TEMPLATE_TZ.equals(indexTemplateId)) {
+                } else if (ModuleConfig.TEMPLATE_TZ.equals(indexTemplateId)) {//台州-管理员
                     clazz = TaiZhouFragment.class;
                     tabId = 15;
                 } else if (ModuleConfig.TEMPLATE_HN_RES.equals(indexTemplateId)) {//海宁资源首页
                     clazz = HaiNingResFragment.class;
                     tabId = 16;
+                } else if (ModuleConfig.TEMPLATE_TZ_SCHOOL.equals(indexTemplateId)) {//台州-学校管理员
+                    clazz = TaiZhouSchoolFragment.class;
+                    tabId = 17;
                 } else {
                     clazz = MainResFragment.class;
                     tabId = 2;

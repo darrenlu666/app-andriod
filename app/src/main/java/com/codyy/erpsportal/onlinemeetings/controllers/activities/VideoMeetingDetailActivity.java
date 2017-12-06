@@ -267,18 +267,22 @@ public class VideoMeetingDetailActivity extends BaseHttpActivity {
 
                                 if(response.optString("result").equals("success")){
                                     JSONObject server = response.optJSONObject("server");
+                                    if(null != server){
 
-                                    meetingBase.setToken(server.optString("token"));
-                                    meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
-                                    meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
+                                        meetingBase.setToken(server.optString("token"));
+                                        meetingBase.getBaseCoco().setCocoIP(server.optString("serverHost"));
+                                        meetingBase.getBaseCoco().setCocoPort(server.optString("port"));
 
-                                    OnlineMeetingActivity.startForResult(
-                                            VideoMeetingDetailActivity.this,
-                                            mMeetingID,
-                                            mUserInfo,
-                                            meetingBase,
-                                            REQUEST_ONLINE_MEETING_CODE
-                                    );
+                                        OnlineMeetingActivity.startForResult(
+                                                VideoMeetingDetailActivity.this,
+                                                mMeetingID,
+                                                mUserInfo,
+                                                meetingBase,
+                                                REQUEST_ONLINE_MEETING_CODE
+                                        );
+                                    }else{
+                                        ToastUtil.showToast(VideoMeetingDetailActivity.this,"无法连接通讯服务器!");
+                                    }
                                 }else{
                                     ToastUtil.showToast(response.optString("message"));
                                 }

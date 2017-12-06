@@ -6,9 +6,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -51,11 +53,13 @@ import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
 import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 
 import org.json.JSONObject;
@@ -297,6 +301,12 @@ public class ImageDetailsActivity extends FragmentActivity {
                             DraweeController controller = Fresco.newDraweeControllerBuilder()
                                     .setUri(mImageUri)
                                     .setAutoPlayAnimations(true)
+                                    .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                                        @Override
+                                        public void onFinalImageSet(String id, @Nullable ImageInfo imageInfo, @Nullable Animatable animatable) {
+                                            CountIncreaser.increaseViewCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
+                                        }
+                                    })
                                     .build();
                             mImageDv.setController(controller);
                         }
@@ -330,6 +340,7 @@ public class ImageDetailsActivity extends FragmentActivity {
                 ToastUtil.showToast(EApplication.instance(), R.string.image_cached_already);
                 return;
             }
+            //增加下载次数
             CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
             final String fileName = mResourceDetails.getId() + suffix;
             ImagePipeline imagePipeline = Fresco.getImagePipeline();

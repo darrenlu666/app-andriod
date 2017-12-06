@@ -51,7 +51,7 @@ public class VideoDownloadUtils {
             } else if(!NetworkUtils.isDownloadEnable(EApplication.instance())){
                 ToastUtil.showToast(EApplication.instance(),EApplication.instance().getString(R.string.net_switch_close));
             } else {
-                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.txt_dialog_download_start, new Object[]{resourceDetails.getResourceName()}));
+                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.txt_dialog_download_start, resourceDetails.getResourceName()));
                 createAndInsertCacheItem(resourceDetails, CacheItem.DOWNLOAD_TYPE_VIDEO, downloadUrl, baseUserId);
                 FileDownloadService.httpDownload(EApplication.instance(), baseUserId);
                 result = true;
@@ -87,7 +87,7 @@ public class VideoDownloadUtils {
             } else if(!NetworkUtils.isDownloadEnable(EApplication.instance())){
                 ToastUtil.showToast(EApplication.instance(),EApplication.instance().getString(R.string.net_switch_close));
             } else {
-                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.txt_dialog_download_start, new Object[]{resourceDetails.getResourceName()}));
+                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.txt_dialog_download_start, resourceDetails.getResourceName()));
                 createAndInsertCacheItem(resourceDetails, CacheItem.DOWNLOAD_TYPE_AUDIO, downloadUrl, baseUserId);
                 FileDownloadService.httpDownload(EApplication.instance(), baseUserId);
                 result = true;

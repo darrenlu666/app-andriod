@@ -460,11 +460,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="btn_download_resource">
-        <item name="android:background">@drawable/bg_btn_download</item>
-        <item name="android:textColor">@color/green_to_white</item>
-    </style>
-
     <style name="text_middle_size_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
