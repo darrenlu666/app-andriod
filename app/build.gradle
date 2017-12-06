@@ -166,7 +166,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${SUPPORT_VERSION}"
     compile "com.android.support:gridlayout-v7:${SUPPORT_VERSION}"
     compile project(':library-viewpager-indicator')
-    compile project(':albumlibrary')
+    api "com.codyy.mobile:albumlibrary:1.0.0"
     compile project(':CalendarListviewLibrary')
     compile project(':bennu')
     compile project(':mupdf')
@@ -176,9 +176,9 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'joda-time:joda-time:2.9.4'
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
     compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.jakewharton.rxrelay2:rxrelay:2.0.0'
@@ -193,5 +193,6 @@ dependencies {
     compile project(path: ':zxing')
     compile project(path: ':frameworklibrary')
     compile project(':umenglibrary')
-    compile project(path: ':coco3.0')
+    implementation project(':baidumobilestatistics')
+    implementation 'codyy.mobile:coco3.0:1.0.2'
 }

@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
-
+apply from: 'publish.gradle'
+// 指定编码
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
     buildToolsVersion BUILD_TOOLS_VERSION

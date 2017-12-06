@@ -26,8 +26,6 @@
     <!-- 系统悬浮框权限 6.0后需单独请求 -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-
-    <!-- tesssst -->
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
@@ -41,6 +39,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
         <service
             android:name="com.codyy.erpsportal.commons.services.uploadServices.UploadService"
             android:enabled="true"
