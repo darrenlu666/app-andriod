@@ -14,9 +14,9 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
+
 import com.codyy.bennu.sdk.BNMediaPlayer;
 import com.codyy.bennu.sdk.impl.BNAudioMixer;
-import com.codyy.bennu.sdk.impl.BNPlayerImpl;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.commons.utils.Cog;
 
@@ -400,6 +400,7 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
             }
         },100L);
     }
+
     private void initListener(){
         if(null != mPlayer){
             //onError
@@ -496,8 +497,6 @@ public class BnVideoView2 extends SurfaceView implements SurfaceHolder.Callback,
             mPlayer.setTimeOut(timeOut);
         }
     }
-
-
 
     private String getObjectId() {
         return Integer.toHexString(System.identityHashCode(this));
