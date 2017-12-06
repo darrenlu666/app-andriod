@@ -7,6 +7,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 资源详情
  * Created by gujiajia on 2015/4/17.
@@ -72,6 +75,8 @@ public class ResourceDetails implements Parcelable {
     private String[] knowledgeNameArr;
 
     private String rtmpPath;
+
+    private List<VideoClarity> videoClarities;
 
     public String getId() {
         return id;
@@ -289,6 +294,14 @@ public class ResourceDetails implements Parcelable {
         this.rtmpPath = rtmpPath;
     }
 
+    public List<VideoClarity> getVideoClarities() {
+        return videoClarities;
+    }
+
+    public void setVideoClarities(List<VideoClarity> videoClarities) {
+        this.videoClarities = videoClarities;
+    }
+
     public ResourceDetails() {
     }
 
@@ -336,6 +349,22 @@ public class ResourceDetails implements Parcelable {
         }
         resourceDetails.setSharer(jsonObject.optString("shareName"));
         resourceDetails.setSharedTimes(jsonObject.optInt("shareNum"));
+        JSONArray clarityArr = jsonObject.optJSONArray("resVideos");
+        if (clarityArr != null && clarityArr.length() > 0) {
+            List<VideoClarity> videoClarities = new ArrayList<>(clarityArr.length());
+            for (int i=0; i < clarityArr.length(); i++) {
+                JSONObject clarityJsonObj = clarityArr.optJSONObject(i);
+                VideoClarity videoClarity = new VideoClarity();
+                videoClarity.setDefinition(clarityJsonObj.optString("definition"));
+                videoClarity.setDownloadUrl(clarityJsonObj.optString("downloadUrl"));
+                videoClarity.setPlayUrl(clarityJsonObj.optString("playUrl"));
+                String definitionName = "HIGH".equals(videoClarity.getDefinition())?
+                        "高清" : "普清";
+                videoClarity.setDefinitionName(definitionName);
+                videoClarities.add(videoClarity);
+            }
+            resourceDetails.setVideoClarities(videoClarities);
+        }
         return resourceDetails;
     }
 

@@ -76,16 +76,18 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
     private BnVideoView2.OnPlayingListener mOnPlayingListener;
     private BnVideoView2.OnSurfaceChangeListener mOnSurfaceChangeListener;
     private ExpandListener mExpandListener;
-    private PlaySate state = PlaySate.STOP;
+    private PlayState state = PlayState.STOP;
 
     private boolean mLandscape;
+
+    private int mSwitchPos = -1;
 
     @Override
     public FragmentManager getNewFragmentManager() {
         return mFragmentManagerInterface==null?null:mFragmentManagerInterface.getNewFragmentManager();
     }
 
-    public enum PlaySate {STOP, PLAY, PAUSE}
+    public enum PlayState {STOP, PLAY, PAUSE}
 
     private BnVideoView2 mVideoView = null;
     private int mTotal = 100;
@@ -109,11 +111,13 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
     private boolean mIsExpandable = true;//是否支持横竖屏 default：true
     private IFragmentMangerInterface mFragmentManagerInterface;
 
+    private boolean mIsComplete;
+
     @Override
     public boolean handleMessage(Message msg) {
         switch (msg.what) {
             case MSG_WHAT_AUTO_HIDE://hide control view
-                if (!isOnTouch && state == PlaySate.PLAY) {
+                if (!isOnTouch && state == PlayState.PLAY) {
                     hideControl();
                 }
                 break;
@@ -231,9 +235,9 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
             public void onClick(View v) {
                 if (null != mVideoView) {
                     Cog.i(TAG,"playButton clicked !");
-                    if (state == PlaySate.STOP || state == PlaySate.PAUSE) {
+                    if (state == PlayState.STOP || state == PlayState.PAUSE) {
                         if (mIsLocal) {
-                            if (state == PlaySate.STOP) {
+                            if (state == PlayState.STOP) {
                                 start();
                             } else {
                                 resume();
@@ -247,16 +251,15 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
 
                                 @Override
                                 public void onContinue() {
-                                    if (state == PlaySate.STOP) {
+                                    if (state == PlayState.STOP) {
                                         start();
                                     } else {
                                         resume();
                                     }
-
                                 }
                             });
                         }
-                    } else if (state == PlaySate.PLAY) {
+                    } else if (state == PlayState.PLAY) {
                         pause();
                     }
                 }
@@ -307,12 +310,12 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
                 mDisplayListener.show();
             }
 
-            if (state == PlaySate.PAUSE) {
+            if (state == PlayState.PAUSE) {
                 setProgress(mLastPercent);
-            } else if (state == PlaySate.PLAY) {
+            } else if (state == PlayState.PLAY) {
                 setProgress(mCurrentPosition);
                 touchControl();
-            } else if (state == PlaySate.STOP) {
+            } else if (state == PlayState.STOP) {
                 setProgress(mCurrentPosition);
             }
         }
@@ -441,6 +444,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
             public void onComplete() {
                 Cog.e("----------dd------------------", "onComplete");
                 stop();
+                mIsComplete = true;
                 mLastPercent = 0;//恢复为0否则，在此点击播放按钮会被seek到上一次seek的位置 .
                 long nowTime = System.currentTimeMillis();
                 if ((nowTime - mStartPlayTime) < 1000) {
@@ -465,9 +469,15 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
                     mCurrentPosition = mLastPercent;
                 }
 
+                if (mSwitchPos > 0 && !mIsComplete) {
+                    mVideoView.seekTo(mSwitchPos);
+                    mSwitchPos = -1;
+                }
+
                 if (null != mOnPlayingListener) {
                     mOnPlayingListener.onPlaying();
                 }
+                mIsComplete = false;
             }
         });
 
@@ -489,7 +499,6 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
                             @Override
                             public void onNetError() {
                                 // has no network...
-
                             }
                         });
                     }
@@ -500,9 +509,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
             }
 
             @Override
-            public void surfaceChanged(SurfaceHolder holder) {
-
-            }
+            public void surfaceChanged(SurfaceHolder holder) { }
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
@@ -514,7 +521,6 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
                     mOnSurfaceChangeListener.surfaceDestroyed(holder);
             }
         });
-
 
         //设置点击事件
         mVideoView.setOnTouchListener(new OnTouchListener() {
@@ -548,8 +554,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
         if (!isLocal) {
             Check3GUtil.instance().CheckNetType(ResVideoControlView.this, new Check3GUtil.OnWifiListener() {
                 @Override
-                public void onNetError() {
-                }
+                public void onNetError() { }
 
                 @Override
                 public void onContinue() {
@@ -565,10 +570,10 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
 
     private void tryEndLastVideo() {
         if (null != mVideoView) {
-            if (state == PlaySate.PAUSE) {
+            if (state == PlayState.PAUSE) {
                 resume();
                 mVideoView.stop();
-            } else if (state == PlaySate.PLAY) {
+            } else if (state == PlayState.PLAY) {
                 stop();
             }
         }
@@ -608,7 +613,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
         showControl();
         setDuration(mTotal);//进度恢复
         setProgress(mCurrentPosition);//进度条恢复
-        state = PlaySate.STOP;
+        state = PlayState.STOP;
     }
 
     /**
@@ -647,13 +652,13 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
     }
 
     private void setPlaySate() {
-        state = PlaySate.PLAY;
+        state = PlayState.PLAY;
         touchControl();
         updatePlayBtnIcon();
     }
 
     private void setStopState() {
-        state = PlaySate.STOP;
+        state = PlayState.STOP;
         disallowHide();
         updatePlayBtnIcon();
     }
@@ -668,7 +673,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
         mLastPercent = mCurrentPosition;
         //为什么要设置为0? 去除本行解决seek后2次重复seek的问题
 //        mCurrentPosition = 0;
-        state = PlaySate.PAUSE;
+        state = PlayState.PAUSE;
         disallowHide();
         updatePlayBtnIcon();
     }
@@ -677,13 +682,13 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
      * 根据状态更新播放按钮
      */
     private void updatePlayBtnIcon() {
-        if (state == PlaySate.PLAY) {
+        if (state == PlayState.PLAY) {
             if (mLandscape) {
                 mPlayIb.setImageResource(R.drawable.ic_pause_fs);
             } else {
                 mPlayIb.setImageResource(R.drawable.poe_select_video_pause);
             }
-        } else {//state == PlaySate.STOP || state == PlaySate.PAUSE
+        } else {//state == PlayState.STOP || state == PlayState.PAUSE
             if (mLandscape) {
                 mPlayIb.setImageResource(R.drawable.ic_play_fs);
             } else {
@@ -694,7 +699,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
 
     private void resume() {
         Cog.e(TAG, "resume()~mLastPercent : " + mLastPercent);
-        if (getPlayState() == PlaySate.PAUSE) {
+        if (getPlayState() == PlayState.PAUSE) {
             setPlaySate();
             mVideoView.resume();
         } else {
@@ -702,7 +707,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
         }
     }
 
-    public PlaySate getPlayState() {
+    public PlayState getPlayState() {
         return state;
     }
 
@@ -727,6 +732,15 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
     }
 
     /**
+     * 切换流
+     * @param playUrl 新流地址
+     */
+    public void switchClarity(String playUrl) {
+        mSwitchPos = mCurrentPosition;
+        setVideoPath( playUrl, BnVideoView2.BN_URL_TYPE_HTTP, false);
+    }
+
+    /**
      * 锁定显示状态，禁止自动隐藏播放条
      */
     public void disallowHide() {
@@ -737,7 +751,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
      * 允许自动显示播放条
      */
     public void allowHide() {
-        if (state == PlaySate.PLAY) {
+        if (state == PlayState.PLAY) {
             mHandler.removeMessages(MSG_WHAT_AUTO_HIDE);
             mHandler.sendEmptyMessageDelayed(MSG_WHAT_AUTO_HIDE, HIDE_DELAY_MILLIS);
         }
