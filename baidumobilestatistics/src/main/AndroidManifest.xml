@@ -16,7 +16,7 @@
         <!-- 您从百度网站获取的APP KEY，根据实际您的APP申请的APP_KEY进行修改 -->
         <meta-data
             android:name="BaiduMobAd_STAT_ID"
-            android:value="62ed3333df" /> <!-- abcd1234 -->
+            android:value="38f83dcca5" /> <!-- 开发appId：62ed3333df -->
         <!-- 渠道商编号 -->
         <meta-data
             android:name="BaiduMobAd_CHANNEL"
