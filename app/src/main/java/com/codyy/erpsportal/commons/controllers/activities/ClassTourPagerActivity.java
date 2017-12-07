@@ -361,11 +361,11 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                                         ReceiveTeacherListBean receiveTeacherListBean = detailBean.getReceiveTeacherList().get(i);
                                         //接受学校_教室
                                         StringBuffer sb = new StringBuffer(receiveTeacherListBean.getSchoolName());
-                                        if(!TextUtils.isEmpty(receiveTeacherListBean.getRoomName())
+                                        /*if(!TextUtils.isEmpty(receiveTeacherListBean.getRoomName())
                                                 &&receiveTeacherListBean.isShowClassRoomName()){
                                             if(!TextUtils.isEmpty(sb))sb.append("_");
                                             sb.append(receiveTeacherListBean.getRoomName());
-                                        }
+                                        }*/
                                         textView.setText(
                                                 (TextUtils.isEmpty(receiveTeacherListBean.getTeacherName()) ? "未选择教师" : receiveTeacherListBean.getTeacherName())
                                                         + (TextUtils.isEmpty(receiveTeacherListBean.getTeacherMobile()) ? "" : "("
