@@ -90,6 +90,33 @@ public class ClassRoomInfoEntity {
         private String mainSchoolName;
         private String subject;
         private String thumb;
+        private String areaPath;
+        private String roomName;//教室名字
+        private boolean showClassRoomName;//是否显示教室名
+
+        public String getAreaPath() {
+            return areaPath;
+        }
+
+        public void setAreaPath(String areaPath) {
+            this.areaPath = areaPath;
+        }
+
+        public String getRoomName() {
+            return roomName;
+        }
+
+        public void setRoomName(String roomName) {
+            this.roomName = roomName;
+        }
+
+        public boolean isShowClassRoomName() {
+            return showClassRoomName;
+        }
+
+        public void setShowClassRoomName(boolean showClassRoomName) {
+            this.showClassRoomName = showClassRoomName;
+        }
 
         public long getRealBeginTime() {
             return realBeginTime;
@@ -201,6 +228,9 @@ public class ClassRoomInfoEntity {
                     listEntity.setSubject(jsonObject.isNull("subjectName") ? "" : jsonObject.optString("subjectName"));
                     listEntity.setTeacherName(jsonObject.isNull("realName") ? "" : jsonObject.optString("realName"));
                     listEntity.setThumb(jsonObject.isNull("thumb") ? "" : jsonObject.optString("thumb"));
+                    listEntity.setRoomName(jsonObject.optString("roomName",""));
+                    listEntity.setShowClassRoomName(jsonObject.optBoolean("showClassRoomName",false));
+                    listEntity.setAreaPath(jsonObject.optString("areaPath",""));
                     listEntities.add(listEntity);
                 }
                 classRoomInfoEntity.setList(listEntities);

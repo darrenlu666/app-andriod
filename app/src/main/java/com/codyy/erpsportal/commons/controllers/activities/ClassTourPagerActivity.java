@@ -56,6 +56,7 @@ import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -192,7 +193,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             public void onPageSelected(int position) {
                 Cog.d(TAG, "onPageSelected position=" + position);
                 TourClassroom tourClassroom = mClassroomList.get(position);
-                mSchoolNameTv.setText(tourClassroom.getSchoolName());
+                setTitle(tourClassroom);
                 playCurrent();
             }
 
@@ -204,6 +205,20 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
         TextView mainTeacherLbTv = (TextView) findViewById(R.id.lb_main_teacher);
         mainTeacherLbTv.setText(getString(R.string.teacher_type_lb, Titles.sMasterTeacher));
         mTvLbReceivingTeacher.setText(getString(R.string.teacher_type_lb, Titles.sCoachTeacher));
+    }
+
+    /**
+     * 设置顶部标题
+     * @param tourClassroom
+     */
+    private void setTitle(TourClassroom tourClassroom) {
+        StringBuffer sb = new StringBuffer(tourClassroom.getSchoolName());
+        if(!TextUtils.isEmpty(tourClassroom.getClassroomName())
+                &&tourClassroom.isShowClassRoomName()){
+            if(!TextUtils.isEmpty(sb))sb.append("_");
+            sb.append(tourClassroom.getClassroomName());
+        }
+        mSchoolNameTv.setText(sb.toString());
     }
 
     private void updateViewPager() {
@@ -289,7 +304,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                     if (classroomList != null && classroomList.size() > 0) {
                         mClassroomList.clear();
                         mClassroomList.addAll(classroomList);
-                        mSchoolNameTv.setText(mClassroomList.get(0).getSchoolName());
+                        setTitle(mClassroomList.get(0));
                         updateViewPager();
                     } else {
                         UIUtils.toast(ClassTourPagerActivity.this, "无法获取视频地址！", Toast.LENGTH_SHORT);
@@ -301,13 +316,11 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             @Override
             public void onErrorResponse(Throwable error) {
                 Cog.e(TAG, "onErrorResponse:" + error);
-//                UiUtils.toast(LiveVideoListPlayActivity.this, R.string.net_error, Toast.LENGTH_SHORT);
                 mClassroomList.clear();
                 if (mParentClassroom != null) {
                     mClassroomList.add(mParentClassroom);
                     updateViewPager();
                 }
-//                finish();
             }
         }));
     }
@@ -346,11 +359,18 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
 //                                        textView.setAutoLinkMask(Linkify.PHONE_NUMBERS);
                                         textView.setLinkTextColor(ContextCompat.getColor(ClassTourPagerActivity.this, android.R.color.white));
                                         ReceiveTeacherListBean receiveTeacherListBean = detailBean.getReceiveTeacherList().get(i);
+                                        //接受学校_教室
+                                        StringBuffer sb = new StringBuffer(receiveTeacherListBean.getSchoolName());
+                                        if(!TextUtils.isEmpty(receiveTeacherListBean.getRoomName())
+                                                &&receiveTeacherListBean.isShowClassRoomName()){
+                                            if(!TextUtils.isEmpty(sb))sb.append("_");
+                                            sb.append(receiveTeacherListBean.getRoomName());
+                                        }
                                         textView.setText(
                                                 (TextUtils.isEmpty(receiveTeacherListBean.getTeacherName()) ? "未选择教师" : receiveTeacherListBean.getTeacherName())
                                                         + (TextUtils.isEmpty(receiveTeacherListBean.getTeacherMobile()) ? "" : "("
                                                         + receiveTeacherListBean.getTeacherMobile() + ")")
-                                                        + "\n" + receiveTeacherListBean.getSchoolName());
+                                                        + "\n" + sb.toString());
                                         if (i != 0) {
                                             setMarginTop(textView);
                                         }
@@ -439,7 +459,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
     }
 
 
-    // TODO: 18/05/17 锁屏处理视频播放暂停.
+    //  18/05/17 锁屏处理视频播放暂停.
     private class ClassroomsPagerAdapter extends PagerAdapter {
 
         private LayoutInflater mLayoutInflater;
@@ -643,6 +663,7 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
 
         private String result;
 
+        @SerializedName(value = "DetailBean",alternate = {"classDetail"})
         private DetailBean detail;
 
         public String getResult() {
@@ -668,8 +689,8 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
             private String teacherMobile;
             private String teacherName;
             private String weekSeq;
-
             private List<ReceiveTeacherListBean> receiveTeacherList;
+
 
             public String getClassSeq() {
                 return classSeq;
@@ -727,10 +748,32 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
                 this.receiveTeacherList = receiveTeacherList;
             }
 
+            //接受教师信息.
             public class ReceiveTeacherListBean {
                 private String schoolName;
                 private String teacherMobile;
                 private String teacherName;
+                private String roomName;
+                /**
+                 * 是否有多件教室.
+                 */
+                private boolean showClassRoomName;
+
+                public String getRoomName() {
+                    return roomName;
+                }
+
+                public void setRoomName(String roomName) {
+                    this.roomName = roomName;
+                }
+
+                public boolean isShowClassRoomName() {
+                    return showClassRoomName;
+                }
+
+                public void setShowClassRoomName(boolean showClassRoomName) {
+                    this.showClassRoomName = showClassRoomName;
+                }
 
                 public String getSchoolName() {
                     return schoolName;

@@ -2,6 +2,7 @@ package com.codyy.erpsportal.classroom.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -107,6 +108,7 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
         private TextView mSchoolNameTv;
         private TextView mClassDetailTv;
         private TextView mStatusIv;
+        private TextView mAreaTv;//行政区.
         private RelativeLayout mContainer;
 
         @Override
@@ -123,8 +125,17 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
                 mStartTimeTv.setText(numArr[Integer.valueOf(data.getClassPeriod())]);
             }
             if (UserInfoKeeper.obtainUserInfo().isArea()) {
+                mAreaTv.setVisibility(View.VISIBLE);
                 mClassDetailTv.setText(data.getGrade() + "/" + data.getSubject() + "/" + data.getTeacherName());
-                mSchoolNameTv.setText(data.getMainSchoolName());
+
+                StringBuffer mainStr = new StringBuffer(data.getMainSchoolName());
+                if(data.isShowClassRoomName()
+                        &&!TextUtils.isEmpty(data.getRoomName())){
+                    if(!TextUtils.isEmpty(mainStr))mainStr.append("_");
+                    mainStr.append(data.getRoomName());
+                }
+                mSchoolNameTv.setText(mainStr.toString());
+                mAreaTv.setText(data.getAreaPath());
             } else {
                 mClassDetailTv.setText(data.getGrade() + "/" + data.getSubject());
                 mSchoolNameTv.setText(data.getTeacherName());
@@ -135,14 +146,14 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
             } else if ("PROGRESS".equals(data.getStatus())) {
                 mStatusIv.setText("正在直播");
                 mStatusIv.setBackgroundResource(R.drawable.status_starting);
+            } else {
+                mStatusIv.setText("已结束");
+                mStatusIv.setBackgroundResource(R.drawable.status_un_start);
             }
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (ClassRoomContants.TYPE_CUSTOM_LIVE.equals(mFrom)) {
-//                        data.setStatus("INIT");
-//                        data.setStatus("PROGRESS");
-//                        data.setStatus("END");
                         CustomLiveDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
                     }else{
                         ClassRoomDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
@@ -158,6 +169,7 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
             mSchoolNameTv = (TextView) view.findViewById(R.id.tv_school_name);
             mClassDetailTv = (TextView) view.findViewById(R.id.tv_class_detail);
             mStatusIv = (TextView) view.findViewById(R.id.tv_status);
+            mAreaTv = (TextView) view.findViewById(R.id.tv_area);
         }
 
         ClassRoomViewHolder(View itemView) {

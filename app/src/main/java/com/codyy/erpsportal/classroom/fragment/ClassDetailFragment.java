@@ -38,6 +38,7 @@ public class ClassDetailFragment extends Fragment {
     public static final String ARG_RECEIVE_SCHOOL_LIST = "receiveSchoolList";
     public static final String ARG_LENGTH = "length";
     public static final String ARG_PLAY_COUNT = "playCount";
+
     @Bind(R.id.tv_class_room_area_value)
     TextView mTvClassRoomAreaValue;
     @Bind(R.id.tv_class_room_main_info)

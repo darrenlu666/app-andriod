@@ -70,6 +70,24 @@ public class BaseClassRoomDetail implements Parcelable {
         private String receiveName;
         private String receiveUrl;
         private String stream;
+        private String roomName;//新增教室名字
+        private boolean showClassRoomName;//是否有多间教室.
+
+        public String getRoomName() {
+            return roomName;
+        }
+
+        public void setRoomName(String roomName) {
+            this.roomName = roomName;
+        }
+
+        public boolean isShowClassRoomName() {
+            return showClassRoomName;
+        }
+
+        public void setShowClassRoomName(boolean showClassRoomName) {
+            this.showClassRoomName = showClassRoomName;
+        }
 
         public String getStream() {
             // 降低分辨率 720p ．　

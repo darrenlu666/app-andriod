@@ -78,5 +78,18 @@
         android:text="进入观摩"
         android:textColor="#6f6f6f"
         android:textSize="16sp"/>
-
+    <TextView
+        android:id="@+id/tv_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_school_name"
+        android:layout_alignStart="@+id/tv_school_name"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@id/tv_scope"
+        android:layout_marginTop="12dp"
+        android:textColor="#6f6f6f"
+        android:textSize="16sp"
+        tools:text="江苏省-苏州市-工业园区"
+        android:visibility="gone"
+        />
 </RelativeLayout>

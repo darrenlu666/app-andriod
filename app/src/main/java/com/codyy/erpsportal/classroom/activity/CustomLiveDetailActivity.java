@@ -38,6 +38,7 @@ import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.fragment.ClassDetailFragment;
 import com.codyy.erpsportal.classroom.fragment.ClassRoomCommentFragment;
 import com.codyy.erpsportal.classroom.fragment.PeopleTreeFragment;
+import com.codyy.erpsportal.classroom.models.BaseClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
@@ -517,8 +518,14 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         List<Fragment> mFragmentList = new ArrayList<>();
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
             mTabLayout.addTab(mTabLayout.newTab().setText("课程详情"));
+            StringBuffer mainStr = new StringBuffer(mClassRoomDetail.getSchoolName());
+            if(mClassRoomDetail.isShowClassRoomName()
+                    &&!TextUtils.isEmpty(mClassRoomDetail.getRoomName())){
+                if(!TextUtils.isEmpty(mainStr))mainStr.append("_");
+                mainStr.append(mClassRoomDetail.getRoomName());
+            }
             mFragmentList.add(ClassDetailFragment.newInstance(mFrom, mClassRoomDetail.getArea(), mClassRoomDetail.getClassPeriod(), mClassRoomDetail.getClassTime(),
-                    mClassRoomDetail.getGrade(), mClassRoomDetail.getSchoolName(), mClassRoomDetail.getTeacher(), mClassRoomDetail.getSubject(), getReceiveNameList()));
+                    mClassRoomDetail.getGrade(), mainStr.toString(), mClassRoomDetail.getTeacher(), mClassRoomDetail.getSubject(), getReceiveNameList()));
         } else {
             mTabLayout.addTab(mTabLayout.newTab().setText("课程详情"));
             mFragmentList.add(ClassDetailFragment.newInstance(mFrom, mRecordRoomDetail.getArea(), mRecordRoomDetail.getClassPeriod(), mRecordRoomDetail.getClassTime(),
@@ -662,7 +669,14 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
         ArrayList<String> nameList = new ArrayList<>();
         if (mFrom.equals(ClassRoomContants.TYPE_CUSTOM_LIVE) || mFrom.equals(ClassRoomContants.TYPE_LIVE_LIVE)) {
             for (int i = 0; i < mClassRoomDetail.getReceiveInfoList().size(); i++) {
-                nameList.add(mClassRoomDetail.getReceiveInfoList().get(i).getReceiveName());
+                BaseClassRoomDetail.ReceiveInfoEntity entity = mClassRoomDetail.getReceiveInfoList().get(i);
+                StringBuffer str = new StringBuffer(entity.getReceiveName());
+                if(entity.isShowClassRoomName()
+                        &&!TextUtils.isEmpty(entity.getRoomName())){
+                    if(!TextUtils.isEmpty(str)) str.append("_");
+                    str.append(entity.getRoomName());
+                }
+                nameList.add(str.toString());
             }
         } else {
             for (int i = 0; i < mRecordRoomDetail.getReceiveInfoList().size(); i++) {

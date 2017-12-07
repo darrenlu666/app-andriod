@@ -25,9 +25,29 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
 
     private String urlType;
 
+    private String roomName;//新增教室名字
+
+    private boolean showClassRoomName;//是否有多间教室.
+
     private DMS external;
 
     private DMS internal;
+
+    public boolean isShowClassRoomName() {
+        return showClassRoomName;
+    }
+
+    public void setShowClassRoomName(boolean showClassRoomName) {
+        this.showClassRoomName = showClassRoomName;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
 
     public String getUrlType() {
         return urlType;
@@ -70,6 +90,8 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
             receiveInfoEntity.setReceiveName(object.isNull("receiveName") ? "" : object.optString("receiveName"));
             receiveInfoEntity.setReceiveUrl(object.isNull("url") ? "" : object.optString("url"));
             receiveInfoEntity.setStream(object.isNull("stream") ? "" : object.optString("stream"));
+            receiveInfoEntity.setRoomName(object.optString("classroomName",""));
+            receiveInfoEntity.setShowClassRoomName(object.optBoolean("showClassRoomName",false));
             receiveInfoEntityList.add(receiveInfoEntity);
         }
         classRoomDetail.setReceiveInfoList(receiveInfoEntityList);
@@ -85,6 +107,8 @@ public class ClassRoomDetail extends BaseClassRoomDetail implements Parcelable{
         classRoomDetail.setTeacher(response.isNull("teacher") ? "" : response.optString("teacher"));
         classRoomDetail.setSubject(response.isNull("subject") ? "" : response.optString("subject"));
 
+        classRoomDetail.setRoomName(response.optString("roomName",""));
+        classRoomDetail.setShowClassRoomName(response.optBoolean("showClassRoomName",false));
         //17-10-11 根据网络情况返回不通的dmc
         if(null != response.optJSONArray("internal")){
             final JSONObject internal = response.optJSONArray("internal").optJSONObject(0);
