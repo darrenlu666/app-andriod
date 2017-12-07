@@ -22,24 +22,7 @@ public class TourClassroom implements Parcelable {
 
     private String teacherName;
 
-    private String classRoomId;
-
     private String videoUrl;
-
-    /**
-     * 流类型DMC或PMS
-     */
-    private String streamingServerType;
-
-    /**
-     * 实际是pms服务器地址
-     */
-    private String pmsServerHost;
-
-    /**
-     * dmc地址，用于获取dms地址
-     */
-    private String dmsServerHost;
 
     /**
      * 主课堂main还是接收课堂receive
@@ -130,38 +113,6 @@ public class TourClassroom implements Parcelable {
         this.id = id;
     }
 
-    public String getClassRoomId() {
-        return classRoomId;
-    }
-
-    public void setClassRoomId(String classRoomId) {
-        this.classRoomId = classRoomId;
-    }
-
-    public String getStreamingServerType() {
-        return streamingServerType;
-    }
-
-    public void setStreamingServerType(String streamingServerType) {
-        this.streamingServerType = streamingServerType;
-    }
-
-    public String getPmsServerHost() {
-        return pmsServerHost;
-    }
-
-    public void setPmsServerHost(String pmsServerHost) {
-        this.pmsServerHost = pmsServerHost;
-    }
-
-    public String getDmsServerHost() {
-        return dmsServerHost;
-    }
-
-    public void setDmsServerHost(String dmsServerHost) {
-        this.dmsServerHost = dmsServerHost;
-    }
-
     public String getType() {
         return type;
     }
@@ -190,10 +141,6 @@ public class TourClassroom implements Parcelable {
         return "main".equals(type);
     }
 
-    public boolean isServerTypePms() {
-        return "PMS".equals(streamingServerType);
-    }
-
     @Override
     public String toString() {
         return super.toString();
@@ -216,11 +163,7 @@ public class TourClassroom implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.schoolName);
         dest.writeString(this.teacherName);
-        dest.writeString(this.classRoomId);
         dest.writeString(this.videoUrl);
-        dest.writeString(this.streamingServerType);
-        dest.writeString(this.pmsServerHost);
-        dest.writeString(this.dmsServerHost);
         dest.writeString(this.type);
         dest.writeString(this.gradeName);
         dest.writeString(this.subjectName);
@@ -231,11 +174,7 @@ public class TourClassroom implements Parcelable {
         this.id = in.readString();
         this.schoolName = in.readString();
         this.teacherName = in.readString();
-        this.classRoomId = in.readString();
         this.videoUrl = in.readString();
-        this.streamingServerType = in.readString();
-        this.pmsServerHost = in.readString();
-        this.dmsServerHost = in.readString();
         this.type = in.readString();
         this.gradeName = in.readString();
         this.subjectName = in.readString();

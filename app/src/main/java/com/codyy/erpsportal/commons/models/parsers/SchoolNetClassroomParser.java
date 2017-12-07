@@ -13,21 +13,13 @@ public class SchoolNetClassroomParser extends JsonParser<TourClassroom> {
     public TourClassroom parse(JSONObject jsonObject) {
         TourClassroom classroom = new TourClassroom();
         classroom.setId(jsonObject.optString("id"));
-        classroom.setClassRoomId(jsonObject.optString("clsClassroomId"));
         classroom.setSchoolName(jsonObject.optString("schoolName"));
-        //classroom.setPmsServerHost(jsonObject.optString("pmsAddr"));接口中无此字段
-        classroom.setPmsServerHost(jsonObject.optString("serverAddress"));
-        classroom.setDmsServerHost(jsonObject.optString("dmsServerHost"));
-        classroom.setStreamingServerType(jsonObject.optString("streamingServerType"));
         classroom.setGradeName(jsonObject.isNull("classlevel")?jsonObject.optString("classlevelName"):jsonObject.optString("classlevel"));
         classroom.setCaptureUrl(jsonObject.optString("captureUrl"));
         classroom.setTeacherName(jsonObject.optString("teacherName"));
         classroom.setSubjectName(jsonObject.isNull("subject")?jsonObject.optString("subjectName"):jsonObject.optString("subject"));
         classroom.setType(jsonObject.optString("classroomType"));
         classroom.setAreaPath(jsonObject.optString("areaPath",""));
-        if ("PMS".equals(classroom.getStreamingServerType())) {
-            classroom.setVideoUrl(classroom.getPmsServerHost() + "/class_" + classroom.getClassRoomId() + "_u_" + classroom.getId() + "__main");
-        }
         return classroom;
     }
 }

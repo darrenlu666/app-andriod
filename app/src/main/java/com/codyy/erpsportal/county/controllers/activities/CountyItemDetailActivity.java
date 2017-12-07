@@ -173,7 +173,7 @@ public class CountyItemDetailActivity extends AppCompatActivity {
     public void enterClass(View view) {
         Log.i("poe","ClassTourPagerActivity.start() ");
         TourClassroom tourClassroom = new TourClassroom();
-        tourClassroom.setClassRoomId(mContyListItemDetial.getClassroomId());
+//        tourClassroom.setClassRoomId(mContyListItemDetial.getClassroomId());
         tourClassroom.setId(mContyListItemDetial.getScheduleDetailId());
         ClassTourPagerActivity.start(this, tourClassroom, mUserInfo, ClassTourNewActivity.TYPE_SPECIAL_DELIVERY_CLASSROOM);
     }
