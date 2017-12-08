@@ -163,7 +163,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
             dateH = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.DEF_FORMAT);
         }
 
-        if (Assessment.TYPE_LIVE.equals(assessmentDetails.getEvaType())) {
+        if (Assessment.TYPE_LIVE.equals(assessmentDetails.getEvaType())) {//直播
             mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
             mScheduleTimeDescTv.setText("排课日期");
             mViewTypeTextView.setText("直播课堂");
@@ -181,7 +181,14 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
                 String sequence = "第"+ EmumIndex.getIndex(Integer.valueOf(assessmentDetails.getClassSeq()))+"节";
                 mScheduleTime.setText(date+" "+week+" "+sequence);
             }
-        } else if (Assessment.TYPE_VIDEO.equals(assessmentDetails.getEvaType())) {
+        } else if (Assessment.TYPE_VIDEO.equals(assessmentDetails.getEvaType())) {//录播
+
+            if(!TextUtils.isEmpty(assessmentDetails.getRealBeginTime())){
+                dateH = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getRealBeginTime()),DateUtil.DEF_FORMAT);
+            }else{
+                dateH = assessmentDetails.getRealBeginTime();
+            }
+
             mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
             mScheduleTimeDescTv.setText("上课时间");
             mViewTypeTextView.setText("录播课堂");

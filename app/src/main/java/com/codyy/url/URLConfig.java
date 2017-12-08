@@ -722,6 +722,7 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/schoolNet/getClassWatchAll.do")
     public static String SCHOOL_NET_CLASSROOM_VIDEOS;
+
     @UrlSuffix("mobile/schoolNet/getLiveAppointmentInfo.do")
     public static String SCHOOL_NET_CLASSROOM_APPOINTMENT_INFO;
 
@@ -3104,6 +3105,26 @@ public class URLConfig {
      */
     @UrlSuffix("mobile/malfunction/addAppend.do")
     public static String MAKE_DETAILED_INQUIRY;
+
+    /**
+     * 按需发流-进入观摩直播
+     * lassRoomId		string	教室ID（可选）
+     * deviceSerialNo		string	移动设备唯一辨识符（可选）
+     * scheduleId		string	课程ID（必填）
+     * uuid		string	用户UUID（必填）
+     */
+    @UrlSuffix("mobile/classroom/plugin/entryClassRoomWatch.do")
+    public static String INTELLIGENT_DMS_FORWARD_ENTER;
+
+    /**
+     * 按需发流-退出观摩直播
+     * lassRoomId		string	教室ID（可选）
+     * deviceSerialNo		string	移动设备唯一辨识符（可选）
+     * scheduleId		string	课程ID（必填）
+     * uuid		string	用户UUID（必填）
+     */
+    @UrlSuffix("mobile/classroom/plugin/exitClassRoomWatch.do")
+    public static String INTELLIGENT_DMS_FORWARD_LEAVE;
 
     static {
         UrlBuilder.updateUrls();
