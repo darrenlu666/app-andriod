@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
+import com.codyy.erpsportal.classroom.utils.DMSUtils;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter.OnFleshStabbedListener;
 import com.codyy.erpsportal.commons.controllers.viewholders.EmptyFleshVhr;
@@ -41,6 +42,7 @@ import com.codyy.erpsportal.commons.models.entities.RecentCourseFlesh;
 import com.codyy.erpsportal.commons.models.entities.SubtitleFlesh;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
 import com.codyy.erpsportal.commons.models.listeners.MainLiveClickListener;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
@@ -87,6 +89,8 @@ public class HaiNingCustomizedFragment extends Fragment{
 
     private WebApi mWebApi;
 
+    private RequestSender mRequestSender;
+
     private CompositeDisposable mCompositeDisposable;
 
     private OnFleshStabbedListener mOnFleshStabbedListener = new OnFleshStabbedListener() {
@@ -103,6 +107,7 @@ public class HaiNingCustomizedFragment extends Fragment{
                         .onLiveClassroomClick(room);
             } else if (flesh instanceof HistoryCourseFlesh) {
                 HistoryCourseFlesh historyCourseFlesh = (HistoryCourseFlesh) flesh;
+                DMSUtils.enterLiving(mRequestSender,historyCourseFlesh.getId(), UserInfoKeeper.obtainUserInfo().getUuid());
                 ClassRoomDetailActivity.startActivity(getActivity(),
                         UserInfoKeeper.obtainUserInfo(),
                         historyCourseFlesh.getId(),
@@ -118,6 +123,7 @@ public class HaiNingCustomizedFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWebApi = RsGenerator.create(WebApi.class);
+        mRequestSender = new RequestSender(this);
         mCompositeDisposable = new CompositeDisposable();
         initViews();
         ConfigBus.register(mOnModuleConfigListener);
@@ -126,6 +132,7 @@ public class HaiNingCustomizedFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(null != mRequestSender) mRequestSender.stop();
         mCompositeDisposable.dispose();
         ConfigBus.unregister(mOnModuleConfigListener);
     }

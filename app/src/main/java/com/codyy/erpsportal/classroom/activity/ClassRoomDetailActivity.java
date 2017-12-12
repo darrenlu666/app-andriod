@@ -42,6 +42,7 @@ import com.codyy.erpsportal.classroom.fragment.ClassRoomCommentFragment;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
+import com.codyy.erpsportal.classroom.utils.DMSUtils;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
@@ -787,6 +788,14 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //stop net request .
+        DMSUtils.exitLiving(mRequestSender, mScheduleDetailId, mUserInfo.getUuid(), new DMSUtils.ILeave() {
+            @Override
+            public void onComplete() {
+                if (null != mRequestSender) mRequestSender.stop();
+            }
+        });
+
         if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
         if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy(ClassRoomDetailActivity.this);
         mHandler.removeCallbacks(mPlayLiveRunnable);

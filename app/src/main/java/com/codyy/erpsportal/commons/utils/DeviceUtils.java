@@ -1,7 +1,10 @@
 package com.codyy.erpsportal.commons.utils;
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Build;
+import android.telecom.TelecomManager;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,6 +19,19 @@ import java.lang.reflect.Field;
  */
 public class DeviceUtils {
 
+    /**
+     * 获取手机的IMEI
+     * @param app
+     * @return
+     */
+    public static String getDeviceIMEI(Application app){
+        TelephonyManager tm = (TelephonyManager) app.getSystemService(Context.TELEPHONY_SERVICE);
+        if(Build.VERSION.SDK_INT>25){
+            return tm.getImei();
+        }else{
+            return tm.getDeviceId();
+        }
+    }
     /**
      * 获取设备名如oppol R9s .
      * @return

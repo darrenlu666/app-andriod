@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.classroom.utils.DMSUtils;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.widgets.RecyclerView.SimpleBisectDivider;
 import com.codyy.tpmp.filterlibrary.adapters.BaseRecyclerAdapter;
 import com.codyy.tpmp.filterlibrary.models.BaseTitleItemBar;
@@ -215,6 +217,7 @@ public class ChannelLivingFragment extends BaseHttpFragment implements ConfigBus
                 switch (mAdapter.getItemViewType(position)){
                     case LivingRecordViewHolder.ITEM_TYPE_LIVING:
                         LivingRecordLesson lc = (LivingRecordLesson) data;
+                        DMSUtils.enterLiving(getSender(),lc.getId(),mUserInfo.getUuid());
                         ClassRoomDetailActivity.startActivity(getActivity(),mUserInfo,lc.getId(),ClassRoomContants.TYPE_LIVE_LIVE,lc.getSubjectName());//ClassRoomContants.FROM_WHERE_LINE ,
                         break;
                     case HistoryClassViewHolder.ITEM_TYPE_BIG_IN_LINE://单行填充

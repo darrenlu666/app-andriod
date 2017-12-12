@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
+import com.codyy.erpsportal.classroom.models.DMS;
+import com.codyy.erpsportal.classroom.utils.DMSUtils;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter.OnFetchMoreListener;
 import com.codyy.erpsportal.commons.controllers.adapters.SkeletonAdapter.OnFleshStabbedListener;
@@ -31,8 +33,10 @@ import com.codyy.erpsportal.commons.models.ConfigBus.OnModuleConfigListener;
 import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.entities.Flesh;
 import com.codyy.erpsportal.commons.models.entities.ModuleConfig;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.RsGenerator;
 import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.erpsportal.commons.utils.UIUtils;
 import com.codyy.erpsportal.commons.widgets.DividerItemDecoration;
 import com.codyy.erpsportal.commons.widgets.EmptyView;
@@ -74,6 +78,8 @@ public class ExcellentCoursesFragment extends Fragment{
 
     private WebApi mWebApi;
 
+    private RequestSender mRequestSender;
+
     private CompositeDisposable mCompositeDisposable;
 
     private int mStart;
@@ -86,6 +92,7 @@ public class ExcellentCoursesFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mWebApi = RsGenerator.create(WebApi.class);
+        mRequestSender = new RequestSender(this);
         mCompositeDisposable = new CompositeDisposable();
         initViews();
         ConfigBus.register(mOnModuleConfigListener);
@@ -94,6 +101,7 @@ public class ExcellentCoursesFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(null != mRequestSender) mRequestSender.stop();
         mCompositeDisposable.dispose();
         ConfigBus.unregister(mOnModuleConfigListener);
     }
@@ -126,6 +134,7 @@ public class ExcellentCoursesFragment extends Fragment{
                 public void onStabbed(Flesh flesh) {
                     if (flesh instanceof ExcellentCourseFlesh) {
                         ExcellentCourseFlesh excellentCourse = (ExcellentCourseFlesh) flesh;
+                        DMSUtils.enterLiving(mRequestSender,excellentCourse.getScheduleDetailId(), UserInfoKeeper.obtainUserInfo().getUuid());
                         ClassRoomDetailActivity.startActivity(
                                 getActivity(),
                                 UserInfoKeeper.obtainUserInfo(),

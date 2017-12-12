@@ -7,7 +7,9 @@ import android.widget.Toast;
 import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
+import com.codyy.erpsportal.classroom.utils.DMSUtils;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
+import com.codyy.erpsportal.commons.models.UserInfoKeeper;
 import com.codyy.erpsportal.commons.models.engine.LiveClassroomViewStuffer.OnLiveClassroomClickListener;
 import com.codyy.erpsportal.commons.models.entities.UserInfo;
 import com.codyy.erpsportal.commons.models.entities.mainpage.MainResClassroom;
@@ -58,6 +60,10 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
                     boolean canView = response.optBoolean("canView");
                     if (canView) {
                         Cog.i(TAG," live type : " +liveClassroom.getType());
+                        /** added by poe 2017/12/12 按需发流 start ---------->**/
+                        RequestSender requestSender = new RequestSender(mFragment.getContext());
+                        DMSUtils.enterLiving(requestSender,liveClassroom.getId(), UserInfoKeeper.obtainUserInfo().getUuid());
+                        /** added by poe 2017/12/12 按需发流 end ---------->**/
                         if (MainResClassroom.TYPE_LIVE.equals(liveClassroom.getType())) {
                             ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
                                     liveClassroom.getId(), ClassRoomContants.TYPE_LIVE_LIVE,liveClassroom.getSubjectName());
