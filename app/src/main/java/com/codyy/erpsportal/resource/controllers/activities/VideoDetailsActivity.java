@@ -475,7 +475,6 @@ public class VideoDetailsActivity extends FragmentActivity {
                 Cog.d(TAG, "onItemClick position=", position);
                 if (currPos != position) {
                     VideoClarity videoClarity = videoClarities.get(position);
-                    String videoUrl = videoClarity.getPlayUrl();
                     mVideoControl.switchClarity( WebUtils.toHttp(videoClarity.getPlayUrl()));
                     currPos = position;
                     mVideoAreaDl.closeDrawer(GravityCompat.END);
