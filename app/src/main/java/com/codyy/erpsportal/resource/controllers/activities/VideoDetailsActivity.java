@@ -54,6 +54,7 @@ import com.codyy.erpsportal.resource.controllers.fragments.ResourceDetailsFragme
 import com.codyy.erpsportal.resource.models.entities.ResourceDetails;
 import com.codyy.erpsportal.resource.models.entities.VideoClarity;
 import com.codyy.erpsportal.resource.utils.CountIncreaser;
+import com.codyy.erpsportal.resource.utils.WebUtils;
 import com.codyy.url.URLConfig;
 
 import org.json.JSONObject;
@@ -435,7 +436,7 @@ public class VideoDetailsActivity extends FragmentActivity {
     private void playVideo(String videoUrl) {
         if (mVideoView == null || TextUtils.isEmpty(videoUrl))
             return;
-        mVideoControl.setVideoPath(videoUrl, BnVideoView2.BN_URL_TYPE_HTTP, false);
+        mVideoControl.setVideoPath(WebUtils.toHttp(videoUrl), BnVideoView2.BN_URL_TYPE_HTTP, false);
     }
 
     @Override
@@ -474,7 +475,8 @@ public class VideoDetailsActivity extends FragmentActivity {
                 Cog.d(TAG, "onItemClick position=", position);
                 if (currPos != position) {
                     VideoClarity videoClarity = videoClarities.get(position);
-                    mVideoControl.switchClarity( videoClarity.getPlayUrl());
+                    String videoUrl = videoClarity.getPlayUrl();
+                    mVideoControl.switchClarity( WebUtils.toHttp(videoClarity.getPlayUrl()));
                     currPos = position;
                     mVideoAreaDl.closeDrawer(GravityCompat.END);
                     mVideoAreaDl.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);

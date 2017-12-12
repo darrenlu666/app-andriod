@@ -423,7 +423,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
         mVideoView.setOnBufferUpdateListener(new BnVideoView2.OnBNBufferUpdateListener() {
             @Override
             public void onBufferUpdate(int position) {
-                Cog.i(TAG, "pos : " + position);
+//                Cog.i(TAG, "pos : " + position);
                 //判断上次拖动后是否出现了抖动，抖动频率低于700ms不做进度更新.
                 if(position>mLastPercent){
                     setProgress(position);
