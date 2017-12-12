@@ -204,6 +204,13 @@ public class VideoDetailsActivity extends FragmentActivity {
                 final BottomSheetDialog dialog = new BottomSheetDialog(v.getContext());
                 ListView listView = new ListView(v.getContext());
                 final List<VideoClarity> videoClarityList = mResourceDetails.getVideoClarities();
+                if (videoClarityList == null) {//如果没有分辨率列表，是538，保留原来的逻辑
+                    if (VideoDownloadUtils.downloadVideo(mResourceDetails, mResourceDetails.getAttachPath(),
+                            mUserInfo.getBaseUserId())) {
+                        CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
+                    }
+                    return;
+                }
                 ArrayAdapter<VideoClarity> clarityAdapter = new ArrayAdapter<>(v.getContext(),
                         R.layout.item_clarity,
                         videoClarityList);
@@ -451,6 +458,9 @@ public class VideoDetailsActivity extends FragmentActivity {
 
     private void loadPlayingClarity() {
         final List<VideoClarity> videoClarities = mResourceDetails.getVideoClarities();
+        if (videoClarities == null) {//如果没有分辨率信息，说明是5.3.8的接口，不处理
+            return;
+        }
         ArrayAdapter<VideoClarity> clarityAdapter = new ArrayAdapter<>(this,
                 R.layout.item_play_clarity,
                 videoClarities);
