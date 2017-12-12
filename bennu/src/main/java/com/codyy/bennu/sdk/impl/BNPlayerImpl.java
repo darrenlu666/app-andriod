@@ -44,6 +44,9 @@ public class BNPlayerImpl {
 	private static int PLAYER_ATTR_VIDEO_SINK_COLORSPACE = 9;
 	private static int PLAYER_ATTR_VIDEO_SINK_RESOLUTION = 10;
 	private static int PLAYER_ATTR_TYPE_RECEIVE_VIDEO = 11;
+	private static int PLAYER_ATTR_AUDIO_SINK_SAMPLE_RATE = 12;
+	private static int PLAYER_ATTR_AUDIO_SINK_CHANNEL = 13;
+	private static int PLAYER_ATTR_AUDIO_SINK_FORMAT = 14;
 
 	private WebRtcVAD mVAD = null;
 	private BNPublisher mPublisher;
@@ -60,7 +63,9 @@ public class BNPlayerImpl {
 	private boolean isUseHwDecoder;
 	private boolean mRunning;
 	private boolean audioMixerRenderSwitch = true;
-
+	private int callbackAudioRate = 16000;
+	private int callbackAudioChannel = 1;
+	private int callbackAudioFormat = 16;
 
 	private BNMediaPlayer mMediaPlayer;
 
@@ -216,6 +221,17 @@ public class BNPlayerImpl {
 		nativeSetAttribute(PLAYER_ATTR_TYPE_TIME_OUT, time);
 	}
 
+	public void setAudioCallbackConfig(int rate, int channel ,int format)
+	{
+		nativeSetAttribute(PLAYER_ATTR_AUDIO_SINK_SAMPLE_RATE, rate);
+		nativeSetAttribute(PLAYER_ATTR_AUDIO_SINK_CHANNEL, channel);
+		nativeSetAttribute(PLAYER_ATTR_AUDIO_SINK_FORMAT, format);
+
+		callbackAudioRate = rate;
+		callbackAudioChannel = channel;
+		callbackAudioFormat = format;
+	}
+
 	public int getTimeOut() {
 		return mTimeOut;
 	}
@@ -353,7 +369,6 @@ public class BNPlayerImpl {
 	private void CFJ_SendPcm (byte[] pcmData) {
 		//Log.i("Bennu", "pcmData " + pcmData.length);
 		short[] pcmAsShorts = shortMe(pcmData);
-
 		if (null != mAudioMixer && mAudioMixer.isRunning()) {
 			if (-1 == audioId && mRunning) {
 				audioId = mAudioMixer.getAudioId();
@@ -363,6 +378,10 @@ public class BNPlayerImpl {
 
 			//if (activeData == 1)
 			mAudioMixer.addNewAudioData(audioId, pcmAsShorts);
+		}
+
+		if (mMediaPlayer != null) {
+			mMediaPlayer.OnAudioPcm(pcmData, pcmData.length, callbackAudioRate, callbackAudioChannel, callbackAudioFormat);
 		}
 	}
 
