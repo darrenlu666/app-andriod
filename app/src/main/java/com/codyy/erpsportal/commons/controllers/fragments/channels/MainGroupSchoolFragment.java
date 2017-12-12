@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
+import com.codyy.erpsportal.classroom.utils.DMSUtils;
 import com.codyy.erpsportal.commons.controllers.activities.ActivityThemeActivity;
 import com.codyy.erpsportal.commons.controllers.activities.CollectivePrepareLessonsNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.MainActivity;
@@ -356,6 +357,9 @@ public class MainGroupSchoolFragment extends BaseHttpFragment implements ConfigB
                         break;
                     case TYPE_ITEM_VIEW_HOLDER_SCHOOL_RESOURCE://校本资源.(课程回放)
                         GroupLive hc2 = (GroupLive) data;
+                        if("live".equals(hc2.getType())){
+                            DMSUtils.enterLiving(getSender(),hc2.getCourseId(), UserInfoKeeper.obtainUserInfo().getUuid());
+                        }
                         ClassRoomDetailActivity.startActivity(getActivity(),
                                 mUserInfo,
                                 hc2.getCourseId(),

@@ -3,6 +3,8 @@ package com.codyy.erpsportal.commons.models.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * 课堂巡视的课堂
  * Created by GuJiajia on 2015/4/20.
@@ -37,6 +39,7 @@ public class TourClassroom implements Parcelable {
 
     private String areaPath;//路径
 
+    @SerializedName(value = "classroomName",alternate = {"roomName"})
     private String classroomName;//教室名
 
     private boolean showClassRoomName;//是否有多间教室

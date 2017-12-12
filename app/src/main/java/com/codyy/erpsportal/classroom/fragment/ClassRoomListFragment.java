@@ -10,6 +10,12 @@ import android.widget.TextView;
 import com.codyy.erpsportal.Constants;
 import com.codyy.erpsportal.R;
 import com.codyy.erpsportal.classroom.activity.CustomLiveDetailActivity;
+import com.codyy.erpsportal.classroom.utils.DMSUtils;
+import com.codyy.erpsportal.commons.controllers.fragments.SimpleRequestDelegate;
+import com.codyy.erpsportal.commons.models.network.RequestSender;
+import com.codyy.erpsportal.commons.models.network.Response;
+import com.codyy.erpsportal.commons.utils.Cog;
+import com.codyy.erpsportal.commons.utils.DeviceUtils;
 import com.codyy.url.URLConfig;
 import com.codyy.erpsportal.classroom.activity.ClassRoomDetailActivity;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
@@ -23,6 +29,7 @@ import com.codyy.erpsportal.commons.models.entities.UserInfo;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +38,7 @@ import java.util.Map;
  * Created by ldh on 2016/6/29.
  */
 public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.ListEntity, ClassRoomListFragment.ClassRoomViewHolder> {
+    private final String TAG = "ClassRoomListFragment";
     private String mFrom;
     private UserInfo mUserInfo;
 
@@ -153,9 +161,11 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
             mContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (ClassRoomContants.TYPE_CUSTOM_LIVE.equals(mFrom)) {
+                    // 观看人数加1
+                    DMSUtils.enterLiving(mRequestSender,data.getScheduleDetailId(),mUserInfo.getUuid());
+                    if (ClassRoomContants.TYPE_CUSTOM_LIVE.equals(mFrom)) {//专递-直播
                         CustomLiveDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
-                    }else{
+                    }else{//名校直播
                         ClassRoomDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
                     }
                 }

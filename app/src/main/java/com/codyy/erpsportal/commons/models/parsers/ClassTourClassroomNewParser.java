@@ -1,5 +1,7 @@
 package com.codyy.erpsportal.commons.models.parsers;
 
+import android.text.TextUtils;
+
 import com.codyy.erpsportal.commons.models.entities.TourClassroom;
 
 import org.json.JSONArray;
@@ -24,6 +26,9 @@ public class ClassTourClassroomNewParser implements JsonParsable<TourClassroom> 
 //        classroom.setClassRoomId(jsonObject.isNull("classroomId") ? jsonObject.optString("classRoomId") : jsonObject.optString("classroomId"));
         classroom.setSchoolName(jsonObject.optString("schoolName"));
         classroom.setClassroomName(jsonObject.optString("classroomName",""));
+        if(TextUtils.isEmpty(classroom.getClassroomName())) {
+            classroom.setClassroomName(jsonObject.optString("roomName", ""));
+        }
         classroom.setShowClassRoomName(jsonObject.optBoolean("showClassRoomName",false));
 //        classroom.setPmsServerHost(jsonObject.optString("serverAddress"));
         classroom.setVideoUrl(jsonObject.optString("streamAddress"));

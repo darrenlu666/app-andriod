@@ -63,7 +63,7 @@ public abstract class LoadMoreFragment<T, VH extends RecyclerViewHolder<T>> exte
 
     protected SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private RequestSender mRequestSender;
+    protected RequestSender mRequestSender;
 
     protected RecyclerAdapter<T, VH> mAdapter;
 

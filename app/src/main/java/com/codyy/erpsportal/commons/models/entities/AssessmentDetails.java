@@ -43,6 +43,15 @@ public class AssessmentDetails extends BaseTitleItemBar implements Parcelable {
     private ArrayList<VideoId> videoIds;
     private boolean scoreVisible;
     private String scheduleDetailId;
+    private String resourceName;
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
+    }
 
     public String getScheduleDetailId() {
         return scheduleDetailId;
@@ -301,6 +310,8 @@ public class AssessmentDetails extends BaseTitleItemBar implements Parcelable {
             assessmentDetails.setServerAddress(jsonObject.optString("serverAddress"));
             assessmentDetails.setScoreVisible(jsonObject.optBoolean("scoreVisible"));
             assessmentDetails.setScheduleDetailId(jsonObject.optString("scheduleDetailId"));
+            assessmentDetails.setResourceName(jsonObject.optString("resourceName",""));//优课资源名字.
+
             JSONArray jsonArray = object.optJSONArray("schoolTeachers");
             List<SchoolTeacher> schoolTeachers = new ArrayList<>();
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -432,6 +443,7 @@ public class AssessmentDetails extends BaseTitleItemBar implements Parcelable {
         dest.writeTypedList(videoIds);
         dest.writeByte(scoreVisible ? (byte) 1 : (byte) 0);
         dest.writeString(this.scheduleDetailId);
+        dest.writeString(this.resourceName);
     }
 
     protected AssessmentDetails(Parcel in) {
@@ -462,6 +474,7 @@ public class AssessmentDetails extends BaseTitleItemBar implements Parcelable {
         this.videoIds = in.createTypedArrayList(VideoId.CREATOR);
         this.scoreVisible = in.readByte() != 0;
         this.scheduleDetailId = in.readString();
+        this.resourceName = in.readString();
     }
 
     public static final Creator<AssessmentDetails> CREATOR = new Creator<AssessmentDetails>() {

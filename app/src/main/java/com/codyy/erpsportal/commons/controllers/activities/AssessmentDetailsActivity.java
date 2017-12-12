@@ -102,7 +102,11 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
     @Override
     public void onSuccess(JSONObject response,boolean isRefreshing) {
         AssessmentDetails.getAssessmentDetail(response, assessmentDetails);
-        setData();
+        try {
+            setData();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -125,13 +129,17 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
         dialogUtil1 = new DialogUtil(this, left, right);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         setAdapter();
-        setData();
+        try {
+            setData();
+        }catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 
     /**
      * 填充数据
      */
-    private void setData() {
+    private void setData() throws NullPointerException{
         mTitleTextView.setText(Titles.sWorkspaceDisucss+"详情");
         mLaunchTv.setText(assessmentDetails.getSponsorName());
         if(!TextUtils.isEmpty(assessmentDetails.getSponsorDate())){
@@ -152,18 +160,12 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
         mGradeNameTv.setText(Html.fromHtml(assessmentDetails.getClassLevelName()));
         mSubjectNameTv.setText(Html.fromHtml(assessmentDetails.getSubjectName()));
 
-        /*if(!TextUtils.isEmpty(assessmentDetails.getRealBeginTime())){
-            mRealStartTimeTv.setText(DateUtil.getDateStr(Long.valueOf(assessmentDetails.getRealBeginTime()),DateUtil.DEF_FORMAT));
-        }else{
-            mRealStartTimeTv.setText("无");
-        }*/
-
         String dateH ="";
         if(UIUtils.isInteger(assessmentDetails.getScheduleDate())){
             dateH = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getScheduleDate()),DateUtil.DEF_FORMAT);
         }
 
-        if (Assessment.TYPE_LIVE.equals(assessmentDetails.getEvaType())) {
+        if (Assessment.TYPE_LIVE.equals(assessmentDetails.getEvaType())) {//直播
             mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
             mScheduleTimeDescTv.setText("排课日期");
             mViewTypeTextView.setText("直播课堂");
@@ -181,7 +183,14 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
                 String sequence = "第"+ EmumIndex.getIndex(Integer.valueOf(assessmentDetails.getClassSeq()))+"节";
                 mScheduleTime.setText(date+" "+week+" "+sequence);
             }
-        } else if (Assessment.TYPE_VIDEO.equals(assessmentDetails.getEvaType())) {
+        } else if (Assessment.TYPE_VIDEO.equals(assessmentDetails.getEvaType())) {//录播
+
+            if(!TextUtils.isEmpty(assessmentDetails.getRealBeginTime())){
+                dateH = DateUtil.getDateStr(Long.valueOf(assessmentDetails.getRealBeginTime()),DateUtil.DEF_FORMAT);
+            }else{
+                dateH = assessmentDetails.getRealBeginTime();
+            }
+
             mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getScheduleSchoolName()));
             mScheduleTimeDescTv.setText("上课时间");
             mViewTypeTextView.setText("录播课堂");
@@ -190,7 +199,7 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
             mScheduleTime.setText(dateH);
         }else if(Assessment.TYPE_RESOURCE.equals(assessmentDetails.getEvaType())){
             //名称
-            mMainSchoolNameTv.setText(Html.fromHtml(assessmentDetails.getDescription()));
+            mMainSchoolNameTv.setText(Html.fromHtml(UIUtils.filterNull(assessmentDetails.getResourceName())));
             //机构
             mOrganizationTvDesc.setVisibility(View.VISIBLE);
             mOrganizationTv.setVisibility(View.VISIBLE);

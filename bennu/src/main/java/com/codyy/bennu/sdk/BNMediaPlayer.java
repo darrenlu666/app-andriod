@@ -339,6 +339,42 @@ public class BNMediaPlayer {
         }
     }
 
+    public static interface AudioPcmListener {
+        abstract void audioPcm(byte[] data, int len, int rate, int channel, int format);
+    }
+
+    private AudioPcmListener audioPcmListener;
+    /**
+     * call {@code setAudioPcmListener} to set audio pcm data callback listener and config.
+     * It can set before playing.
+     * @param listener  the AudioPcmListener listener to callback audio pcm data
+     * @param rate the sample rate of audio callback data, such as 16000/32000/44100/48000, default is 16000
+     * @param channel the sample rate of audio callback data, 1 is mono, 2 is stereo, default is 1
+     * @param format the sample rate of audio callback data, 8 is S8, 16 is S16LE, 32 is S32LE, default is 16
+     */
+    public void setAudioPcmListener(AudioPcmListener listener, int rate, int channel ,int format) {
+        int defaultRate = 16000;
+        int defaultChannel = 1;
+        int defaultFormat = 16;
+        if (rate == 16000 || rate == 32000 || rate == 44100 || rate == 48000){
+            defaultRate = rate;
+        }
+        if (channel == 1 || channel == 2){
+            defaultChannel = channel;
+        }
+        if (format == 8 || format == 16 || format == 32){
+            defaultFormat = format;
+        }
+        mPlayback.setAudioCallbackConfig(defaultRate, defaultChannel, defaultFormat);
+        audioPcmListener = listener;
+    }
+
+    public void OnAudioPcm(byte[] data, int len, int rate, int channel ,int format) {
+        if (audioPcmListener != null) {
+            audioPcmListener.audioPcm(data, len, rate, channel, format);
+        }
+    }
+
     public static interface ErrorListener {
         abstract void error(BNMediaPlayer player, int errorCode, String errorMsg);
     }

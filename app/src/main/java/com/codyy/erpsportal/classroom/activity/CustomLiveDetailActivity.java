@@ -42,6 +42,7 @@ import com.codyy.erpsportal.classroom.models.BaseClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.ClassRoomContants;
 import com.codyy.erpsportal.classroom.models.ClassRoomDetail;
 import com.codyy.erpsportal.classroom.models.RecordRoomDetail;
+import com.codyy.erpsportal.classroom.utils.DMSUtils;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourNewActivity;
 import com.codyy.erpsportal.commons.controllers.activities.ClassTourPagerActivity;
 import com.codyy.erpsportal.commons.interfaces.IFragmentMangerInterface;
@@ -891,7 +892,13 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
     protected void onDestroy() {
         super.onDestroy();
         //stop net request .
-        if (null != mRequestSender) mRequestSender.stop();
+        DMSUtils.exitLiving(mRequestSender, mScheduleDetailId, mUserInfo.getUuid(), new DMSUtils.ILeave() {
+            @Override
+            public void onComplete() {
+                if (null != mRequestSender) mRequestSender.stop();
+            }
+        });
+
         if (null != mWifiUtil) mWifiUtil.destroy();
         if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy(CustomLiveDetailActivity.this );
         mHandler.removeCallbacks(mPlayLiveRunnable);
