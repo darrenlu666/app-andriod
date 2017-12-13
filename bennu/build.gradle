@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply from: 'upload.gradle'
 android {
     compileSdkVersion COMPILE_SDK_VERSION as int
     buildToolsVersion BUILD_TOOLS_VERSION
