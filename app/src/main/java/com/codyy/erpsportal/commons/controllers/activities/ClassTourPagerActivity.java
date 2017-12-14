@@ -663,7 +663,6 @@ public class ClassTourPagerActivity extends FragmentActivity implements IFragmen
 
         private String result;
 
-        @SerializedName(value = "DetailBean",alternate = {"classDetail"})
         private DetailBean detail;
 
         public String getResult() {
