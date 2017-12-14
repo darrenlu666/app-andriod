@@ -124,20 +124,20 @@ public class VideoDetailsActivity extends FragmentActivity {
     }
 
     private void initViews(Bundle savedInstanceState) {
-        mTitleTv = (TextView) findViewById(R.id.title);
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mVideoView = (BnVideoView2) findViewById(R.id.video_view);
-        mVideoAreaDl = (DrawerLayout) findViewById(R.id.dl_video_area);
+        mTitleTv = findViewById(R.id.title);
+        mPager = findViewById(R.id.pager);
+        mVideoView = findViewById(R.id.video_view);
+        mVideoAreaDl = findViewById(R.id.dl_video_area);
         mVideoAreaDl.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
-        mClarityLv = (ListView) findViewById(R.id.lv_clarity);
+        mClarityLv = findViewById(R.id.lv_clarity);
         mClarityLv.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        mVideoAreaFl = (FrameLayout) findViewById(R.id.video_area);
+        mVideoAreaFl = findViewById(R.id.video_area);
 
-        mTitleRl = (RelativeLayout) findViewById(R.id.rltControlTitle);
+        mTitleRl = findViewById(R.id.rltControlTitle);
         mTitleRl.setVisibility(View.GONE);
 
-        mVideoControl = (ResVideoControlView) findViewById(R.id.videoControl);
+        mVideoControl = findViewById(R.id.videoControl);
         mVideoControl.bindVideoView(mVideoView, new IFragmentMangerInterface() {
             @Override
             public FragmentManager getNewFragmentManager() {
@@ -240,7 +240,7 @@ public class VideoDetailsActivity extends FragmentActivity {
             }
         });
 
-        mTabHost = (TabHost) findViewById(android.R.id.tabhost);
+        mTabHost = findViewById(android.R.id.tabhost);
         mTabHost.setup();
         mTabsAdapter = new TabsAdapter(this, getSupportFragmentManager(), mTabHost, mPager);
         if (savedInstanceState != null) {
@@ -345,7 +345,7 @@ public class VideoDetailsActivity extends FragmentActivity {
      */
     private View makeTabIndicator(String title) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_tab, null);
-        TextView tabTitleTv = (TextView) view.findViewById(R.id.tab_title);
+        TextView tabTitleTv = view.findViewById(R.id.tab_title);
         tabTitleTv.setText(title);
         return view;
     }
