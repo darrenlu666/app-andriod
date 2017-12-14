@@ -1,0 +1,42 @@
+/*
+ * 阔地教育科技有限公司版权所有 (codyy.com/codyy.cn)
+ * Copyright (c) 2017.  Codyy and/or its affiliates.All rights  reserved.
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven'
+
+// 指定编码
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidSourcesJar
+//    archives androidJavadocsJar
+}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'http://10.5.52.101:8081/nexus/content/repositories/codyy_mobile/') {
+                authentication(userName: "CodyyMobileAdmin", password: "CodyyMobileAdmin")
+            }
+            snapshotRepository(url: 'http://10.5.52.101:8081/nexus/content/repositories/codyy_mobile_SNAPSHOT') {
+                authentication(userName: "CodyyMobileAdmin", password: "CodyyMobileAdmin")
+            }
+            pom.project {
+                name 'bennu'
+                groupId 'com.codyy.mobile'
+                artifactId 'bennu'
+                version '1.0.0'
+                packaging 'aar'
+                description 'add "https video play" '
+            }
+        }
+    }
+}
