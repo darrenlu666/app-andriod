@@ -156,7 +156,8 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
             mWifiBroadCastUtil = new WiFiBroadCastUtils(new IFragmentMangerInterface() {
                 @Override
                 public FragmentManager getNewFragmentManager() {
-                    return mFragmentManagerInterface ==null?null:mFragmentManagerInterface.getNewFragmentManager();
+                    return mFragmentManagerInterface ==null?
+                            null :mFragmentManagerInterface.getNewFragmentManager();
                 }
             }, new WiFiBroadCastUtils.PlayStateListener() {
                 @Override
@@ -227,7 +228,6 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
                 }
             }
         });
-
 
         mPlayIb.setOnClickListener(new OnClickListener() {
 
@@ -765,21 +765,21 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
             mLandscape = true;
             mExpandIb.setVisibility(INVISIBLE);
             mClarityTv.setVisibility(VISIBLE);
-            bottom2Center(mCurrentTv, false);
-            bottom2Center(mTotalTv, false);
+//            bottom2Center(mCurrentTv, false);
+//            bottom2Center(mTotalTv, false);
             mSeekBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.sb_res_video_landscape));
             mSeekBar.setThumb(ContextCompat.getDrawable(getContext(), R.drawable.tb_position));
-            moveSbBetween(mCurrentTv, mTotalTv);
+//            moveSbBetween(mCurrentTv, mTotalTv);
         } else {
             Cog.d(TAG, "onConfigurationChanged PORTRAIT");
             mLandscape = false;
             mExpandIb.setVisibility(VISIBLE);
             mClarityTv.setVisibility(INVISIBLE);
-            bottom2Center(mCurrentTv, true);
-            bottom2Center(mTotalTv, true);
+//            bottom2Center(mCurrentTv, true);
+//            bottom2Center(mTotalTv, true);
             mSeekBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.po_seekbar));
             mSeekBar.setThumb(ContextCompat.getDrawable(getContext(), R.drawable.poe_circle_bg));
-            moveSbBetween(mPlayIb, mExpandIb);
+//            moveSbBetween(mPlayIb, mExpandIb);
         }
         updatePlayBtnIcon();
     }

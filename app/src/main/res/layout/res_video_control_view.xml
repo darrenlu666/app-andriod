@@ -1,69 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_vertical">
+    android:layout_height="match_parent">
 
     <ImageButton
         android:id="@+id/imgPlayOfVideoControl"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:background="@null"
+        android:padding="@dimen/dp8"
         android:scaleType="centerInside"
         android:src="@drawable/poe_select_video_play" />
 
     <ImageButton
         android:id="@+id/imgExpandOfVideoControl"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:background="@null"
+        android:padding="@dimen/dp8"
         android:scaleType="centerInside"
         android:src="@drawable/btn_video_res_fullscreen_light" />
+
+    <TextView
+        android:id="@+id/txtTotalTimeOfVideoControl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_toLeftOf="@id/imgExpandOfVideoControl"
+        android:layout_toStartOf="@id/imgExpandOfVideoControl"
+        android:text="00:00:00"
+        android:textColor="@color/md_grey_400"
+        android:textSize="12dp" />
+
+    <TextView
+        android:id="@+id/txtPlayTimeOfVideoControl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_toEndOf="@+id/imgPlayOfVideoControl"
+        android:layout_toRightOf="@+id/imgPlayOfVideoControl"
+        android:text="00:00:00"
+        android:textColor="@color/white"
+        android:textSize="12dp" />
 
     <SeekBar
         android:id="@+id/seekBarOfVideoControl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/imgPlayOfVideoControl"
-        android:layout_toLeftOf="@+id/imgExpandOfVideoControl"
-        android:layout_toRightOf="@+id/imgPlayOfVideoControl"
-        android:layout_toStartOf="@+id/imgExpandOfVideoControl"
+        android:layout_toEndOf="@+id/txtPlayTimeOfVideoControl"
+        android:layout_toLeftOf="@+id/txtTotalTimeOfVideoControl"
+        android:layout_toRightOf="@+id/txtPlayTimeOfVideoControl"
+        android:layout_toStartOf="@+id/txtTotalTimeOfVideoControl"
         android:maxHeight="1dp"
         android:minHeight="1dp"
         android:progress="0"
         android:progressDrawable="@drawable/po_seekbar"
         android:thumb="@drawable/poe_circle_bg" />
-
-    <TextView
-        android:id="@+id/txtTotalTimeOfVideoControl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_toLeftOf="@id/imgExpandOfVideoControl"
-        android:layout_toStartOf="@id/imgExpandOfVideoControl"
-        android:text="00:00:00"
-        android:textColor="@color/md_grey_400"
-        android:textSize="17sp" />
-
-    <TextView
-        android:id="@+id/txtPlayTimeOfVideoControl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_toEndOf="@+id/imgPlayOfVideoControl"
-        android:layout_toRightOf="@+id/imgPlayOfVideoControl"
-        android:text="00:00:00"
-        android:textColor="@color/white"
-        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/tv_clarity"
@@ -72,10 +77,13 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="6dp"
+        android:layout_marginRight="6dp"
         android:clickable="true"
         android:focusable="true"
-        android:padding="12dp"
+        android:padding="4dp"
         android:text="普清"
         android:textColor="@color/white"
+        android:textSize="12dp"
         android:visibility="gone" />
 </merge>
