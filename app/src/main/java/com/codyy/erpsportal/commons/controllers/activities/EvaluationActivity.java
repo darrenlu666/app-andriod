@@ -365,6 +365,8 @@ public class EvaluationActivity extends AppCompatActivity implements View.OnClic
                     }
                 });
             }
+        } else if ("RESOURCE".equals(mAssessmentDetails.getEvaType())){//优课资源
+            playRecoidVideo();
         }
         if (!"TEACHER".equals(userInfo.getUserType()) || "N".equals(mAssessmentDetails.getIsAttend())) {
             mCommentBtn.setVisibility(View.GONE);

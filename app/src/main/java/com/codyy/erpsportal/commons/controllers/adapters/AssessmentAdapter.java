@@ -109,6 +109,8 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
             } else {
                 teacherNamme.setText(Titles.sMasterTeacher+" " + Html.fromHtml(assessment.getTeacherName()));
             }
+
+            seqTextView.setVisibility(View.GONE);
             if ("END".equals(assessment.getStatus())) {
                 if ("star".equals(assessment.getScoreType())) {
                     float a = (float) Math.ceil(assessment.getAverageScore()) / 2;
@@ -141,6 +143,7 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
                         date.setText("直播课堂 "+strDate);
                         //set the lesson sequence
                         if(!TextUtils.isEmpty(assessment.getClassSeq())){
+                            seqTextView.setVisibility(View.VISIBLE);
                             seqTextView.setText("第"+ EmumIndex.getIndex(Integer.valueOf(assessment.getClassSeq()))+"节");
                         }
                     }else if(Assessment.TYPE_VIDEO.equals(assessment.getEvaType())) {//录播课堂

@@ -14,6 +14,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.codyy.erpsportal.R;
+import com.codyy.erpsportal.commons.controllers.activities.EvaluationActivity;
 import com.codyy.erpsportal.commons.controllers.activities.EvaluationAllActivity;
 import com.codyy.erpsportal.commons.controllers.adapters.RefreshBaseAdapter;
 import com.codyy.erpsportal.commons.models.ImageFetcher;
@@ -174,11 +175,15 @@ public class EvaluationCommentFragment extends BaseRefreshFragment<Comment> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), EvaluationAllActivity.class);
-                    intent.putParcelableArrayListExtra("mComments", (ArrayList<? extends Parcelable>) mDatas);
-                    intent.putExtra("assessmentDetails", mAssessmentDetails);
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.slidemenu_show, R.anim.layout_hide);
+                    if(getActivity() instanceof EvaluationActivity){
+                        //do nothing ...
+                    }else{
+                        Intent intent = new Intent(getActivity(), EvaluationAllActivity.class);
+                        intent.putParcelableArrayListExtra("mComments", (ArrayList<? extends Parcelable>) mDatas);
+                        intent.putExtra("assessmentDetails", mAssessmentDetails);
+                        startActivity(intent);
+                        getActivity().overridePendingTransition(R.anim.slidemenu_show, R.anim.layout_hide);
+                    }
                 }
             });
             mHeardImage = (SimpleDraweeView) itemView.findViewById(R.id.evaluation_list_item_image);
