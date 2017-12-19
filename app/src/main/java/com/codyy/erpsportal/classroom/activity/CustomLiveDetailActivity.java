@@ -482,7 +482,14 @@ public class CustomLiveDetailActivity extends AppCompatActivity implements View.
                                     @Override
                                     public void run() {
                                         mClassRoomDetail.setSubject(mSubject);
-                                        mTitleTv.setText(mClassRoomDetail.getSchoolName());
+                                        //  2017/12/18 添加教室名称(如有多间教室)v5.3.9
+                                        StringBuffer mainStr = new StringBuffer(mClassRoomDetail.getSchoolName());
+                                        if(mClassRoomDetail.isShowClassRoomName()
+                                                &&!TextUtils.isEmpty(mClassRoomDetail.getRoomName())){
+                                            if(!TextUtils.isEmpty(mainStr))mainStr.append("_");
+                                            mainStr.append(mClassRoomDetail.getRoomName());
+                                        }
+                                        mTitleTv.setText(mainStr.toString());
                                         initViews();
                                         addViewPager();
                                     }
