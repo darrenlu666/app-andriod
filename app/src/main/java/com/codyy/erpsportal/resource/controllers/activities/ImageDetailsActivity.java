@@ -333,7 +333,7 @@ public class ImageDetailsActivity extends FragmentActivity {
     @OnClick(R.id.btn_download)
     public void onDownloadClick() {
         if (mImageUri != null) {
-            String downloadUrl = mResourceDetails.getAttachPath();
+            String downloadUrl = mResourceDetails.getDownloadUrl();
             int lastIndexOfDot = downloadUrl.lastIndexOf('.');
             final String suffix = downloadUrl.substring(lastIndexOfDot);
             if (FileDownloadService.hasCached(mUserInfo.getBaseUserId(), mResourceId + suffix)){

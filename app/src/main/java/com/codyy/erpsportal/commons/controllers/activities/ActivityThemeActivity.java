@@ -131,7 +131,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
                 if(!TextUtils.isEmpty(mVideoList.get(mVideoNumber).getThumbPath()))
                 mResourceDetails.setThumbPath(mVideoList.get(mVideoNumber).getThumbPath());
                 //下载.
-                VideoDownloadUtils.downloadVideo(mResourceDetails, mResourceDetails.getAttachPath(), mUserInfo.getBaseUserId());
+                VideoDownloadUtils.downloadVideo(mResourceDetails, mResourceDetails.getDownloadUrl(), mUserInfo.getBaseUserId());
             } else {
                 ToastUtil.showToast(ActivityThemeActivity.this, "抱歉，没有视频！");
             }
@@ -287,7 +287,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
      */
     private void setSelectVideo(int position) {
         mResourceDetails.setId(mVideoList.get(position).getId());
-        mResourceDetails.setAttachPath(mVideoList.get(mVideoNumber).getDownloadUrl());
+        mResourceDetails.setDownloadUrl(mVideoList.get(mVideoNumber).getDownloadUrl());
         mResourceDetails.setThumbPath(mVideoList.get(position).getThumbPath());
         String resourceName = mVideoList.get(position).getVideoName();
         if(TextUtils.isEmpty(resourceName)){
@@ -500,7 +500,7 @@ public class ActivityThemeActivity extends FragmentActivity implements CustomCom
             mVideoControl.setVideoPath(video, BnVideoView2.BN_URL_TYPE_HTTP, true);
         } else {
             String filePath = mVideoList.get(mVideoNumber).getFilePath();
-            mResourceDetails.setAttachPath(mVideoList.get(mVideoNumber).getDownloadUrl());
+            mResourceDetails.setDownloadUrl(mVideoList.get(mVideoNumber).getDownloadUrl());
             if (filePath != null && !filePath.equals("null")) {
                 mVideoControl.setVideoPath(filePath, BnVideoView2.BN_URL_TYPE_HTTP, false);
             } else {

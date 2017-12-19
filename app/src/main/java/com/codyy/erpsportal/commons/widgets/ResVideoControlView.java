@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -736,8 +734,19 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
      * @param playUrl 新流地址
      */
     public void switchClarity(String playUrl) {
+        Cog.d(TAG, "switchClarity playUrl=", playUrl);
         mSwitchPos = mCurrentPosition;
         setVideoPath( playUrl, BnVideoView2.BN_URL_TYPE_HTTP, false);
+    }
+
+    /**
+     * 切换本地流
+     * @param location 本地流位置
+     */
+    public void switchLocalClarity(String location) {
+        Cog.d(TAG, "switchLocalClarity location=", location);
+        mSwitchPos = mCurrentPosition;
+        setVideoPath( location, BnVideoView2.BN_URL_TYPE_HTTP, true);
     }
 
     /**
@@ -765,56 +774,29 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
             mLandscape = true;
             mExpandIb.setVisibility(INVISIBLE);
             mClarityTv.setVisibility(VISIBLE);
-//            bottom2Center(mCurrentTv, false);
-//            bottom2Center(mTotalTv, false);
             mSeekBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.sb_res_video_landscape));
             mSeekBar.setThumb(ContextCompat.getDrawable(getContext(), R.drawable.tb_position));
-//            moveSbBetween(mCurrentTv, mTotalTv);
         } else {
             Cog.d(TAG, "onConfigurationChanged PORTRAIT");
             mLandscape = false;
             mExpandIb.setVisibility(VISIBLE);
             mClarityTv.setVisibility(INVISIBLE);
-//            bottom2Center(mCurrentTv, true);
-//            bottom2Center(mTotalTv, true);
             mSeekBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.po_seekbar));
             mSeekBar.setThumb(ContextCompat.getDrawable(getContext(), R.drawable.poe_circle_bg));
-//            moveSbBetween(mPlayIb, mExpandIb);
         }
         updatePlayBtnIcon();
     }
 
     /**
-     * 将进度条移到两个组件之间
-     * @param leftView 左边的组件
-     * @param rightView 右边的组件
+     * 设置清晰度名称
+     * @param clarityName 清晰度名称
      */
-    private void moveSbBetween(View leftView, View rightView) {
-        LayoutParams layoutParams = (LayoutParams) mSeekBar.getLayoutParams();
-        layoutParams.addRule(RIGHT_OF, leftView.getId());
-        layoutParams.addRule(LEFT_OF, rightView.getId());
-        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
-            layoutParams.addRule(END_OF, leftView.getId());
-            layoutParams.addRule(START_OF, rightView.getId());
-        }
-        mSeekBar.setLayoutParams(layoutParams);
+    public void setClarityName(String clarityName) {
+        mClarityTv.setText(clarityName);
     }
 
-    /**
-     * 将组件从底部移到居中
-     * @param view 组件
-     * @param reverse 反向，将组件从居中移到底部
-     */
-    private void bottom2Center(View view, boolean reverse) {
-        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-        if (reverse) {
-            layoutParams.addRule(CENTER_VERTICAL, 0);
-            layoutParams.addRule(ALIGN_PARENT_BOTTOM, TRUE);
-        } else {
-            layoutParams.addRule(CENTER_VERTICAL, TRUE);
-            layoutParams.addRule(ALIGN_PARENT_BOTTOM, 0);
-        }
-        view.setLayoutParams(layoutParams);
+    public void setClarityTvEnabled(boolean enabled) {
+        mClarityTv.setEnabled(enabled);
     }
 
     /**
