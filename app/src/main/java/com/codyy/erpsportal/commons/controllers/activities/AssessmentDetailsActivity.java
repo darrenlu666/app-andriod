@@ -208,8 +208,8 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
 
             mMasterTeacherTitleTv.setText("发布人");
             //发布人
-            mMainSpeakerTv.setText(Html.fromHtml(assessmentDetails.getSponsorName()));
-
+//            mMainSpeakerTv.setText(Html.fromHtml(assessmentDetails.getSponsorName()));
+            mMainSpeakerTv.setText(Html.fromHtml(assessmentDetails.getMasterTeacherName()));
             mScheduleTimeDescTv.setText("发布时间");
             mViewTypeTextView.setText("优课资源");
             mScheduleTime.setText(dateH);
