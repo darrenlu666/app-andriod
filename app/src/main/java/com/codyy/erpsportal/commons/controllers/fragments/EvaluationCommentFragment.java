@@ -175,7 +175,7 @@ public class EvaluationCommentFragment extends BaseRefreshFragment<Comment> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(getActivity() instanceof EvaluationActivity){
+                    if(getActivity() instanceof EvaluationAllActivity){
                         //do nothing ...
                     }else{
                         Intent intent = new Intent(getActivity(), EvaluationAllActivity.class);
