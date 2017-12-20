@@ -37,7 +37,7 @@ public class VideoDownloadUtils {
         } else {
             String resId = resourceDetails.getId();
             if (FileDownloadService.hasCached(baseUserId, resId + ".mp4")) {
-                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.txt_dialog_download_exist));
+                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.video_downloaded_already));
                 if (!checkMyDownloadResource(resourceDetails, baseUserId)) {
                     createAndInsertCacheItem(resourceDetails, CacheItem.DOWNLOAD_TYPE_VIDEO, downloadUrl, baseUserId);
                 }
@@ -51,7 +51,7 @@ public class VideoDownloadUtils {
             } else if(!NetworkUtils.isDownloadEnable(EApplication.instance())){
                 ToastUtil.showToast(EApplication.instance(),EApplication.instance().getString(R.string.net_switch_close));
             } else {
-                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.txt_dialog_download_start, resourceDetails.getResourceName()));
+                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.add_download_successfully));
                 createAndInsertCacheItem(resourceDetails, CacheItem.DOWNLOAD_TYPE_VIDEO, downloadUrl, baseUserId);
                 FileDownloadService.httpDownload(EApplication.instance(), baseUserId);
                 result = true;
@@ -73,7 +73,7 @@ public class VideoDownloadUtils {
         }else{
             String resId = resourceDetails.getId();
             if (FileDownloadService.hasCached(baseUserId, resId + ".mp3")) {
-                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.txt_dialog_download_exist));
+                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.audio_downloaded_already));
                 if (!checkMyDownloadResource(resourceDetails, baseUserId)) {
                     createAndInsertCacheItem(resourceDetails, CacheItem.DOWNLOAD_TYPE_AUDIO, downloadUrl, baseUserId);
                 }
@@ -83,11 +83,11 @@ public class VideoDownloadUtils {
                     createAndInsertCacheItem(resourceDetails, CacheItem.DOWNLOAD_TYPE_AUDIO, downloadUrl, baseUserId);
                 }
             } else if (!VideoDownloadUtils.isConnected(EApplication.instance())){
-                ToastUtil.showToast(EApplication.instance(),EApplication.instance().getString(R.string.net_error));
+                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.net_error));
             } else if(!NetworkUtils.isDownloadEnable(EApplication.instance())){
-                ToastUtil.showToast(EApplication.instance(),EApplication.instance().getString(R.string.net_switch_close));
+                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.net_switch_close));
             } else {
-                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.txt_dialog_download_start, resourceDetails.getResourceName()));
+                ToastUtil.showToast(EApplication.instance(), EApplication.instance().getString(R.string.add_download_successfully));
                 createAndInsertCacheItem(resourceDetails, CacheItem.DOWNLOAD_TYPE_AUDIO, downloadUrl, baseUserId);
                 FileDownloadService.httpDownload(EApplication.instance(), baseUserId);
                 result = true;
@@ -105,7 +105,7 @@ public class VideoDownloadUtils {
         if (sCacheDao == null) {
             sCacheDao = new CacheDao(EApplication.instance());
         }
-        String downloadUrl = resourceDetails.getAttachPath();
+        String downloadUrl = resourceDetails.getDownloadUrl();
         int lastIndexOfDot = downloadUrl.lastIndexOf('.');
         String suffix = downloadUrl.substring(lastIndexOfDot);
         CacheItem ci = new CacheItem(resourceDetails);

@@ -26,7 +26,7 @@ public class ResourceDetails implements Parcelable {
 
     private String thumbPath;
 
-    private String attachPath;
+    private String downloadUrl;
 
     private String playUrl;
 
@@ -74,8 +74,6 @@ public class ResourceDetails implements Parcelable {
 
     private String[] knowledgeNameArr;
 
-    private String rtmpPath;
-
     private List<VideoClarity> videoClarities;
 
     public String getId() {
@@ -118,12 +116,12 @@ public class ResourceDetails implements Parcelable {
         this.thumbPath = thumbPath;
     }
 
-    public String getAttachPath() {
-        return attachPath;
+    public String getDownloadUrl() {
+        return downloadUrl;
     }
 
-    public void setAttachPath(String attachPath) {
-        this.attachPath = attachPath;
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 
     public String getPlayUrl() {
@@ -286,14 +284,6 @@ public class ResourceDetails implements Parcelable {
         this.sharedTimes = sharedTimes;
     }
 
-    public String getRtmpPath() {
-        return rtmpPath;
-    }
-
-    public void setRtmpPath(String rtmpPath) {
-        this.rtmpPath = rtmpPath;
-    }
-
     public List<VideoClarity> getVideoClarities() {
         return videoClarities;
     }
@@ -317,7 +307,7 @@ public class ResourceDetails implements Parcelable {
         resourceDetails.setDownloadCount(jsonObject.optString("downloadCnt", "未知"));
         resourceDetails.setResourceName(jsonObject.optString("resourceName"));
         resourceDetails.setThumbPath(jsonObject.optString("thumbPathUrl"));
-        resourceDetails.setAttachPath(jsonObject.optString("downloadUrl"));
+        resourceDetails.setDownloadUrl(jsonObject.optString("downloadUrl"));
         resourceDetails.setSemesterName(optString(jsonObject, "semesterName"));
         resourceDetails.setSubjectName(optString(jsonObject, "subjectName"));
         resourceDetails.setVolumeName(optString(jsonObject, "volumnName"));
@@ -330,9 +320,6 @@ public class ResourceDetails implements Parcelable {
         resourceDetails.setViewCount(jsonObject.optString("viewCnt"));
         resourceDetails.setPlayUrl(optString(jsonObject, "playUrl"));
         resourceDetails.setFavoriteCount(jsonObject.optString("favoriteCnt", "未知"));
-        if (!jsonObject.isNull("rtmpPath")) {
-            resourceDetails.setRtmpPath(jsonObject.optString("rtmpPath").replace("::", "/"));
-        }
         JSONArray knowledges = jsonObject.optJSONArray("knowledges");
         if (knowledges != null){
             String[] knowledgeArr = new String[knowledges.length()];
@@ -389,7 +376,7 @@ public class ResourceDetails implements Parcelable {
         dest.writeString(this.userName);
         dest.writeString(this.resourceName);
         dest.writeString(this.thumbPath);
-        dest.writeString(this.attachPath);
+        dest.writeString(this.downloadUrl);
         dest.writeString(this.playUrl);
         dest.writeString(this.semesterName);
         dest.writeString(this.classLevelName);
@@ -407,7 +394,6 @@ public class ResourceDetails implements Parcelable {
         dest.writeInt(this.duration);
         dest.writeString(this.durationStr);
         dest.writeString(this.knowledgeNames);
-        dest.writeString(this.rtmpPath);
     }
 
     protected ResourceDetails(Parcel in) {
@@ -416,7 +402,7 @@ public class ResourceDetails implements Parcelable {
         this.userName = in.readString();
         this.resourceName = in.readString();
         this.thumbPath = in.readString();
-        this.attachPath = in.readString();
+        this.downloadUrl = in.readString();
         this.playUrl = in.readString();
         this.semesterName = in.readString();
         this.classLevelName = in.readString();
@@ -434,7 +420,6 @@ public class ResourceDetails implements Parcelable {
         this.duration = in.readInt();
         this.durationStr = in.readString();
         this.knowledgeNames = in.readString();
-        this.rtmpPath = in.readString();
     }
 
     public static final Creator<ResourceDetails> CREATOR = new Creator<ResourceDetails>() {

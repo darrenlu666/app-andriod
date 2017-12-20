@@ -419,7 +419,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
     public void onDownloadBtnClick(){
         if (mResourceDetails == null) return;
         if (VideoDownloadUtils.downloadAudio(mResourceDetails
-                , mResourceDetails.getAttachPath()
+                , mResourceDetails.getDownloadUrl()
                 , mUserInfo.getBaseUserId())) {
             CountIncreaser.increaseDownloadCount(mRequestSender, mUserInfo.getUuid(), mResourceId);
         }
@@ -570,7 +570,7 @@ public class AudioDetailsActivity extends AppCompatActivity implements Callback 
 
     private void updateDownloadBtn() {
         if (mFromCache) return;
-        if (mResourceDetails == null || !TextUtils.isEmpty(mResourceDetails.getRtmpPath())) {
+        if (mResourceDetails == null || TextUtils.isEmpty(mResourceDetails.getDownloadUrl())) {
             mDownloadBtn.setVisibility(View.GONE);
         } else {
             mDownloadBtn.setVisibility(View.VISIBLE);

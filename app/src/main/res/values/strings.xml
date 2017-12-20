@@ -71,7 +71,10 @@
     <string name="loading_video_framework">正在加载视频模块，请稍后…</string>
     <string name="title_back">返回</string>
     <string name="txt_dialog_download_start">开始下载 %s</string>
+    <string name="add_download_successfully">成功加入下载列表</string>
     <string name="txt_dialog_download_exist">之前已下载！</string>
+    <string name="video_downloaded_already">此视频已下载</string>
+    <string name="audio_downloaded_already">此音频已下载</string>
     <string name="txt_dialog_download_exist_downloading">已在下载列表中</string>
     <string name="txt_dialog_download_error">获取下载地址失败,请检查网络是否通畅！</string>
     <string name="txt_dialog_download_audio_exist">当前音频已下载！</string>
