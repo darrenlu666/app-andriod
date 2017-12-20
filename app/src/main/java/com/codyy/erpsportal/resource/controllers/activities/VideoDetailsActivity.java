@@ -227,7 +227,9 @@ public class VideoDetailsActivity extends FragmentActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         dialog.dismiss();
                         VideoClarity videoClarity = videoClarityList.get(position);
-                        addDownload(videoClarity.getDefinition(), videoClarity.getDownloadUrl());
+                        addDownload(videoClarity.getDownloadUrl(),
+                                videoClarity.getDefinition(),
+                                videoClarity.getDefinitionName());
                     }
                 });
                 dialog.setContentView(listView,
@@ -259,7 +261,7 @@ public class VideoDetailsActivity extends FragmentActivity {
     /**
      * 添加下载
      */
-    private void addDownload(String definition, String downloadPath) {
+    private void addDownload(String downloadPath, String definition, String definitionName) {
         ResourceDetails resourceDetails = new ResourceDetails();
         resourceDetails.setId(definition + "_" + mResourceId);
         resourceDetails.setResourceName(mResourceDetails.getResourceName()
@@ -424,29 +426,30 @@ public class VideoDetailsActivity extends FragmentActivity {
             return ;
         }
 
-        Cog.d(TAG, "playVideo url=" + resourceDetails.getPlayUrl());
-        //检测网络环境 ,如果是3G则给提示
-        String videoUrl = resourceDetails.getPlayUrl();
+        List<VideoClarity> videoClarities = resourceDetails.getVideoClarities();
+        String videoUrl;
+        if (videoClarities == null || videoClarities.size() == 0) {//539前
+            videoUrl = resourceDetails.getPlayUrl();
+        } else {
+            VideoClarity videoClarity = videoClarities.get(0);
+            videoUrl = videoClarity.getPlayUrl();
+        }
+        Cog.d(TAG, "playVideo url=" + videoUrl);
         if (!TextUtils.isEmpty(videoUrl)) {
             playVideo(videoUrl);
         }
+
     }
 
     private boolean tryToPlayLocalCached(ResourceDetails resourceDetails) {
         String videoLocation = null;
         List<VideoClarity> videoClarities = resourceDetails.getVideoClarities();
-        if (videoClarities == null) {//无清晰度列表，直接根据resourceId查找是否有缓存
+        if (videoClarities == null || videoClarities.size() == 0) {//无清晰度列表，直接根据resourceId查找是否有缓存
             //1.判断是否已经下载 本视频
             videoLocation = obtainLocalCache(mResourceId);
         } else {
-            String playUrl = resourceDetails.getPlayUrl();
-            if (playUrl != null){
-                if (playUrl.contains("high")) {
-                    videoLocation = obtainLocalCache(DEFINITION_HIGH + "_" + mResourceId);
-                } else if (playUrl.contains("normal")) {
-                    videoLocation = obtainLocalCache(DEFINITION_NORMAL + "_" + mResourceId);
-                }
-            }
+            VideoClarity videoClarity = videoClarities.get(0);
+            videoLocation = obtainLocalCache(videoClarity.getDefinition() + "_" + mResourceId);
         }
         Cog.i(TAG, "videoLocation:", videoLocation);
         if (videoLocation != null) {
@@ -494,39 +497,20 @@ public class VideoDetailsActivity extends FragmentActivity {
     }
 
     private void loadPlayingClarity() {
-        boolean isHigh = checkWhetherPlayUrlIsHigh();
-        setClarityName(isHigh);
         final List<VideoClarity> videoClarities = mResourceDetails.getVideoClarities();
-        if (videoClarities == null) {//如果没有分辨率信息，说明是5.3.8的接口，不处理
+        if (videoClarities == null || videoClarities.size() == 0) {//如果没有分辨率信息，说明是5.3.8的接口，不处理
             mVideoControl.setClarityTvEnabled(false);
             return;
-        }
-
-        int selectedClarityPos = -1;
-
-        for (int i=0; i<videoClarities.size(); i++) {
-            VideoClarity videoClarity = videoClarities.get(i);
-            if (isHigh){
-                if (videoClarity.getDefinition().equals(DEFINITION_HIGH)) {
-                    selectedClarityPos = i;
-                    break;
-                }
-            } else {
-                if (videoClarity.getDefinition().equals(DEFINITION_NORMAL)) {
-                    selectedClarityPos = i;
-                    break;
-                }
-            }
         }
 
         ArrayAdapter<VideoClarity> clarityAdapter = new ArrayAdapter<>(this,
                 R.layout.item_play_clarity,
                 videoClarities);
         mClarityLv.setAdapter(clarityAdapter);
-        final int finalSelectedClarityPos = selectedClarityPos;
         mClarityLv.setOnItemClickListener(new OnItemClickListener() {
 
-            int currPos = finalSelectedClarityPos;
+            //默认为选择播放第一项
+            int currPos = 0;
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -544,24 +528,12 @@ public class VideoDetailsActivity extends FragmentActivity {
                     currPos = position;
                     mVideoAreaDl.closeDrawer(GravityCompat.END);
                     mVideoAreaDl.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    setClarityName(videoClarity.getDefinition().equals(DEFINITION_HIGH));
+                    mVideoControl.setClarityName(videoClarity.getDefinitionName());
                 }
             }
         });
-        mClarityLv.setItemChecked(selectedClarityPos, true);
-    }
-
-    /**
-     * 检查首次播放的是高清还是普清，并且会影响播放条上的高清普清按钮
-     * @return
-     */
-    private boolean checkWhetherPlayUrlIsHigh() {
-        String playUrl = mResourceDetails.getPlayUrl();
-        return !TextUtils.isEmpty(playUrl) && playUrl.contains("high");
-    }
-
-    private void setClarityName(boolean isHigh) {
-        mVideoControl.setClarityName(obtainClarityName(isHigh));
+        mVideoControl.setClarityName(videoClarities.get(0).getDefinitionName());
+        mClarityLv.setItemChecked(0, true);
     }
 
     /**

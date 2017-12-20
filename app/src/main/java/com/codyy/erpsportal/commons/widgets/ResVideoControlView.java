@@ -681,17 +681,17 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
      */
     private void updatePlayBtnIcon() {
         if (state == PlayState.PLAY) {
-            if (mLandscape) {
-                mPlayIb.setImageResource(R.drawable.ic_pause_fs);
-            } else {
+//            if (mLandscape) {
+//                mPlayIb.setImageResource(R.drawable.ic_pause_fs);
+//            } else {
                 mPlayIb.setImageResource(R.drawable.poe_select_video_pause);
-            }
+//            }
         } else {//state == PlayState.STOP || state == PlayState.PAUSE
-            if (mLandscape) {
-                mPlayIb.setImageResource(R.drawable.ic_play_fs);
-            } else {
+//            if (mLandscape) {
+//                mPlayIb.setImageResource(R.drawable.ic_play_fs);
+//            } else {
                 mPlayIb.setImageResource(R.drawable.poe_select_video_play);
-            }
+//            }
         }
     }
 
@@ -784,7 +784,7 @@ public class ResVideoControlView extends RelativeLayout implements AutoHide, Han
             mSeekBar.setProgressDrawable(ContextCompat.getDrawable(getContext(), R.drawable.po_seekbar));
             mSeekBar.setThumb(ContextCompat.getDrawable(getContext(), R.drawable.poe_circle_bg));
         }
-        updatePlayBtnIcon();
+//        updatePlayBtnIcon();
     }
 
     /**
