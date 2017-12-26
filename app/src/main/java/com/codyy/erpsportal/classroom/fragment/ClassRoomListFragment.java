@@ -162,7 +162,7 @@ public class ClassRoomListFragment extends LoadMoreFragment<ClassRoomInfoEntity.
                 @Override
                 public void onClick(View v) {
                     // 观看人数加1
-                    DMSUtils.enterLiving(mRequestSender,data.getScheduleDetailId(),mUserInfo.getUuid());
+//                    DMSUtils.enterLiving(mRequestSender,data.getScheduleDetailId(),mUserInfo.getUuid());
                     if (ClassRoomContants.TYPE_CUSTOM_LIVE.equals(mFrom)) {//专递-直播
                         CustomLiveDetailActivity.startActivity(getContext(), mUserInfo,data.getScheduleDetailId(), mFrom, data.getStatus(),data.getSubject());
                     }else{//名校直播

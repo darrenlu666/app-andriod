@@ -107,7 +107,7 @@ public class HaiNingCustomizedFragment extends Fragment{
                         .onLiveClassroomClick(room);
             } else if (flesh instanceof HistoryCourseFlesh) {
                 HistoryCourseFlesh historyCourseFlesh = (HistoryCourseFlesh) flesh;
-                DMSUtils.enterLiving(mRequestSender,historyCourseFlesh.getId(), UserInfoKeeper.obtainUserInfo().getUuid());
+//                DMSUtils.enterLiving(mRequestSender,historyCourseFlesh.getId(), UserInfoKeeper.obtainUserInfo().getUuid());
                 ClassRoomDetailActivity.startActivity(getActivity(),
                         UserInfoKeeper.obtainUserInfo(),
                         historyCourseFlesh.getId(),

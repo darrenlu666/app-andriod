@@ -62,7 +62,7 @@ public class MainLiveClickListener implements OnLiveClassroomClickListener {
                         Cog.i(TAG," live type : " +liveClassroom.getType());
                         /** added by poe 2017/12/12 按需发流 start ---------->**/
                         RequestSender requestSender = new RequestSender(mFragment.getContext());
-                        DMSUtils.enterLiving(requestSender,liveClassroom.getId(), UserInfoKeeper.obtainUserInfo().getUuid());
+//                        DMSUtils.enterLiving(requestSender,liveClassroom.getId(), UserInfoKeeper.obtainUserInfo().getUuid());
                         /** added by poe 2017/12/12 按需发流 end ---------->**/
                         if (MainResClassroom.TYPE_LIVE.equals(liveClassroom.getType())) {
                             ClassRoomDetailActivity.startActivity(mFragment.getActivity(),mUserInfo,
