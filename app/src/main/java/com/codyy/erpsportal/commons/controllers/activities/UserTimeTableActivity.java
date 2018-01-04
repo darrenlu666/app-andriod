@@ -260,6 +260,7 @@ public class UserTimeTableActivity extends Activity {
         Map<String, String> data = new HashMap<>();
         if (!TextUtils.isEmpty(mUserID)) {
             data.put("userId", mUserID);
+            data.put("isNewVersion", "1");
         }
         switch (mUserType) {
             case UserInfo.USER_TYPE_TEACHER:
@@ -319,7 +320,7 @@ public class UserTimeTableActivity extends Activity {
                         mTimeTableContents.clear();
                         int afternoonCount = response.optInt("afternoonCount", 4);
                         int morningCount = response.optInt("morningCount", 4);
-                        mTimeTableView.setClassCount(afternoonCount,morningCount);
+                        mTimeTableView.setClassCount(morningCount, afternoonCount);
                         TimeTableContent.getTimeTable(response, mTimeTableContents);
                         if (mTimeTableContents.size() <= 0) {
                             ToastUtil.showToast(UserTimeTableActivity.this, "暂无课程表信息");
