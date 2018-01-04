@@ -157,8 +157,12 @@ public class TimeTableBase extends View {
             mRowSize = a.getDimensionPixelSize(R.styleable.TimeTableView2_rowSize, 0);
             mSubjectTestSize = a.getDimensionPixelSize(R.styleable.TimeTableView2_subjectTextSize, 15);
             mAmPmTextSize = a.getDimensionPixelSize(R.styleable.TimeTableView2_noon, 10);
-            setMinimumHeight(mRowSize * (mAMRow + mPMRow));
-            setMinimumWidth(mColumnSize * 7);
+            if (mRowSize > 0) {
+                setMinimumHeight(mRowSize * (mAMRow + mPMRow));
+            }
+            if (mColumnSize > 0) {
+                setMinimumWidth(mColumnSize * 7);
+            }
             mWeekStart = a.getInt(R.styleable.TimeTableView2_startWith, 0);
             a.recycle();
         }
@@ -377,18 +381,27 @@ public class TimeTableBase extends View {
     }
 
     @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = w;
-        mHeight = h;
-        mHorizontalAV = w / 7;
-        mVerticalAV = h / (mAMRow + mPMRow);
-        if (mVerticalAV > mRowSize) {
-            mRowSize = mVerticalAV;
+        if (w != 0 && h != 0 && w >= oldw && h >= oldh) {
+            mWidth = w;
+            mHeight = h;
+            mHorizontalAV = w / 7;
+            mVerticalAV = h / (mAMRow + mPMRow);
+            if (mVerticalAV > mRowSize) {
+                mRowSize = mVerticalAV;
+                setMinimumHeight(h);
+            }
+            if (mHorizontalAV > mColumnSize) {
+                mColumnSize = mHorizontalAV;
+                setMinimumWidth(w);
+            }
+            invalidate();
         }
-        if (mHorizontalAV > mColumnSize) {
-            mColumnSize = mHorizontalAV;
-        }
-        invalidate();
     }
 }
