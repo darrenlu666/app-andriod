@@ -132,7 +132,11 @@ public class AssessmentAdapter extends RefreshBaseAdapter<Assessment> {
                 String strDate = "";
                 if(!TextUtils.isEmpty(assessment.getScheduleDate()) && UIUtils.isInteger(assessment.getScheduleDate())){
                     if(UIUtils.isInteger(assessment.getScheduleDate())){
-                        strDate =DateUtil.getDateStr(Long.valueOf(assessment.getScheduleDate()),DateUtil.YEAR_MONTH_DAY);
+                        if(Assessment.TYPE_LIVE.equals(assessment.getEvaType())){//直播 2015-01-01
+                            strDate =DateUtil.getDateStr(Long.valueOf(assessment.getScheduleDate()),DateUtil.YEAR_MONTH_DAY);
+                        }else{//录播/优课资源:录播课堂：2015-1-1 9:00
+                            strDate =DateUtil.getDateStr(Long.valueOf(assessment.getScheduleDate()),DateUtil.DEF_FORMAT);
+                        }
                     }
                 }else{
                     strDate = assessment.getScheduleDate();

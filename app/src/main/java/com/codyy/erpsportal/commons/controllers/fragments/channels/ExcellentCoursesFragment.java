@@ -134,7 +134,7 @@ public class ExcellentCoursesFragment extends Fragment{
                 public void onStabbed(Flesh flesh) {
                     if (flesh instanceof ExcellentCourseFlesh) {
                         ExcellentCourseFlesh excellentCourse = (ExcellentCourseFlesh) flesh;
-                        DMSUtils.enterLiving(mRequestSender,excellentCourse.getScheduleDetailId(), UserInfoKeeper.obtainUserInfo().getUuid());
+//                        DMSUtils.enterLiving(mRequestSender,excellentCourse.getScheduleDetailId(), UserInfoKeeper.obtainUserInfo().getUuid());
                         ClassRoomDetailActivity.startActivity(
                                 getActivity(),
                                 UserInfoKeeper.obtainUserInfo(),

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -49,6 +50,7 @@ public class SuperTimeTableLayout extends FrameLayout {
     private int mWeekStart;
     private int mCurrentYear;
     private int mYear;
+    private boolean mShowDate;
 
     public SuperTimeTableLayout(Context context) {
         super(context);
@@ -77,6 +79,7 @@ public class SuperTimeTableLayout extends FrameLayout {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SuperTimeTableLayout);
             titleHeight = a.getDimensionPixelSize(R.styleable.SuperTimeTableLayout_titleHeight, 60);
+            mShowDate = a.getBoolean(R.styleable.SuperTimeTableLayout_showDate, true);
             a.recycle();
         }
         mIsShowToday = true;
@@ -87,15 +90,20 @@ public class SuperTimeTableLayout extends FrameLayout {
         mTitleLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, titleHeight));
         mTitleLayout.setOrientation(LinearLayout.HORIZONTAL);
         linearLayout.addView(mTitleLayout);
+
         mTimeTableBase = new TimeTableBase(context, attrs);
+        mTimeTableBase.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mTimeTableBase.setBackgroundColor(Color.WHITE);
         mWeekStart = mTimeTableBase.getWeekStart();
         mScrollView = new ScrollView(context, attrs);
+        mScrollView.setFillViewport(true);
         mScrollView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         mScrollView.addView(mTimeTableBase);
         mHorizontalScrollView = new HorizontalScrollView(context, attrs);
+        mHorizontalScrollView.setFillViewport(true);
         mHorizontalScrollView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         linearLayout.addView(mScrollView);
+
         mHorizontalScrollView.addView(linearLayout);
         addView(mHorizontalScrollView);
         initDate();
@@ -107,7 +115,11 @@ public class SuperTimeTableLayout extends FrameLayout {
             if (mToday.equals(mWeekDate.get(i).getmDate())) {
                 titleLayout.setTextColor(Color.parseColor("#19AB20"));
             }
-            titleLayout.setText(mWeek[i] + "\n" + mWeekDate.get(i).getmDate());
+            String title = mWeek[i];
+            if (mShowDate) {
+                title += "\n" + mWeekDate.get(i).getmDate();
+            }
+            titleLayout.setText(title);
             titleLayout.setLayoutParams(layoutParams);
             titleLayout.setBackgroundColor(Color.parseColor("#e6e6e6"));
             mTitleLayout.addView(titleLayout);
@@ -152,6 +164,7 @@ public class SuperTimeTableLayout extends FrameLayout {
             mLinePT.setStrokeWidth(1);
             mLinePT.setColor(Color.parseColor("#e9e9e9"));
             mTextView = new TextView(context, attrs);
+            mTextView.setGravity(Gravity.CENTER);
             mColorStateList = mTextView.getTextColors();
             mTextView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
             mImageView = new ImageView(context);
@@ -206,7 +219,11 @@ public class SuperTimeTableLayout extends FrameLayout {
             } else {
                 titleLayout.colorReset();
             }
-            titleLayout.setText(mWeek[i] + "\n" + mWeekDate.get(i).getmDate());
+            String title = mWeek[i];
+            if (mShowDate) {
+                title += "\n" + mWeekDate.get(i).getmDate();
+            }
+            titleLayout.setText(title);
             titleLayout.isHoliday(mWeekDate.get(i).isHoliday());
         }
     }
@@ -286,5 +303,10 @@ public class SuperTimeTableLayout extends FrameLayout {
             mWeekDate.add(holiday);
             calendar.add(Calendar.DAY_OF_WEEK, 1);
         }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
     }
 }

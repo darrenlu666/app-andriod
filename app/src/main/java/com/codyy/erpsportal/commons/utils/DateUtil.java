@@ -66,7 +66,7 @@ public class DateUtil {
             format = PATTERN;
         }
         SimpleDateFormat sdf = new SimpleDateFormat(format);
-
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         return sdf.format(date);
     }
 

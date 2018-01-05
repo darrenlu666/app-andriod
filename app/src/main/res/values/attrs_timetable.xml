@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="TimeTableView2">
-        <attr name="titleSize" format="integer" />
-        <attr name="columnSize" format="dimension" />
-        <attr name="rowSize" format="dimension" />
-        <attr name="noon" format="dimension" />
-        <attr name="AMRow" format="integer" />
-        <attr name="PMRow" format="integer" />
-        <attr name="subjectTextSize" format="dimension" />
+        <attr name="titleSize" format="integer"/>
+        <attr name="columnSize" format="dimension"/>
+        <attr name="rowSize" format="dimension"/>
+        <attr name="noon" format="dimension"/>
+        <attr name="AMRow" format="integer"/>
+        <attr name="PMRow" format="integer"/>
+        <attr name="subjectTextSize" format="dimension"/>
         <attr name="startWith">
-            <enum name="monday" value="1" />
-            <enum name="sunday" value="0" />
+            <enum name="monday" value="1"/>
+            <enum name="sunday" value="0"/>
         </attr>
-        <attr name="isShowDate" format="boolean" />
+        <attr name="isShowDate" format="boolean"/>
     </declare-styleable>
     <declare-styleable name="SuperTimeTableLayout">
-        <attr name="titleHeight" format="dimension" />
+        <attr name="titleHeight" format="dimension"/>
+        <attr name="showDate" format="boolean"/>
     </declare-styleable>
 </resources>

@@ -31,6 +31,7 @@ import com.codyy.erpsportal.commons.models.network.RequestSender;
 import com.codyy.erpsportal.commons.models.network.Response;
 import com.codyy.erpsportal.commons.utils.ToastUtil;
 import com.codyy.erpsportal.commons.utils.UIUtils;
+import com.codyy.erpsportal.commons.widgets.TimeTable.SuperTimeTableLayout;
 import com.codyy.erpsportal.commons.widgets.TimeTable.TimeTableView2;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
@@ -86,7 +87,7 @@ public class UserTimeTableActivity extends Activity {
     @Bind(R.id.user_timeable_layout_title)
     TextView mTitleText;
     @Bind(R.id.user_timeable_layout_timetableview)
-    TimeTableView2 mTimeTableView;
+    SuperTimeTableLayout mTimeTableView;
     @Bind(R.id.user_timeable_layout_class)
     TextView mClassTV;
     RadioGroup mRadioGroup;
@@ -96,7 +97,7 @@ public class UserTimeTableActivity extends Activity {
     private ClassCont mClassCont;
 
 
-    private ArrayList<TimeTableContent> timeTables;
+    private ArrayList<TimeTableContent> mTimeTableContents;
 
     private ArrayList<ClassCont> mClassConts;
     private PopupWindow mPopupWindow;
@@ -139,7 +140,7 @@ public class UserTimeTableActivity extends Activity {
      */
     private void init() {
         mSender = new RequestSender(this);
-        timeTables = new ArrayList<>();
+        mTimeTableContents = new ArrayList<>();
         mClassConts = new ArrayList<>();
         switch (mUserType) {
             case UserInfo.USER_TYPE_TEACHER:
@@ -259,6 +260,7 @@ public class UserTimeTableActivity extends Activity {
         Map<String, String> data = new HashMap<>();
         if (!TextUtils.isEmpty(mUserID)) {
             data.put("userId", mUserID);
+            data.put("isNewVersion", "1");
         }
         switch (mUserType) {
             case UserInfo.USER_TYPE_TEACHER:
@@ -315,12 +317,15 @@ public class UserTimeTableActivity extends Activity {
             public void onResponse(JSONObject response) {
                 switch (msg) {
                     case GET_TIMETABLE:
-                        timeTables.clear();
-                        TimeTableContent.getTimeTable(response, timeTables);
-                        if (timeTables.size() <= 0) {
+                        mTimeTableContents.clear();
+                        int afternoonCount = response.optInt("afternoonCount", 4);
+                        int morningCount = response.optInt("morningCount", 4);
+                        mTimeTableView.setClassCount(morningCount, afternoonCount);
+                        TimeTableContent.getTimeTable(response, mTimeTableContents);
+                        if (mTimeTableContents.size() <= 0) {
                             ToastUtil.showToast(UserTimeTableActivity.this, "暂无课程表信息");
                         }
-                        mTimeTableView.setClass(timeTables);
+                        mTimeTableView.setClass(mTimeTableContents);
                         break;
                     case GET_CLASS_LIST:
                         TeacherClassParse teacherClassParse = new Gson().fromJson(response.toString(), TeacherClassParse.class);

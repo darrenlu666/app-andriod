@@ -214,6 +214,10 @@ public class AssessmentDetailsActivity extends BaseHttpActivity implements View.
             mViewTypeTextView.setText("优课资源");
             mScheduleTime.setText(dateH);
         }
+        //隐藏空白标题.
+        if(TextUtils.isEmpty(mMainSchoolNameTv.getText().toString())){
+            mMainSchoolNameTv.setVisibility(View.GONE);
+        }
         mVerticalDivider.setVisibility(View.GONE);
         mSetTeacherTv.setVisibility(View.GONE);
         mStateTextView.setOnClickListener(this);

@@ -789,13 +789,13 @@ public class ClassRoomDetailActivity extends AppCompatActivity implements View.O
     protected void onDestroy() {
         super.onDestroy();
         //stop net request .
-        DMSUtils.exitLiving(mRequestSender, mScheduleDetailId, mUserInfo.getUuid(), new DMSUtils.ILeave() {
+        /*DMSUtils.exitLiving(mRequestSender, mScheduleDetailId, mUserInfo.getUuid(), new DMSUtils.ILeave() {
             @Override
             public void onComplete() {
                 if (null != mRequestSender) mRequestSender.stop();
             }
-        });
-
+        });*/
+        if (null != mRequestSender) mRequestSender.stop();
         if(null != mWiFiBroadCastUtils) mWiFiBroadCastUtils.destroy();
         if(null != mScreenBroadCastUtils) mScreenBroadCastUtils.destroy(ClassRoomDetailActivity.this);
         mHandler.removeCallbacks(mPlayLiveRunnable);

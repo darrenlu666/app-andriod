@@ -150,7 +150,7 @@ android {
         web {
             dimension "mode"
             applicationId "com.codyy.erpsportal.web"
-            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8080/mobile/\"")
+            buildConfigField("String", "API_HOST", "\"http://10.1.80.22:8081/\"")
         }
     }
 
