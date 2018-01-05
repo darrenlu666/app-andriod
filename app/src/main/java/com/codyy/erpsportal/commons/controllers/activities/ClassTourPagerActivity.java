@@ -56,7 +56,6 @@ import com.codyy.erpsportal.commons.widgets.BnVideoView2;
 import com.codyy.url.URLConfig;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -67,7 +66,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 直播详细、视频播放页面
+ * 直播详细、视频播放页面、课堂巡视
  * Created by caixingming on 2015/4/24.
  * <p>
  * 多个视频播放、主辅课堂页面
